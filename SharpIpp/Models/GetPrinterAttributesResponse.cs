@@ -174,6 +174,16 @@ namespace SharpIpp.Models
         public Range? JobKOctetsSupported { get; set; }
 
         /// <summary>
+        ///     jpeg-k-octets-supported
+        /// </summary>
+        public Range? JpegKOctetsSupported { get; set; }
+
+        /// <summary>
+        ///     pdf-k-octets-supported
+        /// </summary>
+        public Range? PdfKOctetsSupported { get; set; }
+
+        /// <summary>
         ///     job-impressions-supported
         /// </summary>
         public Range? JobImpressionsSupported { get; set; }
@@ -248,5 +258,7 @@ namespace SharpIpp.Models
 
         public PrintColorMode? PrintColorModeDefault { get; set; }
         public PrintColorMode[]? PrintColorModeSupported { get; set; }
+
+        public WhichJobs[]? WhichJobsSupported { get; set; }
     }
 }
