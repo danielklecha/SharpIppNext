@@ -37,6 +37,8 @@ namespace SharpIpp.Protocol.Models
         public const string MultipleOperationTimeOut = "multiple-operation-time-out";
         public const string CompressionSupported = "compression-supported";
         public const string JobKOctetsSupported = "job-k-octets-supported";
+        public const string JpegKOctetsSupported = "jpeg-k-octets-supported";
+        public const string PdfKOctetsSupported = "pdf-k-octets-supported";
         public const string JobImpressionsSupported = "job-impressions-supported";
         public const string JobMediaSheetsSupported = "job-media-sheets-supported";
         public const string PagesPerMinute = "pages-per-minute";
@@ -67,6 +69,7 @@ namespace SharpIpp.Protocol.Models
         public const string MediaColDefault = "media-col-default";
         public const string PrintColorModeDefault = "print-color-mode-default";
         public const string PrintColorModeSupported = "print-color-mode-supported";
+        public const string WhichJobsSupported = "which-jobs-supported";
 
         public static IEnumerable<string> GetAttributes(IppVersion version)
         {
@@ -84,7 +87,7 @@ namespace SharpIpp.Protocol.Models
             yield return PrinterState;
             yield return PrinterStateReasons;
             yield return PrinterStateMessage;
-            yield return IppVersionsSupported ;
+            yield return IppVersionsSupported;
             yield return OperationsSupported;
             yield return MultipleDocumentJobsSupported;
             yield return CharsetConfigured;
@@ -103,6 +106,8 @@ namespace SharpIpp.Protocol.Models
             yield return MultipleOperationTimeOut;
             yield return CompressionSupported;
             yield return JobKOctetsSupported;
+            yield return JpegKOctetsSupported;
+            yield return PdfKOctetsSupported;
             yield return JobImpressionsSupported;
             yield return JobMediaSheetsSupported;
             yield return PagesPerMinute;
@@ -133,6 +138,7 @@ namespace SharpIpp.Protocol.Models
             yield return MediaColDefault;
             yield return PrintColorModeDefault;
             yield return PrintColorModeSupported;
+            yield return WhichJobsSupported;
         }
     }
 }

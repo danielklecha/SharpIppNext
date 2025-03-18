@@ -70,6 +70,8 @@ namespace SharpIpp.Mapping.Profiles
                         map.MapFromDicSetNull<IppVersion[]?>(src, PrinterAttribute.IppVersionsSupported),
                     JobImpressionsSupported = map.MapFromDic<Range?>(src, PrinterAttribute.JobImpressionsSupported),
                     JobKOctetsSupported = map.MapFromDic<Range?>(src, PrinterAttribute.JobKOctetsSupported),
+                    JpegKOctetsSupported = map.MapFromDic<Range?>(src, PrinterAttribute.JpegKOctetsSupported),
+                    PdfKOctetsSupported = map.MapFromDic<Range?>(src, PrinterAttribute.PdfKOctetsSupported),
                     JobMediaSheetsSupported = map.MapFromDic<Range?>(src, PrinterAttribute.JobMediaSheetsSupported),
                     MultipleDocumentJobsSupported =
                         map.MapFromDic<bool?>(src, PrinterAttribute.MultipleDocumentJobsSupported),
@@ -134,6 +136,7 @@ namespace SharpIpp.Mapping.Profiles
                     MediaColDefault = src.ContainsKey(PrinterAttribute.MediaColDefault) ? MediaCol.Create(src[PrinterAttribute.MediaColDefault].FromBegCollection().ToIppDictionary(), map) : null,
                     PrintColorModeDefault = map.MapFromDic<PrintColorMode?>(src, PrinterAttribute.PrintColorModeDefault),
                     PrintColorModeSupported = map.MapFromDicSetNull<PrintColorMode[]?>(src, PrinterAttribute.PrintColorModeSupported),
+                    WhichJobsSupported = map.MapFromDicSetNull<WhichJobs[]?>(src, PrinterAttribute.WhichJobsSupported),
                 } );
 
             mapper.CreateMap<GetPrinterAttributesResponse, IDictionary<string, IppAttribute[]>>( ( src, map ) =>
@@ -159,6 +162,10 @@ namespace SharpIpp.Mapping.Profiles
                         dic.Add( PrinterAttribute.JobImpressionsSupported, new IppAttribute[] { new IppAttribute( Tag.RangeOfInteger, PrinterAttribute.JobImpressionsSupported, src.JobImpressionsSupported.Value ) } );
                     if ( src.JobKOctetsSupported != null )
                         dic.Add( PrinterAttribute.JobKOctetsSupported, new IppAttribute[] { new IppAttribute( Tag.RangeOfInteger, PrinterAttribute.JobKOctetsSupported, src.JobKOctetsSupported.Value ) } );
+                    if (src.JpegKOctetsSupported != null)
+                        dic.Add(PrinterAttribute.JpegKOctetsSupported, new IppAttribute[] { new IppAttribute(Tag.RangeOfInteger, PrinterAttribute.JpegKOctetsSupported, src.JpegKOctetsSupported.Value) });
+                    if (src.PdfKOctetsSupported != null)
+                        dic.Add(PrinterAttribute.PdfKOctetsSupported, new IppAttribute[] { new IppAttribute(Tag.RangeOfInteger, PrinterAttribute.PdfKOctetsSupported, src.PdfKOctetsSupported.Value) });
                     if ( src.JobMediaSheetsSupported != null )
                         dic.Add( PrinterAttribute.JobMediaSheetsSupported, new IppAttribute[] { new IppAttribute( Tag.RangeOfInteger, PrinterAttribute.JobMediaSheetsSupported, src.JobMediaSheetsSupported.Value ) } );
                     if ( src.MultipleDocumentJobsSupported != null )
@@ -265,6 +272,8 @@ namespace SharpIpp.Mapping.Profiles
                         dic.Add(PrinterAttribute.PrintColorModeDefault, new IppAttribute[] { new IppAttribute(Tag.Keyword, PrinterAttribute.PrintColorModeDefault, map.Map<string>(src.PrintColorModeDefault.Value)) });
                     if (src.PrintColorModeSupported?.Any() ?? false)
                         dic.Add(PrinterAttribute.PrintColorModeSupported, src.PrintColorModeSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PrintColorModeSupported, map.Map<string>(x))).ToArray());
+                    if (src.WhichJobsSupported?.Any() ?? false)
+                        dic.Add(PrinterAttribute.WhichJobsSupported, src.WhichJobsSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.WhichJobsSupported, map.Map<string>(x))).ToArray());
                     return dic;
                 } );
         }
