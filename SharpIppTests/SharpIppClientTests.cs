@@ -897,11 +897,14 @@ public class SharpIppClientTests
     }
 
     [DataTestMethod]
-    [DataRow( "http://127.0.0.1:631", "http://127.0.0.1:631" )]
-    [DataRow( "https://127.0.0.1:631", "https://127.0.0.1:631" )]
-    [DataRow( "ipp://127.0.0.1:631", "http://127.0.0.1:631" )]
-    [DataRow( "ipps://127.0.0.1:631", "https://127.0.0.1:631" )]
-    [DataRow( "ipp://127.0.0.1", "http://127.0.0.1:631" )]
+    [DataRow("http://127.0.0.1:631", "http://127.0.0.1:631")]
+    [DataRow("https://127.0.0.1:631", "https://127.0.0.1:631")]
+    [DataRow("ipp://127.0.0.1:631", "http://127.0.0.1:631")]
+    [DataRow("ipps://127.0.0.1:631", "https://127.0.0.1:631")]
+    [DataRow("http://127.0.0.1", "http://127.0.0.1:80")]
+    [DataRow("https://127.0.0.1", "https://127.0.0.1:443")]
+    [DataRow("ipp://127.0.0.1", "http://127.0.0.1:631")]
+    [DataRow("ipps://127.0.0.1", "https://127.0.0.1:631")]
     public async Task CreateJobAsync_PrinterUri_ShouldBeUpdated(string printerUri, string expected )
     {
         // Arrange
