@@ -159,7 +159,7 @@ public partial class SharpIppClient : ISharpIppClient
         return ippRequest;
     }
 
-    public T Construct<T>(IIppResponseMessage ippResponse) where T : IIppResponseMessage
+    public virtual T Construct<T>(IIppResponseMessage ippResponse) where T : IIppResponseMessage
     {
         try
         {
