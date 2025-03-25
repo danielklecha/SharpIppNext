@@ -181,7 +181,10 @@ public partial class SharpIppClient : ISharpIppClient
             : printer.Scheme.Equals("http", StringComparison.OrdinalIgnoreCase)
             ? 80
             : 631;
-        var uriBuilder = new UriBuilder(isSecured ? "https" : "http", printer.Host, printer.Port == -1 ? defaultPort : printer.Port);
+        var uriBuilder = new UriBuilder(isSecured ? "https" : "http", printer.Host, printer.Port == -1 ? defaultPort : printer.Port, printer.AbsolutePath)
+        {
+            Query = printer.Query
+        };
         return new HttpRequestMessage( HttpMethod.Post, uriBuilder.Uri );
     }
 
