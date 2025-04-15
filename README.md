@@ -8,33 +8,24 @@
 
 A .NET Standard library that can be used as IPP client and IPP server.
 
+## Strong-named version
+
+[![NuGet](https://img.shields.io/nuget/v/SharpIppNext.StrongName.svg)](https://www.nuget.org/packages/SharpIppNext.StrongName)
+[![NuGet downloads](https://img.shields.io/nuget/dt/SharpIppNext.StrongName.svg)](https://www.nuget.org/packages/SharpIppNext.StrongName)
+
 ## Features
 
 - Client and server support all operations of [Internet Printing Protocol/1.1](https://tools.ietf.org/html/rfc2911)
 - Client supports [CUPS-Get-Printers operation](http://www.cups.org/doc/spec-ipp.html#CUPS_GET_PRINTERS)
 
-## Installing
-
-The fastest way of getting started using `SharpIppNext` is to install the NuGet package.
-
-```csharp
-dotnet add package SharpIppNext
-```
-
-There is also strong-typed version.
-
-```csharp
-dotnet add package SharpIppNext.StrongName
-```
-
 ## Getting started
 
 - [Documentation](https://danielklecha.github.io/SharpIppNext/).
 - [Wiki](https://github.com/danielklecha/SharpIppNext/wiki).
-- Example of the IPP client is included in solution
-- Example of the IPP server is avaliable in [SharpIppNextServer repository](https://github.com/danielklecha/SharpIppNextServer).
+- An example of the IPP client is included in the solution
+- An example of the IPP server is available in [SharpIppNextServer repository](https://github.com/danielklecha/SharpIppNextServer).
 
 
 ## License
 
-SharpIppNext is provided as-is under the MIT license.
+`SharpIppNext` is provided as-is under the MIT license.
