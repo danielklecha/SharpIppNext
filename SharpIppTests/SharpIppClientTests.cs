@@ -55,6 +55,39 @@ public class SharpIppClientTests
     }
 
     [TestMethod()]
+    public async Task CreateJobAsync_OperationAttributes_ShouldThrowException()
+    {
+        // Arrange
+        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
+        using SharpIppClient client = new(new(GetMockOfHttpMessageHandler().Object), protocol.Object);
+        // Act
+        Func<Task<Models.CreateJobResponse>> act = async () => await client.CreateJobAsync(new Models.CreateJobRequest
+        {
+            RequestId = 123,
+            Version = IppVersion.V1_1
+        });
+        // Assert
+        await act.Should().ThrowAsync<Exception>();
+    }
+
+    [TestMethod()]
+    public async Task CreateJobAsync_PrinterUri_ShouldThrowException()
+    {
+        // Arrange
+        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
+        using SharpIppClient client = new(new(GetMockOfHttpMessageHandler().Object), protocol.Object);
+        // Act
+        Func<Task<Models.CreateJobResponse>> act = async () => await client.CreateJobAsync(new Models.CreateJobRequest
+        {
+            RequestId = 123,
+            Version = IppVersion.V1_1,
+            OperationAttributes = new CreateJobOperationAttributes()
+        });
+        // Assert
+        await act.Should().ThrowAsync<Exception>();
+    }
+
+    [TestMethod()]
     public async Task CreateJobAsync_CreateJobRequest_ShouldBeMapped()
     {
         // Arrange
