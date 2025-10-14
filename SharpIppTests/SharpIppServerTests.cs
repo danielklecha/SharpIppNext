@@ -1064,4 +1064,44 @@ public class SharpIppServerTests
             It.IsAny<Stream>(),
             It.IsAny<CancellationToken>() ) );
     }
+
+    [TestMethod()]
+    public async Task CreateRawResponseAsync_CreateJobResponse_ShouldBeMapped()
+    {
+        // Arrange
+        Mock<IIppProtocol> ippProtocol = new();
+        SharpIppServer server = new(ippProtocol.Object);
+        var message = new CreateJobResponse
+        {
+            RequestId = 123,
+            Version = IppVersion.V1_1,
+            StatusCode = IppStatusCode.SuccessfulOk,
+            JobId = 234,
+            JobUri = "http://127.0.0.1:631/234",
+            JobState = JobState.Pending,
+            JobStateMessage = "custom state",
+            NumberOfInterveningJobs = 0,
+            JobStateReasons = [JobStateReason.None]
+        };
+        var rawMessage = new IppResponseMessage
+        {
+            RequestId = 123
+        };
+        var operationSection = new IppSection { Tag = SectionTag.OperationAttributesTag };
+        operationSection.Attributes.Add(new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"));
+        operationSection.Attributes.Add(new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"));
+        rawMessage.Sections.Add(operationSection);
+        var jobSection = new IppSection { Tag = SectionTag.JobAttributesTag };
+        jobSection.Attributes.Add(new IppAttribute(Tag.Uri, JobAttribute.JobUri, "http://127.0.0.1:631/234"));
+        jobSection.Attributes.Add(new IppAttribute(Tag.Integer, JobAttribute.JobId, 234));
+        jobSection.Attributes.Add(new IppAttribute(Tag.Enum, JobAttribute.JobState, (int)JobState.Pending));
+        jobSection.Attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.JobStateMessage, "custom state"));
+        jobSection.Attributes.Add(new IppAttribute(Tag.Integer, JobAttribute.NumberOfInterveningJobs, 0));
+        jobSection.Attributes.Add(new IppAttribute(Tag.Keyword, JobAttribute.JobStateReasons, "none"));
+        rawMessage.Sections.Add(jobSection);
+        // Act
+        Func<Task<IIppResponseMessage>> act = () => server.CreateRawResponseAsync(message);
+        // Assert
+        (await act.Should().NotThrowAsync()).Which.Should().BeEquivalentTo(rawMessage);
+    }
 }

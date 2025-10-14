@@ -113,15 +113,23 @@ public partial class SharpIppServer : ISharpIppServer
         return _ippProtocol.WriteIppResponseAsync(ippResponseMessage, stream, cancellationToken);
     }
 
-    public Task SendResponseAsync<T>(
+    public async Task SendResponseAsync<T>(
         T ippResponsMessage,
         Stream stream,
+        CancellationToken cancellationToken = default) where T : IIppResponseMessage
+    {
+        var ippResponse = await CreateRawResponseAsync(ippResponsMessage, cancellationToken);
+        await _ippProtocol.WriteIppResponseAsync(ippResponse, stream, cancellationToken);
+    }
+
+    public Task<IIppResponseMessage> CreateRawResponseAsync<T>(
+        T ippResponsMessage,
         CancellationToken cancellationToken = default) where T : IIppResponseMessage
     {
         if (ippResponsMessage is null)
             throw new ArgumentNullException(nameof(ippResponsMessage));
         var ippResponse = Mapper.Map<IppResponseMessage>(ippResponsMessage);
-        return _ippProtocol.WriteIppResponseAsync(ippResponse, stream, cancellationToken);
+        return Task.FromResult<IIppResponseMessage>(ippResponse);
     }
 
     private static IMapper MapperFactory()
