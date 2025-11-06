@@ -89,6 +89,9 @@ namespace SharpIpp.Mapping.Profiles
                 if (src.PrintColorMode != null)
                     job.Add(new IppAttribute(Tag.Keyword, JobAttribute.PrintColorMode, map.Map<string>(src.PrintColorMode.Value)));
 
+                if (src.MediaCol != null)
+                    job.AddRange(src.MediaCol.GetIppAttributes(map).ToBegCollection(PrinterAttribute.MediaColDefault));
+
                 dst.OperationAttributes.Populate(src.AdditionalOperationAttributes);
                 dst.JobAttributes.Populate(src.AdditionalJobAttributes);
                 return dst;
@@ -111,6 +114,7 @@ namespace SharpIpp.Mapping.Profiles
                 dst.PrintQuality = map.MapFromDic<PrintQuality?>(jobDict, JobAttribute.PrintQuality);
                 dst.PrintScaling = map.MapFromDic<PrintScaling?>(jobDict, JobAttribute.PrintScaling);
                 dst.PrintColorMode = map.MapFromDic<PrintColorMode?>(jobDict, JobAttribute.PrintScaling);
+                dst.MediaCol = jobDict.ContainsKey(JobAttribute.MediaCol) ? MediaCol.Create(jobDict[JobAttribute.MediaCol].FromBegCollection().ToIppDictionary(), map) : null;
                 var additionalOperationAttributes = src.OperationAttributes.Where( x => !JobAttribute.GetAttributes( src.Version ).Contains( x.Name ) ).ToArray();
                 if (additionalOperationAttributes.Length > 0)
                     dst.AdditionalOperationAttributes = additionalOperationAttributes;

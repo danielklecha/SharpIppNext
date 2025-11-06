@@ -181,6 +181,8 @@ namespace SharpIpp.Protocol.Models
 
         public PrintColorMode? PrintColorMode { get; set; }
 
+        public MediaCol? MediaCol { get; set; }
+
         public IEnumerable<IppAttribute>? AdditionalOperationAttributes { get; set; }
 
         public IEnumerable<IppAttribute>? AdditionalJobAttributes { get; set; }
