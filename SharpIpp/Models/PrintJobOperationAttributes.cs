@@ -65,7 +65,7 @@ public class PrintJobOperationAttributes : CreateJobOperationAttributes
         attributes.DocumentName = mapper.MapFromDic<string?>(dict, JobAttribute.DocumentName);
         attributes.Compression = mapper.MapFromDic<Compression?>(dict, JobAttribute.Compression);
         attributes.DocumentFormat = mapper.MapFromDic<string?>(dict, JobAttribute.DocumentFormat);
-        attributes.DocumentNaturalLanguage = mapper.MapFromDic<string?>(dict, JobAttribute.DocumentFormat);
+        attributes.DocumentNaturalLanguage = mapper.MapFromDic<string?>(dict, JobAttribute.DocumentNaturalLanguage);
         return attributes;
     }
 
