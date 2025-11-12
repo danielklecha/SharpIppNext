@@ -79,7 +79,7 @@ namespace SharpIpp.Protocol
             Stack<IppAttribute> prevBegCollectionAttributes = new();
             IppAttribute? prevBegCollectionAttribute = new();
             List<IppAttribute>? attributes = null;
-
+            Encoding encoding = Encoding.ASCII;
             do
             {
                 var data = reader.ReadByte();
@@ -106,9 +106,19 @@ namespace SharpIpp.Protocol
                     default:
                         if (attributes is null)
                             throw new ArgumentException( $"Section start tag not found in stream. Expected < 0x06. Actual: {data}" );
-                        var attribute = ReadAttribute((Tag)data, reader, prevAttribute, prevBegCollectionAttribute);
+                        var attribute = ReadAttribute((Tag)data, reader, prevAttribute, prevBegCollectionAttribute, encoding);
                         switch(attribute.Tag)
                         {
+                            case Tag.Charset when sectionTag == SectionTag.OperationAttributesTag && attribute.Name == JobAttribute.AttributesCharset && attribute.Value is string charsetName:
+                                try
+                                {
+                                    encoding = Encoding.GetEncoding(charsetName);
+                                }
+                                catch (ArgumentException)
+                                {
+                                    //ignore invalid charset, keep previous one
+                                }
+                                break;
                             case Tag.BegCollection:
                                 prevBegCollectionAttributes.Push(attribute);
                                 break;
@@ -130,6 +140,7 @@ namespace SharpIpp.Protocol
             Stack<IppAttribute> prevBegCollectionAttributes = new();
             IppAttribute? prevBegCollectionAttribute = new();
             List<IppAttribute>? attributes = null;
+            Encoding encoding = Encoding.ASCII;
             do
             {
                 var data = reader.ReadByte();
@@ -169,9 +180,19 @@ namespace SharpIpp.Protocol
                             reader.BaseStream.Position--;
                             return;
                         }
-                        var attribute = ReadAttribute((Tag)data, reader, prevAttribute, prevBegCollectionAttribute);
+                        var attribute = ReadAttribute((Tag)data, reader, prevAttribute, prevBegCollectionAttribute, encoding);
                         switch (attribute.Tag)
                         {
+                            case Tag.Charset when sectionTag == SectionTag.OperationAttributesTag && attribute.Name == JobAttribute.AttributesCharset && attribute.Value is string charsetName:
+                                try
+                                {
+                                    encoding = Encoding.GetEncoding(charsetName);
+                                }
+                                catch (ArgumentException)
+                                {
+                                    //ignore invalid charset, keep previous one
+                                }
+                                break;
                             case Tag.BegCollection:
                                 prevBegCollectionAttributes.Push(attribute);
                                 break;
@@ -187,7 +208,7 @@ namespace SharpIpp.Protocol
             while ( true );
         }
 
-        public void WriteAttribute( BinaryWriter stream, IppAttribute attribute, IppAttribute? prevAttribute )
+        public void WriteAttribute( BinaryWriter stream, IppAttribute attribute, IppAttribute? prevAttribute, Encoding encoding )
         {
             stream.Write( (byte)attribute.Tag );
 
@@ -201,11 +222,22 @@ namespace SharpIpp.Protocol
                 stream.Write( Encoding.ASCII.GetBytes( attribute.Name ) );
             }
 
-            var value = attribute.Value;
-            WriteValue( value, stream );
+            switch(attribute.Tag)
+            {
+                case Tag.NameWithLanguage:
+                case Tag.TextWithLanguage:
+                case Tag.NameWithoutLanguage:
+                case Tag.TextWithoutLanguage:
+                    WriteValue(attribute.Value, stream, encoding);
+                    break;
+                default:
+                    WriteValue(attribute.Value, stream, null);
+                    break;
+            }
+            
         }
 
-        public void WriteValue(object value, BinaryWriter stream)
+        public void WriteValue(object value, BinaryWriter stream, Encoding? encoding = null)
         {
             //https://tools.ietf.org/html/rfc8010#section-3.5.2
             switch (value)
@@ -220,7 +252,7 @@ namespace SharpIpp.Protocol
                     Write(v, stream);
                     break;
                 case string v:
-                    Write(v, stream);
+                    Write(v, stream, encoding);
                     break;
                 case DateTimeOffset v:
                     Write(v, stream);
@@ -232,7 +264,7 @@ namespace SharpIpp.Protocol
                     Write(v, stream);
                     break;
                 case StringWithLanguage v:
-                    Write(v, stream);
+                    Write(v, stream, encoding);
                     break;
                 default:
                     throw new ArgumentException($"Type {value.GetType()} not supported in ipp");
@@ -245,15 +277,30 @@ namespace SharpIpp.Protocol
                 throw new ArgumentNullException( nameof( ippResponseMessage ) );
             if (stream is null)
                 throw new ArgumentNullException( nameof( stream ) );
+            var encoding = Encoding.ASCII;
+            try
+            {
+                var charset = ippResponseMessage.Sections
+                    .FirstOrDefault(x => x.Tag == SectionTag.OperationAttributesTag)
+                    ?.Attributes
+                    .FirstOrDefault(x => x.Tag == Tag.Charset && x.Name == JobAttribute.AttributesCharset)
+                    ?.Value as string;
+                if (charset is not null)
+                    encoding = Encoding.GetEncoding(charset);
+            }
+            catch (ArgumentException)
+            {
+                //ignore invalid charset, keep previous one
+            }
             using var writer = new BinaryWriter( stream, Encoding.ASCII, true );
             writer.WriteBigEndian( ippResponseMessage.Version.ToInt16BigEndian() );
             writer.WriteBigEndian( (short)ippResponseMessage.StatusCode );
             writer.WriteBigEndian( ippResponseMessage.RequestId );
-            WriteSections( ippResponseMessage, writer );
+            WriteSections( ippResponseMessage, writer, encoding );
             return Task.CompletedTask;
         }
 
-        public object ReadValue(BinaryReader stream, Tag tag)
+        public object ReadValue(BinaryReader stream, Tag tag, Encoding? encoding = null)
         {
             if (stream is null)
                 throw new ArgumentNullException( nameof( stream ) );
@@ -271,11 +318,11 @@ namespace SharpIpp.Protocol
                 Tag.Resolution => ReadResolution(stream),
                 Tag.RangeOfInteger => ReadRange(stream),
                 Tag.BegCollection => ReadNoValue(stream),
-                Tag.TextWithLanguage => ReadStringWithLanguage(stream),
-                Tag.NameWithLanguage => ReadStringWithLanguage(stream),
+                Tag.TextWithLanguage => ReadStringWithLanguage(stream, encoding),
+                Tag.NameWithLanguage => ReadStringWithLanguage(stream, encoding),
                 Tag.EndCollection => ReadNoValue(stream),
-                Tag.TextWithoutLanguage => ReadString(stream),
-                Tag.NameWithoutLanguage => ReadString(stream),
+                Tag.TextWithoutLanguage => ReadString(stream, encoding),
+                Tag.NameWithoutLanguage => ReadString(stream, encoding),
                 Tag.Keyword => ReadString(stream),
                 Tag.Uri => ReadString(stream),
                 Tag.UriScheme => ReadString(stream),
@@ -331,14 +378,14 @@ namespace SharpIpp.Protocol
             };
         }
 
-        public IppAttribute ReadAttribute(Tag tag, BinaryReader stream, IppAttribute? prevAttribute, IppAttribute? prevBegCollectionAttribute)
+        public IppAttribute ReadAttribute(Tag tag, BinaryReader stream, IppAttribute? prevAttribute, IppAttribute? prevBegCollectionAttribute, Encoding encoding)
         {
             if (stream is null)
                 throw new ArgumentNullException( nameof( stream ) );
             var len = stream.ReadInt16BigEndian();
             var name = Encoding.ASCII.GetString(stream.ReadBytes(len));
             var normalizedName = GetNormalizedName(tag, name, prevAttribute, prevBegCollectionAttribute);
-            var value = ReadValue( stream, tag );
+            var value = ReadValue(stream, tag, encoding);
             var attribute = new IppAttribute(tag, normalizedName, value);
             return attribute;
         }
@@ -401,28 +448,41 @@ namespace SharpIpp.Protocol
                 && requestMessage.DocumentAttributes.Count == 0
                 && requestMessage.SystemAttributes.Count == 0)
                 return;
-            WriteSection(SectionTag.OperationAttributesTag, requestMessage.OperationAttributes, writer);
-            WriteSection(SectionTag.JobAttributesTag, requestMessage.JobAttributes, writer);
-            WriteSection(SectionTag.PrinterAttributesTag, requestMessage.PrinterAttributes, writer);
-            WriteSection(SectionTag.UnsupportedAttributesTag, requestMessage.UnsupportedAttributes, writer);
-            WriteSection(SectionTag.SubscriptionAttributesTag, requestMessage.SubscriptionAttributes, writer);
-            WriteSection(SectionTag.EventNotificationAttributesTag, requestMessage.EventNotificationAttributes, writer);
-            WriteSection(SectionTag.ResourceAttributesTag, requestMessage.ResourceAttributes, writer);
-            WriteSection(SectionTag.DocumentAttributesTag, requestMessage.DocumentAttributes, writer);
-            WriteSection(SectionTag.SystemAttributesTag, requestMessage.SystemAttributes, writer);
+            var encoding = Encoding.ASCII;
+            try
+            {
+                var charset = requestMessage.OperationAttributes
+                    .FirstOrDefault(x => x.Tag == Tag.Charset && x.Name == JobAttribute.AttributesCharset)
+                    ?.Value as string;
+                if (charset is null)
+                    encoding = Encoding.GetEncoding(charset);
+            }
+            catch (ArgumentException)
+            {
+                //ignore invalid charset, keep previous one
+            }
+            WriteSection(SectionTag.OperationAttributesTag, requestMessage.OperationAttributes, writer, encoding);
+            WriteSection(SectionTag.JobAttributesTag, requestMessage.JobAttributes, writer, encoding);
+            WriteSection(SectionTag.PrinterAttributesTag, requestMessage.PrinterAttributes, writer, encoding);
+            WriteSection(SectionTag.UnsupportedAttributesTag, requestMessage.UnsupportedAttributes, writer, encoding);
+            WriteSection(SectionTag.SubscriptionAttributesTag, requestMessage.SubscriptionAttributes, writer, encoding);
+            WriteSection(SectionTag.EventNotificationAttributesTag, requestMessage.EventNotificationAttributes, writer, encoding);
+            WriteSection(SectionTag.ResourceAttributesTag, requestMessage.ResourceAttributes, writer, encoding);
+            WriteSection(SectionTag.DocumentAttributesTag, requestMessage.DocumentAttributes, writer, encoding);
+            WriteSection(SectionTag.SystemAttributesTag, requestMessage.SystemAttributes, writer, encoding);
             //end-of-attributes-tag https://tools.ietf.org/html/rfc8010#section-3.5.1
             writer.Write((byte)SectionTag.EndOfAttributesTag);
         }
 
-        private void WriteSections( IIppResponseMessage responseMessage, BinaryWriter writer )
+        private void WriteSections( IIppResponseMessage responseMessage, BinaryWriter writer, Encoding encoding )
         {
             foreach (var section in responseMessage.Sections)
-                WriteSection( section.Tag, section.Attributes, writer );
+                WriteSection( section.Tag, section.Attributes, writer, encoding );
             //end-of-attributes-tag https://tools.ietf.org/html/rfc8010#section-3.5.1
             writer.Write( (byte)SectionTag.EndOfAttributesTag );
         }
 
-        public void WriteSection( SectionTag sectionTag, List<IppAttribute> attributes, BinaryWriter writer )
+        public void WriteSection( SectionTag sectionTag, List<IppAttribute> attributes, BinaryWriter writer, Encoding encoding )
         {
             if (attributes is null)
                 throw new ArgumentNullException( nameof( attributes ) );
@@ -433,7 +493,7 @@ namespace SharpIpp.Protocol
             //operation-attributes-tag https://tools.ietf.org/html/rfc8010#section-3.5.1
             writer.Write( (byte)sectionTag );
             for (var i = 0; i < attributes.Count; i++)
-                WriteAttribute( writer, attributes[ i ], i > 0 ? attributes[ i - 1 ] : null );
+                WriteAttribute( writer, attributes[ i ], i > 0 ? attributes[ i - 1 ] : null, encoding );
         }
     }
 }

@@ -172,30 +172,30 @@ namespace SharpIpp.Protocol
             return new Resolution(width, height, (ResolutionUnit)units);
         }
 
-        public void Write(string value, BinaryWriter stream)
+        public void Write(string value, BinaryWriter stream, Encoding? encoding)
         {
             stream.WriteBigEndian((short)value.Length);
-            stream.Write(Encoding.ASCII.GetBytes(value));
+            stream.Write((encoding ?? Encoding.ASCII).GetBytes(value));
         }
 
-        private string ReadString(BinaryReader stream)
+        private string ReadString(BinaryReader stream, Encoding? encoding = null)
         {
             var len = stream.ReadInt16BigEndian();
-            return Encoding.ASCII.GetString(stream.ReadBytes(len));
+            return (encoding ?? Encoding.ASCII).GetString(stream.ReadBytes(len));
         }
 
-        private void Write(StringWithLanguage value, BinaryWriter stream)
+        private void Write(StringWithLanguage value, BinaryWriter stream, Encoding? encoding)
         {
             stream.WriteBigEndian((short)(value.Language.Length + value.Value.Length));
-            Write(value.Language, stream);
-            Write(value.Value, stream);
+            Write(value.Language, stream, null);
+            Write(value.Value, stream, encoding);
         }
 
-        private StringWithLanguage ReadStringWithLanguage(BinaryReader stream)
+        private StringWithLanguage ReadStringWithLanguage(BinaryReader stream, Encoding? encoding = null)
         {
             var _ = stream.ReadInt16BigEndian();
             var language = ReadString(stream);
-            var value = ReadString(stream);
+            var value = ReadString(stream, encoding);
             return new StringWithLanguage(language, value);
         }
     }
