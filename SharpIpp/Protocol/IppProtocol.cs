@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -80,6 +80,7 @@ namespace SharpIpp.Protocol
             IppAttribute? prevBegCollectionAttribute = new();
             List<IppAttribute>? attributes = null;
             Encoding encoding = Encoding.ASCII;
+            IppSection? currentSection = null; // 跟踪当前的 section
             do
             {
                 var data = reader.ReadByte();
@@ -99,9 +100,9 @@ namespace SharpIpp.Protocol
                     case SectionTag.ResourceAttributesTag:
                     case SectionTag.DocumentAttributesTag:
                     case SectionTag.SystemAttributesTag:
-                        var section = new IppSection { Tag = sectionTag };
-                        res.Sections.Add(section);
-                        attributes = section.Attributes;
+                        currentSection = new IppSection { Tag = sectionTag };
+                        res.Sections.Add(currentSection);
+                        attributes = currentSection.Attributes;
                         break;
                     default:
                         if (attributes is null)
@@ -109,7 +110,8 @@ namespace SharpIpp.Protocol
                         var attribute = ReadAttribute((Tag)data, reader, prevAttribute, prevBegCollectionAttribute, encoding);
                         switch(attribute.Tag)
                         {
-                            case Tag.Charset when sectionTag == SectionTag.OperationAttributesTag && attribute.Name == JobAttribute.AttributesCharset && attribute.Value is string charsetName:
+                            // 修复：通过检查 currentSection.Tag 来判断当前是否在 OperationAttributesTag 中
+                            case Tag.Charset when currentSection != null && currentSection.Tag == SectionTag.OperationAttributesTag && attribute.Name == JobAttribute.AttributesCharset && attribute.Value is string charsetName:
                                 try
                                 {
                                     encoding = Encoding.GetEncoding(charsetName);
@@ -183,7 +185,8 @@ namespace SharpIpp.Protocol
                         var attribute = ReadAttribute((Tag)data, reader, prevAttribute, prevBegCollectionAttribute, encoding);
                         switch (attribute.Tag)
                         {
-                            case Tag.Charset when sectionTag == SectionTag.OperationAttributesTag && attribute.Name == JobAttribute.AttributesCharset && attribute.Value is string charsetName:
+                            // 修复：通过检查 attributes 是否指向 OperationAttributes 来判断当前是否在 OperationAttributesTag 中
+                            case Tag.Charset when attributes == res.OperationAttributes && attribute.Name == JobAttribute.AttributesCharset && attribute.Value is string charsetName:
                                 try
                                 {
                                     encoding = Encoding.GetEncoding(charsetName);
