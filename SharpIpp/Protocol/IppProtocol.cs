@@ -48,7 +48,7 @@ namespace SharpIpp.Protocol
         public async Task<IIppRequestMessage> ReadIppRequestAsync( Stream stream, CancellationToken cancellationToken = default )
         {
             if (stream is null)
-                new ArgumentException( nameof( stream ) );
+                throw new ArgumentNullException( nameof( stream ) );
             using var reader = new BinaryReader( stream, Encoding.ASCII, true );
             return await ReadIppRequestAsync( reader, cancellationToken );
         }
@@ -56,7 +56,7 @@ namespace SharpIpp.Protocol
         public Task<IIppResponseMessage> ReadIppResponseAsync(Stream stream, CancellationToken cancellationToken = default)
         {
             if (stream is null)
-                new ArgumentException( nameof( stream ) );
+                throw new ArgumentNullException( nameof( stream ) );
             var res = new IppResponseMessage();
             try
             {
@@ -457,7 +457,7 @@ namespace SharpIpp.Protocol
                 var charset = requestMessage.OperationAttributes
                     .FirstOrDefault(x => x.Tag == Tag.Charset && x.Name == JobAttribute.AttributesCharset)
                     ?.Value as string;
-                if (charset is null)
+                if (charset is not null)
                     encoding = Encoding.GetEncoding(charset);
             }
             catch (ArgumentException)
