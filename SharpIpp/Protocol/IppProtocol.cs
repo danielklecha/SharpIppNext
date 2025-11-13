@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -48,7 +48,7 @@ namespace SharpIpp.Protocol
         public async Task<IIppRequestMessage> ReadIppRequestAsync( Stream stream, CancellationToken cancellationToken = default )
         {
             if (stream is null)
-                new ArgumentException( nameof( stream ) );
+                throw new ArgumentNullException( nameof( stream ) );
             using var reader = new BinaryReader( stream, Encoding.ASCII, true );
             return await ReadIppRequestAsync( reader, cancellationToken );
         }
@@ -56,7 +56,7 @@ namespace SharpIpp.Protocol
         public Task<IIppResponseMessage> ReadIppResponseAsync(Stream stream, CancellationToken cancellationToken = default)
         {
             if (stream is null)
-                new ArgumentException( nameof( stream ) );
+                throw new ArgumentNullException( nameof( stream ) );
             var res = new IppResponseMessage();
             try
             {
@@ -78,8 +78,8 @@ namespace SharpIpp.Protocol
             IppAttribute? prevAttribute = null;
             Stack<IppAttribute> prevBegCollectionAttributes = new();
             IppAttribute? prevBegCollectionAttribute = new();
-            List<IppAttribute>? attributes = null;
             Encoding encoding = Encoding.ASCII;
+            IppSection? currentSection = null;
             do
             {
                 var data = reader.ReadByte();
@@ -99,17 +99,16 @@ namespace SharpIpp.Protocol
                     case SectionTag.ResourceAttributesTag:
                     case SectionTag.DocumentAttributesTag:
                     case SectionTag.SystemAttributesTag:
-                        var section = new IppSection { Tag = sectionTag };
-                        res.Sections.Add(section);
-                        attributes = section.Attributes;
+                        currentSection = new IppSection { Tag = sectionTag };
+                        res.Sections.Add(currentSection);
                         break;
                     default:
-                        if (attributes is null)
+                        if (currentSection is null)
                             throw new ArgumentException( $"Section start tag not found in stream. Expected < 0x06. Actual: {data}" );
                         var attribute = ReadAttribute((Tag)data, reader, prevAttribute, prevBegCollectionAttribute, encoding);
                         switch(attribute.Tag)
                         {
-                            case Tag.Charset when sectionTag == SectionTag.OperationAttributesTag && attribute.Name == JobAttribute.AttributesCharset && attribute.Value is string charsetName:
+                            case Tag.Charset when currentSection.Tag == SectionTag.OperationAttributesTag && attribute.Name == JobAttribute.AttributesCharset && attribute.Value is string charsetName:
                                 try
                                 {
                                     encoding = Encoding.GetEncoding(charsetName);
@@ -127,7 +126,7 @@ namespace SharpIpp.Protocol
                                 break;
                         }
                         prevAttribute = attribute;
-                        attributes.Add(attribute);
+                        currentSection.Attributes.Add(attribute);
                         break;
                 }
             }
@@ -183,7 +182,7 @@ namespace SharpIpp.Protocol
                         var attribute = ReadAttribute((Tag)data, reader, prevAttribute, prevBegCollectionAttribute, encoding);
                         switch (attribute.Tag)
                         {
-                            case Tag.Charset when sectionTag == SectionTag.OperationAttributesTag && attribute.Name == JobAttribute.AttributesCharset && attribute.Value is string charsetName:
+                            case Tag.Charset when attributes == res.OperationAttributes && attribute.Name == JobAttribute.AttributesCharset && attribute.Value is string charsetName:
                                 try
                                 {
                                     encoding = Encoding.GetEncoding(charsetName);
@@ -454,7 +453,7 @@ namespace SharpIpp.Protocol
                 var charset = requestMessage.OperationAttributes
                     .FirstOrDefault(x => x.Tag == Tag.Charset && x.Name == JobAttribute.AttributesCharset)
                     ?.Value as string;
-                if (charset is null)
+                if (charset is not null)
                     encoding = Encoding.GetEncoding(charset);
             }
             catch (ArgumentException)
