@@ -78,9 +78,8 @@ namespace SharpIpp.Protocol
             IppAttribute? prevAttribute = null;
             Stack<IppAttribute> prevBegCollectionAttributes = new();
             IppAttribute? prevBegCollectionAttribute = new();
-            List<IppAttribute>? attributes = null;
             Encoding encoding = Encoding.ASCII;
-            IppSection? currentSection = null; // 跟踪当前的 section
+            IppSection? currentSection = null;
             do
             {
                 var data = reader.ReadByte();
@@ -102,16 +101,14 @@ namespace SharpIpp.Protocol
                     case SectionTag.SystemAttributesTag:
                         currentSection = new IppSection { Tag = sectionTag };
                         res.Sections.Add(currentSection);
-                        attributes = currentSection.Attributes;
                         break;
                     default:
-                        if (attributes is null)
+                        if (currentSection is null)
                             throw new ArgumentException( $"Section start tag not found in stream. Expected < 0x06. Actual: {data}" );
                         var attribute = ReadAttribute((Tag)data, reader, prevAttribute, prevBegCollectionAttribute, encoding);
                         switch(attribute.Tag)
                         {
-                            // 修复：通过检查 currentSection.Tag 来判断当前是否在 OperationAttributesTag 中
-                            case Tag.Charset when currentSection != null && currentSection.Tag == SectionTag.OperationAttributesTag && attribute.Name == JobAttribute.AttributesCharset && attribute.Value is string charsetName:
+                            case Tag.Charset when currentSection.Tag == SectionTag.OperationAttributesTag && attribute.Name == JobAttribute.AttributesCharset && attribute.Value is string charsetName:
                                 try
                                 {
                                     encoding = Encoding.GetEncoding(charsetName);
@@ -129,7 +126,7 @@ namespace SharpIpp.Protocol
                                 break;
                         }
                         prevAttribute = attribute;
-                        attributes.Add(attribute);
+                        currentSection.Attributes.Add(attribute);
                         break;
                 }
             }
@@ -185,7 +182,6 @@ namespace SharpIpp.Protocol
                         var attribute = ReadAttribute((Tag)data, reader, prevAttribute, prevBegCollectionAttribute, encoding);
                         switch (attribute.Tag)
                         {
-                            // 修复：通过检查 attributes 是否指向 OperationAttributes 来判断当前是否在 OperationAttributesTag 中
                             case Tag.Charset when attributes == res.OperationAttributes && attribute.Name == JobAttribute.AttributesCharset && attribute.Value is string charsetName:
                                 try
                                 {
