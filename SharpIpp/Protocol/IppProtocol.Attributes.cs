@@ -174,8 +174,9 @@ namespace SharpIpp.Protocol
 
         public void Write(string value, BinaryWriter stream, Encoding? encoding)
         {
-            stream.WriteBigEndian((short)value.Length);
-            stream.Write((encoding ?? Encoding.ASCII).GetBytes(value));
+            var bytes = (encoding ?? Encoding.ASCII).GetBytes(value);
+            stream.WriteBigEndian((short)bytes.Length);
+            stream.Write(bytes);
         }
 
         private string ReadString(BinaryReader stream, Encoding? encoding = null)
