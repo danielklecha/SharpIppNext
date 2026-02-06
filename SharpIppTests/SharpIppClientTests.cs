@@ -910,7 +910,7 @@ public class SharpIppClientTests
         using SharpIppClient client = new();
         var message = new Mock<IIppResponseMessage>();
         //Act
-        Func<IppResponseMessage> act = () => client.Construct<IppResponseMessage>( message.Object );
+        Func<IppResponseMessage> act = () => client.CreateResponse<IppResponseMessage>( message.Object );
         // Assert
         act.Should().Throw<IppResponseException>();
     }
@@ -976,7 +976,7 @@ public class SharpIppClientTests
         await using var stream = new FileStream(path, FileMode.Open, FileAccess.Read);
         var ippResponse = await protocol.ReadIppResponseAsync(stream);
         using SharpIppClient client = new(new HttpClient(), protocol);
-        var mapped = client.Construct<GetPrinterAttributesResponse>(ippResponse);
+        var mapped = client.CreateResponse<GetPrinterAttributesResponse>(ippResponse);
         Assert.IsNotNull(mapped);
     }
 
@@ -988,7 +988,7 @@ public class SharpIppClientTests
         await using var stream = new FileStream(path, FileMode.Open, FileAccess.Read);
         var ippResponse = await protocol.ReadIppResponseAsync(stream);
         using SharpIppClient client = new(new HttpClient(), protocol);
-        var mapped = client.Construct<PrintJobResponse>(ippResponse);
+        var mapped = client.CreateResponse<PrintJobResponse>(ippResponse);
         Assert.IsNotNull(mapped);
     }
 
@@ -1000,7 +1000,7 @@ public class SharpIppClientTests
         await using var stream = new FileStream(path, FileMode.Open, FileAccess.Read);
         var ippResponse = await protocol.ReadIppResponseAsync(stream);
         using SharpIppClient client = new(new HttpClient(), protocol);
-        var mapped = client.Construct<GetJobAttributesResponse>(ippResponse);
+        var mapped = client.CreateResponse<GetJobAttributesResponse>(ippResponse);
         Assert.IsNotNull(mapped);
     }
 }

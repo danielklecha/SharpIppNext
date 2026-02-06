@@ -10,97 +10,97 @@ namespace SharpIpp
         /// <inheritdoc />
         public Task<CancelJobResponse> CancelJobAsync(CancelJobRequest request, CancellationToken cancellationToken = default)
         {
-            return SendAsync(request, ConstructIppRequest, Construct<CancelJobResponse>, cancellationToken);
+            return SendAsync<CancelJobRequest, CancelJobResponse>(request, cancellationToken);
         }
 
         /// <inheritdoc />
         public Task<CreateJobResponse> CreateJobAsync(CreateJobRequest request, CancellationToken cancellationToken = default)
         {
-            return SendAsync(request, ConstructIppRequest, Construct<CreateJobResponse>, cancellationToken);
+            return SendAsync<CreateJobRequest, CreateJobResponse>(request, cancellationToken);
         }
 
         /// <inheritdoc />
         public Task<GetJobAttributesResponse> GetJobAttributesAsync(GetJobAttributesRequest request, CancellationToken cancellationToken = default)
         {
-            return SendAsync(request, ConstructIppRequest, Construct<GetJobAttributesResponse>, cancellationToken);
+            return SendAsync<GetJobAttributesRequest, GetJobAttributesResponse>(request, cancellationToken);
         }
 
         /// <inheritdoc />
         public Task<GetJobsResponse> GetJobsAsync(GetJobsRequest request, CancellationToken cancellationToken = default)
         {
-            return SendAsync(request, ConstructIppRequest, Construct<GetJobsResponse>, cancellationToken);
+            return SendAsync<GetJobsRequest, GetJobsResponse>(request, cancellationToken);
         }
 
         /// <inheritdoc />
         public Task<GetPrinterAttributesResponse> GetPrinterAttributesAsync(GetPrinterAttributesRequest request, CancellationToken cancellationToken = default)
         {
-            return SendAsync(request, ConstructIppRequest, Construct<GetPrinterAttributesResponse>, cancellationToken);
+            return SendAsync<GetPrinterAttributesRequest, GetPrinterAttributesResponse>(request, cancellationToken);
         }
 
         /// <inheritdoc />
         public Task<HoldJobResponse> HoldJobAsync(HoldJobRequest request, CancellationToken cancellationToken = default)
         {
-            return SendAsync(request, ConstructIppRequest, Construct<HoldJobResponse>, cancellationToken);
+            return SendAsync<HoldJobRequest, HoldJobResponse>(request, cancellationToken);
         }
 
         /// <inheritdoc />
         public Task<PausePrinterResponse> PausePrinterAsync(PausePrinterRequest request, CancellationToken cancellationToken = default)
         {
-            return SendAsync(request, ConstructIppRequest, Construct<PausePrinterResponse>, cancellationToken);
+            return SendAsync<PausePrinterRequest, PausePrinterResponse>(request, cancellationToken);
         }
 
         /// <inheritdoc />
         public Task<PrintJobResponse> PrintJobAsync(PrintJobRequest request, CancellationToken cancellationToken = default)
         {
-            return SendAsync(request, ConstructIppRequest, Construct<PrintJobResponse>, cancellationToken);
+            return SendAsync<PrintJobRequest, PrintJobResponse>(request, cancellationToken);
         }
 
         /// <inheritdoc />
         public Task<PrintUriResponse> PrintUriAsync(PrintUriRequest request, CancellationToken cancellationToken = default)
         {
-            return SendAsync(request, ConstructIppRequest, Construct<PrintUriResponse>, cancellationToken);
+            return SendAsync<PrintUriRequest, PrintUriResponse>(request, cancellationToken);
         }
 
         /// <inheritdoc />
         public Task<PurgeJobsResponse> PurgeJobsAsync(PurgeJobsRequest request, CancellationToken cancellationToken = default)
         {
-            return SendAsync(request, ConstructIppRequest, Construct<PurgeJobsResponse>, cancellationToken);
+            return SendAsync<PurgeJobsRequest, PurgeJobsResponse>(request, cancellationToken);
         }
 
         /// <inheritdoc />
         public Task<ReleaseJobResponse> ReleaseJobAsync(ReleaseJobRequest request, CancellationToken cancellationToken = default)
         {
-            return SendAsync(request, ConstructIppRequest, Construct<ReleaseJobResponse>, cancellationToken);
+            return SendAsync<ReleaseJobRequest, ReleaseJobResponse>(request, cancellationToken);
         }
 
         /// <inheritdoc />
         public Task<RestartJobResponse> RestartJobAsync(RestartJobRequest request, CancellationToken cancellationToken = default)
         {
-            return SendAsync(request, ConstructIppRequest, Construct<RestartJobResponse>, cancellationToken);
+            return SendAsync<RestartJobRequest, RestartJobResponse>(request, cancellationToken);
         }
 
         /// <inheritdoc />
         public Task<ResumePrinterResponse> ResumePrinterAsync(ResumePrinterRequest request, CancellationToken cancellationToken = default)
         {
-            return SendAsync(request, ConstructIppRequest, Construct<ResumePrinterResponse>, cancellationToken);
+            return SendAsync<ResumePrinterRequest, ResumePrinterResponse>(request, cancellationToken);
         }
 
         /// <inheritdoc />
         public Task<SendDocumentResponse> SendDocumentAsync(SendDocumentRequest request, CancellationToken cancellationToken = default)
         {
-            return SendAsync(request, ConstructIppRequest, Construct<SendDocumentResponse>, cancellationToken);
+            return SendAsync<SendDocumentRequest, SendDocumentResponse>(request, cancellationToken);
         }
 
         /// <inheritdoc />
         public Task<SendUriResponse> SendUriAsync(SendUriRequest request, CancellationToken cancellationToken = default)
         {
-            return SendAsync(request, ConstructIppRequest, Construct<SendUriResponse>, cancellationToken);
+            return SendAsync<SendUriRequest, SendUriResponse>(request, cancellationToken);
         }
 
         /// <inheritdoc />
         public Task<ValidateJobResponse> ValidateJobAsync(ValidateJobRequest request, CancellationToken cancellationToken = default)
         {
-            return SendAsync(request, ConstructIppRequest, Construct<ValidateJobResponse>, cancellationToken);
+            return SendAsync<ValidateJobRequest, ValidateJobResponse>(request, cancellationToken);
         }
     }
 }

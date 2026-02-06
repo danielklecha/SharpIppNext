@@ -14,6 +14,10 @@ namespace SharpIpp
         /// </summary>
         Task<IIppResponseMessage> SendAsync(Uri printerUri, IIppRequestMessage request, CancellationToken cancellationToken = default);
 
+        IIppRequestMessage CreateRawRequest<T>(T ippRequestMessage) where T : IIppRequest;
+
+        T CreateResponse<T>(IIppResponseMessage ippResponse) where T : IIppResponseMessage;
+
         #region V11
 
         /// <summary>
@@ -249,7 +253,7 @@ namespace SharpIpp
         ///     may include printers that are not served directly by the server.
         /// </summary>
         Task<CUPSGetPrintersResponse> GetCUPSPrintersAsync(CUPSGetPrintersRequest request, CancellationToken cancellationToken = default);
-
+        
         #endregion
     }
 }

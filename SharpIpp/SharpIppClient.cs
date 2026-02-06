@@ -134,32 +134,27 @@ public partial class SharpIppClient : ISharpIppClient
 
     protected async Task<TOut> SendAsync<TIn, TOut>(
         TIn data,
-        Func<TIn, IIppRequestMessage> constructRequestFunc,
-        Func<IIppResponseMessage, TOut> constructResponseFunc,
         CancellationToken cancellationToken)
         where TIn : IIppRequest
         where TOut : IIppResponseMessage
     {
-        var ippRequest = constructRequestFunc(data);
+        var ippRequest = CreateRawRequest(data);
         if (data.OperationAttributes == null || data.OperationAttributes.PrinterUri == null)
             throw new Exception("PrinterUri is not set");
         var ippResponse = await SendAsync(data.OperationAttributes.PrinterUri, ippRequest, cancellationToken).ConfigureAwait(false);
-        var res = constructResponseFunc(ippResponse);
+        var res = CreateResponse<TOut>(ippResponse);
         return res;
     }
 
-    private IppRequestMessage ConstructIppRequest<T>(T request)
+    public IIppRequestMessage CreateRawRequest<T>(T ippRequestMessage) where T : IIppRequest
     {
-        if (request == null)
-        {
-            throw new ArgumentException($"{nameof(request)}");
-        }
-
-        var ippRequest = Mapper.Map<T, IppRequestMessage>(request);
+        if (ippRequestMessage is null)
+            throw new ArgumentNullException(nameof(ippRequestMessage));
+        var ippRequest = Mapper.Map<T, IppRequestMessage>(ippRequestMessage);
         return ippRequest;
     }
 
-    public virtual T Construct<T>(IIppResponseMessage ippResponse) where T : IIppResponseMessage
+    public virtual T CreateResponse<T>(IIppResponseMessage ippResponse) where T : IIppResponseMessage
     {
         try
         {

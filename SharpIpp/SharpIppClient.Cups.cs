@@ -9,6 +9,6 @@ namespace SharpIpp
     {
         /// <inheritdoc />
         public Task<CUPSGetPrintersResponse> GetCUPSPrintersAsync(CUPSGetPrintersRequest request, CancellationToken cancellationToken = default) => 
-            SendAsync(request, ConstructIppRequest, Construct<CUPSGetPrintersResponse>, cancellationToken);
+            SendAsync<CUPSGetPrintersRequest, CUPSGetPrintersResponse>(request, cancellationToken);
     }
 }
