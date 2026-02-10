@@ -1,14 +1,19 @@
 ﻿#nullable disable
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SharpIpp.Mapping
 {
     public class SimpleMapper : IMapper
     {
-        private readonly Dictionary<(Type src, Type dst), Func<object, object, SimpleMapper, object>> _dictionary =
-            new Dictionary<(Type src, Type dst), Func<object, object, SimpleMapper, object>>();
+        private readonly ConcurrentDictionary<(Type src, Type dst), Func<object, object, SimpleMapper, object>> _dictionary =
+            new ConcurrentDictionary<(Type src, Type dst), Func<object, object, SimpleMapper, object>>();
+
+        private readonly ConcurrentDictionary<(Type src, Type dst), List<((Type src, Type dst) map, MapType type)>> _pairsCache =
+            new ConcurrentDictionary<(Type src, Type dst), List<((Type src, Type dst) map, MapType type)>>();
 
         public void CreateMap<TSource, TDest>(Func<TSource, IMapperApplier, TDest> mapFunc)
         {
@@ -30,8 +35,7 @@ namespace SharpIpp.Mapping
         public void CreateMap(Type sourceType, Type destType, Func<object, object, IMapperApplier, object> mapFunc)
         {
             var key = (sourceType, destType);
-            var value = mapFunc;
-            _dictionary[key] = value;
+            _dictionary[key] = (src, dst, mapper) => mapFunc(src, dst, mapper);
         }
 
         public TDest Map<TDest>(object source)
@@ -41,6 +45,11 @@ namespace SharpIpp.Mapping
 
         public TDest Map<TDest>(object source, TDest dest)
         {
+            if (source == null)
+            {
+                return dest;
+            }
+
             return Map(source, source.GetType(), dest);
         }
 
@@ -51,6 +60,11 @@ namespace SharpIpp.Mapping
 
         public TDest Map<TSource, TDest>(TSource source, TDest dest)
         {
+            if (source == null)
+            {
+                return dest;
+            }
+
             return Map(source, typeof(TSource), dest);
         }
 
@@ -63,7 +77,9 @@ namespace SharpIpp.Mapping
                 return (TDest)source;
             }
             
-            foreach (var (map, type) in PossiblePairs(sourceType, destType))
+            var pairs = _pairsCache.GetOrAdd((sourceType, destType), key => PossiblePairs(key.src, key.dst).ToList());
+
+            foreach (var (map, type) in pairs)
             {
                 switch (type)
                 {
@@ -78,7 +94,7 @@ namespace SharpIpp.Mapping
                 }
             }
 
-            throw new ArgumentException($"No mapping found for types {sourceType} -> {destType}. Source: {source}");
+            throw new ArgumentException($"No mapping found for types {sourceType.FullName} -> {destType.FullName}. Source: {source}");
         }
 
         private IEnumerable<((Type src, Type dst) map, MapType type)> PossiblePairs(Type sourceType, Type destType)
