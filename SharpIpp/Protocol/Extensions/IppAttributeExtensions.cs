@@ -1,12 +1,9 @@
 ﻿using SharpIpp.Protocol.Models;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace SharpIpp.Protocol.Extensions;
-internal static class IppAttributeExtensions
+public static class IppAttributeExtensions
 {
     public static Dictionary<string, IppAttribute[]> ToIppDictionary(this IEnumerable<IppAttribute> attributes)
     {
@@ -88,7 +85,9 @@ internal static class IppAttributeExtensions
                 case Tag.BegCollection:
                     if (level > 0)
                     {
-                        yield return new IppAttribute(attribute.Tag, attribute.Name, attribute.Value);
+                        var name = memberName ?? attribute.Name;
+                        yield return new IppAttribute(attribute.Tag, name, attribute.Value);
+                        memberName = null;
                     }
                     level++;
                     break;
