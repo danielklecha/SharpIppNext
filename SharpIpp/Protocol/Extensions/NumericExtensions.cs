@@ -2,14 +2,17 @@
 
 namespace SharpIpp.Protocol.Extensions
 {
-    internal static class Bytes
+    /// <summary>
+    /// Extension methods for numeric types.
+    /// </summary>
+    public static class NumericExtensions
     {
         /// <summary>
         ///     Flip the bytes in an UInt16.
         /// </summary>
         /// <param name="value">The value to flip.</param>
         /// <returns>An UInt16 with flipped bytes.</returns>
-        public static ushort Reverse(ushort value)
+        public static ushort ReverseBytes(this ushort value)
         {
             return (ushort)(((value & 0xFF00) >> 8) | ((value & 0x00FF) << 8));
         }
@@ -19,9 +22,9 @@ namespace SharpIpp.Protocol.Extensions
         /// </summary>
         /// <param name="value">The value to flip.</param>
         /// <returns>An Int16 with flipped bytes.</returns>
-        public static short Reverse(short value)
+        public static short ReverseBytes(this short value)
         {
-            return (short)Reverse((ushort)value);
+            return (short)ReverseBytes((ushort)value);
         }
 
         /// <summary>
@@ -29,7 +32,7 @@ namespace SharpIpp.Protocol.Extensions
         /// </summary>
         /// <param name="value">The value to reverse.</param>
         /// <returns>An UInt32 with reversed bytes.</returns>
-        public static uint Reverse(uint value)
+        public static uint ReverseBytes(this uint value)
         {
             return ((value & 0xff000000) >> 24) | ((value & 0x00ff0000) >> 8) | ((value & 0x0000ff00) << 8) |
                    ((value & 0x000000ff) << 24);
@@ -40,9 +43,9 @@ namespace SharpIpp.Protocol.Extensions
         /// </summary>
         /// <param name="value">The value to reverse.</param>
         /// <returns>An Int32 with reversed bytes.</returns>
-        public static int Reverse(int value)
+        public static int ReverseBytes(this int value)
         {
-            return (int)Reverse((uint)value);
+            return (int)ReverseBytes((uint)value);
         }
 
         /// <summary>
@@ -50,7 +53,7 @@ namespace SharpIpp.Protocol.Extensions
         /// </summary>
         /// <param name="value">The value to reverse.</param>
         /// <returns>An UInt64 with reversed bytes.</returns>
-        public static ulong Reverse(ulong value)
+        public static ulong ReverseBytes(this ulong value)
         {
             return ((value & 0xFF00000000000000) >> 56) | ((value & 0x00FF000000000000) >> 40) |
                    ((value & 0x0000FF0000000000) >> 24) | ((value & 0x000000FF00000000) >> 8) |
@@ -63,9 +66,9 @@ namespace SharpIpp.Protocol.Extensions
         /// </summary>
         /// <param name="value">The value to reverse.</param>
         /// <returns>An Int64 with reversed bytes.</returns>
-        public static long Reverse(long value)
+        public static long ReverseBytes(this long value)
         {
-            return (long)Reverse((ulong)value);
+            return (long)ReverseBytes((ulong)value);
         }
 
         /// <summary>
@@ -73,7 +76,7 @@ namespace SharpIpp.Protocol.Extensions
         /// </summary>
         /// <param name="value">The value to reverse.</param>
         /// <returns>A Single with reversed bytes.</returns>
-        public static float Reverse(float value)
+        public static float ReverseBytes(this float value)
         {
             var bytes = BitConverter.GetBytes(value);
             Array.Reverse(bytes);
@@ -85,7 +88,7 @@ namespace SharpIpp.Protocol.Extensions
         /// </summary>
         /// <param name="value">The value to reverse.</param>
         /// <returns>A Double with reversed bytes.</returns>
-        public static double Reverse(double value)
+        public static double ReverseBytes(this double value)
         {
             var bytes = BitConverter.GetBytes(value);
             Array.Reverse(bytes);

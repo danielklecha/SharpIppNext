@@ -22,20 +22,17 @@ public class MediaSourceProperties
     public IEnumerable<IppAttribute> GetIppAttributes(IMapperApplier mapper)
     {
         if (MediaSourceFeedDirection.HasValue)
-            yield return new IppAttribute(Tag.Keyword, nameof(MediaSourceFeedDirection).ConvertCamelCaseToDash(), mapper.Map<string>(MediaSourceFeedDirection.Value));
+            yield return new IppAttribute(Tag.Keyword, nameof(MediaSourceFeedDirection).ConvertCamelCaseToKebabCase(), mapper.Map<string>(MediaSourceFeedDirection.Value));
         if (MediaSourceFeedOrientation.HasValue)
-            yield return new IppAttribute(Tag.Enum, nameof(MediaSourceFeedOrientation).ConvertCamelCaseToDash(), mapper.Map<string>(MediaSourceFeedOrientation.Value));
+            yield return new IppAttribute(Tag.Enum, nameof(MediaSourceFeedOrientation).ConvertCamelCaseToKebabCase(), mapper.Map<string>(MediaSourceFeedOrientation.Value));
     }
 
-    public static MediaSourceProperties Create(IMapperApplier mapper, IppAttribute[] attributes)
+    public static MediaSourceProperties Create(IMapperApplier mapper, Dictionary<string, IppAttribute[]> dict)
     {
-        if (attributes.Length < 3)
-            return new MediaSourceProperties();
-        var dict = attributes.Skip(1).Take(attributes.Length - 2).ToIppDictionary();
         return new MediaSourceProperties
         {
-            MediaSourceFeedDirection = mapper.MapFromDic<MediaSourceFeedDirection?>(dict, nameof(MediaSourceFeedDirection).ConvertCamelCaseToDash()),
-            MediaSourceFeedOrientation = mapper.MapFromDic<Orientation?>(dict, nameof(MediaSourceFeedOrientation).ConvertCamelCaseToDash())
+            MediaSourceFeedDirection = mapper.MapFromDic<MediaSourceFeedDirection?>(dict, nameof(MediaSourceFeedDirection).ConvertCamelCaseToKebabCase()),
+            MediaSourceFeedOrientation = mapper.MapFromDic<Orientation?>(dict, nameof(MediaSourceFeedOrientation).ConvertCamelCaseToKebabCase())
         };
     }
 }

@@ -22,17 +22,17 @@ public class MediaSize
     public IEnumerable<IppAttribute> GetIppAttributes(IMapperApplier mapper)
     {
         if (XDimension.HasValue)
-            yield return new IppAttribute(Tag.Integer, nameof(XDimension).ConvertCamelCaseToDash(), XDimension.Value);
+            yield return new IppAttribute(Tag.Integer, nameof(XDimension).ConvertCamelCaseToKebabCase(), XDimension.Value);
         if (YDimension.HasValue)
-            yield return new IppAttribute(Tag.Integer, nameof(YDimension).ConvertCamelCaseToDash(), YDimension.Value);
+            yield return new IppAttribute(Tag.Integer, nameof(YDimension).ConvertCamelCaseToKebabCase(), YDimension.Value);
     }
 
     public static MediaSize Create(Dictionary<string, IppAttribute[]> dict, IMapperApplier mapper)
     {
         return new MediaSize
         {
-            XDimension = mapper.MapFromDic<int?>(dict, nameof(XDimension).ConvertCamelCaseToDash()),
-            YDimension = mapper.MapFromDic<int?>(dict, nameof(YDimension).ConvertCamelCaseToDash())
+            XDimension = mapper.MapFromDic<int?>(dict, nameof(XDimension).ConvertCamelCaseToKebabCase()),
+            YDimension = mapper.MapFromDic<int?>(dict, nameof(YDimension).ConvertCamelCaseToKebabCase())
         };
     }
 }
