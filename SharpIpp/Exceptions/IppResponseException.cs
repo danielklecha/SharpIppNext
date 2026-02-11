@@ -13,14 +13,6 @@ namespace SharpIpp.Exceptions
             ResponseMessage = responseMessage;
         }
 
-        protected IppResponseException(
-            SerializationInfo info,
-            StreamingContext context,
-            IIppResponseMessage responseMessage) : base(info, context)
-        {
-            ResponseMessage = responseMessage;
-        }
-
         public IppResponseException(string message, IIppResponseMessage responseMessage) : base(message)
         {
             ResponseMessage = responseMessage;

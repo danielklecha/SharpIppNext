@@ -15,14 +15,6 @@ namespace SharpIpp.Exceptions
             RequestMessage = requestMessage;
         }
 
-        protected IppRequestException(
-            SerializationInfo info,
-            StreamingContext context,
-            IIppRequestMessage requestMessage ) : base( info, context )
-        {
-            RequestMessage = requestMessage;
-        }
-
         public IppRequestException( string message, IIppRequestMessage requestMessage, IppStatusCode statusCode ) : base( message )
         {
             RequestMessage = requestMessage;
