@@ -97,7 +97,7 @@ namespace SharpIpp.Mapping
             throw new ArgumentException($"No mapping found for types {sourceType.FullName} -> {destType.FullName}. Source: {source}");
         }
 
-        private IEnumerable<((Type src, Type dst) map, MapType type)> PossiblePairs(Type sourceType, Type destType)
+        private static IEnumerable<((Type src, Type dst) map, MapType type)> PossiblePairs(Type sourceType, Type destType)
         {
             var underlying = Nullable.GetUnderlyingType(destType);
 

@@ -3,6 +3,7 @@
     /// <summary>
     ///     https://tools.ietf.org/html/rfc8010#section-3.5.2
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1720:Identifier contains type name", Justification = "<Pending>")]
     public enum Tag : byte
     {
         /// <summary>

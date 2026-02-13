@@ -63,7 +63,7 @@ namespace SharpIpp.Mapping.Profiles
             ConfigureKeyword( mapper, PrintColorMode.Unsupported );
         }
 
-        private void ConfigureKeyword<T>( IMapperConstructor map, T defaultValue ) where T : struct, Enum
+        private static void ConfigureKeyword<T>( IMapperConstructor map, T defaultValue ) where T : struct, Enum
         {
             map.CreateIppMap<string, T>( ( src, ctx ) => Enum.TryParse(src.ConvertKebabCaseToCamelCase(), false, out T value ) ? value : defaultValue );
             map.CreateIppMap<T, string>( ( src, ctx ) => src.ToString().ConvertCamelCaseToKebabCase() );

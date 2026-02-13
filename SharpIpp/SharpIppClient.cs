@@ -65,11 +65,11 @@ public partial class SharpIppClient : ISharpIppClient
 
     /// <inheritdoc />
     public async Task<IIppResponseMessage> SendAsync(
-        Uri printer,
+        Uri printerUri,
         IIppRequestMessage ippRequest,
         CancellationToken cancellationToken = default)
     {
-        var httpRequest = GetHttpRequestMessage( printer );
+        var httpRequest = GetHttpRequestMessage( printerUri );
 
         HttpResponseMessage? response;
 

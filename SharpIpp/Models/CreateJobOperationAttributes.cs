@@ -102,16 +102,16 @@ public class CreateJobOperationAttributes : OperationAttributes
 
     public static new T Create<T>(Dictionary<string, IppAttribute[]> dict, IMapperApplier mapper) where T : CreateJobOperationAttributes, new()
     {
-        var attributes = new T
-        {
-            JobName = mapper.MapFromDic<string?>(dict, JobAttribute.JobName),
-            JobMediaSheets = mapper.MapFromDic<int?>(dict, JobAttribute.JobMediaSheets),
-            IppAttributeFidelity = mapper.MapFromDic<bool?>(dict, JobAttribute.IppAttributeFidelity),
-            JobImpressions = mapper.MapFromDic<int?>(dict, JobAttribute.JobImpressions),
-            JobKOctetsProcessed = mapper.MapFromDic<int?>(dict, JobAttribute.JobKOctetsProcessed),
-            RequestingUserName = mapper.MapFromDic<string?>(dict, JobAttribute.RequestingUserName)
-        };
-        if(Uri.TryCreate(mapper.MapFromDic<string?>(dict, JobAttribute.PrinterUri), UriKind.RelativeOrAbsolute, out Uri printerUri))
+        var attributes = OperationAttributes.Create<T>(dict, mapper);
+        attributes.JobName = mapper.MapFromDic<string?>(dict, JobAttribute.JobName);
+        attributes.JobMediaSheets = mapper.MapFromDic<int?>(dict, JobAttribute.JobMediaSheets);
+        attributes.IppAttributeFidelity = mapper.MapFromDic<bool?>(dict, JobAttribute.IppAttributeFidelity);
+        attributes.JobImpressions = mapper.MapFromDic<int?>(dict, JobAttribute.JobImpressions);
+        attributes.JobKOctetsProcessed = mapper.MapFromDic<int?>(dict, JobAttribute.JobKOctetsProcessed);
+        attributes.RequestingUserName = mapper.MapFromDic<string?>(dict, JobAttribute.RequestingUserName);
+        attributes.AttributesCharset = mapper.MapFromDic<string?>(dict, JobAttribute.AttributesCharset);
+        attributes.AttributesNaturalLanguage = mapper.MapFromDic<string?>(dict, JobAttribute.AttributesNaturalLanguage);
+        if (Uri.TryCreate(mapper.MapFromDic<string?>(dict, JobAttribute.PrinterUri), UriKind.RelativeOrAbsolute, out Uri printerUri))
             attributes.PrinterUri = printerUri;
         return attributes;
     }

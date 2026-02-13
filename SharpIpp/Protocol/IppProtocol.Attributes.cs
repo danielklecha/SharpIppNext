@@ -12,12 +12,12 @@ namespace SharpIpp.Protocol
         private static readonly byte Plus = Encoding.ASCII.GetBytes("+")[0];
         private static readonly byte Minus = Encoding.ASCII.GetBytes("-")[0];
 
-        private void Write(NoValue _, BinaryWriter stream)
+        private static void Write(NoValue _, BinaryWriter stream)
         {
             stream.WriteBigEndian((short)0);
         }
 
-        private NoValue ReadNoValue(BinaryReader stream)
+        private static NoValue ReadNoValue(BinaryReader stream)
         {
             var length = stream.ReadInt16BigEndian();
 
@@ -29,13 +29,13 @@ namespace SharpIpp.Protocol
             return NoValue.Instance;
         }
 
-        private void Write(bool value, BinaryWriter stream)
+        private static void Write(bool value, BinaryWriter stream)
         {
             stream.WriteBigEndian((short)1);
             stream.Write(value ? (byte)0x01 : (byte)0x00);
         }
 
-        private bool ReadBool(BinaryReader stream)
+        private static bool ReadBool(BinaryReader stream)
         {
             var length = stream.ReadInt16BigEndian();
 
@@ -59,7 +59,7 @@ namespace SharpIpp.Protocol
             throw new ArgumentException($"boolean value {value} not supported");
         }
 
-        private void Write(DateTimeOffset value, BinaryWriter stream)
+        private static void Write(DateTimeOffset value, BinaryWriter stream)
         {
             stream.WriteBigEndian((short)11);
             stream.WriteBigEndian((short)value.Year);
@@ -74,7 +74,7 @@ namespace SharpIpp.Protocol
             stream.Write((byte)Math.Abs(value.Offset.Minutes));
         }
 
-        private DateTimeOffset ReadDateTimeOffset(BinaryReader stream)
+        private static DateTimeOffset ReadDateTimeOffset(BinaryReader stream)
         {
             var length = stream.ReadInt16BigEndian();
 
@@ -109,13 +109,13 @@ namespace SharpIpp.Protocol
             return dateTimeOffset;
         }
 
-        private void Write(int value, BinaryWriter stream)
+        private static void Write(int value, BinaryWriter stream)
         {
             stream.WriteBigEndian((short)4);
             stream.WriteBigEndian(value);
         }
 
-        private int ReadInt(BinaryReader stream)
+        private static int ReadInt(BinaryReader stream)
         {
             var length = stream.ReadInt16BigEndian();
 
@@ -128,14 +128,14 @@ namespace SharpIpp.Protocol
             return value;
         }
 
-        private void Write(Range value, BinaryWriter stream)
+        private static void Write(Range value, BinaryWriter stream)
         {
             stream.WriteBigEndian((short)8);
             stream.WriteBigEndian(value.Lower);
             stream.WriteBigEndian(value.Upper);
         }
 
-        private Range ReadRange(BinaryReader stream)
+        private static Range ReadRange(BinaryReader stream)
         {
             var length = stream.ReadInt16BigEndian();
 
@@ -149,7 +149,7 @@ namespace SharpIpp.Protocol
             return new Range(lower, upper);
         }
 
-        private void Write(Resolution value, BinaryWriter stream)
+        private static void Write(Resolution value, BinaryWriter stream)
         {
             stream.WriteBigEndian((short)9);
             stream.WriteBigEndian(value.Width);
@@ -157,7 +157,7 @@ namespace SharpIpp.Protocol
             stream.Write((byte)value.Units);
         }
 
-        private Resolution ReadResolution(BinaryReader stream)
+        private static Resolution ReadResolution(BinaryReader stream)
         {
             var length = stream.ReadInt16BigEndian();
 
@@ -172,27 +172,27 @@ namespace SharpIpp.Protocol
             return new Resolution(width, height, (ResolutionUnit)units);
         }
 
-        public void Write(string value, BinaryWriter stream, Encoding? encoding)
+        public static void Write(string value, BinaryWriter stream, Encoding? encoding)
         {
             var bytes = (encoding ?? Encoding.ASCII).GetBytes(value);
             stream.WriteBigEndian((short)bytes.Length);
             stream.Write(bytes);
         }
 
-        private string ReadString(BinaryReader stream, Encoding? encoding = null)
+        private static string ReadString(BinaryReader stream, Encoding? encoding = null)
         {
             var len = stream.ReadInt16BigEndian();
             return (encoding ?? Encoding.ASCII).GetString(stream.ReadBytes(len));
         }
 
-        private void Write(StringWithLanguage value, BinaryWriter stream, Encoding? encoding)
+        private static void Write(StringWithLanguage value, BinaryWriter stream, Encoding? encoding)
         {
             stream.WriteBigEndian((short)(value.Language.Length + value.Value.Length));
             Write(value.Language, stream, null);
             Write(value.Value, stream, encoding);
         }
 
-        private StringWithLanguage ReadStringWithLanguage(BinaryReader stream, Encoding? encoding = null)
+        private static StringWithLanguage ReadStringWithLanguage(BinaryReader stream, Encoding? encoding = null)
         {
             var _ = stream.ReadInt16BigEndian();
             var language = ReadString(stream);

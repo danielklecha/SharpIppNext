@@ -389,7 +389,7 @@ namespace SharpIpp.Protocol
             return attribute;
         }
 
-        private string GetNormalizedName(Tag tag, string name, IppAttribute? prevAttribute, IppAttribute? prevBegCollectionAttribute)
+        private static string GetNormalizedName(Tag tag, string name, IppAttribute? prevAttribute, IppAttribute? prevBegCollectionAttribute)
         {
             if (!string.IsNullOrEmpty(name))
                 return name;

@@ -6,7 +6,7 @@ namespace SharpIpp.Protocol
 {
     public interface IIppProtocol
     {
-        Task<IIppRequestMessage> ReadIppRequestAsync(Stream inputStream, CancellationToken cancellationToken = default);
+        Task<IIppRequestMessage> ReadIppRequestAsync(Stream stream, CancellationToken cancellationToken = default);
         Task<IIppResponseMessage> ReadIppResponseAsync(Stream stream, CancellationToken cancellationToken = default);
         Task WriteIppRequestAsync(IIppRequestMessage ippRequestMessage, Stream stream, CancellationToken cancellationToken = default);
         Task WriteIppResponseAsync(IIppResponseMessage message, Stream stream, CancellationToken cancellationToken = default);

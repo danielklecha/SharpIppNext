@@ -17,7 +17,7 @@ namespace SharpIpp.Protocol.Extensions
         /// <returns>The CamelCase string.</returns>
         public static string ConvertKebabCaseToCamelCase(this string input)
         {
-            return string.Join("", input.Split('-').Select(x => x.First().ToString().ToUpper() + x.Substring(1).ToLower()));
+            return string.Join("", input.Split('-').Select(x => x.First().ToString().ToUpperInvariant() + x.Substring(1).ToLowerInvariant()));
         }
 
         /// <summary>
