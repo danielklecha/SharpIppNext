@@ -263,9 +263,7 @@ public class SharpIppIntegrationTests
                 DocumentFormat = "application/pdf",
                 DocumentNaturalLanguage = "en",
                 LastDocument = true,
-                AdditionalAttributes = [new IppAttribute(Tag.Keyword, "extra-op-att", "test")],
             },
-            AdditionalJobAttributes = [new IppAttribute(Tag.Keyword, "extra-job-att", "test")],
         };
         IIppRequest? serverRequest = null;
         SendDocumentResponse? serverResponse = null;
@@ -296,9 +294,7 @@ public class SharpIppIntegrationTests
         // Act
         SendDocumentResponse? clientResponse = await client.SendDocumentAsync(clientRequest);
         // Assert
-        clientRequest.Should().BeEquivalentTo(serverRequest, options => options
-            .Excluding(req => req.OperationAttributes.AdditionalAttributes)
-            .Excluding(req => req.AdditionalJobAttributes));
+        clientRequest.Should().BeEquivalentTo(serverRequest);
         clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
     
     }
@@ -321,9 +317,7 @@ public class SharpIppIntegrationTests
                 JobId = 1,
                 JobUri = new Uri("http://127.0.0.1:631/jobs/1"),
                 Message = "message",
-                AdditionalAttributes = [new IppAttribute(Tag.Keyword, "extra-op-att", "test")],
             },
-            AdditionalJobAttributes = [new IppAttribute(Tag.Keyword, "extra-job-att", "test")],
         };
         IIppRequest? serverRequest = null;
         CancelJobResponse? serverResponse = null;
@@ -350,9 +344,7 @@ public class SharpIppIntegrationTests
         // Act
         CancelJobResponse? clientResponse = await client.CancelJobAsync(clientRequest);
         // Assert
-        clientRequest.Should().BeEquivalentTo(serverRequest, options => options
-            .Excluding(req => req.OperationAttributes.AdditionalAttributes)
-            .Excluding(req => req.AdditionalJobAttributes));
+        clientRequest.Should().BeEquivalentTo(serverRequest);
         clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
     }
 
@@ -376,7 +368,6 @@ public class SharpIppIntegrationTests
                 JobKOctetsProcessed = 10,
                 JobImpressions = 5,
                 JobMediaSheets = 2,
-                AdditionalAttributes = [new IppAttribute(Tag.Keyword, "extra-op-att", "test")],
             },
             JobTemplateAttributes = new()
             {
@@ -419,7 +410,6 @@ public class SharpIppIntegrationTests
                     MediaType = "stationery",
                     MediaWeightMetric = 80
                 },
-                AdditionalJobAttributes = [new IppAttribute(Tag.Keyword, "extra-job-att", "test")],
             }
         };
         IIppRequest? serverRequest = null;
@@ -451,9 +441,7 @@ public class SharpIppIntegrationTests
         // Act
         CreateJobResponse? clientResponse = await client.CreateJobAsync(clientRequest);
         // Assert
-        clientRequest.Should().BeEquivalentTo(serverRequest, options => options
-            .Excluding(req => req.OperationAttributes.AdditionalAttributes)
-            .Excluding(req => ((CreateJobRequest)req).JobTemplateAttributes!.AdditionalJobAttributes));
+        clientRequest.Should().BeEquivalentTo(serverRequest);
         clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
     }
 
@@ -475,7 +463,6 @@ public class SharpIppIntegrationTests
                 JobId = 1,
                 JobUri = new Uri("http://127.0.0.1:631/jobs/1"),
                 RequestedAttributes = ["job-id", "job-uri", "job-state"],
-                AdditionalAttributes = [new IppAttribute(Tag.Keyword, "extra-op-att", "test")],
             },
         };
         IIppRequest? serverRequest = null;
@@ -512,8 +499,7 @@ public class SharpIppIntegrationTests
         // Act
         GetJobAttributesResponse? clientResponse = await client.GetJobAttributesAsync(clientRequest);
         // Assert
-        clientRequest.Should().BeEquivalentTo(serverRequest, options => options
-            .Excluding(req => req.OperationAttributes.AdditionalAttributes));
+        clientRequest.Should().BeEquivalentTo(serverRequest);
         clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
     }
 
@@ -537,8 +523,6 @@ public class SharpIppIntegrationTests
                 RequestedAttributes = ["job-id", "job-uri", "job-state"],
                 WhichJobs = WhichJobs.Completed,
                 Limit = 10,
-                MyJobs = true,
-                AdditionalAttributes = [new IppAttribute(Tag.Keyword, "extra-op-att", "test")],
             },
         };
         IIppRequest? serverRequest = null;
@@ -600,8 +584,7 @@ public class SharpIppIntegrationTests
         // Act
         GetJobsResponse? clientResponse = await client.GetJobsAsync(clientRequest);
         // Assert
-        clientRequest.Should().BeEquivalentTo(serverRequest, options => options
-            .Excluding(req => req.OperationAttributes.AdditionalAttributes));
+        clientRequest.Should().BeEquivalentTo(serverRequest);
         clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
     }
     [TestMethod()]
@@ -620,10 +603,7 @@ public class SharpIppIntegrationTests
                 AttributesNaturalLanguage = "en-us",
                 RequestingUserName = "test-user",
                 RequestedAttributes = ["printer-uri", "printer-state", "printer-name"],
-                DocumentFormat = "application/octet-stream",
-                AdditionalAttributes = [new IppAttribute(Tag.Keyword, "extra-op-att", "test")],
             },
-            AdditionalJobAttributes = [new IppAttribute(Tag.Keyword, "extra-job-att", "test")],
         };
         IIppRequest? serverRequest = null;
         GetPrinterAttributesResponse? serverResponse = null;
@@ -661,9 +641,7 @@ public class SharpIppIntegrationTests
         // Act
         GetPrinterAttributesResponse? clientResponse = await client.GetPrinterAttributesAsync(clientRequest);
         // Assert
-        clientRequest.Should().BeEquivalentTo(serverRequest, options => options
-            .Excluding(req => req.OperationAttributes.AdditionalAttributes)
-            .Excluding(req => req.AdditionalJobAttributes));
+        clientRequest.Should().BeEquivalentTo(serverRequest);
         clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
     }
 
@@ -686,9 +664,7 @@ public class SharpIppIntegrationTests
                 JobUri = new Uri("http://127.0.0.1:631/jobs/1"),
                 Message = "message",
                 JobHoldUntil = JobHoldUntil.Indefinite,
-                AdditionalAttributes = [new IppAttribute(Tag.Keyword, "extra-op-att", "test")],
             },
-            AdditionalJobAttributes = [new IppAttribute(Tag.Keyword, "extra-job-att", "test")],
         };
         IIppRequest? serverRequest = null;
         HoldJobResponse? serverResponse = null;
@@ -715,9 +691,7 @@ public class SharpIppIntegrationTests
         // Act
         HoldJobResponse? clientResponse = await client.HoldJobAsync(clientRequest);
         // Assert
-        clientRequest.Should().BeEquivalentTo(serverRequest, options => options
-            .Excluding(req => req.OperationAttributes.AdditionalAttributes)
-            .Excluding(req => req.AdditionalJobAttributes));
+        clientRequest.Should().BeEquivalentTo(serverRequest);
         clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
     }
     [TestMethod()]
@@ -735,9 +709,7 @@ public class SharpIppIntegrationTests
                 AttributesCharset = "utf-8",
                 AttributesNaturalLanguage = "en-us",
                 RequestingUserName = "test-user",
-                AdditionalAttributes = [new IppAttribute(Tag.Keyword, "extra-op-att", "test")],
             },
-            AdditionalJobAttributes = [new IppAttribute(Tag.Keyword, "extra-job-att", "test")],
         };
         IIppRequest? serverRequest = null;
         PausePrinterResponse? serverResponse = null;
@@ -764,9 +736,7 @@ public class SharpIppIntegrationTests
         // Act
         PausePrinterResponse? clientResponse = await client.PausePrinterAsync(clientRequest);
         // Assert
-        clientRequest.Should().BeEquivalentTo(serverRequest, options => options
-            .Excluding(req => req.OperationAttributes.AdditionalAttributes)
-            .Excluding(req => req.AdditionalJobAttributes));
+        clientRequest.Should().BeEquivalentTo(serverRequest);
         clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
     }
 
@@ -785,9 +755,7 @@ public class SharpIppIntegrationTests
                 AttributesCharset = "utf-8",
                 AttributesNaturalLanguage = "en-us",
                 RequestingUserName = "test-user",
-                AdditionalAttributes = [new IppAttribute(Tag.Keyword, "extra-op-att", "test")],
             },
-            AdditionalJobAttributes = [new IppAttribute(Tag.Keyword, "extra-job-att", "test")],
         };
         IIppRequest? serverRequest = null;
         PurgeJobsResponse? serverResponse = null;
@@ -814,11 +782,10 @@ public class SharpIppIntegrationTests
         // Act
         PurgeJobsResponse? clientResponse = await client.PurgeJobsAsync(clientRequest);
         // Assert
-        clientRequest.Should().BeEquivalentTo(serverRequest, options => options
-            .Excluding(req => req.OperationAttributes.AdditionalAttributes)
-            .Excluding(req => req.AdditionalJobAttributes));
+        clientRequest.Should().BeEquivalentTo(serverRequest);
         clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
     }
+
     [TestMethod()]
     public async Task ReleaseJobAsync_WhenSendingStream_ServerReceivesSameRequestAndReturnsExpectedResponse()
     {
@@ -836,10 +803,7 @@ public class SharpIppIntegrationTests
                 RequestingUserName = "test-user",
                 JobId = 1,
                 JobUri = new Uri("http://127.0.0.1:631/jobs/1"),
-                Message = "message",
-                AdditionalAttributes = [new IppAttribute(Tag.Keyword, "extra-op-att", "test")],
             },
-            AdditionalJobAttributes = [new IppAttribute(Tag.Keyword, "extra-job-att", "test")],
         };
         IIppRequest? serverRequest = null;
         ReleaseJobResponse? serverResponse = null;
@@ -866,10 +830,9 @@ public class SharpIppIntegrationTests
         // Act
         ReleaseJobResponse? clientResponse = await client.ReleaseJobAsync(clientRequest);
         // Assert
-        clientRequest.Should().BeEquivalentTo(serverRequest, options => options
-            .Excluding(req => req.OperationAttributes.AdditionalAttributes)
-            .Excluding(req => req.AdditionalJobAttributes));
+        clientRequest.Should().BeEquivalentTo(serverRequest);
         clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
+
     }
 
     [TestMethod()]
@@ -887,9 +850,7 @@ public class SharpIppIntegrationTests
                 AttributesCharset = "utf-8",
                 AttributesNaturalLanguage = "en-us",
                 RequestingUserName = "test-user",
-                AdditionalAttributes = [new IppAttribute(Tag.Keyword, "extra-op-att", "test")],
             },
-            AdditionalJobAttributes = [new IppAttribute(Tag.Keyword, "extra-job-att", "test")],
         };
         IIppRequest? serverRequest = null;
         ResumePrinterResponse? serverResponse = null;
@@ -916,13 +877,9 @@ public class SharpIppIntegrationTests
         // Act
         ResumePrinterResponse? clientResponse = await client.ResumePrinterAsync(clientRequest);
         // Assert
-        clientRequest.Should().BeEquivalentTo(serverRequest, options => options
-            .Excluding(req => req.OperationAttributes.AdditionalAttributes)
-            .Excluding(req => req.AdditionalJobAttributes));
+        clientRequest.Should().BeEquivalentTo(serverRequest);
         clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
     }
-
-
 
     [TestMethod()]
     public async Task RestartJobAsync_WhenSendingStream_ServerReceivesSameRequestAndReturnsExpectedResponse()
@@ -943,9 +900,7 @@ public class SharpIppIntegrationTests
                 JobUri = new Uri("http://127.0.0.1:631/jobs/1"),
                 Message = "message",
                 JobHoldUntil = JobHoldUntil.Indefinite,
-                AdditionalAttributes = [new IppAttribute(Tag.Keyword, "extra-op-att", "test")],
             },
-            AdditionalJobAttributes = [new IppAttribute(Tag.Keyword, "extra-job-att", "test")],
         };
         IIppRequest? serverRequest = null;
         RestartJobResponse? serverResponse = null;
@@ -972,9 +927,7 @@ public class SharpIppIntegrationTests
         // Act
         RestartJobResponse? clientResponse = await client.RestartJobAsync(clientRequest);
         // Assert
-        clientRequest.Should().BeEquivalentTo(serverRequest, options => options
-            .Excluding(req => req.OperationAttributes.AdditionalAttributes)
-            .Excluding(req => req.AdditionalJobAttributes));
+        clientRequest.Should().BeEquivalentTo(serverRequest);
         clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
     }
 
@@ -1001,9 +954,7 @@ public class SharpIppIntegrationTests
                 DocumentNaturalLanguage = "en",
                 LastDocument = true,
                 DocumentUri = new Uri("ftp://document.pdf"),
-                AdditionalAttributes = [new IppAttribute(Tag.Keyword, "extra-op-att", "test")],
             },
-            AdditionalJobAttributes = [new IppAttribute(Tag.Keyword, "extra-job-att", "test")],
         };
         IIppRequest? serverRequest = null;
         SendUriResponse? serverResponse = null;
@@ -1034,9 +985,7 @@ public class SharpIppIntegrationTests
         // Act
         SendUriResponse? clientResponse = await client.SendUriAsync(clientRequest);
         // Assert
-        clientRequest.Should().BeEquivalentTo(serverRequest, options => options
-            .Excluding(req => req.OperationAttributes.AdditionalAttributes)
-            .Excluding(req => req.AdditionalJobAttributes));
+        clientRequest.Should().BeEquivalentTo(serverRequest);
         clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
     }
     [TestMethod()]
@@ -1065,7 +1014,6 @@ public class SharpIppIntegrationTests
                 JobMediaSheets = 2,
                 Compression = Compression.None,
                 DocumentNaturalLanguage = "en",
-                AdditionalAttributes = [new IppAttribute(Tag.Keyword, "extra-op-att", "test")],
             },
             JobTemplateAttributes = new()
             {
@@ -1106,9 +1054,7 @@ public class SharpIppIntegrationTests
                     MediaTooth = MediaTooth.Medium,
                     MediaTopMargin = 10,
                     MediaType = "stationery",
-                    MediaWeightMetric = 80
                 },
-                AdditionalJobAttributes = [new IppAttribute(Tag.Keyword, "extra-job-att", "test")],
             }
         };
         IIppRequest? serverRequest = null;
@@ -1136,9 +1082,7 @@ public class SharpIppIntegrationTests
         // Act
         ValidateJobResponse? clientResponse = await client.ValidateJobAsync(clientRequest);
         // Assert
-        clientRequest.Should().BeEquivalentTo(serverRequest, options => options
-             .Excluding(req => req.OperationAttributes.AdditionalAttributes)
-             .Excluding(req => ((ValidateJobRequest)req).JobTemplateAttributes!.AdditionalJobAttributes));
+        clientRequest.Should().BeEquivalentTo(serverRequest);
         clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
     }
     [TestMethod()]
@@ -1163,7 +1107,6 @@ public class SharpIppIntegrationTests
                 PrinterType = PrinterType.DefaultPrinter,
                 PrinterTypeMask = PrinterType.DefaultPrinter,
                 RequestedAttributes = ["printer-name", "printer-uri", "printer-state"],
-                AdditionalAttributes = [new IppAttribute(Tag.Keyword, "extra-op-att", "test")],
             },
         };
         IIppRequest? serverRequest = null;
@@ -1225,8 +1168,7 @@ public class SharpIppIntegrationTests
         // Act
         CUPSGetPrintersResponse? clientResponse = await client.GetCUPSPrintersAsync(clientRequest);
         // Assert
-        clientRequest.Should().BeEquivalentTo(serverRequest, options => options
-            .Excluding(req => req.OperationAttributes.AdditionalAttributes));
+        clientRequest.Should().BeEquivalentTo(serverRequest);
         clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
     }
 }

@@ -13,6 +13,6 @@ namespace SharpIpp.Models
 
         OperationAttributes? OperationAttributes { get; }
 
-        IEnumerable<IppAttribute>? AdditionalJobAttributes { get; set; }
+
     }
 }

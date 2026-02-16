@@ -20,7 +20,6 @@ namespace SharpIpp.Mapping.Profiles
                 map.Map<IIppPrinterRequest, IppRequestMessage>(src, dst);
                 if(src.OperationAttributes != null)
                     dst.OperationAttributes.AddRange(src.OperationAttributes.GetIppAttributes(map));
-                dst.JobAttributes.Populate(src.AdditionalJobAttributes);
                 return dst;
             });
 
@@ -29,9 +28,6 @@ namespace SharpIpp.Mapping.Profiles
                 var dst = new GetJobsRequest();
                 map.Map<IIppRequestMessage, IIppPrinterRequest>( src, dst );
                 dst.OperationAttributes = GetJobsOperationAttributes.Create<GetJobsOperationAttributes>(src.OperationAttributes.ToIppDictionary(), map);
-                var additionalJobAttributes = src.JobAttributes.Where( x => !JobAttribute.GetAttributes( src.Version ).Contains( x.Name ) ).ToList();
-                if (additionalJobAttributes.Any())
-                    dst.AdditionalJobAttributes = additionalJobAttributes;
                 return dst;
             } );
 

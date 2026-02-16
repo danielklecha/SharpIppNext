@@ -16,11 +16,6 @@ public class OperationAttributes
 
     public string? RequestingUserName { get; set; }
 
-    /// <summary>
-    /// This property allow to pass custom attributes from client to server.
-    /// It will not contain custom attributes in server side. You should use ReceiveRawRequestAsync to get all data. 
-    /// </summary>
-    public IEnumerable<IppAttribute>? AdditionalAttributes { get; set; }
 
     public static T Create<T>(Dictionary<string, IppAttribute[]> dict, IMapperApplier mapper) where T : OperationAttributes, new()
     {
@@ -48,8 +43,5 @@ public class OperationAttributes
             yield return new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, PrinterUri.ToString());
         if (RequestingUserName != null)
             yield return new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, RequestingUserName);
-        if(AdditionalAttributes != null)
-            foreach (var attribute in AdditionalAttributes)
-                yield return attribute;
     }
 }
