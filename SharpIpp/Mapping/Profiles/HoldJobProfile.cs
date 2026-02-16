@@ -30,14 +30,14 @@ namespace SharpIpp.Mapping.Profiles
             mapper.CreateMap<IppResponseMessage, HoldJobResponse>((src, map) =>
             {
                 var dst = new HoldJobResponse();
-                map.Map<IppResponseMessage, IIppResponseMessage>(src, dst);
+                map.Map<IppResponseMessage, IIppResponse>(src, dst);
                 return dst;
             });
 
             mapper.CreateMap<HoldJobResponse, IppResponseMessage>( ( src, map ) =>
             {
                 var dst = new IppResponseMessage();
-                map.Map<IIppResponseMessage, IppResponseMessage>( src, dst );
+                map.Map<IIppResponse, IppResponseMessage>( src, dst );
                 return dst;
             } );
         }

@@ -56,6 +56,7 @@ public class SharpIppIntegrationTests
                 JobName = "Test Job",
                 IppAttributeFidelity = true,
                 JobKOctetsProcessed = 10,
+                JobKOctets = 12,
                 JobImpressions = 5,
                 JobMediaSheets = 2,
                 Compression = Compression.None,
@@ -65,6 +66,7 @@ public class SharpIppIntegrationTests
             {
                 Copies = 1,
                 JobPriority = 1,
+                JobSheets = JobSheets.None,
                 JobHoldUntil = JobHoldUntil.NoHold,
                 MultipleDocumentHandling = MultipleDocumentHandling.SeparateDocumentsUncollatedCopies,
                 Finishings = Finishings.None,
@@ -134,7 +136,7 @@ public class SharpIppIntegrationTests
         PrintJobResponse? clientResponse = await client.PrintJobAsync(clientRequest);
         // Assert
         clientRequest.Should().BeEquivalentTo(serverRequest);
-        clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
+        clientResponse.Should().BeEquivalentTo(serverResponse);
     }
 
     [TestMethod()]
@@ -158,6 +160,7 @@ public class SharpIppIntegrationTests
                 JobName = "Test Job",
                 IppAttributeFidelity = true,
                 JobKOctetsProcessed = 10,
+                JobKOctets = 12,
                 JobImpressions = 5,
                 JobMediaSheets = 2,
                 Compression = Compression.None,
@@ -167,6 +170,7 @@ public class SharpIppIntegrationTests
             {
                 Copies = 1,
                 JobPriority = 1,
+                JobSheets = JobSheets.None,
                 JobHoldUntil = JobHoldUntil.NoHold,
                 MultipleDocumentHandling = MultipleDocumentHandling.SeparateDocumentsUncollatedCopies,
                 Finishings = Finishings.None,
@@ -236,7 +240,7 @@ public class SharpIppIntegrationTests
         PrintUriResponse? clientResponse = await client.PrintUriAsync(clientRequest);
         // Assert
         clientRequest.Should().BeEquivalentTo(serverRequest);
-        clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
+        clientResponse.Should().BeEquivalentTo(serverResponse);
     }
 
     [TestMethod()]
@@ -295,7 +299,7 @@ public class SharpIppIntegrationTests
         SendDocumentResponse? clientResponse = await client.SendDocumentAsync(clientRequest);
         // Assert
         clientRequest.Should().BeEquivalentTo(serverRequest);
-        clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
+        clientResponse.Should().BeEquivalentTo(serverResponse);
     
     }
 
@@ -345,7 +349,7 @@ public class SharpIppIntegrationTests
         CancelJobResponse? clientResponse = await client.CancelJobAsync(clientRequest);
         // Assert
         clientRequest.Should().BeEquivalentTo(serverRequest);
-        clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
+        clientResponse.Should().BeEquivalentTo(serverResponse);
     }
 
     [TestMethod()]
@@ -366,6 +370,7 @@ public class SharpIppIntegrationTests
                 JobName = "Test Job",
                 IppAttributeFidelity = true,
                 JobKOctetsProcessed = 10,
+                JobKOctets = 12,
                 JobImpressions = 5,
                 JobMediaSheets = 2,
             },
@@ -373,6 +378,7 @@ public class SharpIppIntegrationTests
             {
                 Copies = 1,
                 JobPriority = 1,
+                JobSheets = JobSheets.None,
                 JobHoldUntil = JobHoldUntil.NoHold,
                 MultipleDocumentHandling = MultipleDocumentHandling.SeparateDocumentsUncollatedCopies,
                 Finishings = Finishings.None,
@@ -442,7 +448,7 @@ public class SharpIppIntegrationTests
         CreateJobResponse? clientResponse = await client.CreateJobAsync(clientRequest);
         // Assert
         clientRequest.Should().BeEquivalentTo(serverRequest);
-        clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
+        clientResponse.Should().BeEquivalentTo(serverResponse);
     }
 
     [TestMethod()]
@@ -500,7 +506,7 @@ public class SharpIppIntegrationTests
         GetJobAttributesResponse? clientResponse = await client.GetJobAttributesAsync(clientRequest);
         // Assert
         clientRequest.Should().BeEquivalentTo(serverRequest);
-        clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
+        clientResponse.Should().BeEquivalentTo(serverResponse);
     }
 
     [TestMethod()]
@@ -585,7 +591,7 @@ public class SharpIppIntegrationTests
         GetJobsResponse? clientResponse = await client.GetJobsAsync(clientRequest);
         // Assert
         clientRequest.Should().BeEquivalentTo(serverRequest);
-        clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
+        clientResponse.Should().BeEquivalentTo(serverResponse);
     }
     [TestMethod()]
     public async Task GetPrinterAttributesAsync_WhenSendingStream_ServerReceivesSameRequestAndReturnsExpectedResponse()
@@ -642,7 +648,7 @@ public class SharpIppIntegrationTests
         GetPrinterAttributesResponse? clientResponse = await client.GetPrinterAttributesAsync(clientRequest);
         // Assert
         clientRequest.Should().BeEquivalentTo(serverRequest);
-        clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
+        clientResponse.Should().BeEquivalentTo(serverResponse);
     }
 
     [TestMethod()]
@@ -692,7 +698,7 @@ public class SharpIppIntegrationTests
         HoldJobResponse? clientResponse = await client.HoldJobAsync(clientRequest);
         // Assert
         clientRequest.Should().BeEquivalentTo(serverRequest);
-        clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
+        clientResponse.Should().BeEquivalentTo(serverResponse);
     }
     [TestMethod()]
     public async Task PausePrinterAsync_WhenSendingStream_ServerReceivesSameRequestAndReturnsExpectedResponse()
@@ -737,7 +743,7 @@ public class SharpIppIntegrationTests
         PausePrinterResponse? clientResponse = await client.PausePrinterAsync(clientRequest);
         // Assert
         clientRequest.Should().BeEquivalentTo(serverRequest);
-        clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
+        clientResponse.Should().BeEquivalentTo(serverResponse);
     }
 
     [TestMethod()]
@@ -783,7 +789,7 @@ public class SharpIppIntegrationTests
         PurgeJobsResponse? clientResponse = await client.PurgeJobsAsync(clientRequest);
         // Assert
         clientRequest.Should().BeEquivalentTo(serverRequest);
-        clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
+        clientResponse.Should().BeEquivalentTo(serverResponse);
     }
 
     [TestMethod()]
@@ -831,7 +837,7 @@ public class SharpIppIntegrationTests
         ReleaseJobResponse? clientResponse = await client.ReleaseJobAsync(clientRequest);
         // Assert
         clientRequest.Should().BeEquivalentTo(serverRequest);
-        clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
+        clientResponse.Should().BeEquivalentTo(serverResponse);
 
     }
 
@@ -878,7 +884,7 @@ public class SharpIppIntegrationTests
         ResumePrinterResponse? clientResponse = await client.ResumePrinterAsync(clientRequest);
         // Assert
         clientRequest.Should().BeEquivalentTo(serverRequest);
-        clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
+        clientResponse.Should().BeEquivalentTo(serverResponse);
     }
 
     [TestMethod()]
@@ -928,7 +934,7 @@ public class SharpIppIntegrationTests
         RestartJobResponse? clientResponse = await client.RestartJobAsync(clientRequest);
         // Assert
         clientRequest.Should().BeEquivalentTo(serverRequest);
-        clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
+        clientResponse.Should().BeEquivalentTo(serverResponse);
     }
 
     [TestMethod()]
@@ -986,7 +992,7 @@ public class SharpIppIntegrationTests
         SendUriResponse? clientResponse = await client.SendUriAsync(clientRequest);
         // Assert
         clientRequest.Should().BeEquivalentTo(serverRequest);
-        clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
+        clientResponse.Should().BeEquivalentTo(serverResponse);
     }
     [TestMethod()]
     public async Task ValidateJobAsync_WhenSendingStream_ServerReceivesSameRequestAndReturnsExpectedResponse()
@@ -1083,7 +1089,7 @@ public class SharpIppIntegrationTests
         ValidateJobResponse? clientResponse = await client.ValidateJobAsync(clientRequest);
         // Assert
         clientRequest.Should().BeEquivalentTo(serverRequest);
-        clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
+        clientResponse.Should().BeEquivalentTo(serverResponse);
     }
     [TestMethod()]
     public async Task GetCUPSPrintersAsync_WhenSendingStream_ServerReceivesSameRequestAndReturnsExpectedResponse()
@@ -1120,38 +1126,22 @@ public class SharpIppIntegrationTests
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
                 StatusCode = IppStatusCode.SuccessfulOk,
-                Jobs = 
+                Printers = 
                 [
-                    new JobDescriptionAttributes
+                    new PrinterDescriptionAttributes
                     {
-                        JobId = 1,
-                        JobUri = "http://127.0.0.1:631/jobs/1",
-                        JobPrinterUri = "http://127.0.0.1:631",
-                        JobName = "Test Job",
-                        JobOriginatingUserName = "test-user",
-                        JobKOctetsProcessed = 10,
-                        JobImpressions = 5,
-                        JobImpressionsCompleted = 0,
-                        JobMediaSheets = 2,
-                        JobMoreInfo = "more info",
-                        NumberOfDocuments = 1,
-                        NumberOfInterveningJobs = 0,
-                        OutputDeviceAssigned = "printer",
-                        JobMediaSheetsCompleted = 0,
-                        JobState = JobState.Pending,
-                        JobStateMessage = "pending",
-                        JobStateReasons = [JobStateReason.None],
-                        DateTimeAtCreation = new DateTimeOffset(2024, 1, 1, 1, 1, 1, TimeSpan.Zero),
-                        DateTimeAtProcessing = new DateTimeOffset(2024, 1, 1, 1, 1, 1, TimeSpan.Zero),
-                        DateTimeAtCompleted = new DateTimeOffset(2024, 1, 1, 1, 1, 1, TimeSpan.Zero),
-                        TimeAtCreation = 100,
-                        TimeAtProcessing = 110,
-                        TimeAtCompleted = 120,
-                        JobPrinterUpTime = 200,
-                        JobKOctets = 20,
-                        JobDetailedStatusMessages = ["message"],
-                        JobDocumentAccessErrors = ["error"],
-                        JobMessageFromOperator = "operator message"
+                        PrinterUriSupported = ["http://127.0.0.1:631"],
+                        PrinterName = "printer-1",
+                        PrinterState = PrinterState.Idle,
+                        PrinterStateReasons = ["none"],
+                        PrinterLocation = "Office",
+                        PrinterInfo = "Test Printer Info",
+                        PrinterMoreInfo = "http://127.0.0.1:631",
+                        PrinterDriverInstaller = "installer",
+                        PrinterMakeAndModel = "SharpIpp Virtual Printer",
+                        PrinterMoreInfoManufacturer = "http://manufacturer.com",
+                        PrinterStateMessage = "Idle",
+                        QueuedJobCount = 0
                     }
                 ]
             };
@@ -1169,6 +1159,6 @@ public class SharpIppIntegrationTests
         CUPSGetPrintersResponse? clientResponse = await client.GetCUPSPrintersAsync(clientRequest);
         // Assert
         clientRequest.Should().BeEquivalentTo(serverRequest);
-        clientResponse.Should().BeEquivalentTo(serverResponse, options => options.Excluding(ctx => ctx!.Sections));
+        clientResponse.Should().BeEquivalentTo(serverResponse);
     }
 }

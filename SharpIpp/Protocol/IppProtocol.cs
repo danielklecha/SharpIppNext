@@ -78,8 +78,8 @@ namespace SharpIpp.Protocol
             IppAttribute? prevAttribute = null;
             Stack<IppAttribute> prevBegCollectionAttributes = new();
             IppAttribute? prevBegCollectionAttribute = new();
+            IppSection? section = null;
             Encoding encoding = Encoding.ASCII;
-            IppSection? currentSection = null;
             do
             {
                 var data = reader.ReadByte();
@@ -87,9 +87,6 @@ namespace SharpIpp.Protocol
 
                 switch (sectionTag)
                 {
-                    //https://tools.ietf.org/html/rfc8010#section-3.5.1
-                    case SectionTag.EndOfAttributesTag: return;
-                    case SectionTag.Reserved:
                     case SectionTag.OperationAttributesTag:
                     case SectionTag.JobAttributesTag:
                     case SectionTag.PrinterAttributesTag:
@@ -99,16 +96,20 @@ namespace SharpIpp.Protocol
                     case SectionTag.ResourceAttributesTag:
                     case SectionTag.DocumentAttributesTag:
                     case SectionTag.SystemAttributesTag:
-                        currentSection = new IppSection { Tag = sectionTag };
-                        res.Sections.Add(currentSection);
+                        section = new IppSection { Tag = sectionTag };
+                        res.Sections.Add(section);
                         break;
+                    case SectionTag.EndOfAttributesTag:
+                        return;
                     default:
-                        if (currentSection is null)
-                            throw new ArgumentException( $"Section start tag not found in stream. Expected < 0x06. Actual: {data}" );
-                        var attribute = ReadAttribute((Tag)data, reader, prevAttribute, prevBegCollectionAttribute, encoding);
-                        switch(attribute.Tag)
+                        if (section is null)
                         {
-                            case Tag.Charset when currentSection.Tag == SectionTag.OperationAttributesTag && attribute.Name == JobAttribute.AttributesCharset && attribute.Value is string charsetName:
+                            throw new ArgumentException($"<Hex dump> Expected section tag, found {data:X2}");
+                        }
+                        var attribute = ReadAttribute((Tag)data, reader, prevAttribute, prevBegCollectionAttribute, encoding);
+                        switch (attribute.Tag)
+                        {
+                            case Tag.Charset when section.Tag == SectionTag.OperationAttributesTag && attribute.Name == JobAttribute.AttributesCharset && attribute.Value is string charsetName:
                                 try
                                 {
                                     encoding = Encoding.GetEncoding(charsetName);
@@ -126,7 +127,7 @@ namespace SharpIpp.Protocol
                                 break;
                         }
                         prevAttribute = attribute;
-                        currentSection.Attributes.Add(attribute);
+                        section.Attributes.Add(attribute);
                         break;
                 }
             }
@@ -475,8 +476,10 @@ namespace SharpIpp.Protocol
 
         private void WriteSections( IIppResponseMessage responseMessage, BinaryWriter writer, Encoding encoding )
         {
-            foreach (var section in responseMessage.Sections)
+            foreach ( var section in responseMessage.Sections )
+            {
                 WriteSection( section.Tag, section.Attributes, writer, encoding );
+            }
             //end-of-attributes-tag https://tools.ietf.org/html/rfc8010#section-3.5.1
             writer.Write( (byte)SectionTag.EndOfAttributesTag );
         }

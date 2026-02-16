@@ -1,17 +1,9 @@
-﻿using System.Collections.Generic;
-
-using SharpIpp.Protocol.Models;
+﻿using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models
 {
-    public class PrintUriResponse : IIppJobResponse
+    public class PrintUriResponse : IppResponse, IIppJobResponse
     {
-        public IppVersion Version { get; set; } = IppVersion.V1_1;
-
-        public IppStatusCode StatusCode { get; set; }
-
-        public int RequestId { get; set; } = 1;
-
         public string JobUri { get; set; } = null!;
 
         public int JobId { get; set; }
@@ -23,7 +15,5 @@ namespace SharpIpp.Models
         public string? JobStateMessage { get; set; }
 
         public int? NumberOfInterveningJobs { get; set; }
-
-        public List<IppSection> Sections { get; } = new List<IppSection>();
     }
 }

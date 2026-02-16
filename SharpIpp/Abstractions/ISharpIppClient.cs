@@ -16,7 +16,7 @@ namespace SharpIpp
 
         IIppRequestMessage CreateRawRequest<T>(T ippRequestMessage) where T : IIppRequest;
 
-        T CreateResponse<T>(IIppResponseMessage ippResponse) where T : IIppResponseMessage;
+        T CreateResponse<T>(IIppResponseMessage ippResponse) where T : IIppResponse;
 
         #region V11
 

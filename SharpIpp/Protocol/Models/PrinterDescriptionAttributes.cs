@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 
-using SharpIpp.Protocol;
-using SharpIpp.Protocol.Models;
-
-namespace SharpIpp.Models
+namespace SharpIpp.Protocol.Models
 {
-    public class GetPrinterAttributesResponse : IppResponse
+    public class PrinterDescriptionAttributes
     {
         /// <summary>
         ///     printer-uri-supported

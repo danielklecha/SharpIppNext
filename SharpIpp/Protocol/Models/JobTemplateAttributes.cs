@@ -34,6 +34,8 @@ namespace SharpIpp.Protocol.Models
 
         public MultipleDocumentHandling? MultipleDocumentHandling { get; set; }
 
+        public JobSheets? JobSheets { get; set; }
+
         /// <summary>
         ///     This attribute specifies the number of copies to be printed.
         ///     On many devices the supported number of collated copies will be

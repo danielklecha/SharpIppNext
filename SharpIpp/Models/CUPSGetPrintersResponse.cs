@@ -1,20 +1,15 @@
-﻿using System.Collections.Generic;
-
-using SharpIpp.Protocol;
+﻿using SharpIpp.Protocol;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models
 {
-    public class CUPSGetPrintersResponse : IIppResponseMessage
+    public class CUPSGetPrintersResponse : IppResponse
     {
-        public JobDescriptionAttributes[] Jobs { get; set; } = null!;
+        public CUPSGetPrintersResponse()
+        {
+            Version = IppVersion.CUPS10;
+        }
 
-        public IppVersion Version { get; set; } = IppVersion.CUPS10;
-
-        public IppStatusCode StatusCode { get; set; }
-
-        public int RequestId { get; set; } = 1;
-
-        public List<IppSection> Sections { get; } = new List<IppSection>();
+        public PrinterDescriptionAttributes[]? Printers { get; set; }
     }
 }

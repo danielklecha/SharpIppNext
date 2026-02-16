@@ -56,14 +56,14 @@ namespace SharpIpp.Mapping.Profiles
             mapper.CreateMap<IppResponseMessage, ValidateJobResponse>((src, map) =>
             {
                 var dst = new ValidateJobResponse();
-                map.Map<IppResponseMessage, IIppResponseMessage>(src, dst);
+                map.Map<IppResponseMessage, IIppResponse>(src, dst);
                 return dst;
             });
 
             mapper.CreateMap<ValidateJobResponse, IppResponseMessage>( ( src, map ) =>
             {
                 var dst = new IppResponseMessage();
-                map.Map<IIppResponseMessage, IppResponseMessage>( src, dst );
+                map.Map<IIppResponse, IppResponseMessage>( src, dst );
                 return dst;
             } );
         }

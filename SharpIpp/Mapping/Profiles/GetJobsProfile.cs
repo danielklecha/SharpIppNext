@@ -35,15 +35,15 @@ namespace SharpIpp.Mapping.Profiles
             mapper.CreateMap<IppResponseMessage, GetJobsResponse>((src, map) =>
             {
                 var dst = new GetJobsResponse { Jobs = map.Map<List<IppSection>, JobDescriptionAttributes[]>(src.Sections) };
-                map.Map<IppResponseMessage, IIppResponseMessage>(src, dst);
+                map.Map<IppResponseMessage, IIppResponse>(src, dst);
                 return dst;
             });
 
             mapper.CreateMap<GetJobsResponse, IppResponseMessage>((src, map) =>
             {
                 var dst = new IppResponseMessage();
-                map.Map<IIppResponseMessage, IppResponseMessage>( src, dst );
-                dst.Sections.AddRange(map.Map<JobDescriptionAttributes[], List<IppSection>>(src.Jobs));
+                map.Map<IIppResponse, IppResponseMessage>( src, dst );
+                dst.Sections.AddRange(map.Map<JobDescriptionAttributes[], List<IppSection>>(src.Jobs ?? []));
                 return dst;
             } );
 

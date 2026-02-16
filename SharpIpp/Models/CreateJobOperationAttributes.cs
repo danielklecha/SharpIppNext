@@ -100,11 +100,25 @@ public class CreateJobOperationAttributes : OperationAttributes
     /// <code>job-media-sheets</code>
     public int? JobMediaSheets { get; set; }
 
+    /// <summary>
+    ///     The client OPTIONALLY supplies this attribute.  The Printer
+    ///     object MUST support this attribute.  The value of this
+    ///     attribute identifies the total size of the document(s) in K
+    ///     octets, i.e., in units of 1024 octets.  The value MUST be
+    ///     rounded up, so that a job between 1 and 1024 octets inclusive
+    ///     MUST be indicated as being 1, 1025 to 2048 inclusive MUST be
+    ///     2, etc.
+    /// </summary>
+    /// <example>26</example>
+    /// <code>job-k-octets</code>
+    public int? JobKOctets { get; set; }
+
     public static new T Create<T>(Dictionary<string, IppAttribute[]> dict, IMapperApplier mapper) where T : CreateJobOperationAttributes, new()
     {
         var attributes = OperationAttributes.Create<T>(dict, mapper);
         attributes.JobName = mapper.MapFromDic<string?>(dict, JobAttribute.JobName);
         attributes.JobMediaSheets = mapper.MapFromDic<int?>(dict, JobAttribute.JobMediaSheets);
+        attributes.JobKOctets = mapper.MapFromDic<int?>(dict, JobAttribute.JobKOctets);
         attributes.IppAttributeFidelity = mapper.MapFromDic<bool?>(dict, JobAttribute.IppAttributeFidelity);
         attributes.JobImpressions = mapper.MapFromDic<int?>(dict, JobAttribute.JobImpressions);
         attributes.JobKOctetsProcessed = mapper.MapFromDic<int?>(dict, JobAttribute.JobKOctetsProcessed);
@@ -130,5 +144,7 @@ public class CreateJobOperationAttributes : OperationAttributes
             yield return new IppAttribute(Tag.Integer, JobAttribute.JobImpressions, JobImpressions.Value);
         if (JobMediaSheets.HasValue)
             yield return new IppAttribute(Tag.Integer, JobAttribute.JobMediaSheets, JobMediaSheets.Value);
+        if (JobKOctets.HasValue)
+            yield return new IppAttribute(Tag.Integer, JobAttribute.JobKOctets, JobKOctets.Value);
     }
 }

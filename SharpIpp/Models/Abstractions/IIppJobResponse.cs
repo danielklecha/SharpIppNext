@@ -3,7 +3,7 @@ using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models
 {
-    public interface IIppJobResponse : IIppResponseMessage
+    public interface IIppJobResponse : IIppResponse
     {
         /// <summary>
         ///     job-uri

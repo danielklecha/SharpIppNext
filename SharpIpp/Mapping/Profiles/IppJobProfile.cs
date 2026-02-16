@@ -28,14 +28,14 @@ namespace SharpIpp.Mapping.Profiles
 
             mapper.CreateMap<IppResponseMessage, IIppJobResponse>((src, dst, map) =>
             {
-                map.Map<IppResponseMessage, IIppResponseMessage>(src, dst);
+                map.Map<IppResponseMessage, IIppResponse>(src, dst);
                 map.Map(src.AllAttributes(), dst);
                 return dst;
             });
 
             mapper.CreateMap<IIppJobResponse, IppResponseMessage>( ( src, dst, map ) =>
             {
-                map.Map<IIppResponseMessage, IppResponseMessage>( src, dst );
+                map.Map<IIppResponse, IppResponseMessage>( src, dst );
                 var section = new IppSection { Tag = SectionTag.JobAttributesTag };
                 section.Attributes.AddRange( map.Map<IIppJobResponse, IDictionary<string, IppAttribute[]>>( src ).Values.SelectMany( x => x ) );
                 dst.Sections.Add( section );

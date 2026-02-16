@@ -136,7 +136,7 @@ public partial class SharpIppClient : ISharpIppClient
         TIn data,
         CancellationToken cancellationToken)
         where TIn : IIppRequest
-        where TOut : IIppResponseMessage
+        where TOut : IIppResponse
     {
         var ippRequest = CreateRawRequest(data);
         if (data.OperationAttributes == null || data.OperationAttributes.PrinterUri == null)
@@ -154,7 +154,7 @@ public partial class SharpIppClient : ISharpIppClient
         return ippRequest;
     }
 
-    public virtual T CreateResponse<T>(IIppResponseMessage ippResponse) where T : IIppResponseMessage
+    public virtual T CreateResponse<T>(IIppResponseMessage ippResponse) where T : IIppResponse
     {
         try
         {

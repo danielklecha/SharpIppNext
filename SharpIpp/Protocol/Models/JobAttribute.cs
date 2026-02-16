@@ -66,69 +66,11 @@ namespace SharpIpp.Protocol.Models
         public const string DetailedStatusMessage = "detailed-status-message";
         public const string JobDetailedStatusMessages = "job-detailed-status-messages";
         public const string JobDocumentAccessErrors = "job-document-access-errors";
+        public const string DocumentAccessError = "document-access-error";
         public const string JobMessageFromOperator = "job-message-from-operator";
         public const string JobMoreInfo = "job-more-info";
         public const string NumberOfDocuments = "number-of-documents";
         public const string OutputDeviceAssigned = "output-device-assigned";
         public const string MediaCol = "media-col";
-
-        public static IEnumerable<string> GetAttributes( IppVersion version )
-        {
-            yield return Compression;
-            yield return Copies;
-            yield return DateTimeAtCompleted;
-            yield return DateTimeAtCreation;
-            yield return DateTimeAtProcessing;
-            yield return DocumentFormat;
-            yield return DocumentName;
-            yield return Finishings;
-            yield return IppAttributeFidelity;
-            yield return JobUri;
-            yield return JobId;
-            yield return JobImpressions;
-            yield return JobImpressionsCompleted;
-            yield return JobKOctetsProcessed;
-            yield return JobMediaSheets;
-            yield return JobMediaSheetsCompleted;
-            yield return JobName;
-            yield return JobOriginatingUserName;
-            yield return JobPrinterUpTime;
-            yield return JobPrinterUri;
-            yield return JobSheets;
-            yield return JobState;
-            yield return Media;
-            yield return MultipleDocumentHandling;
-            yield return NumberUp;
-            yield return OrientationRequested;
-            yield return PrinterResolution;
-            yield return PrintQuality;
-            yield return Sides;
-            yield return TimeAtCompleted;
-            yield return TimeAtCreation;
-            yield return TimeAtProcessing;
-            yield return NumberOfInterveningJobs;
-            yield return JobPriority;
-            yield return JobHoldUntil;
-            yield return PageRanges;
-            yield return PrintScaling;
-            yield return RequestingUserName;
-            yield return AttributesCharset;
-            yield return AttributesNaturalLanguage;
-            yield return DocumentNaturalLanguage;
-            yield return FirstPrinterName;
-            yield return PrinterId;
-            yield return PrinterLocation;
-            yield return PrinterType;
-            yield return PrinterTypeMask;
-            yield return RequestedAttributes;
-            yield return Limit;
-            yield return WhichJobs;
-            yield return MyJobs;
-            yield return PrinterUri;
-            yield return DocumentUri;
-            yield return LastDocument;
-            yield return PrintColorMode;
-            yield return Message;
-        }
     }
 }

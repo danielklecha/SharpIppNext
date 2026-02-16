@@ -116,7 +116,7 @@ public partial class SharpIppServer : ISharpIppServer
     public async Task SendResponseAsync<T>(
         T ippResponsMessage,
         Stream stream,
-        CancellationToken cancellationToken = default) where T : IIppResponseMessage
+        CancellationToken cancellationToken = default) where T : IIppResponse
     {
         var ippResponse = await CreateRawResponseAsync(ippResponsMessage, cancellationToken);
         await _ippProtocol.WriteIppResponseAsync(ippResponse, stream, cancellationToken);
@@ -124,7 +124,7 @@ public partial class SharpIppServer : ISharpIppServer
 
     public Task<IIppResponseMessage> CreateRawResponseAsync<T>(
         T ippResponsMessage,
-        CancellationToken cancellationToken = default) where T : IIppResponseMessage
+        CancellationToken cancellationToken = default) where T : IIppResponse
     {
         if (ippResponsMessage is null)
             throw new ArgumentNullException(nameof(ippResponsMessage));

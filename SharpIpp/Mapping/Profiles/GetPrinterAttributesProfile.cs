@@ -34,14 +34,14 @@ namespace SharpIpp.Mapping.Profiles
             mapper.CreateMap<IppResponseMessage, GetPrinterAttributesResponse>((src, map) =>
             {
                 var dst = map.Map<GetPrinterAttributesResponse>(src.AllAttributes());
-                map.Map<IppResponseMessage, IIppResponseMessage>(src, dst);
+                map.Map<IppResponseMessage, IIppResponse>(src, dst);
                 return dst;
             });
 
             mapper.CreateMap<GetPrinterAttributesResponse, IppResponseMessage>( ( src, map ) =>
             {
                 var dst = new IppResponseMessage();
-                map.Map<IIppResponseMessage, IppResponseMessage>( src, dst );
+                map.Map<IIppResponse, IppResponseMessage>( src, dst );
                 var section = new IppSection { Tag = SectionTag.PrinterAttributesTag };
                 section.Attributes.AddRange( map.Map<IDictionary<string, IppAttribute[]>>( src ).Values.SelectMany( x => x ) );
                 dst.Sections.Add( section );

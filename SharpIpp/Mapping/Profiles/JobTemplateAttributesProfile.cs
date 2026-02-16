@@ -35,6 +35,13 @@ namespace SharpIpp.Mapping.Profiles
                         map.Map<string>(src.MultipleDocumentHandling.Value)));
                 }
 
+                if (src.JobSheets != null)
+                {
+                    job.Add(new IppAttribute(Tag.Keyword,
+                        JobAttribute.JobSheets,
+                        map.Map<string>(src.JobSheets.Value)));
+                }
+
                 if (src.Copies != null)
                 {
                     job.Add(new IppAttribute(Tag.Integer, JobAttribute.Copies, src.Copies.Value));
@@ -101,6 +108,7 @@ namespace SharpIpp.Mapping.Profiles
                 dst.JobPriority = map.MapFromDic<int?>(jobDict, JobAttribute.JobPriority);
                 dst.JobHoldUntil = map.MapFromDic<JobHoldUntil?>(jobDict, JobAttribute.JobHoldUntil);
                 dst.MultipleDocumentHandling = map.MapFromDic<MultipleDocumentHandling?>(jobDict, JobAttribute.MultipleDocumentHandling);
+                dst.JobSheets = map.MapFromDic<JobSheets?>(jobDict, JobAttribute.JobSheets);
                 dst.Copies = map.MapFromDic<int?>(jobDict, JobAttribute.Copies);
                 dst.Finishings = map.MapFromDic<Finishings?>(jobDict, JobAttribute.Finishings);
                 dst.PageRanges = map.MapFromDicSetNull<Range[]?>(jobDict, JobAttribute.PageRanges);
