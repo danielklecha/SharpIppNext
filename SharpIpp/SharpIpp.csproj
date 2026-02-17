@@ -35,7 +35,4 @@
 		<PackagePath></PackagePath>
 	</None>
   </ItemGroup>
-   <ItemGroup>
-     <Folder Include="Models\Abstractions\" />
-   </ItemGroup>
 </Project>

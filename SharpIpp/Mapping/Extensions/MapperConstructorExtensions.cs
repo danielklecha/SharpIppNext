@@ -4,85 +4,84 @@ using System.Reflection;
 
 using SharpIpp.Protocol.Models;
 
-namespace SharpIpp.Mapping
+namespace SharpIpp.Mapping.Extensions;
+
+public static class MapperConstructorExtensions
 {
-    internal static class MapperConstructorExtensions
+    public static void FillFromAssembly(this IMapperConstructor mapper, Assembly assembly)
     {
-        public static void FillFromAssembly(this IMapperConstructor mapper, Assembly assembly)
-        {
-            var profiles = assembly.GetTypes()
-                .Where(x => typeof(IProfile).IsAssignableFrom(x) && x.IsClass)
-                .Select(x => (IProfile)Activator.CreateInstance(x));
+        var profiles = assembly.GetTypes()
+            .Where(x => typeof(IProfile).IsAssignableFrom(x) && x.IsClass)
+            .Select(x => (IProfile)Activator.CreateInstance(x));
 
-            foreach (var profile in profiles)
-            {
-                profile.CreateMaps(mapper);
-            }
+        foreach (var profile in profiles)
+        {
+            profile.CreateMaps(mapper);
         }
-        public static void CreateIppMap<T>(this IMapperConstructor mapper) where T : notnull
+    }
+    public static void CreateIppMap<T>(this IMapperConstructor mapper) where T : notnull
+    {
+        mapper.CreateIppMap<T, T>((i, _) => i);
+    }
+
+    public static void CreateIppMap<TSource, TDestination>(
+        this IMapperConstructor mapper,
+        Func<TSource, IMapperApplier, TDestination> mapFunc) where TSource : notnull
+    {
+        var destType = typeof(TDestination);
+        var srcType = typeof(TSource);
+        mapper.CreateMap(mapFunc);
+        mapper.CreateMap<NoValue, TDestination[]?>((_, __) => null);
+
+        mapper.CreateMap<object, TDestination>((src, map) =>
         {
-            mapper.CreateIppMap<T, T>((i, _) => i);
-        }
-
-        public static void CreateIppMap<TSource, TDestination>(
-            this IMapperConstructor mapper,
-            Func<TSource, IMapperApplier, TDestination> mapFunc) where TSource : notnull
-        {
-            var destType = typeof(TDestination);
-            var srcType = typeof(TSource);
-            mapper.CreateMap(mapFunc);
-            mapper.CreateMap<NoValue, TDestination[]?>((_, __) => null);
-
-            mapper.CreateMap<object, TDestination>((src, map) =>
+            if (src == null)
             {
-                if (src == null)
-                {
-                    throw new ArgumentException($"Mapping null to non nullable type {typeof(object)} -> {destType}");
-                }
-
-                return src is TSource source
-                    ? map.Map<TDestination>(source)
-                    : throw new ArgumentException($"Mapping not supported {srcType} -> {destType}");
-            });
-
-            if (Nullable.GetUnderlyingType(destType) == null)
-            {
-                var destIsClass = destType.IsClass;
-                var destNullable = destIsClass ? destType : typeof(Nullable<>).MakeGenericType(destType);
-
-                var destNull = destIsClass
-                    ? Convert.ChangeType(null, destNullable)
-                    : Activator.CreateInstance(destNullable);
-                mapper.CreateMap(typeof(NoValue), destNullable, (_, __) => destNull);
-
-                if (!destIsClass)
-                {
-                    mapper.CreateMap(srcType,
-                        destNullable,
-                        (src, map) => src == null ? destNull : map.Map<TDestination>(src));
-                }
+                throw new ArgumentException($"Mapping null to non nullable type {typeof(object)} -> {destType}");
             }
 
-            mapper.CreateMap<TSource, TDestination[]>((src, map) =>
-                src != null
-                    ? map.Map<TDestination[]>(new[] { src })
-                    : throw new ArgumentException($"Mapping null to non nullable type {srcType} -> {destType}"));
+            return src is TSource source
+                ? map.Map<TDestination>(source)
+                : throw new ArgumentException($"Mapping not supported {srcType} -> {destType}");
+        });
 
-            mapper.CreateMap<TSource, TDestination[]?>((src, map) =>
-                src == null ? null : map.Map<TDestination[]?>(new[] { src }));
+        if (Nullable.GetUnderlyingType(destType) == null)
+        {
+            var destIsClass = destType.IsClass;
+            var destNullable = destIsClass ? destType : typeof(Nullable<>).MakeGenericType(destType);
 
-            mapper.CreateMap<TSource[], TDestination[]>((src, map) =>
-                src.Select(x => map.Map<TDestination>(x)).ToArray());
+            var destNull = destIsClass
+                ? Convert.ChangeType(null, destNullable)
+                : Activator.CreateInstance(destNullable);
+            mapper.CreateMap(typeof(NoValue), destNullable, (_, __) => destNull);
 
-            mapper.CreateMap<TSource[], TDestination[]?>((src, map) =>
-                src.Select(x => map.Map<TDestination>(x)).ToArray());
-
-            mapper.CreateMap<TSource[]?, TDestination[]?>((src, map) =>
-                src?.Select(x => map.Map<TDestination>(x)).ToArray());
-
-            mapper.CreateMap<object[], TDestination[]>((src, map) => src.Select(map.Map<TDestination>).ToArray());
-            mapper.CreateMap<object[], TDestination[]?>((src, map) => src.Select(map.Map<TDestination>).ToArray());
-            mapper.CreateMap<object[]?, TDestination[]?>((src, map) => src?.Select(map.Map<TDestination>).ToArray());
+            if (!destIsClass)
+            {
+                mapper.CreateMap(srcType,
+                    destNullable,
+                    (src, map) => src == null ? destNull : map.Map<TDestination>(src));
+            }
         }
+
+        mapper.CreateMap<TSource, TDestination[]>((src, map) =>
+            src != null
+                ? map.Map<TDestination[]>(new[] { src })
+                : throw new ArgumentException($"Mapping null to non nullable type {srcType} -> {destType}"));
+
+        mapper.CreateMap<TSource, TDestination[]?>((src, map) =>
+            src == null ? null : map.Map<TDestination[]?>(new[] { src }));
+
+        mapper.CreateMap<TSource[], TDestination[]>((src, map) =>
+            src.Select(x => map.Map<TDestination>(x)).ToArray());
+
+        mapper.CreateMap<TSource[], TDestination[]?>((src, map) =>
+            src.Select(x => map.Map<TDestination>(x)).ToArray());
+
+        mapper.CreateMap<TSource[]?, TDestination[]?>((src, map) =>
+            src?.Select(x => map.Map<TDestination>(x)).ToArray());
+
+        mapper.CreateMap<object[], TDestination[]>((src, map) => src.Select(map.Map<TDestination>).ToArray());
+        mapper.CreateMap<object[], TDestination[]?>((src, map) => src.Select(map.Map<TDestination>).ToArray());
+        mapper.CreateMap<object[]?, TDestination[]?>((src, map) => src?.Select(map.Map<TDestination>).ToArray());
     }
 }

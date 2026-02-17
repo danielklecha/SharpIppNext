@@ -49,6 +49,33 @@ public class SimpleMapperTests
         act.Should().Throw<ArgumentException>().WithMessage("*No mapping found*");
     }
 
+    [TestMethod]
+    public void Map_NullSource_ShouldReturnDefault()
+    {
+        // Arrange
+        var mapper = new SimpleMapper();
+
+        // Act
+        var result = mapper.Map<int>((object?)null);
+
+        // Assert
+        result.Should().Be(default(int));
+    }
+
+    [TestMethod]
+    public void Map_NullSource_WithGenericOverload_ShouldReturnDestination()
+    {
+        // Arrange
+        var mapper = new SimpleMapper();
+        var dest = 123;
+
+        // Act
+        var result = mapper.Map<string, int>(null, dest);
+
+        // Assert
+        result.Should().Be(dest);
+    }
+
     private interface IMyInterface { string? Value { get; } }
     private class MyImplementation : IMyInterface { public string? Value { get; set; } }
 }

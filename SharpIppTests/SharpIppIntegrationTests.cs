@@ -118,10 +118,18 @@ public class SharpIppIntegrationTests
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
                 StatusCode = IppStatusCode.SuccessfulOk,
+                OperationAttributes = new()
+                {
+                    StatusMessage = "successful-ok",
+                    DetailedStatusMessage = ["detail1"],
+                    DocumentAccessError = "none"
+                },
                 JobAttributes = new()
                 {
                     JobState = JobState.Pending,
                     JobStateReasons = [JobStateReason.None],
+                    JobStateMessage = "pending",
+                    NumberOfInterveningJobs = 0,
                     JobId = 456,
                     JobUri = "http://127.0.0.1:631/456"
                 }
@@ -225,10 +233,18 @@ public class SharpIppIntegrationTests
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
                 StatusCode = IppStatusCode.SuccessfulOk,
+                OperationAttributes = new()
+                {
+                    StatusMessage = "successful-ok",
+                    DetailedStatusMessage = ["detail1"],
+                    DocumentAccessError = "none"
+                },
                 JobAttributes = new()
                 {
                     JobState = JobState.Pending,
                     JobStateReasons = [JobStateReason.None],
+                    JobStateMessage = "pending",
+                    NumberOfInterveningJobs = 0,
                     JobId = 456,
                     JobUri = "http://127.0.0.1:631/456"
                 }
@@ -287,10 +303,18 @@ public class SharpIppIntegrationTests
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
                 StatusCode = IppStatusCode.SuccessfulOk,
+                OperationAttributes = new()
+                {
+                    StatusMessage = "successful-ok",
+                    DetailedStatusMessage = ["detail1"],
+                    DocumentAccessError = "none"
+                },
                 JobAttributes = new()
                 {
                     JobState = JobState.Pending,
                     JobStateReasons = [JobStateReason.None],
+                    JobStateMessage = "pending",
+                    NumberOfInterveningJobs = 0,
                     JobId = 456,
                     JobUri = "http://127.0.0.1:631/456"
                 }
@@ -344,6 +368,12 @@ public class SharpIppIntegrationTests
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
                 StatusCode = IppStatusCode.SuccessfulOk,
+                OperationAttributes = new()
+                {
+                    StatusMessage = "successful-ok",
+                    DetailedStatusMessage = ["detail1"],
+                    DocumentAccessError = "none"
+                },
             };
             var memoryStream = new MemoryStream();
             await server.SendResponseAsync(serverResponse, memoryStream, c);
@@ -439,10 +469,18 @@ public class SharpIppIntegrationTests
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
                 StatusCode = IppStatusCode.SuccessfulOk,
+                OperationAttributes = new()
+                {
+                    StatusMessage = "successful-ok",
+                    DetailedStatusMessage = ["detail1"],
+                    DocumentAccessError = "none"
+                },
                 JobAttributes = new()
                 {
                     JobState = JobState.Pending,
                     JobStateReasons = [JobStateReason.None],
+                    JobStateMessage = "pending",
+                    NumberOfInterveningJobs = 0,
                     JobId = 456,
                     JobUri = "http://127.0.0.1:631/456"
                 }
@@ -499,10 +537,38 @@ public class SharpIppIntegrationTests
                 {
                     JobId = 1,
                     JobUri = "http://127.0.0.1:631/jobs/1",
+                    JobPrinterUri = "http://127.0.0.1:631",
                     JobState = JobState.Pending,
                     JobStateReasons = [JobStateReason.None],
                     JobName = "Test Job",
-                    JobOriginatingUserName = "test-user"
+                    JobOriginatingUserName = "test-user",
+                    JobKOctetsProcessed = 10,
+                    JobImpressions = 5,
+                    JobImpressionsCompleted = 0,
+                    JobMediaSheets = 2,
+                    JobMoreInfo = "more info",
+                    NumberOfDocuments = 1,
+                    NumberOfInterveningJobs = 0,
+                    OutputDeviceAssigned = "printer",
+                    JobMediaSheetsCompleted = 0,
+                    JobStateMessage = "pending",
+                    DateTimeAtCreation = new DateTimeOffset(2024, 1, 1, 1, 1, 1, TimeSpan.Zero),
+                    DateTimeAtProcessing = new DateTimeOffset(2024, 1, 1, 1, 1, 1, TimeSpan.Zero),
+                    DateTimeAtCompleted = new DateTimeOffset(2024, 1, 1, 1, 1, 1, TimeSpan.Zero),
+                    TimeAtCreation = 100,
+                    TimeAtProcessing = 110,
+                    TimeAtCompleted = 120,
+                    JobPrinterUpTime = 200,
+                    JobKOctets = 20,
+                    JobDetailedStatusMessages = ["message"],
+                    JobDocumentAccessErrors = ["error"],
+                    JobMessageFromOperator = "operator message"
+                },
+                OperationAttributes = new()
+                {
+                    StatusMessage = "successful-ok",
+                    DetailedStatusMessage = ["detail1"],
+                    DocumentAccessError = "none"
                 }
             };
             var memoryStream = new MemoryStream();
@@ -555,6 +621,12 @@ public class SharpIppIntegrationTests
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
                 StatusCode = IppStatusCode.SuccessfulOk,
+                OperationAttributes = new()
+                {
+                    StatusMessage = "successful-ok",
+                    DetailedStatusMessage = ["detail1"],
+                    DocumentAccessError = "none"
+                },
                 JobsAttributes = 
                 [
                     new JobDescriptionAttributes
@@ -622,6 +694,7 @@ public class SharpIppIntegrationTests
                 AttributesNaturalLanguage = "en-us",
                 RequestingUserName = "test-user",
                 RequestedAttributes = ["printer-uri", "printer-state", "printer-name"],
+                DocumentFormat = "application/pdf",
             },
         };
         IIppRequest? serverRequest = null;
@@ -637,8 +710,9 @@ public class SharpIppIntegrationTests
                 StatusCode = IppStatusCode.SuccessfulOk,
                 PrinterAttributes = new()
                 {
-                    PrinterState = PrinterState.Idle,
-                    PrinterStateReasons = ["none"],
+                    PrinterUriSupported = ["http://127.0.0.1:631"],
+                    UriSecuritySupported = [UriSecurity.None],
+                    UriAuthenticationSupported = [UriAuthentication.None],
                     PrinterName = "Test Printer",
                     PrinterLocation = "Office",
                     PrinterInfo = "Test Printer Info",
@@ -646,8 +720,92 @@ public class SharpIppIntegrationTests
                     PrinterDriverInstaller = "installer",
                     PrinterMakeAndModel = "SharpIpp Virtual Printer",
                     PrinterMoreInfoManufacturer = "http://manufacturer.com",
+                    PrinterState = PrinterState.Idle,
+                    PrinterStateReasons = ["none"],
                     PrinterStateMessage = "Idle",
-                    QueuedJobCount = 0
+                    IppVersionsSupported = [IppVersion.V1_1],
+                    OperationsSupported = [IppOperation.PrintJob],
+                    MultipleDocumentJobsSupported = true,
+                    CharsetConfigured = "utf-8",
+                    CharsetSupported = ["utf-8"],
+                    NaturalLanguageConfigured = "en-us",
+                    GeneratedNaturalLanguageSupported = ["en-us"],
+                    DocumentFormatDefault = "application/pdf",
+                    DocumentFormatSupported = ["application/pdf"],
+                    PrinterIsAcceptingJobs = true,
+                    QueuedJobCount = 0,
+                    PrinterMessageFromOperator = "message",
+                    ColorSupported = true,
+                    ReferenceUriSchemesSupported = [UriScheme.Ftp],
+                    PdlOverrideSupported = "attempted",
+                    PrinterUpTime = 100,
+                    PrinterCurrentTime = new DateTimeOffset(2024, 1, 1, 1, 1, 1, TimeSpan.Zero),
+                    MultipleOperationTimeOut = 10,
+                    CompressionSupported = [Compression.None],
+                    JobKOctetsSupported = new SharpIpp.Protocol.Models.Range(1, 100),
+                    JpegKOctetsSupported = new SharpIpp.Protocol.Models.Range(1, 100),
+                    PdfKOctetsSupported = new SharpIpp.Protocol.Models.Range(1, 100),
+                    JobImpressionsSupported = new SharpIpp.Protocol.Models.Range(1, 100),
+                    JobMediaSheetsSupported = new SharpIpp.Protocol.Models.Range(1, 100),
+                    PagesPerMinute = 10,
+                    PagesPerMinuteColor = 10,
+                    PrintScalingDefault = PrintScaling.Auto,
+                    PrintScalingSupported = [PrintScaling.Auto],
+                    MediaDefault = "iso_a4_210x297mm",
+                    MediaSupported = ["iso_a4_210x297mm"],
+                    SidesDefault = Sides.OneSided,
+                    SidesSupported = [Sides.OneSided],
+                    FinishingsDefault = Finishings.None,
+                    FinishingsSupported = [Finishings.None],
+                    PrinterResolutionDefault = new Resolution(600, 600, ResolutionUnit.DotsPerInch),
+                    PrinterResolutionSupported = [new Resolution(600, 600, ResolutionUnit.DotsPerInch)],
+                    PrintQualityDefault = PrintQuality.Normal,
+                    PrintQualitySupported = [PrintQuality.Normal],
+                    JobPriorityDefault = 1,
+                    JobPrioritySupported = 1,
+                    CopiesDefault = 1,
+                    CopiesSupported = new SharpIpp.Protocol.Models.Range(1, 100),
+                    OrientationRequestedDefault = Orientation.Portrait,
+                    OrientationRequestedSupported = [Orientation.Portrait],
+                    PageRangesSupported = true,
+                    JobHoldUntilSupported = [JobHoldUntil.NoHold],
+                    JobHoldUntilDefault = JobHoldUntil.NoHold,
+                    OutputBinDefault = "face-down",
+                    OutputBinSupported = ["face-down"],
+                    MediaColDefault =  new MediaCol
+                    {
+                        MediaBackCoating = MediaCoating.Glossy,
+                        MediaBottomMargin = 10,
+                        MediaColor = "white",
+                        MediaFrontCoating = MediaCoating.Glossy,
+                        MediaGrain = MediaGrain.XDirection,
+                        MediaHoleCount = 0,
+                        MediaInfo = "test",
+                        MediaKey = "test",
+                        MediaLeftMargin = 10,
+                        MediaOrderCount = 1,
+                        MediaPrePrinted = MediaPrePrinted.Blank,
+                        MediaRecycled = MediaRecycled.None,
+                        MediaRightMargin = 10,
+                        MediaSize = new MediaSize { XDimension = 21000, YDimension = 29700 }, // 1/100 mm for A4
+                        MediaSizeName = "iso_a4_210x297mm",
+                        MediaSource = MediaSource.Main,
+                        MediaSourceProperties = new MediaSourceProperties { MediaSourceFeedDirection = MediaSourceFeedDirection.LongEdgeFirst, MediaSourceFeedOrientation = Orientation.Portrait },
+                        MediaThickness = 10,
+                        MediaTooth = MediaTooth.Medium,
+                        MediaTopMargin = 10,
+                        MediaType = "stationery",
+                        MediaWeightMetric = 80
+                    },
+                    PrintColorModeDefault = PrintColorMode.Color,
+                    PrintColorModeSupported = [PrintColorMode.Color],
+                    WhichJobsSupported = [WhichJobs.Completed]
+                },
+                OperationAttributes = new()
+                {
+                    StatusMessage = "successful-ok",
+                    DetailedStatusMessage = ["detail1"],
+                    DocumentAccessError = "none"
                 }
             };
             var memoryStream = new MemoryStream();
@@ -699,6 +857,12 @@ public class SharpIppIntegrationTests
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
                 StatusCode = IppStatusCode.SuccessfulOk,
+                OperationAttributes = new()
+                {
+                    StatusMessage = "successful-ok",
+                    DetailedStatusMessage = ["detail1"],
+                    DocumentAccessError = "none"
+                },
             };
             var memoryStream = new MemoryStream();
             await server.SendResponseAsync(serverResponse, memoryStream, c);
@@ -744,6 +908,12 @@ public class SharpIppIntegrationTests
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
                 StatusCode = IppStatusCode.SuccessfulOk,
+                OperationAttributes = new()
+                {
+                    StatusMessage = "successful-ok",
+                    DetailedStatusMessage = ["detail1"],
+                    DocumentAccessError = "none"
+                },
             };
             var memoryStream = new MemoryStream();
             await server.SendResponseAsync(serverResponse, memoryStream, c);
@@ -790,6 +960,12 @@ public class SharpIppIntegrationTests
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
                 StatusCode = IppStatusCode.SuccessfulOk,
+                OperationAttributes = new()
+                {
+                    StatusMessage = "successful-ok",
+                    DetailedStatusMessage = ["detail1"],
+                    DocumentAccessError = "none"
+                },
             };
             var memoryStream = new MemoryStream();
             await server.SendResponseAsync(serverResponse, memoryStream, c);
@@ -838,6 +1014,12 @@ public class SharpIppIntegrationTests
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
                 StatusCode = IppStatusCode.SuccessfulOk,
+                OperationAttributes = new()
+                {
+                    StatusMessage = "successful-ok",
+                    DetailedStatusMessage = ["detail1"],
+                    DocumentAccessError = "none"
+                },
             };
             var memoryStream = new MemoryStream();
             await server.SendResponseAsync(serverResponse, memoryStream, c);
@@ -885,6 +1067,12 @@ public class SharpIppIntegrationTests
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
                 StatusCode = IppStatusCode.SuccessfulOk,
+                OperationAttributes = new()
+                {
+                    StatusMessage = "successful-ok",
+                    DetailedStatusMessage = ["detail1"],
+                    DocumentAccessError = "none"
+                },
             };
             var memoryStream = new MemoryStream();
             await server.SendResponseAsync(serverResponse, memoryStream, c);
@@ -935,6 +1123,12 @@ public class SharpIppIntegrationTests
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
                 StatusCode = IppStatusCode.SuccessfulOk,
+                OperationAttributes = new()
+                {
+                    StatusMessage = "successful-ok",
+                    DetailedStatusMessage = ["detail1"],
+                    DocumentAccessError = "none"
+                },
             };
             var memoryStream = new MemoryStream();
             await server.SendResponseAsync(serverResponse, memoryStream, c);
@@ -989,10 +1183,18 @@ public class SharpIppIntegrationTests
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
                 StatusCode = IppStatusCode.SuccessfulOk,
+                OperationAttributes = new()
+                {
+                    StatusMessage = "successful-ok",
+                    DetailedStatusMessage = ["detail1"],
+                    DocumentAccessError = "none"
+                },
                 JobAttributes = new()
                 {
                     JobState = JobState.Pending,
                     JobStateReasons = [JobStateReason.None],
+                    JobStateMessage = "pending",
+                    NumberOfInterveningJobs = 0,
                     JobId = 456,
                     JobUri = "http://127.0.0.1:631/456"
                 }
@@ -1093,6 +1295,12 @@ public class SharpIppIntegrationTests
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
                 StatusCode = IppStatusCode.SuccessfulOk,
+                OperationAttributes = new()
+                {
+                    StatusMessage = "successful-ok",
+                    DetailedStatusMessage = ["detail1"],
+                    DocumentAccessError = "none"
+                },
             };
             var memoryStream = new MemoryStream();
             await server.SendResponseAsync(serverResponse, memoryStream, c);
@@ -1145,22 +1353,106 @@ public class SharpIppIntegrationTests
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
                 StatusCode = IppStatusCode.SuccessfulOk,
+                OperationAttributes = new()
+                {
+                    StatusMessage = "successful-ok",
+                    DetailedStatusMessage = ["detail1"],
+                    DocumentAccessError = "none"
+                },
                 PrintersAttributes = 
                 [
                     new PrinterDescriptionAttributes
                     {
                         PrinterUriSupported = ["http://127.0.0.1:631"],
+                        UriSecuritySupported = [UriSecurity.None],
+                        UriAuthenticationSupported = [UriAuthentication.None],
                         PrinterName = "printer-1",
-                        PrinterState = PrinterState.Idle,
-                        PrinterStateReasons = ["none"],
                         PrinterLocation = "Office",
                         PrinterInfo = "Test Printer Info",
                         PrinterMoreInfo = "http://127.0.0.1:631",
                         PrinterDriverInstaller = "installer",
                         PrinterMakeAndModel = "SharpIpp Virtual Printer",
                         PrinterMoreInfoManufacturer = "http://manufacturer.com",
+                        PrinterState = PrinterState.Idle,
+                        PrinterStateReasons = ["none"],
                         PrinterStateMessage = "Idle",
-                        QueuedJobCount = 0
+                        IppVersionsSupported = [IppVersion.V1_1],
+                        OperationsSupported = [IppOperation.PrintJob],
+                        MultipleDocumentJobsSupported = true,
+                        CharsetConfigured = "utf-8",
+                        CharsetSupported = ["utf-8"],
+                        NaturalLanguageConfigured = "en-us",
+                        GeneratedNaturalLanguageSupported = ["en-us"],
+                        DocumentFormatDefault = "application/pdf",
+                        DocumentFormatSupported = ["application/pdf"],
+                        PrinterIsAcceptingJobs = true,
+                        QueuedJobCount = 0,
+                        PrinterMessageFromOperator = "message",
+                        ColorSupported = true,
+                        ReferenceUriSchemesSupported = [UriScheme.Ftp],
+                        PdlOverrideSupported = "attempted",
+                        PrinterUpTime = 100,
+                        PrinterCurrentTime = new DateTimeOffset(2024, 1, 1, 1, 1, 1, TimeSpan.Zero),
+                        MultipleOperationTimeOut = 10,
+                        CompressionSupported = [Compression.None],
+                        JobKOctetsSupported = new SharpIpp.Protocol.Models.Range(1, 100),
+                        JpegKOctetsSupported = new SharpIpp.Protocol.Models.Range(1, 100),
+                        PdfKOctetsSupported = new SharpIpp.Protocol.Models.Range(1, 100),
+                        JobImpressionsSupported = new SharpIpp.Protocol.Models.Range(1, 100),
+                        JobMediaSheetsSupported = new SharpIpp.Protocol.Models.Range(1, 100),
+                        PagesPerMinute = 10,
+                        PagesPerMinuteColor = 10,
+                        PrintScalingDefault = PrintScaling.Auto,
+                        PrintScalingSupported = [PrintScaling.Auto],
+                        MediaDefault = "iso_a4_210x297mm",
+                        MediaSupported = ["iso_a4_210x297mm"],
+                        SidesDefault = Sides.OneSided,
+                        SidesSupported = [Sides.OneSided],
+                        FinishingsDefault = Finishings.None,
+                        FinishingsSupported = [Finishings.None],
+                        PrinterResolutionDefault = new Resolution(600, 600, ResolutionUnit.DotsPerInch),
+                        PrinterResolutionSupported = [new Resolution(600, 600, ResolutionUnit.DotsPerInch)],
+                        PrintQualityDefault = PrintQuality.Normal,
+                        PrintQualitySupported = [PrintQuality.Normal],
+                        JobPriorityDefault = 1,
+                        JobPrioritySupported = 1,
+                        CopiesDefault = 1,
+                        CopiesSupported = new SharpIpp.Protocol.Models.Range(1, 100),
+                        OrientationRequestedDefault = Orientation.Portrait,
+                        OrientationRequestedSupported = [Orientation.Portrait],
+                        PageRangesSupported = true,
+                        JobHoldUntilSupported = [JobHoldUntil.NoHold],
+                        JobHoldUntilDefault = JobHoldUntil.NoHold,
+                        OutputBinDefault = "face-down",
+                        OutputBinSupported = ["face-down"],
+                        MediaColDefault =  new MediaCol
+                        {
+                            MediaBackCoating = MediaCoating.Glossy,
+                            MediaBottomMargin = 10,
+                            MediaColor = "white",
+                            MediaFrontCoating = MediaCoating.Glossy,
+                            MediaGrain = MediaGrain.XDirection,
+                            MediaHoleCount = 0,
+                            MediaInfo = "test",
+                            MediaKey = "test",
+                            MediaLeftMargin = 10,
+                            MediaOrderCount = 1,
+                            MediaPrePrinted = MediaPrePrinted.Blank,
+                            MediaRecycled = MediaRecycled.None,
+                            MediaRightMargin = 10,
+                            MediaSize = new MediaSize { XDimension = 21000, YDimension = 29700 }, // 1/100 mm for A4
+                            MediaSizeName = "iso_a4_210x297mm",
+                            MediaSource = MediaSource.Main,
+                            MediaSourceProperties = new MediaSourceProperties { MediaSourceFeedDirection = MediaSourceFeedDirection.LongEdgeFirst, MediaSourceFeedOrientation = Orientation.Portrait },
+                            MediaThickness = 10,
+                            MediaTooth = MediaTooth.Medium,
+                            MediaTopMargin = 10,
+                            MediaType = "stationery",
+                            MediaWeightMetric = 80
+                        },
+                        PrintColorModeDefault = PrintColorMode.Color,
+                        PrintColorModeSupported = [PrintColorMode.Color],
+                        WhichJobsSupported = [WhichJobs.Completed]
                     }
                 ]
             };

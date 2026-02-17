@@ -6,9 +6,9 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-
 using SharpIpp.Exceptions;
 using SharpIpp.Mapping;
+using SharpIpp.Mapping.Extensions;
 using SharpIpp.Mapping.Profiles;
 using SharpIpp.Models.Requests;
 using SharpIpp.Protocol;

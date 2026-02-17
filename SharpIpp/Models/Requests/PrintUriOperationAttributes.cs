@@ -1,4 +1,5 @@
 ﻿using SharpIpp.Mapping;
+using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Models;
 using System;
 using System.Collections.Generic;
@@ -8,15 +9,13 @@ using System.Text;
 namespace SharpIpp.Models.Requests;
 public class PrintUriOperationAttributes : PrintJobOperationAttributes
 {
-    public Uri DocumentUri { get; set; } = null!;
+    public Uri? DocumentUri { get; set; }
 
     public static new T Create<T>(Dictionary<string, IppAttribute[]> dict, IMapperApplier mapper) where T : PrintUriOperationAttributes, new()
     {
         var attributes = PrintJobOperationAttributes.Create<T>(dict, mapper);
         if (Uri.TryCreate(mapper.MapFromDic<string?>(dict, JobAttribute.DocumentUri), UriKind.RelativeOrAbsolute, out Uri documentUri))
             attributes.DocumentUri = documentUri;
-        else
-            throw new ArgumentException($"{JobAttribute.DocumentUri} attribute must be set");
         return attributes;
     }
 

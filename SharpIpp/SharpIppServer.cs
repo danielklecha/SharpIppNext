@@ -1,5 +1,6 @@
 ﻿using SharpIpp.Exceptions;
 using SharpIpp.Mapping;
+using SharpIpp.Mapping.Extensions;
 using SharpIpp.Mapping.Profiles;
 using SharpIpp.Models.Requests;
 using SharpIpp.Protocol;

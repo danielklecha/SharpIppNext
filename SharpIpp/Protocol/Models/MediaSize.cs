@@ -1,4 +1,5 @@
 ﻿using SharpIpp.Mapping;
+using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Extensions;
 using System;
 using System.Collections.Generic;

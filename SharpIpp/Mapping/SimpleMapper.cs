@@ -85,12 +85,11 @@ namespace SharpIpp.Mapping
                 {
                     case MapType.Cast: return (TDest)source;
                     case MapType.Simple:
-                        if (!_dictionary.TryGetValue(map, out var mapFunc))
+                        if (_dictionary.TryGetValue(map, out var mapFunc))
                         {
-                            continue;
+                            return (TDest)mapFunc(source, dest, this);
                         }
-
-                        return (TDest)mapFunc(source, dest, this);
+                        break;
                 }
             }
 

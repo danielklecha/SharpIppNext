@@ -1,4 +1,5 @@
 ﻿using SharpIpp.Mapping;
+using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Extensions;
 using System;
 using System.Collections.Generic;
@@ -155,6 +156,8 @@ public class MediaCol
             yield return new IppAttribute(Tag.Keyword, nameof(MediaBackCoating).ConvertCamelCaseToKebabCase(), mapper.Map<string>(MediaBackCoating.Value));
         if (MediaBottomMargin.HasValue)
             yield return new IppAttribute(Tag.Integer, nameof(MediaBottomMargin).ConvertCamelCaseToKebabCase(), MediaBottomMargin.Value);
+        if (MediaColor != null)
+            yield return new IppAttribute(Tag.Keyword, nameof(MediaColor).ConvertCamelCaseToKebabCase(), MediaColor);
         if (MediaFrontCoating.HasValue)
             yield return new IppAttribute(Tag.Keyword, nameof(MediaFrontCoating).ConvertCamelCaseToKebabCase(), mapper.Map<string>(MediaFrontCoating.Value));
         if (MediaGrain.HasValue)
@@ -189,6 +192,10 @@ public class MediaCol
             yield return new IppAttribute(Tag.Integer, nameof(MediaThickness).ConvertCamelCaseToKebabCase(), MediaThickness.Value);
         if (MediaTooth.HasValue)
             yield return new IppAttribute(Tag.Keyword, nameof(MediaTooth).ConvertCamelCaseToKebabCase(), mapper.Map<string>(MediaTooth.Value));
+        if (MediaTopMargin.HasValue)
+            yield return new IppAttribute(Tag.Integer, nameof(MediaTopMargin).ConvertCamelCaseToKebabCase(), MediaTopMargin.Value);
+        if (MediaType != null)
+            yield return new IppAttribute(Tag.Keyword, nameof(MediaType).ConvertCamelCaseToKebabCase(), MediaType);
         if (MediaWeightMetric.HasValue)
             yield return new IppAttribute(Tag.Integer, nameof(MediaWeightMetric).ConvertCamelCaseToKebabCase(), MediaWeightMetric.Value);
     }

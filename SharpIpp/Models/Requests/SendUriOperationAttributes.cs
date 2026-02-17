@@ -1,4 +1,5 @@
 ﻿using SharpIpp.Mapping;
+using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Models;
 using System;
 using System.Collections.Generic;
@@ -14,8 +15,6 @@ public class SendUriOperationAttributes : SendDocumentOperationAttributes
         var attributes = SendDocumentOperationAttributes.Create<T>(dict, mapper);
         if (Uri.TryCreate(mapper.MapFromDic<string?>(dict, JobAttribute.DocumentUri), UriKind.RelativeOrAbsolute, out Uri documentUri))
             attributes.DocumentUri = documentUri;
-        else
-            throw new ArgumentException($"{JobAttribute.DocumentUri} attribute must be set");
         return attributes;
     }
 

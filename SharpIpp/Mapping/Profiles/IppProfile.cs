@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SharpIpp.Models.Requests;
 using ResponseOperationAttributes = SharpIpp.Models.Responses.OperationAttributes;
+using SharpIpp.Mapping.Extensions;
 
 namespace SharpIpp.Mapping.Profiles
 {
