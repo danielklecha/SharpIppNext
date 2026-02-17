@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-
-using SharpIpp.Models;
+using SharpIpp.Models.Requests;
+using SharpIpp.Models.Responses;
 
 namespace SharpIpp
 {

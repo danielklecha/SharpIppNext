@@ -31,23 +31,5 @@ namespace SharpIppTests.Protocol.Extensions
 
             mock.Object.IsSuccessfulStatusCode().Should().Be(expected);
         }
-
-        [TestMethod]
-        public void AllAttributes_ShouldCollectFromAllSections()
-        {
-            var section1 = new IppSection { Tag = SectionTag.OperationAttributesTag };
-            section1.Attributes.Add(new IppAttribute(Tag.Charset, "a", "1"));
-            var section2 = new IppSection { Tag = SectionTag.JobAttributesTag };
-            section2.Attributes.Add(new IppAttribute(Tag.NaturalLanguage, "b", "2"));
-            
-            var mock = new Mock<IIppResponseMessage>();
-            mock.Setup(x => x.Sections).Returns(new List<IppSection> { section1, section2 });
-
-            var result = mock.Object.AllAttributes();
-
-            result.Should().HaveCount(2);
-            result.Should().ContainKey("a");
-            result.Should().ContainKey("b");
-        }
     }
 }

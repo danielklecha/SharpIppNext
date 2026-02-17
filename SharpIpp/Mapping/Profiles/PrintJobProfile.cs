@@ -1,5 +1,6 @@
 ﻿using System;
-using SharpIpp.Models;
+using SharpIpp.Models.Requests;
+using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Extensions;
 using SharpIpp.Protocol.Models;

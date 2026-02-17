@@ -2,13 +2,18 @@
 using SharpIpp;
 using Moq;
 using SharpIpp.Exceptions;
-using SharpIpp.Models;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Models;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
+using FluentAssertions;
 using SharpIppTests.Extensions;
+using SharpIpp.Models.Requests;
+using SharpIpp.Models.Responses;
 
 namespace SharpIpp.Tests;
 
@@ -641,7 +646,7 @@ public class SharpIppServerTests
         // Act
         Func<Task<IIppRequest>> act = async () => await server.ReceiveRequestAsync( ippRequestMessage );
         // Assert
-        (await act.Should().NotThrowAsync()).Which.Should().BeEquivalentTo( new Models.PrintJobRequest
+        (await act.Should().NotThrowAsync()).Which.Should().BeEquivalentTo( new PrintJobRequest
         {
             RequestId = 123,
             Version = IppVersion.V1_1,
@@ -1033,29 +1038,36 @@ public class SharpIppServerTests
             RequestId = 123,
             Version = IppVersion.V1_1,
             StatusCode = IppStatusCode.SuccessfulOk,
-            JobId = 234,
-            JobUri = "http://127.0.0.1:631/234",
-            JobState = JobState.Pending,
-            JobStateMessage = "custom state",
-            NumberOfInterveningJobs = 0,
-            JobStateReasons = [JobStateReason.None]
+            JobAttributes = new()
+            {
+                JobId = 234,
+                JobUri = "http://127.0.0.1:631/234",
+                JobState = JobState.Pending,
+                JobStateMessage = "custom state",
+                NumberOfInterveningJobs = 0,
+                JobStateReasons = [JobStateReason.None]
+            }
         };
         var rawMessage = new IppResponseMessage
         {
             RequestId = 123
         };
-        var operationSection = new IppSection { Tag = SectionTag.OperationAttributesTag };
-        operationSection.Attributes.Add( new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ) );
-        operationSection.Attributes.Add( new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ) );
-        rawMessage.Sections.Add( operationSection );
-        var jobSection = new IppSection { Tag = SectionTag.JobAttributesTag };
-        jobSection.Attributes.Add(new IppAttribute(Tag.Uri, JobAttribute.JobUri, "http://127.0.0.1:631/234"));
-        jobSection.Attributes.Add(new IppAttribute(Tag.Integer, JobAttribute.JobId, 234));
-        jobSection.Attributes.Add(new IppAttribute(Tag.Enum, JobAttribute.JobState, (int)JobState.Pending));
-        jobSection.Attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.JobStateMessage, "custom state"));
-        jobSection.Attributes.Add(new IppAttribute(Tag.Integer, JobAttribute.NumberOfInterveningJobs, 0));
-        jobSection.Attributes.Add(new IppAttribute(Tag.Keyword, JobAttribute.JobStateReasons, "none"));
-        rawMessage.Sections.Add(jobSection);
+        var operationAttrs = new List<IppAttribute>
+        {
+            new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ),
+            new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" )
+        };
+        rawMessage.OperationAttributes.Add( operationAttrs );
+        var jobAttrs = new List<IppAttribute>
+        {
+            new IppAttribute(Tag.Uri, JobAttribute.JobUri, "http://127.0.0.1:631/234"),
+            new IppAttribute(Tag.Integer, JobAttribute.JobId, 234),
+            new IppAttribute(Tag.Enum, JobAttribute.JobState, (int)JobState.Pending),
+            new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.JobStateMessage, "custom state"),
+            new IppAttribute(Tag.Integer, JobAttribute.NumberOfInterveningJobs, 0),
+            new IppAttribute(Tag.Keyword, JobAttribute.JobStateReasons, "none")
+        };
+        rawMessage.JobAttributes.Add(jobAttrs);
         // Act
         await server.SendResponseAsync( message, Stream.Null );
         // Assert
@@ -1076,29 +1088,36 @@ public class SharpIppServerTests
             RequestId = 123,
             Version = IppVersion.V1_1,
             StatusCode = IppStatusCode.SuccessfulOk,
-            JobId = 234,
-            JobUri = "http://127.0.0.1:631/234",
-            JobState = JobState.Pending,
-            JobStateMessage = "custom state",
-            NumberOfInterveningJobs = 0,
-            JobStateReasons = [JobStateReason.None]
+            JobAttributes = new()
+            {
+                JobId = 234,
+                JobUri = "http://127.0.0.1:631/234",
+                JobState = JobState.Pending,
+                JobStateMessage = "custom state",
+                NumberOfInterveningJobs = 0,
+                JobStateReasons = [JobStateReason.None]
+            }
         };
         var rawMessage = new IppResponseMessage
         {
             RequestId = 123
         };
-        var operationSection = new IppSection { Tag = SectionTag.OperationAttributesTag };
-        operationSection.Attributes.Add(new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"));
-        operationSection.Attributes.Add(new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"));
-        rawMessage.Sections.Add(operationSection);
-        var jobSection = new IppSection { Tag = SectionTag.JobAttributesTag };
-        jobSection.Attributes.Add(new IppAttribute(Tag.Uri, JobAttribute.JobUri, "http://127.0.0.1:631/234"));
-        jobSection.Attributes.Add(new IppAttribute(Tag.Integer, JobAttribute.JobId, 234));
-        jobSection.Attributes.Add(new IppAttribute(Tag.Enum, JobAttribute.JobState, (int)JobState.Pending));
-        jobSection.Attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.JobStateMessage, "custom state"));
-        jobSection.Attributes.Add(new IppAttribute(Tag.Integer, JobAttribute.NumberOfInterveningJobs, 0));
-        jobSection.Attributes.Add(new IppAttribute(Tag.Keyword, JobAttribute.JobStateReasons, "none"));
-        rawMessage.Sections.Add(jobSection);
+        var operationAttrs = new List<IppAttribute>
+        {
+            new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en")
+        };
+        rawMessage.OperationAttributes.Add(operationAttrs);
+        var jobAttrs = new List<IppAttribute>
+        {
+            new IppAttribute(Tag.Uri, JobAttribute.JobUri, "http://127.0.0.1:631/234"),
+            new IppAttribute(Tag.Integer, JobAttribute.JobId, 234),
+            new IppAttribute(Tag.Enum, JobAttribute.JobState, (int)JobState.Pending),
+            new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.JobStateMessage, "custom state"),
+            new IppAttribute(Tag.Integer, JobAttribute.NumberOfInterveningJobs, 0),
+            new IppAttribute(Tag.Keyword, JobAttribute.JobStateReasons, "none")
+        };
+        rawMessage.JobAttributes.Add(jobAttrs);
         // Act
         Func<Task<IIppResponseMessage>> act = () => server.CreateRawResponseAsync(message);
         // Assert

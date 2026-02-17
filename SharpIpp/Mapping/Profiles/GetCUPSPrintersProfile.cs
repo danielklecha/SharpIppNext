@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
-using SharpIpp.Models;
+using SharpIpp.Models.Requests;
+using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Extensions;
 using SharpIpp.Protocol.Models;
@@ -33,7 +33,7 @@ namespace SharpIpp.Mapping.Profiles
 
             mapper.CreateMap<IppResponseMessage, CUPSGetPrintersResponse>((src, map) =>
             {
-                var dst = new CUPSGetPrintersResponse { Printers = map.Map<List<IppSection>, PrinterDescriptionAttributes[]>(src.Sections) };
+                var dst = new CUPSGetPrintersResponse { PrintersAttributes = map.Map<List<List<IppAttribute>>, PrinterDescriptionAttributes[]>(src.PrinterAttributes) };
                 map.Map<IppResponseMessage, IIppResponse>(src, dst);
                 return dst;
             });
@@ -41,23 +41,22 @@ namespace SharpIpp.Mapping.Profiles
             mapper.CreateMap<CUPSGetPrintersResponse, IppResponseMessage>( ( src, map ) =>
             {
                 var dst = new IppResponseMessage();
-                dst.Sections.AddRange( map.Map<PrinterDescriptionAttributes[], List<IppSection>>( src.Printers ?? [] ) );
+                dst.PrinterAttributes.AddRange( map.Map<PrinterDescriptionAttributes[], List<List<IppAttribute>>>( src.PrintersAttributes ?? [] ) );
                 map.Map<IIppResponse, IppResponseMessage>( src, dst );
                 return dst;
             } );
 
-            mapper.CreateMap<List<IppSection>, PrinterDescriptionAttributes[]>((src, map) =>
-                src.Where(x => x.Tag == SectionTag.PrinterAttributesTag)
-                    .Select(x => map.Map<PrinterDescriptionAttributes>(x.AllAttributes()))
+            mapper.CreateMap<List<List<IppAttribute>>, PrinterDescriptionAttributes[]>((src, map) =>
+                src.Select(x => map.Map<PrinterDescriptionAttributes>(x.ToIppDictionary()))
                     .ToArray());
 
-            mapper.CreateMap<PrinterDescriptionAttributes[], List<IppSection>>( (src, map) =>
+            mapper.CreateMap<PrinterDescriptionAttributes[], List<List<IppAttribute>>>( (src, map) =>
             {
                 return src.Select(x =>
                 {
-                    var section = new IppSection { Tag = SectionTag.PrinterAttributesTag };
-                    section.Attributes.AddRange( map.Map<IDictionary<string, IppAttribute[]>>( x ).Values.SelectMany( v => v ) );
-                    return section;
+                    var attrs = new List<IppAttribute>();
+                    attrs.AddRange( map.Map<IDictionary<string, IppAttribute[]>>( x ).Values.SelectMany( v => v ) );
+                    return attrs;
                 }).ToList();
             });
 

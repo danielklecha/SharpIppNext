@@ -445,13 +445,17 @@ public class IppProtocolTests
             Version = IppVersion.V1_1,
             RequestId = 123
         };
-        var operationSection = new IppSection { Tag = SectionTag.OperationAttributesTag };
-        operationSection.Attributes.Add( new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ) );
-        operationSection.Attributes.Add( new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ) );
-        message.Sections.Add( operationSection );
-        var jobSection = new IppSection { Tag = SectionTag.JobAttributesTag };
-        jobSection.Attributes.Add( new IppAttribute( Tag.Integer, JobAttribute.Copies, 1 ) );
-        message.Sections.Add( jobSection );
+        var operationAttrs = new List<IppAttribute>
+        {
+            new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ),
+            new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" )
+        };
+        message.OperationAttributes.Add( operationAttrs );
+        var jobAttrs = new List<IppAttribute>
+        {
+            new IppAttribute( Tag.Integer, JobAttribute.Copies, 1 )
+        };
+        message.JobAttributes.Add( jobAttrs );
         // Act
         await protocol.WriteIppResponseAsync( message, requestStream );
         // Assert
@@ -498,13 +502,17 @@ public class IppProtocolTests
             Version = IppVersion.V1_1,
             RequestId = 123
         };
-        var operationSection = new IppSection { Tag = SectionTag.OperationAttributesTag };
-        operationSection.Attributes.Add( new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ) );
-        operationSection.Attributes.Add( new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ) );
-        message.Sections.Add( operationSection );
-        var jobSection = new IppSection { Tag = SectionTag.JobAttributesTag };
-        jobSection.Attributes.Add( new IppAttribute( Tag.Integer, JobAttribute.Copies, 1 ) );
-        message.Sections.Add( jobSection );
+        var operationAttrs = new List<IppAttribute>
+        {
+            new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ),
+            new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" )
+        };
+        message.OperationAttributes.Add( operationAttrs );
+        var jobAttrs = new List<IppAttribute>
+        {
+            new IppAttribute( Tag.Integer, JobAttribute.Copies, 1 )
+        };
+        message.JobAttributes.Add( jobAttrs );
         (await act.Should().NotThrowAsync()).Which.Should().BeEquivalentTo( message );
     }
 

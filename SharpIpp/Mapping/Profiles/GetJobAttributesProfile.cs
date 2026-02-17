@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
-using SharpIpp.Models;
+using SharpIpp.Models.Requests;
+using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Extensions;
 using SharpIpp.Protocol.Models;
@@ -34,7 +34,7 @@ namespace SharpIpp.Mapping.Profiles
             //https://tools.ietf.org/html/rfc2911#section-4.4
             mapper.CreateMap<IppResponseMessage, GetJobAttributesResponse>((src, map) =>
             {
-                var dst = new GetJobAttributesResponse { JobAttributes = map.Map<JobDescriptionAttributes>(src.AllAttributes()) };
+                var dst = new GetJobAttributesResponse { JobAttributes = map.Map<JobDescriptionAttributes>(src.JobAttributes.SelectMany(x => x).ToIppDictionary()) };
                 map.Map<IppResponseMessage, IIppResponse>(src, dst);
                 return dst;
             });
@@ -43,9 +43,9 @@ namespace SharpIpp.Mapping.Profiles
             {
                 var dst = new IppResponseMessage();
                 map.Map<IIppResponse, IppResponseMessage>( src, dst );
-                var section = new IppSection { Tag = SectionTag.JobAttributesTag };
-                section.Attributes.AddRange( map.Map<IDictionary<string, IppAttribute[]>>( src.JobAttributes ).Values.SelectMany( x => x ) );
-                dst.Sections.Add(section );
+                var jobAttrs = new List<IppAttribute>();
+                jobAttrs.AddRange( map.Map<IDictionary<string, IppAttribute[]>>( src.JobAttributes ).Values.SelectMany( x => x ) );
+                dst.JobAttributes.Add(jobAttrs);
                 return dst;
             } );
 

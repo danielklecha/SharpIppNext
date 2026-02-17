@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-
-using SharpIpp.Models;
+using SharpIpp.Models.Requests;
+using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
 
 namespace SharpIpp

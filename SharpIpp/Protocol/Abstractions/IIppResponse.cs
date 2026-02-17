@@ -1,3 +1,4 @@
+using SharpIpp.Models.Responses;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Protocol
@@ -10,10 +11,6 @@ namespace SharpIpp.Protocol
 
         int RequestId { get; set; }
 
-        string? StatusMessage { get; set; }
-
-        string[]? DetailedStatusMessage { get; set; }
-
-        string? DocumentAccessError { get; set; }
+        OperationAttributes? OperationAttributes { get; set; }
     }
 }

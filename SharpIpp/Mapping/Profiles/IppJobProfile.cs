@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using SharpIpp.Exceptions;
-using SharpIpp.Models;
+using SharpIpp.Models.Requests;
+using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Extensions;
 using SharpIpp.Protocol.Models;
@@ -29,20 +30,25 @@ namespace SharpIpp.Mapping.Profiles
             mapper.CreateMap<IppResponseMessage, IIppJobResponse>((src, dst, map) =>
             {
                 map.Map<IppResponseMessage, IIppResponse>(src, dst);
-                map.Map(src.AllAttributes(), dst);
+                var jobAttrs = new JobAttributes();
+                map.Map(src.JobAttributes.SelectMany(x => x).ToIppDictionary(), jobAttrs);
+                dst.JobAttributes = jobAttrs;
                 return dst;
             });
 
             mapper.CreateMap<IIppJobResponse, IppResponseMessage>( ( src, dst, map ) =>
             {
                 map.Map<IIppResponse, IppResponseMessage>( src, dst );
-                var section = new IppSection { Tag = SectionTag.JobAttributesTag };
-                section.Attributes.AddRange( map.Map<IIppJobResponse, IDictionary<string, IppAttribute[]>>( src ).Values.SelectMany( x => x ) );
-                dst.Sections.Add( section );
+                if (src.JobAttributes != null)
+                {
+                    var jobAttrs = new List<IppAttribute>();
+                    jobAttrs.AddRange( map.Map<JobAttributes, IDictionary<string, IppAttribute[]>>( src.JobAttributes ).Values.SelectMany( x => x ) );
+                    dst.JobAttributes.Add( jobAttrs );
+                }
                 return dst;
             } );
 
-            mapper.CreateMap<IDictionary<string, IppAttribute[]>, IIppJobResponse>((
+            mapper.CreateMap<IDictionary<string, IppAttribute[]>, JobAttributes>((
                 src,
                 dst,
                 map) =>
@@ -56,7 +62,7 @@ namespace SharpIpp.Mapping.Profiles
                 return dst;
             });
 
-            mapper.CreateMap<IIppJobResponse, IDictionary<string, IppAttribute[]>>( (
+            mapper.CreateMap<JobAttributes, IDictionary<string, IppAttribute[]>>( (
                 src,
                 dst,
                 map ) =>

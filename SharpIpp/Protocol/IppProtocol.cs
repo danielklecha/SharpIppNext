@@ -73,12 +73,30 @@ namespace SharpIpp.Protocol
             }
         }
 
+        private static List<List<IppAttribute>> GetSectionList(IIppResponseMessage res, SectionTag sectionTag)
+        {
+            return sectionTag switch
+            {
+                SectionTag.OperationAttributesTag => res.OperationAttributes,
+                SectionTag.JobAttributesTag => res.JobAttributes,
+                SectionTag.PrinterAttributesTag => res.PrinterAttributes,
+                SectionTag.UnsupportedAttributesTag => res.UnsupportedAttributes,
+                SectionTag.SubscriptionAttributesTag => res.SubscriptionAttributes,
+                SectionTag.EventNotificationAttributesTag => res.EventNotificationAttributes,
+                SectionTag.ResourceAttributesTag => res.ResourceAttributes,
+                SectionTag.DocumentAttributesTag => res.DocumentAttributes,
+                SectionTag.SystemAttributesTag => res.SystemAttributes,
+                _ => throw new ArgumentException($"Unknown section tag: {sectionTag}")
+            };
+        }
+
         private void ReadSections(BinaryReader reader, IIppResponseMessage res)
         {
             IppAttribute? prevAttribute = null;
             Stack<IppAttribute> prevBegCollectionAttributes = new();
             IppAttribute? prevBegCollectionAttribute = new();
-            IppSection? section = null;
+            List<IppAttribute>? currentAttributes = null;
+            SectionTag currentSectionTag = default;
             Encoding encoding = Encoding.ASCII;
             do
             {
@@ -96,20 +114,21 @@ namespace SharpIpp.Protocol
                     case SectionTag.ResourceAttributesTag:
                     case SectionTag.DocumentAttributesTag:
                     case SectionTag.SystemAttributesTag:
-                        section = new IppSection { Tag = sectionTag };
-                        res.Sections.Add(section);
+                        currentAttributes = new List<IppAttribute>();
+                        currentSectionTag = sectionTag;
+                        GetSectionList(res, sectionTag).Add(currentAttributes);
                         break;
                     case SectionTag.EndOfAttributesTag:
                         return;
                     default:
-                        if (section is null)
+                        if (currentAttributes is null)
                         {
                             throw new ArgumentException($"<Hex dump> Expected section tag, found {data:X2}");
                         }
                         var attribute = ReadAttribute((Tag)data, reader, prevAttribute, prevBegCollectionAttribute, encoding);
                         switch (attribute.Tag)
                         {
-                            case Tag.Charset when section.Tag == SectionTag.OperationAttributesTag && attribute.Name == JobAttribute.AttributesCharset && attribute.Value is string charsetName:
+                            case Tag.Charset when currentSectionTag == SectionTag.OperationAttributesTag && attribute.Name == JobAttribute.AttributesCharset && attribute.Value is string charsetName:
                                 try
                                 {
                                     encoding = Encoding.GetEncoding(charsetName);
@@ -127,7 +146,7 @@ namespace SharpIpp.Protocol
                                 break;
                         }
                         prevAttribute = attribute;
-                        section.Attributes.Add(attribute);
+                        currentAttributes.Add(attribute);
                         break;
                 }
             }
@@ -280,9 +299,8 @@ namespace SharpIpp.Protocol
             var encoding = Encoding.ASCII;
             try
             {
-                var charset = ippResponseMessage.Sections
-                    .FirstOrDefault(x => x.Tag == SectionTag.OperationAttributesTag)
-                    ?.Attributes
+                var charset = ippResponseMessage.OperationAttributes
+                    .SelectMany(x => x)
                     .FirstOrDefault(x => x.Tag == Tag.Charset && x.Name == JobAttribute.AttributesCharset)
                     ?.Value as string;
                 if (charset is not null)
@@ -476,12 +494,25 @@ namespace SharpIpp.Protocol
 
         private void WriteSections( IIppResponseMessage responseMessage, BinaryWriter writer, Encoding encoding )
         {
-            foreach ( var section in responseMessage.Sections )
-            {
-                WriteSection( section.Tag, section.Attributes, writer, encoding );
-            }
+            WriteSections( SectionTag.OperationAttributesTag, responseMessage.OperationAttributes, writer, encoding );
+            WriteSections( SectionTag.JobAttributesTag, responseMessage.JobAttributes, writer, encoding );
+            WriteSections( SectionTag.PrinterAttributesTag, responseMessage.PrinterAttributes, writer, encoding );
+            WriteSections( SectionTag.UnsupportedAttributesTag, responseMessage.UnsupportedAttributes, writer, encoding );
+            WriteSections( SectionTag.SubscriptionAttributesTag, responseMessage.SubscriptionAttributes, writer, encoding );
+            WriteSections( SectionTag.EventNotificationAttributesTag, responseMessage.EventNotificationAttributes, writer, encoding );
+            WriteSections( SectionTag.ResourceAttributesTag, responseMessage.ResourceAttributes, writer, encoding );
+            WriteSections( SectionTag.DocumentAttributesTag, responseMessage.DocumentAttributes, writer, encoding );
+            WriteSections( SectionTag.SystemAttributesTag, responseMessage.SystemAttributes, writer, encoding );
             //end-of-attributes-tag https://tools.ietf.org/html/rfc8010#section-3.5.1
             writer.Write( (byte)SectionTag.EndOfAttributesTag );
+        }
+
+        private void WriteSections( SectionTag sectionTag, List<List<IppAttribute>> groups, BinaryWriter writer, Encoding encoding )
+        {
+            foreach ( var attributes in groups )
+            {
+                WriteSection( sectionTag, attributes, writer, encoding );
+            }
         }
 
         public void WriteSection( SectionTag sectionTag, List<IppAttribute> attributes, BinaryWriter writer, Encoding encoding )

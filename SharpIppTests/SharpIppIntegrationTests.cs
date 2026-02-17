@@ -1,7 +1,8 @@
 ﻿using Moq;
 using Moq.Protected;
 using SharpIpp;
-using SharpIpp.Models;
+using SharpIpp.Models.Requests;
+using SharpIpp.Models.Responses;
 using SharpIpp.Protocol.Models;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -116,11 +117,14 @@ public class SharpIppIntegrationTests
             {
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
-                JobState = JobState.Pending,
                 StatusCode = IppStatusCode.SuccessfulOk,
-                JobStateReasons = [JobStateReason.None],
-                JobId = 456,
-                JobUri = "http://127.0.0.1:631/456"
+                JobAttributes = new()
+                {
+                    JobState = JobState.Pending,
+                    JobStateReasons = [JobStateReason.None],
+                    JobId = 456,
+                    JobUri = "http://127.0.0.1:631/456"
+                }
             };
             var memoryStream = new MemoryStream();
             await server.SendResponseAsync(serverResponse, memoryStream, c);
@@ -220,11 +224,14 @@ public class SharpIppIntegrationTests
             {
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
-                JobState = JobState.Pending,
                 StatusCode = IppStatusCode.SuccessfulOk,
-                JobStateReasons = [JobStateReason.None],
-                JobId = 456,
-                JobUri = "http://127.0.0.1:631/456"
+                JobAttributes = new()
+                {
+                    JobState = JobState.Pending,
+                    JobStateReasons = [JobStateReason.None],
+                    JobId = 456,
+                    JobUri = "http://127.0.0.1:631/456"
+                }
             };
             var memoryStream = new MemoryStream();
             await server.SendResponseAsync(serverResponse, memoryStream, c);
@@ -279,11 +286,14 @@ public class SharpIppIntegrationTests
             {
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
-                JobState = JobState.Pending,
                 StatusCode = IppStatusCode.SuccessfulOk,
-                JobStateReasons = [JobStateReason.None],
-                JobId = 456,
-                JobUri = "http://127.0.0.1:631/456"
+                JobAttributes = new()
+                {
+                    JobState = JobState.Pending,
+                    JobStateReasons = [JobStateReason.None],
+                    JobId = 456,
+                    JobUri = "http://127.0.0.1:631/456"
+                }
             };
             var memoryStream = new MemoryStream();
             await server.SendResponseAsync(serverResponse, memoryStream, c);
@@ -428,11 +438,14 @@ public class SharpIppIntegrationTests
             {
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
-                JobState = JobState.Pending,
                 StatusCode = IppStatusCode.SuccessfulOk,
-                JobStateReasons = [JobStateReason.None],
-                JobId = 456,
-                JobUri = "http://127.0.0.1:631/456"
+                JobAttributes = new()
+                {
+                    JobState = JobState.Pending,
+                    JobStateReasons = [JobStateReason.None],
+                    JobId = 456,
+                    JobUri = "http://127.0.0.1:631/456"
+                }
             };
             var memoryStream = new MemoryStream();
             await server.SendResponseAsync(serverResponse, memoryStream, c);
@@ -542,7 +555,7 @@ public class SharpIppIntegrationTests
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
                 StatusCode = IppStatusCode.SuccessfulOk,
-                Jobs = 
+                JobsAttributes = 
                 [
                     new JobDescriptionAttributes
                     {
@@ -622,17 +635,20 @@ public class SharpIppIntegrationTests
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
                 StatusCode = IppStatusCode.SuccessfulOk,
-                PrinterState = PrinterState.Idle,
-                PrinterStateReasons = ["none"],
-                PrinterName = "Test Printer",
-                PrinterLocation = "Office",
-                PrinterInfo = "Test Printer Info",
-                PrinterMoreInfo = "http://127.0.0.1:631",
-                PrinterDriverInstaller = "installer",
-                PrinterMakeAndModel = "SharpIpp Virtual Printer",
-                PrinterMoreInfoManufacturer = "http://manufacturer.com",
-                PrinterStateMessage = "Idle",
-                QueuedJobCount = 0
+                PrinterAttributes = new()
+                {
+                    PrinterState = PrinterState.Idle,
+                    PrinterStateReasons = ["none"],
+                    PrinterName = "Test Printer",
+                    PrinterLocation = "Office",
+                    PrinterInfo = "Test Printer Info",
+                    PrinterMoreInfo = "http://127.0.0.1:631",
+                    PrinterDriverInstaller = "installer",
+                    PrinterMakeAndModel = "SharpIpp Virtual Printer",
+                    PrinterMoreInfoManufacturer = "http://manufacturer.com",
+                    PrinterStateMessage = "Idle",
+                    QueuedJobCount = 0
+                }
             };
             var memoryStream = new MemoryStream();
             await server.SendResponseAsync(serverResponse, memoryStream, c);
@@ -972,11 +988,14 @@ public class SharpIppIntegrationTests
             {
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
-                JobState = JobState.Pending,
                 StatusCode = IppStatusCode.SuccessfulOk,
-                JobStateReasons = [JobStateReason.None],
-                JobId = 456,
-                JobUri = "http://127.0.0.1:631/456"
+                JobAttributes = new()
+                {
+                    JobState = JobState.Pending,
+                    JobStateReasons = [JobStateReason.None],
+                    JobId = 456,
+                    JobUri = "http://127.0.0.1:631/456"
+                }
             };
             var memoryStream = new MemoryStream();
             await server.SendResponseAsync(serverResponse, memoryStream, c);
@@ -1126,7 +1145,7 @@ public class SharpIppIntegrationTests
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
                 StatusCode = IppStatusCode.SuccessfulOk,
-                Printers = 
+                PrintersAttributes = 
                 [
                     new PrinterDescriptionAttributes
                     {

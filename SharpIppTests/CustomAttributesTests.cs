@@ -9,10 +9,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Moq.Protected;
 using SharpIpp;
-using SharpIpp.Models;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Models;
 using System.Diagnostics.CodeAnalysis;
+using SharpIpp.Models.Responses;
+using SharpIpp.Models.Requests;
 
 namespace SharpIpp.Tests
 {
@@ -73,8 +74,11 @@ namespace SharpIpp.Tests
                     RequestId = serverRequest.RequestId,
                     Version = serverRequest.Version,
                     StatusCode = IppStatusCode.SuccessfulOk,
-                    PrinterState = PrinterState.Idle,
-                    PrinterStateReasons = ["none"],
+                    PrinterAttributes = new()
+                    {
+                        PrinterState = PrinterState.Idle,
+                        PrinterStateReasons = ["none"],
+                    }
                 };
                 var memoryStream = new MemoryStream();
                 await server.SendResponseAsync(serverResponse, memoryStream, c);

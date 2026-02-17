@@ -15,7 +15,8 @@ using System.Diagnostics.CodeAnalysis;
 using FluentAssertions.Equivalency;
 using SharpIpp.Exceptions;
 using System.Net.Http;
-using SharpIpp.Models;
+using SharpIpp.Models.Responses;
+using SharpIpp.Models.Requests;
 
 namespace SharpIpp.Tests;
 
@@ -61,7 +62,7 @@ public class SharpIppClientTests
         Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
         using SharpIppClient client = new(new(GetMockOfHttpMessageHandler().Object), protocol.Object);
         // Act
-        Func<Task<Models.CreateJobResponse>> act = async () => await client.CreateJobAsync(new Models.CreateJobRequest
+        Func<Task<CreateJobResponse>> act = async () => await client.CreateJobAsync(new CreateJobRequest
         {
             RequestId = 123,
             Version = IppVersion.V1_1
@@ -77,7 +78,7 @@ public class SharpIppClientTests
         Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
         using SharpIppClient client = new(new(GetMockOfHttpMessageHandler().Object), protocol.Object);
         // Act
-        Func<Task<Models.CreateJobResponse>> act = async () => await client.CreateJobAsync(new Models.CreateJobRequest
+        Func<Task<CreateJobResponse>> act = async () => await client.CreateJobAsync(new CreateJobRequest
         {
             RequestId = 123,
             Version = IppVersion.V1_1,
@@ -94,7 +95,7 @@ public class SharpIppClientTests
         Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
         using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
         // Act
-        await client.CreateJobAsync( new Models.CreateJobRequest
+        await client.CreateJobAsync( new CreateJobRequest
         {
             RequestId = 123,
             Version = IppVersion.V1_1,
@@ -131,7 +132,7 @@ public class SharpIppClientTests
         Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
         using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
         // Act
-        await client.CancelJobAsync( new Models.CancelJobRequest
+        await client.CancelJobAsync( new CancelJobRequest
         {
             RequestId = 123,
             Version = IppVersion.V1_1,
@@ -170,7 +171,7 @@ public class SharpIppClientTests
         Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
         using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
         // Act
-        await client.HoldJobAsync( new Models.HoldJobRequest
+        await client.HoldJobAsync( new HoldJobRequest
         {
             RequestId = 123,
             Version = IppVersion.V1_1,
@@ -209,7 +210,7 @@ public class SharpIppClientTests
         Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
         using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
         // Act
-        await client.PausePrinterAsync( new Models.PausePrinterRequest
+        await client.PausePrinterAsync( new PausePrinterRequest
         {
             RequestId = 123,
             Version = IppVersion.V1_1,
@@ -246,7 +247,7 @@ public class SharpIppClientTests
         Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
         using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
         // Act
-        await client.ReleaseJobAsync( new Models.ReleaseJobRequest
+        await client.ReleaseJobAsync( new ReleaseJobRequest
         {
             RequestId = 123,
             Version = IppVersion.V1_1,
@@ -286,7 +287,7 @@ public class SharpIppClientTests
         using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
         using MemoryStream memoryStream = new();
         // Act
-        await client.PrintJobAsync( new Models.PrintJobRequest
+        await client.PrintJobAsync( new PrintJobRequest
         {
             RequestId = 123,
             Version = IppVersion.V1_1,
@@ -325,7 +326,7 @@ public class SharpIppClientTests
         Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
         using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
         // Act
-        await client.ResumePrinterAsync( new Models.ResumePrinterRequest
+        await client.ResumePrinterAsync( new ResumePrinterRequest
         {
             RequestId = 123,
             Version = IppVersion.V1_1,
@@ -363,7 +364,7 @@ public class SharpIppClientTests
         using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
         using MemoryStream memoryStream = new();
         // Act
-        await client.ValidateJobAsync( new Models.ValidateJobRequest
+        await client.ValidateJobAsync( new ValidateJobRequest
         {
             RequestId = 123,
             Version = IppVersion.V1_1,
@@ -403,7 +404,7 @@ public class SharpIppClientTests
         using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
         var uri = new Uri( "http://test.com/document.pdf" );
         // Act
-        await client.PrintUriAsync( new Models.PrintUriRequest
+        await client.PrintUriAsync( new PrintUriRequest
         {
             RequestId = 123,
             Version = IppVersion.V1_1,
@@ -443,7 +444,7 @@ public class SharpIppClientTests
         using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
         using MemoryStream memoryStream = new();
         // Act
-        await client.SendDocumentAsync( new Models.SendDocumentRequest
+        await client.SendDocumentAsync( new SendDocumentRequest
         {
             RequestId = 123,
             Version = IppVersion.V1_1,
@@ -486,7 +487,7 @@ public class SharpIppClientTests
         using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
         var uri = new Uri( "http://test.com/document.pdf" );
         // Act
-        await client.SendUriAsync( new Models.SendUriRequest
+        await client.SendUriAsync( new SendUriRequest
         {
             RequestId = 123,
             Version = IppVersion.V1_1,
@@ -528,7 +529,7 @@ public class SharpIppClientTests
         Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
         using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
         // Act
-        await client.GetJobAttributesAsync( new Models.GetJobAttributesRequest
+        await client.GetJobAttributesAsync( new GetJobAttributesRequest
         {
             RequestId = 123,
             Version = IppVersion.V1_1,
@@ -567,7 +568,7 @@ public class SharpIppClientTests
         Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
         using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
         // Act
-        await client.GetJobsAsync( new Models.GetJobsRequest
+        await client.GetJobsAsync( new GetJobsRequest
         {
             RequestId = 123,
             Version = IppVersion.V1_1,
@@ -606,7 +607,7 @@ public class SharpIppClientTests
         Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
         using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
         // Act
-        await client.GetPrinterAttributesAsync( new Models.GetPrinterAttributesRequest
+        await client.GetPrinterAttributesAsync( new GetPrinterAttributesRequest
         {
             RequestId = 123,
             Version = IppVersion.V1_1,
@@ -643,7 +644,7 @@ public class SharpIppClientTests
         Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
         using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
         // Act
-        await client.PurgeJobsAsync( new Models.PurgeJobsRequest
+        await client.PurgeJobsAsync( new PurgeJobsRequest
         {
             RequestId = 123,
             Version = IppVersion.V1_1,
@@ -680,7 +681,7 @@ public class SharpIppClientTests
         Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
         using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
         // Act
-        await client.RestartJobAsync( new Models.RestartJobRequest
+        await client.RestartJobAsync( new RestartJobRequest
         {
             RequestId = 123,
             Version = IppVersion.V1_1,
@@ -719,7 +720,7 @@ public class SharpIppClientTests
         Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
         using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
         // Act
-        await client.GetCUPSPrintersAsync( new Models.CUPSGetPrintersRequest
+        await client.GetCUPSPrintersAsync( new CUPSGetPrintersRequest
         {
             RequestId = 123,
             Version = IppVersion.V1_1,
@@ -763,7 +764,7 @@ public class SharpIppClientTests
         } );
         SharpIppClient client = new( httpClient, protocol.Object );
         // Act
-        Func<Task<Models.CreateJobResponse>> act = async () => await client.CreateJobAsync( new Models.CreateJobRequest
+        Func<Task<CreateJobResponse>> act = async () => await client.CreateJobAsync( new CreateJobRequest
         {
             RequestId = 123,
             Version = IppVersion.V1_1,
@@ -791,7 +792,7 @@ public class SharpIppClientTests
         } );
         SharpIppClient client = new( httpClient, protocol.Object );
         // Act
-        Func<Task<Models.CreateJobResponse>> act = async () => await client.CreateJobAsync( new Models.CreateJobRequest
+        Func<Task<CreateJobResponse>> act = async () => await client.CreateJobAsync( new CreateJobRequest
         {
             RequestId = 123,
             Version = IppVersion.V1_1,
@@ -818,7 +819,7 @@ public class SharpIppClientTests
         } );
         SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
         // Act
-        Func<Task<Models.CreateJobResponse>> act = async () => await client.CreateJobAsync( new Models.CreateJobRequest
+        Func<Task<CreateJobResponse>> act = async () => await client.CreateJobAsync( new CreateJobRequest
         {
             RequestId = 123,
             Version = IppVersion.V1_1,
@@ -947,7 +948,7 @@ public class SharpIppClientTests
         Mock<HttpMessageHandler> messageHandler = GetMockOfHttpMessageHandler();
         using SharpIppClient client = new( new( messageHandler.Object ), protocol.Object );
         // Act
-        await client.CreateJobAsync( new Models.CreateJobRequest
+        await client.CreateJobAsync( new CreateJobRequest
         {
             RequestId = 123,
             Version = IppVersion.V1_1,

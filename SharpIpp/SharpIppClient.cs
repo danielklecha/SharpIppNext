@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using SharpIpp.Exceptions;
 using SharpIpp.Mapping;
 using SharpIpp.Mapping.Profiles;
-using SharpIpp.Models;
+using SharpIpp.Models.Requests;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Extensions;
 using SharpIpp.Protocol.Models;

@@ -1,9 +1,11 @@
-﻿using SharpIpp.Models;
-using SharpIpp.Protocol;
+﻿using SharpIpp.Protocol;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Protocol.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using SharpIpp.Models.Requests;
+using ResponseOperationAttributes = SharpIpp.Models.Responses.OperationAttributes;
 
 namespace SharpIpp.Mapping.Profiles
 {
@@ -31,7 +33,15 @@ namespace SharpIpp.Mapping.Profiles
                 dst.Version = src.Version;
                 dst.RequestId = src.RequestId;
                 dst.StatusCode = src.StatusCode;
-                dst.Sections.AddRange(src.Sections);
+                dst.OperationAttributes.AddRange(src.OperationAttributes);
+                dst.JobAttributes.AddRange(src.JobAttributes);
+                dst.PrinterAttributes.AddRange(src.PrinterAttributes);
+                dst.UnsupportedAttributes.AddRange(src.UnsupportedAttributes);
+                dst.SubscriptionAttributes.AddRange(src.SubscriptionAttributes);
+                dst.EventNotificationAttributes.AddRange(src.EventNotificationAttributes);
+                dst.ResourceAttributes.AddRange(src.ResourceAttributes);
+                dst.DocumentAttributes.AddRange(src.DocumentAttributes);
+                dst.SystemAttributes.AddRange(src.SystemAttributes);
                 return dst;
             });
 
@@ -40,26 +50,37 @@ namespace SharpIpp.Mapping.Profiles
                 dst.Version = src.Version;
                 dst.RequestId = src.RequestId;
                 dst.StatusCode = src.StatusCode;
-                if ( !src.Sections.Any( x => x.Tag == SectionTag.OperationAttributesTag ) )
+                if ( !src.OperationAttributes.Any( x => x.Any() ) )
                 {
-                    var section = new IppSection { Tag = SectionTag.OperationAttributesTag };
-                    section.Attributes.Add( new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ) );
-                    section.Attributes.Add( new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ) );
-                    dst.Sections.Add( section );
+                    var operationAttrs = new List<IppAttribute>
+                    {
+                        new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ),
+                        new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" )
+                    };
+                    dst.OperationAttributes.Add( operationAttrs );
                 }
                 
-                var operationSection = dst.Sections.FirstOrDefault(x => x.Tag == SectionTag.OperationAttributesTag);
-                if (operationSection != null)
+                var firstOperationGroup = dst.OperationAttributes.FirstOrDefault();
+                if (firstOperationGroup != null)
                 {
-                    if (src.StatusMessage != null)
-                        operationSection.Attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.StatusMessage, src.StatusMessage));
-                    if (src.DetailedStatusMessage?.Any() ?? false)
-                        operationSection.Attributes.AddRange(src.DetailedStatusMessage.Select(x => new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.DetailedStatusMessage, x)));
-                    if (src.DocumentAccessError != null)
-                        operationSection.Attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.DocumentAccessError, src.DocumentAccessError));
+                    var responseOpAttrs = ((IIppResponse)src).OperationAttributes;
+                    if (responseOpAttrs?.StatusMessage != null)
+                        firstOperationGroup.Add(new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.StatusMessage, responseOpAttrs.StatusMessage));
+                    if (responseOpAttrs?.DetailedStatusMessage?.Any() ?? false)
+                        firstOperationGroup.AddRange(responseOpAttrs.DetailedStatusMessage.Select(x => new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.DetailedStatusMessage, x)));
+                    if (responseOpAttrs?.DocumentAccessError != null)
+                        firstOperationGroup.Add(new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.DocumentAccessError, responseOpAttrs.DocumentAccessError));
                 }
 
-                dst.Sections.AddRange( src.Sections );
+                dst.OperationAttributes.AddRange( src.OperationAttributes );
+                dst.JobAttributes.AddRange( src.JobAttributes );
+                dst.PrinterAttributes.AddRange( src.PrinterAttributes );
+                dst.UnsupportedAttributes.AddRange( src.UnsupportedAttributes );
+                dst.SubscriptionAttributes.AddRange( src.SubscriptionAttributes );
+                dst.EventNotificationAttributes.AddRange( src.EventNotificationAttributes );
+                dst.ResourceAttributes.AddRange( src.ResourceAttributes );
+                dst.DocumentAttributes.AddRange( src.DocumentAttributes );
+                dst.SystemAttributes.AddRange( src.SystemAttributes );
                 return dst;
             } );
 
@@ -68,12 +89,21 @@ namespace SharpIpp.Mapping.Profiles
                 dst.Version = src.Version;
                 dst.RequestId = src.RequestId;
                 dst.StatusCode = src.StatusCode;
-                var operationAttributes = src.Sections.FirstOrDefault(x => x.Tag == SectionTag.OperationAttributesTag)?.Attributes.ToIppDictionary();
+                var operationAttributes = src.OperationAttributes.SelectMany(x => x).ToIppDictionary();
                 if (operationAttributes != null)
                 {
-                    dst.StatusMessage = map.MapFromDic<string?>(operationAttributes, JobAttribute.StatusMessage);
-                    dst.DetailedStatusMessage = map.MapFromDicSetNull<string[]?>(operationAttributes, JobAttribute.DetailedStatusMessage);
-                    dst.DocumentAccessError = map.MapFromDic<string?>(operationAttributes, JobAttribute.DocumentAccessError);
+                    var statusMessage = map.MapFromDic<string?>(operationAttributes, JobAttribute.StatusMessage);
+                    var detailedStatusMessage = map.MapFromDicSetNull<string[]?>(operationAttributes, JobAttribute.DetailedStatusMessage);
+                    var documentAccessError = map.MapFromDic<string?>(operationAttributes, JobAttribute.DocumentAccessError);
+                    if (statusMessage != null || detailedStatusMessage != null || documentAccessError != null)
+                    {
+                        dst.OperationAttributes = new ResponseOperationAttributes
+                        {
+                            StatusMessage = statusMessage,
+                            DetailedStatusMessage = detailedStatusMessage,
+                            DocumentAccessError = documentAccessError
+                        };
+                    }
                 }
                 return dst;
             });
@@ -83,16 +113,18 @@ namespace SharpIpp.Mapping.Profiles
                 dst.Version = src.Version;
                 dst.RequestId = src.RequestId;
                 dst.StatusCode = src.StatusCode;
-                var section = new IppSection { Tag = SectionTag.OperationAttributesTag };
-                section.Attributes.Add(new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"));
-                section.Attributes.Add(new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"));
-                if (src.StatusMessage != null)
-                    section.Attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.StatusMessage, src.StatusMessage));
-                if (src.DetailedStatusMessage?.Any() ?? false)
-                    section.Attributes.AddRange(src.DetailedStatusMessage.Select(x => new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.DetailedStatusMessage, x)));
-                if (src.DocumentAccessError != null)
-                    section.Attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.DocumentAccessError, src.DocumentAccessError));
-                dst.Sections.Add(section);
+                var operationAttrs = new List<IppAttribute>
+                {
+                    new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"),
+                    new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en")
+                };
+                if (src.OperationAttributes?.StatusMessage != null)
+                    operationAttrs.Add(new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.StatusMessage, src.OperationAttributes.StatusMessage));
+                if (src.OperationAttributes?.DetailedStatusMessage?.Any() ?? false)
+                    operationAttrs.AddRange(src.OperationAttributes.DetailedStatusMessage.Select(x => new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.DetailedStatusMessage, x)));
+                if (src.OperationAttributes?.DocumentAccessError != null)
+                    operationAttrs.Add(new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.DocumentAccessError, src.OperationAttributes.DocumentAccessError));
+                dst.OperationAttributes.Add(operationAttrs);
                 return dst;
             });
 

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Linq;
 using SharpIpp.Exceptions;
-using SharpIpp.Models;
+using SharpIpp.Models.Requests;
+using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Extensions;
 using SharpIpp.Protocol.Models;

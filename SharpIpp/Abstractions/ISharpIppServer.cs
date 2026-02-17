@@ -1,4 +1,4 @@
-﻿using SharpIpp.Models;
+﻿using SharpIpp.Models.Requests;
 using SharpIpp.Protocol;
 using System.IO;
 using System.Threading;

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-
-using SharpIpp.Models;
+using SharpIpp.Models.Requests;
+using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Extensions;
 using SharpIpp.Protocol.Models;
@@ -34,7 +34,7 @@ namespace SharpIpp.Mapping.Profiles
             // https://tools.ietf.org/html/rfc2911#section-3.3.4.2
             mapper.CreateMap<IppResponseMessage, GetJobsResponse>((src, map) =>
             {
-                var dst = new GetJobsResponse { Jobs = map.Map<List<IppSection>, JobDescriptionAttributes[]>(src.Sections) };
+                var dst = new GetJobsResponse { JobsAttributes = map.Map<List<List<IppAttribute>>, JobDescriptionAttributes[]>(src.JobAttributes) };
                 map.Map<IppResponseMessage, IIppResponse>(src, dst);
                 return dst;
             });
@@ -43,23 +43,22 @@ namespace SharpIpp.Mapping.Profiles
             {
                 var dst = new IppResponseMessage();
                 map.Map<IIppResponse, IppResponseMessage>( src, dst );
-                dst.Sections.AddRange(map.Map<JobDescriptionAttributes[], List<IppSection>>(src.Jobs ?? []));
+                dst.JobAttributes.AddRange(map.Map<JobDescriptionAttributes[], List<List<IppAttribute>>>(src.JobsAttributes ?? []));
                 return dst;
             } );
 
             //https://tools.ietf.org/html/rfc2911#section-4.4
-            mapper.CreateMap<List<IppSection>, JobDescriptionAttributes[]>((src, map) =>
-                src.Where(x => x.Tag == SectionTag.JobAttributesTag)
-                    .Select(x => map.Map<JobDescriptionAttributes>(x.AllAttributes()))
+            mapper.CreateMap<List<List<IppAttribute>>, JobDescriptionAttributes[]>((src, map) =>
+                src.Select(x => map.Map<JobDescriptionAttributes>(x.ToIppDictionary()))
                     .ToArray());
 
-            mapper.CreateMap<JobDescriptionAttributes[], List<IppSection>>( (src, map) =>
+            mapper.CreateMap<JobDescriptionAttributes[], List<List<IppAttribute>>>( (src, map) =>
             {
                 return src.Select(x =>
                 {
-                    var section = new IppSection { Tag = SectionTag.JobAttributesTag };
-                    section.Attributes.AddRange( map.Map<IDictionary<string, IppAttribute[]>>( x ).Values.SelectMany( x => x ) );
-                    return section;
+                    var attrs = new List<IppAttribute>();
+                    attrs.AddRange( map.Map<IDictionary<string, IppAttribute[]>>( x ).Values.SelectMany( x => x ) );
+                    return attrs;
                 }).ToList();
             });
         }
