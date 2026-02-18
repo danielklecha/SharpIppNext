@@ -181,8 +181,13 @@ namespace SharpIpp.Protocol
 
         private static string ReadString(BinaryReader stream, Encoding? encoding = null)
         {
+            return ReadStringWithLength(stream, encoding).Value;
+        }
+
+        private static (string Value, short Length) ReadStringWithLength(BinaryReader stream, Encoding? encoding = null)
+        {
             var len = stream.ReadInt16BigEndian();
-            return (encoding ?? Encoding.ASCII).GetString(stream.ReadBytes(len));
+            return ((encoding ?? Encoding.ASCII).GetString(stream.ReadBytes(len)), len);
         }
 
         private static void Write(StringWithLanguage value, BinaryWriter stream, Encoding? encoding)
@@ -196,10 +201,14 @@ namespace SharpIpp.Protocol
 
         private static StringWithLanguage ReadStringWithLanguage(BinaryReader stream, Encoding? encoding = null)
         {
-            var _ = stream.ReadInt16BigEndian();
-            var language = ReadString(stream);
-            var value = ReadString(stream, encoding);
-            return new StringWithLanguage(language, value);
+            var len = stream.ReadInt16BigEndian();
+            var language = ReadStringWithLength(stream);
+            var value = ReadStringWithLength(stream, encoding);
+            if (len != language.Length + value.Length + 4)
+            {
+                throw new ArgumentException($"Expected string-with-language length: {language.Length + value.Length + 4}, actual :{len}");
+            }
+            return new StringWithLanguage(language.Value, value.Value);
         }
     }
 }

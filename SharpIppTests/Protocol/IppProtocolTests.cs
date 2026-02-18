@@ -547,12 +547,29 @@ public class IppProtocolTests
     {
         // Arrange
         var protocol = new IppProtocol();
-        using MemoryStream memoryStream = new( new byte[] { 0x00, 0x0A, 0x00, 0x05, 0x65, 0x6E, 0x2D, 0x75, 0x73, 0x00, 0x05, 0x4C, 0x6F, 0x72, 0x65, 0x6D } );
+        // 5 (lang) + 5 (value) + 4 = 14 (0x0E)
+        using MemoryStream memoryStream = new( new byte[] { 0x00, 0x0E, 0x00, 0x05, 0x65, 0x6E, 0x2D, 0x75, 0x73, 0x00, 0x05, 0x4C, 0x6F, 0x72, 0x65, 0x6D } );
         using BinaryReader binaryReader = new( memoryStream );
         // Act
         Func<object> act = () => protocol.ReadValue( binaryReader, tag );
         // Assert
         act.Should().NotThrow().Which.Should().BeEquivalentTo( new StringWithLanguage( "en-us", "Lorem" ) );
+    }
+
+    [DataTestMethod]
+    [DataRow( Tag.TextWithLanguage )]
+    [DataRow( Tag.NameWithLanguage )]
+    public void ReadValue_InvalidStringWithLanguage_ThrowsArgumentException( Tag tag )
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        // 10 (0x0A) != 5 + 5 + 4
+        using MemoryStream memoryStream = new( new byte[] { 0x00, 0x0A, 0x00, 0x05, 0x65, 0x6E, 0x2D, 0x75, 0x73, 0x00, 0x05, 0x4C, 0x6F, 0x72, 0x65, 0x6D } );
+        using BinaryReader binaryReader = new( memoryStream );
+        // Act
+        Func<object> act = () => protocol.ReadValue( binaryReader, tag );
+        // Assert
+        act.Should().Throw<ArgumentException>();
     }
 
     [DataTestMethod]
