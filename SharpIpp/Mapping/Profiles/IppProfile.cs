@@ -29,61 +29,7 @@ namespace SharpIpp.Mapping.Profiles
                 return dst;
             } );
 
-            mapper.CreateMap<IppResponseMessage, IIppResponseMessage>((src, dst, map) =>
-            {
-                dst.Version = src.Version;
-                dst.RequestId = src.RequestId;
-                dst.StatusCode = src.StatusCode;
-                dst.OperationAttributes.AddRange(src.OperationAttributes);
-                dst.JobAttributes.AddRange(src.JobAttributes);
-                dst.PrinterAttributes.AddRange(src.PrinterAttributes);
-                dst.UnsupportedAttributes.AddRange(src.UnsupportedAttributes);
-                dst.SubscriptionAttributes.AddRange(src.SubscriptionAttributes);
-                dst.EventNotificationAttributes.AddRange(src.EventNotificationAttributes);
-                dst.ResourceAttributes.AddRange(src.ResourceAttributes);
-                dst.DocumentAttributes.AddRange(src.DocumentAttributes);
-                dst.SystemAttributes.AddRange(src.SystemAttributes);
-                return dst;
-            });
 
-            mapper.CreateMap<IIppResponseMessage, IppResponseMessage>( ( src, dst, map ) =>
-            {
-                dst.Version = src.Version;
-                dst.RequestId = src.RequestId;
-                dst.StatusCode = src.StatusCode;
-                if ( !src.OperationAttributes.Any( x => x.Any() ) )
-                {
-                    var operationAttrs = new List<IppAttribute>
-                    {
-                        new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ),
-                        new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" )
-                    };
-                    dst.OperationAttributes.Add( operationAttrs );
-                }
-                
-                var firstOperationGroup = dst.OperationAttributes.FirstOrDefault();
-                if (firstOperationGroup != null)
-                {
-                    var responseOpAttrs = ((IIppResponse)src).OperationAttributes;
-                    if (responseOpAttrs?.StatusMessage != null)
-                        firstOperationGroup.Add(new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.StatusMessage, responseOpAttrs.StatusMessage));
-                    if (responseOpAttrs?.DetailedStatusMessage?.Any() ?? false)
-                        firstOperationGroup.AddRange(responseOpAttrs.DetailedStatusMessage.Select(x => new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.DetailedStatusMessage, x)));
-                    if (responseOpAttrs?.DocumentAccessError != null)
-                        firstOperationGroup.Add(new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.DocumentAccessError, responseOpAttrs.DocumentAccessError));
-                }
-
-                dst.OperationAttributes.AddRange( src.OperationAttributes );
-                dst.JobAttributes.AddRange( src.JobAttributes );
-                dst.PrinterAttributes.AddRange( src.PrinterAttributes );
-                dst.UnsupportedAttributes.AddRange( src.UnsupportedAttributes );
-                dst.SubscriptionAttributes.AddRange( src.SubscriptionAttributes );
-                dst.EventNotificationAttributes.AddRange( src.EventNotificationAttributes );
-                dst.ResourceAttributes.AddRange( src.ResourceAttributes );
-                dst.DocumentAttributes.AddRange( src.DocumentAttributes );
-                dst.SystemAttributes.AddRange( src.SystemAttributes );
-                return dst;
-            } );
 
             mapper.CreateMap<IppResponseMessage, IIppResponse>((src, dst, map) =>
             {
