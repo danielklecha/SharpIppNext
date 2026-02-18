@@ -187,7 +187,9 @@ namespace SharpIpp.Protocol
 
         private static void Write(StringWithLanguage value, BinaryWriter stream, Encoding? encoding)
         {
-            stream.WriteBigEndian((short)(value.Language.Length + value.Value.Length));
+            var languageBytes = Encoding.ASCII.GetBytes(value.Language);
+            var valueBytes = (encoding ?? Encoding.ASCII).GetBytes(value.Value);
+            stream.WriteBigEndian((short)(languageBytes.Length + valueBytes.Length + 4));
             Write(value.Language, stream, null);
             Write(value.Value, stream, encoding);
         }

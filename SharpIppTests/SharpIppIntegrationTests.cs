@@ -799,7 +799,8 @@ public class SharpIppIntegrationTests
                     },
                     PrintColorModeDefault = PrintColorMode.Color,
                     PrintColorModeSupported = [PrintColorMode.Color],
-                    WhichJobsSupported = [WhichJobs.Completed]
+                    WhichJobsSupported = [WhichJobs.Completed],
+                    PrinterUUID = "{6541A875-C511-4273-909F-18CFBB38D9D0}"
                 },
                 OperationAttributes = new()
                 {
@@ -1452,7 +1453,8 @@ public class SharpIppIntegrationTests
                         },
                         PrintColorModeDefault = PrintColorMode.Color,
                         PrintColorModeSupported = [PrintColorMode.Color],
-                        WhichJobsSupported = [WhichJobs.Completed]
+                        WhichJobsSupported = [WhichJobs.Completed],
+                        PrinterUUID = "{6541A875-C511-4273-909F-18CFBB38D9D0}"
                     }
                 ]
             };

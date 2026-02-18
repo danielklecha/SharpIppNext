@@ -248,5 +248,7 @@ namespace SharpIpp.Protocol.Models
         public PrintColorMode[]? PrintColorModeSupported { get; set; }
 
         public WhichJobs[]? WhichJobsSupported { get; set; }
+
+        public string? PrinterUUID { get; set; }
     }
 }

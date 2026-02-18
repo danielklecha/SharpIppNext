@@ -35,6 +35,7 @@ namespace SharpIpp.Protocol.Models
         public const string PrinterUpTime = "printer-up-time";
         public const string PrinterCurrentTime = "printer-current-time";
         public const string MultipleOperationTimeOut = "multiple-operation-time-out";
+        public const string CompressionDefault = "compression-default";
         public const string CompressionSupported = "compression-supported";
         public const string JobKOctetsSupported = "job-k-octets-supported";
         public const string JpegKOctetsSupported = "jpeg-k-octets-supported";
@@ -67,9 +68,15 @@ namespace SharpIpp.Protocol.Models
         public const string OutputBinDefault = "output-bin-default";
         public const string OutputBinSupported = "output-bin-supported";
         public const string MediaColDefault = "media-col-default";
+        public const string MediaColSupported = "media-col-supported";
+        public const string MediaColReady = "media-col-ready";
         public const string PrintColorModeDefault = "print-color-mode-default";
         public const string PrintColorModeSupported = "print-color-mode-supported";
         public const string WhichJobsSupported = "which-jobs-supported";
+        public const string PrinterUUID = "printer-uuid";
+        public const string PdfVersionsSupported = "pdf-versions-supported";
+        public const string IppFeaturesSupported = "ipp-features-supported";
+        public const string MediaTypeSupported = "media-type-supported";
 
         public static IEnumerable<string> GetAttributes(IppVersion version)
         {
@@ -104,6 +111,7 @@ namespace SharpIpp.Protocol.Models
             yield return PrinterUpTime;
             yield return PrinterCurrentTime;
             yield return MultipleOperationTimeOut;
+            yield return CompressionDefault;
             yield return CompressionSupported;
             yield return JobKOctetsSupported;
             yield return JpegKOctetsSupported;
@@ -136,9 +144,15 @@ namespace SharpIpp.Protocol.Models
             yield return OutputBinDefault;
             yield return OutputBinSupported;
             yield return MediaColDefault;
+            yield return MediaColSupported;
+            yield return MediaColReady;
             yield return PrintColorModeDefault;
             yield return PrintColorModeSupported;
             yield return WhichJobsSupported;
+            yield return PrinterUUID;
+            yield return PdfVersionsSupported;
+            yield return IppFeaturesSupported;
+            yield return MediaTypeSupported;
         }
     }
 }

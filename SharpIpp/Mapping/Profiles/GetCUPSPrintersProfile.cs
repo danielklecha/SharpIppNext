@@ -130,6 +130,7 @@ namespace SharpIpp.Mapping.Profiles
                     PrintColorModeDefault = map.MapFromDic<PrintColorMode?>(src, PrinterAttribute.PrintColorModeDefault),
                     PrintColorModeSupported = map.MapFromDicSetNull<PrintColorMode[]?>(src, PrinterAttribute.PrintColorModeSupported),
                     WhichJobsSupported = map.MapFromDicSetNull<WhichJobs[]?>(src, PrinterAttribute.WhichJobsSupported),
+                    PrinterUUID = map.MapFromDic<string?>(src, PrinterAttribute.PrinterUUID),
                 });
 
             mapper.CreateMap<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>( ( src, map ) =>
@@ -267,6 +268,8 @@ namespace SharpIpp.Mapping.Profiles
                         dic.Add(PrinterAttribute.PrintColorModeSupported, src.PrintColorModeSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PrintColorModeSupported, map.Map<string>(x))).ToArray());
                     if (src.WhichJobsSupported?.Any() ?? false)
                         dic.Add(PrinterAttribute.WhichJobsSupported, src.WhichJobsSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.WhichJobsSupported, map.Map<string>(x))).ToArray());
+                    if (src.PrinterUUID?.Any() ?? false)
+                        dic.Add(PrinterAttribute.PrinterUUID, new IppAttribute[] { new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterUUID, src.PrinterUUID) });
                     return dic;
                 } );
         }
