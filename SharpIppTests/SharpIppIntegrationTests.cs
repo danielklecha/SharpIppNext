@@ -9,6 +9,7 @@ using SharpIpp.Protocol.Models;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net;
+using System.Text;
 using System.Threading;
 
 namespace SharpIpp.Tests;
@@ -151,6 +152,71 @@ public class SharpIppIntegrationTests
         // Assert
         clientRequest.Should().BeEquivalentTo(serverRequest);
         clientResponse.Should().BeEquivalentTo(serverResponse);
+    }
+
+    [TestMethod()]
+    public async Task PrintJobAsync_TurnOffReadDocumentStream_ServerReceivesSameRequestAndReturnsExpectedResponse()
+    {
+        // Arrange
+        using MemoryStream memoryStream = new(Encoding.ASCII.GetBytes("Lorem"));
+        IppProtocol ippProtocol = new()
+        {
+            ReadDocumentStream = false
+        };
+        SharpIppServer server = new(ippProtocol);
+        PrintJobRequest clientRequest = new()
+        {
+            RequestId = 123,
+            Version = new IppVersion(2, 0),
+            Document = memoryStream,
+            OperationAttributes = new()
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631"),
+                DocumentName = "のデフォルト値を保存するメソッドを呼び出します.pdf"
+            },
+            JobTemplateAttributes = new()
+        };
+        IIppRequest? serverRequest = null;
+        PrintJobResponse? serverResponse = null;
+        HttpStatusCode statusCode = HttpStatusCode.OK;
+        async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
+        {
+            serverRequest = (await server.ReceiveRequestAsync(s, c));
+            serverResponse = new PrintJobResponse
+            {
+                RequestId = serverRequest.RequestId,
+                Version = serverRequest.Version,
+                StatusCode = IppStatusCode.SuccessfulOk,
+                OperationAttributes = new()
+                {
+                    StatusMessage = "successful-ok",
+                    DetailedStatusMessage = ["detail1"],
+                    DocumentAccessError = "none"
+                },
+                JobAttributes = new()
+                {
+                    JobState = JobState.Pending,
+                    JobStateReasons = [JobStateReason.None],
+                    JobStateMessage = "pending",
+                    NumberOfInterveningJobs = 0,
+                    JobId = 456,
+                    JobUri = "http://127.0.0.1:631/456"
+                }
+            };
+            var memoryStream = new MemoryStream();
+            await server.SendResponseAsync(serverResponse, memoryStream, c);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return new HttpResponseMessage()
+            {
+                StatusCode = statusCode,
+                Content = new StreamContent(memoryStream)
+            };
+        }
+        SharpIppClient client = new(new(GetMockOfHttpMessageHandler(func).Object), ippProtocol);
+        // Act
+        PrintJobResponse? clientResponse = await client.PrintJobAsync(clientRequest);
+        // Assert
+        serverRequest.As<PrintJobRequest>().Document.Should().BeSameAs(Stream.Null);
     }
 
     [TestMethod()]
