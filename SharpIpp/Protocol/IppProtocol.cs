@@ -28,6 +28,16 @@ namespace SharpIpp.Protocol
     /// </summary>
     public partial class IppProtocol : IIppProtocol
     {
+        /// <summary>
+        /// Controls the behavior of ReadIppRequestAsync() method.
+        /// If true, the whole incoming document is read into a memory stream, 
+        /// and can be accessed via message.Document.
+        /// If false, the document is not read into a memory stream, and it should
+        /// be consumed from the input stream by the caller.
+        /// Defaults to true.
+        /// </summary>
+        public bool ReadDocumentStream { get; set; } = true;
+
         public async Task WriteIppRequestAsync(IIppRequestMessage ippRequestMessage, Stream stream, CancellationToken cancellationToken = default)
         {
             if (ippRequestMessage is null)
@@ -449,8 +459,11 @@ namespace SharpIpp.Protocol
             };
             ReadSections( reader, message );
             message.Document = new MemoryStream();
-            await reader.BaseStream.CopyToAsync( message.Document );
-            message.Document.Seek( 0, SeekOrigin.Begin );
+            if (ReadDocumentStream)
+            {
+                await reader.BaseStream.CopyToAsync(message.Document);
+                message.Document.Seek(0, SeekOrigin.Begin);
+            }
             return message;
         }
 
