@@ -458,11 +458,15 @@ namespace SharpIpp.Protocol
                 RequestId = reader.ReadInt32BigEndian()
             };
             ReadSections( reader, message );
-            message.Document = new MemoryStream();
             if (ReadDocumentStream)
             {
+                message.Document = new MemoryStream();
                 await reader.BaseStream.CopyToAsync(message.Document);
                 message.Document.Seek(0, SeekOrigin.Begin);
+            }
+            else
+            {
+                message.Document = Stream.Null;
             }
             return message;
         }
