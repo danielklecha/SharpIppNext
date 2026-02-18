@@ -206,7 +206,7 @@ namespace SharpIpp.Protocol
             var value = ReadStringWithLength(stream, encoding);
             if (len != language.Length + value.Length + 4)
             {
-                throw new ArgumentException($"Expected string-with-language length: {language.Length + value.Length + 4}, actual :{len}");
+                throw new ArgumentException($"Expected string-with-language length: {language.Length + value.Length + 4}, actual: {len}");
             }
             return new StringWithLanguage(language.Value, value.Value);
         }

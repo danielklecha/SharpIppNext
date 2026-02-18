@@ -104,7 +104,7 @@ namespace SharpIpp.Protocol
         {
             IppAttribute? prevAttribute = null;
             Stack<IppAttribute> prevBegCollectionAttributes = new();
-            IppAttribute? prevBegCollectionAttribute = new();
+            IppAttribute? prevBegCollectionAttribute = null;
             List<IppAttribute>? currentAttributes = null;
             SectionTag currentSectionTag = default;
             Encoding encoding = Encoding.ASCII;
@@ -167,7 +167,7 @@ namespace SharpIpp.Protocol
         {
             IppAttribute? prevAttribute = null;
             Stack<IppAttribute> prevBegCollectionAttributes = new();
-            IppAttribute? prevBegCollectionAttribute = new();
+            IppAttribute? prevBegCollectionAttribute = null;
             List<IppAttribute>? attributes = null;
             Encoding encoding = Encoding.ASCII;
             do

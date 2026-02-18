@@ -38,7 +38,7 @@ public class IppAttributeExtensionsTests
             new IppAttribute(Tag.MemberAttrName, "", "media-size"),
             new IppAttribute(Tag.BegCollection, "", NoValue.Instance),
             new IppAttribute(Tag.MemberAttrName, "", "x-dimension"),
-            new IppAttribute(Tag.Integer, "", 21000),
+            IppAttribute.CreateInt("", 21000),
             new IppAttribute(Tag.EndCollection, "", NoValue.Instance),
             new IppAttribute(Tag.EndCollection, "", NoValue.Instance)
         };
@@ -59,8 +59,8 @@ public class IppAttributeExtensionsTests
         // Arrange
         var innerAttributes = new List<IppAttribute>
         {
-            new IppAttribute(Tag.Integer, "x-dimension", 21000),
-            new IppAttribute(Tag.Integer, "y-dimension", 29700)
+            IppAttribute.CreateInt("x-dimension", 21000),
+            IppAttribute.CreateInt("y-dimension", 29700)
         };
 
         // Act
@@ -83,9 +83,9 @@ public class IppAttributeExtensionsTests
         {
             new IppAttribute(Tag.BegCollection, "media-size", NoValue.Instance),
             new IppAttribute(Tag.MemberAttrName, "", "x-dimension"),
-            new IppAttribute(Tag.Integer, "", 21000),
+            IppAttribute.CreateInt("", 21000),
             new IppAttribute(Tag.MemberAttrName, "", "y-dimension"),
-            new IppAttribute(Tag.Integer, "", 29700),
+            IppAttribute.CreateInt("", 29700),
             new IppAttribute(Tag.EndCollection, "", NoValue.Instance)
         };
 
@@ -106,7 +106,7 @@ public class IppAttributeExtensionsTests
         // Arrange
         var innerAttributes = new List<IppAttribute>
         {
-            new IppAttribute(Tag.Integer, "inner-val", 42)
+            IppAttribute.CreateInt("inner-val", 42)
         };
         var nested = innerAttributes.ToBegCollection("inner-col");
 
@@ -137,7 +137,7 @@ public class IppAttributeExtensionsTests
             new IppAttribute(Tag.MemberAttrName, "", "inner-col"),
             new IppAttribute(Tag.BegCollection, "", NoValue.Instance),
             new IppAttribute(Tag.MemberAttrName, "", "inner-val"),
-            new IppAttribute(Tag.Integer, "", 42),
+            IppAttribute.CreateInt("", 42),
             new IppAttribute(Tag.EndCollection, "", NoValue.Instance),
             new IppAttribute(Tag.EndCollection, "", NoValue.Instance)
         };
@@ -212,9 +212,9 @@ public class IppAttributeExtensionsTests
         {
             new IppAttribute(Tag.BegCollection, "root", NoValue.Instance),
             new IppAttribute(Tag.MemberAttrName, "", "list"),
-            new IppAttribute(Tag.Integer, "", 1),
+            IppAttribute.CreateInt("", 1),
             new IppAttribute(Tag.MemberAttrName, "", ""),
-            new IppAttribute(Tag.Integer, "", 2),
+            IppAttribute.CreateInt("", 2),
             new IppAttribute(Tag.EndCollection, "", NoValue.Instance)
         };
 
@@ -233,8 +233,8 @@ public class IppAttributeExtensionsTests
         // Arrange
         var inner = new List<IppAttribute>
         {
-            new IppAttribute(Tag.Integer, "list", 1),
-            new IppAttribute(Tag.Integer, "list", 2)
+            IppAttribute.CreateInt("list", 1),
+            IppAttribute.CreateInt("list", 2)
         };
 
         // Act
@@ -264,7 +264,7 @@ public class IppAttributeExtensionsTests
             new IppAttribute(Tag.MemberAttrName, "", "L2"),
             new IppAttribute(Tag.BegCollection, "", NoValue.Instance),
             new IppAttribute(Tag.MemberAttrName, "", "L3"),
-            new IppAttribute(Tag.Integer, "", 42),
+            IppAttribute.CreateInt("", 42),
             new IppAttribute(Tag.EndCollection, "", NoValue.Instance),
             new IppAttribute(Tag.EndCollection, "", NoValue.Instance),
             new IppAttribute(Tag.EndCollection, "", NoValue.Instance)
@@ -288,7 +288,7 @@ public class IppAttributeExtensionsTests
     public void ToBegCollection_DeeplyNested_ShouldWrapCorrectly()
     {
         // Arrange
-        var innerMost = new List<IppAttribute> { new IppAttribute(Tag.Integer, "L2", 42) };
+        var innerMost = new List<IppAttribute> { IppAttribute.CreateInt("L2", 42) };
         var innerAttributes = innerMost.ToBegCollection("L1");
 
         // Act
@@ -307,7 +307,7 @@ public class IppAttributeExtensionsTests
         var innerAttributes = new List<IppAttribute>
         {
             new IppAttribute(Tag.BegCollection, "L1", NoValue.Instance),
-            new IppAttribute(Tag.Integer, "nested-named", 42),
+            IppAttribute.CreateInt("nested-named", 42),
             new IppAttribute(Tag.EndCollection, "", NoValue.Instance)
         };
 
@@ -352,7 +352,7 @@ public class IppAttributeExtensionsTests
             new IppAttribute(Tag.BegCollection, "L0", NoValue.Instance),
             new IppAttribute(Tag.MemberAttrName, "", "L1"),
             new IppAttribute(Tag.BegCollection, "", NoValue.Instance),
-            new IppAttribute(Tag.Integer, "invalid-name", 42),
+            IppAttribute.CreateInt("invalid-name", 42),
             new IppAttribute(Tag.EndCollection, "", NoValue.Instance),
             new IppAttribute(Tag.EndCollection, "", NoValue.Instance)
         };
@@ -397,7 +397,7 @@ public class IppAttributeExtensionsTests
     [TestMethod]
     public void FromBegCollection_ShouldThrow_WhenFirstTagNotBegCollection()
     {
-        var wrapped = new List<IppAttribute> { new IppAttribute(Tag.Integer, "", 1) };
+        var wrapped = new List<IppAttribute> { IppAttribute.CreateInt("", 1) };
         Action action = () => wrapped.FromBegCollection().ToList();
         action.Should().Throw<ArgumentException>().WithMessage("*First attribute must be BegCollection*");
     }
@@ -426,8 +426,8 @@ public class IppAttributeExtensionsTests
         {
             new IppAttribute(Tag.BegCollection, "root", NoValue.Instance),
             new IppAttribute(Tag.MemberAttrName, "", "list"),
-            new IppAttribute(Tag.Integer, "", 1),
-            new IppAttribute(Tag.Integer, "", 2), // Missing MemberAttrName("")!
+            IppAttribute.CreateInt("", 1),
+            IppAttribute.CreateInt("", 2), // Missing MemberAttrName("")!
             new IppAttribute(Tag.EndCollection, "", NoValue.Instance)
         };
 
@@ -446,7 +446,7 @@ public class IppAttributeExtensionsTests
             new IppAttribute(Tag.BegCollection, "root", NoValue.Instance),
             new IppAttribute(Tag.MemberAttrName, "", "attr1"),
             new IppAttribute(Tag.MemberAttrName, "", "attr2"), // dangling attr1
-            new IppAttribute(Tag.Integer, "", 1),
+            IppAttribute.CreateInt("", 1),
             new IppAttribute(Tag.EndCollection, "", NoValue.Instance)
         };
 
@@ -481,7 +481,7 @@ public class IppAttributeExtensionsTests
         // Arrange
         var attributes = new List<IppAttribute>
         {
-            new IppAttribute(Tag.Integer, "", 42) // No name, and not preceded by MemberAttrName context
+            IppAttribute.CreateInt("", 42) // No name, and not preceded by MemberAttrName context
         };
 
         // Act
@@ -499,7 +499,7 @@ public class IppAttributeExtensionsTests
         {
             new IppAttribute(Tag.BegCollection, "root", NoValue.Instance),
             new IppAttribute(Tag.MemberAttrName, "", ""), // Empty name!
-            new IppAttribute(Tag.Integer, "", 1),
+            IppAttribute.CreateInt("", 1),
             new IppAttribute(Tag.EndCollection, "", NoValue.Instance)
         };
 
@@ -523,14 +523,14 @@ public class IppAttributeExtensionsTests
             new IppAttribute(Tag.MemberAttrName, "", "list"),
             new IppAttribute(Tag.BegCollection, "", NoValue.Instance),
                 new IppAttribute(Tag.MemberAttrName, "", "inner"),
-                new IppAttribute(Tag.Integer, "", 1),
+                IppAttribute.CreateInt("", 1),
             new IppAttribute(Tag.EndCollection, "", NoValue.Instance),
 
             // Second item
             new IppAttribute(Tag.MemberAttrName, "", ""), // Empty name, refers to "list"
             new IppAttribute(Tag.BegCollection, "", NoValue.Instance),
                 new IppAttribute(Tag.MemberAttrName, "", "inner"),
-                new IppAttribute(Tag.Integer, "", 2),
+                IppAttribute.CreateInt("", 2),
             new IppAttribute(Tag.EndCollection, "", NoValue.Instance),
 
             new IppAttribute(Tag.EndCollection, "", NoValue.Instance)
@@ -592,7 +592,7 @@ public class IppAttributeExtensionsTests
         var wrapped = new List<IppAttribute>
         {
             new IppAttribute(Tag.BegCollection, "root", NoValue.Instance),
-            new IppAttribute(Tag.Integer, "named-int", 1), // Named integer!
+            IppAttribute.CreateInt("named-int", 1), // Named integer!
             new IppAttribute(Tag.EndCollection, "", NoValue.Instance)
         };
 

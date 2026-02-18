@@ -71,15 +71,15 @@ namespace SharpIpp.Mapping.Profiles
                 var dic = new Dictionary<string, IppAttribute[]>
                 {
                     { JobAttribute.JobUri, new IppAttribute[] { new IppAttribute( Tag.Uri, JobAttribute.JobUri, src.JobUri ) } },
-                    { JobAttribute.JobId, new IppAttribute[] { new IppAttribute( Tag.Integer, JobAttribute.JobId, src.JobId ) } },
-                    { JobAttribute.JobState, new IppAttribute[] { new IppAttribute( Tag.Enum, JobAttribute.JobState, (int)src.JobState ) } }
+                    { JobAttribute.JobId, [IppAttribute.CreateInt( JobAttribute.JobId, src.JobId )] },
+                    { JobAttribute.JobState, new IppAttribute[] { IppAttribute.CreateEnum( JobAttribute.JobState, (int)src.JobState ) } }
                 };
                 if ( src.JobStateReasons?.Any() ?? false )
                     dic.Add( JobAttribute.JobStateReasons, src.JobStateReasons.Select( x => new IppAttribute( Tag.Keyword, JobAttribute.JobStateReasons, map.Map<string>( x ) ) ).ToArray() );
                 if( src.JobStateMessage != null )
                     dic.Add( JobAttribute.JobStateMessage, new IppAttribute[] { new IppAttribute( Tag.TextWithoutLanguage, JobAttribute.JobStateMessage, src.JobStateMessage ) } );
                 if(src.NumberOfInterveningJobs != null )
-                    dic.Add( JobAttribute.NumberOfInterveningJobs, new IppAttribute[] { new IppAttribute( Tag.Integer, JobAttribute.NumberOfInterveningJobs, src.NumberOfInterveningJobs.Value ) } );
+                    dic.Add( JobAttribute.NumberOfInterveningJobs, [IppAttribute.CreateInt( JobAttribute.NumberOfInterveningJobs, src.NumberOfInterveningJobs.Value )] );
                 return dic;
             } );
         }

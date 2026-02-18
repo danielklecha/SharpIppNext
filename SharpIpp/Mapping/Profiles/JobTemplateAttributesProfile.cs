@@ -19,7 +19,7 @@ namespace SharpIpp.Mapping.Profiles
 
                 if (src.JobPriority != null)
                 {
-                    job.Add(new IppAttribute(Tag.Integer, JobAttribute.JobPriority, src.JobPriority.Value));
+                    job.Add(IppAttribute.CreateInt(JobAttribute.JobPriority, src.JobPriority.Value));
                 }
 
                 if (src.JobHoldUntil != null)
@@ -45,12 +45,12 @@ namespace SharpIpp.Mapping.Profiles
 
                 if (src.Copies != null)
                 {
-                    job.Add(new IppAttribute(Tag.Integer, JobAttribute.Copies, src.Copies.Value));
+                    job.Add(IppAttribute.CreateInt(JobAttribute.Copies, src.Copies.Value));
                 }
 
                 if (src.Finishings != null)
                 {
-                    job.Add(new IppAttribute(Tag.Enum, JobAttribute.Finishings, (int)src.Finishings.Value));
+                    job.Add(IppAttribute.CreateEnum(JobAttribute.Finishings, (int)src.Finishings.Value));
                 }
 
                 if (src.PageRanges != null)
@@ -66,12 +66,12 @@ namespace SharpIpp.Mapping.Profiles
 
                 if (src.NumberUp != null)
                 {
-                    job.Add(new IppAttribute(Tag.Integer, JobAttribute.NumberUp, src.NumberUp.Value));
+                    job.Add(IppAttribute.CreateInt(JobAttribute.NumberUp, src.NumberUp.Value));
                 }
 
                 if (src.OrientationRequested != null)
                 {
-                    job.Add(new IppAttribute(Tag.Enum, JobAttribute.OrientationRequested, (int)src.OrientationRequested.Value));
+                    job.Add(IppAttribute.CreateEnum(JobAttribute.OrientationRequested, (int)src.OrientationRequested.Value));
                 }
 
                 if (src.Media != null)
@@ -86,7 +86,7 @@ namespace SharpIpp.Mapping.Profiles
 
                 if (src.PrintQuality != null)
                 {
-                    job.Add(new IppAttribute(Tag.Enum, JobAttribute.PrintQuality, (int)src.PrintQuality.Value));
+                    job.Add(IppAttribute.CreateEnum(JobAttribute.PrintQuality, (int)src.PrintQuality.Value));
                 }
 
                 if (src.PrintScaling != null)

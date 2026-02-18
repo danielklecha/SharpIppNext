@@ -23,9 +23,9 @@ public class MediaSize
     public IEnumerable<IppAttribute> GetIppAttributes(IMapperApplier mapper)
     {
         if (XDimension.HasValue)
-            yield return new IppAttribute(Tag.Integer, nameof(XDimension).ConvertCamelCaseToKebabCase(), XDimension.Value);
+            yield return IppAttribute.CreateInt(nameof(XDimension).ConvertCamelCaseToKebabCase(), XDimension.Value);
         if (YDimension.HasValue)
-            yield return new IppAttribute(Tag.Integer, nameof(YDimension).ConvertCamelCaseToKebabCase(), YDimension.Value);
+            yield return IppAttribute.CreateInt(nameof(YDimension).ConvertCamelCaseToKebabCase(), YDimension.Value);
     }
 
     public static MediaSize Create(Dictionary<string, IppAttribute[]> dict, IMapperApplier mapper)

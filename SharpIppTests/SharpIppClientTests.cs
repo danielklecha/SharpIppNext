@@ -156,7 +156,7 @@ public class SharpIppClientTests
             new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ),
             new IppAttribute( Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "test-user" ),
             new IppAttribute( Tag.Uri, JobAttribute.PrinterUri, "http://127.0.0.1:631/" ),
-            new IppAttribute( Tag.Integer, JobAttribute.JobId, 234 )
+            IppAttribute.CreateInt( JobAttribute.JobId, 234 )
         } );
         protocol.Verify( x => x.WriteIppRequestAsync(
             It.Is<IppRequestMessage>( x => x.VerifyAssertionScope( _ => x.Should().BeEquivalentTo( rawRequestMessage, "" ) ) ),
@@ -195,7 +195,7 @@ public class SharpIppClientTests
             new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ),
             new IppAttribute( Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "test-user" ),
             new IppAttribute( Tag.Uri, JobAttribute.PrinterUri, "http://127.0.0.1:631/" ),
-            new IppAttribute( Tag.Integer, JobAttribute.JobId, 234 )
+            IppAttribute.CreateInt( JobAttribute.JobId, 234 )
         } );
         protocol.Verify( x => x.WriteIppRequestAsync(
             It.Is<IppRequestMessage>( x => x.VerifyAssertionScope( _ => x.Should().BeEquivalentTo( rawRequestMessage, "" ) ) ),
@@ -271,7 +271,7 @@ public class SharpIppClientTests
             new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ),
             new IppAttribute( Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "test-user" ),
             new IppAttribute( Tag.Uri, JobAttribute.PrinterUri, "http://127.0.0.1:631/" ),
-            new IppAttribute( Tag.Integer, JobAttribute.JobId, 234 )
+            IppAttribute.CreateInt( JobAttribute.JobId, 234 )
         } );
         protocol.Verify( x => x.WriteIppRequestAsync(
             It.Is<IppRequestMessage>( x => x.VerifyAssertionScope( _ => x.Should().BeEquivalentTo( rawRequestMessage, "" ) ) ),
@@ -470,8 +470,8 @@ public class SharpIppClientTests
             new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ),
             new IppAttribute( Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "test-user" ),
             new IppAttribute( Tag.Uri, JobAttribute.PrinterUri, "http://127.0.0.1:631/" ),
-            new IppAttribute( Tag.Integer, JobAttribute.JobId, 456 ),
-            new IppAttribute( Tag.Boolean, JobAttribute.LastDocument, false )
+            IppAttribute.CreateInt( JobAttribute.JobId, 456 ),
+            IppAttribute.CreateBoolean(JobAttribute.LastDocument, false)
         } );
         protocol.Verify( x => x.WriteIppRequestAsync(
             It.Is<IppRequestMessage>( x => x.VerifyAssertionScope( _ => x.Should().BeEquivalentTo( rawRequestMessage, "" ) ) ),
@@ -513,8 +513,8 @@ public class SharpIppClientTests
             new IppAttribute( Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "test-user" ),
             new IppAttribute( Tag.Uri, JobAttribute.PrinterUri, "http://127.0.0.1:631/" ),
             new IppAttribute( Tag.Uri, JobAttribute.DocumentUri, uri.AbsoluteUri ),
-            new IppAttribute( Tag.Integer, JobAttribute.JobId, 456 ),
-            new IppAttribute( Tag.Boolean, JobAttribute.LastDocument, false )
+            IppAttribute.CreateInt( JobAttribute.JobId, 456 ),
+            IppAttribute.CreateBoolean(JobAttribute.LastDocument, false)
         } );
         protocol.Verify( x => x.WriteIppRequestAsync(
             It.Is<IppRequestMessage>( x => x.VerifyAssertionScope( _ => x.Should().BeEquivalentTo( rawRequestMessage, "" ) ) ),
@@ -553,7 +553,7 @@ public class SharpIppClientTests
             new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ),
             new IppAttribute( Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "test-user" ),
             new IppAttribute( Tag.Uri, JobAttribute.PrinterUri, "http://127.0.0.1:631/" ),
-            new IppAttribute( Tag.Integer, JobAttribute.JobId, 456 )
+            IppAttribute.CreateInt( JobAttribute.JobId, 456 )
         } );
         protocol.Verify( x => x.WriteIppRequestAsync(
             It.Is<IppRequestMessage>( x => x.VerifyAssertionScope( _ => x.Should().BeEquivalentTo( rawRequestMessage, "" ) ) ),
@@ -592,7 +592,7 @@ public class SharpIppClientTests
             new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ),
             new IppAttribute( Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "test-user" ),
             new IppAttribute( Tag.Uri, JobAttribute.PrinterUri, "http://127.0.0.1:631/" ),
-            new IppAttribute( Tag.Boolean, JobAttribute.MyJobs, true )
+            IppAttribute.CreateBoolean(JobAttribute.MyJobs, true)
         } );
         protocol.Verify( x => x.WriteIppRequestAsync(
             It.Is<IppRequestMessage>( x => x.VerifyAssertionScope( _ => x.Should().BeEquivalentTo( rawRequestMessage, "" ) ) ),
@@ -705,7 +705,7 @@ public class SharpIppClientTests
             new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ),
             new IppAttribute( Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "test-user" ),
             new IppAttribute( Tag.Uri, JobAttribute.PrinterUri, "http://127.0.0.1:631/" ),
-            new IppAttribute( Tag.Integer, JobAttribute.JobId, 456 )
+            IppAttribute.CreateInt( JobAttribute.JobId, 456 )
         } );
         protocol.Verify( x => x.WriteIppRequestAsync(
             It.Is<IppRequestMessage>( x => x.VerifyAssertionScope( _ => x.Should().BeEquivalentTo( rawRequestMessage, "" ) ) ),

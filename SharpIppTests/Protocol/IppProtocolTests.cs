@@ -207,7 +207,7 @@ public class IppProtocolTests
         message.OperationAttributes.Add( new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ) );
         message.OperationAttributes.Add( new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ) );
         message.OperationAttributes.Add( new IppAttribute( Tag.NameWithoutLanguage, JobAttribute.JobName, "Test Job" ) );
-        message.JobAttributes.Add( new IppAttribute( Tag.Integer, JobAttribute.Copies, 1 ) );
+        message.JobAttributes.Add( IppAttribute.CreateInt( JobAttribute.Copies, 1 ) );
         // Act
         await protocol.WriteIppRequestAsync( message, memoryStream );
         // Assert
@@ -267,7 +267,7 @@ public class IppProtocolTests
         message.OperationAttributes.Add( new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ) );
         message.OperationAttributes.Add( new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ) );
         message.OperationAttributes.Add( new IppAttribute( Tag.NameWithoutLanguage, JobAttribute.JobName, "Test Job" ) );
-        message.JobAttributes.Add( new IppAttribute( Tag.Integer, JobAttribute.Copies, 1 ) );
+        message.JobAttributes.Add( IppAttribute.CreateInt( JobAttribute.Copies, 1 ) );
         (await act.Should().NotThrowAsync()).Which.Should().BeEquivalentTo( message, x => x.Excluding( ( IMemberInfo x ) => x.Path == "Document.ReadTimeout" || x.Path == "Document.WriteTimeout" ) );
     }
 
@@ -453,7 +453,7 @@ public class IppProtocolTests
         message.OperationAttributes.Add( operationAttrs );
         var jobAttrs = new List<IppAttribute>
         {
-            new IppAttribute( Tag.Integer, JobAttribute.Copies, 1 )
+            IppAttribute.CreateInt( JobAttribute.Copies, 1 )
         };
         message.JobAttributes.Add( jobAttrs );
         // Act
@@ -510,7 +510,7 @@ public class IppProtocolTests
         message.OperationAttributes.Add( operationAttrs );
         var jobAttrs = new List<IppAttribute>
         {
-            new IppAttribute( Tag.Integer, JobAttribute.Copies, 1 )
+            IppAttribute.CreateInt( JobAttribute.Copies, 1 )
         };
         message.JobAttributes.Add( jobAttrs );
         (await act.Should().NotThrowAsync()).Which.Should().BeEquivalentTo( message );

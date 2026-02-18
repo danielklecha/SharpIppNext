@@ -1,40 +1,39 @@
 ﻿using System;
 
-namespace SharpIpp.Protocol.Models
+namespace SharpIpp.Protocol.Models;
+
+public struct Range : IEquatable<Range>
 {
-    public struct Range : IEquatable<Range>
+    public int Lower { get; }
+
+    public int Upper { get; }
+
+    public Range(int lower, int upper)
     {
-        public int Lower { get; }
+        Lower = lower;
+        Upper = upper;
+    }
 
-        public int Upper { get; }
+    public override string ToString()
+    {
+        return $"{Lower} - {Upper}";
+    }
 
-        public Range(int lower, int upper)
+    public bool Equals(Range other)
+    {
+        return Lower == other.Lower && Upper == other.Upper;
+    }
+
+    public override bool Equals(object obj)
+    {
+        return obj is Range other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
         {
-            Lower = lower;
-            Upper = upper;
-        }
-
-        public override string ToString()
-        {
-            return $"{Lower} - {Upper}";
-        }
-
-        public bool Equals(Range other)
-        {
-            return Lower == other.Lower && Upper == other.Upper;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is Range other && Equals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                return (Lower * 397) ^ Upper;
-            }
+            return (Lower * 397) ^ Upper;
         }
     }
 }

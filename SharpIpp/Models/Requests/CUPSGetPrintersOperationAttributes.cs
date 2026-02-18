@@ -89,9 +89,9 @@ public class CUPSGetPrintersOperationAttributes : OperationAttributes
         if (PrinterLocation != null)
             yield return new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.PrinterLocation, PrinterLocation);
         if (PrinterType != null)
-            yield return new IppAttribute(Tag.Enum, JobAttribute.PrinterType, (int)PrinterType.Value);
+            yield return IppAttribute.CreateEnum(JobAttribute.PrinterType, (int)PrinterType.Value);
         if (PrinterTypeMask != null)
-            yield return new IppAttribute(Tag.Enum, JobAttribute.PrinterTypeMask, (int)PrinterTypeMask.Value);
+            yield return IppAttribute.CreateEnum(JobAttribute.PrinterTypeMask, (int)PrinterTypeMask.Value);
         if (RequestedAttributes != null)
             foreach (var name in RequestedAttributes)
                 yield return new IppAttribute(Tag.Keyword, JobAttribute.RequestedAttributes, name);

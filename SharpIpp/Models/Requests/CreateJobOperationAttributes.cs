@@ -138,14 +138,14 @@ public class CreateJobOperationAttributes : OperationAttributes
         if (JobName != null)
             yield return new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.JobName, JobName);
         if (IppAttributeFidelity.HasValue)
-            yield return new IppAttribute(Tag.Boolean, JobAttribute.IppAttributeFidelity, IppAttributeFidelity.Value);
+            yield return IppAttribute.CreateBoolean(JobAttribute.IppAttributeFidelity, IppAttributeFidelity.Value);
         if (JobKOctetsProcessed.HasValue)
-            yield return new IppAttribute(Tag.Integer, JobAttribute.JobKOctetsProcessed, JobKOctetsProcessed.Value);
+            yield return IppAttribute.CreateInt( JobAttribute.JobKOctetsProcessed, JobKOctetsProcessed.Value);
         if (JobImpressions.HasValue)
-            yield return new IppAttribute(Tag.Integer, JobAttribute.JobImpressions, JobImpressions.Value);
+            yield return IppAttribute.CreateInt( JobAttribute.JobImpressions, JobImpressions.Value);
         if (JobMediaSheets.HasValue)
-            yield return new IppAttribute(Tag.Integer, JobAttribute.JobMediaSheets, JobMediaSheets.Value);
+            yield return IppAttribute.CreateInt( JobAttribute.JobMediaSheets, JobMediaSheets.Value);
         if (JobKOctets.HasValue)
-            yield return new IppAttribute(Tag.Integer, JobAttribute.JobKOctets, JobKOctets.Value);
+            yield return IppAttribute.CreateInt( JobAttribute.JobKOctets, JobKOctets.Value);
     }
 }
