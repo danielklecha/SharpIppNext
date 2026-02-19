@@ -39,6 +39,103 @@ public class SharpIppIntegrationTests
     }
 
     [TestMethod()]
+    public async Task PrintJobAsync_WhenSendingMessage_ServerReceivesSameRequestAndReturnsExpectedResponse()
+    {
+        // Arrange
+        using MemoryStream memoryStream = new();
+        var clientRequest = new PrintJobRequest
+        {
+            Version = new IppVersion(2, 0),
+            Document = memoryStream,
+            OperationAttributes = new()
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631"),
+                DocumentName = "のデフォルト値を保存するメソッドを呼び出します.pdf",
+                DocumentFormat = "application/pdf"
+            },
+            JobTemplateAttributes = new()
+            {
+                Copies = 1
+            }
+        };
+        var client = new SharpIppClient();
+        var server = new SharpIppServer();
+        // Act
+        var clientRawRequest = client.CreateRawRequest(clientRequest);
+        var serverRequest = (await server.ReceiveRequestAsync(clientRawRequest));
+        // Assert
+        clientRequest.Should().BeEquivalentTo(serverRequest);
+    }
+
+    [TestMethod()]
+    public async Task SendAsync_AllSections_ServerReceivesSameRequestAndReturnsExpectedResponse()
+    {
+        // Arrange
+        var printerUri = new Uri("http://127.0.0.1:631");
+
+        using MemoryStream memoryStream = new();
+        SharpIppServer server = new();
+
+        IIppRequestMessage clientRawRequest = new IppRequestMessage()
+        {
+            IppOperation = (IppOperation)0x000A,
+            RequestId = 123,
+            Version = new IppVersion(2, 0),
+            Document = memoryStream
+        };
+        clientRawRequest.OperationAttributes.AddRange([
+            new IppAttribute(Tag.Charset, "attributes-charset", "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, "attributes-natural-language", "en"),
+            new IppAttribute(Tag.NameWithoutLanguage, "requesting-user-name", "test"),
+            new IppAttribute(Tag.Uri, "printer-uri", "ipp://localhost:631"),
+            new IppAttribute(Tag.Integer, "job-id", 1)]);
+        clientRawRequest.PrinterAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, "request", "test"));
+        clientRawRequest.ResourceAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, "request", "test"));
+        clientRawRequest.SubscriptionAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, "request", "test"));
+        clientRawRequest.SystemAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, "request", "test"));
+        clientRawRequest.UnsupportedAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, "request", "test"));
+        clientRawRequest.DocumentAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, "request", "test"));
+        clientRawRequest.EventNotificationAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, "request", "test"));
+        clientRawRequest.JobAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, "request", "test"));
+        IIppRequestMessage? serverRawRequest = null;
+        IIppResponseMessage? serverRawResponse = null;
+        HttpStatusCode statusCode = HttpStatusCode.OK;
+        async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
+        {
+            serverRawRequest = (await server.ReceiveRawRequestAsync(s, c));
+            serverRawResponse = new IppResponseMessage
+            {
+                RequestId = serverRawRequest.RequestId,
+                Version = serverRawRequest.Version,
+                StatusCode = IppStatusCode.SuccessfulOk
+            };
+            serverRawResponse.OperationAttributes.Add([new IppAttribute(Tag.NameWithoutLanguage, "response", "test")]);
+            serverRawResponse.PrinterAttributes.Add([new IppAttribute(Tag.NameWithoutLanguage, "response", "test")]);
+            serverRawResponse.ResourceAttributes.Add([new IppAttribute(Tag.NameWithoutLanguage, "response", "test")]);
+            serverRawResponse.SubscriptionAttributes.Add([new IppAttribute(Tag.NameWithoutLanguage, "response", "test")]);
+            serverRawResponse.SystemAttributes.Add([new IppAttribute(Tag.NameWithoutLanguage, "response", "test")]);
+            serverRawResponse.UnsupportedAttributes.Add([new IppAttribute(Tag.NameWithoutLanguage, "response", "test")]);
+            serverRawResponse.DocumentAttributes.Add([new IppAttribute(Tag.NameWithoutLanguage, "response", "test")]);
+            serverRawResponse.EventNotificationAttributes.Add([new IppAttribute(Tag.NameWithoutLanguage, "response", "test")]);
+            serverRawResponse.JobAttributes.Add([new IppAttribute(Tag.NameWithoutLanguage, "response", "test")]);
+            var memoryStream = new MemoryStream();
+            await server.SendRawResponseAsync(serverRawResponse, memoryStream, c);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return new HttpResponseMessage()
+            {
+                StatusCode = statusCode,
+                Content = new StreamContent(memoryStream)
+            };
+        }
+        SharpIppClient client = new(new(GetMockOfHttpMessageHandler(func).Object));
+        // Act
+        IIppResponseMessage? clientRawResponse = await client.SendAsync(printerUri, clientRawRequest);
+        // Assert
+        clientRawRequest.Should().BeEquivalentTo(serverRawRequest, options => options.Excluding(x => x.Document));
+        clientRawResponse.Should().BeEquivalentTo(serverRawResponse);
+    }
+
+    [TestMethod()]
     public async Task PrintJobAsync_WhenSendingStream_ServerReceivesSameRequestAndReturnsExpectedResponse()
     {
         // Arrange
@@ -149,6 +246,124 @@ public class SharpIppIntegrationTests
         SharpIppClient client = new(new(GetMockOfHttpMessageHandler(func).Object));
         // Act
         PrintJobResponse? clientResponse = await client.PrintJobAsync(clientRequest);
+        // Assert
+        clientRequest.Should().BeEquivalentTo(serverRequest);
+        clientResponse.Should().BeEquivalentTo(serverResponse);
+    }
+
+    [TestMethod()]
+    public async Task PrintJobAsync_LongWayWhenSendingStream_ServerReceivesSameRequestAndReturnsExpectedResponse()
+    {
+        // Arrange
+        using MemoryStream memoryStream = new();
+        SharpIppServer server = new();
+        PrintJobRequest clientRequest = new()
+        {
+            RequestId = 123,
+            Version = new IppVersion(2, 0),
+            Document = memoryStream,
+            OperationAttributes = new()
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631"),
+                DocumentName = "のデフォルト値を保存するメソッドを呼び出します.pdf",
+                DocumentFormat = "application/pdf",
+                AttributesCharset = "utf-8",
+                AttributesNaturalLanguage = "en-us",
+                RequestingUserName = "test-user",
+                JobName = "Test Job",
+                IppAttributeFidelity = true,
+                JobKOctetsProcessed = 10,
+                JobKOctets = 12,
+                JobImpressions = 5,
+                JobMediaSheets = 2,
+                Compression = Compression.None,
+                DocumentNaturalLanguage = "en",
+            },
+            JobTemplateAttributes = new()
+            {
+                Copies = 1,
+                JobPriority = 1,
+                JobSheets = JobSheets.None,
+                JobHoldUntil = JobHoldUntil.NoHold,
+                MultipleDocumentHandling = MultipleDocumentHandling.SeparateDocumentsUncollatedCopies,
+                Finishings = Finishings.None,
+                PageRanges = [new SharpIpp.Protocol.Models.Range(1, 2)],
+                Sides = Sides.OneSided,
+                NumberUp = 1,
+                OrientationRequested = Orientation.Portrait,
+                Media = "iso_a4_210x297mm",
+                PrinterResolution = new Resolution(600, 600, ResolutionUnit.DotsPerInch),
+                PrintQuality = PrintQuality.Normal,
+                PrintScaling = PrintScaling.Auto,
+                PrintColorMode = PrintColorMode.Color,
+                MediaCol = new MediaCol
+                {
+                    MediaBackCoating = MediaCoating.Glossy,
+                    MediaBottomMargin = 10,
+                    MediaColor = "white",
+                    MediaFrontCoating = MediaCoating.Glossy,
+                    MediaGrain = MediaGrain.XDirection,
+                    MediaHoleCount = 0,
+                    MediaInfo = "test",
+                    MediaKey = "test",
+                    MediaLeftMargin = 10,
+                    MediaOrderCount = 1,
+                    MediaPrePrinted = MediaPrePrinted.Blank,
+                    MediaRecycled = MediaRecycled.None,
+                    MediaRightMargin = 10,
+                    MediaSize = new MediaSize { XDimension = 21000, YDimension = 29700 }, // 1/100 mm for A4
+                    MediaSizeName = "iso_a4_210x297mm",
+                    MediaSource = MediaSource.Main,
+                    MediaSourceProperties = new MediaSourceProperties { MediaSourceFeedDirection = MediaSourceFeedDirection.LongEdgeFirst, MediaSourceFeedOrientation = Orientation.Portrait },
+                    MediaThickness = 10,
+                    MediaTooth = MediaTooth.Medium,
+                    MediaTopMargin = 10,
+                    MediaType = "stationery",
+                    MediaWeightMetric = 80
+                }
+            }
+        };
+        IIppRequest? serverRequest = null;
+        PrintJobResponse? serverResponse = null;
+        HttpStatusCode statusCode = HttpStatusCode.OK;
+        async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
+        {
+            serverRequest = (await server.ReceiveRequestAsync(s, c));
+            serverResponse = new PrintJobResponse
+            {
+                RequestId = serverRequest.RequestId,
+                Version = serverRequest.Version,
+                StatusCode = IppStatusCode.SuccessfulOk,
+                OperationAttributes = new()
+                {
+                    StatusMessage = "successful-ok",
+                    DetailedStatusMessage = ["detail1"],
+                    DocumentAccessError = "none"
+                },
+                JobAttributes = new()
+                {
+                    JobState = JobState.Pending,
+                    JobStateReasons = [JobStateReason.None],
+                    JobStateMessage = "pending",
+                    NumberOfInterveningJobs = 0,
+                    JobId = 456,
+                    JobUri = "http://127.0.0.1:631/456"
+                }
+            };
+            var memoryStream = new MemoryStream();
+            await server.SendResponseAsync(serverResponse, memoryStream, c);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return new HttpResponseMessage()
+            {
+                StatusCode = statusCode,
+                Content = new StreamContent(memoryStream)
+            };
+        }
+        SharpIppClient client = new(new(GetMockOfHttpMessageHandler(func).Object));
+        // Act
+        var clientRawRequest = client.CreateRawRequest(clientRequest);
+        var clientRawResponse = await client.SendAsync(clientRequest.OperationAttributes.PrinterUri, clientRawRequest).ConfigureAwait(false);
+        var clientResponse = client.CreateResponse<PrintJobResponse>(clientRawResponse);
         // Assert
         clientRequest.Should().BeEquivalentTo(serverRequest);
         clientResponse.Should().BeEquivalentTo(serverResponse);

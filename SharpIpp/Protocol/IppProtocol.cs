@@ -139,14 +139,7 @@ namespace SharpIpp.Protocol
                         switch (attribute.Tag)
                         {
                             case Tag.Charset when currentSectionTag == SectionTag.OperationAttributesTag && attribute.Name == JobAttribute.AttributesCharset && attribute.Value is string charsetName:
-                                try
-                                {
-                                    encoding = Encoding.GetEncoding(charsetName);
-                                }
-                                catch (ArgumentException)
-                                {
-                                    //ignore invalid charset, keep previous one
-                                }
+                                encoding = Encoding.GetEncoding(charsetName);
                                 break;
                             case Tag.BegCollection:
                                 prevBegCollectionAttributes.Push(attribute);
@@ -186,6 +179,9 @@ namespace SharpIpp.Protocol
                     case SectionTag.PrinterAttributesTag:
                         attributes = res.PrinterAttributes;
                         break;
+                    case SectionTag.UnsupportedAttributesTag:
+                        attributes = res.UnsupportedAttributes;
+                        break;
                     case SectionTag.SubscriptionAttributesTag:
                         attributes = res.SubscriptionAttributes;
                         break;
@@ -213,14 +209,7 @@ namespace SharpIpp.Protocol
                         switch (attribute.Tag)
                         {
                             case Tag.Charset when attributes == res.OperationAttributes && attribute.Name == JobAttribute.AttributesCharset && attribute.Value is string charsetName:
-                                try
-                                {
-                                    encoding = Encoding.GetEncoding(charsetName);
-                                }
-                                catch (ArgumentException)
-                                {
-                                    //ignore invalid charset, keep previous one
-                                }
+                                encoding = Encoding.GetEncoding(charsetName);
                                 break;
                             case Tag.BegCollection:
                                 prevBegCollectionAttributes.Push(attribute);
@@ -307,19 +296,12 @@ namespace SharpIpp.Protocol
             if (stream is null)
                 throw new ArgumentNullException( nameof( stream ) );
             var encoding = Encoding.ASCII;
-            try
-            {
-                var charset = ippResponseMessage.OperationAttributes
-                    .SelectMany(x => x)
-                    .FirstOrDefault(x => x.Tag == Tag.Charset && x.Name == JobAttribute.AttributesCharset)
-                    ?.Value as string;
-                if (charset is not null)
-                    encoding = Encoding.GetEncoding(charset);
-            }
-            catch (ArgumentException)
-            {
-                //ignore invalid charset, keep previous one
-            }
+            var charset = ippResponseMessage.OperationAttributes
+                .SelectMany(x => x)
+                .FirstOrDefault(x => x.Tag == Tag.Charset && x.Name == JobAttribute.AttributesCharset)
+                ?.Value as string;
+            if (charset is not null)
+                encoding = Encoding.GetEncoding(charset);
             using var writer = new BinaryWriter( stream, Encoding.ASCII, true );
             writer.WriteBigEndian( ippResponseMessage.Version.ToInt16BigEndian() );
             writer.WriteBigEndian( (short)ippResponseMessage.StatusCode );
