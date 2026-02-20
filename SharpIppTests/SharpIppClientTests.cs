@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq.Protected;
 using Moq;
 using SharpIpp;
@@ -49,7 +49,6 @@ public class SharpIppClientTests
         protocol.Setup( x => x.ReadIppResponseAsync( It.IsAny<Stream>(), It.IsAny<CancellationToken>() ) ).ReturnsAsync( new IppResponseMessage
         {
             RequestId = 123,
-            Version = IppVersion.V1_1,
             StatusCode = IppStatusCode.SuccessfulOk
         } );
         return protocol;
@@ -65,7 +64,7 @@ public class SharpIppClientTests
         Func<Task<CreateJobResponse>> act = async () => await client.CreateJobAsync(new CreateJobRequest
         {
             RequestId = 123,
-            Version = IppVersion.V1_1
+
         });
         // Assert
         await act.Should().ThrowAsync<Exception>();
@@ -81,7 +80,6 @@ public class SharpIppClientTests
         Func<Task<CreateJobResponse>> act = async () => await client.CreateJobAsync(new CreateJobRequest
         {
             RequestId = 123,
-            Version = IppVersion.V1_1,
             OperationAttributes = new CreateJobOperationAttributes()
         });
         // Assert
@@ -98,7 +96,6 @@ public class SharpIppClientTests
         await client.CreateJobAsync( new CreateJobRequest
         {
             RequestId = 123,
-            Version = IppVersion.V1_1,
             OperationAttributes = new CreateJobOperationAttributes
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
@@ -110,7 +107,7 @@ public class SharpIppClientTests
         {
             IppOperation = IppOperation.CreateJob,
             RequestId = 123,
-            Version = IppVersion.V1_1
+
         };
         rawRequestMessage.OperationAttributes.AddRange( new[]
         {
@@ -135,7 +132,6 @@ public class SharpIppClientTests
         await client.CancelJobAsync( new CancelJobRequest
         {
             RequestId = 123,
-            Version = IppVersion.V1_1,
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
@@ -148,7 +144,7 @@ public class SharpIppClientTests
         {
             IppOperation = IppOperation.CancelJob,
             RequestId = 123,
-            Version = IppVersion.V1_1
+
         };
         rawRequestMessage.OperationAttributes.AddRange( new[]
         {
@@ -174,7 +170,6 @@ public class SharpIppClientTests
         await client.HoldJobAsync( new HoldJobRequest
         {
             RequestId = 123,
-            Version = IppVersion.V1_1,
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
@@ -187,7 +182,7 @@ public class SharpIppClientTests
         {
             IppOperation = IppOperation.HoldJob,
             RequestId = 123,
-            Version = IppVersion.V1_1
+
         };
         rawRequestMessage.OperationAttributes.AddRange( new[]
         {
@@ -213,7 +208,6 @@ public class SharpIppClientTests
         await client.PausePrinterAsync( new PausePrinterRequest
         {
             RequestId = 123,
-            Version = IppVersion.V1_1,
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
@@ -225,7 +219,7 @@ public class SharpIppClientTests
         {
             IppOperation = IppOperation.PausePrinter,
             RequestId = 123,
-            Version = IppVersion.V1_1
+
         };
         rawRequestMessage.OperationAttributes.AddRange( new[]
         {
@@ -250,7 +244,6 @@ public class SharpIppClientTests
         await client.ReleaseJobAsync( new ReleaseJobRequest
         {
             RequestId = 123,
-            Version = IppVersion.V1_1,
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
@@ -263,7 +256,7 @@ public class SharpIppClientTests
         {
             IppOperation = IppOperation.ReleaseJob,
             RequestId = 123,
-            Version = IppVersion.V1_1
+
         };
         rawRequestMessage.OperationAttributes.AddRange( new[]
         {
@@ -290,7 +283,6 @@ public class SharpIppClientTests
         await client.PrintJobAsync( new PrintJobRequest
         {
             RequestId = 123,
-            Version = IppVersion.V1_1,
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
@@ -303,7 +295,6 @@ public class SharpIppClientTests
         {
             IppOperation = IppOperation.PrintJob,
             RequestId = 123,
-            Version = IppVersion.V1_1,
             Document = memoryStream
         };
         rawRequestMessage.OperationAttributes.AddRange( new[]
@@ -329,7 +320,6 @@ public class SharpIppClientTests
         await client.ResumePrinterAsync( new ResumePrinterRequest
         {
             RequestId = 123,
-            Version = IppVersion.V1_1,
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
@@ -341,7 +331,7 @@ public class SharpIppClientTests
         {
             IppOperation = IppOperation.ResumePrinter,
             RequestId = 123,
-            Version = IppVersion.V1_1
+
         };
         rawRequestMessage.OperationAttributes.AddRange( new[]
         {
@@ -367,7 +357,6 @@ public class SharpIppClientTests
         await client.ValidateJobAsync( new ValidateJobRequest
         {
             RequestId = 123,
-            Version = IppVersion.V1_1,
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
@@ -380,7 +369,6 @@ public class SharpIppClientTests
         {
             IppOperation = IppOperation.ValidateJob,
             RequestId = 123,
-            Version = IppVersion.V1_1,
             Document = memoryStream
         };
         rawRequestMessage.OperationAttributes.AddRange( new[]
@@ -407,7 +395,6 @@ public class SharpIppClientTests
         await client.PrintUriAsync( new PrintUriRequest
         {
             RequestId = 123,
-            Version = IppVersion.V1_1,
             OperationAttributes = new PrintUriOperationAttributes
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
@@ -420,7 +407,7 @@ public class SharpIppClientTests
         {
             IppOperation = IppOperation.PrintUri,
             RequestId = 123,
-            Version = IppVersion.V1_1
+
         };
         rawRequestMessage.OperationAttributes.AddRange( new[]
         {
@@ -447,7 +434,6 @@ public class SharpIppClientTests
         await client.SendDocumentAsync( new SendDocumentRequest
         {
             RequestId = 123,
-            Version = IppVersion.V1_1,
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
@@ -461,7 +447,6 @@ public class SharpIppClientTests
         {
             IppOperation = IppOperation.SendDocument,
             RequestId = 123,
-            Version = IppVersion.V1_1,
             Document = memoryStream
         };
         rawRequestMessage.OperationAttributes.AddRange( new[]
@@ -490,7 +475,6 @@ public class SharpIppClientTests
         await client.SendUriAsync( new SendUriRequest
         {
             RequestId = 123,
-            Version = IppVersion.V1_1,
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
@@ -504,7 +488,7 @@ public class SharpIppClientTests
         {
             IppOperation = IppOperation.SendUri,
             RequestId = 123,
-            Version = IppVersion.V1_1
+
         };
         rawRequestMessage.OperationAttributes.AddRange( new[]
         {
@@ -532,7 +516,6 @@ public class SharpIppClientTests
         await client.GetJobAttributesAsync( new GetJobAttributesRequest
         {
             RequestId = 123,
-            Version = IppVersion.V1_1,
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
@@ -545,7 +528,7 @@ public class SharpIppClientTests
         {
             IppOperation = IppOperation.GetJobAttributes,
             RequestId = 123,
-            Version = IppVersion.V1_1
+
         };
         rawRequestMessage.OperationAttributes.AddRange( new[]
         {
@@ -571,7 +554,6 @@ public class SharpIppClientTests
         await client.GetJobsAsync( new GetJobsRequest
         {
             RequestId = 123,
-            Version = IppVersion.V1_1,
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
@@ -584,7 +566,7 @@ public class SharpIppClientTests
         {
             IppOperation = IppOperation.GetJobs,
             RequestId = 123,
-            Version = IppVersion.V1_1
+
         };
         rawRequestMessage.OperationAttributes.AddRange( new[]
         {
@@ -610,7 +592,6 @@ public class SharpIppClientTests
         await client.GetPrinterAttributesAsync( new GetPrinterAttributesRequest
         {
             RequestId = 123,
-            Version = IppVersion.V1_1,
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
@@ -622,7 +603,7 @@ public class SharpIppClientTests
         {
             IppOperation = IppOperation.GetPrinterAttributes,
             RequestId = 123,
-            Version = IppVersion.V1_1
+
         };
         rawRequestMessage.OperationAttributes.AddRange( new[]
         {
@@ -647,7 +628,6 @@ public class SharpIppClientTests
         await client.PurgeJobsAsync( new PurgeJobsRequest
         {
             RequestId = 123,
-            Version = IppVersion.V1_1,
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
@@ -659,7 +639,7 @@ public class SharpIppClientTests
         {
             IppOperation = IppOperation.PurgeJobs,
             RequestId = 123,
-            Version = IppVersion.V1_1
+
         };
         rawRequestMessage.OperationAttributes.AddRange( new[]
         {
@@ -684,7 +664,6 @@ public class SharpIppClientTests
         await client.RestartJobAsync( new RestartJobRequest
         {
             RequestId = 123,
-            Version = IppVersion.V1_1,
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
@@ -697,7 +676,7 @@ public class SharpIppClientTests
         {
             IppOperation = IppOperation.RestartJob,
             RequestId = 123,
-            Version = IppVersion.V1_1
+
         };
         rawRequestMessage.OperationAttributes.AddRange( new[]
         {
@@ -723,7 +702,6 @@ public class SharpIppClientTests
         await client.GetCUPSPrintersAsync( new CUPSGetPrintersRequest
         {
             RequestId = 123,
-            Version = IppVersion.V1_1,
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
@@ -735,7 +713,7 @@ public class SharpIppClientTests
         {
             IppOperation = IppOperation.GetCUPSPrinters,
             RequestId = 123,
-            Version = IppVersion.V1_1
+
         };
         rawRequestMessage.OperationAttributes.AddRange( new[]
         {
@@ -759,7 +737,6 @@ public class SharpIppClientTests
         protocol.Setup( x => x.ReadIppResponseAsync( It.IsAny<Stream>(), It.IsAny<CancellationToken>() ) ).ReturnsAsync( new IppResponseMessage
         {
             RequestId = 123,
-            Version = IppVersion.V1_1,
             StatusCode = IppStatusCode.SuccessfulOk
         } );
         SharpIppClient client = new( httpClient, protocol.Object );
@@ -767,7 +744,6 @@ public class SharpIppClientTests
         Func<Task<CreateJobResponse>> act = async () => await client.CreateJobAsync( new CreateJobRequest
         {
             RequestId = 123,
-            Version = IppVersion.V1_1,
             OperationAttributes = new CreateJobOperationAttributes
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
@@ -787,7 +763,6 @@ public class SharpIppClientTests
         protocol.Setup( x => x.ReadIppResponseAsync( It.IsAny<Stream>(), It.IsAny<CancellationToken>() ) ).ReturnsAsync( new IppResponseMessage
         {
             RequestId = 123,
-            Version = IppVersion.V1_1,
             StatusCode = IppStatusCode.SuccessfulOk
         } );
         SharpIppClient client = new( httpClient, protocol.Object );
@@ -795,7 +770,6 @@ public class SharpIppClientTests
         Func<Task<CreateJobResponse>> act = async () => await client.CreateJobAsync( new CreateJobRequest
         {
             RequestId = 123,
-            Version = IppVersion.V1_1,
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
@@ -814,7 +788,6 @@ public class SharpIppClientTests
         protocol.Setup( x => x.ReadIppResponseAsync( It.IsAny<Stream>(), It.IsAny<CancellationToken>() ) ).ReturnsAsync( new IppResponseMessage
         {
             RequestId = 123,
-            Version = IppVersion.V1_1,
             StatusCode = IppStatusCode.ServerErrorBusy
         } );
         SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
@@ -822,7 +795,6 @@ public class SharpIppClientTests
         Func<Task<CreateJobResponse>> act = async () => await client.CreateJobAsync( new CreateJobRequest
         {
             RequestId = 123,
-            Version = IppVersion.V1_1,
             OperationAttributes= new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
@@ -844,7 +816,6 @@ public class SharpIppClientTests
         Func<Task<CreateJobResponse>> act = async () => await client.CreateJobAsync( new CreateJobRequest
         {
             RequestId = 123,
-            Version = IppVersion.V1_1,
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
@@ -866,7 +837,6 @@ public class SharpIppClientTests
         Func<Task<CreateJobResponse>> act = async () => await client.CreateJobAsync( new CreateJobRequest
         {
             RequestId = 123,
-            Version = IppVersion.V1_1,
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
@@ -951,7 +921,6 @@ public class SharpIppClientTests
         await client.CreateJobAsync( new CreateJobRequest
         {
             RequestId = 123,
-            Version = IppVersion.V1_1,
             OperationAttributes = new()
             {
                 PrinterUri = new Uri(printerUri),

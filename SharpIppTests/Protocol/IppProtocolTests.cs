@@ -1,4 +1,4 @@
-﻿using FluentAssertions.Equivalency;
+using FluentAssertions.Equivalency;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.TestTools.UnitTesting.Logging;
 using SharpIpp.Exceptions;
@@ -156,7 +156,6 @@ public class IppProtocolTests
         var message = new IppRequestMessage
         {
             IppOperation = IppOperation.PrintJob,
-            Version = IppVersion.V1_1,
             RequestId = 123
         };
         // Act
@@ -201,7 +200,6 @@ public class IppProtocolTests
         var message = new IppRequestMessage
         {
             IppOperation = IppOperation.PrintJob,
-            Version = IppVersion.V1_1,
             RequestId = 123
         };
         message.OperationAttributes.Add( new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ) );
@@ -230,7 +228,6 @@ public class IppProtocolTests
         var message = new IppRequestMessage
         {
             IppOperation = IppOperation.PrintJob,
-            Version = IppVersion.V1_1,
             RequestId = 123,
             Document = documentStream
         };
@@ -260,7 +257,6 @@ public class IppProtocolTests
         var message = new IppRequestMessage
         {
             IppOperation = IppOperation.PrintJob,
-            Version = IppVersion.V1_1,
             RequestId = 123,
             Document = documentStream
         };
@@ -297,7 +293,6 @@ public class IppProtocolTests
         (await act.Should().NotThrowAsync()).Which.Should().BeEquivalentTo( new IppRequestMessage
         {
             IppOperation = IppOperation.PrintJob,
-            Version = IppVersion.V1_1,
             RequestId = 123,
             Document = expectedStream
         }, x => x.Excluding( ( IMemberInfo x ) => x.Path == "Document.ReadTimeout" || x.Path == "Document.WriteTimeout" ) );
@@ -425,7 +420,6 @@ public class IppProtocolTests
         using MemoryStream requestStream = new();
         var message = new IppResponseMessage
         {
-            Version = IppVersion.V1_1,
             RequestId = 123
         };
         // Act
@@ -442,7 +436,6 @@ public class IppProtocolTests
         using MemoryStream requestStream = new();
         var message = new IppResponseMessage
         {
-            Version = IppVersion.V1_1,
             RequestId = 123
         };
         var operationAttrs = new List<IppAttribute>
@@ -477,7 +470,6 @@ public class IppProtocolTests
         // Assert
         var message = new IppResponseMessage
         {
-            Version = IppVersion.V1_1,
             RequestId = 123
         };
         (await act.Should().NotThrowAsync()).Which.Should().BeEquivalentTo( message );
@@ -499,7 +491,6 @@ public class IppProtocolTests
         // Assert
         var message = new IppResponseMessage
         {
-            Version = IppVersion.V1_1,
             RequestId = 123
         };
         var operationAttrs = new List<IppAttribute>
@@ -954,7 +945,6 @@ public class IppProtocolTests
         var protocol = new IppProtocol();
         var message = new IppResponseMessage
         {
-            Version = IppVersion.V1_1,
             RequestId = 123
         };
         // Act

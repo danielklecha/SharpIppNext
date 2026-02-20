@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 
 namespace SharpIpp.Protocol.Models;
@@ -7,7 +7,7 @@ public class IppRequestMessage : IIppRequestMessage
 {
     public Stream? Document { get; set; }
 
-    public IppVersion Version { get; set; } = IppVersion.V1_1;
+    public IppVersion Version { get; set; } = new();
 
     public IppOperation IppOperation { get; set; }
 

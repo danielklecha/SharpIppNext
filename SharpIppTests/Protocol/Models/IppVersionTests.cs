@@ -56,9 +56,6 @@ public class IppVersionTests
     [TestMethod]
     public void StaticProperties_HaveCorrectValues()
     {
-        IppVersion.V1_1.Major.Should().Be(1);
-        IppVersion.V1_1.Minor.Should().Be(1);
-
         IppVersion.CUPS10.Major.Should().Be(1);
         IppVersion.CUPS10.Minor.Should().Be(2);
     }

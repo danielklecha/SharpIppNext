@@ -39,7 +39,6 @@ public readonly struct IppVersion : IEquatable<IppVersion>, IComparable<IppVersi
         Minor = parts.Skip( 1 ).FirstOrDefault();
     }
 
-    public static IppVersion V1_1 { get; } = new( 1, 1 );
     public static IppVersion CUPS10 { get; } = new( 1, 2 );
 
     public override string ToString() => $"{Major}.{Minor}";

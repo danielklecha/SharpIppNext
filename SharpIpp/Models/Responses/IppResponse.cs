@@ -5,7 +5,7 @@ namespace SharpIpp.Models.Responses;
 
 public abstract class IppResponse<TOperationAttributes> : IIppResponse where TOperationAttributes : OperationAttributes
 {
-    public IppVersion Version { get; set; } = IppVersion.V1_1;
+    public IppVersion Version { get; set; } = new();
 
     public IppStatusCode StatusCode { get; set; }
 

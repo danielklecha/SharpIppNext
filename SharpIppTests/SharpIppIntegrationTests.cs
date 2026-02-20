@@ -1,4 +1,4 @@
-﻿using Moq;
+using Moq;
 using Moq.Protected;
 using SharpIpp;
 using SharpIpp.Models.Requests;
@@ -1006,7 +1006,7 @@ public class SharpIppIntegrationTests
                     PrinterState = PrinterState.Idle,
                     PrinterStateReasons = ["none"],
                     PrinterStateMessage = "Idle",
-                    IppVersionsSupported = [IppVersion.V1_1],
+                    IppVersionsSupported = [default],
                     OperationsSupported = [IppOperation.PrintJob],
                     MultipleDocumentJobsSupported = true,
                     CharsetConfigured = "utf-8",
@@ -1660,7 +1660,7 @@ public class SharpIppIntegrationTests
                         PrinterState = PrinterState.Idle,
                         PrinterStateReasons = ["none"],
                         PrinterStateMessage = "Idle",
-                        IppVersionsSupported = [IppVersion.V1_1],
+                        IppVersionsSupported = [default],
                         OperationsSupported = [IppOperation.PrintJob],
                         MultipleDocumentJobsSupported = true,
                         CharsetConfigured = "utf-8",
