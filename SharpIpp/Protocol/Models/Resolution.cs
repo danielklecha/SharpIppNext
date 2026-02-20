@@ -17,31 +17,14 @@ public readonly struct Resolution : IEquatable<Resolution>
         Units = units;
     }
 
-    public override string ToString()
-    {
-        return $"{Width}x{Height} ({(Units == ResolutionUnit.DotsPerInch ? "dpi" : Units == ResolutionUnit.DotsPerCm ? "dpcm" : "unknown")})";
-    }
+    public override string ToString() =>
+        $"{Width}x{Height} ({(Units == ResolutionUnit.DotsPerInch ? "dpi" : Units == ResolutionUnit.DotsPerCm ? "dpcm" : "unknown")})";
 
-    public bool Equals(Resolution other)
-    {
-        return Width == other.Width && Height == other.Height && Units == other.Units;
-    }
+    public bool Equals(Resolution other) => Width == other.Width && Height == other.Height && Units == other.Units;
 
-    public override bool Equals(object obj)
-    {
-        return obj is Resolution other && Equals(other);
-    }
+    public override bool Equals(object? obj) => obj is Resolution other && Equals(other);
 
-    public override int GetHashCode()
-    {
-        unchecked
-        {
-            var hashCode = Width;
-            hashCode = (hashCode * 397) ^ Height;
-            hashCode = (hashCode * 397) ^ (int)Units;
-            return hashCode;
-        }
-    }
+    public override int GetHashCode() => (Width, Height, Units).GetHashCode();
 
     public void Deconstruct(out int width, out int height, out ResolutionUnit units)
     {
@@ -50,13 +33,7 @@ public readonly struct Resolution : IEquatable<Resolution>
         units = Units;
     }
 
-    public static bool operator ==(Resolution left, Resolution right)
-    {
-        return left.Equals(right);
-    }
+    public static bool operator ==(Resolution left, Resolution right) => left.Equals(right);
 
-    public static bool operator !=(Resolution left, Resolution right)
-    {
-        return !left.Equals(right);
-    }
+    public static bool operator !=(Resolution left, Resolution right) => !left.Equals(right);
 }

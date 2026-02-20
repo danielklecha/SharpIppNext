@@ -5,7 +5,6 @@ namespace SharpIpp.Protocol.Models;
 public readonly struct Range : IEquatable<Range>
 {
     public int Lower { get; }
-
     public int Upper { get; }
 
     public Range(int lower, int upper)
@@ -14,10 +13,7 @@ public readonly struct Range : IEquatable<Range>
         Upper = upper;
     }
 
-    public override string ToString()
-    {
-        return $"{Lower} - {Upper}";
-    }
+    public override string ToString() => $"{Lower} - {Upper}";
 
     public void Deconstruct(out int lower, out int upper)
     {
@@ -25,15 +21,9 @@ public readonly struct Range : IEquatable<Range>
         upper = Upper;
     }
 
-    public bool Equals(Range other)
-    {
-        return Lower == other.Lower && Upper == other.Upper;
-    }
+    public bool Equals(Range other) => Lower == other.Lower && Upper == other.Upper;
 
-    public override bool Equals(object obj)
-    {
-        return obj is Range other && Equals(other);
-    }
+    public override bool Equals(object? obj) => obj is Range other && Equals(other);
 
     public override int GetHashCode()
     {
@@ -43,13 +33,7 @@ public readonly struct Range : IEquatable<Range>
         }
     }
 
-    public static bool operator ==(Range left, Range right)
-    {
-        return left.Equals(right);
-    }
+    public static bool operator ==(Range left, Range right) => left.Equals(right);
 
-    public static bool operator !=(Range left, Range right)
-    {
-        return !left.Equals(right);
-    }
+    public static bool operator !=(Range left, Range right) => !left.Equals(right);
 }
