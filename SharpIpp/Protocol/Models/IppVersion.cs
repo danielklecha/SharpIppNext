@@ -1,87 +1,105 @@
 ﻿using System;
 using System.Linq;
 
-namespace SharpIpp.Protocol.Models
+namespace SharpIpp.Protocol.Models;
+
+public readonly struct IppVersion : IEquatable<IppVersion>, IComparable<IppVersion>
 {
-    public class IppVersion : IEquatable<IppVersion>, IComparable<IppVersion>
+    public byte Major { get; }
+    public byte Minor { get; }
+
+    public IppVersion()
     {
-        public byte Major { get; internal set; }
-        public byte Minor { get; internal set; }
-        public IppVersion( short int16BigEndian )
+        Major = 1;
+        Minor = 1;
+    }
+
+    public IppVersion( short int16BigEndian )
+    {
+        byte[] bytes = BitConverter.GetBytes( int16BigEndian );
+        Major = bytes[ 1 ];
+        Minor = bytes[ 0 ];
+    }
+
+    public IppVersion( byte major, byte minor )
+    {
+        Major = major;
+        Minor = minor;
+    }
+
+    public IppVersion( string version )
+    {
+        if ( string.IsNullOrEmpty( version ) )
         {
-            byte[] bytes = BitConverter.GetBytes( int16BigEndian );
-            Major = bytes[ 1 ];
-            Minor = bytes[ 0 ];
+            throw new ArgumentNullException( nameof(version) );
         }
 
-        public IppVersion( byte major, byte minor  )
+        var parts = version.Split( '.' ).Select( byte.Parse ).ToList();
+        Major = parts.FirstOrDefault();
+        Minor = parts.Skip( 1 ).FirstOrDefault();
+    }
+
+    public static IppVersion V1_1 { get; } = new( 1, 1 );
+    public static IppVersion CUPS10 { get; } = new( 1, 2 );
+
+    public override string ToString() => $"{Major}.{Minor}";
+
+    public decimal ToDecimal() => Major + Minor / 100m;
+
+    public short ToInt16BigEndian() => BitConverter.ToInt16( [Minor, Major], 0 );
+
+    public bool Equals( IppVersion other )
+    {
+        return Major == other.Major && Minor == other.Minor;
+    }
+
+    public override bool Equals( object? obj )
+    {
+        return obj is IppVersion other && Equals( other );
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
         {
-            Major = major;
-            Minor = minor;
+            return (Major.GetHashCode() * 397) ^ Minor.GetHashCode();
         }
+    }
 
-        public IppVersion( string version )
-        {
-            var parts = version.Split( '.' ).Select( byte.Parse ).ToList();
-            Major = parts.FirstOrDefault();
-            Minor = parts.Skip( 1 ).FirstOrDefault();
-        }
+    public int CompareTo( IppVersion other )
+    {
+        int majorComparison = Major.CompareTo( other.Major );
+        if ( majorComparison != 0 ) return majorComparison;
+        return Minor.CompareTo( other.Minor );
+    }
 
-        public static IppVersion V1_1 { get; } = new( 1, 1 );
-        public static IppVersion CUPS10 { get; } = new( 1, 2 );
+    public static bool operator ==( IppVersion left, IppVersion right )
+    {
+        return left.Equals( right );
+    }
 
-        public override string ToString() => Major + "." + Minor;
+    public static bool operator !=( IppVersion left, IppVersion right )
+    {
+        return !left.Equals( right );
+    }
 
-        public decimal ToDecimal() => Major + Minor / 100;
+    public static bool operator <( IppVersion left, IppVersion right )
+    {
+        return left.CompareTo( right ) < 0;
+    }
 
-        public short ToInt16BigEndian() => BitConverter.ToInt16( new byte[] { Minor, Major }, 0 );
+    public static bool operator >( IppVersion left, IppVersion right )
+    {
+        return left.CompareTo( right ) > 0;
+    }
 
-        public bool Equals( IppVersion other )
-        {
-            return other != null
-                && Major == other.Major
-                && Minor == other.Minor;
-        }
+    public static bool operator <=( IppVersion left, IppVersion right )
+    {
+        return left.CompareTo( right ) <= 0;
+    }
 
-        public override bool Equals( object? obj )
-        {
-            return ReferenceEquals( this, obj ) || obj is IppVersion other && Equals( other );
-        }
-
-        public override int GetHashCode()
-        {
-            return Major.GetHashCode() * 17 + Minor.GetHashCode();
-        }
-
-        public int CompareTo( IppVersion other )
-        {
-            if (other == null)
-                return 1;
-            return ToDecimal().CompareTo( other.ToDecimal() );
-        }
-
-        public static bool operator ==( IppVersion? left, IppVersion? right )
-        {
-            return Equals( left, right );
-        }
-
-        public static bool operator !=( IppVersion? left, IppVersion? right )
-        {
-            return !Equals( left, right );
-        }
-
-        public static bool operator <( IppVersion? left, IppVersion? right )
-        {
-            if (left != null && right != null)
-                return left.CompareTo( right ) < 0;
-            return left == null && right != null;
-        }
-
-        public static bool operator >( IppVersion? left, IppVersion? right )
-        {
-            if (left != null && right != null)
-                return left.CompareTo( right ) > 0;
-            return left != null && right == null;
-        }
+    public static bool operator >=( IppVersion left, IppVersion right )
+    {
+        return left.CompareTo( right ) >= 0;
     }
 }
