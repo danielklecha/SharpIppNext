@@ -2,7 +2,7 @@
 
 namespace SharpIpp.Protocol.Models;
 
-public struct Range : IEquatable<Range>
+public readonly struct Range : IEquatable<Range>
 {
     public int Lower { get; }
 
@@ -17,6 +17,12 @@ public struct Range : IEquatable<Range>
     public override string ToString()
     {
         return $"{Lower} - {Upper}";
+    }
+
+    public void Deconstruct(out int lower, out int upper)
+    {
+        lower = Lower;
+        upper = Upper;
     }
 
     public bool Equals(Range other)
@@ -35,5 +41,15 @@ public struct Range : IEquatable<Range>
         {
             return (Lower * 397) ^ Upper;
         }
+    }
+
+    public static bool operator ==(Range left, Range right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(Range left, Range right)
+    {
+        return !left.Equals(right);
     }
 }

@@ -25,7 +25,7 @@ public class MediaSourceProperties
         if (MediaSourceFeedDirection.HasValue)
             yield return new IppAttribute(Tag.Keyword, nameof(MediaSourceFeedDirection).ConvertCamelCaseToKebabCase(), mapper.Map<string>(MediaSourceFeedDirection.Value));
         if (MediaSourceFeedOrientation.HasValue)
-            yield return IppAttribute.CreateEnum(nameof(MediaSourceFeedOrientation).ConvertCamelCaseToKebabCase(), (int)MediaSourceFeedOrientation.Value);
+            yield return new IppAttribute(Tag.Enum, nameof(MediaSourceFeedOrientation).ConvertCamelCaseToKebabCase(), (int)MediaSourceFeedOrientation.Value);
     }
 
     public static MediaSourceProperties Create(IMapperApplier mapper, Dictionary<string, IppAttribute[]> dict)

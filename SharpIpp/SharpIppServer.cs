@@ -94,7 +94,7 @@ public partial class SharpIppServer : ISharpIppServer
             throw new IppRequestException("No Operation Attributes", request, IppStatusCode.ClientErrorBadRequest);
         if (request.OperationAttributes.First().Name != JobAttribute.AttributesCharset)
             throw new IppRequestException("attributes-charset MUST be the first attribute", request, IppStatusCode.ClientErrorBadRequest);
-        if (request.OperationAttributes.Skip(1).FirstOrDefault()?.Name != JobAttribute.AttributesNaturalLanguage)
+        if (request.OperationAttributes.Skip(1).FirstOrDefault().Name != JobAttribute.AttributesNaturalLanguage)
             throw new IppRequestException("attributes-natural-language MUST be the second attribute", request, IppStatusCode.ClientErrorBadRequest);
         if (request.Version < new IppVersion(1, 0))
             throw new IppRequestException("Unsupported IPP version", request, IppStatusCode.ServerErrorVersionNotSupported);

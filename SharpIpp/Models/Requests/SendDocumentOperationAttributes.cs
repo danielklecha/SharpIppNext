@@ -82,7 +82,7 @@ public class SendDocumentOperationAttributes : JobOperationAttributes
             yield return new IppAttribute(Tag.Keyword, JobAttribute.Compression, mapper.Map<string>(Compression));
         if (DocumentFormat != null)
             yield return new IppAttribute(Tag.MimeMediaType, JobAttribute.DocumentFormat, DocumentFormat);
-        yield return IppAttribute.CreateBoolean(JobAttribute.LastDocument, LastDocument);
+        yield return new IppAttribute(Tag.Boolean, JobAttribute.LastDocument, LastDocument);
         if (DocumentNaturalLanguage != null)
             yield return new IppAttribute(Tag.NaturalLanguage, JobAttribute.DocumentNaturalLanguage, DocumentNaturalLanguage);
     }

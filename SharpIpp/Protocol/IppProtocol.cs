@@ -230,7 +230,7 @@ namespace SharpIpp.Protocol
         {
             stream.Write( (byte)attribute.Tag );
 
-            if (prevAttribute != null && prevAttribute.Name == attribute.Name)
+            if (prevAttribute != null && prevAttribute.Value.Name == attribute.Name)
             {
                 stream.WriteBigEndian( (short)0 );
             }
@@ -299,7 +299,7 @@ namespace SharpIpp.Protocol
             var charset = ippResponseMessage.OperationAttributes
                 .SelectMany(x => x)
                 .FirstOrDefault(x => x.Tag == Tag.Charset && x.Name == JobAttribute.AttributesCharset)
-                ?.Value as string;
+                .Value as string;
             if (charset is not null)
                 encoding = Encoding.GetEncoding(charset);
             using var writer = new BinaryWriter( stream, Encoding.ASCII, true );
@@ -400,7 +400,7 @@ namespace SharpIpp.Protocol
             return attribute;
         }
 
-        private static string GetNormalizedName(Tag tag, string name, IppAttribute? prevAttribute, IppAttribute? prevBegCollectionAttribute)
+        public static string GetNormalizedName(Tag tag, string name, IppAttribute? prevAttribute, IppAttribute? prevBegCollectionAttribute)
         {
             if (!string.IsNullOrEmpty(name))
                 return name;
@@ -412,19 +412,17 @@ namespace SharpIpp.Protocol
             }
             if(prevAttribute != null)
             {
-                switch (prevAttribute.Tag)
+                switch (prevAttribute.Value.Tag)
                 {
-                    case Tag.BegCollection:
-                        break;
                     case Tag.EndCollection:
-                        if (prevBegCollectionAttribute != null && !string.IsNullOrEmpty(prevBegCollectionAttribute.Name))
-                            return prevBegCollectionAttribute.Name;
+                        if (prevBegCollectionAttribute != null && !string.IsNullOrEmpty(prevBegCollectionAttribute.Value.Name))
+                            return prevBegCollectionAttribute.Value.Name;
                         break;
-                    case Tag.MemberAttrName when prevAttribute.Value is string memberAttrName:
+                    case Tag.MemberAttrName when prevAttribute.Value.Value is string memberAttrName:
                         return memberAttrName;
                     default:
-                        if (!string.IsNullOrEmpty(prevAttribute.Name))
-                            return prevAttribute.Name;
+                        if (!string.IsNullOrEmpty(prevAttribute.Value.Name))
+                            return prevAttribute.Value.Name;
                         break;
                 }
             }
@@ -465,19 +463,12 @@ namespace SharpIpp.Protocol
                 && requestMessage.DocumentAttributes.Count == 0
                 && requestMessage.SystemAttributes.Count == 0)
                 return;
-            var encoding = Encoding.ASCII;
-            try
-            {
-                var charset = requestMessage.OperationAttributes
+            var charset = requestMessage.OperationAttributes
                     .FirstOrDefault(x => x.Tag == Tag.Charset && x.Name == JobAttribute.AttributesCharset)
-                    ?.Value as string;
-                if (charset is not null)
-                    encoding = Encoding.GetEncoding(charset);
-            }
-            catch (ArgumentException)
-            {
-                //ignore invalid charset, keep previous one
-            }
+                    .Value as string;
+            var encoding = charset is not null
+                ? Encoding.GetEncoding(charset)
+                : Encoding.ASCII;
             WriteSection(SectionTag.OperationAttributesTag, requestMessage.OperationAttributes, writer, encoding);
             WriteSection(SectionTag.JobAttributesTag, requestMessage.JobAttributes, writer, encoding);
             WriteSection(SectionTag.PrinterAttributesTag, requestMessage.PrinterAttributes, writer, encoding);

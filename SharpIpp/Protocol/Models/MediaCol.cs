@@ -155,7 +155,7 @@ public class MediaCol
         if (MediaBackCoating.HasValue)
             yield return new IppAttribute(Tag.Keyword, nameof(MediaBackCoating).ConvertCamelCaseToKebabCase(), mapper.Map<string>(MediaBackCoating.Value));
         if (MediaBottomMargin.HasValue)
-            yield return IppAttribute.CreateInt(nameof(MediaBottomMargin).ConvertCamelCaseToKebabCase(), MediaBottomMargin.Value);
+            yield return new IppAttribute(Tag.Integer, nameof(MediaBottomMargin).ConvertCamelCaseToKebabCase(), MediaBottomMargin.Value);
         if (MediaColor != null)
             yield return new IppAttribute(Tag.Keyword, nameof(MediaColor).ConvertCamelCaseToKebabCase(), MediaColor);
         if (MediaFrontCoating.HasValue)
@@ -163,21 +163,21 @@ public class MediaCol
         if (MediaGrain.HasValue)
             yield return new IppAttribute(Tag.Keyword, nameof(MediaGrain).ConvertCamelCaseToKebabCase(), mapper.Map<string>(MediaGrain.Value));
         if (MediaHoleCount.HasValue)
-            yield return IppAttribute.CreateInt(nameof(MediaHoleCount).ConvertCamelCaseToKebabCase(), MediaHoleCount.Value);
+            yield return new IppAttribute(Tag.Integer, nameof(MediaHoleCount).ConvertCamelCaseToKebabCase(), MediaHoleCount.Value);
         if (MediaInfo != null)
             yield return new IppAttribute(Tag.TextWithoutLanguage, nameof(MediaInfo).ConvertCamelCaseToKebabCase(), MediaInfo);
         if (MediaKey != null)
             yield return new IppAttribute(Tag.Keyword, nameof(MediaKey).ConvertCamelCaseToKebabCase(), MediaKey);
         if (MediaLeftMargin.HasValue)
-            yield return IppAttribute.CreateInt(nameof(MediaLeftMargin).ConvertCamelCaseToKebabCase(), MediaLeftMargin.Value);
+            yield return new IppAttribute(Tag.Integer, nameof(MediaLeftMargin).ConvertCamelCaseToKebabCase(), MediaLeftMargin.Value);
         if (MediaOrderCount.HasValue)
-            yield return IppAttribute.CreateInt(nameof(MediaOrderCount).ConvertCamelCaseToKebabCase(), MediaOrderCount.Value);
+            yield return new IppAttribute(Tag.Integer, nameof(MediaOrderCount).ConvertCamelCaseToKebabCase(), MediaOrderCount.Value);
         if (MediaPrePrinted.HasValue)
             yield return new IppAttribute(Tag.Keyword, nameof(MediaPrePrinted).ConvertCamelCaseToKebabCase(), mapper.Map<string>(MediaPrePrinted.Value));
         if (MediaRecycled.HasValue)
             yield return new IppAttribute(Tag.Keyword, nameof(MediaRecycled).ConvertCamelCaseToKebabCase(), mapper.Map<string>(MediaRecycled.Value));
         if (MediaRightMargin.HasValue)
-            yield return IppAttribute.CreateInt(nameof(MediaRightMargin).ConvertCamelCaseToKebabCase(), MediaRightMargin.Value);
+            yield return new IppAttribute(Tag.Integer, nameof(MediaRightMargin).ConvertCamelCaseToKebabCase(), MediaRightMargin.Value);
         if (MediaSize != null)
             foreach (var attribute in MediaSize.GetIppAttributes(mapper).ToBegCollection(nameof(MediaSize).ConvertCamelCaseToKebabCase()))
                 yield return attribute;
@@ -189,14 +189,14 @@ public class MediaCol
             foreach (var attribute in MediaSourceProperties.GetIppAttributes(mapper).ToBegCollection(nameof(MediaSourceProperties).ConvertCamelCaseToKebabCase()))
                 yield return attribute;
         if (MediaThickness.HasValue)
-            yield return IppAttribute.CreateInt(nameof(MediaThickness).ConvertCamelCaseToKebabCase(), MediaThickness.Value);
+            yield return new IppAttribute(Tag.Integer, nameof(MediaThickness).ConvertCamelCaseToKebabCase(), MediaThickness.Value);
         if (MediaTooth.HasValue)
             yield return new IppAttribute(Tag.Keyword, nameof(MediaTooth).ConvertCamelCaseToKebabCase(), mapper.Map<string>(MediaTooth.Value));
         if (MediaTopMargin.HasValue)
-            yield return IppAttribute.CreateInt(nameof(MediaTopMargin).ConvertCamelCaseToKebabCase(), MediaTopMargin.Value);
+            yield return new IppAttribute(Tag.Integer, nameof(MediaTopMargin).ConvertCamelCaseToKebabCase(), MediaTopMargin.Value);
         if (MediaType != null)
             yield return new IppAttribute(Tag.Keyword, nameof(MediaType).ConvertCamelCaseToKebabCase(), MediaType);
         if (MediaWeightMetric.HasValue)
-            yield return IppAttribute.CreateInt(nameof(MediaWeightMetric).ConvertCamelCaseToKebabCase(), MediaWeightMetric.Value);
+            yield return new IppAttribute(Tag.Integer, nameof(MediaWeightMetric).ConvertCamelCaseToKebabCase(), MediaWeightMetric.Value);
     }
 }

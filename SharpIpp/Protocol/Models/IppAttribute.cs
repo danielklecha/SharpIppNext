@@ -5,54 +5,68 @@ using System.Numerics;
 
 namespace SharpIpp.Protocol.Models;
 
-public class IppAttribute : IEquatable<IppAttribute>
+public readonly struct IppAttribute : IEquatable<IppAttribute>
 {
+    public IppAttribute()
+    {
+        Tag = Tag.NoValue;
+        Name = string.Empty;
+        Value = NoValue.Instance;
+    }
+
     internal IppAttribute(Tag tag, string name, object value)
     {
+        if (name is null)
+            throw new ArgumentNullException(nameof(name));
+        if (value is null)
+            throw new ArgumentNullException(nameof(value));
+
+        switch (value)
+        {
+            case int integer when integer == int.MinValue:
+            case DateTimeOffset dateTime when dateTime == default:
+            case Range range when range.Equals(default):
+            case Resolution resolution when resolution.Equals(default):
+            case StringWithLanguage stringWithLanguage when stringWithLanguage.Equals(default):
+            case string stringValue when stringValue == string.Empty && tag == Tag.Keyword:
+                tag = Tag.NoValue;
+                value = NoValue.Instance;
+                break;
+        }
         Tag = tag;
         Name = name;
         Value = value;
     }
 
-    public IppAttribute(Tag tag, string name, int value) : this(tag, name, (object)value)
+    public IppAttribute(Tag tag, string name, int value) : this(tag, name, value as object)
     {
     }
 
-    public static IppAttribute CreateInt(string name, int value) => value == int.MinValue ? CreateNoValue(name) : new (Tag.Integer, name, value);
-
-    public static IppAttribute CreateEnum(string name, int value) => value == int.MinValue ? CreateNoValue(name) : new(Tag.Enum, name, value);
-
-    public IppAttribute(Tag tag, string name, bool value) : this(tag, name, (object)value)
+    public IppAttribute(Tag tag, string name, bool value) : this(tag, name, value as object)
     {
     }
 
-    public static IppAttribute CreateBoolean(string name, bool value) => new(Tag.Boolean, name, value);
-
-    public IppAttribute(Tag tag, string name, string value) : this(tag, name, (object)value)
+    public IppAttribute(Tag tag, string name, string value) : this(tag, name, value as object)
     {
     }
 
-    public IppAttribute(Tag tag, string name, DateTimeOffset value) : this(tag, name, (object)value)
+    public IppAttribute(Tag tag, string name, DateTimeOffset value) : this(tag, name, value as object)
     {
     }
 
-    public static IppAttribute CreateDateTime(string name, DateTimeOffset value) => value == DateTimeOffset.MinValue ? CreateNoValue(name) : new (Tag.DateTime, name, value);
-
-    public IppAttribute(Tag tag, string name, NoValue value) : this(tag, name, (object)value)
+    public IppAttribute(Tag tag, string name, NoValue value) : this(tag, name, value as object)
     {
     }
 
-    public static IppAttribute CreateNoValue(string name) => new(Tag.NoValue, name, NoValue.Instance);
-
-    public IppAttribute(Tag tag, string name, Range value) : this(tag, name, (object)value)
+    public IppAttribute(Tag tag, string name, Range value) : this(tag, name, value as object)
     {
     }
 
-    public IppAttribute(Tag tag, string name, Resolution value) : this(tag, name, (object)value)
+    public IppAttribute(Tag tag, string name, Resolution value) : this(tag, name, value as object)
     {
     }
 
-    public IppAttribute(Tag tag, string name, StringWithLanguage value) : this(tag, name, (object)value)
+    public IppAttribute(Tag tag, string name, StringWithLanguage value) : this(tag, name, value as object)
     {
     }
 
@@ -75,16 +89,6 @@ public class IppAttribute : IEquatable<IppAttribute>
 
     public bool Equals(IppAttribute other)
     {
-        if (null == other)
-        {
-            return false;
-        }
-
-        if (ReferenceEquals(this, other))
-        {
-            return true;
-        }
-
         return Tag == other.Tag && Name == other.Name && Equals(Value, other.Value);
     }
 
@@ -93,24 +97,14 @@ public class IppAttribute : IEquatable<IppAttribute>
         return $"({Tag}) {Name}: {Value}";
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
-        if (null == obj)
+        if (obj is not IppAttribute other)
         {
             return false;
         }
 
-        if (ReferenceEquals(this, obj))
-        {
-            return true;
-        }
-
-        if (obj.GetType() != GetType())
-        {
-            return false;
-        }
-
-        return Equals((IppAttribute)obj);
+        return Equals(other);
     }
 
     public override int GetHashCode()

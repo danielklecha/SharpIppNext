@@ -141,7 +141,7 @@ namespace SharpIpp.Mapping.Profiles
                     if ( src.CharsetSupported?.Any() ?? false )
                         dic.Add(PrinterAttribute.CharsetSupported, src.CharsetSupported.Select( x => new IppAttribute( Tag.Charset, PrinterAttribute.CharsetSupported, x ) ).ToArray());
                     if( src.ColorSupported != null )
-                        dic.Add( PrinterAttribute.ColorSupported, new IppAttribute[] { IppAttribute.CreateBoolean( PrinterAttribute.ColorSupported, src.ColorSupported.Value ) } );
+                        dic.Add( PrinterAttribute.ColorSupported, new IppAttribute[] { new IppAttribute(Tag.Boolean, PrinterAttribute.ColorSupported, src.ColorSupported.Value ) } );
                     if ( src.CompressionSupported?.Any() ?? false )
                         dic.Add( PrinterAttribute.CompressionSupported, src.CompressionSupported.Select( x => new IppAttribute( Tag.Keyword, PrinterAttribute.CompressionSupported, map.Map<string>( x ) ) ).ToArray() );
                     if ( src.DocumentFormatDefault != null )
@@ -163,27 +163,27 @@ namespace SharpIpp.Mapping.Profiles
                     if ( src.JobMediaSheetsSupported != null )
                         dic.Add( PrinterAttribute.JobMediaSheetsSupported, new IppAttribute[] { new IppAttribute( Tag.RangeOfInteger, PrinterAttribute.JobMediaSheetsSupported, src.JobMediaSheetsSupported.Value ) } );
                     if ( src.MultipleDocumentJobsSupported != null )
-                        dic.Add( PrinterAttribute.MultipleDocumentJobsSupported, new IppAttribute[] { IppAttribute.CreateBoolean( PrinterAttribute.MultipleDocumentJobsSupported, src.MultipleDocumentJobsSupported.Value ) } );
+                        dic.Add( PrinterAttribute.MultipleDocumentJobsSupported, new IppAttribute[] { new IppAttribute(Tag.Boolean, PrinterAttribute.MultipleDocumentJobsSupported, src.MultipleDocumentJobsSupported.Value ) } );
                     if ( src.MultipleOperationTimeOut != null )
-                        dic.Add( PrinterAttribute.MultipleOperationTimeOut, new IppAttribute[] { IppAttribute.CreateInt( PrinterAttribute.MultipleOperationTimeOut, src.MultipleOperationTimeOut.Value ) } );
+                        dic.Add( PrinterAttribute.MultipleOperationTimeOut, new IppAttribute[] { new IppAttribute(Tag.Integer, PrinterAttribute.MultipleOperationTimeOut, src.MultipleOperationTimeOut.Value ) } );
                     if ( src.NaturalLanguageConfigured != null )
                         dic.Add( PrinterAttribute.NaturalLanguageConfigured, new IppAttribute[] { new IppAttribute( Tag.NaturalLanguage, PrinterAttribute.NaturalLanguageConfigured, src.NaturalLanguageConfigured ) } );
                     if ( src.OperationsSupported?.Any() ?? false )
-                        dic.Add( PrinterAttribute.OperationsSupported, src.OperationsSupported.Select( x => IppAttribute.CreateEnum( PrinterAttribute.OperationsSupported, (int)x ) ).ToArray() );
+                        dic.Add( PrinterAttribute.OperationsSupported, src.OperationsSupported.Select( x => new IppAttribute(Tag.Enum, PrinterAttribute.OperationsSupported, (int)x ) ).ToArray() );
                     if ( src.PagesPerMinute != null )
-                        dic.Add( PrinterAttribute.PagesPerMinute, new IppAttribute[] { IppAttribute.CreateInt( PrinterAttribute.PagesPerMinute, src.PagesPerMinute.Value ) } );
+                        dic.Add( PrinterAttribute.PagesPerMinute, new IppAttribute[] { new IppAttribute(Tag.Integer, PrinterAttribute.PagesPerMinute, src.PagesPerMinute.Value ) } );
                     if ( src.PdlOverrideSupported != null )
                         dic.Add( PrinterAttribute.PdlOverrideSupported, new IppAttribute[] { new IppAttribute( Tag.Keyword, PrinterAttribute.PdlOverrideSupported, src.PdlOverrideSupported ) } );
                     if ( src.PagesPerMinuteColor != null )
-                        dic.Add( PrinterAttribute.PagesPerMinuteColor, [IppAttribute.CreateInt( PrinterAttribute.PagesPerMinuteColor, src.PagesPerMinuteColor.Value )] );
+                        dic.Add( PrinterAttribute.PagesPerMinuteColor, [new IppAttribute(Tag.Integer, PrinterAttribute.PagesPerMinuteColor, src.PagesPerMinuteColor.Value )] );
                     if ( src.PrinterCurrentTime != null )
-                        dic.Add( PrinterAttribute.PrinterCurrentTime, new IppAttribute[] { IppAttribute.CreateDateTime( PrinterAttribute.PrinterCurrentTime, src.PrinterCurrentTime.Value ) } );
+                        dic.Add( PrinterAttribute.PrinterCurrentTime, new IppAttribute[] { new IppAttribute(Tag.DateTime, PrinterAttribute.PrinterCurrentTime, src.PrinterCurrentTime.Value ) } );
                     if ( src.PrinterDriverInstaller != null )
                         dic.Add( PrinterAttribute.PrinterDriverInstaller, new IppAttribute[] { new IppAttribute( Tag.Uri, PrinterAttribute.PrinterDriverInstaller, src.PrinterDriverInstaller ) } );
                     if ( src.PrinterInfo != null )
                         dic.Add( PrinterAttribute.PrinterInfo, new IppAttribute[] { new IppAttribute( Tag.TextWithoutLanguage, PrinterAttribute.PrinterInfo, src.PrinterInfo ) } );
                     if ( src.PrinterIsAcceptingJobs != null )
-                        dic.Add( PrinterAttribute.PrinterIsAcceptingJobs, new IppAttribute[] { IppAttribute.CreateBoolean( PrinterAttribute.PrinterIsAcceptingJobs, src.PrinterIsAcceptingJobs.Value ) } );
+                        dic.Add( PrinterAttribute.PrinterIsAcceptingJobs, new IppAttribute[] { new IppAttribute(Tag.Boolean, PrinterAttribute.PrinterIsAcceptingJobs, src.PrinterIsAcceptingJobs.Value ) } );
                     if ( src.PrinterLocation != null )
                         dic.Add( PrinterAttribute.PrinterLocation, new IppAttribute[] { new IppAttribute( Tag.TextWithoutLanguage, PrinterAttribute.PrinterLocation, src.PrinterLocation ) } );
                     if ( src.PrinterMakeAndModel != null )
@@ -197,13 +197,13 @@ namespace SharpIpp.Mapping.Profiles
                     if ( src.PrinterName != null )
                         dic.Add( PrinterAttribute.PrinterName, new IppAttribute[] { new IppAttribute( Tag.NameWithoutLanguage, PrinterAttribute.PrinterName, src.PrinterName ) } );
                     if ( src.PrinterState != null )
-                        dic.Add( PrinterAttribute.PrinterState, new IppAttribute[] { IppAttribute.CreateEnum( PrinterAttribute.PrinterState, (int)src.PrinterState.Value ) } );
+                        dic.Add( PrinterAttribute.PrinterState, new IppAttribute[] { new IppAttribute(Tag.Enum, PrinterAttribute.PrinterState, (int)src.PrinterState.Value ) } );
                     if ( src.PrinterStateMessage != null )
                         dic.Add( PrinterAttribute.PrinterStateMessage, new IppAttribute[] { new IppAttribute( Tag.TextWithoutLanguage, PrinterAttribute.PrinterStateMessage, src.PrinterStateMessage ) } );
                     if ( src.PrinterStateReasons?.Any() ?? false )
                         dic.Add( PrinterAttribute.PrinterStateReasons, src.PrinterStateReasons.Select( x => new IppAttribute( Tag.Keyword, PrinterAttribute.PrinterStateReasons, x ) ).ToArray() );
                     if ( src.PrinterUpTime != null )
-                        dic.Add( PrinterAttribute.PrinterUpTime, [IppAttribute.CreateInt( PrinterAttribute.PrinterUpTime, src.PrinterUpTime.Value )] );
+                        dic.Add( PrinterAttribute.PrinterUpTime, [new IppAttribute(Tag.Integer, PrinterAttribute.PrinterUpTime, src.PrinterUpTime.Value )] );
                     if ( src.PrinterUriSupported?.Any() ?? false )
                         dic.Add( PrinterAttribute.PrinterUriSupported, src.PrinterUriSupported.Select( x => new IppAttribute( Tag.Uri, PrinterAttribute.PrinterUriSupported, x ) ).ToArray() );
                     if ( src.PrintScalingDefault != null )
@@ -211,7 +211,7 @@ namespace SharpIpp.Mapping.Profiles
                     if ( src.PrintScalingSupported != null )
                         dic.Add( PrinterAttribute.PrintScalingSupported, src.PrintScalingSupported.Select( x => new IppAttribute( Tag.Keyword, PrinterAttribute.PrintScalingSupported, map.Map<string>( x ) ) ).ToArray() );
                     if ( src.QueuedJobCount != null )
-                        dic.Add( PrinterAttribute.QueuedJobCount, [IppAttribute.CreateInt( PrinterAttribute.QueuedJobCount, src.QueuedJobCount.Value )] );
+                        dic.Add( PrinterAttribute.QueuedJobCount, [new IppAttribute(Tag.Integer, PrinterAttribute.QueuedJobCount, src.QueuedJobCount.Value )] );
                     if ( src.ReferenceUriSchemesSupported?.Any() ?? false )
                         dic.Add( PrinterAttribute.ReferenceUriSchemesSupported, src.ReferenceUriSchemesSupported.Select( x => new IppAttribute( Tag.UriScheme, PrinterAttribute.ReferenceUriSchemesSupported, map.Map<string>( x ) ) ).ToArray() );
                     if ( src.UriAuthenticationSupported?.Any() ?? false )
@@ -227,31 +227,31 @@ namespace SharpIpp.Mapping.Profiles
                     if ( src.SidesSupported?.Any() ?? false )
                         dic.Add( PrinterAttribute.SidesSupported, src.SidesSupported.Select( x => new IppAttribute( Tag.Keyword, PrinterAttribute.SidesSupported, map.Map<string>( x ) ) ).ToArray() );
                     if ( src.FinishingsDefault != null )
-                        dic.Add( PrinterAttribute.FinishingsDefault, new IppAttribute[] { IppAttribute.CreateEnum( PrinterAttribute.FinishingsDefault, (int)src.FinishingsDefault.Value ) } );
+                        dic.Add( PrinterAttribute.FinishingsDefault, new IppAttribute[] { new IppAttribute(Tag.Enum, PrinterAttribute.FinishingsDefault, (int)src.FinishingsDefault.Value ) } );
                     if (src.FinishingsSupported?.Any() ?? false)
-                        dic.Add(PrinterAttribute.FinishingsSupported, src.FinishingsSupported.Select(x => IppAttribute.CreateEnum(PrinterAttribute.FinishingsSupported, (int)x)).ToArray());
+                        dic.Add(PrinterAttribute.FinishingsSupported, src.FinishingsSupported.Select(x => new IppAttribute(Tag.Enum, PrinterAttribute.FinishingsSupported, (int)x)).ToArray());
                     if ( src.PrinterResolutionDefault != null )
                         dic.Add( PrinterAttribute.PrinterResolutionDefault, new IppAttribute[] { new IppAttribute( Tag.Resolution, PrinterAttribute.PrinterResolutionDefault, src.PrinterResolutionDefault.Value ) } );
                     if ( src.PrinterResolutionSupported?.Any() ?? false )
                         dic.Add( PrinterAttribute.PrinterResolutionSupported, src.PrinterResolutionSupported.Select( x => new IppAttribute( Tag.Resolution, PrinterAttribute.PrinterResolutionSupported, x ) ).ToArray() );
                     if ( src.PrintQualityDefault != null )
-                        dic.Add( PrinterAttribute.PrintQualityDefault, new IppAttribute[] { IppAttribute.CreateEnum( PrinterAttribute.PrintQualityDefault, (int)src.PrintQualityDefault.Value ) } );
+                        dic.Add( PrinterAttribute.PrintQualityDefault, new IppAttribute[] { new IppAttribute(Tag.Enum, PrinterAttribute.PrintQualityDefault, (int)src.PrintQualityDefault.Value ) } );
                     if ( src.PrintQualitySupported?.Any() ?? false )
-                        dic.Add( PrinterAttribute.PrintQualitySupported, src.PrintQualitySupported.Select( x => IppAttribute.CreateEnum( PrinterAttribute.PrintQualitySupported, (int)x ) ).ToArray() );
+                        dic.Add( PrinterAttribute.PrintQualitySupported, src.PrintQualitySupported.Select( x => new IppAttribute(Tag.Enum, PrinterAttribute.PrintQualitySupported, (int)x ) ).ToArray() );
                     if ( src.JobPriorityDefault != null )
-                        dic.Add( PrinterAttribute.JobPriorityDefault, [IppAttribute.CreateInt( PrinterAttribute.JobPriorityDefault, src.JobPriorityDefault.Value )] );
+                        dic.Add( PrinterAttribute.JobPriorityDefault, [new IppAttribute(Tag.Integer, PrinterAttribute.JobPriorityDefault, src.JobPriorityDefault.Value )] );
                     if ( src.JobPrioritySupported != null )
-                        dic.Add( PrinterAttribute.JobPrioritySupported, [IppAttribute.CreateInt( PrinterAttribute.JobPrioritySupported, src.JobPrioritySupported.Value )] );
+                        dic.Add( PrinterAttribute.JobPrioritySupported, [new IppAttribute(Tag.Integer, PrinterAttribute.JobPrioritySupported, src.JobPrioritySupported.Value )] );
                     if ( src.CopiesDefault != null )
-                        dic.Add( PrinterAttribute.CopiesDefault, [IppAttribute.CreateInt( PrinterAttribute.CopiesDefault, src.CopiesDefault.Value )] );
+                        dic.Add( PrinterAttribute.CopiesDefault, [new IppAttribute(Tag.Integer, PrinterAttribute.CopiesDefault, src.CopiesDefault.Value )] );
                     if ( src.CopiesSupported != null )
                         dic.Add( PrinterAttribute.CopiesSupported, new IppAttribute[] { new IppAttribute( Tag.RangeOfInteger, PrinterAttribute.CopiesSupported, src.CopiesSupported.Value ) } );
                     if ( src.OrientationRequestedDefault != null )
-                        dic.Add( PrinterAttribute.OrientationRequestedDefault, new IppAttribute[] { IppAttribute.CreateEnum( PrinterAttribute.OrientationRequestedDefault, (int)src.OrientationRequestedDefault.Value ) } );
+                        dic.Add( PrinterAttribute.OrientationRequestedDefault, new IppAttribute[] { new IppAttribute(Tag.Enum, PrinterAttribute.OrientationRequestedDefault, (int)src.OrientationRequestedDefault.Value ) } );
                     if ( src.OrientationRequestedSupported?.Any() ?? false )
-                        dic.Add( PrinterAttribute.OrientationRequestedSupported, src.OrientationRequestedSupported.Select( x => IppAttribute.CreateEnum( PrinterAttribute.OrientationRequestedSupported, (int)x ) ).ToArray() );
+                        dic.Add( PrinterAttribute.OrientationRequestedSupported, src.OrientationRequestedSupported.Select( x => new IppAttribute(Tag.Enum, PrinterAttribute.OrientationRequestedSupported, (int)x ) ).ToArray() );
                     if ( src.PageRangesSupported != null )
-                        dic.Add( PrinterAttribute.PageRangesSupported, new IppAttribute[] { IppAttribute.CreateBoolean(PrinterAttribute.PageRangesSupported, src.PageRangesSupported.Value) } );
+                        dic.Add( PrinterAttribute.PageRangesSupported, new IppAttribute[] { new IppAttribute(Tag.Boolean, PrinterAttribute.PageRangesSupported, src.PageRangesSupported.Value ) } );
                     if (src.JobHoldUntilDefault != null)
                         dic.Add( PrinterAttribute.JobHoldUntilDefault, new IppAttribute[] { new IppAttribute( Tag.Keyword, PrinterAttribute.JobHoldUntilDefault, map.Map<string>( src.JobHoldUntilDefault.Value ) ) } );
                     if (src.JobHoldUntilSupported?.Any() ?? false)

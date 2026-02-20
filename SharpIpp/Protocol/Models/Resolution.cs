@@ -1,46 +1,62 @@
 ﻿using System;
 
-namespace SharpIpp.Protocol.Models
+namespace SharpIpp.Protocol.Models;
+
+public readonly struct Resolution : IEquatable<Resolution>
 {
-    public struct Resolution : IEquatable<Resolution>
+    public int Width { get; }
+
+    public int Height { get; }
+
+    public ResolutionUnit Units { get; }
+
+    public Resolution(int width, int height, ResolutionUnit units)
     {
-        public int Width { get; }
+        Width = width;
+        Height = height;
+        Units = units;
+    }
 
-        public int Height { get; }
+    public override string ToString()
+    {
+        return $"{Width}x{Height} ({(Units == ResolutionUnit.DotsPerInch ? "dpi" : Units == ResolutionUnit.DotsPerCm ? "dpcm" : "unknown")})";
+    }
 
-        public ResolutionUnit Units { get; }
+    public bool Equals(Resolution other)
+    {
+        return Width == other.Width && Height == other.Height && Units == other.Units;
+    }
 
-        public Resolution(int width, int height, ResolutionUnit units)
+    public override bool Equals(object obj)
+    {
+        return obj is Resolution other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
         {
-            Width = width;
-            Height = height;
-            Units = units;
+            var hashCode = Width;
+            hashCode = (hashCode * 397) ^ Height;
+            hashCode = (hashCode * 397) ^ (int)Units;
+            return hashCode;
         }
+    }
 
-        public override string ToString()
-        {
-            return $"{Width}x{Height} ({(Units == ResolutionUnit.DotsPerInch ? "dpi" : Units == ResolutionUnit.DotsPerCm ? "dpcm" : "unknown")})";
-        }
+    public void Deconstruct(out int width, out int height, out ResolutionUnit units)
+    {
+        width = Width;
+        height = Height;
+        units = Units;
+    }
 
-        public bool Equals(Resolution other)
-        {
-            return Width == other.Width && Height == other.Height && Units == other.Units;
-        }
+    public static bool operator ==(Resolution left, Resolution right)
+    {
+        return left.Equals(right);
+    }
 
-        public override bool Equals(object obj)
-        {
-            return obj is Resolution other && Equals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                var hashCode = Width;
-                hashCode = (hashCode * 397) ^ Height;
-                hashCode = (hashCode * 397) ^ (int)Units;
-                return hashCode;
-            }
-        }
+    public static bool operator !=(Resolution left, Resolution right)
+    {
+        return !left.Equals(right);
     }
 }
