@@ -1,41 +1,50 @@
 ﻿using System;
 
-namespace SharpIpp.Protocol.Models
+namespace SharpIpp.Protocol.Models;
+
+public readonly struct StringWithLanguage : IEquatable<StringWithLanguage>
 {
-    public struct StringWithLanguage : IEquatable<StringWithLanguage>
+    public string Language { get; }
+
+    public string Value { get; }
+
+    public StringWithLanguage(string language, string value)
     {
-        public string Language { get; set; }
+        Language = language;
+        Value = value;
+    }
 
-        public string Value { get; set; }
+    public override string ToString()
+    {
+        return $"{Value} ({Language})";
+    }
 
-        public StringWithLanguage(string language, string value)
+    public bool Equals(StringWithLanguage other)
+    {
+        return Language == other.Language && Value == other.Value;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is StringWithLanguage other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
         {
-            Language = language;
-            Value = value;
+            return ((Language != null ? Language.GetHashCode() : 0) * 397) ^
+                   (Value != null ? Value.GetHashCode() : 0);
         }
+    }
 
-        public override string ToString()
-        {
-            return $"{Value} ({Language})";
-        }
+    public static bool operator ==(StringWithLanguage left, StringWithLanguage right)
+    {
+        return left.Equals(right);
+    }
 
-        public bool Equals(StringWithLanguage other)
-        {
-            return Language == other.Language && Value == other.Value;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is StringWithLanguage other && Equals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                return ((Language != null ? Language.GetHashCode() : 0) * 397) ^
-                       (Value != null ? Value.GetHashCode() : 0);
-            }
-        }
+    public static bool operator !=(StringWithLanguage left, StringWithLanguage right)
+    {
+        return !left.Equals(right);
     }
 }
