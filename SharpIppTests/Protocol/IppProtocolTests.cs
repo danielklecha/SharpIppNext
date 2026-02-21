@@ -413,7 +413,7 @@ public class IppProtocolTests
     }
 
     [TestMethod]
-    public async Task WriteIppResponseAsync_NoSections_ShouldBeWritten()
+    public async Task WriteIppResponseAsync_NoSections_ShouldThrowArgumentException()
     {
         // Arrange
         var protocol = new IppProtocol();
@@ -423,9 +423,9 @@ public class IppProtocolTests
             RequestId = 123
         };
         // Act
-        await protocol.WriteIppResponseAsync( message, requestStream );
+        Func<Task> act = async () => await protocol.WriteIppResponseAsync( message, requestStream );
         // Assert
-        requestStream.ToArray().Should().Equal( 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7B, 0x03 );
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
     [TestMethod]
@@ -951,7 +951,197 @@ public class IppProtocolTests
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
         Func<Task> act = async () => await protocol.WriteIppResponseAsync( message, null );
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
-                              // Assert
+// Assert
         await act.Should().ThrowAsync<ArgumentNullException>();
+    }
+
+    [TestMethod]
+    public async Task WriteIppRequestAsync_NoCharset_ShouldThrowArgumentException()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        using MemoryStream memoryStream = new();
+        var message = new IppRequestMessage
+        {
+            IppOperation = IppOperation.PrintJob,
+            RequestId = 123
+        };
+        message.JobAttributes.Add( new IppAttribute(Tag.Integer, JobAttribute.Copies, 1 ) );
+        
+        // Act
+        Func<Task> act = async () => await protocol.WriteIppRequestAsync( message, memoryStream );
+        
+        // Assert
+        await act.Should().ThrowAsync<ArgumentException>();
+    }
+
+    [TestMethod]
+    public async Task WriteIppRequestAsync_CharsetNotString_ShouldThrowArgumentException()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        using MemoryStream memoryStream = new();
+        var message = new IppRequestMessage
+        {
+            IppOperation = IppOperation.PrintJob,
+            RequestId = 123
+        };
+        message.OperationAttributes.Add( new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, 1 ) );
+        
+        // Act
+        Func<Task> act = async () => await protocol.WriteIppRequestAsync( message, memoryStream );
+        
+        // Assert
+        await act.Should().ThrowAsync<ArgumentException>();
+    }
+
+    [TestMethod]
+    public async Task WriteIppRequestAsync_MultipleAttributes_ShouldProvideFullLambdaCoverage()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        using MemoryStream memoryStream = new();
+        var message = new IppRequestMessage
+        {
+            IppOperation = IppOperation.PrintJob,
+            RequestId = 123
+        };
+        message.OperationAttributes.Add( new IppAttribute( Tag.Integer, JobAttribute.Copies, 1 ) );
+        message.OperationAttributes.Add( new IppAttribute( Tag.Charset, JobAttribute.JobName, "utf-8" ) );
+        message.OperationAttributes.Add( new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ) );
+        
+        // Act
+        Func<Task> act = async () => await protocol.WriteIppRequestAsync( message, memoryStream );
+        
+        // Assert
+        await act.Should().NotThrowAsync();
+    }
+
+    [TestMethod]
+    public async Task WriteIppResponseAsync_NoCharset_ShouldThrowArgumentException()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        using MemoryStream memoryStream = new();
+        var message = new IppResponseMessage
+        {
+            StatusCode = IppStatusCode.SuccessfulOk,
+            RequestId = 123
+        };
+        message.JobAttributes.Add( new List<IppAttribute> { new IppAttribute(Tag.Integer, JobAttribute.Copies, 1 ) } );
+        
+        // Act
+        Func<Task> act = async () => await protocol.WriteIppResponseAsync( message, memoryStream );
+        
+        // Assert
+        await act.Should().ThrowAsync<ArgumentException>();
+    }
+
+    [TestMethod]
+    public async Task WriteIppResponseAsync_CharsetNotString_ShouldThrowArgumentException()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        using MemoryStream memoryStream = new();
+        var message = new IppResponseMessage
+        {
+            StatusCode = IppStatusCode.SuccessfulOk,
+            RequestId = 123
+        };
+        message.OperationAttributes.Add( new List<IppAttribute> { new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, 1 ) } );
+        
+        // Act
+        Func<Task> act = async () => await protocol.WriteIppResponseAsync( message, memoryStream );
+        
+        // Assert
+        await act.Should().ThrowAsync<ArgumentException>();
+    }
+
+    [TestMethod]
+    public async Task WriteIppResponseAsync_MultipleAttributes_ShouldProvideFullLambdaCoverage()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        using MemoryStream memoryStream = new();
+        var message = new IppResponseMessage
+        {
+            StatusCode = IppStatusCode.SuccessfulOk,
+            RequestId = 123
+        };
+        message.OperationAttributes.Add( new List<IppAttribute> 
+        { 
+            new IppAttribute( Tag.Integer, JobAttribute.Copies, 1 ),
+            new IppAttribute( Tag.Charset, JobAttribute.JobName, "utf-8" ),
+            new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" )
+        } );
+        
+        // Act
+        Func<Task> act = async () => await protocol.WriteIppResponseAsync( message, memoryStream );
+        
+        // Assert
+        await act.Should().NotThrowAsync();
+    }
+
+    [TestMethod]
+    public void GetNormalizedName_PrevBegCollection_ShouldReturnPrevName()
+    {
+        // Case for verifying 1setOf Collection support (formerly line 418 break)
+        var prevAttribute = new IppAttribute(Tag.BegCollection, "test-collection", NoValue.Instance);
+
+        var name = IppProtocol.GetNormalizedName(Tag.BegCollection, "", prevAttribute, null);
+        name.Should().Be("test-collection");
+    }
+
+    [TestMethod]
+    public void GetNormalizedName_PrevEndCollection_NoPrevBegCollection_ShouldThrow()
+    {
+        // Case for Line 422 (break) coverage
+        var prevAttribute = new IppAttribute(Tag.EndCollection, "", NoValue.Instance);
+
+        Action act = () => IppProtocol.GetNormalizedName(Tag.Integer, "", prevAttribute, null);
+
+        act.Should().Throw<ArgumentException>().WithMessage("0 length attribute name found not in a 1setOf");
+    }
+
+    [TestMethod]
+    public void GetNormalizedName_PrevEndCollection_PrevBegCollectionNoName_ShouldThrow()
+    {
+        // Case for Line 422/420 (condition false) coverage
+        var prevAttribute = new IppAttribute(Tag.EndCollection, "", NoValue.Instance);
+        var prevBeg = new IppAttribute(Tag.BegCollection, "", NoValue.Instance); // Empty name
+
+        Action act = () => IppProtocol.GetNormalizedName(Tag.Integer, "", prevAttribute, prevBeg);
+
+        act.Should().Throw<ArgumentException>().WithMessage("0 length attribute name found not in a 1setOf");
+    }
+
+    [TestMethod]
+    public void GetNormalizedName_Default_PrevNameEmpty_ShouldThrow()
+    {
+        // Case for Line 428 (break) coverage
+        // Use a tag that hits default (e.g. Integer) but has empty name
+        var prevAttribute = new IppAttribute(Tag.Integer, "", 1);
+
+        Action act = () => IppProtocol.GetNormalizedName(Tag.Integer, "", prevAttribute, null);
+
+        act.Should().Throw<ArgumentException>().WithMessage("0 length attribute name found not in a 1setOf");
+    }
+
+    [TestMethod]
+    public void GetNormalizedName_PrevMember_NameIsValue()
+    {
+        var prevAttribute = new IppAttribute(Tag.MemberAttrName, "", "member-name");
+        var name = IppProtocol.GetNormalizedName(Tag.Integer, "", prevAttribute, null);
+        name.Should().Be("member-name");
+    }
+
+    [TestMethod]
+    public void GetNormalizedName_EndCollection_TakesPrevBegCollectionName()
+    {
+        var prevAttribute = new IppAttribute(Tag.EndCollection, "", NoValue.Instance);
+        var prevBeg = new IppAttribute(Tag.BegCollection, "collection-name", NoValue.Instance);
+
+        var name = IppProtocol.GetNormalizedName(Tag.BegCollection, "", prevAttribute, prevBeg);
+        name.Should().Be("collection-name");
     }
 }

@@ -83,23 +83,6 @@ namespace SharpIpp.Protocol
             }
         }
 
-        private static List<List<IppAttribute>> GetSectionList(IIppResponseMessage res, SectionTag sectionTag)
-        {
-            return sectionTag switch
-            {
-                SectionTag.OperationAttributesTag => res.OperationAttributes,
-                SectionTag.JobAttributesTag => res.JobAttributes,
-                SectionTag.PrinterAttributesTag => res.PrinterAttributes,
-                SectionTag.UnsupportedAttributesTag => res.UnsupportedAttributes,
-                SectionTag.SubscriptionAttributesTag => res.SubscriptionAttributes,
-                SectionTag.EventNotificationAttributesTag => res.EventNotificationAttributes,
-                SectionTag.ResourceAttributesTag => res.ResourceAttributes,
-                SectionTag.DocumentAttributesTag => res.DocumentAttributes,
-                SectionTag.SystemAttributesTag => res.SystemAttributes,
-                _ => throw new ArgumentException($"Unknown section tag: {sectionTag}")
-            };
-        }
-
         private void ReadSections(BinaryReader reader, IIppResponseMessage res)
         {
             IppAttribute? prevAttribute = null;
@@ -124,9 +107,9 @@ namespace SharpIpp.Protocol
                     case SectionTag.ResourceAttributesTag:
                     case SectionTag.DocumentAttributesTag:
                     case SectionTag.SystemAttributesTag:
-                        currentAttributes = new List<IppAttribute>();
+                        currentAttributes = [];
                         currentSectionTag = sectionTag;
-                        GetSectionList(res, sectionTag).Add(currentAttributes);
+                        res.GetSectionList(sectionTag).Add(currentAttributes);
                         break;
                     case SectionTag.EndOfAttributesTag:
                         return;
@@ -138,8 +121,9 @@ namespace SharpIpp.Protocol
                         var attribute = ReadAttribute((Tag)data, reader, prevAttribute, prevBegCollectionAttribute, encoding);
                         switch (attribute.Tag)
                         {
-                            case Tag.Charset when currentSectionTag == SectionTag.OperationAttributesTag && attribute.Name == JobAttribute.AttributesCharset && attribute.Value is string charsetName:
-                                encoding = Encoding.GetEncoding(charsetName);
+                            case Tag.Charset when currentSectionTag == SectionTag.OperationAttributesTag && attribute.Name == JobAttribute.AttributesCharset:
+                                //note: charset tag is read as string
+                                encoding = Encoding.GetEncoding((string)attribute.Value);
                                 break;
                             case Tag.BegCollection:
                                 prevBegCollectionAttributes.Push(attribute);
@@ -208,8 +192,9 @@ namespace SharpIpp.Protocol
                         var attribute = ReadAttribute((Tag)data, reader, prevAttribute, prevBegCollectionAttribute, encoding);
                         switch (attribute.Tag)
                         {
-                            case Tag.Charset when attributes == res.OperationAttributes && attribute.Name == JobAttribute.AttributesCharset && attribute.Value is string charsetName:
-                                encoding = Encoding.GetEncoding(charsetName);
+                            case Tag.Charset when attributes == res.OperationAttributes && attribute.Name == JobAttribute.AttributesCharset:
+                                //note: charset tag is read as string
+                                encoding = Encoding.GetEncoding((string)attribute.Value);
                                 break;
                             case Tag.BegCollection:
                                 prevBegCollectionAttributes.Push(attribute);
@@ -295,13 +280,14 @@ namespace SharpIpp.Protocol
                 throw new ArgumentNullException( nameof( ippResponseMessage ) );
             if (stream is null)
                 throw new ArgumentNullException( nameof( stream ) );
-            var encoding = Encoding.ASCII;
-            var charset = ippResponseMessage.OperationAttributes
+            var charsetAttribute = ippResponseMessage.OperationAttributes
                 .SelectMany(x => x)
-                .FirstOrDefault(x => x.Tag == Tag.Charset && x.Name == JobAttribute.AttributesCharset)
-                .Value as string;
-            if (charset is not null)
-                encoding = Encoding.GetEncoding(charset);
+                .FirstOrDefault(x => x.Tag == Tag.Charset && x.Name == JobAttribute.AttributesCharset);
+            if (charsetAttribute.Value is not string charset)
+            {
+                throw new ArgumentException($"The operation attribute '{JobAttribute.AttributesCharset}' is missing or invalid.");
+            }
+            var encoding = Encoding.GetEncoding(charset);
             using var writer = new BinaryWriter( stream, Encoding.ASCII, true );
             writer.WriteBigEndian( ippResponseMessage.Version.ToInt16BigEndian() );
             writer.WriteBigEndian( (short)ippResponseMessage.StatusCode );
@@ -388,7 +374,7 @@ namespace SharpIpp.Protocol
             };
         }
 
-        public IppAttribute ReadAttribute(Tag tag, BinaryReader stream, IppAttribute? prevAttribute, IppAttribute? prevBegCollectionAttribute, Encoding encoding)
+        public virtual IppAttribute ReadAttribute(Tag tag, BinaryReader stream, IppAttribute? prevAttribute, IppAttribute? prevBegCollectionAttribute, Encoding encoding)
         {
             if (stream is null)
                 throw new ArgumentNullException( nameof( stream ) );
@@ -463,12 +449,13 @@ namespace SharpIpp.Protocol
                 && requestMessage.DocumentAttributes.Count == 0
                 && requestMessage.SystemAttributes.Count == 0)
                 return;
-            var charset = requestMessage.OperationAttributes
-                    .FirstOrDefault(x => x.Tag == Tag.Charset && x.Name == JobAttribute.AttributesCharset)
-                    .Value as string;
-            var encoding = charset is not null
-                ? Encoding.GetEncoding(charset)
-                : Encoding.ASCII;
+            var charsetAttribute = requestMessage.OperationAttributes
+                    .FirstOrDefault(x => x.Tag == Tag.Charset && x.Name == JobAttribute.AttributesCharset);
+            if (charsetAttribute.Value is not string charset)
+            {
+                throw new ArgumentException($"The operation attribute '{JobAttribute.AttributesCharset}' is missing or invalid.");
+            }
+            var encoding = Encoding.GetEncoding(charset);
             WriteSection(SectionTag.OperationAttributesTag, requestMessage.OperationAttributes, writer, encoding);
             WriteSection(SectionTag.JobAttributesTag, requestMessage.JobAttributes, writer, encoding);
             WriteSection(SectionTag.PrinterAttributesTag, requestMessage.PrinterAttributes, writer, encoding);
