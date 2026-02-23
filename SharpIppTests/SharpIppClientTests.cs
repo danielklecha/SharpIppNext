@@ -49,7 +49,12 @@ public class SharpIppClientTests
         protocol.Setup( x => x.ReadIppResponseAsync( It.IsAny<Stream>(), It.IsAny<CancellationToken>() ) ).ReturnsAsync( new IppResponseMessage
         {
             RequestId = 123,
-            StatusCode = IppStatusCode.SuccessfulOk
+            StatusCode = IppStatusCode.SuccessfulOk,
+            JobAttributes = { new List<IppAttribute> { 
+                new IppAttribute(Tag.Uri, JobAttribute.JobUri, "ipp://127.0.0.1:631/jobs/1"),
+                new IppAttribute(Tag.Integer, JobAttribute.JobId, 1),
+                new IppAttribute(Tag.Enum, JobAttribute.JobState, (int)JobState.Pending)
+            } }
         } );
         return protocol;
     }
@@ -737,7 +742,12 @@ public class SharpIppClientTests
         protocol.Setup( x => x.ReadIppResponseAsync( It.IsAny<Stream>(), It.IsAny<CancellationToken>() ) ).ReturnsAsync( new IppResponseMessage
         {
             RequestId = 123,
-            StatusCode = IppStatusCode.SuccessfulOk
+            StatusCode = IppStatusCode.SuccessfulOk,
+            JobAttributes = { new List<IppAttribute> { 
+                new IppAttribute(Tag.Uri, JobAttribute.JobUri, "ipp://127.0.0.1:631/jobs/1"),
+                new IppAttribute(Tag.Integer, JobAttribute.JobId, 1),
+                new IppAttribute(Tag.Enum, JobAttribute.JobState, (int)JobState.Pending)
+            } }
         } );
         SharpIppClient client = new( httpClient, protocol.Object );
         // Act
@@ -763,7 +773,12 @@ public class SharpIppClientTests
         protocol.Setup( x => x.ReadIppResponseAsync( It.IsAny<Stream>(), It.IsAny<CancellationToken>() ) ).ReturnsAsync( new IppResponseMessage
         {
             RequestId = 123,
-            StatusCode = IppStatusCode.SuccessfulOk
+            StatusCode = IppStatusCode.SuccessfulOk,
+            JobAttributes = { new List<IppAttribute> { 
+                new IppAttribute(Tag.Uri, JobAttribute.JobUri, "ipp://127.0.0.1:631/jobs/1"),
+                new IppAttribute(Tag.Integer, JobAttribute.JobId, 1),
+                new IppAttribute(Tag.Enum, JobAttribute.JobState, (int)JobState.Pending)
+            } }
         } );
         SharpIppClient client = new( httpClient, protocol.Object );
         // Act
@@ -788,7 +803,12 @@ public class SharpIppClientTests
         protocol.Setup( x => x.ReadIppResponseAsync( It.IsAny<Stream>(), It.IsAny<CancellationToken>() ) ).ReturnsAsync( new IppResponseMessage
         {
             RequestId = 123,
-            StatusCode = IppStatusCode.ServerErrorBusy
+            StatusCode = IppStatusCode.ServerErrorBusy,
+            JobAttributes = { new List<IppAttribute> { 
+                new IppAttribute(Tag.Uri, JobAttribute.JobUri, "ipp://127.0.0.1:631/jobs/1"),
+                new IppAttribute(Tag.Integer, JobAttribute.JobId, 1),
+                new IppAttribute(Tag.Enum, JobAttribute.JobState, (int)JobState.Pending)
+            } }
         } );
         SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
         // Act

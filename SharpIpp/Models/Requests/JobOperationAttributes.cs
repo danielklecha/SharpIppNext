@@ -15,8 +15,8 @@ public class JobOperationAttributes : OperationAttributes
     public static new T Create<T>(Dictionary<string, IppAttribute[]> dict, IMapperApplier mapper) where T : JobOperationAttributes, new()
     {
         var attributes = OperationAttributes.Create<T>(dict, mapper);
-        attributes.JobId = mapper.MapFromDic<int?>(dict, JobAttribute.JobId);
-        var jobUri = mapper.MapFromDic<string?>(dict, JobAttribute.JobUri);
+        attributes.JobId = mapper.MapFromDicNullable<int?>(dict, JobAttribute.JobId);
+        var jobUri = mapper.MapFromDicNullable<string?>(dict, JobAttribute.JobUri);
         if (jobUri != null && Uri.TryCreate(jobUri, UriKind.RelativeOrAbsolute, out var uri))
             attributes.JobUri = uri;
         return attributes;

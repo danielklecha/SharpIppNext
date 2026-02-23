@@ -57,9 +57,9 @@ namespace SharpIpp.Mapping.Profiles
                 dst.JobUri = map.MapFromDic<string>(src, JobAttribute.JobUri);
                 dst.JobId = map.MapFromDic<int>(src, JobAttribute.JobId);
                 dst.JobState = map.MapFromDic<JobState>(src, JobAttribute.JobState);
-                dst.JobStateReasons = map.MapFromDicSet<JobStateReason[]?>(src, JobAttribute.JobStateReasons);
-                dst.JobStateMessage = map.MapFromDic<string?>(src, JobAttribute.JobStateMessage);
-                dst.NumberOfInterveningJobs = map.MapFromDic<int?>(src, JobAttribute.NumberOfInterveningJobs);
+                dst.JobStateReasons = map.MapFromDicSetNullable<JobStateReason[]?>(src, JobAttribute.JobStateReasons);
+                dst.JobStateMessage = map.MapFromDicNullable<string?>(src, JobAttribute.JobStateMessage);
+                dst.NumberOfInterveningJobs = map.MapFromDicNullable<int?>(src, JobAttribute.NumberOfInterveningJobs);
                 return dst;
             });
 

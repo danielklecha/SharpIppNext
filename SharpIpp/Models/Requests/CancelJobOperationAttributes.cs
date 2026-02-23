@@ -13,7 +13,7 @@ public class CancelJobOperationAttributes : JobOperationAttributes
     public static new T Create<T>(Dictionary<string, IppAttribute[]> dict, IMapperApplier mapper) where T : CancelJobOperationAttributes, new()
     {
         var attributes = JobOperationAttributes.Create<T>(dict, mapper);
-        attributes.Message = mapper.MapFromDic<string?>(dict, JobAttribute.Message);
+        attributes.Message = mapper.MapFromDicNullable<string?>(dict, JobAttribute.Message);
         return attributes;
     }
 

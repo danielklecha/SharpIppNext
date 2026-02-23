@@ -63,10 +63,10 @@ public class PrintJobOperationAttributes : CreateJobOperationAttributes
     public static new T Create<T>(Dictionary<string, IppAttribute[]> dict, IMapperApplier mapper) where T : PrintJobOperationAttributes, new()
     {
         var attributes = CreateJobOperationAttributes.Create<T>(dict, mapper);
-        attributes.DocumentName = mapper.MapFromDic<string?>(dict, JobAttribute.DocumentName);
-        attributes.Compression = mapper.MapFromDic<Compression?>(dict, JobAttribute.Compression);
-        attributes.DocumentFormat = mapper.MapFromDic<string?>(dict, JobAttribute.DocumentFormat);
-        attributes.DocumentNaturalLanguage = mapper.MapFromDic<string?>(dict, JobAttribute.DocumentNaturalLanguage);
+        attributes.DocumentName = mapper.MapFromDicNullable<string?>(dict, JobAttribute.DocumentName);
+        attributes.Compression = mapper.MapFromDicNullable<Compression?>(dict, JobAttribute.Compression);
+        attributes.DocumentFormat = mapper.MapFromDicNullable<string?>(dict, JobAttribute.DocumentFormat);
+        attributes.DocumentNaturalLanguage = mapper.MapFromDicNullable<string?>(dict, JobAttribute.DocumentNaturalLanguage);
         return attributes;
     }
 

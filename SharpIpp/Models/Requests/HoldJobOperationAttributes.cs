@@ -13,7 +13,7 @@ public class HoldJobOperationAttributes : CancelJobOperationAttributes
     public static new T Create<T>(Dictionary<string, IppAttribute[]> dict, IMapperApplier mapper) where T : HoldJobOperationAttributes, new()
     {
         var attributes = CancelJobOperationAttributes.Create<T>(dict, mapper);
-        attributes.JobHoldUntil = mapper.MapFromDic<JobHoldUntil?>(dict, JobAttribute.JobHoldUntil);
+        attributes.JobHoldUntil = mapper.MapFromDicNullable<JobHoldUntil?>(dict, JobAttribute.JobHoldUntil);
         return attributes;
     }
 

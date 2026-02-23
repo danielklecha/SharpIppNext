@@ -25,7 +25,7 @@ public class GetJobAttributesOperationAttributes : JobOperationAttributes
     public static new T Create<T>(Dictionary<string, IppAttribute[]> dict, IMapperApplier mapper) where T : GetJobAttributesOperationAttributes, new()
     {
         var attributes = JobOperationAttributes.Create<T>(dict, mapper);
-        attributes.RequestedAttributes = mapper.MapFromDicSet<string[]?>(dict, JobAttribute.RequestedAttributes);
+        attributes.RequestedAttributes = mapper.MapFromDicSetNullable<string[]?>(dict, JobAttribute.RequestedAttributes);
         return attributes;
     }
 

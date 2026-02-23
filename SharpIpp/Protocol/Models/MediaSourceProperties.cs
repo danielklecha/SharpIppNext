@@ -32,8 +32,8 @@ public class MediaSourceProperties
     {
         return new MediaSourceProperties
         {
-            MediaSourceFeedDirection = mapper.MapFromDic<MediaSourceFeedDirection?>(dict, nameof(MediaSourceFeedDirection).ConvertCamelCaseToKebabCase()),
-            MediaSourceFeedOrientation = mapper.MapFromDic<Orientation?>(dict, nameof(MediaSourceFeedOrientation).ConvertCamelCaseToKebabCase())
+            MediaSourceFeedDirection = mapper.MapFromDicNullable<MediaSourceFeedDirection?>(dict, nameof(MediaSourceFeedDirection).ConvertCamelCaseToKebabCase()),
+            MediaSourceFeedOrientation = mapper.MapFromDicNullable<Orientation?>(dict, nameof(MediaSourceFeedOrientation).ConvertCamelCaseToKebabCase())
         };
     }
 }

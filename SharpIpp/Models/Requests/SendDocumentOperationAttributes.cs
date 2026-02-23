@@ -64,11 +64,11 @@ public class SendDocumentOperationAttributes : JobOperationAttributes
     public static new T Create<T>(Dictionary<string, IppAttribute[]> dict, IMapperApplier mapper) where T : SendDocumentOperationAttributes, new()
     {
         var attributes = JobOperationAttributes.Create<T>(dict, mapper);
-        attributes.DocumentName = mapper.MapFromDic<string?>(dict, JobAttribute.DocumentName);
-        attributes.Compression = mapper.MapFromDic<Compression?>(dict, JobAttribute.Compression);
-        attributes.DocumentFormat = mapper.MapFromDic<string?>(dict, JobAttribute.DocumentFormat);
+        attributes.DocumentName = mapper.MapFromDicNullable<string?>(dict, JobAttribute.DocumentName);
+        attributes.Compression = mapper.MapFromDicNullable<Compression?>(dict, JobAttribute.Compression);
+        attributes.DocumentFormat = mapper.MapFromDicNullable<string?>(dict, JobAttribute.DocumentFormat);
         attributes.LastDocument = mapper.MapFromDic<bool>(dict, JobAttribute.LastDocument);
-        attributes.DocumentNaturalLanguage = mapper.MapFromDic<string?>(dict, JobAttribute.DocumentFormat);
+        attributes.DocumentNaturalLanguage = mapper.MapFromDicNullable<string?>(dict, JobAttribute.DocumentFormat);
         return attributes;
     }
 

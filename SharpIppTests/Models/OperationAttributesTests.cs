@@ -88,10 +88,10 @@ public class OperationAttributesTests
             { JobAttribute.RequestingUserName, new[] { new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "user") } }
         };
         var mapperMock = new Mock<IMapperApplier>();
-        mapperMock.Setup(x => x.Map<string?>((object)"utf-8")).Returns("utf-8");
-        mapperMock.Setup(x => x.Map<string?>((object)"en-us")).Returns("en-us");
-        mapperMock.Setup(x => x.Map<string?>((object)"ipp://printer")).Returns("ipp://printer");
-        mapperMock.Setup(x => x.Map<string?>((object)"user")).Returns("user");
+        mapperMock.Setup(x => x.MapNullable<string?>((object)"utf-8")).Returns("utf-8");
+        mapperMock.Setup(x => x.MapNullable<string?>((object)"en-us")).Returns("en-us");
+        mapperMock.Setup(x => x.MapNullable<string?>((object)"ipp://printer")).Returns("ipp://printer");
+        mapperMock.Setup(x => x.MapNullable<string?>((object)"user")).Returns("user");
 
         // Act
         var attributes = OperationAttributes.Create<OperationAttributes>(dict, mapperMock.Object);
@@ -114,7 +114,7 @@ public class OperationAttributesTests
             { JobAttribute.PrinterUri, new[] { new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, invalidUri) } }
         };
         var mapperMock = new Mock<IMapperApplier>();
-        mapperMock.Setup(x => x.Map<string?>((object)invalidUri)).Returns(invalidUri);
+        mapperMock.Setup(x => x.MapNullable<string?>((object)invalidUri)).Returns(invalidUri);
 
         // Act
         var attributes = OperationAttributes.Create<OperationAttributes>(dict, mapperMock.Object);
@@ -130,7 +130,7 @@ public class OperationAttributesTests
         var dict = new Dictionary<string, IppAttribute[]>();
         var mapperMock = new Mock<IMapperApplier>();
         // When key is missing, MapFromDic passes NoValue.Instance
-        mapperMock.Setup(x => x.Map<string?>(NoValue.Instance)).Returns((string?)null);
+        mapperMock.Setup(x => x.MapNullable<string?>(NoValue.Instance)).Returns((string?)null);
 
         // Act
         var attributes = OperationAttributes.Create<OperationAttributes>(dict, mapperMock.Object);

@@ -32,8 +32,8 @@ public class MediaSize
     {
         return new MediaSize
         {
-            XDimension = mapper.MapFromDic<int?>(dict, nameof(XDimension).ConvertCamelCaseToKebabCase()),
-            YDimension = mapper.MapFromDic<int?>(dict, nameof(YDimension).ConvertCamelCaseToKebabCase())
+            XDimension = mapper.MapFromDicNullable<int?>(dict, nameof(XDimension).ConvertCamelCaseToKebabCase()),
+            YDimension = mapper.MapFromDicNullable<int?>(dict, nameof(YDimension).ConvertCamelCaseToKebabCase())
         };
     }
 }

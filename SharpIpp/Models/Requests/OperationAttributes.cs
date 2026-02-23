@@ -22,11 +22,11 @@ public class OperationAttributes
     {
         var attributes = new T
         {
-            AttributesCharset = mapper.MapFromDic<string?>(dict, JobAttribute.AttributesCharset),
-            AttributesNaturalLanguage = mapper.MapFromDic<string?>(dict, JobAttribute.AttributesNaturalLanguage),
-            RequestingUserName = mapper.MapFromDic<string?>(dict, JobAttribute.RequestingUserName)
+            AttributesCharset = mapper.MapFromDicNullable<string?>(dict, JobAttribute.AttributesCharset),
+            AttributesNaturalLanguage = mapper.MapFromDicNullable<string?>(dict, JobAttribute.AttributesNaturalLanguage),
+            RequestingUserName = mapper.MapFromDicNullable<string?>(dict, JobAttribute.RequestingUserName)
         };
-        var printerUri = mapper.MapFromDic<string?>(dict, JobAttribute.PrinterUri);
+        var printerUri = mapper.MapFromDicNullable<string?>(dict, JobAttribute.PrinterUri);
         if(printerUri != null && Uri.TryCreate(printerUri, UriKind.RelativeOrAbsolute, out Uri uri))
             attributes.PrinterUri = uri;
         return attributes;

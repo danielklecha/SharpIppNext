@@ -106,21 +106,21 @@ namespace SharpIpp.Mapping.Profiles
             mapper.CreateMap<IIppRequestMessage, JobTemplateAttributes>( ( src, dst, map ) =>
             {
                 var jobDict = src.JobAttributes.ToIppDictionary();
-                dst.JobPriority = map.MapFromDic<int?>(jobDict, JobAttribute.JobPriority);
-                dst.JobHoldUntil = map.MapFromDic<JobHoldUntil?>(jobDict, JobAttribute.JobHoldUntil);
-                dst.MultipleDocumentHandling = map.MapFromDic<MultipleDocumentHandling?>(jobDict, JobAttribute.MultipleDocumentHandling);
-                dst.JobSheets = map.MapFromDic<JobSheets?>(jobDict, JobAttribute.JobSheets);
-                dst.Copies = map.MapFromDic<int?>(jobDict, JobAttribute.Copies);
-                dst.Finishings = map.MapFromDic<Finishings?>(jobDict, JobAttribute.Finishings);
-                dst.PageRanges = map.MapFromDicSet<Range[]?>(jobDict, JobAttribute.PageRanges);
-                dst.Sides = map.MapFromDic<Sides?>(jobDict, JobAttribute.Sides);
-                dst.NumberUp = map.MapFromDic<int?>(jobDict, JobAttribute.NumberUp);
-                dst.OrientationRequested = map.MapFromDic<Orientation?>(jobDict, JobAttribute.OrientationRequested);
-                dst.Media = map.MapFromDic<string?>(jobDict, JobAttribute.Media);
-                dst.PrinterResolution = map.MapFromDic<Resolution?>(jobDict, JobAttribute.PrinterResolution);
-                dst.PrintQuality = map.MapFromDic<PrintQuality?>(jobDict, JobAttribute.PrintQuality);
-                dst.PrintScaling = map.MapFromDic<PrintScaling?>(jobDict, JobAttribute.PrintScaling);
-                dst.PrintColorMode = map.MapFromDic<PrintColorMode?>(jobDict, JobAttribute.PrintColorMode);
+                dst.JobPriority = map.MapFromDicNullable<int?>(jobDict, JobAttribute.JobPriority);
+                dst.JobHoldUntil = map.MapFromDicNullable<JobHoldUntil?>(jobDict, JobAttribute.JobHoldUntil);
+                dst.MultipleDocumentHandling = map.MapFromDicNullable<MultipleDocumentHandling?>(jobDict, JobAttribute.MultipleDocumentHandling);
+                dst.JobSheets = map.MapFromDicNullable<JobSheets?>(jobDict, JobAttribute.JobSheets);
+                dst.Copies = map.MapFromDicNullable<int?>(jobDict, JobAttribute.Copies);
+                dst.Finishings = map.MapFromDicNullable<Finishings?>(jobDict, JobAttribute.Finishings);
+                dst.PageRanges = map.MapFromDicSetNullable<Range[]?>(jobDict, JobAttribute.PageRanges);
+                dst.Sides = map.MapFromDicNullable<Sides?>(jobDict, JobAttribute.Sides);
+                dst.NumberUp = map.MapFromDicNullable<int?>(jobDict, JobAttribute.NumberUp);
+                dst.OrientationRequested = map.MapFromDicNullable<Orientation?>(jobDict, JobAttribute.OrientationRequested);
+                dst.Media = map.MapFromDicNullable<string?>(jobDict, JobAttribute.Media);
+                dst.PrinterResolution = map.MapFromDicNullable<Resolution?>(jobDict, JobAttribute.PrinterResolution);
+                dst.PrintQuality = map.MapFromDicNullable<PrintQuality?>(jobDict, JobAttribute.PrintQuality);
+                dst.PrintScaling = map.MapFromDicNullable<PrintScaling?>(jobDict, JobAttribute.PrintScaling);
+                dst.PrintColorMode = map.MapFromDicNullable<PrintColorMode?>(jobDict, JobAttribute.PrintColorMode);
                 dst.MediaCol = jobDict.ContainsKey(JobAttribute.MediaCol) ? MediaCol.Create(jobDict[JobAttribute.MediaCol].FromBegCollection().ToIppDictionary(), map) : null;
                 return dst;
             } );

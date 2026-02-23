@@ -66,13 +66,13 @@ public class CUPSGetPrintersOperationAttributes : OperationAttributes
     public static new T Create<T>(Dictionary<string, IppAttribute[]> dict, IMapperApplier mapper) where T : CUPSGetPrintersOperationAttributes, new()
     {
         var attributes = OperationAttributes.Create<T>(dict, mapper);
-        attributes.FirstPrinterName = mapper.MapFromDic<string?>(dict, JobAttribute.FirstPrinterName);
-        attributes.Limit = mapper.MapFromDic<int?>(dict, JobAttribute.Limit);
-        attributes.PrinterId = mapper.MapFromDic<int?>(dict, JobAttribute.PrinterId);
-        attributes.PrinterLocation = mapper.MapFromDic<string?>(dict, JobAttribute.PrinterLocation);
-        attributes.PrinterType = mapper.MapFromDic<PrinterType?>(dict, JobAttribute.PrinterType);
-        attributes.PrinterTypeMask = mapper.MapFromDic<PrinterType?>(dict, JobAttribute.PrinterTypeMask);
-        attributes.RequestedAttributes = mapper.MapFromDicSet<string[]?>(dict, JobAttribute.RequestedAttributes);
+        attributes.FirstPrinterName = mapper.MapFromDicNullable<string?>(dict, JobAttribute.FirstPrinterName);
+        attributes.Limit = mapper.MapFromDicNullable<int?>(dict, JobAttribute.Limit);
+        attributes.PrinterId = mapper.MapFromDicNullable<int?>(dict, JobAttribute.PrinterId);
+        attributes.PrinterLocation = mapper.MapFromDicNullable<string?>(dict, JobAttribute.PrinterLocation);
+        attributes.PrinterType = mapper.MapFromDicNullable<PrinterType?>(dict, JobAttribute.PrinterType);
+        attributes.PrinterTypeMask = mapper.MapFromDicNullable<PrinterType?>(dict, JobAttribute.PrinterTypeMask);
+        attributes.RequestedAttributes = mapper.MapFromDicSetNullable<string[]?>(dict, JobAttribute.RequestedAttributes);
         return attributes;
     }
 

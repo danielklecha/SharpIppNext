@@ -84,7 +84,7 @@ public class TypesProfileTest
     public void Map_StringToStringWithLanguageNullable_MapsCorrectly()
     {
         // Act
-        var result = _mapper.Map<string, StringWithLanguage?>("test");
+        var result = _mapper.MapNullable<string, StringWithLanguage?>("test");
 
         // Assert
         result.Should().BeNull();
@@ -108,5 +108,25 @@ public class TypesProfileTest
 
         // Assert
         result.Should().Be(JobHoldUntil.Unsupported);
+    }
+
+    [TestMethod]
+    public void Map_NoValueToInt_MapsCorrectly()
+    {
+        // Act
+        var result = _mapper.Map<NoValue, int>(NoValue.Instance);
+
+        // Assert
+        result.Should().Be(0);
+    }
+
+    [TestMethod]
+    public void Map_NoValueToJobState_MapsCorrectly()
+    {
+        // Act
+        var result = _mapper.Map<NoValue, JobState>(NoValue.Instance);
+
+        // Assert
+        result.Should().Be((JobState)0);
     }
 }

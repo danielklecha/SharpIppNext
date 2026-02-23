@@ -13,28 +13,28 @@ public class MediaCol
     {
         return new MediaCol
         {
-            MediaBackCoating = mapper.MapFromDic<MediaCoating?>(dict, nameof(MediaBackCoating).ConvertCamelCaseToKebabCase()),
-            MediaBottomMargin = mapper.MapFromDic<int?>(dict, nameof(MediaBottomMargin).ConvertCamelCaseToKebabCase()),
-            MediaColor = mapper.MapFromDic<string?>(dict, nameof(MediaColor).ConvertCamelCaseToKebabCase()),
-            MediaFrontCoating = mapper.MapFromDic<MediaCoating?>(dict, nameof(MediaFrontCoating).ConvertCamelCaseToKebabCase()),
-            MediaGrain = mapper.MapFromDic<MediaGrain?>(dict, nameof(MediaGrain).ConvertCamelCaseToKebabCase()),
-            MediaHoleCount = mapper.MapFromDic<int?>(dict, nameof(MediaHoleCount).ConvertCamelCaseToKebabCase()),
-            MediaInfo = mapper.MapFromDic<string?>(dict, nameof(MediaInfo).ConvertCamelCaseToKebabCase()),
-            MediaKey = mapper.MapFromDic<string?>(dict, nameof(MediaKey).ConvertCamelCaseToKebabCase()),
-            MediaLeftMargin = mapper.MapFromDic<int?>(dict, nameof(MediaLeftMargin).ConvertCamelCaseToKebabCase()),
-            MediaOrderCount = mapper.MapFromDic<int?>(dict, nameof(MediaOrderCount).ConvertCamelCaseToKebabCase()),
-            MediaPrePrinted = mapper.MapFromDic<MediaPrePrinted?>(dict, nameof(MediaPrePrinted).ConvertCamelCaseToKebabCase()),
-            MediaRecycled = mapper.MapFromDic<MediaRecycled?>(dict, nameof(MediaRecycled).ConvertCamelCaseToKebabCase()),
-            MediaRightMargin = mapper.MapFromDic<int?>(dict, nameof(MediaRightMargin).ConvertCamelCaseToKebabCase()),
+            MediaBackCoating = mapper.MapFromDicNullable<MediaCoating?>(dict, nameof(MediaBackCoating).ConvertCamelCaseToKebabCase()),
+            MediaBottomMargin = mapper.MapFromDicNullable<int?>(dict, nameof(MediaBottomMargin).ConvertCamelCaseToKebabCase()),
+            MediaColor = mapper.MapFromDicNullable<string?>(dict, nameof(MediaColor).ConvertCamelCaseToKebabCase()),
+            MediaFrontCoating = mapper.MapFromDicNullable<MediaCoating?>(dict, nameof(MediaFrontCoating).ConvertCamelCaseToKebabCase()),
+            MediaGrain = mapper.MapFromDicNullable<MediaGrain?>(dict, nameof(MediaGrain).ConvertCamelCaseToKebabCase()),
+            MediaHoleCount = mapper.MapFromDicNullable<int?>(dict, nameof(MediaHoleCount).ConvertCamelCaseToKebabCase()),
+            MediaInfo = mapper.MapFromDicNullable<string?>(dict, nameof(MediaInfo).ConvertCamelCaseToKebabCase()),
+            MediaKey = mapper.MapFromDicNullable<string?>(dict, nameof(MediaKey).ConvertCamelCaseToKebabCase()),
+            MediaLeftMargin = mapper.MapFromDicNullable<int?>(dict, nameof(MediaLeftMargin).ConvertCamelCaseToKebabCase()),
+            MediaOrderCount = mapper.MapFromDicNullable<int?>(dict, nameof(MediaOrderCount).ConvertCamelCaseToKebabCase()),
+            MediaPrePrinted = mapper.MapFromDicNullable<MediaPrePrinted?>(dict, nameof(MediaPrePrinted).ConvertCamelCaseToKebabCase()),
+            MediaRecycled = mapper.MapFromDicNullable<MediaRecycled?>(dict, nameof(MediaRecycled).ConvertCamelCaseToKebabCase()),
+            MediaRightMargin = mapper.MapFromDicNullable<int?>(dict, nameof(MediaRightMargin).ConvertCamelCaseToKebabCase()),
             MediaSize = dict.ContainsKey(nameof(MediaSize).ConvertCamelCaseToKebabCase()) ? MediaSize.Create(dict[nameof(MediaSize).ConvertCamelCaseToKebabCase()].FromBegCollection().ToIppDictionary(), mapper) : null,
-            MediaSizeName = mapper.MapFromDic<string?>(dict, nameof(MediaSizeName).ConvertCamelCaseToKebabCase()),
-            MediaSource = mapper.MapFromDic<MediaSource?>(dict, nameof(MediaSource).ConvertCamelCaseToKebabCase()),
+            MediaSizeName = mapper.MapFromDicNullable<string?>(dict, nameof(MediaSizeName).ConvertCamelCaseToKebabCase()),
+            MediaSource = mapper.MapFromDicNullable<MediaSource?>(dict, nameof(MediaSource).ConvertCamelCaseToKebabCase()),
             MediaSourceProperties = dict.ContainsKey(nameof(MediaSourceProperties).ConvertCamelCaseToKebabCase()) ? MediaSourceProperties.Create(mapper, dict[nameof(MediaSourceProperties).ConvertCamelCaseToKebabCase()].FromBegCollection().ToIppDictionary()) : null,
-            MediaThickness = mapper.MapFromDic<int?>(dict, nameof(MediaThickness).ConvertCamelCaseToKebabCase()),
-            MediaTooth = mapper.MapFromDic<MediaTooth?>(dict, nameof(MediaTooth).ConvertCamelCaseToKebabCase()),
-            MediaTopMargin = mapper.MapFromDic<int?>(dict, nameof(MediaTopMargin).ConvertCamelCaseToKebabCase()),
-            MediaType = mapper.MapFromDic<string?>(dict, nameof(MediaType).ConvertCamelCaseToKebabCase()),
-            MediaWeightMetric = mapper.MapFromDic<int?>(dict, nameof(MediaWeightMetric).ConvertCamelCaseToKebabCase())
+            MediaThickness = mapper.MapFromDicNullable<int?>(dict, nameof(MediaThickness).ConvertCamelCaseToKebabCase()),
+            MediaTooth = mapper.MapFromDicNullable<MediaTooth?>(dict, nameof(MediaTooth).ConvertCamelCaseToKebabCase()),
+            MediaTopMargin = mapper.MapFromDicNullable<int?>(dict, nameof(MediaTopMargin).ConvertCamelCaseToKebabCase()),
+            MediaType = mapper.MapFromDicNullable<string?>(dict, nameof(MediaType).ConvertCamelCaseToKebabCase()),
+            MediaWeightMetric = mapper.MapFromDicNullable<int?>(dict, nameof(MediaWeightMetric).ConvertCamelCaseToKebabCase())
         };
     }
 

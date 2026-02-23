@@ -39,9 +39,9 @@ namespace SharpIpp.Mapping.Profiles
                 var operationAttributes = src.OperationAttributes.SelectMany(x => x).ToIppDictionary();
                 if (operationAttributes != null)
                 {
-                    var statusMessage = map.MapFromDic<string?>(operationAttributes, JobAttribute.StatusMessage);
-                    var detailedStatusMessage = map.MapFromDicSet<string[]?>(operationAttributes, JobAttribute.DetailedStatusMessage);
-                    var documentAccessError = map.MapFromDic<string?>(operationAttributes, JobAttribute.DocumentAccessError);
+                    var statusMessage = map.MapFromDicNullable<string?>(operationAttributes, JobAttribute.StatusMessage);
+                    var detailedStatusMessage = map.MapFromDicSetNullable<string[]?>(operationAttributes, JobAttribute.DetailedStatusMessage);
+                    var documentAccessError = map.MapFromDicNullable<string?>(operationAttributes, JobAttribute.DocumentAccessError);
                     if (statusMessage != null || detailedStatusMessage != null || documentAccessError != null)
                     {
                         dst.OperationAttributes = new ResponseOperationAttributes

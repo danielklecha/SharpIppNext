@@ -21,8 +21,8 @@ public class GetPrinterAttributesOperationAttributes : OperationAttributes
     public static new T Create<T>(Dictionary<string, IppAttribute[]> dict, IMapperApplier mapper) where T : GetPrinterAttributesOperationAttributes, new()
     {
         var attributes = OperationAttributes.Create<T>(dict, mapper);
-        attributes.RequestedAttributes = mapper.MapFromDicSet<string[]?>(dict, JobAttribute.RequestedAttributes);
-        attributes.DocumentFormat = mapper.MapFromDic<string?>(dict, JobAttribute.DocumentFormat);
+        attributes.RequestedAttributes = mapper.MapFromDicSetNullable<string[]?>(dict, JobAttribute.RequestedAttributes);
+        attributes.DocumentFormat = mapper.MapFromDicNullable<string?>(dict, JobAttribute.DocumentFormat);
         return attributes;
     }
 

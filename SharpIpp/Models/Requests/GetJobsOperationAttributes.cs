@@ -42,9 +42,9 @@ public class GetJobsOperationAttributes : GetJobAttributesOperationAttributes
     public static new T Create<T>(Dictionary<string, IppAttribute[]> dict, IMapperApplier mapper) where T : GetJobsOperationAttributes, new()
     {
         var attributes = GetJobAttributesOperationAttributes.Create<T>(dict, mapper);
-        attributes.Limit = mapper.MapFromDic<int?>(dict, JobAttribute.Limit);
-        attributes.WhichJobs = mapper.MapFromDic<WhichJobs?>(dict, JobAttribute.WhichJobs);
-        attributes.MyJobs = mapper.MapFromDic<bool?>(dict, JobAttribute.MyJobs);
+        attributes.Limit = mapper.MapFromDicNullable<int?>(dict, JobAttribute.Limit);
+        attributes.WhichJobs = mapper.MapFromDicNullable<WhichJobs?>(dict, JobAttribute.WhichJobs);
+        attributes.MyJobs = mapper.MapFromDicNullable<bool?>(dict, JobAttribute.MyJobs);
         return attributes;
     }
 

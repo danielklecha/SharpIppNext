@@ -117,16 +117,16 @@ public class CreateJobOperationAttributes : OperationAttributes
     public static new T Create<T>(Dictionary<string, IppAttribute[]> dict, IMapperApplier mapper) where T : CreateJobOperationAttributes, new()
     {
         var attributes = OperationAttributes.Create<T>(dict, mapper);
-        attributes.JobName = mapper.MapFromDic<string?>(dict, JobAttribute.JobName);
-        attributes.JobMediaSheets = mapper.MapFromDic<int?>(dict, JobAttribute.JobMediaSheets);
-        attributes.JobKOctets = mapper.MapFromDic<int?>(dict, JobAttribute.JobKOctets);
-        attributes.IppAttributeFidelity = mapper.MapFromDic<bool?>(dict, JobAttribute.IppAttributeFidelity);
-        attributes.JobImpressions = mapper.MapFromDic<int?>(dict, JobAttribute.JobImpressions);
-        attributes.JobKOctetsProcessed = mapper.MapFromDic<int?>(dict, JobAttribute.JobKOctetsProcessed);
-        attributes.RequestingUserName = mapper.MapFromDic<string?>(dict, JobAttribute.RequestingUserName);
-        attributes.AttributesCharset = mapper.MapFromDic<string?>(dict, JobAttribute.AttributesCharset);
-        attributes.AttributesNaturalLanguage = mapper.MapFromDic<string?>(dict, JobAttribute.AttributesNaturalLanguage);
-        if (Uri.TryCreate(mapper.MapFromDic<string?>(dict, JobAttribute.PrinterUri), UriKind.RelativeOrAbsolute, out Uri printerUri))
+        attributes.JobName = mapper.MapFromDicNullable<string?>(dict, JobAttribute.JobName);
+        attributes.JobMediaSheets = mapper.MapFromDicNullable<int?>(dict, JobAttribute.JobMediaSheets);
+        attributes.JobKOctets = mapper.MapFromDicNullable<int?>(dict, JobAttribute.JobKOctets);
+        attributes.IppAttributeFidelity = mapper.MapFromDicNullable<bool?>(dict, JobAttribute.IppAttributeFidelity);
+        attributes.JobImpressions = mapper.MapFromDicNullable<int?>(dict, JobAttribute.JobImpressions);
+        attributes.JobKOctetsProcessed = mapper.MapFromDicNullable<int?>(dict, JobAttribute.JobKOctetsProcessed);
+        attributes.RequestingUserName = mapper.MapFromDicNullable<string?>(dict, JobAttribute.RequestingUserName);
+        attributes.AttributesCharset = mapper.MapFromDicNullable<string?>(dict, JobAttribute.AttributesCharset);
+        attributes.AttributesNaturalLanguage = mapper.MapFromDicNullable<string?>(dict, JobAttribute.AttributesNaturalLanguage);
+        if (Uri.TryCreate(mapper.MapFromDicNullable<string?>(dict, JobAttribute.PrinterUri), UriKind.RelativeOrAbsolute, out Uri printerUri))
             attributes.PrinterUri = printerUri;
         return attributes;
     }

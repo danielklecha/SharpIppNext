@@ -36,10 +36,50 @@ namespace SharpIpp.Mapping
 
         public TDest Map<TDest>(object? source)
         {
-            return Map<TDest>(source, default!);
+            var res = MapNullable<TDest>(source);
+            if (res is null)
+            {
+                throw new ArgumentException("Cannot map null source to non-nullable destination without a default destination.");
+            }
+            return res;
         }
 
         public TDest Map<TDest>(object? source, TDest dest)
+        {
+            var res = MapNullable(source, dest);
+            if (res is null)
+            {
+                throw new ArgumentException("Cannot map null source to non-nullable destination without a default destination.");
+            }
+            return res;
+        }
+
+        public TDest Map<TSource, TDest>(TSource? source)
+        {
+            var res = MapNullable<TSource, TDest>(source);
+            if (res is null)
+            {
+                throw new ArgumentException("Cannot map null source to non-nullable destination without a default destination.");
+            }
+            return res;
+        }
+
+        public TDest Map<TSource, TDest>(TSource? source, TDest dest)
+        {
+            var res = MapNullable(source, dest);
+            if (res is null)
+            {
+                throw new ArgumentException("Cannot map null source to non-nullable destination without a default destination.");
+            }
+            return res;
+        }
+
+        public TDest? MapNullable<TDest>(object? source)
+        {
+            return MapNullable<TDest>(source, default);
+        }
+
+        public TDest? MapNullable<TDest>(object? source, TDest? dest)
         {
             if (source == null)
             {
@@ -49,12 +89,12 @@ namespace SharpIpp.Mapping
             return Map(source, source.GetType(), dest);
         }
 
-        public TDest Map<TSource, TDest>(TSource? source)
+        public TDest? MapNullable<TSource, TDest>(TSource? source)
         {
-            return Map<TSource, TDest>(source, default!);
+            return MapNullable<TSource, TDest>(source, default);
         }
 
-        public TDest Map<TSource, TDest>(TSource? source, TDest dest)
+        public TDest? MapNullable<TSource, TDest>(TSource? source, TDest? dest)
         {
             if (source == null)
             {
