@@ -20,7 +20,7 @@ public class PrintUriProfileTests
     {
         // Arrange
         var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(TypesProfile));
+        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
         mapper.FillFromAssembly(assembly!);
 
         // Using proper setup for PrintUriRequest
@@ -44,7 +44,7 @@ public class PrintUriProfileTests
     {
         // Arrange
         var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(TypesProfile));
+        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
         mapper.FillFromAssembly(assembly!);
 
         // Using proper setup for PrintUriRequest

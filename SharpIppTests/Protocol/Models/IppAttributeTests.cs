@@ -144,6 +144,14 @@ public class IppAttributeTests
     }
 
     [TestMethod]
+    public void GetHashCode_DefaultAttribute_ReturnsHashCode()
+    {
+        var attr = default(IppAttribute);
+        var hashCode = attr.GetHashCode();
+        hashCode.Should().Be(0);
+    }
+
+    [TestMethod]
     public void ToString_ReturnsFormattedString()
     {
         var attr = new IppAttribute(Tag.Integer, "test", 1);

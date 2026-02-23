@@ -22,7 +22,7 @@ public class SendDocumentProfileTest
     {
         // Arrange
         var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(TypesProfile));
+        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
         mapper.FillFromAssembly(assembly!);
 
         var request = new SendDocumentRequest
@@ -43,7 +43,7 @@ public class SendDocumentProfileTest
     {
         // Arrange
         var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(TypesProfile));
+        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
         mapper.FillFromAssembly(assembly!);
 
         var request = new SendDocumentRequest
@@ -67,7 +67,7 @@ public class SendDocumentProfileTest
     {
         // Arrange
         var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(TypesProfile));
+        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
         mapper.FillFromAssembly(assembly!);
 
         var request = new IppRequestMessage

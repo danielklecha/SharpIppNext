@@ -21,7 +21,7 @@ public class PrintJobProfileTest
     {
         // Arrange
         var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(TypesProfile));
+        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
         mapper.FillFromAssembly(assembly!);
 
         var request = new PrintJobRequest
@@ -41,7 +41,7 @@ public class PrintJobProfileTest
     {
         // Arrange
         var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(TypesProfile));
+        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
         mapper.FillFromAssembly(assembly!);
 
         IIppRequestMessage request = new IppRequestMessage

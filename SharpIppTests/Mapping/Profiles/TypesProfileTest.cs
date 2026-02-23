@@ -19,7 +19,7 @@ public class TypesProfileTest
     public TypesProfileTest()
     {
         var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(TypesProfile));
+        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
         mapper.FillFromAssembly(assembly!);
         _mapper = mapper;
     }

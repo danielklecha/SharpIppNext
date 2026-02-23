@@ -36,41 +36,25 @@ namespace SharpIpp.Mapping
 
         public TDest Map<TDest>(object? source)
         {
-            var res = MapNullable<TDest>(source);
-            if (res is null)
-            {
-                throw new ArgumentException("Cannot map null source to non-nullable destination without a default destination.");
-            }
+            var res = MapNullable<TDest>(source) ?? throw new ArgumentException("Cannot map null source to non-nullable destination without a default destination.");
             return res;
         }
 
         public TDest Map<TDest>(object? source, TDest dest)
         {
-            var res = MapNullable(source, dest);
-            if (res is null)
-            {
-                throw new ArgumentException("Cannot map null source to non-nullable destination without a default destination.");
-            }
+            var res = MapNullable(source, dest) ?? throw new ArgumentException("Cannot map null source to non-nullable destination without a default destination.");
             return res;
         }
 
         public TDest Map<TSource, TDest>(TSource? source)
         {
-            var res = MapNullable<TSource, TDest>(source);
-            if (res is null)
-            {
-                throw new ArgumentException("Cannot map null source to non-nullable destination without a default destination.");
-            }
+            var res = MapNullable<TSource, TDest>(source) ?? throw new ArgumentException("Cannot map null source to non-nullable destination without a default destination.");
             return res;
         }
 
         public TDest Map<TSource, TDest>(TSource? source, TDest dest)
         {
-            var res = MapNullable(source, dest);
-            if (res is null)
-            {
-                throw new ArgumentException("Cannot map null source to non-nullable destination without a default destination.");
-            }
+            var res = MapNullable(source, dest) ?? throw new ArgumentException("Cannot map null source to non-nullable destination without a default destination.");
             return res;
         }
 

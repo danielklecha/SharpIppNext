@@ -1,43 +1,6 @@
-using SharpIpp.Mapping;
-using SharpIpp.Mapping.Extensions;
-using SharpIpp.Protocol.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace SharpIpp.Protocol.Models;
 public class MediaCol
 {
-    public static MediaCol Create(Dictionary<string, IppAttribute[]> dict, IMapperApplier mapper)
-    {
-        return new MediaCol
-        {
-            MediaBackCoating = mapper.MapFromDicNullable<MediaCoating?>(dict, nameof(MediaBackCoating).ConvertCamelCaseToKebabCase()),
-            MediaBottomMargin = mapper.MapFromDicNullable<int?>(dict, nameof(MediaBottomMargin).ConvertCamelCaseToKebabCase()),
-            MediaColor = mapper.MapFromDicNullable<string?>(dict, nameof(MediaColor).ConvertCamelCaseToKebabCase()),
-            MediaFrontCoating = mapper.MapFromDicNullable<MediaCoating?>(dict, nameof(MediaFrontCoating).ConvertCamelCaseToKebabCase()),
-            MediaGrain = mapper.MapFromDicNullable<MediaGrain?>(dict, nameof(MediaGrain).ConvertCamelCaseToKebabCase()),
-            MediaHoleCount = mapper.MapFromDicNullable<int?>(dict, nameof(MediaHoleCount).ConvertCamelCaseToKebabCase()),
-            MediaInfo = mapper.MapFromDicNullable<string?>(dict, nameof(MediaInfo).ConvertCamelCaseToKebabCase()),
-            MediaKey = mapper.MapFromDicNullable<string?>(dict, nameof(MediaKey).ConvertCamelCaseToKebabCase()),
-            MediaLeftMargin = mapper.MapFromDicNullable<int?>(dict, nameof(MediaLeftMargin).ConvertCamelCaseToKebabCase()),
-            MediaOrderCount = mapper.MapFromDicNullable<int?>(dict, nameof(MediaOrderCount).ConvertCamelCaseToKebabCase()),
-            MediaPrePrinted = mapper.MapFromDicNullable<MediaPrePrinted?>(dict, nameof(MediaPrePrinted).ConvertCamelCaseToKebabCase()),
-            MediaRecycled = mapper.MapFromDicNullable<MediaRecycled?>(dict, nameof(MediaRecycled).ConvertCamelCaseToKebabCase()),
-            MediaRightMargin = mapper.MapFromDicNullable<int?>(dict, nameof(MediaRightMargin).ConvertCamelCaseToKebabCase()),
-            MediaSize = dict.ContainsKey(nameof(MediaSize).ConvertCamelCaseToKebabCase()) ? MediaSize.Create(dict[nameof(MediaSize).ConvertCamelCaseToKebabCase()].FromBegCollection().ToIppDictionary(), mapper) : null,
-            MediaSizeName = mapper.MapFromDicNullable<string?>(dict, nameof(MediaSizeName).ConvertCamelCaseToKebabCase()),
-            MediaSource = mapper.MapFromDicNullable<MediaSource?>(dict, nameof(MediaSource).ConvertCamelCaseToKebabCase()),
-            MediaSourceProperties = dict.ContainsKey(nameof(MediaSourceProperties).ConvertCamelCaseToKebabCase()) ? MediaSourceProperties.Create(mapper, dict[nameof(MediaSourceProperties).ConvertCamelCaseToKebabCase()].FromBegCollection().ToIppDictionary()) : null,
-            MediaThickness = mapper.MapFromDicNullable<int?>(dict, nameof(MediaThickness).ConvertCamelCaseToKebabCase()),
-            MediaTooth = mapper.MapFromDicNullable<MediaTooth?>(dict, nameof(MediaTooth).ConvertCamelCaseToKebabCase()),
-            MediaTopMargin = mapper.MapFromDicNullable<int?>(dict, nameof(MediaTopMargin).ConvertCamelCaseToKebabCase()),
-            MediaType = mapper.MapFromDicNullable<string?>(dict, nameof(MediaType).ConvertCamelCaseToKebabCase()),
-            MediaWeightMetric = mapper.MapFromDicNullable<int?>(dict, nameof(MediaWeightMetric).ConvertCamelCaseToKebabCase())
-        };
-    }
-
     /// <summary>
     /// type2 keyword | name(MAX)
     /// </summary>
@@ -149,54 +112,4 @@ public class MediaCol
     /// integer(0:MAX)
     /// </summary>
     public int? MediaWeightMetric { get; set; }
-
-    public IEnumerable<IppAttribute> GetIppAttributes(IMapperApplier mapper)
-    {
-        if (MediaBackCoating.HasValue)
-            yield return new IppAttribute(Tag.Keyword, nameof(MediaBackCoating).ConvertCamelCaseToKebabCase(), mapper.Map<string>(MediaBackCoating.Value));
-        if (MediaBottomMargin.HasValue)
-            yield return new IppAttribute(Tag.Integer, nameof(MediaBottomMargin).ConvertCamelCaseToKebabCase(), MediaBottomMargin.Value);
-        if (MediaColor != null)
-            yield return new IppAttribute(Tag.Keyword, nameof(MediaColor).ConvertCamelCaseToKebabCase(), MediaColor);
-        if (MediaFrontCoating.HasValue)
-            yield return new IppAttribute(Tag.Keyword, nameof(MediaFrontCoating).ConvertCamelCaseToKebabCase(), mapper.Map<string>(MediaFrontCoating.Value));
-        if (MediaGrain.HasValue)
-            yield return new IppAttribute(Tag.Keyword, nameof(MediaGrain).ConvertCamelCaseToKebabCase(), mapper.Map<string>(MediaGrain.Value));
-        if (MediaHoleCount.HasValue)
-            yield return new IppAttribute(Tag.Integer, nameof(MediaHoleCount).ConvertCamelCaseToKebabCase(), MediaHoleCount.Value);
-        if (MediaInfo != null)
-            yield return new IppAttribute(Tag.TextWithoutLanguage, nameof(MediaInfo).ConvertCamelCaseToKebabCase(), MediaInfo);
-        if (MediaKey != null)
-            yield return new IppAttribute(Tag.Keyword, nameof(MediaKey).ConvertCamelCaseToKebabCase(), MediaKey);
-        if (MediaLeftMargin.HasValue)
-            yield return new IppAttribute(Tag.Integer, nameof(MediaLeftMargin).ConvertCamelCaseToKebabCase(), MediaLeftMargin.Value);
-        if (MediaOrderCount.HasValue)
-            yield return new IppAttribute(Tag.Integer, nameof(MediaOrderCount).ConvertCamelCaseToKebabCase(), MediaOrderCount.Value);
-        if (MediaPrePrinted.HasValue)
-            yield return new IppAttribute(Tag.Keyword, nameof(MediaPrePrinted).ConvertCamelCaseToKebabCase(), mapper.Map<string>(MediaPrePrinted.Value));
-        if (MediaRecycled.HasValue)
-            yield return new IppAttribute(Tag.Keyword, nameof(MediaRecycled).ConvertCamelCaseToKebabCase(), mapper.Map<string>(MediaRecycled.Value));
-        if (MediaRightMargin.HasValue)
-            yield return new IppAttribute(Tag.Integer, nameof(MediaRightMargin).ConvertCamelCaseToKebabCase(), MediaRightMargin.Value);
-        if (MediaSize != null)
-            foreach (var attribute in MediaSize.GetIppAttributes(mapper).ToBegCollection(nameof(MediaSize).ConvertCamelCaseToKebabCase()))
-                yield return attribute;
-        if (MediaSizeName != null)
-            yield return new IppAttribute(Tag.Keyword, nameof(MediaSizeName).ConvertCamelCaseToKebabCase(), MediaSizeName);
-        if (MediaSource.HasValue)
-            yield return new IppAttribute(Tag.Keyword, nameof(MediaSource).ConvertCamelCaseToKebabCase(), mapper.Map<string>(MediaSource.Value));
-        if (MediaSourceProperties != null)
-            foreach (var attribute in MediaSourceProperties.GetIppAttributes(mapper).ToBegCollection(nameof(MediaSourceProperties).ConvertCamelCaseToKebabCase()))
-                yield return attribute;
-        if (MediaThickness.HasValue)
-            yield return new IppAttribute(Tag.Integer, nameof(MediaThickness).ConvertCamelCaseToKebabCase(), MediaThickness.Value);
-        if (MediaTooth.HasValue)
-            yield return new IppAttribute(Tag.Keyword, nameof(MediaTooth).ConvertCamelCaseToKebabCase(), mapper.Map<string>(MediaTooth.Value));
-        if (MediaTopMargin.HasValue)
-            yield return new IppAttribute(Tag.Integer, nameof(MediaTopMargin).ConvertCamelCaseToKebabCase(), MediaTopMargin.Value);
-        if (MediaType != null)
-            yield return new IppAttribute(Tag.Keyword, nameof(MediaType).ConvertCamelCaseToKebabCase(), MediaType);
-        if (MediaWeightMetric.HasValue)
-            yield return new IppAttribute(Tag.Integer, nameof(MediaWeightMetric).ConvertCamelCaseToKebabCase(), MediaWeightMetric.Value);
-    }
 }

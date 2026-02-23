@@ -1,12 +1,3 @@
-using SharpIpp.Mapping;
-using SharpIpp.Mapping.Extensions;
-using SharpIpp.Protocol.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Linq;
-
 namespace SharpIpp.Protocol.Models;
 public class MediaSourceProperties
 {
@@ -19,21 +10,4 @@ public class MediaSourceProperties
     /// type2 enum
     /// </summary>
     public Orientation? MediaSourceFeedOrientation { get; set; }
-
-    public IEnumerable<IppAttribute> GetIppAttributes(IMapperApplier mapper)
-    {
-        if (MediaSourceFeedDirection.HasValue)
-            yield return new IppAttribute(Tag.Keyword, nameof(MediaSourceFeedDirection).ConvertCamelCaseToKebabCase(), mapper.Map<string>(MediaSourceFeedDirection.Value));
-        if (MediaSourceFeedOrientation.HasValue)
-            yield return new IppAttribute(Tag.Enum, nameof(MediaSourceFeedOrientation).ConvertCamelCaseToKebabCase(), (int)MediaSourceFeedOrientation.Value);
-    }
-
-    public static MediaSourceProperties Create(IMapperApplier mapper, Dictionary<string, IppAttribute[]> dict)
-    {
-        return new MediaSourceProperties
-        {
-            MediaSourceFeedDirection = mapper.MapFromDicNullable<MediaSourceFeedDirection?>(dict, nameof(MediaSourceFeedDirection).ConvertCamelCaseToKebabCase()),
-            MediaSourceFeedOrientation = mapper.MapFromDicNullable<Orientation?>(dict, nameof(MediaSourceFeedOrientation).ConvertCamelCaseToKebabCase())
-        };
-    }
 }
