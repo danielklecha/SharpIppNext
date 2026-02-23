@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using SharpIpp.Exceptions;
@@ -57,7 +57,7 @@ namespace SharpIpp.Mapping.Profiles
                 dst.JobUri = map.MapFromDic<string>(src, JobAttribute.JobUri);
                 dst.JobId = map.MapFromDic<int>(src, JobAttribute.JobId);
                 dst.JobState = map.MapFromDic<JobState>(src, JobAttribute.JobState);
-                dst.JobStateReasons = map.MapFromDicSet<JobStateReason[]>(src, JobAttribute.JobStateReasons);
+                dst.JobStateReasons = map.MapFromDicSet<JobStateReason[]?>(src, JobAttribute.JobStateReasons);
                 dst.JobStateMessage = map.MapFromDic<string?>(src, JobAttribute.JobStateMessage);
                 dst.NumberOfInterveningJobs = map.MapFromDic<int?>(src, JobAttribute.NumberOfInterveningJobs);
                 return dst;
@@ -74,7 +74,7 @@ namespace SharpIpp.Mapping.Profiles
                     { JobAttribute.JobId, [new IppAttribute(Tag.Integer, JobAttribute.JobId, src.JobId )] },
                     { JobAttribute.JobState, new IppAttribute[] { new IppAttribute(Tag.Enum, JobAttribute.JobState, (int)src.JobState ) } }
                 };
-                if ( src.JobStateReasons?.Any() ?? false )
+                if ( src.JobStateReasons!= null )
                     dic.Add( JobAttribute.JobStateReasons, src.JobStateReasons.Select( x => new IppAttribute( Tag.Keyword, JobAttribute.JobStateReasons, map.Map<string>( x ) ) ).ToArray() );
                 if( src.JobStateMessage != null )
                     dic.Add( JobAttribute.JobStateMessage, new IppAttribute[] { new IppAttribute( Tag.TextWithoutLanguage, JobAttribute.JobStateMessage, src.JobStateMessage ) } );

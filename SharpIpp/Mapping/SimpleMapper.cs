@@ -1,5 +1,3 @@
-﻿#nullable disable
-
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -9,22 +7,20 @@ namespace SharpIpp.Mapping
 {
     public class SimpleMapper : IMapper
     {
-        private readonly ConcurrentDictionary<(Type src, Type dst), Func<object, object, SimpleMapper, object>> _dictionary =
-            new ConcurrentDictionary<(Type src, Type dst), Func<object, object, SimpleMapper, object>>();
+        private readonly ConcurrentDictionary<(Type src, Type dst), Func<object, object?, SimpleMapper, object>> _dictionary = new();
 
-        private readonly ConcurrentDictionary<(Type src, Type dst), List<((Type src, Type dst) map, MapType type)>> _pairsCache =
-            new ConcurrentDictionary<(Type src, Type dst), List<((Type src, Type dst) map, MapType type)>>();
+        private readonly ConcurrentDictionary<(Type src, Type dst), List<((Type src, Type dst) map, MapType type)>> _pairsCache = new();
 
         public void CreateMap<TSource, TDest>(Func<TSource, IMapperApplier, TDest> mapFunc)
         {
-            CreateMap(typeof(TSource), typeof(TDest), (src, mapper) => mapFunc((TSource)src, mapper));
+            CreateMap(typeof(TSource), typeof(TDest), (src, mapper) => mapFunc((TSource)src, mapper)!);
         }
 
         public void CreateMap<TSource, TDest>(Func<TSource, TDest, IMapperApplier, TDest> mapFunc)
         {
             CreateMap(typeof(TSource),
                 typeof(TDest),
-                (src, dst, mapper) => mapFunc((TSource)src, (TDest)dst, mapper));
+                (src, dst, mapper) => mapFunc((TSource)src, dst == null ? default! : (TDest)dst, mapper)!);
         }
 
         public void CreateMap(Type sourceType, Type destType, Func<object, IMapperApplier, object> mapFunc)
@@ -32,18 +28,18 @@ namespace SharpIpp.Mapping
             CreateMap(sourceType, destType, (src, dst, mapper) => mapFunc(src, mapper));
         }
 
-        public void CreateMap(Type sourceType, Type destType, Func<object, object, IMapperApplier, object> mapFunc)
+        public void CreateMap(Type sourceType, Type destType, Func<object, object?, IMapperApplier, object> mapFunc)
         {
             var key = (sourceType, destType);
             _dictionary[key] = (src, dst, mapper) => mapFunc(src, dst, mapper);
         }
 
-        public TDest Map<TDest>(object source)
+        public TDest Map<TDest>(object? source)
         {
-            return Map<TDest>(source, default);
+            return Map<TDest>(source, default!);
         }
 
-        public TDest Map<TDest>(object source, TDest dest)
+        public TDest Map<TDest>(object? source, TDest dest)
         {
             if (source == null)
             {
@@ -53,12 +49,12 @@ namespace SharpIpp.Mapping
             return Map(source, source.GetType(), dest);
         }
 
-        public TDest Map<TSource, TDest>(TSource source)
+        public TDest Map<TSource, TDest>(TSource? source)
         {
-            return Map<TSource, TDest>(source, default);
+            return Map<TSource, TDest>(source, default!);
         }
 
-        public TDest Map<TSource, TDest>(TSource source, TDest dest)
+        public TDest Map<TSource, TDest>(TSource? source, TDest dest)
         {
             if (source == null)
             {

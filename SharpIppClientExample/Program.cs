@@ -1,4 +1,4 @@
-﻿using SharpIpp;
+using SharpIpp;
 using SharpIpp.Models;
 using SharpIpp.Models.Requests;
 using SharpIpp.Protocol.Models;

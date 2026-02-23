@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using SharpIpp.Models.Requests;
 using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;

@@ -1,4 +1,4 @@
-﻿namespace SharpIpp.Models.Requests
+namespace SharpIpp.Models.Requests
 {
     public interface IIppPrinterRequest : IIppRequest
     {

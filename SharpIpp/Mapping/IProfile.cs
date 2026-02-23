@@ -1,4 +1,4 @@
-﻿namespace SharpIpp.Mapping
+namespace SharpIpp.Mapping
 {
     internal interface IProfile
     {

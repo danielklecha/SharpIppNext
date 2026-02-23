@@ -1,4 +1,4 @@
-﻿using FluentAssertions.Execution;
+using FluentAssertions.Execution;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;

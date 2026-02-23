@@ -1,4 +1,4 @@
-﻿namespace SharpIpp.Protocol.Models
+namespace SharpIpp.Protocol.Models
 {
     /// <summary>
     ///     This attribute determines which job start/end sheet(s), if any, MUST

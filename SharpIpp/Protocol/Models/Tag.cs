@@ -1,4 +1,4 @@
-﻿namespace SharpIpp.Protocol.Models
+namespace SharpIpp.Protocol.Models
 {
     /// <summary>
     ///     https://tools.ietf.org/html/rfc8010#section-3.5.2

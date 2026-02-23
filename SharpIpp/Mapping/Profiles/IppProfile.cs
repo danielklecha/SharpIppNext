@@ -1,4 +1,4 @@
-﻿using SharpIpp.Protocol;
+using SharpIpp.Protocol;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Protocol.Extensions;
 using System;
@@ -40,7 +40,7 @@ namespace SharpIpp.Mapping.Profiles
                 if (operationAttributes != null)
                 {
                     var statusMessage = map.MapFromDic<string?>(operationAttributes, JobAttribute.StatusMessage);
-                    var detailedStatusMessage = map.MapFromDicSetNull<string[]?>(operationAttributes, JobAttribute.DetailedStatusMessage);
+                    var detailedStatusMessage = map.MapFromDicSet<string[]?>(operationAttributes, JobAttribute.DetailedStatusMessage);
                     var documentAccessError = map.MapFromDic<string?>(operationAttributes, JobAttribute.DocumentAccessError);
                     if (statusMessage != null || detailedStatusMessage != null || documentAccessError != null)
                     {
@@ -67,7 +67,7 @@ namespace SharpIpp.Mapping.Profiles
                 };
                 if (src.OperationAttributes?.StatusMessage != null)
                     operationAttrs.Add(new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.StatusMessage, src.OperationAttributes.StatusMessage));
-                if (src.OperationAttributes?.DetailedStatusMessage?.Any() ?? false)
+                if (src.OperationAttributes?.DetailedStatusMessage!= null)
                     operationAttrs.AddRange(src.OperationAttributes.DetailedStatusMessage.Select(x => new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.DetailedStatusMessage, x)));
                 if (src.OperationAttributes?.DocumentAccessError != null)
                     operationAttrs.Add(new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.DocumentAccessError, src.OperationAttributes.DocumentAccessError));

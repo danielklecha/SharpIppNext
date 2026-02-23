@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Extensions;

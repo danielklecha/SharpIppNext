@@ -1,4 +1,4 @@
-﻿namespace SharpIpp.Protocol.Models
+namespace SharpIpp.Protocol.Models
 {
     public enum PrintQuality
     {

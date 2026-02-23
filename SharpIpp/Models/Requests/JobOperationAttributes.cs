@@ -1,4 +1,4 @@
-﻿using SharpIpp.Mapping;
+using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Models;
 using System;

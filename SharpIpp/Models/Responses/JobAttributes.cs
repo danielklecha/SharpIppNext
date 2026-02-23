@@ -22,7 +22,7 @@ public class JobAttributes
     /// <summary>
     ///     job-state-reasons
     /// </summary>
-    public JobStateReason[] JobStateReasons { get; set; } = null!;
+    public JobStateReason[]? JobStateReasons { get; set; }
 
     /// <summary>
     ///     job-state-message

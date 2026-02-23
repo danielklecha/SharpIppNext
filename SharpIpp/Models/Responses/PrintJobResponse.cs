@@ -1,4 +1,4 @@
-﻿using SharpIpp.Protocol.Models;
+using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Responses;
 

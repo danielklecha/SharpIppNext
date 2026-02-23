@@ -1,4 +1,4 @@
-﻿namespace SharpIpp.Protocol.Models
+namespace SharpIpp.Protocol.Models
 {
     /// <summary>
     ///     This REQUIRED Printer attribute identifies the set of supported

@@ -1,4 +1,4 @@
-﻿namespace SharpIpp.Protocol.Models
+namespace SharpIpp.Protocol.Models
 {
     /// <summary>
     ///     https://www.iana.org/assignments/ipp-registrations/ipp-registrations.xhtml#ipp-registrations-11

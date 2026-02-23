@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using SharpIpp.Mapping.Extensions;
@@ -112,7 +112,7 @@ namespace SharpIpp.Mapping.Profiles
                 dst.JobSheets = map.MapFromDic<JobSheets?>(jobDict, JobAttribute.JobSheets);
                 dst.Copies = map.MapFromDic<int?>(jobDict, JobAttribute.Copies);
                 dst.Finishings = map.MapFromDic<Finishings?>(jobDict, JobAttribute.Finishings);
-                dst.PageRanges = map.MapFromDicSetNull<Range[]?>(jobDict, JobAttribute.PageRanges);
+                dst.PageRanges = map.MapFromDicSet<Range[]?>(jobDict, JobAttribute.PageRanges);
                 dst.Sides = map.MapFromDic<Sides?>(jobDict, JobAttribute.Sides);
                 dst.NumberUp = map.MapFromDic<int?>(jobDict, JobAttribute.NumberUp);
                 dst.OrientationRequested = map.MapFromDic<Orientation?>(jobDict, JobAttribute.OrientationRequested);

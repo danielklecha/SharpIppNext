@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using SharpIpp.Models.Responses;
 
 namespace SharpIpp.Protocol.Models

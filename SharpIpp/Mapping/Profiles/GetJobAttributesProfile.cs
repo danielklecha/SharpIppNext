@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using SharpIpp.Mapping.Extensions;
@@ -64,7 +64,7 @@ namespace SharpIpp.Mapping.Profiles
                 JobPrinterUri = map.MapFromDic<string?>(src, JobAttribute.JobPrinterUri),
                 JobState = map.MapFromDic<JobState?>(src, JobAttribute.JobState),
                 JobStateMessage = map.MapFromDic<string?>(src, JobAttribute.JobStateMessage),
-                JobStateReasons = map.MapFromDicSetNull<JobStateReason[]?>(src, JobAttribute.JobStateReasons),
+                JobStateReasons = map.MapFromDicSet<JobStateReason[]?>(src, JobAttribute.JobStateReasons),
                 TimeAtCompleted = map.MapFromDic<int?>(src, JobAttribute.TimeAtCompleted),
                 TimeAtCreation = map.MapFromDic<int?>(src, JobAttribute.TimeAtCreation),
                 TimeAtProcessing = map.MapFromDic<int?>(src, JobAttribute.TimeAtProcessing),
@@ -77,8 +77,8 @@ namespace SharpIpp.Mapping.Profiles
                 NumberOfInterveningJobs = map.MapFromDic<int?>(src, JobAttribute.NumberOfInterveningJobs),
                 OutputDeviceAssigned = map.MapFromDic<string?>(src, JobAttribute.OutputDeviceAssigned),
                 JobKOctets = map.MapFromDic<int?>(src, JobAttribute.JobKOctets),
-                JobDetailedStatusMessages = map.MapFromDicSetNull<string[]?>(src, JobAttribute.JobDetailedStatusMessages),
-                JobDocumentAccessErrors = map.MapFromDicSetNull<string[]?>(src, JobAttribute.JobDocumentAccessErrors),
+                JobDetailedStatusMessages = map.MapFromDicSet<string[]?>(src, JobAttribute.JobDetailedStatusMessages),
+                JobDocumentAccessErrors = map.MapFromDicSet<string[]?>(src, JobAttribute.JobDocumentAccessErrors),
                 JobMessageFromOperator = map.MapFromDic<string?>(src, JobAttribute.JobMessageFromOperator)
             });
 

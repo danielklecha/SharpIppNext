@@ -1,4 +1,4 @@
-﻿namespace SharpIpp.Models.Requests
+namespace SharpIpp.Models.Requests
 {
     /// <summary>
     ///     <a href="https://datatracker.ietf.org/doc/html/rfc2911#section-3.3.5">Hold-Job Operation</a>

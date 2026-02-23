@@ -1,4 +1,4 @@
-﻿using SharpIpp.Mapping;
+using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Models;
 using System;
@@ -21,7 +21,7 @@ public class GetPrinterAttributesOperationAttributes : OperationAttributes
     public static new T Create<T>(Dictionary<string, IppAttribute[]> dict, IMapperApplier mapper) where T : GetPrinterAttributesOperationAttributes, new()
     {
         var attributes = OperationAttributes.Create<T>(dict, mapper);
-        attributes.RequestedAttributes = mapper.MapFromDicSetNull<string[]?>(dict, JobAttribute.RequestedAttributes);
+        attributes.RequestedAttributes = mapper.MapFromDicSet<string[]?>(dict, JobAttribute.RequestedAttributes);
         attributes.DocumentFormat = mapper.MapFromDic<string?>(dict, JobAttribute.DocumentFormat);
         return attributes;
     }

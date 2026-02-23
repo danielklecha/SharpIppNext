@@ -1,4 +1,4 @@
-﻿using SharpIpp.Mapping;
+using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Models;
 using System;
@@ -72,7 +72,7 @@ public class CUPSGetPrintersOperationAttributes : OperationAttributes
         attributes.PrinterLocation = mapper.MapFromDic<string?>(dict, JobAttribute.PrinterLocation);
         attributes.PrinterType = mapper.MapFromDic<PrinterType?>(dict, JobAttribute.PrinterType);
         attributes.PrinterTypeMask = mapper.MapFromDic<PrinterType?>(dict, JobAttribute.PrinterTypeMask);
-        attributes.RequestedAttributes = mapper.MapFromDicSetNull<string[]?>(dict, JobAttribute.RequestedAttributes);
+        attributes.RequestedAttributes = mapper.MapFromDicSet<string[]?>(dict, JobAttribute.RequestedAttributes);
         return attributes;
     }
 

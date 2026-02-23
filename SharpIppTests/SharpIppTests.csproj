@@ -34,10 +34,4 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="Protocol\NewFolder\**" />
-    <EmbeddedResource Remove="Protocol\NewFolder\**" />
-    <None Remove="Protocol\NewFolder\**" />
-  </ItemGroup>
 </Project>

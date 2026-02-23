@@ -260,6 +260,7 @@ public class MapperConstructorExtensionsTests
 
         // Func 1: object[] -> TDestination[]
         var res1 = func1(new object[] { "1" }, mapperApplierMock.Object);
+        Assert.IsNotNull(res1);
         Assert.AreEqual(1, res1.Length);
         Assert.AreEqual(1, res1[0]);
 

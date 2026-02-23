@@ -1,4 +1,4 @@
-﻿using SharpIpp.Models.Requests;
+using SharpIpp.Models.Requests;
 using SharpIpp.Protocol;
 using System.IO;
 using System.Threading;
@@ -14,5 +14,4 @@ public interface ISharpIppServer
     Task<IIppRequest> ReceiveRequestAsync(Stream stream, CancellationToken cancellationToken = default);
     Task SendRawResponseAsync(IIppResponseMessage ippResponseMessage, Stream stream, CancellationToken cancellationToken = default);
     Task SendResponseAsync<T>(T ippResponsMessage, Stream stream, CancellationToken cancellationToken = default) where T : IIppResponse;
-    void ValidateRawRequest(IIppRequestMessage request);
 }
