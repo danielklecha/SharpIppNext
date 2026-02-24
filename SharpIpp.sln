@@ -5,11 +5,11 @@ VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpIpp", "SharpIpp\SharpIpp.csproj", "{4718D86A-C465-43C7-8A36-959F53C8E6DB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpIppClientExample", "SharpIppClientExample\SharpIppClientExample.csproj", "{7ED644D7-06E3-42DE-9673-6A7DE3E6B7BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpIpp.Samples.Client", "SharpIpp.Samples.Client\SharpIpp.Samples.Client.csproj", "{7ED644D7-06E3-42DE-9673-6A7DE3E6B7BA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpIppTests", "SharpIppTests\SharpIppTests.csproj", "{918F0853-35FC-4283-B9A6-9346837CE41A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpIpp.Tests.Unit", "SharpIpp.Tests.Unit\SharpIpp.Tests.Unit.csproj", "{2D7D8B87-8C5D-4386-9795-56DF4CC58EBE}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6228B57D-8C9C-4130-B0B5-35AC84093DBB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpIpp.Tests.Integration", "SharpIpp.Tests.Integration\SharpIpp.Tests.Integration.csproj", "{34C72A6E-D808-407C-BB91-418D72977C5A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +25,14 @@ Global
 		{7ED644D7-06E3-42DE-9673-6A7DE3E6B7BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7ED644D7-06E3-42DE-9673-6A7DE3E6B7BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7ED644D7-06E3-42DE-9673-6A7DE3E6B7BA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{918F0853-35FC-4283-B9A6-9346837CE41A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{918F0853-35FC-4283-B9A6-9346837CE41A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{918F0853-35FC-4283-B9A6-9346837CE41A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{918F0853-35FC-4283-B9A6-9346837CE41A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D7D8B87-8C5D-4386-9795-56DF4CC58EBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D7D8B87-8C5D-4386-9795-56DF4CC58EBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D7D8B87-8C5D-4386-9795-56DF4CC58EBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D7D8B87-8C5D-4386-9795-56DF4CC58EBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34C72A6E-D808-407C-BB91-418D72977C5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34C72A6E-D808-407C-BB91-418D72977C5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34C72A6E-D808-407C-BB91-418D72977C5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34C72A6E-D808-407C-BB91-418D72977C5A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

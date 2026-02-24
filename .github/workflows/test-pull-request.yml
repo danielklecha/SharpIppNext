@@ -21,4 +21,10 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: Test
-      run: dotnet test --configuration Release --no-build
+      run: dotnet test --configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutput=${{ github.workspace }}/CoverageResults/coverage /p:MergeWith=${{ github.workspace }}/CoverageResults/coverage.json /p:CoverletOutputFormat=\"json,lcov\"
+    - name: Publish coverage report to coveralls.io   
+      uses: coverallsapp/github-action@master
+      continue-on-error: true
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }} 
+        path-to-lcov: CoverageResults/coverage.info 

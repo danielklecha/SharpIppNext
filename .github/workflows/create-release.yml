@@ -34,8 +34,11 @@ jobs:
     - name: Build (Standard)
       run: dotnet build --configuration Release --no-restore
 
-    - name: Test
-      run: dotnet test --configuration Release --no-build
+    - name: Test Unit
+      run: dotnet test SharpIpp.Tests.Unit/SharpIpp.Tests.Unit.csproj --configuration Release --no-build
+
+    - name: Test Integration
+      run: dotnet test SharpIpp.Tests.Integration/SharpIpp.Tests.Integration.csproj --configuration Release --no-build
 
     - name: Pack (Standard)
       run: dotnet pack SharpIpp/SharpIpp.csproj --configuration Release --no-build

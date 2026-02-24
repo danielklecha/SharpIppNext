@@ -3,12 +3,11 @@ using System.Threading.Tasks;
 using SharpIpp.Models.Requests;
 using SharpIpp.Models.Responses;
 
-namespace SharpIpp
+namespace SharpIpp;
+
+public partial class SharpIppClient
 {
-    public partial class SharpIppClient
-    {
-        /// <inheritdoc />
-        public Task<CUPSGetPrintersResponse> GetCUPSPrintersAsync(CUPSGetPrintersRequest request, CancellationToken cancellationToken = default) => 
-            SendAsync<CUPSGetPrintersRequest, CUPSGetPrintersResponse>(request, cancellationToken);
-    }
+    /// <inheritdoc />
+    public Task<CUPSGetPrintersResponse> GetCUPSPrintersAsync(CUPSGetPrintersRequest request, CancellationToken cancellationToken = default) => 
+        SendAsync<CUPSGetPrintersRequest, CUPSGetPrintersResponse>(request, cancellationToken);
 }
