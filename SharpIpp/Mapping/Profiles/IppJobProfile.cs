@@ -18,18 +18,21 @@ internal class IppJobProfile : IProfile
     {
         mapper.CreateMap<IIppJobRequest, IppRequestMessage>((src, dst, map) =>
         {
+            dst ??= new IppRequestMessage();
             map.Map<IIppRequest, IppRequestMessage>(src, dst);
             return dst;
         });
 
         mapper.CreateMap<IIppRequestMessage, IIppJobRequest>( ( src, dst, map ) =>
         {
+            dst = dst ?? throw new ArgumentNullException(nameof(dst));
             map.Map<IIppRequestMessage, IIppRequest>( src, dst );
             return dst;
         } );
 
         mapper.CreateMap<IppResponseMessage, IIppJobResponse>((src, dst, map) =>
         {
+            dst = dst ?? throw new ArgumentNullException(nameof(dst));
             map.Map<IppResponseMessage, IIppResponse>(src, dst);
             var jobAttrs = new JobAttributes();
             map.Map(src.JobAttributes.SelectMany(x => x).ToIppDictionary(), jobAttrs);
@@ -39,6 +42,7 @@ internal class IppJobProfile : IProfile
 
         mapper.CreateMap<IIppJobResponse, IppResponseMessage>( ( src, dst, map ) =>
         {
+            dst ??= new IppResponseMessage();
             map.Map<IIppResponse, IppResponseMessage>( src, dst );
             if (src.JobAttributes != null)
             {
@@ -54,6 +58,7 @@ internal class IppJobProfile : IProfile
             dst,
             map) =>
         {
+            dst ??= new JobAttributes();
             dst.JobUri = map.MapFromDic<string>(src, JobAttribute.JobUri);
             dst.JobId = map.MapFromDic<int>(src, JobAttribute.JobId);
             dst.JobState = map.MapFromDic<JobState>(src, JobAttribute.JobState);
@@ -68,6 +73,7 @@ internal class IppJobProfile : IProfile
             dst,
             map ) =>
         {
+            // dst is ignored — always creates a new dictionary
             var dic = new Dictionary<string, IppAttribute[]>
             {
                 { JobAttribute.JobUri, new IppAttribute[] { new IppAttribute( Tag.Uri, JobAttribute.JobUri, src.JobUri ) } },

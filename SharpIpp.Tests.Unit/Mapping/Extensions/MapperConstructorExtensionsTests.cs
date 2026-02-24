@@ -188,13 +188,13 @@ public class MapperConstructorExtensionsTests
         // Arrange
         var mapperMock = new Mock<IMapperConstructor>();
 
-        // We are looking for CreateMap(Type, Type, Func<object, IMapperApplier, object>)
-        Func<object, IMapperApplier, object>? capturedFunc = null;
+        // We are looking for CreateMap(Type, Type, Func<object, object?, IMapperApplier, object?>)
+        Func<object, object?, IMapperApplier, object?>? capturedFunc = null;
         Type? capturedSrcType = null;
         Type? capturedDestType = null;
 
-        mapperMock.Setup(x => x.CreateMap(It.IsAny<Type>(), It.IsAny<Type>(), It.IsAny<Func<object, IMapperApplier, object>>()))
-            .Callback<Type, Type, Func<object, IMapperApplier, object>>((src, dest, func) =>
+        mapperMock.Setup(x => x.CreateMap(It.IsAny<Type>(), It.IsAny<Type>(), It.IsAny<Func<object, object?, IMapperApplier, object?>>()))
+            .Callback<Type, Type, Func<object, object?, IMapperApplier, object?>>((src, dest, func) =>
             {
                 // We are interested in the explicit Type registration: mapper.CreateMap(srcType, destNullable, ...)
                 if (src == typeof(int) && dest == typeof(double?))
@@ -218,12 +218,12 @@ public class MapperConstructorExtensionsTests
         mapperApplierMock.Setup(x => x.Map<double>(123)).Returns(123.0);
 
         // Valid
-        // The lambda is: (src, map) => src == null ? destNull : map.Map<TDestination>(src)
-        var result = capturedFunc!(123, mapperApplierMock.Object);
+        // The lambda is: (src, _2, map) => src == null ? destNull : map.Map<TDestination>(src)
+        var result = capturedFunc!(123, null, mapperApplierMock.Object);
         Assert.AreEqual(123.0, result);
 
         // Null
-        var resultNull = capturedFunc!(null!, mapperApplierMock.Object);
+        var resultNull = capturedFunc!(null!, null, mapperApplierMock.Object);
         Assert.IsNull(resultNull);
     }
     [TestMethod]
@@ -277,7 +277,7 @@ public class MapperConstructorExtensionsTests
         Assert.IsNotNull(res3);
         Assert.AreEqual(1, res3.Length);
 
-        var res3Null = func3(null, mapperApplierMock.Object);
+        var res3Null = func3(null!, mapperApplierMock.Object);
         Assert.IsNull(res3Null);
     }
 }

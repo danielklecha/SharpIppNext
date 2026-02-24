@@ -53,13 +53,13 @@ public static class MapperConstructorExtensions
             var destNull = destIsClass
                 ? Convert.ChangeType(null, destNullable)
                 : Activator.CreateInstance(destNullable);
-            mapper.CreateMap(typeof(NoValue), destNullable, (_, __) => destNull);
+            mapper.CreateMap(typeof(NoValue), destNullable, (_, _2, _3) => destNull);
 
             if (!destIsClass)
             {
                 mapper.CreateMap(srcType,
                     destNullable,
-                    (src, map) => src == null ? destNull : map.Map<TDestination>(src));
+                    (src, _2, map) => src == null ? destNull : map.Map<TDestination>(src));
             }
         }
 

@@ -17,6 +17,7 @@ internal class IppProfile : IProfile
     {
         mapper.CreateMap<IIppRequest, IppRequestMessage>((src, dst, map) =>
         {
+            dst ??= new IppRequestMessage();
             dst.Version = src.Version;
             dst.RequestId = src.RequestId;
             return dst;
@@ -24,6 +25,7 @@ internal class IppProfile : IProfile
 
         mapper.CreateMap<IIppRequestMessage, IIppRequest>( ( src, dst, map ) =>
         {
+            dst = dst ?? throw new ArgumentNullException(nameof(dst));
             dst.Version = src.Version;
             dst.RequestId = src.RequestId;
             return dst;
@@ -33,6 +35,7 @@ internal class IppProfile : IProfile
 
         mapper.CreateMap<IppResponseMessage, IIppResponse>((src, dst, map) =>
         {
+            dst = dst ?? throw new ArgumentNullException(nameof(dst));
             dst.Version = src.Version;
             dst.RequestId = src.RequestId;
             dst.StatusCode = src.StatusCode;
@@ -57,6 +60,7 @@ internal class IppProfile : IProfile
 
         mapper.CreateMap<IIppResponse, IppResponseMessage>((src, dst, map) =>
         {
+            dst ??= new IppResponseMessage();
             dst.Version = src.Version;
             dst.RequestId = src.RequestId;
             dst.StatusCode = src.StatusCode;
@@ -77,12 +81,14 @@ internal class IppProfile : IProfile
 
         mapper.CreateMap<IIppPrinterRequest, IppRequestMessage>((src, dst, map) =>
         {
+            dst ??= new IppRequestMessage();
             map.Map<IIppRequest, IppRequestMessage>(src, dst);
             return dst;
         });
 
         mapper.CreateMap<IIppRequestMessage, IIppPrinterRequest>( ( src, dst, map ) =>
         {
+            dst = dst ?? throw new ArgumentNullException(nameof(dst));
             map.Map<IIppRequestMessage, IIppRequest>( src, dst );
             return dst;
         } );

@@ -15,6 +15,7 @@ internal class JobTemplateAttributesProfile : IProfile
     {
         mapper.CreateMap<JobTemplateAttributes, IppRequestMessage>((src, dst, map) =>
         {
+            dst ??= new IppRequestMessage();
             var job = dst.JobAttributes;
 
             if (src.JobPriority != null)
@@ -105,6 +106,7 @@ internal class JobTemplateAttributesProfile : IProfile
 
         mapper.CreateMap<IIppRequestMessage, JobTemplateAttributes>( ( src, dst, map ) =>
         {
+            dst ??= new JobTemplateAttributes();
             var jobDict = src.JobAttributes.ToIppDictionary();
             dst.JobPriority = map.MapFromDicNullable<int?>(jobDict, JobAttribute.JobPriority);
             dst.JobHoldUntil = map.MapFromDicNullable<JobHoldUntil?>(jobDict, JobAttribute.JobHoldUntil);

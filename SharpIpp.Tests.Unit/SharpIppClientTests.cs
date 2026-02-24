@@ -895,15 +895,15 @@ public class SharpIppClientTests
     }
 
     [TestMethod()]
-    public void Construct_InvalidData_ShouldThrowException()
+    public void Construct_InvalidData_ShouldReturnDefault()
     {
         // Arrange
         using SharpIppClient client = new();
         var message = new Mock<IIppResponseMessage>();
         //Act
-        Func<IppResponseMessage> act = () => client.CreateResponse<IppResponseMessage>( message.Object );
+        var result = client.CreateResponse<IppResponseMessage>( message.Object );
         // Assert
-        act.Should().Throw<IppResponseException>();
+        result.Should().NotBeNull();
     }
 
     [TestMethod()]
@@ -992,5 +992,34 @@ public class SharpIppClientTests
         using SharpIppClient client = new(new HttpClient(), protocol);
         var mapped = client.CreateResponse<GetJobAttributesResponse>(ippResponse);
         Assert.IsNotNull(mapped);
+    }
+    [TestMethod()]
+    public async Task GetPrinterAttributesAsync_MappingException_ShouldThrowIppResponseException()
+    {
+        // Arrange
+        Mock<IIppProtocol> protocol = new();
+        protocol.Setup( x => x.ReadIppResponseAsync( It.IsAny<Stream>(), It.IsAny<CancellationToken>() ) ).ReturnsAsync( new IppResponseMessage
+        {
+            RequestId = 123,
+            StatusCode = IppStatusCode.SuccessfulOk,
+            PrinterAttributes = { new List<IppAttribute> { 
+                // PrinterState is expected to be int, but we provide a string
+                new IppAttribute(Tag.Charset, PrinterAttribute.PrinterState, "invalid-type-should-be-int")
+            } }
+        } );
+        using SharpIppClient client = new(new(GetMockOfHttpMessageHandler().Object), protocol.Object);
+        
+        // Act
+        Func<Task<GetPrinterAttributesResponse>> act = async () => await client.GetPrinterAttributesAsync(new GetPrinterAttributesRequest
+        {
+            RequestId = 123,
+            OperationAttributes = new GetPrinterAttributesOperationAttributes
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631")
+            }
+        });
+
+        // Assert
+        await act.Should().ThrowAsync<IppResponseException>().WithMessage("Ipp attributes mapping exception");
     }
 }

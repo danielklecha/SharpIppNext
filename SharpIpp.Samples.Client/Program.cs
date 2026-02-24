@@ -1,14 +1,13 @@
 using SharpIpp;
-using SharpIpp.Models;
 using SharpIpp.Models.Requests;
 using SharpIpp.Protocol.Models;
 
 try
 {
-    var client = new SharpIppClient();
-    var filePath = @"C:\example.pdf";
+    SharpIppClient client = new();
+    string filePath = @"C:\example.pdf";
     await using var stream = File.Open(filePath, FileMode.Open);
-    var printJobRequest = new PrintJobRequest
+    PrintJobRequest printJobRequest = new()
     {
         Document = stream,
         OperationAttributes = new()
@@ -39,6 +38,6 @@ try
 }
 catch (Exception ex)
 {
-    Console.WriteLine( ex );
+    Console.WriteLine(ex);
 }
 Console.ReadKey();

@@ -1,8 +1,6 @@
-#nullable disable
-namespace SharpIpp.Mapping
-{
-    public interface IMapper : IMapperConstructor, IMapperApplier
-    {
+namespace SharpIpp.Mapping;
 
-    }
+public interface IMapper : IMapperConstructor, IMapperApplier
+{
+
 }
