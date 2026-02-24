@@ -112,7 +112,7 @@ internal class JobTemplateAttributesProfile : IProfile
             dst.JobSheets = map.MapFromDicNullable<JobSheets?>(jobDict, JobAttribute.JobSheets);
             dst.Copies = map.MapFromDicNullable<int?>(jobDict, JobAttribute.Copies);
             dst.Finishings = map.MapFromDicNullable<Finishings?>(jobDict, JobAttribute.Finishings);
-            dst.PageRanges = map.MapFromDicSetNullable<Range[]?>(jobDict, JobAttribute.PageRanges);
+            dst.PageRanges = map.MapFromDicSetNullable<Protocol.Models.Range[]?>(jobDict, JobAttribute.PageRanges);
             dst.Sides = map.MapFromDicNullable<Sides?>(jobDict, JobAttribute.Sides);
             dst.NumberUp = map.MapFromDicNullable<int?>(jobDict, JobAttribute.NumberUp);
             dst.OrientationRequested = map.MapFromDicNullable<Orientation?>(jobDict, JobAttribute.OrientationRequested);

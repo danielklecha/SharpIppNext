@@ -15,7 +15,7 @@ internal class TypesProfile : IProfile
         mapper.CreateIppMap<bool>();
         mapper.CreateIppMap<string>();
         mapper.CreateIppMap<DateTimeOffset>();
-        mapper.CreateIppMap<Range>();
+        mapper.CreateIppMap<Protocol.Models.Range>();
         mapper.CreateIppMap<Resolution>();
         mapper.CreateIppMap<StringWithLanguage>();
 

@@ -128,14 +128,14 @@ namespace SharpIpp.Protocol
             return value;
         }
 
-        private static void Write(Range value, BinaryWriter stream)
+        private static void Write(Models.Range value, BinaryWriter stream)
         {
             stream.WriteBigEndian((short)8);
             stream.WriteBigEndian(value.Lower);
             stream.WriteBigEndian(value.Upper);
         }
 
-        private static Range ReadRange(BinaryReader stream)
+        private static Models.Range ReadRange(BinaryReader stream)
         {
             var length = stream.ReadInt16BigEndian();
 
@@ -146,7 +146,7 @@ namespace SharpIpp.Protocol
 
             var lower = stream.ReadInt32BigEndian();
             var upper = stream.ReadInt32BigEndian();
-            return new Range(lower, upper);
+            return new Models.Range(lower, upper);
         }
 
         private static void Write(Resolution value, BinaryWriter stream)

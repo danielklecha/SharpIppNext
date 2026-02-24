@@ -12,9 +12,9 @@ public static class MapperConstructorExtensions
     {
         var profiles = assembly.GetTypes()
             .Where(x => typeof(IProfile).IsAssignableFrom(x) && x.IsClass)
-            .Select(x => (IProfile)Activator.CreateInstance(x));
+            .Select(x => (IProfile)Activator.CreateInstance(x)!);
 
-        foreach (var profile in profiles)
+        foreach (IProfile profile in profiles)
         {
             profile.CreateMaps(mapper);
         }

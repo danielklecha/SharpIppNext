@@ -14,7 +14,7 @@ public class PrintUriOperationAttributes : PrintJobOperationAttributes
     public static new T Create<T>(Dictionary<string, IppAttribute[]> dict, IMapperApplier mapper) where T : PrintUriOperationAttributes, new()
     {
         var attributes = PrintJobOperationAttributes.Create<T>(dict, mapper);
-        if (Uri.TryCreate(mapper.MapFromDicNullable<string?>(dict, JobAttribute.DocumentUri), UriKind.RelativeOrAbsolute, out Uri documentUri))
+        if (Uri.TryCreate(mapper.MapFromDicNullable<string?>(dict, JobAttribute.DocumentUri), UriKind.RelativeOrAbsolute, out Uri? documentUri))
             attributes.DocumentUri = documentUri;
         return attributes;
     }

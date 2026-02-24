@@ -263,7 +263,7 @@ namespace SharpIpp.Protocol
                 case Resolution v:
                     Write(v, stream);
                     break;
-                case Range v:
+                case Models.Range v:
                     Write(v, stream);
                     break;
                 case StringWithLanguage v:

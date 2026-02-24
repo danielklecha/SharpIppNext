@@ -27,7 +27,7 @@ public class OperationAttributes
             RequestingUserName = mapper.MapFromDicNullable<string?>(dict, JobAttribute.RequestingUserName)
         };
         var printerUri = mapper.MapFromDicNullable<string?>(dict, JobAttribute.PrinterUri);
-        if(printerUri != null && Uri.TryCreate(printerUri, UriKind.RelativeOrAbsolute, out Uri uri))
+        if(printerUri != null && Uri.TryCreate(printerUri, UriKind.RelativeOrAbsolute, out Uri? uri))
             attributes.PrinterUri = uri;
         return attributes;
     }

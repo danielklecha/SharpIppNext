@@ -58,11 +58,11 @@ public class MapperConstructorExtensionsTests
         Assert.AreEqual(123, result);
 
         // Test Null Case
-        var exNull = Assert.ThrowsException<ArgumentException>(() => capturedFunc!(null!, mapperApplierMock.Object));
+        var exNull = Assert.ThrowsExactly<ArgumentException>(() => capturedFunc!(null!, mapperApplierMock.Object));
         Assert.IsTrue(exNull.Message.Contains("Mapping null to non nullable type"));
 
         // Test Wrong Type
-        var exType = Assert.ThrowsException<ArgumentException>(() => capturedFunc!(123, mapperApplierMock.Object)); // 123 is int, expecting string
+        var exType = Assert.ThrowsExactly<ArgumentException>(() => capturedFunc!(123, mapperApplierMock.Object)); // 123 is int, expecting string
         Assert.IsTrue(exType.Message.Contains("Mapping not supported"));
     }
 
@@ -118,7 +118,7 @@ public class MapperConstructorExtensionsTests
         Assert.AreEqual(1, resultStrict.Length);
         Assert.AreEqual(123, resultStrict[0]);
         // Null -> Throws
-        var ex = Assert.ThrowsException<ArgumentException>(() => strictFunc(null!, mapperApplierMock.Object));
+        var ex = Assert.ThrowsExactly<ArgumentException>(() => strictFunc(null!, mapperApplierMock.Object));
         Assert.IsTrue(ex.Message.Contains("Mapping null to non nullable type"));
 
         // 2. Nullable
@@ -164,13 +164,13 @@ public class MapperConstructorExtensionsTests
         Assert.AreEqual(1, res1[0]);
         // If src is null? The lambda is src.Select(...) -> Throws NullReferenceException or similar if not checked?
         // Code: src.Select(...).ToArray(). Enumerable.Select throws on null source.
-        Assert.ThrowsException<ArgumentNullException>(() => func1(null!, mapperApplierMock.Object));
+        Assert.ThrowsExactly<ArgumentNullException>(() => func1(null!, mapperApplierMock.Object));
 
         // Func 2: TSource[] -> TDestination[]?
         var res2 = func2(new[] { "1" }, mapperApplierMock.Object);
         Assert.AreEqual(1, res2.Length);
         // Src null? Code: src.Select(...) -> Throws
-        Assert.ThrowsException<ArgumentNullException>(() => func2(null!, mapperApplierMock.Object));
+        Assert.ThrowsExactly<ArgumentNullException>(() => func2(null!, mapperApplierMock.Object));
 
         // Func 3: TSource[]? -> TDestination[]?
         var res3 = func3(new[] { "1" }, mapperApplierMock.Object);

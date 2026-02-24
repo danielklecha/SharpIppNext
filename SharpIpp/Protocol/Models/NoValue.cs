@@ -14,7 +14,7 @@ public struct NoValue : IEquatable<NoValue>
         return true;
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return obj is NoValue other && Equals(other);
     }

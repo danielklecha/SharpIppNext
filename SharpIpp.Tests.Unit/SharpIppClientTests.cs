@@ -920,7 +920,7 @@ public class SharpIppClientTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("http://127.0.0.1:631", "http://127.0.0.1:631")]
     [DataRow("https://127.0.0.1:631", "https://127.0.0.1:631")]
     [DataRow("ipp://127.0.0.1:631", "http://127.0.0.1:631")]
@@ -957,7 +957,7 @@ public class SharpIppClientTests
                 ItExpr.IsAny<CancellationToken>() );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("RawIppResponses/GetPrinterAttributes_Canon_MX490_series_low_supply.bin")]
     [DataRow("RawIppResponses/GetPrinterAttributes_HP_Color_LaserJet_MFP_M476dn.bin")]
     public async Task Construct_ReadBinFileWithGetPrinterAttributes_ShouldBeMapped(string path)
@@ -970,7 +970,7 @@ public class SharpIppClientTests
         Assert.IsNotNull(mapped);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("RawIppResponses/PrintJob_HP_Color_LaserJet_MFP_M476dn.bin")]
     public async Task Construct_ReadBinFileWithPrintJob_ShouldBeMapped(string path)
     {
@@ -982,7 +982,7 @@ public class SharpIppClientTests
         Assert.IsNotNull(mapped);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("RawIppResponses/GetJobAttributes_HP_Color_LaserJet_MFP_M476dn.bin")]
     public async Task Construct_ReadBinFileWithGetJobAttributes_ShouldBeMapped(string path)
     {

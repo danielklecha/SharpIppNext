@@ -30,7 +30,7 @@ public class IppProtocolTests
         memoryStream.ToArray().Should().Equal( 0x00, 0x00 );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( true, new byte[] { 0x00, 0x01, 0x01 } )]
     [DataRow( false, new byte[] { 0x00, 0x01, 0x00 } )]
     public void WriteValue_Boolean_ShouldBeWritten( bool value, byte[] expected )
@@ -42,7 +42,7 @@ public class IppProtocolTests
         memoryStream.ToArray().Should().Equal( expected );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "12/31/1999 23:59:59 +02:30", new byte[] { 0x00, 0x0B, 0x07, 0xCF, 0x0C, 0x1F, 0x17, 0x3B, 0x3B, 0x00, 0x2B, 0x02, 0x1E } )]
     [DataRow( "12/31/1999 23:59:59 -02:30", new byte[] { 0x00, 0x0B, 0x07, 0xCF, 0x0C, 0x1F, 0x17, 0x3B, 0x3B, 0x00, 0x2D, 0x02, 0x1E } )]
     [DataRow( "01/01/0001 01:01:01 +00:00", new byte[] { 0x00, 0x0B, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x2D, 0x00, 0x00 } )]
@@ -58,7 +58,7 @@ public class IppProtocolTests
         memoryStream.ToArray().Should().Equal( expected );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( int.MinValue, new byte[] { 0x00, 0x04, 0x80, 0x00, 0x00, 0x00 } )]
     [DataRow( 0, new byte[] { 0x00, 0x04, 0x00, 0x00, 0x00, 0x00 } )]
     [DataRow( int.MaxValue, new byte[] { 0x00, 0x04, 0x7F, 0xFF, 0xFF, 0xFF } )]
@@ -74,7 +74,7 @@ public class IppProtocolTests
         memoryStream.ToArray().Should().Equal( expected );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( int.MinValue, int.MinValue, new byte[] { 0x00, 0x08, 0x80, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00, 0x00 } )]
     [DataRow( int.MinValue, int.MaxValue, new byte[] { 0x00, 0x08, 0x80, 0x00, 0x00, 0x00, 0x7F, 0xFF, 0xFF, 0xFF } )]
     [DataRow( int.MaxValue, int.MaxValue, new byte[] { 0x00, 0x08, 0x7F, 0xFF, 0xFF, 0xFF, 0x7F, 0xFF, 0xFF, 0xFF } )]
@@ -90,7 +90,7 @@ public class IppProtocolTests
         memoryStream.ToArray().Should().Equal( expected );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( 0, int.MaxValue, ResolutionUnit.DotsPerCm, new byte[] { 0x00, 0x09, 0x00, 0x00, 0x00, 0x00, 0x7F, 0xFF, 0xFF, 0xFF, 0x04 } )]
     [DataRow( 0, int.MaxValue, ResolutionUnit.DotsPerInch, new byte[] { 0x00, 0x09, 0x00, 0x00, 0x00, 0x00, 0x7F, 0xFF, 0xFF, 0xFF, 0x03 } )]
     [DataRow( int.MaxValue, int.MaxValue, ResolutionUnit.DotsPerCm, new byte[] { 0x00, 0x09, 0x7F, 0xFF, 0xFF, 0xFF, 0x7F, 0xFF, 0xFF, 0xFF, 0x04 } )]
@@ -107,7 +107,7 @@ public class IppProtocolTests
         memoryStream.ToArray().Should().Equal( expected );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "en-us", "Lorem", new byte[] { 0x00, 0x0E, 0x00, 0x05, 0x65, 0x6E, 0x2D, 0x75, 0x73, 0x00, 0x05, 0x4C, 0x6F, 0x72, 0x65, 0x6D } )]
     public void Write_StringWithLanguage_ShouldBeWritten( string language, string text, byte[] expected )
     {
@@ -531,7 +531,7 @@ public class IppProtocolTests
         await act.Should().ThrowAsync<IppResponseException>();
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( Tag.TextWithLanguage )]
     [DataRow( Tag.NameWithLanguage )]
     public void ReadValue_StringWithLanguage_ReturnsCorrectResult( Tag tag )
@@ -547,7 +547,7 @@ public class IppProtocolTests
         act.Should().NotThrow().Which.Should().BeEquivalentTo( new StringWithLanguage( "en-us", "Lorem" ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( Tag.TextWithLanguage )]
     [DataRow( Tag.NameWithLanguage )]
     public void ReadValue_InvalidStringWithLanguage_ThrowsArgumentException( Tag tag )
@@ -563,7 +563,7 @@ public class IppProtocolTests
         act.Should().Throw<ArgumentException>();
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( Tag.OctetStringWithAnUnspecifiedFormat )]
     [DataRow( Tag.TextWithoutLanguage )]
     [DataRow( Tag.NameWithoutLanguage )]
@@ -617,7 +617,7 @@ public class IppProtocolTests
         act.Should().NotThrow().Which.Should().BeEquivalentTo( "Lorem" );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( Tag.Unsupported )]
     [DataRow( Tag.Unknown )]
     [DataRow( Tag.NoValue )]
@@ -649,7 +649,7 @@ public class IppProtocolTests
     }
 
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( Tag.Integer )]
     [DataRow( Tag.Enum )]
     [DataRow( Tag.IntegerUnassigned20 )]

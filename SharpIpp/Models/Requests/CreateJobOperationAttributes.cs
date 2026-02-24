@@ -126,7 +126,7 @@ public class CreateJobOperationAttributes : OperationAttributes
         attributes.RequestingUserName = mapper.MapFromDicNullable<string?>(dict, JobAttribute.RequestingUserName);
         attributes.AttributesCharset = mapper.MapFromDicNullable<string?>(dict, JobAttribute.AttributesCharset);
         attributes.AttributesNaturalLanguage = mapper.MapFromDicNullable<string?>(dict, JobAttribute.AttributesNaturalLanguage);
-        if (Uri.TryCreate(mapper.MapFromDicNullable<string?>(dict, JobAttribute.PrinterUri), UriKind.RelativeOrAbsolute, out Uri printerUri))
+        if (Uri.TryCreate(mapper.MapFromDicNullable<string?>(dict, JobAttribute.PrinterUri), UriKind.RelativeOrAbsolute, out Uri? printerUri))
             attributes.PrinterUri = printerUri;
         return attributes;
     }

@@ -131,7 +131,7 @@ public class SharpIppIntegrationTests
         // Act
         IIppResponseMessage? clientRawResponse = await client.SendAsync(printerUri, clientRawRequest);
         // Assert
-        clientRawRequest.Should().BeEquivalentTo(serverRawRequest, options => options.Excluding(x => x.Document));
+        clientRawRequest.Should().NotBeNull().And.BeEquivalentTo(serverRawRequest, options => options.Excluding(x => x!.Document));
         clientRawResponse.Should().BeEquivalentTo(serverRawResponse);
     }
 

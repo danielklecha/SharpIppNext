@@ -41,7 +41,7 @@ public static class IppAttributeExtensions
                     break;
             }
             var groupName = collectionName ?? attribute.Name;
-            if (groups.TryGetValue(groupName, out List<IppAttribute> value))
+            if (groups.TryGetValue(groupName, out List<IppAttribute>? value))
                 value.Add(attribute);
             else
                 groups.Add(groupName, new List<IppAttribute> { attribute });
