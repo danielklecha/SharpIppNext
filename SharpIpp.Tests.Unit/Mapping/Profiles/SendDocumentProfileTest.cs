@@ -17,8 +17,10 @@ namespace SharpIpp.Tests.Unit.Mapping.Profiles;
 [ExcludeFromCodeCoverage]
 public class SendDocumentProfileTest
 {
+    [DataRow(true, true, "Document must be set for non-last document")]
+    [DataRow(true, false, "Document must be set for non-last document")]
     [TestMethod]
-    public void Map_SendDocumentRequestToIppRequestMessage_DocumentNullAndOperationAttributesNull_ThrowsArgumentException()
+    public void Map_SendDocumentRequestToIppRequestMessage_InvalidRequest_ThrowsArgumentException(bool isDocumentNull, bool isOperationAttributesNull, string expectedMessage)
     {
         // Arrange
         var mapper = new SimpleMapper();
@@ -27,29 +29,8 @@ public class SendDocumentProfileTest
 
         var request = new SendDocumentRequest
         {
-            Document = null,
-            OperationAttributes = null
-        };
-
-        // Act
-        Action act = () => mapper.Map<SendDocumentRequest, IppRequestMessage>(request);
-
-        // Assert
-        act.Should().Throw<ArgumentException>().WithMessage($"{nameof(SendDocumentRequest.Document)} must be set for non-last document");
-    }
-
-    [TestMethod]
-    public void Map_SendDocumentRequestToIppRequestMessage_DocumentNullAndLastDocumentFalse_ThrowsArgumentException()
-    {
-        // Arrange
-        var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
-
-        var request = new SendDocumentRequest
-        {
-            Document = null,
-            OperationAttributes = new SendDocumentOperationAttributes
+            Document = isDocumentNull ? null : new MemoryStream(),
+            OperationAttributes = isOperationAttributesNull ? null : new SendDocumentOperationAttributes
             {
                 LastDocument = false
             }
@@ -59,7 +40,7 @@ public class SendDocumentProfileTest
         Action act = () => mapper.Map<SendDocumentRequest, IppRequestMessage>(request);
 
         // Assert
-        act.Should().Throw<ArgumentException>().WithMessage($"{nameof(SendDocumentRequest.Document)} must be set for non-last document");
+        act.Should().Throw<ArgumentException>().WithMessage(expectedMessage);
     }
 
     [TestMethod]

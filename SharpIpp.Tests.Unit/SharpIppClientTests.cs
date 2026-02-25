@@ -91,647 +91,177 @@ public class SharpIppClientTests
         await act.Should().ThrowAsync<Exception>();
     }
 
-    [TestMethod()]
-    public async Task CreateJobAsync_CreateJobRequest_ShouldBeMapped()
+
+    public static IEnumerable<object[]> ClientMappingData
+    {
+        get
+        {
+            yield return [
+                IppOperation.CancelJob,
+                new CancelJobRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", JobId = 234 } },
+                new Func<SharpIppClient, object, Task>(async (c, r) => await c.CancelJobAsync((CancelJobRequest)r)),
+                new[] { new IppAttribute(Tag.Integer, JobAttribute.JobId, 234) },
+                "CancelJob"
+            ];
+            yield return [
+                IppOperation.HoldJob,
+                new HoldJobRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", JobId = 234 } },
+                new Func<SharpIppClient, object, Task>(async (c, r) => await c.HoldJobAsync((HoldJobRequest)r)),
+                new[] { new IppAttribute(Tag.Integer, JobAttribute.JobId, 234) },
+                "HoldJob"
+            ];
+            yield return [
+                IppOperation.ReleaseJob,
+                new ReleaseJobRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", JobId = 234 } },
+                new Func<SharpIppClient, object, Task>(async (c, r) => await c.ReleaseJobAsync((ReleaseJobRequest)r)),
+                new[] { new IppAttribute(Tag.Integer, JobAttribute.JobId, 234) },
+                "ReleaseJob"
+            ];
+            yield return [
+                IppOperation.RestartJob,
+                new RestartJobRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", JobId = 234 } },
+                new Func<SharpIppClient, object, Task>(async (c, r) => await c.RestartJobAsync((RestartJobRequest)r)),
+                new[] { new IppAttribute(Tag.Integer, JobAttribute.JobId, 234) },
+                "RestartJob"
+            ];
+            yield return [
+                IppOperation.PausePrinter,
+                new PausePrinterRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user" } },
+                new Func<SharpIppClient, object, Task>(async (c, r) => await c.PausePrinterAsync((PausePrinterRequest)r)),
+                null!,
+                "PausePrinter"
+            ];
+            yield return [
+                IppOperation.ResumePrinter,
+                new ResumePrinterRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user" } },
+                new Func<SharpIppClient, object, Task>(async (c, r) => await c.ResumePrinterAsync((ResumePrinterRequest)r)),
+                null!,
+                "ResumePrinter"
+            ];
+            yield return [
+                IppOperation.PurgeJobs,
+                new PurgeJobsRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user" } },
+                new Func<SharpIppClient, object, Task>(async (c, r) => await c.PurgeJobsAsync((PurgeJobsRequest)r)),
+                null!,
+                "PurgeJobs"
+            ];
+            yield return [
+                IppOperation.GetPrinterAttributes,
+                new GetPrinterAttributesRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user" } },
+                new Func<SharpIppClient, object, Task>(async (c, r) => await c.GetPrinterAttributesAsync((GetPrinterAttributesRequest)r)),
+                null!,
+                "GetPrinterAttributes"
+            ];
+            yield return [
+                IppOperation.GetCUPSPrinters,
+                new CUPSGetPrintersRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user" } },
+                new Func<SharpIppClient, object, Task>(async (c, r) => await c.GetCUPSPrintersAsync((CUPSGetPrintersRequest)r)),
+                null!,
+                "GetCUPSPrinters"
+            ];
+            yield return [
+                IppOperation.GetJobs,
+                new GetJobsRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", MyJobs = true } },
+                new Func<SharpIppClient, object, Task>(async (c, r) => await c.GetJobsAsync((GetJobsRequest)r)),
+                new[] { new IppAttribute(Tag.Boolean, JobAttribute.MyJobs, true) },
+                "GetJobs"
+            ];
+            yield return [
+                IppOperation.GetJobAttributes,
+                new GetJobAttributesRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", JobId = 234 } },
+                new Func<SharpIppClient, object, Task>(async (c, r) => await c.GetJobAttributesAsync((GetJobAttributesRequest)r)),
+                new[] { new IppAttribute(Tag.Integer, JobAttribute.JobId, 234) },
+                "GetJobAttributes"
+            ];
+            yield return [
+                IppOperation.CreateJob,
+                new CreateJobRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user" } },
+                new Func<SharpIppClient, object, Task>(async (c, r) => await c.CreateJobAsync((CreateJobRequest)r)),
+                null!,
+                "CreateJob"
+            ];
+            yield return [
+                IppOperation.PrintJob,
+                new PrintJobRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user" }, Document = new MemoryStream() },
+                new Func<SharpIppClient, object, Task>(async (c, r) => await c.PrintJobAsync((PrintJobRequest)r)),
+                null!,
+                "PrintJob"
+            ];
+            yield return [
+                IppOperation.ValidateJob,
+                new ValidateJobRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user" }, Document = new MemoryStream() },
+                new Func<SharpIppClient, object, Task>(async (c, r) => await c.ValidateJobAsync((ValidateJobRequest)r)),
+                null!,
+                "ValidateJob"
+            ];
+            yield return [
+                IppOperation.PrintUri,
+                new PrintUriRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", DocumentUri = new Uri("http://test.com/document.pdf") } },
+                new Func<SharpIppClient, object, Task>(async (c, r) => await c.PrintUriAsync((PrintUriRequest)r)),
+                new[] { new IppAttribute(Tag.Uri, JobAttribute.DocumentUri, "http://test.com/document.pdf") },
+                "PrintUri"
+            ];
+            yield return [
+                IppOperation.SendDocument,
+                new SendDocumentRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", JobId = 456 }, Document = new MemoryStream() },
+                new Func<SharpIppClient, object, Task>(async (c, r) => await c.SendDocumentAsync((SendDocumentRequest)r)),
+                new[] { new IppAttribute(Tag.Integer, JobAttribute.JobId, 456), new IppAttribute(Tag.Boolean, JobAttribute.LastDocument, false) },
+                "SendDocument"
+            ];
+            yield return [
+                IppOperation.SendUri,
+                new SendUriRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", JobId = 456, DocumentUri = new Uri("http://test.com/document.pdf") } },
+                new Func<SharpIppClient, object, Task>(async (c, r) => await c.SendUriAsync((SendUriRequest)r)),
+                new[] { new IppAttribute(Tag.Uri, JobAttribute.DocumentUri, "http://test.com/document.pdf"), new IppAttribute(Tag.Integer, JobAttribute.JobId, 456), new IppAttribute(Tag.Boolean, JobAttribute.LastDocument, false) },
+                "SendUri"
+            ];
+        }
+    }
+
+    [TestMethod]
+    [DynamicData(nameof(ClientMappingData))]
+    public async Task Request_ShouldBeMapped(IppOperation operation, object request, Func<SharpIppClient, object, Task> act, IppAttribute[] additionalAttributes, string description)
     {
         // Arrange
         Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
-        using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
-        // Act
-        await client.CreateJobAsync( new CreateJobRequest
+        using SharpIppClient client = new(new(GetMockOfHttpMessageHandler().Object), protocol.Object);
+        Stream? document = request switch
         {
-            RequestId = 123,
-            OperationAttributes = new CreateJobOperationAttributes
-            {
-                PrinterUri = new Uri("http://127.0.0.1:631"),
-                RequestingUserName = "test-user"
-            }
-        } );
+            PrintJobRequest r => r.Document,
+            ValidateJobRequest r => r.Document,
+            SendDocumentRequest r => r.Document,
+            _ => null
+        };
+
+        // Act
+        await act(client, request);
+
         // Assert
         IppRequestMessage rawRequestMessage = new()
         {
-            IppOperation = IppOperation.CreateJob,
+            IppOperation = operation,
             RequestId = 123,
-
+            Document = document
         };
-        rawRequestMessage.OperationAttributes.AddRange( new[]
+        rawRequestMessage.OperationAttributes.AddRange(new[]
         {
-            new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ),
-            new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ),
-            new IppAttribute( Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "test-user" ),
-            new IppAttribute( Tag.Uri, JobAttribute.PrinterUri, "http://127.0.0.1:631/" )
-        } );
-        protocol.Verify( x => x.WriteIppRequestAsync(
-            It.Is<IppRequestMessage>( x => x.VerifyAssertionScope( _ => x.Should().BeEquivalentTo( rawRequestMessage, "" ) ) ),
+            new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "test-user"),
+            new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "http://127.0.0.1:631/"),
+        });
+        if (additionalAttributes != null)
+        {
+            rawRequestMessage.OperationAttributes.AddRange(additionalAttributes);
+        }
+        protocol.Verify(x => x.WriteIppRequestAsync(
+            It.Is<IppRequestMessage>(x => x.VerifyAssertionScope(_ => x.Should().BeEquivalentTo(rawRequestMessage, options => options.Excluding((IMemberInfo m) => m.Path == "Document.ReadTimeout" || m.Path == "Document.WriteTimeout"), ""))),
             It.IsAny<Stream>(),
-            It.IsAny<CancellationToken>() ) );
+            It.IsAny<CancellationToken>()));
     }
 
-    [TestMethod()]
-    public async Task CancelJobAsync_CancelJobRequest_ShouldBeMapped()
-    {
-        // Arrange
-        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
-        using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
-        // Act
-        await client.CancelJobAsync( new CancelJobRequest
-        {
-            RequestId = 123,
-            OperationAttributes = new()
-            {
-                PrinterUri = new Uri("http://127.0.0.1:631"),
-                RequestingUserName = "test-user",
-                JobId = 234
-            }
-        } );
-        // Assert
-        IppRequestMessage rawRequestMessage = new()
-        {
-            IppOperation = IppOperation.CancelJob,
-            RequestId = 123,
 
-        };
-        rawRequestMessage.OperationAttributes.AddRange( new[]
-        {
-            new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ),
-            new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ),
-            new IppAttribute( Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "test-user" ),
-            new IppAttribute( Tag.Uri, JobAttribute.PrinterUri, "http://127.0.0.1:631/" ),
-            new IppAttribute(Tag.Integer, JobAttribute.JobId, 234 )
-        } );
-        protocol.Verify( x => x.WriteIppRequestAsync(
-            It.Is<IppRequestMessage>( x => x.VerifyAssertionScope( _ => x.Should().BeEquivalentTo( rawRequestMessage, "" ) ) ),
-            It.IsAny<Stream>(),
-            It.IsAny<CancellationToken>() ) );
-    }
 
-    [TestMethod()]
-    public async Task HoldJobAsync_HoldJobRequest_ShouldBeMapped()
-    {
-        // Arrange
-        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
-        using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
-        // Act
-        await client.HoldJobAsync( new HoldJobRequest
-        {
-            RequestId = 123,
-            OperationAttributes = new()
-            {
-                PrinterUri = new Uri("http://127.0.0.1:631"),
-                RequestingUserName = "test-user",
-                JobId = 234
-            }
-        } );
-        // Assert
-        IppRequestMessage rawRequestMessage = new()
-        {
-            IppOperation = IppOperation.HoldJob,
-            RequestId = 123,
-
-        };
-        rawRequestMessage.OperationAttributes.AddRange( new[]
-        {
-            new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ),
-            new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ),
-            new IppAttribute( Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "test-user" ),
-            new IppAttribute( Tag.Uri, JobAttribute.PrinterUri, "http://127.0.0.1:631/" ),
-            new IppAttribute(Tag.Integer, JobAttribute.JobId, 234 )
-        } );
-        protocol.Verify( x => x.WriteIppRequestAsync(
-            It.Is<IppRequestMessage>( x => x.VerifyAssertionScope( _ => x.Should().BeEquivalentTo( rawRequestMessage, "" ) ) ),
-            It.IsAny<Stream>(),
-            It.IsAny<CancellationToken>() ) );
-    }
-
-    [TestMethod()]
-    public async Task PausePrinterAsync_PausePrinterRequest_ShouldBeMapped()
-    {
-        // Arrange
-        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
-        using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
-        // Act
-        await client.PausePrinterAsync( new PausePrinterRequest
-        {
-            RequestId = 123,
-            OperationAttributes = new()
-            {
-                PrinterUri = new Uri("http://127.0.0.1:631"),
-                RequestingUserName = "test-user"
-            }
-        } );
-        // Assert
-        IppRequestMessage rawRequestMessage = new()
-        {
-            IppOperation = IppOperation.PausePrinter,
-            RequestId = 123,
-
-        };
-        rawRequestMessage.OperationAttributes.AddRange( new[]
-        {
-            new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ),
-            new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ),
-            new IppAttribute( Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "test-user" ),
-            new IppAttribute( Tag.Uri, JobAttribute.PrinterUri, "http://127.0.0.1:631/" )
-        } );
-        protocol.Verify( x => x.WriteIppRequestAsync(
-            It.Is<IppRequestMessage>( x => x.VerifyAssertionScope( _ => x.Should().BeEquivalentTo( rawRequestMessage, "" ) ) ),
-            It.IsAny<Stream>(),
-            It.IsAny<CancellationToken>() ) );
-    }
-
-    [TestMethod()]
-    public async Task ReleaseJobAsync_ReleaseJobRequest_ShouldBeMapped()
-    {
-        // Arrange
-        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
-        using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
-        // Act
-        await client.ReleaseJobAsync( new ReleaseJobRequest
-        {
-            RequestId = 123,
-            OperationAttributes = new()
-            {
-                PrinterUri = new Uri("http://127.0.0.1:631"),
-                RequestingUserName = "test-user",
-                JobId = 234
-            }
-        } );
-        // Assert
-        IppRequestMessage rawRequestMessage = new()
-        {
-            IppOperation = IppOperation.ReleaseJob,
-            RequestId = 123,
-
-        };
-        rawRequestMessage.OperationAttributes.AddRange( new[]
-        {
-            new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ),
-            new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ),
-            new IppAttribute( Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "test-user" ),
-            new IppAttribute( Tag.Uri, JobAttribute.PrinterUri, "http://127.0.0.1:631/" ),
-            new IppAttribute(Tag.Integer, JobAttribute.JobId, 234 )
-        } );
-        protocol.Verify( x => x.WriteIppRequestAsync(
-            It.Is<IppRequestMessage>( x => x.VerifyAssertionScope( _ => x.Should().BeEquivalentTo( rawRequestMessage, "" ) ) ),
-            It.IsAny<Stream>(),
-            It.IsAny<CancellationToken>() ) );
-    }
-
-    [TestMethod()]
-    public async Task PrintJobAsync_PrintJobRequest_ShouldBeMapped()
-    {
-        // Arrange
-        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
-        using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
-        using MemoryStream memoryStream = new();
-        // Act
-        await client.PrintJobAsync( new PrintJobRequest
-        {
-            RequestId = 123,
-            OperationAttributes = new()
-            {
-                PrinterUri = new Uri("http://127.0.0.1:631"),
-                RequestingUserName = "test-user"
-            },
-            Document = memoryStream
-        } );
-        // Assert
-        IppRequestMessage rawRequestMessage = new()
-        {
-            IppOperation = IppOperation.PrintJob,
-            RequestId = 123,
-            Document = memoryStream
-        };
-        rawRequestMessage.OperationAttributes.AddRange( new[]
-        {
-            new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ),
-            new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ),
-            new IppAttribute( Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "test-user" ),
-            new IppAttribute( Tag.Uri, JobAttribute.PrinterUri, "http://127.0.0.1:631/" )
-        } );
-        protocol.Verify( x => x.WriteIppRequestAsync(
-            It.Is<IppRequestMessage>( x => x.VerifyAssertionScope( _ => x.Should().BeEquivalentTo( rawRequestMessage, x => x.Excluding( ( IMemberInfo x ) => x.Path == "Document.ReadTimeout" || x.Path == "Document.WriteTimeout" ), "" ) ) ),
-            It.IsAny<Stream>(),
-            It.IsAny<CancellationToken>() ) );
-    }
-
-    [TestMethod()]
-    public async Task ResumePrinterAsync_ResumePrinterRequest_ShouldBeMapped()
-    {
-        // Arrange
-        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
-        using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
-        // Act
-        await client.ResumePrinterAsync( new ResumePrinterRequest
-        {
-            RequestId = 123,
-            OperationAttributes = new()
-            {
-                PrinterUri = new Uri("http://127.0.0.1:631"),
-                RequestingUserName = "test-user"
-            }
-        } );
-        // Assert
-        IppRequestMessage rawRequestMessage = new()
-        {
-            IppOperation = IppOperation.ResumePrinter,
-            RequestId = 123,
-
-        };
-        rawRequestMessage.OperationAttributes.AddRange( new[]
-        {
-            new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ),
-            new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ),
-            new IppAttribute( Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "test-user" ),
-            new IppAttribute( Tag.Uri, JobAttribute.PrinterUri, "http://127.0.0.1:631/" )
-        } );
-        protocol.Verify( x => x.WriteIppRequestAsync(
-            It.Is<IppRequestMessage>( x => x.VerifyAssertionScope( _ => x.Should().BeEquivalentTo( rawRequestMessage, "" ) ) ),
-            It.IsAny<Stream>(),
-            It.IsAny<CancellationToken>() ) );
-    }
-
-    [TestMethod()]
-    public async Task ValidateJobAsync_ValidateJobRequest_ShouldBeMapped()
-    {
-        // Arrange
-        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
-        using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
-        using MemoryStream memoryStream = new();
-        // Act
-        await client.ValidateJobAsync( new ValidateJobRequest
-        {
-            RequestId = 123,
-            OperationAttributes = new()
-            {
-                PrinterUri = new Uri("http://127.0.0.1:631"),
-                RequestingUserName = "test-user"
-            },
-            Document = memoryStream
-        } );
-        // Assert
-        IppRequestMessage rawRequestMessage = new()
-        {
-            IppOperation = IppOperation.ValidateJob,
-            RequestId = 123,
-            Document = memoryStream
-        };
-        rawRequestMessage.OperationAttributes.AddRange( new[]
-        {
-            new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ),
-            new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ),
-            new IppAttribute( Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "test-user" ),
-            new IppAttribute( Tag.Uri, JobAttribute.PrinterUri, "http://127.0.0.1:631/" )
-        } );
-        protocol.Verify( x => x.WriteIppRequestAsync(
-            It.Is<IppRequestMessage>( x => x.VerifyAssertionScope( _ => x.Should().BeEquivalentTo( rawRequestMessage, "" ) ) ),
-            It.IsAny<Stream>(),
-            It.IsAny<CancellationToken>() ) );
-    }
-
-    [TestMethod()]
-    public async Task PrintUriAsync_PrintUriRequest_ShouldBeMapped()
-    {
-        // Arrange
-        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
-        using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
-        var uri = new Uri( "http://test.com/document.pdf" );
-        // Act
-        await client.PrintUriAsync( new PrintUriRequest
-        {
-            RequestId = 123,
-            OperationAttributes = new PrintUriOperationAttributes
-            {
-                PrinterUri = new Uri("http://127.0.0.1:631"),
-                RequestingUserName = "test-user",
-                DocumentUri = uri
-            }
-        } );
-        // Assert
-        IppRequestMessage rawRequestMessage = new()
-        {
-            IppOperation = IppOperation.PrintUri,
-            RequestId = 123,
-
-        };
-        rawRequestMessage.OperationAttributes.AddRange( new[]
-        {
-            new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ),
-            new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ),
-            new IppAttribute( Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "test-user" ),
-            new IppAttribute( Tag.Uri, JobAttribute.PrinterUri, "http://127.0.0.1:631/" ),
-            new IppAttribute( Tag.Uri, JobAttribute.DocumentUri, uri.AbsoluteUri )
-        } );
-        protocol.Verify( x => x.WriteIppRequestAsync(
-            It.Is<IppRequestMessage>( x => x.VerifyAssertionScope( _ => x.Should().BeEquivalentTo( rawRequestMessage, "" ) ) ),
-            It.IsAny<Stream>(),
-            It.IsAny<CancellationToken>() ) );
-    }
-
-    [TestMethod()]
-    public async Task SendDocumentAsync_SendDocumentRequest_ShouldBeMapped()
-    {
-        // Arrange
-        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
-        using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
-        using MemoryStream memoryStream = new();
-        // Act
-        await client.SendDocumentAsync( new SendDocumentRequest
-        {
-            RequestId = 123,
-            OperationAttributes = new()
-            {
-                PrinterUri = new Uri("http://127.0.0.1:631"),
-                RequestingUserName = "test-user",
-                JobId = 456
-            },
-            Document = memoryStream
-        } );
-        // Assert
-        IppRequestMessage rawRequestMessage = new()
-        {
-            IppOperation = IppOperation.SendDocument,
-            RequestId = 123,
-            Document = memoryStream
-        };
-        rawRequestMessage.OperationAttributes.AddRange( new[]
-        {
-            new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ),
-            new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ),
-            new IppAttribute( Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "test-user" ),
-            new IppAttribute( Tag.Uri, JobAttribute.PrinterUri, "http://127.0.0.1:631/" ),
-            new IppAttribute(Tag.Integer, JobAttribute.JobId, 456 ),
-            new IppAttribute(Tag.Boolean, JobAttribute.LastDocument, false)
-        } );
-        protocol.Verify( x => x.WriteIppRequestAsync(
-            It.Is<IppRequestMessage>( x => x.VerifyAssertionScope( _ => x.Should().BeEquivalentTo( rawRequestMessage, "" ) ) ),
-            It.IsAny<Stream>(),
-            It.IsAny<CancellationToken>() ) );
-    }
-
-    [TestMethod()]
-    public async Task SendUriAsync_SendUriRequest_ShouldBeMapped()
-    {
-        // Arrange
-        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
-        using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
-        var uri = new Uri( "http://test.com/document.pdf" );
-        // Act
-        await client.SendUriAsync( new SendUriRequest
-        {
-            RequestId = 123,
-            OperationAttributes = new()
-            {
-                PrinterUri = new Uri("http://127.0.0.1:631"),
-                RequestingUserName = "test-user",
-                JobId = 456,
-                DocumentUri = uri
-            }
-        } );
-        // Assert
-        IppRequestMessage rawRequestMessage = new()
-        {
-            IppOperation = IppOperation.SendUri,
-            RequestId = 123,
-
-        };
-        rawRequestMessage.OperationAttributes.AddRange( new[]
-        {
-            new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ),
-            new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ),
-            new IppAttribute( Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "test-user" ),
-            new IppAttribute( Tag.Uri, JobAttribute.PrinterUri, "http://127.0.0.1:631/" ),
-            new IppAttribute( Tag.Uri, JobAttribute.DocumentUri, uri.AbsoluteUri ),
-            new IppAttribute(Tag.Integer, JobAttribute.JobId, 456 ),
-            new IppAttribute(Tag.Boolean, JobAttribute.LastDocument, false)
-        } );
-        protocol.Verify( x => x.WriteIppRequestAsync(
-            It.Is<IppRequestMessage>( x => x.VerifyAssertionScope( _ => x.Should().BeEquivalentTo( rawRequestMessage, "" ) ) ),
-            It.IsAny<Stream>(),
-            It.IsAny<CancellationToken>() ) );
-    }
-
-    [TestMethod()]
-    public async Task GetJobAttributesAsync_GetJobAttributesRequest_ShouldBeMapped()
-    {
-        // Arrange
-        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
-        using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
-        // Act
-        await client.GetJobAttributesAsync( new GetJobAttributesRequest
-        {
-            RequestId = 123,
-            OperationAttributes = new()
-            {
-                PrinterUri = new Uri("http://127.0.0.1:631"),
-                RequestingUserName = "test-user",
-                JobId = 456
-            }
-        } );
-        // Assert
-        IppRequestMessage rawRequestMessage = new()
-        {
-            IppOperation = IppOperation.GetJobAttributes,
-            RequestId = 123,
-
-        };
-        rawRequestMessage.OperationAttributes.AddRange( new[]
-        {
-            new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ),
-            new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ),
-            new IppAttribute( Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "test-user" ),
-            new IppAttribute( Tag.Uri, JobAttribute.PrinterUri, "http://127.0.0.1:631/" ),
-            new IppAttribute(Tag.Integer, JobAttribute.JobId, 456 )
-        } );
-        protocol.Verify( x => x.WriteIppRequestAsync(
-            It.Is<IppRequestMessage>( x => x.VerifyAssertionScope( _ => x.Should().BeEquivalentTo( rawRequestMessage, "" ) ) ),
-            It.IsAny<Stream>(),
-            It.IsAny<CancellationToken>() ) );
-    }
-
-    [TestMethod()]
-    public async Task GetJobsAsync_GetJobsRequest_ShouldBeMapped()
-    {
-        // Arrange
-        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
-        using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
-        // Act
-        await client.GetJobsAsync( new GetJobsRequest
-        {
-            RequestId = 123,
-            OperationAttributes = new()
-            {
-                PrinterUri = new Uri("http://127.0.0.1:631"),
-                RequestingUserName = "test-user",
-                MyJobs = true
-            }
-        } );
-        // Assert
-        IppRequestMessage rawRequestMessage = new()
-        {
-            IppOperation = IppOperation.GetJobs,
-            RequestId = 123,
-
-        };
-        rawRequestMessage.OperationAttributes.AddRange( new[]
-        {
-            new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ),
-            new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ),
-            new IppAttribute( Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "test-user" ),
-            new IppAttribute( Tag.Uri, JobAttribute.PrinterUri, "http://127.0.0.1:631/" ),
-            new IppAttribute(Tag.Boolean, JobAttribute.MyJobs, true)
-        } );
-        protocol.Verify( x => x.WriteIppRequestAsync(
-            It.Is<IppRequestMessage>( x => x.VerifyAssertionScope( _ => x.Should().BeEquivalentTo( rawRequestMessage, "" ) ) ),
-            It.IsAny<Stream>(),
-            It.IsAny<CancellationToken>() ) );
-    }
-
-    [TestMethod()]
-    public async Task GetPrinterAttributesAsync_GetPrinterAttributesRequest_ShouldBeMapped()
-    {
-        // Arrange
-        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
-        using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
-        // Act
-        await client.GetPrinterAttributesAsync( new GetPrinterAttributesRequest
-        {
-            RequestId = 123,
-            OperationAttributes = new()
-            {
-                PrinterUri = new Uri("http://127.0.0.1:631"),
-                RequestingUserName = "test-user"
-            }
-        } );
-        // Assert
-        IppRequestMessage rawRequestMessage = new()
-        {
-            IppOperation = IppOperation.GetPrinterAttributes,
-            RequestId = 123,
-
-        };
-        rawRequestMessage.OperationAttributes.AddRange( new[]
-        {
-            new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ),
-            new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ),
-            new IppAttribute( Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "test-user" ),
-            new IppAttribute( Tag.Uri, JobAttribute.PrinterUri, "http://127.0.0.1:631/" )
-        } );
-        protocol.Verify( x => x.WriteIppRequestAsync(
-            It.Is<IppRequestMessage>( x => x.VerifyAssertionScope( _ => x.Should().BeEquivalentTo( rawRequestMessage, "" ) ) ),
-            It.IsAny<Stream>(),
-            It.IsAny<CancellationToken>() ) );
-    }
-
-    [TestMethod()]
-    public async Task PurgeJobsAsync_PurgeJobsRequest_ShouldBeMapped()
-    {
-        // Arrange
-        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
-        using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
-        // Act
-        await client.PurgeJobsAsync( new PurgeJobsRequest
-        {
-            RequestId = 123,
-            OperationAttributes = new()
-            {
-                PrinterUri = new Uri("http://127.0.0.1:631"),
-                RequestingUserName = "test-user"
-            }
-        } );
-        // Assert
-        IppRequestMessage rawRequestMessage = new()
-        {
-            IppOperation = IppOperation.PurgeJobs,
-            RequestId = 123,
-
-        };
-        rawRequestMessage.OperationAttributes.AddRange( new[]
-        {
-            new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ),
-            new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ),
-            new IppAttribute( Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "test-user" ),
-            new IppAttribute( Tag.Uri, JobAttribute.PrinterUri, "http://127.0.0.1:631/" )
-        } );
-        protocol.Verify( x => x.WriteIppRequestAsync(
-            It.Is<IppRequestMessage>( x => x.VerifyAssertionScope( _ => x.Should().BeEquivalentTo( rawRequestMessage, "" ) ) ),
-            It.IsAny<Stream>(),
-            It.IsAny<CancellationToken>() ) );
-    }
-
-    [TestMethod()]
-    public async Task RestartJobAsync_RestartJobRequest_ShouldBeMapped()
-    {
-        // Arrange
-        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
-        using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
-        // Act
-        await client.RestartJobAsync( new RestartJobRequest
-        {
-            RequestId = 123,
-            OperationAttributes = new()
-            {
-                PrinterUri = new Uri("http://127.0.0.1:631"),
-                RequestingUserName = "test-user",
-                JobId = 456
-            }
-        } );
-        // Assert
-        IppRequestMessage rawRequestMessage = new()
-        {
-            IppOperation = IppOperation.RestartJob,
-            RequestId = 123,
-
-        };
-        rawRequestMessage.OperationAttributes.AddRange( new[]
-        {
-            new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ),
-            new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ),
-            new IppAttribute( Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "test-user" ),
-            new IppAttribute( Tag.Uri, JobAttribute.PrinterUri, "http://127.0.0.1:631/" ),
-            new IppAttribute(Tag.Integer, JobAttribute.JobId, 456 )
-        } );
-        protocol.Verify( x => x.WriteIppRequestAsync(
-            It.Is<IppRequestMessage>( x => x.VerifyAssertionScope( _ => x.Should().BeEquivalentTo( rawRequestMessage, "" ) ) ),
-            It.IsAny<Stream>(),
-            It.IsAny<CancellationToken>() ) );
-    }
-
-    [TestMethod()]
-    public async Task GetCUPSPrintersAsync_CUPSGetPrintersRequest_ShouldBeMapped()
-    {
-        // Arrange
-        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
-        using SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
-        // Act
-        await client.GetCUPSPrintersAsync( new CUPSGetPrintersRequest
-        {
-            RequestId = 123,
-            OperationAttributes = new()
-            {
-                PrinterUri = new Uri("http://127.0.0.1:631"),
-                RequestingUserName = "test-user"
-            }
-        } );
-        // Assert
-        IppRequestMessage rawRequestMessage = new()
-        {
-            IppOperation = IppOperation.GetCUPSPrinters,
-            RequestId = 123,
-
-        };
-        rawRequestMessage.OperationAttributes.AddRange( new[]
-        {
-            new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ),
-            new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ),
-            new IppAttribute( Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "test-user" ),
-            new IppAttribute( Tag.Uri, JobAttribute.PrinterUri, "http://127.0.0.1:631/" )
-        } );
-        protocol.Verify( x => x.WriteIppRequestAsync(
-            It.Is<IppRequestMessage>( x => x.VerifyAssertionScope( _ => x.Should().BeEquivalentTo( rawRequestMessage, "" ) ) ),
-            It.IsAny<Stream>(),
-            It.IsAny<CancellationToken>() ) );
-    }
 
     [TestMethod()]
     public async Task CreateJobAsync_ResponseWithValidIppCodeAndInvalidHttpState_ShouldThrowException()
@@ -958,40 +488,18 @@ public class SharpIppClientTests
     }
 
     [TestMethod]
-    [DataRow("RawIppResponses/GetPrinterAttributes_Canon_MX490_series_low_supply.bin")]
-    [DataRow("RawIppResponses/GetPrinterAttributes_HP_Color_LaserJet_MFP_M476dn.bin")]
-    public async Task Construct_ReadBinFileWithGetPrinterAttributes_ShouldBeMapped(string path)
+    [DataRow("RawIppResponses/GetPrinterAttributes_Canon_MX490_series_low_supply.bin", typeof(GetPrinterAttributesResponse))]
+    [DataRow("RawIppResponses/GetPrinterAttributes_HP_Color_LaserJet_MFP_M476dn.bin", typeof(GetPrinterAttributesResponse))]
+    [DataRow("RawIppResponses/PrintJob_HP_Color_LaserJet_MFP_M476dn.bin", typeof(PrintJobResponse))]
+    [DataRow("RawIppResponses/GetJobAttributes_HP_Color_LaserJet_MFP_M476dn.bin", typeof(GetJobAttributesResponse))]
+    public async Task Construct_ReadBinFile_ShouldBeMapped(string path, Type responseType)
     {
         var protocol = new IppProtocol();
         await using var stream = new FileStream(path, FileMode.Open, FileAccess.Read);
         var ippResponse = await protocol.ReadIppResponseAsync(stream);
         using SharpIppClient client = new(new HttpClient(), protocol);
-        var mapped = client.CreateResponse<GetPrinterAttributesResponse>(ippResponse);
-        Assert.IsNotNull(mapped);
-    }
-
-    [TestMethod]
-    [DataRow("RawIppResponses/PrintJob_HP_Color_LaserJet_MFP_M476dn.bin")]
-    public async Task Construct_ReadBinFileWithPrintJob_ShouldBeMapped(string path)
-    {
-        var protocol = new IppProtocol();
-        await using var stream = new FileStream(path, FileMode.Open, FileAccess.Read);
-        var ippResponse = await protocol.ReadIppResponseAsync(stream);
-        using SharpIppClient client = new(new HttpClient(), protocol);
-        var mapped = client.CreateResponse<PrintJobResponse>(ippResponse);
-        Assert.IsNotNull(mapped);
-    }
-
-    [TestMethod]
-    [DataRow("RawIppResponses/GetJobAttributes_HP_Color_LaserJet_MFP_M476dn.bin")]
-    public async Task Construct_ReadBinFileWithGetJobAttributes_ShouldBeMapped(string path)
-    {
-        var protocol = new IppProtocol();
-        await using var stream = new FileStream(path, FileMode.Open, FileAccess.Read);
-        var ippResponse = await protocol.ReadIppResponseAsync(stream);
-        using SharpIppClient client = new(new HttpClient(), protocol);
-        var mapped = client.CreateResponse<GetJobAttributesResponse>(ippResponse);
-        Assert.IsNotNull(mapped);
+        var mapped = client.CreateResponse(responseType, ippResponse);
+        mapped.Should().NotBeNull();
     }
     [TestMethod()]
     public async Task GetPrinterAttributesAsync_MappingException_ShouldThrowIppResponseException()

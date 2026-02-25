@@ -24,9 +24,13 @@ public interface IMapperApplier
     
     object Map(object? source, Type destType);
 
+    object Map(object? source, Type sourceType, Type destType);
+
     object Map(object? source, Type sourceType, Type destType, object? dest);
 
     object? MapNullable(object? source, Type destType);
+
+    object? MapNullable(object? source, Type sourceType, Type destType);
 
     object? MapNullable(object? source, Type sourceType, Type destType, object? dest);
 }

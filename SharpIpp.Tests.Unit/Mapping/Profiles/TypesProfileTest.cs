@@ -24,60 +24,31 @@ public class TypesProfileTest
         _mapper = mapper;
     }
 
-    [TestMethod]
-    public void Map_IntToDateTime_MapsCorrectly()
+    public static IEnumerable<object[]> SerializationData
     {
-        // Act
-        var result = _mapper.Map<int, DateTime>(10);
-
-        // Assert
-        result.Should().Be(new DateTime(1970, 1, 1, 0, 0, 10, DateTimeKind.Unspecified));
+        get
+        {
+            yield return [10, typeof(int), typeof(DateTime), new DateTime(1970, 1, 1, 0, 0, 10, DateTimeKind.Unspecified), "Int -> DateTime"];
+            yield return [new DateTime(1970, 1, 1, 0, 0, 20, DateTimeKind.Unspecified), typeof(DateTime), typeof(int), 20, "DateTime -> Int"];
+            yield return [0x0000, typeof(int), typeof(IppStatusCode), IppStatusCode.SuccessfulOk, "Int -> IppStatusCode"];
+            yield return [3, typeof(int), typeof(ResolutionUnit), ResolutionUnit.DotsPerInch, "Int -> ResolutionUnit"];
+            yield return [new StringWithLanguage("en", "Test Value"), typeof(StringWithLanguage), typeof(string), "Test Value", "StringWithLanguage -> String"];
+            yield return ["no-hold", typeof(string), typeof(JobHoldUntil), JobHoldUntil.NoHold, "String -> JobHoldUntil (valid)"];
+            yield return ["invalid-value", typeof(string), typeof(JobHoldUntil), JobHoldUntil.Unsupported, "String -> JobHoldUntil (invalid)"];
+            yield return [NoValue.Instance, typeof(NoValue), typeof(int), 0, "NoValue -> Int"];
+            yield return [NoValue.Instance, typeof(NoValue), typeof(JobState), (JobState)0, "NoValue -> JobState"];
+        }
     }
 
     [TestMethod]
-    public void Map_DateTimeToInt_MapsCorrectly()
-    {
-        // Arrange
-        var dt = new DateTime(1970, 1, 1, 0, 0, 20, DateTimeKind.Unspecified);
-
-        // Act
-        var result = _mapper.Map<DateTime, int>(dt);
-
-        // Assert
-        result.Should().Be(20);
-    }
-
-    [TestMethod]
-    public void Map_IntToIppStatusCode_MapsCorrectly()
+    [DynamicData(nameof(SerializationData))]
+    public void Map_Values_MapsCorrectly(object source, Type sourceType, Type destType, object expected, string description)
     {
         // Act
-        var result = _mapper.Map<int, IppStatusCode>(0x0000);
+        var result = _mapper.Map(source, sourceType, destType);
 
         // Assert
-        result.Should().Be(IppStatusCode.SuccessfulOk);
-    }
-
-    [TestMethod]
-    public void Map_IntToResolutionUnit_MapsCorrectly()
-    {
-        // Act
-        var result = _mapper.Map<int, ResolutionUnit>(3);
-
-        // Assert
-        result.Should().Be(ResolutionUnit.DotsPerInch);
-    }
-
-    [TestMethod]
-    public void Map_StringWithLanguageToString_MapsCorrectly()
-    {
-        // Arrange
-        var strLang = new StringWithLanguage("en", "Test Value");
-
-        // Act
-        var result = _mapper.Map<StringWithLanguage, string>(strLang);
-
-        // Assert
-        result.Should().Be("Test Value");
+        result.Should().Be(expected, description);
     }
 
     [TestMethod]
@@ -90,43 +61,4 @@ public class TypesProfileTest
         result.Should().BeNull();
     }
 
-    [TestMethod]
-    public void Map_StringToEnum_ValidString_MapsCorrectly()
-    {
-        // Act
-        var result = _mapper.Map<string, JobHoldUntil>("no-hold");
-
-        // Assert
-        result.Should().Be(JobHoldUntil.NoHold);
-    }
-
-    [TestMethod]
-    public void Map_StringToEnum_InvalidString_MapsToDefault()
-    {
-        // Act
-        var result = _mapper.Map<string, JobHoldUntil>("invalid-value");
-
-        // Assert
-        result.Should().Be(JobHoldUntil.Unsupported);
-    }
-
-    [TestMethod]
-    public void Map_NoValueToInt_MapsCorrectly()
-    {
-        // Act
-        var result = _mapper.Map<NoValue, int>(NoValue.Instance);
-
-        // Assert
-        result.Should().Be(0);
-    }
-
-    [TestMethod]
-    public void Map_NoValueToJobState_MapsCorrectly()
-    {
-        // Act
-        var result = _mapper.Map<NoValue, JobState>(NoValue.Instance);
-
-        // Assert
-        result.Should().Be((JobState)0);
-    }
 }

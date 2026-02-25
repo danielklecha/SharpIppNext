@@ -98,6 +98,11 @@ public class SimpleMapper : IMapper
         return MapNullable(source, destType) ?? throw new ArgumentException("Cannot map null source to non-nullable destination without a default destination.");
     }
 
+    public object Map(object? source, Type sourceType, Type destType)
+    {
+        return Map(source, sourceType, destType, null);
+    }
+
     public object Map(object? source, Type sourceType, Type destType, object? dest)
     {
         return MapNullable(source, sourceType, destType, dest) ?? throw new ArgumentException("Cannot map null source to non-nullable destination without a default destination.");
@@ -111,6 +116,11 @@ public class SimpleMapper : IMapper
         }
 
         return MapNullable(source, source.GetType(), destType, null);
+    }
+
+    public object? MapNullable(object? source, Type sourceType, Type destType)
+    {
+        return MapNullable(source, sourceType, destType, null);
     }
 
     public object? MapNullable(object? source, Type sourceType, Type destType, object? dest)

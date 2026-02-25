@@ -156,9 +156,14 @@ public partial class SharpIppClient : ISharpIppClient
 
     public virtual T CreateResponse<T>(IIppResponseMessage ippResponse) where T : IIppResponse
     {
+        return (T)CreateResponse(typeof(T), ippResponse);
+    }
+
+    public virtual object CreateResponse(Type responseType, IIppResponseMessage ippResponse)
+    {
         try
         {
-            var r = Mapper.Map<T>(ippResponse);
+            var r = Mapper.Map(ippResponse, ippResponse.GetType(), responseType, null);
             return r;
         }
         catch (Exception ex)

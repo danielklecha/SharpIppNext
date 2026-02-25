@@ -15,20 +15,21 @@ namespace SharpIpp.Tests.Unit.Mapping.Profiles;
 [ExcludeFromCodeCoverage]
 public class PrintUriProfileTests
 {
+    [DataRow(true, false, "DocumentUri must be set")]
+    [DataRow(false, true, "DocumentUri must be set")]
     [TestMethod]
-    public void Map_PrintUriRequestToIppRequestMessage_DocumentUriNull_ThrowsArgumentException()
+    public void Map_PrintUriRequestToIppRequestMessage_InvalidRequest_ThrowsArgumentException(bool isDocumentUriNull, bool isOperationAttributesNull, string expectedMessage)
     {
         // Arrange
         var mapper = new SimpleMapper();
         var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
         mapper.FillFromAssembly(assembly!);
 
-        // Using proper setup for PrintUriRequest
         var request = new PrintUriRequest
         {
-            OperationAttributes = new PrintUriOperationAttributes
+            OperationAttributes = isOperationAttributesNull ? null! : new PrintUriOperationAttributes
             {
-                DocumentUri = null!
+                DocumentUri = isDocumentUriNull ? null! : new Uri("http://localhost")
             }
         };
 
@@ -36,27 +37,6 @@ public class PrintUriProfileTests
         Action act = () => mapper.Map<PrintUriRequest, IppRequestMessage>(request);
 
         // Assert
-        act.Should().Throw<ArgumentException>().WithMessage($"{nameof(JobAttribute.DocumentUri)} must be set");
-    }
-
-    [TestMethod]
-    public void Map_PrintUriRequestToIppRequestMessage_OperationAttributesNull_ThrowsArgumentException()
-    {
-        // Arrange
-        var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
-
-        // Using proper setup for PrintUriRequest
-        var request = new PrintUriRequest
-        {
-            OperationAttributes = null!
-        };
-
-        // Act
-        Action act = () => mapper.Map<PrintUriRequest, IppRequestMessage>(request);
-
-        // Assert
-        act.Should().Throw<ArgumentException>().WithMessage($"{nameof(JobAttribute.DocumentUri)} must be set");
+        act.Should().Throw<ArgumentException>().WithMessage(expectedMessage);
     }
 }

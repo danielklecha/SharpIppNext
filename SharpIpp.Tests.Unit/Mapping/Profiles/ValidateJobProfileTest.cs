@@ -16,43 +16,24 @@ namespace SharpIpp.Tests.Unit.Mapping.Profiles;
 [ExcludeFromCodeCoverage]
 public class ValidateJobProfileTest
 {
+    [DataRow(typeof(ValidateJobRequest), typeof(IppRequestMessage), "Document must be set")]
+    [DataRow(typeof(IppRequestMessage), typeof(ValidateJobRequest), "Document must be set")]
     [TestMethod]
-    public void Map_ValidateJobRequestToIppRequestMessage_DocumentNull_ThrowsArgumentException()
+    public void Map_InvalidRequest_ThrowsArgumentException(Type sourceType, Type destType, string expectedMessage)
     {
         // Arrange
         var mapper = new SimpleMapper();
         var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
         mapper.FillFromAssembly(assembly!);
 
-        var request = new ValidateJobRequest
-        {
-            Document = null!
-        };
+        object source = sourceType == typeof(ValidateJobRequest) 
+            ? new ValidateJobRequest { Document = null! } 
+            : new IppRequestMessage { Document = null! };
 
         // Act
-        Action act = () => mapper.Map<ValidateJobRequest, IppRequestMessage>(request);
+        Action act = () => mapper.Map(source, sourceType, destType);
 
         // Assert
-        act.Should().Throw<ArgumentException>().WithMessage("Document must be set");
-    }
-
-    [TestMethod]
-    public void Map_IppRequestMessageToValidateJobRequest_DocumentNull_ThrowsArgumentException()
-    {
-        // Arrange
-        var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
-
-        IIppRequestMessage request = new IppRequestMessage
-        {
-            Document = null!
-        };
-
-        // Act
-        Action act = () => mapper.Map<IIppRequestMessage, ValidateJobRequest>(request);
-
-        // Assert
-        act.Should().Throw<ArgumentException>().WithMessage("Document must be set");
+        act.Should().Throw<ArgumentException>().WithMessage(expectedMessage);
     }
 }

@@ -339,4 +339,18 @@ public class SimpleMapperTests
         // Assert
         result.Should().Be(dest);
     }
+
+    [TestMethod]
+    public void MapNullable_NonGeneric_WithSourceType_ShouldWork()
+    {
+        // Arrange
+        var mapper = new SimpleMapper();
+        mapper.CreateMap<string, int>((src, m) => int.Parse(src));
+
+        // Act
+        var result = mapper.MapNullable("123", sourceType: typeof(string), destType: typeof(int));
+
+        // Assert
+        result.Should().Be(123);
+    }
 }
