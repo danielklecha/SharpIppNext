@@ -1,4 +1,6 @@
 - name: API
   href: api/
+- name: Documentation
+  href: Content/
 - name: GitHub Repository
   href: https://github.com/danielklecha/SharpIppNext

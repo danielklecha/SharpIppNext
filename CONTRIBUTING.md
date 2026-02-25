@@ -6,10 +6,12 @@ First off, thank you for considering contributing to `SharpIppNext`! It's people
 
 To contribute to this project, you will need:
 
-- [.NET SDK 8.0](https://dotnet.microsoft.com/download/dotnet/8.0) or later.
+- [.NET SDK 10.0](https://dotnet.microsoft.com/download/dotnet/10.0) or later.
 - A C# IDE (e.g., Visual Studio 2026 or VS Code).
 
 ### Clone the Repository
+
+It is recommended to create a fork of the repository (fork button in GitHub) and clone your fork. Alternatively, you can clone the main repository directly:
 
 ```bash
 git clone https://github.com/danielklecha/SharpIppNext.git
