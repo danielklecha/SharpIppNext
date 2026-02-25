@@ -13,7 +13,7 @@ public class OperationAttributes
 
     public string? AttributesNaturalLanguage { get; set; } = "en";
 
-    public Uri PrinterUri { get; set; } = null!;
+    public Uri? PrinterUri { get; set; }
 
     public string? RequestingUserName { get; set; }
 

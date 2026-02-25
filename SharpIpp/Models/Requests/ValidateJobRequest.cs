@@ -22,7 +22,6 @@ namespace SharpIpp.Models.Requests
     /// </summary>
     public class ValidateJobRequest : IppRequest<ValidateJobOperationAttributes>, IIppPrinterRequest
     {
-        public Stream Document { get; set; } = null!;
         public JobTemplateAttributes? JobTemplateAttributes { get; set; }
     }
 }

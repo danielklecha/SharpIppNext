@@ -27,8 +27,8 @@ public class PrintJobProfileTest
         mapper.FillFromAssembly(assembly!);
 
         object source = sourceType == typeof(PrintJobRequest) 
-            ? new PrintJobRequest { Document = null! } 
-            : new IppRequestMessage { Document = null! };
+            ? new PrintJobRequest { Document = null } 
+            : new IppRequestMessage { Document = null };
 
         // Act
         Action act = () => mapper.Map(source, sourceType, destType);

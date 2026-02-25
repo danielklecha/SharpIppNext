@@ -14,13 +14,7 @@ internal class ValidateJobProfile : IProfile
     {
         mapper.CreateMap<ValidateJobRequest, IppRequestMessage>((src, map) =>
         {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            if (src.Document == null)
-            {
-                throw new ArgumentException($"{nameof(src.Document)} must be set");
-            }
-
-            var dst = new IppRequestMessage { IppOperation = IppOperation.ValidateJob, Document = src.Document };
+            var dst = new IppRequestMessage { IppOperation = IppOperation.ValidateJob };
             map.Map<IIppPrinterRequest, IppRequestMessage>(src, dst);
 
             if (src.JobTemplateAttributes != null)
@@ -36,15 +30,8 @@ internal class ValidateJobProfile : IProfile
 
         mapper.CreateMap<IIppRequestMessage, ValidateJobRequest>( ( src, map ) =>
         {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            if ( src.Document == null )
-            {
-                throw new ArgumentException( $"{nameof( src.Document )} must be set" );
-            }
-
             var dst = new ValidateJobRequest
             {
-                Document = src.Document,
                 JobTemplateAttributes = new JobTemplateAttributes()
             };
             map.Map<IIppRequestMessage, IIppPrinterRequest>( src, dst );

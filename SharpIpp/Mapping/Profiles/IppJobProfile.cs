@@ -59,7 +59,7 @@ internal class IppJobProfile : IProfile
             map) =>
         {
             dst ??= new JobAttributes();
-            dst.JobUri = map.MapFromDic<string>(src, JobAttribute.JobUri);
+            dst.JobUri = map.MapFromDicNullable<string?>(src, JobAttribute.JobUri);
             dst.JobId = map.MapFromDic<int>(src, JobAttribute.JobId);
             dst.JobState = map.MapFromDic<JobState>(src, JobAttribute.JobState);
             dst.JobStateReasons = map.MapFromDicSetNullable<JobStateReason[]?>(src, JobAttribute.JobStateReasons);
@@ -76,10 +76,11 @@ internal class IppJobProfile : IProfile
             // dst is ignored — always creates a new dictionary
             var dic = new Dictionary<string, IppAttribute[]>
             {
-                { JobAttribute.JobUri, new IppAttribute[] { new IppAttribute( Tag.Uri, JobAttribute.JobUri, src.JobUri ) } },
                 { JobAttribute.JobId, [new IppAttribute(Tag.Integer, JobAttribute.JobId, src.JobId )] },
                 { JobAttribute.JobState, new IppAttribute[] { new IppAttribute(Tag.Enum, JobAttribute.JobState, (int)src.JobState ) } }
             };
+            if (src.JobUri != null)
+                dic.Add(JobAttribute.JobUri, new IppAttribute[] { new IppAttribute(Tag.Uri, JobAttribute.JobUri, src.JobUri) });
             if ( src.JobStateReasons!= null )
                 dic.Add( JobAttribute.JobStateReasons, src.JobStateReasons.Select( x => new IppAttribute( Tag.Keyword, JobAttribute.JobStateReasons, map.Map<string>( x ) ) ).ToArray() );
             if( src.JobStateMessage != null )

@@ -705,7 +705,7 @@ public class SharpIppServerTests
                 PrinterUri = new Uri("http://127.0.0.1:631"),
                 RequestingUserName = "test-user"
             },
-            Document = memoryStream,
+
             JobTemplateAttributes = new()
         } );
     }

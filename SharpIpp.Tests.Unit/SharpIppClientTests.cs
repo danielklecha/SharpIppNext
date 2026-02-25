@@ -189,7 +189,7 @@ public class SharpIppClientTests
             ];
             yield return [
                 IppOperation.ValidateJob,
-                new ValidateJobRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user" }, Document = new MemoryStream() },
+                new ValidateJobRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user" } },
                 new Func<SharpIppClient, object, Task>(async (c, r) => await c.ValidateJobAsync((ValidateJobRequest)r)),
                 null!,
                 "ValidateJob"
@@ -228,7 +228,7 @@ public class SharpIppClientTests
         Stream? document = request switch
         {
             PrintJobRequest r => r.Document,
-            ValidateJobRequest r => r.Document,
+
             SendDocumentRequest r => r.Document,
             _ => null
         };

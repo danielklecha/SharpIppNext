@@ -7,7 +7,7 @@ public class JobAttributes
     /// <summary>
     ///     job-uri
     /// </summary>
-    public string JobUri { get; set; } = null!;
+    public string? JobUri { get; set; }
 
     /// <summary>
     ///     job-id

@@ -13,7 +13,7 @@ namespace SharpIpp.Models.Requests
     /// </summary>
     public class PrintJobRequest : IppRequest<PrintJobOperationAttributes>, IIppPrinterRequest
     {
-        public Stream Document { get; set; } = null!;
+        public Stream? Document { get; set; }
 
         public JobTemplateAttributes? JobTemplateAttributes { get; set; }
     }

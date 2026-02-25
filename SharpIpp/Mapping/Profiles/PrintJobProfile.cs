@@ -14,7 +14,6 @@ internal class PrintJobProfile : IProfile
     {
         mapper.CreateMap<PrintJobRequest, IppRequestMessage>((src, map) =>
         {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             if (src.Document == null)
             {
                 throw new ArgumentException($"{nameof(src.Document)} must be set");
@@ -35,7 +34,6 @@ internal class PrintJobProfile : IProfile
 
         mapper.CreateMap<IIppRequestMessage, PrintJobRequest>( ( src, map ) =>
         {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             if ( src.Document == null )
             {
                 throw new ArgumentException( $"{nameof( src.Document )} must be set" );

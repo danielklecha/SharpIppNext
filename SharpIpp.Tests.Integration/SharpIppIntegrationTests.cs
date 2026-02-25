@@ -1509,7 +1509,6 @@ public class SharpIppIntegrationTests
         {
             RequestId = 123,
             Version = new IppVersion(2, 0),
-            Document = memoryStream,
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
