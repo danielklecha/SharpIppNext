@@ -1,0 +1,42 @@
+- name: Operations
+  href: Operations.md
+- name: Standard Operations Examples
+  items:
+    - name: Cancel-Job
+      href: CancelJob.md
+    - name: Create-Job
+      href: CreateJob.md
+    - name: Get-Job-Attributes
+      href: GetJobAttributes.md
+    - name: Get-Jobs
+      href: GetJobs.md
+    - name: Hold-Job
+      href: HoldJob.md
+    - name: Print-Job
+      href: PrintJob.md
+    - name: Print-URI
+      href: PrintUri.md
+    - name: Purge-Jobs
+      href: PurgeJobs.md
+    - name: Release-Job
+      href: ReleaseJob.md
+    - name: Restart-Job
+      href: RestartJob.md
+    - name: Send-Document
+      href: SendDocument.md
+    - name: Send-URI
+      href: SendUri.md
+    - name: Validate-Job
+      href: ValidateJob.md
+    - name: Get-Printer-Attributes
+      href: GetPrinterAttributes.md
+    - name: Pause-Printer
+      href: PausePrinter.md
+    - name: Resume-Printer
+      href: ResumePrinter.md
+    - name: CUPS-Get-Printers
+      href: CUPSGetPrinters.md
+- name: Advanced Custom Requests
+  href: CustomRequests.md
+- name: Advanced Replacing Attributes
+  href: ReplaceAttributes.md
