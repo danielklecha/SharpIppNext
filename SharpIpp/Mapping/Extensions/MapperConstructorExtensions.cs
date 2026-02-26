@@ -31,7 +31,10 @@ public static class MapperConstructorExtensions
         var destType = typeof(TDestination);
         var srcType = typeof(TSource);
         mapper.CreateMap(mapFunc);
-        mapper.CreateMap<NoValue, TDestination[]?>((_, __) => null);
+        if (srcType != typeof(NoValue))
+        {
+            mapper.CreateMap<NoValue, TDestination[]?>((_, __) => null);
+        }
 
         mapper.CreateMap<object, TDestination>((src, map) =>
         {
@@ -45,21 +48,18 @@ public static class MapperConstructorExtensions
                 : throw new ArgumentException($"Mapping not supported {srcType} -> {destType}");
         });
 
-        if (Nullable.GetUnderlyingType(destType) == null)
+        if (srcType != typeof(NoValue) && Nullable.GetUnderlyingType(destType) == null)
         {
             var destIsClass = destType.IsClass;
             var destNullable = destIsClass ? destType : typeof(Nullable<>).MakeGenericType(destType);
 
-            var destNull = destIsClass
-                ? Convert.ChangeType(null, destNullable)
-                : Activator.CreateInstance(destNullable);
-            mapper.CreateMap(typeof(NoValue), destNullable, (_, _2, _3) => destNull);
+            mapper.CreateMap(typeof(NoValue), destNullable, (_, _2, _3) => NoValue.GetNoValue(destNullable));
 
             if (!destIsClass)
             {
                 mapper.CreateMap(srcType,
                     destNullable,
-                    (src, _2, map) => src == null ? destNull : map.Map<TDestination>(src));
+                    (src, _2, map) => src == null ? NoValue.GetNoValue(destNullable) : map.Map<TDestination>(src));
             }
         }
 

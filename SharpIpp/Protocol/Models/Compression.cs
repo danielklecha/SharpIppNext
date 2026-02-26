@@ -11,7 +11,6 @@ namespace SharpIpp.Protocol.Models
     /// </summary>
     public enum Compression
     {
-        Unsupported,
 
         /// <summary>
         ///     no compression is used.

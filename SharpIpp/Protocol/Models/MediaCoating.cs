@@ -6,7 +6,6 @@ namespace SharpIpp.Protocol.Models
 {
     public enum MediaCoating
     {
-        Unsupported,
         None,
         Glossy,
         HighGloss,

@@ -44,23 +44,6 @@ public class CreateJobOperationAttributes : OperationAttributes
     public bool? IppAttributeFidelity { get; set; }
 
     /// <summary>
-    ///     This attribute specifies the total number of octets processed in K
-    ///     octets, i.e., in units of 1024 octets so far.  The value MUST be
-    ///     rounded up, so that a job between 1 and 1024 octets inclusive MUST be
-    ///     indicated as being 1, 1025 to 2048 inclusive MUST be 2, etc.
-    ///     For implementations where multiple copies are produced by the
-    ///     interpreter with only a single pass over the data, the final value
-    ///     MUST be equal to the value of the "job-k-octets" attribute.  For
-    ///     implementations where multiple copies are produced by the interpreter
-    ///     by processing the data for each copy, the final value MUST be a
-    ///     multiple of the value of the "job-k-octets" attribute.
-    ///     https://tools.ietf.org/html/rfc2911#section-4.3.18.1
-    /// </summary>
-    /// <example>26</example>
-    /// <code>job-k-octets-processed</code>
-    public int? JobKOctetsProcessed { get; set; }
-
-    /// <summary>
     ///     This attribute specifies the total size in number of impressions of
     ///     the document(s) being submitted.
     ///     As with "job-k-octets", this value MUST NOT include the
@@ -114,38 +97,4 @@ public class CreateJobOperationAttributes : OperationAttributes
     /// <code>job-k-octets</code>
     public int? JobKOctets { get; set; }
 
-    public static new T Create<T>(Dictionary<string, IppAttribute[]> dict, IMapperApplier mapper) where T : CreateJobOperationAttributes, new()
-    {
-        var attributes = OperationAttributes.Create<T>(dict, mapper);
-        attributes.JobName = mapper.MapFromDicNullable<string?>(dict, JobAttribute.JobName);
-        attributes.JobMediaSheets = mapper.MapFromDicNullable<int?>(dict, JobAttribute.JobMediaSheets);
-        attributes.JobKOctets = mapper.MapFromDicNullable<int?>(dict, JobAttribute.JobKOctets);
-        attributes.IppAttributeFidelity = mapper.MapFromDicNullable<bool?>(dict, JobAttribute.IppAttributeFidelity);
-        attributes.JobImpressions = mapper.MapFromDicNullable<int?>(dict, JobAttribute.JobImpressions);
-        attributes.JobKOctetsProcessed = mapper.MapFromDicNullable<int?>(dict, JobAttribute.JobKOctetsProcessed);
-        attributes.RequestingUserName = mapper.MapFromDicNullable<string?>(dict, JobAttribute.RequestingUserName);
-        attributes.AttributesCharset = mapper.MapFromDicNullable<string?>(dict, JobAttribute.AttributesCharset);
-        attributes.AttributesNaturalLanguage = mapper.MapFromDicNullable<string?>(dict, JobAttribute.AttributesNaturalLanguage);
-        if (Uri.TryCreate(mapper.MapFromDicNullable<string?>(dict, JobAttribute.PrinterUri), UriKind.RelativeOrAbsolute, out Uri? printerUri))
-            attributes.PrinterUri = printerUri;
-        return attributes;
-    }
-
-    public override IEnumerable<IppAttribute> GetIppAttributes(IMapperApplier mapper)
-    {
-        foreach (var attribute in base.GetIppAttributes(mapper))
-            yield return attribute;
-        if (JobName != null)
-            yield return new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.JobName, JobName);
-        if (IppAttributeFidelity.HasValue)
-            yield return new IppAttribute(Tag.Boolean, JobAttribute.IppAttributeFidelity, IppAttributeFidelity.Value);
-        if (JobKOctetsProcessed.HasValue)
-            yield return new IppAttribute(Tag.Integer, JobAttribute.JobKOctetsProcessed, JobKOctetsProcessed.Value);
-        if (JobImpressions.HasValue)
-            yield return new IppAttribute(Tag.Integer, JobAttribute.JobImpressions, JobImpressions.Value);
-        if (JobMediaSheets.HasValue)
-            yield return new IppAttribute(Tag.Integer, JobAttribute.JobMediaSheets, JobMediaSheets.Value);
-        if (JobKOctets.HasValue)
-            yield return new IppAttribute(Tag.Integer, JobAttribute.JobKOctets, JobKOctets.Value);
-    }
 }

@@ -31,6 +31,7 @@ public class SimpleMapper : IMapper
     public void CreateMap(Type sourceType, Type destType, Func<object, object?, IMapperApplier, object?> mapFunc)
     {
         var key = (sourceType, destType);
+        // Console.WriteLine($"Registering Map: {sourceType.Name} -> {destType.Name}");
         _dictionary[key] = (src, dst, mapper) => mapFunc(src, dst, mapper);
     }
 

@@ -65,4 +65,93 @@ public class NoValueTests
         var instance = NoValue.Instance;
         instance.Should().BeOfType<NoValue>();
     }
+
+    private enum TestShortEnum : short { }
+    private enum TestIntEnum : int { }
+
+    [TestMethod]
+    public void IsNoValue_WithShortEnumMinValue_ShouldReturnTrue()
+    {
+        var result = NoValue.IsNoValue((TestShortEnum)short.MinValue);
+        result.Should().BeTrue();
+    }
+
+    [TestMethod]
+    public void IsNoValue_WithShortEnumNotMinValue_ShouldReturnFalse()
+    {
+        var result = NoValue.IsNoValue((TestShortEnum)0);
+        result.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void IsNoValue_WithIntEnumMinValue_ShouldReturnTrue()
+    {
+        var result = NoValue.IsNoValue((TestIntEnum)int.MinValue);
+        result.Should().BeTrue();
+    }
+
+    [TestMethod]
+    public void IsNoValue_WithIntEnumNotMinValue_ShouldReturnFalse()
+    {
+        var result = NoValue.IsNoValue((TestIntEnum)0);
+        result.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void IsNoValue_WithStringNoValueString_ShouldReturnTrue()
+    {
+        var result = NoValue.IsNoValue(NoValue.NoValueString);
+        result.Should().BeTrue();
+    }
+
+    [TestMethod]
+    public void IsNoValue_WithNormalString_ShouldReturnFalse()
+    {
+        var result = NoValue.IsNoValue("Some string");
+        result.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void IsNoValue_WithDefaultDateTime_ShouldReturnTrue()
+    {
+        var result = NoValue.IsNoValue(default(DateTime));
+        result.Should().BeTrue();
+    }
+
+    [TestMethod]
+    public void IsNoValue_WithNormalDateTime_ShouldReturnFalse()
+    {
+        var result = NoValue.IsNoValue(DateTime.Now);
+        result.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void IsNoValue_WithDefaultDateTimeOffset_ShouldReturnTrue()
+    {
+        var result = NoValue.IsNoValue(default(DateTimeOffset));
+        result.Should().BeTrue();
+    }
+
+
+
+    [TestMethod]
+    public void GetNoValue_WithString_ShouldReturnNoValueString()
+    {
+        var result = NoValue.GetNoValue<string>();
+        result.Should().Be(NoValue.NoValueString);
+    }
+
+    [TestMethod]
+    public void GetNoValue_WithStringAndKeywordTag_ShouldReturnEmptyString()
+    {
+        var result = NoValue.GetNoValue<string>(Tag.Keyword);
+        result.Should().Be(string.Empty);
+    }
+
+    [TestMethod]
+    public void GetNoValue_WithStringWithLanguage_ShouldReturnDefaultNew()
+    {
+        var result = NoValue.GetNoValue<StringWithLanguage>();
+        result.Should().Be(new StringWithLanguage());
+    }
 }

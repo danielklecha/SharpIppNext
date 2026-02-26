@@ -59,31 +59,11 @@ public class SendDocumentOperationAttributes : JobOperationAttributes
     /// </summary>
     public string? DocumentNaturalLanguage { get; set; }
 
+    /// <summary>
+    ///     The client MUST supply this attribute.  The Printer object MUST
+    ///     support this attribute.  It is a boolean flag that is set to 'true' if
+    ///     this is the last document for the Job, 'false' otherwise.
+    /// </summary>
     public bool LastDocument { get; set; }
 
-    public static new T Create<T>(Dictionary<string, IppAttribute[]> dict, IMapperApplier mapper) where T : SendDocumentOperationAttributes, new()
-    {
-        var attributes = JobOperationAttributes.Create<T>(dict, mapper);
-        attributes.DocumentName = mapper.MapFromDicNullable<string?>(dict, JobAttribute.DocumentName);
-        attributes.Compression = mapper.MapFromDicNullable<Compression?>(dict, JobAttribute.Compression);
-        attributes.DocumentFormat = mapper.MapFromDicNullable<string?>(dict, JobAttribute.DocumentFormat);
-        attributes.LastDocument = mapper.MapFromDic<bool>(dict, JobAttribute.LastDocument);
-        attributes.DocumentNaturalLanguage = mapper.MapFromDicNullable<string?>(dict, JobAttribute.DocumentFormat);
-        return attributes;
-    }
-
-    public override IEnumerable<IppAttribute> GetIppAttributes(IMapperApplier mapper)
-    {
-        foreach (var attribute in base.GetIppAttributes(mapper))
-            yield return attribute;
-        if (DocumentName != null)
-            yield return new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.DocumentName, DocumentName);
-        if (Compression != null)
-            yield return new IppAttribute(Tag.Keyword, JobAttribute.Compression, mapper.Map<string>(Compression));
-        if (DocumentFormat != null)
-            yield return new IppAttribute(Tag.MimeMediaType, JobAttribute.DocumentFormat, DocumentFormat);
-        yield return new IppAttribute(Tag.Boolean, JobAttribute.LastDocument, LastDocument);
-        if (DocumentNaturalLanguage != null)
-            yield return new IppAttribute(Tag.NaturalLanguage, JobAttribute.DocumentNaturalLanguage, DocumentNaturalLanguage);
-    }
 }

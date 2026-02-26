@@ -2,8 +2,6 @@ namespace SharpIpp.Protocol.Models
 {
     public enum Finishings
     {
-        Unsupported,
-
         /// <summary>
         ///     Perform no finishing
         /// </summary>

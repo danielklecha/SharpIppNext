@@ -5,32 +5,32 @@ namespace SharpIpp.Models.Responses;
 public class JobAttributes
 {
     /// <summary>
-    ///     job-uri
+    ///     The job-uri attribute identifies the Job object.
     /// </summary>
     public string? JobUri { get; set; }
 
     /// <summary>
-    ///     job-id
+    ///     The job-id attribute identifies the Job object.
     /// </summary>
     public int JobId { get; set; }
 
     /// <summary>
-    ///     job-state
+    ///     The job-state attribute identifies the current state of the job.
     /// </summary>
     public JobState JobState { get; set; }
 
     /// <summary>
-    ///     job-state-reasons
+    ///     The job-state-reasons attribute provides additional information about the job's current state.
     /// </summary>
     public JobStateReason[]? JobStateReasons { get; set; }
 
     /// <summary>
-    ///     job-state-message
+    ///     The job-state-message attribute provides a message from an operator, system administrator or "intelligent" process to indicate to the end user the reasons for modification or other management action taken on a job.
     /// </summary>
     public string? JobStateMessage { get; set; }
 
     /// <summary>
-    ///     number-of-intervening-jobs
+    ///     The number-of-intervening-jobs attribute indicates the number of jobs that are expected to complete before this job completes.
     /// </summary>
     public int? NumberOfInterveningJobs { get; set; }
 }

@@ -9,7 +9,6 @@ namespace SharpIpp.Protocol.Models
     /// </summary>
     public enum UriScheme
     {
-        Unsupported,
         Ipp,
         Ipps,
         Http,

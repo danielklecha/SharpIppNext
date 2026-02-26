@@ -156,7 +156,6 @@ public class SharpIppIntegrationTests
                 RequestingUserName = "test-user",
                 JobName = "Test Job",
                 IppAttributeFidelity = true,
-                JobKOctetsProcessed = 10,
                 JobKOctets = 12,
                 JobImpressions = 5,
                 JobMediaSheets = 2,
@@ -272,7 +271,6 @@ public class SharpIppIntegrationTests
                 RequestingUserName = "test-user",
                 JobName = "Test Job",
                 IppAttributeFidelity = true,
-                JobKOctetsProcessed = 10,
                 JobKOctets = 12,
                 JobImpressions = 5,
                 JobMediaSheets = 2,
@@ -454,7 +452,6 @@ public class SharpIppIntegrationTests
                 RequestingUserName = "test-user",
                 JobName = "Test Job",
                 IppAttributeFidelity = true,
-                JobKOctetsProcessed = 10,
                 JobKOctets = 12,
                 JobImpressions = 5,
                 JobMediaSheets = 2,
@@ -692,7 +689,6 @@ public class SharpIppIntegrationTests
                 RequestingUserName = "test-user",
                 JobName = "Test Job",
                 IppAttributeFidelity = true,
-                JobKOctetsProcessed = 10,
                 JobKOctets = 12,
                 JobImpressions = 5,
                 JobMediaSheets = 2,
@@ -886,8 +882,6 @@ public class SharpIppIntegrationTests
                 AttributesCharset = "utf-8",
                 AttributesNaturalLanguage = "en-us",
                 RequestingUserName = "test-user",
-                JobId = 1,
-                JobUri = new Uri("http://127.0.0.1:631/jobs/1"),
                 RequestedAttributes = ["job-id", "job-uri", "job-state"],
                 WhichJobs = WhichJobs.Completed,
                 Limit = 10,
@@ -1512,18 +1506,13 @@ public class SharpIppIntegrationTests
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
-                DocumentName = "test-document.pdf",
-                DocumentFormat = "application/pdf",
                 AttributesCharset = "utf-8",
                 AttributesNaturalLanguage = "en-us",
                 RequestingUserName = "test-user",
                 JobName = "Test Job",
                 IppAttributeFidelity = true,
-                JobKOctetsProcessed = 10,
                 JobImpressions = 5,
                 JobMediaSheets = 2,
-                Compression = Compression.None,
-                DocumentNaturalLanguage = "en",
             },
             JobTemplateAttributes = new()
             {
@@ -1755,5 +1744,225 @@ public class SharpIppIntegrationTests
         // Assert
         clientRequest.Should().BeEquivalentTo(serverRequest);
         clientResponse.Should().BeEquivalentTo(serverResponse);
+    }
+
+    [TestMethod()]
+    public async Task GetPrinterAttributesAsync_NoValueEverywhere_ServerReceivesSameRequestAndReturnsExpectedResponse()
+    {
+        // Arrange
+        SharpIppServer server = new();
+        GetPrinterAttributesRequest clientRequest = new()
+        {
+            RequestId = 123,
+            Version = new IppVersion(2, 0),
+            OperationAttributes = new()
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631"),
+                AttributesCharset = "utf-8",
+                AttributesNaturalLanguage = "en-us",
+                RequestingUserName = "test-user",
+                RequestedAttributes = ["printer-state", "queued-job-count"],
+                DocumentFormat = "application/pdf",
+            },
+        };
+
+        IIppRequestMessage? serverRawRequest = null;
+        GetPrinterAttributesResponse? serverResponse = null;
+        HttpStatusCode statusCode = HttpStatusCode.OK;
+        async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
+        {
+            serverRawRequest = (await server.ReceiveRawRequestAsync(s, c));
+            
+            // Set up sever raw response with NoValue for specific properties 
+            // the user requested to be mapped to MinValue/default instead of null
+            var serverRawResponse = new IppResponseMessage
+            {
+                RequestId = serverRawRequest.RequestId,
+                Version = serverRawRequest.Version,
+                StatusCode = IppStatusCode.SuccessfulOk,
+            };
+            
+            serverRawResponse.OperationAttributes.Add([
+                new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"),
+                new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"),
+                new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.StatusMessage, "successful-ok"),
+                new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.DetailedStatusMessage, "detail1"),
+                new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.DocumentAccessError, "none")
+            ]);
+            
+            serverRawResponse.PrinterAttributes.Add([
+                new IppAttribute(Tag.NoValue, PrinterAttribute.PrinterName, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.PrinterLocation, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.PrinterInfo, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.QueuedJobCount, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.PrinterCurrentTime, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.PrinterState, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.JobKOctetsSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.PrinterResolutionDefault, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.MediaColDefault, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.MultipleDocumentJobsSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.PrinterIsAcceptingJobs, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.ColorSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.PrinterUpTime, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.MultipleOperationTimeOut, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.JpegKOctetsSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.PdfKOctetsSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.JobImpressionsSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.JobMediaSheetsSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.PagesPerMinute, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.PagesPerMinuteColor, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.PrinterResolutionSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.JobPriorityDefault, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.JobPrioritySupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.CopiesDefault, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.CopiesSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.PageRangesSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.UriSecuritySupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.UriAuthenticationSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.OperationsSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.ReferenceUriSchemesSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.CompressionSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.PrintScalingDefault, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.PrintScalingSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.SidesDefault, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.SidesSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.FinishingsDefault, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.FinishingsSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.PrintQualityDefault, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.PrintQualitySupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.OrientationRequestedDefault, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.OrientationRequestedSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.JobHoldUntilSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.JobHoldUntilDefault, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.PrintColorModeDefault, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.PrintColorModeSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.WhichJobsSupported, NoValue.Instance)
+            ]);
+
+            var memoryStream = new MemoryStream();
+            await server.SendRawResponseAsync(serverRawResponse, memoryStream, c);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            
+            memoryStream.Position = 0;
+            // The client parses the response, not the server
+            // But we don't have the client instance here yet.
+            // Let's just return the stream directly and let the client parse it naturally via the HTTP handler.
+            memoryStream.Position = 0;
+            return new HttpResponseMessage()
+            {
+                StatusCode = statusCode,
+                Content = new StreamContent(memoryStream)
+            };
+        }
+
+        SharpIppClient client = new(new(GetMockOfHttpMessageHandler(func).Object));
+        
+        // Let's create an expected serverResponse directly in code logic to compare.
+        serverResponse = new GetPrinterAttributesResponse
+        {
+            RequestId = 123,
+            Version = new IppVersion(2, 0),
+            StatusCode = IppStatusCode.SuccessfulOk,
+            OperationAttributes = new()
+            {
+                AttributesCharset = "utf-8",
+                AttributesNaturalLanguage = "en",
+                StatusMessage = "successful-ok",
+                DetailedStatusMessage = ["detail1"],
+                DocumentAccessError = "none"
+            },
+            PrinterAttributes = new()
+            {
+                MultipleDocumentJobsSupported = NoValue.GetNoValue<bool?>(),
+                PrinterIsAcceptingJobs = NoValue.GetNoValue<bool?>(),
+                ColorSupported = NoValue.GetNoValue<bool?>(),
+                PrinterUpTime = NoValue.GetNoValue<int>(),
+                MultipleOperationTimeOut = NoValue.GetNoValue<int>(),
+                JpegKOctetsSupported = NoValue.GetNoValue<SharpIpp.Protocol.Models.Range>(),
+                PdfKOctetsSupported = NoValue.GetNoValue<SharpIpp.Protocol.Models.Range>(),
+                JobImpressionsSupported = NoValue.GetNoValue<SharpIpp.Protocol.Models.Range>(),
+                JobMediaSheetsSupported = NoValue.GetNoValue<SharpIpp.Protocol.Models.Range>(),
+                PagesPerMinute = NoValue.GetNoValue<int>(),
+                PagesPerMinuteColor = NoValue.GetNoValue<int>(),
+                PrinterResolutionSupported = [NoValue.GetNoValue<Resolution>()],
+                JobPriorityDefault = NoValue.GetNoValue<int>(),
+                JobPrioritySupported = NoValue.GetNoValue<int>(),
+                CopiesDefault = NoValue.GetNoValue<int>(),
+                CopiesSupported = NoValue.GetNoValue<SharpIpp.Protocol.Models.Range>(),
+                PageRangesSupported = NoValue.GetNoValue<bool?>(),
+
+                PrinterName = NoValue.GetNoValue<string>(),
+                PrinterLocation = NoValue.GetNoValue<string>(),
+                PrinterInfo = NoValue.GetNoValue<string>(),
+                QueuedJobCount = NoValue.GetNoValue<int>(),
+                PrinterCurrentTime = NoValue.GetNoValue<DateTimeOffset>(),
+                PrinterState = NoValue.GetNoValue<PrinterState>(),
+                JobKOctetsSupported = NoValue.GetNoValue<SharpIpp.Protocol.Models.Range>(),
+                PrinterResolutionDefault = NoValue.GetNoValue<Resolution>(),
+                UriSecuritySupported = [NoValue.GetNoValue<UriSecurity>()],
+                UriAuthenticationSupported = [NoValue.GetNoValue<UriAuthentication>()],
+                OperationsSupported = [NoValue.GetNoValue<IppOperation>()],
+                ReferenceUriSchemesSupported = [NoValue.GetNoValue<UriScheme>()],
+                CompressionSupported = [NoValue.GetNoValue<Compression>()],
+                PrintScalingDefault = NoValue.GetNoValue<PrintScaling>(),
+                PrintScalingSupported = [NoValue.GetNoValue<PrintScaling>()],
+                SidesDefault = NoValue.GetNoValue<Sides>(),
+                SidesSupported = [NoValue.GetNoValue<Sides>()],
+                FinishingsDefault = NoValue.GetNoValue<Finishings>(),
+                FinishingsSupported = [NoValue.GetNoValue<Finishings>()],
+                PrintQualityDefault = NoValue.GetNoValue<PrintQuality>(),
+                PrintQualitySupported = [NoValue.GetNoValue<PrintQuality>()],
+                OrientationRequestedDefault = NoValue.GetNoValue<Orientation>(),
+                OrientationRequestedSupported = [NoValue.GetNoValue<Orientation>()],
+                JobHoldUntilSupported = [NoValue.GetNoValue<JobHoldUntil>()],
+                JobHoldUntilDefault = NoValue.GetNoValue<JobHoldUntil>(),
+                PrintColorModeDefault = NoValue.GetNoValue<PrintColorMode>(),
+                PrintColorModeSupported = [NoValue.GetNoValue<PrintColorMode>()],
+                WhichJobsSupported = [NoValue.GetNoValue<WhichJobs>()],
+                MediaColDefault = new MediaCol()
+                {
+                    MediaBottomMargin = NoValue.GetNoValue<int>(),
+                    MediaHoleCount = NoValue.GetNoValue<int>(),
+                    MediaLeftMargin = NoValue.GetNoValue<int>(),
+                    MediaOrderCount = NoValue.GetNoValue<int>(),
+                    MediaRightMargin = NoValue.GetNoValue<int>(),
+                    MediaThickness = NoValue.GetNoValue<int>(),
+                    MediaTopMargin = NoValue.GetNoValue<int>(),
+                    MediaWeightMetric = NoValue.GetNoValue<int>(),
+                    MediaBackCoating = NoValue.GetNoValue<MediaCoating>(),
+                    MediaFrontCoating = NoValue.GetNoValue<MediaCoating>(),
+                    MediaGrain = NoValue.GetNoValue<MediaGrain>(),
+                    MediaPrePrinted = NoValue.GetNoValue<MediaPrePrinted>(),
+                    MediaRecycled = NoValue.GetNoValue<MediaRecycled>(),
+                    MediaSource = NoValue.GetNoValue<MediaSource>(),
+                    MediaTooth = NoValue.GetNoValue<MediaTooth>()
+                }
+            }
+        };
+        
+        // Act
+        var clientRawRequest = client.CreateRawRequest(clientRequest);
+        GetPrinterAttributesResponse? clientResponse = await client.GetPrinterAttributesAsync(clientRequest);
+        
+        // Assert
+        clientRawRequest.Should().NotBeNull().And.BeEquivalentTo(serverRawRequest, options => options.Excluding(x => x!.Document));
+        clientResponse.Should().BeEquivalentTo(serverResponse);
+        
+        // Explicitly check for "NoValue" mapped min/default values
+        clientResponse.Should().NotBeNull();
+        clientResponse!.PrinterAttributes.PrinterName.Should().Be(NoValue.GetNoValue<string>());
+        clientResponse.PrinterAttributes.PrinterLocation.Should().Be(NoValue.GetNoValue<string>());
+        clientResponse.PrinterAttributes.PrinterInfo.Should().Be(NoValue.GetNoValue<string>());
+        clientResponse.PrinterAttributes.QueuedJobCount.Should().Be(NoValue.GetNoValue<int>());
+        clientResponse.PrinterAttributes.PrinterCurrentTime.Should().Be(NoValue.GetNoValue<DateTimeOffset>());
+        clientResponse.PrinterAttributes.PrinterState.Should().Be(NoValue.GetNoValue<PrinterState>());
+        clientResponse.PrinterAttributes.JobKOctetsSupported.Should().NotBeNull();
+        clientResponse.PrinterAttributes.JobKOctetsSupported.HasValue.Should().BeTrue();
+        clientResponse.PrinterAttributes.JobKOctetsSupported!.Value.Lower.Should().Be(NoValue.GetNoValue<SharpIpp.Protocol.Models.Range>().Lower);
+        clientResponse.PrinterAttributes.JobKOctetsSupported!.Value.Upper.Should().Be(NoValue.GetNoValue<SharpIpp.Protocol.Models.Range>().Upper);
+        clientResponse.PrinterAttributes.PrinterResolutionDefault.Should().NotBeNull();
+        clientResponse.PrinterAttributes.PrinterResolutionDefault.HasValue.Should().BeTrue();
+        clientResponse.PrinterAttributes.PrinterResolutionDefault!.Value.Width.Should().Be(NoValue.GetNoValue<Resolution>().Width);
+        clientResponse.PrinterAttributes.PrinterResolutionDefault!.Value.Height.Should().Be(NoValue.GetNoValue<Resolution>().Height);
     }
 }

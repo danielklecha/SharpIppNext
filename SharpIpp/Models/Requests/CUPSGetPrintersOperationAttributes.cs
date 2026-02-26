@@ -62,38 +62,4 @@ public class CUPSGetPrintersOperationAttributes : OperationAttributes
     ///     uri' and 'job-id'.
     /// </summary>
     public string[]? RequestedAttributes { get; set; }
-
-    public static new T Create<T>(Dictionary<string, IppAttribute[]> dict, IMapperApplier mapper) where T : CUPSGetPrintersOperationAttributes, new()
-    {
-        var attributes = OperationAttributes.Create<T>(dict, mapper);
-        attributes.FirstPrinterName = mapper.MapFromDicNullable<string?>(dict, JobAttribute.FirstPrinterName);
-        attributes.Limit = mapper.MapFromDicNullable<int?>(dict, JobAttribute.Limit);
-        attributes.PrinterId = mapper.MapFromDicNullable<int?>(dict, JobAttribute.PrinterId);
-        attributes.PrinterLocation = mapper.MapFromDicNullable<string?>(dict, JobAttribute.PrinterLocation);
-        attributes.PrinterType = mapper.MapFromDicNullable<PrinterType?>(dict, JobAttribute.PrinterType);
-        attributes.PrinterTypeMask = mapper.MapFromDicNullable<PrinterType?>(dict, JobAttribute.PrinterTypeMask);
-        attributes.RequestedAttributes = mapper.MapFromDicSetNullable<string[]?>(dict, JobAttribute.RequestedAttributes);
-        return attributes;
-    }
-
-    public override IEnumerable<IppAttribute> GetIppAttributes(IMapperApplier mapper)
-    {
-        foreach (var attribute in base.GetIppAttributes(mapper))
-            yield return attribute;
-        if (FirstPrinterName != null)
-            yield return new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.FirstPrinterName, FirstPrinterName);
-        if (Limit.HasValue)
-            yield return new IppAttribute(Tag.Integer, JobAttribute.Limit, Limit.Value);
-        if (PrinterId != null)
-            yield return new IppAttribute(Tag.Integer, JobAttribute.PrinterId, PrinterId.Value);
-        if (PrinterLocation != null)
-            yield return new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.PrinterLocation, PrinterLocation);
-        if (PrinterType != null)
-            yield return new IppAttribute(Tag.Enum, JobAttribute.PrinterType, (int)PrinterType.Value);
-        if (PrinterTypeMask != null)
-            yield return new IppAttribute(Tag.Enum, JobAttribute.PrinterTypeMask, (int)PrinterTypeMask.Value);
-        if (RequestedAttributes != null)
-            foreach (var name in RequestedAttributes)
-                yield return new IppAttribute(Tag.Keyword, JobAttribute.RequestedAttributes, name);
-    }
 }

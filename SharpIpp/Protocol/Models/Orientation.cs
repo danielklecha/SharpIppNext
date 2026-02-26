@@ -2,8 +2,6 @@ namespace SharpIpp.Protocol.Models
 {
     public enum Orientation
     {
-        Unsupported,
-
         /// The content will be imaged across the short edge
         /// of the medium.
         Portrait = 3,

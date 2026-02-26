@@ -8,20 +8,10 @@ using System.Text;
 namespace SharpIpp.Models.Requests;
 public class CancelJobOperationAttributes : JobOperationAttributes
 {
+    /// <summary>
+    ///     The client OPTIONALLY supplies this attribute. The Printer object MUST
+    ///     support this attribute. It is a message to the operator.
+    /// </summary>
     public string? Message { get; set; }
 
-    public static new T Create<T>(Dictionary<string, IppAttribute[]> dict, IMapperApplier mapper) where T : CancelJobOperationAttributes, new()
-    {
-        var attributes = JobOperationAttributes.Create<T>(dict, mapper);
-        attributes.Message = mapper.MapFromDicNullable<string?>(dict, JobAttribute.Message);
-        return attributes;
-    }
-
-    public override IEnumerable<IppAttribute> GetIppAttributes(IMapperApplier mapper)
-    {
-        foreach (var attribute in base.GetIppAttributes(mapper))
-            yield return attribute;
-        if (Message != null)
-            yield return new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.Message, Message);
-    }
 }

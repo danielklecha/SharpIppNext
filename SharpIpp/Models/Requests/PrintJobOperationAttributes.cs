@@ -60,27 +60,4 @@ public class PrintJobOperationAttributes : CreateJobOperationAttributes
     /// </summary>
     public string? DocumentNaturalLanguage { get; set; }
 
-    public static new T Create<T>(Dictionary<string, IppAttribute[]> dict, IMapperApplier mapper) where T : PrintJobOperationAttributes, new()
-    {
-        var attributes = CreateJobOperationAttributes.Create<T>(dict, mapper);
-        attributes.DocumentName = mapper.MapFromDicNullable<string?>(dict, JobAttribute.DocumentName);
-        attributes.Compression = mapper.MapFromDicNullable<Compression?>(dict, JobAttribute.Compression);
-        attributes.DocumentFormat = mapper.MapFromDicNullable<string?>(dict, JobAttribute.DocumentFormat);
-        attributes.DocumentNaturalLanguage = mapper.MapFromDicNullable<string?>(dict, JobAttribute.DocumentNaturalLanguage);
-        return attributes;
-    }
-
-    public override IEnumerable<IppAttribute> GetIppAttributes(IMapperApplier mapper)
-    {
-        foreach(var attribute in base.GetIppAttributes(mapper))
-            yield return attribute;
-        if (DocumentName != null)
-            yield return new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.DocumentName, DocumentName);
-        if (Compression != null)
-            yield return new IppAttribute(Tag.Keyword, JobAttribute.Compression, mapper.Map<string>(Compression));
-        if (DocumentFormat != null)
-            yield return new IppAttribute(Tag.MimeMediaType, JobAttribute.DocumentFormat, DocumentFormat);
-        if (DocumentNaturalLanguage != null)
-            yield return new IppAttribute(Tag.NaturalLanguage, JobAttribute.DocumentNaturalLanguage, DocumentNaturalLanguage);
-    }
 }

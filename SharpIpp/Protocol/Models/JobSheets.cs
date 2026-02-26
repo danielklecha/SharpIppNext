@@ -7,7 +7,6 @@ namespace SharpIpp.Protocol.Models
     /// </summary>
     public enum JobSheets
     {
-        Unsupported,
 
         /// <summary>
         ///     no job sheet is printed

@@ -2,7 +2,6 @@ namespace SharpIpp.Protocol.Models
 {
     public enum Sides
     {
-        Unsupported,
 
         /// 'one-sided': imposes each consecutive print-stream page upon the
         /// same side of consecutive media sheets.

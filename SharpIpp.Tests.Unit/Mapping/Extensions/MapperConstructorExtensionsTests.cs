@@ -189,42 +189,49 @@ public class MapperConstructorExtensionsTests
         var mapperMock = new Mock<IMapperConstructor>();
 
         // We are looking for CreateMap(Type, Type, Func<object, object?, IMapperApplier, object?>)
-        Func<object, object?, IMapperApplier, object?>? capturedFunc = null;
-        Type? capturedSrcType = null;
-        Type? capturedDestType = null;
+        Func<object, object?, IMapperApplier, object?>? capturedDoubleFunc = null;
+        Func<object, object?, IMapperApplier, object?>? capturedIntFunc = null;
 
         mapperMock.Setup(x => x.CreateMap(It.IsAny<Type>(), It.IsAny<Type>(), It.IsAny<Func<object, object?, IMapperApplier, object?>>()))
             .Callback<Type, Type, Func<object, object?, IMapperApplier, object?>>((src, dest, func) =>
             {
-                // We are interested in the explicit Type registration: mapper.CreateMap(srcType, destNullable, ...)
                 if (src == typeof(int) && dest == typeof(double?))
                 {
-                    capturedSrcType = src;
-                    capturedDestType = dest;
-                    capturedFunc = func;
+                    capturedDoubleFunc = func;
+                }
+                else if (src == typeof(int) && dest == typeof(int?))
+                {
+                    capturedIntFunc = func;
                 }
             });
 
         // Act
         mapperMock.Object.CreateIppMap<int, double>((src, map) => (double)src);
+        mapperMock.Object.CreateIppMap<int, int>((src, map) => src);
 
         // Assert
-        Assert.IsNotNull(capturedFunc, "Should register TSource -> TDest?");
-        Assert.AreEqual(typeof(int), capturedSrcType);
-        Assert.AreEqual(typeof(double?), capturedDestType);
+        Assert.IsNotNull(capturedDoubleFunc, "Should register int -> double?");
+        Assert.IsNotNull(capturedIntFunc, "Should register int -> int?");
 
-        // Test Logic
         var mapperApplierMock = new Mock<IMapperApplier>();
         mapperApplierMock.Setup(x => x.Map<double>(123)).Returns(123.0);
+        mapperApplierMock.Setup(x => x.Map<int>(123)).Returns(123);
 
+        // 1. Double Case (Not supported for NoValue)
         // Valid
-        // The lambda is: (src, _2, map) => src == null ? destNull : map.Map<TDestination>(src)
-        var result = capturedFunc!(123, null, mapperApplierMock.Object);
-        Assert.AreEqual(123.0, result);
+        var resDouble = capturedDoubleFunc!(123, null, mapperApplierMock.Object);
+        Assert.AreEqual(123.0, resDouble);
+        // Null -> Should throw because double is not supported for NoValue mapping
+        var ex = Assert.ThrowsExactly<ArgumentException>(() => capturedDoubleFunc!(null!, null, mapperApplierMock.Object));
+        Assert.IsTrue(ex.Message.Contains("not supported for NoValue mapping"));
 
-        // Null
-        var resultNull = capturedFunc!(null!, null, mapperApplierMock.Object);
-        Assert.IsNull(resultNull);
+        // 2. Int Case (Supported for NoValue)
+        // Valid
+        var resInt = capturedIntFunc!(123, null, mapperApplierMock.Object);
+        Assert.AreEqual(123, resInt);
+        // Null -> Should return int.MinValue
+        var resIntNull = capturedIntFunc!(null!, null, mapperApplierMock.Object);
+        Assert.AreEqual(int.MinValue, resIntNull);
     }
     [TestMethod]
     public void CreateIppMap_Should_Register_ObjectArray_To_DestinationArray_Mappings()

@@ -39,4 +39,6 @@
 - name: Advanced Custom Requests
   href: CustomRequests.md
 - name: Advanced Replacing Attributes
-  href: ReplaceAttributes.md
+  href: advanced-replace-attributes.md
+- name: Advanced NoValue in Client
+  href: advanced-novalue-requests.md

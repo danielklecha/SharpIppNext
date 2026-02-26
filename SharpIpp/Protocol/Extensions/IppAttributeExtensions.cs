@@ -159,6 +159,11 @@ public static class IppAttributeExtensions
         {
             if (isFirst)
             {
+                if (attribute.Tag.IsOutOfBand())
+                {
+                    yield return attribute;
+                    yield break;
+                }
                 if (attribute.Tag != Tag.BegCollection)
                 {
                     throw new System.ArgumentException("First attribute must be BegCollection", nameof(attributes));

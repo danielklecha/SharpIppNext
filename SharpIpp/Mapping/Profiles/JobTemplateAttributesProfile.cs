@@ -104,7 +104,7 @@ internal class JobTemplateAttributesProfile : IProfile
             return dst;
         });
 
-        mapper.CreateMap<IIppRequestMessage, JobTemplateAttributes>( ( src, dst, map ) =>
+        mapper.CreateMap<IIppRequestMessage, JobTemplateAttributes>((src, dst, map) =>
         {
             dst ??= new JobTemplateAttributes();
             var jobDict = src.JobAttributes.ToIppDictionary();
@@ -123,9 +123,9 @@ internal class JobTemplateAttributesProfile : IProfile
             dst.PrintQuality = map.MapFromDicNullable<PrintQuality?>(jobDict, JobAttribute.PrintQuality);
             dst.PrintScaling = map.MapFromDicNullable<PrintScaling?>(jobDict, JobAttribute.PrintScaling);
             dst.PrintColorMode = map.MapFromDicNullable<PrintColorMode?>(jobDict, JobAttribute.PrintColorMode);
-            if(jobDict.ContainsKey(JobAttribute.MediaCol))
+            if (jobDict.ContainsKey(JobAttribute.MediaCol))
                 dst.MediaCol = map.Map<MediaCol>(jobDict[JobAttribute.MediaCol].FromBegCollection().ToIppDictionary());
             return dst;
-        } );
+        });
     }
 }

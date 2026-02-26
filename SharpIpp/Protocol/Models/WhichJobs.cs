@@ -2,7 +2,6 @@ namespace SharpIpp.Protocol.Models
 {
     public enum WhichJobs
     {
-        Unsupported,
 
         /// <summary>
         ///     This includes any Job object whose state is

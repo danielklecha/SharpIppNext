@@ -6,7 +6,6 @@ namespace SharpIpp.Protocol.Models
 {
     public enum UriAuthentication
     {
-        Unsupported,
         None,
         RequestingUserName,
         Basic,

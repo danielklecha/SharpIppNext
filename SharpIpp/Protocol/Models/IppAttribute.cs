@@ -21,17 +21,10 @@ public readonly struct IppAttribute : IEquatable<IppAttribute>
         if (value is null)
             throw new ArgumentNullException(nameof(value));
 
-        switch (value)
+        if (NoValue.IsNoValue(value, tag))
         {
-            case int integer when integer == int.MinValue:
-            case DateTimeOffset dateTime when dateTime == default:
-            case Range range when range.Equals(default):
-            case Resolution resolution when resolution.Equals(default):
-            case StringWithLanguage stringWithLanguage when stringWithLanguage.Equals(default):
-            case string stringValue when stringValue == string.Empty && tag == Tag.Keyword:
-                tag = Tag.NoValue;
-                value = NoValue.Instance;
-                break;
+            tag = Tag.NoValue;
+            value = NoValue.Instance;
         }
         Tag = tag;
         Name = name;

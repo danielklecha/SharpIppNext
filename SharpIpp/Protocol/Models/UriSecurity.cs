@@ -6,7 +6,6 @@ namespace SharpIpp.Protocol.Models
 {
     public enum UriSecurity
     {
-        Unsupported,
         None,
         Ssl3,
         Tls

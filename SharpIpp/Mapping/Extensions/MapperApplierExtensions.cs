@@ -14,10 +14,10 @@ public static class MapperApplierExtensions
         string key) where TDestination : IEnumerable?
     {
         if (!src.ContainsKey(key))
-            return mapper.Map<TDestination>(NoValue.Instance);
+            return mapper.Map<TDestination>(null);
         var values = src[key].Select(x => x.Value).ToArray();
         if (values.Length == 0)
-            return mapper.Map<TDestination>(NoValue.Instance);
+            return mapper.Map<TDestination>(null);
         return mapper.Map<TDestination>(values);
     }
 
@@ -27,10 +27,10 @@ public static class MapperApplierExtensions
         string key) where TDestination : IEnumerable?
     {
         if (!src.ContainsKey(key))
-            return mapper.MapNullable<TDestination>(NoValue.Instance);
+            return mapper.MapNullable<TDestination>(null);
         var values = src[key].Select(x => x.Value).ToArray();
         if (values.Length == 0)
-            return mapper.MapNullable<TDestination>(NoValue.Instance);
+            return mapper.MapNullable<TDestination>(null);
         return mapper.MapNullable<TDestination>(values);
     }
 
@@ -39,11 +39,10 @@ public static class MapperApplierExtensions
         IDictionary<string, IppAttribute[]> src,
         string key)
     {
-        if (!src.ContainsKey(key))
-            return mapper.Map<TDestination>(NoValue.Instance);
-        var values = src[key];
+        if (!src.TryGetValue(key, out IppAttribute[]? values))
+            return mapper.Map<TDestination>(null);
         if (values.Length == 0)
-            return mapper.Map<TDestination>(NoValue.Instance);
+            return mapper.Map<TDestination>(null);
         return mapper.Map<TDestination>(values[0].Value);
     }
 
@@ -52,11 +51,10 @@ public static class MapperApplierExtensions
         IDictionary<string, IppAttribute[]> src,
         string key)
     {
-        if (!src.ContainsKey(key))
-            return mapper.MapNullable<TDestination>(NoValue.Instance);
-        var values = src[key];
+        if (!src.TryGetValue(key, out IppAttribute[]? values))
+            return mapper.MapNullable<TDestination>(null);
         if (values.Length == 0)
-            return mapper.MapNullable<TDestination>(NoValue.Instance);
+            return mapper.MapNullable<TDestination>(null);
         return mapper.MapNullable<TDestination>(values[0].Value);
     }
 }

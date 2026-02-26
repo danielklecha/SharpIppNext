@@ -2,7 +2,6 @@ namespace SharpIpp.Protocol.Models
 {
     public enum MultipleDocumentHandling
     {
-        Unsupported,
 
         /// 'single-document': If a Job object has multiple documents, say,
         /// the document data is called a and b, then the result of

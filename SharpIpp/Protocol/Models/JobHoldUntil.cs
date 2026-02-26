@@ -2,7 +2,6 @@ namespace SharpIpp.Protocol.Models
 {
     public enum JobHoldUntil
     {
-        Unsupported,
 
         /// <summary>
         ///     'no-hold': immediately, if there are not other reasons to hold the job

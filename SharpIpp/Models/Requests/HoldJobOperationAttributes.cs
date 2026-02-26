@@ -8,20 +8,10 @@ using System.Text;
 namespace SharpIpp.Models.Requests;
 public class HoldJobOperationAttributes : CancelJobOperationAttributes
 {
+    /// <summary>
+    ///     The client OPTIONALLY supplies this attribute.  The Printer object
+    ///     MUST support this attribute.  It indicates the time period during
+    ///     which the job shall be held.
+    /// </summary>
     public JobHoldUntil? JobHoldUntil { get; set; }
-
-    public static new T Create<T>(Dictionary<string, IppAttribute[]> dict, IMapperApplier mapper) where T : HoldJobOperationAttributes, new()
-    {
-        var attributes = CancelJobOperationAttributes.Create<T>(dict, mapper);
-        attributes.JobHoldUntil = mapper.MapFromDicNullable<JobHoldUntil?>(dict, JobAttribute.JobHoldUntil);
-        return attributes;
-    }
-
-    public override IEnumerable<IppAttribute> GetIppAttributes(IMapperApplier mapper)
-    {
-        foreach (var attribute in base.GetIppAttributes(mapper))
-            yield return attribute;
-        if (JobHoldUntil.HasValue)
-            yield return new IppAttribute(Tag.Keyword, JobAttribute.JobHoldUntil, mapper.Map<string>(JobHoldUntil.Value));
-    }
 }

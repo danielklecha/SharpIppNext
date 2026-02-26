@@ -6,7 +6,6 @@ namespace SharpIpp.Protocol.Models
 {
     public enum JobStateReason
     {
-        Unsupported,
         None,
         JobIncoming,
         JobDataInsufficient,

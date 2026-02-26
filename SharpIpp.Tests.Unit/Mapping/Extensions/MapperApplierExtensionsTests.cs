@@ -79,7 +79,7 @@ public class MapperApplierExtensionsTests
     public void MapFromDicSetNullable_Should_Return_NoValue_For_Missing_Key()
     {
         var mapperMock = new Mock<IMapperApplier>();
-        mapperMock.Setup(m => m.MapNullable<int[]?>(NoValue.Instance)).Returns((int[]?)null);
+        mapperMock.Setup(m => m.MapNullable<int[]?>(null)).Returns((int[]?)null);
         var src = new Dictionary<string, IppAttribute[]>();
 
         var result = mapperMock.Object.MapFromDicSetNullable<int[]?>(src, "testKey");
@@ -90,7 +90,7 @@ public class MapperApplierExtensionsTests
     public void MapFromDicSetNullable_Should_Return_NoValue_For_Empty_Array()
     {
         var mapperMock = new Mock<IMapperApplier>();
-        mapperMock.Setup(m => m.MapNullable<int[]?>(NoValue.Instance)).Returns((int[]?)null);
+        mapperMock.Setup(m => m.MapNullable<int[]?>(null)).Returns((int[]?)null);
         var src = new Dictionary<string, IppAttribute[]> { { "testKey", new IppAttribute[0] } };
 
         var result = mapperMock.Object.MapFromDicSetNullable<int[]?>(src, "testKey");
