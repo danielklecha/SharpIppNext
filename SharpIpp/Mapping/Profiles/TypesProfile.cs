@@ -34,6 +34,8 @@ internal class TypesProfile : IProfile
         mapper.CreateIppMap<string, IppVersion>((src, map) => new IppVersion(src));
         mapper.CreateIppMap<NoValue, int>((src, map) => NoValue.GetNoValue<int>());
         mapper.CreateIppMap<NoValue, int?>((src, map) => NoValue.GetNoValue<int?>());
+        mapper.CreateIppMap<NoValue, bool>((src, map) => NoValue.GetNoValue<bool>());
+        mapper.CreateIppMap<NoValue, bool?>((src, map) => NoValue.GetNoValue<bool?>());
         mapper.CreateIppMap<NoValue, JobState>((src, map) => NoValue.GetNoValue<JobState>());
         mapper.CreateIppMap<NoValue, PrinterState>((src, map) => NoValue.GetNoValue<PrinterState>());
         mapper.CreateIppMap<NoValue, Finishings>((src, map) => NoValue.GetNoValue<Finishings>());

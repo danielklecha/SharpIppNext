@@ -46,6 +46,7 @@ public class TypesProfileTest
             yield return [NoValue.Instance, typeof(NoValue), typeof(ResolutionUnit), (ResolutionUnit)int.MinValue, "NoValue -> ResolutionUnit"];
             yield return [NoValue.Instance, typeof(NoValue), typeof(PrinterType), (PrinterType)int.MinValue, "NoValue -> PrinterType"];
             yield return [NoValue.Instance, typeof(NoValue), typeof(IppOperation), (IppOperation)short.MinValue, "NoValue -> IppOperation"];
+            yield return [NoValue.Instance, typeof(NoValue), typeof(bool), false, "NoValue -> Bool"];
             yield return [NoValue.Instance, typeof(NoValue), typeof(DateTime), NoValue.GetNoValue<DateTime>(), "NoValue -> DateTime"];
             yield return [NoValue.Instance, typeof(NoValue), typeof(DateTime?), NoValue.GetNoValue<DateTime?>(), "NoValue -> DateTime?"];
             yield return [NoValue.Instance, typeof(NoValue), typeof(DateTimeOffset), NoValue.GetNoValue<DateTimeOffset>(), "NoValue -> DateTimeOffset"];
