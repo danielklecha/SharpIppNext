@@ -101,6 +101,11 @@ internal class JobTemplateAttributesProfile : IProfile
             if (src.MediaCol != null)
                 job.AddRange(map.Map<IEnumerable<IppAttribute>>(src.MediaCol).ToBegCollection(JobAttribute.MediaCol));
 
+            if (src.OutputBin != null)
+            {
+                job.Add(new IppAttribute(Tag.Keyword, JobAttribute.OutputBin, src.OutputBin));
+            }
+
             return dst;
         });
 
@@ -125,6 +130,7 @@ internal class JobTemplateAttributesProfile : IProfile
             dst.PrintColorMode = map.MapFromDicNullable<PrintColorMode?>(jobDict, JobAttribute.PrintColorMode);
             if (jobDict.ContainsKey(JobAttribute.MediaCol))
                 dst.MediaCol = map.Map<MediaCol>(jobDict[JobAttribute.MediaCol].FromBegCollection().ToIppDictionary());
+            dst.OutputBin = map.MapFromDicNullable<string?>(jobDict, JobAttribute.OutputBin);
             return dst;
         });
     }

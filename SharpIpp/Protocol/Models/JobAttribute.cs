@@ -72,5 +72,6 @@ namespace SharpIpp.Protocol.Models
         public const string NumberOfDocuments = "number-of-documents";
         public const string OutputDeviceAssigned = "output-device-assigned";
         public const string MediaCol = "media-col";
+        public const string OutputBin = "output-bin";
     }
 }

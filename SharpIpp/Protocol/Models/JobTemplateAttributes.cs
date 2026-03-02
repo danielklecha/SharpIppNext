@@ -185,5 +185,14 @@ namespace SharpIpp.Protocol.Models
 
         public MediaCol? MediaCol { get; set; }
 
+        /// <summary>
+        ///     This attribute identifies the device output bin to which the job
+        ///     is to be delivered.  There are standard values whose attribute
+        ///     syntax is 'keyword', but there are no standard values whose
+        ///     attribute syntax is 'name'.
+        ///     See: PWG 5100.2-2001
+        /// </summary>
+        public string? OutputBin { get; set; }
+
     }
 }

@@ -735,6 +735,7 @@ public class SharpIppIntegrationTests
                     MediaType = "stationery",
                     MediaWeightMetric = 80
                 },
+                OutputBin = "face-down",
             }
         };
         IIppRequest? serverRequest = null;
