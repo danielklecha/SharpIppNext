@@ -22,6 +22,20 @@
           "_site/**",
           "filterConfig.yml"
         ]
+      },
+      {
+        "files": [
+          "CONTRIBUTING.md"
+        ],
+        "src": ".."
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "LICENSE.txt"
+        ],
+        "src": ".."
       }
     ],
     "output": "_site",
@@ -34,7 +48,7 @@
       "_appFooter": "© Copyright Daniel Klecha",
       "_enableSearch": true,
       "pdf": false,
-	    "_disableContribution": true
+      "_disableContribution": true
     }
   }
 }

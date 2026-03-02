@@ -1,21 +1,23 @@
-# Advanced NoValue in Responses
+# Advanced NoValue in Server
 
-In IPP responses, the `no-value` out-of-band tag (0x13) indicates that a printer attribute is supported but currently has no value. SharpIppNext automatically maps these tags into standard C# types in your response models.
+In IPP requests and responses, the `no-value` out-of-band tag (0x13) indicates that an attribute is supported but currently has no value. SharpIppNext automatically maps these tags into standard C# types in your models.
 
 ## Automatic NoValue Mapping
 
 When SharpIppNext receives an attribute with the `Tag.NoValue` tag, it maps it to the same "strict" special values used in requests. This allows you to check for "no value" by comparing the property to its type's special value (e.g., `int.MinValue`, `DateTime.MinValue`, etc.).
 
-For a full list of these special values, see the [Advanced NoValue in Requests](../Client/advanced-novalue-requests.md) documentation.
+For a full list of these special values, see the [Advanced NoValue in Client](../Client/advanced-novalue.md) documentation.
 
-### Example: Checking for NoValue in a Response
+### Example: Checking for NoValue in a Request
 
 ```csharp
-var response = await client.GetPrinterAttributesAsync(request);
+// When your server receives a request, SharpIppNext automatically maps
+// NoValue tags into the corresponding special values in the request model.
+var request = (GetJobsRequest)await sharpIppServer.ReceiveRequestAsync(stream);
 
-if (response.PrinterAttributes.QueuedJobCount == NoValue.GetNoValue<int>())
+if (request.OperationAttributes.Limit == NoValue.GetNoValue<int>())
 {
-    Console.WriteLine("The printer supports queued-job-count but it currently has no value.");
+    Console.WriteLine("The client sent a 'no-value' tag for the limit attribute.");
 }
 ```
 

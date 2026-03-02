@@ -1,4 +1,4 @@
-# Advanced NoValue in Client Requests and Responses
+# Advanced NoValue in Client
 
 In IPP, the `no-value` out-of-band tag (0x13) is used to indicate that an attribute is supported but currently has no value. SharpIppNext allows you to include this tag in your requests by using specific "special" values in your request models.
 
@@ -39,21 +39,24 @@ If you need to send a `NoValue` tag for a boolean attribute, you must manually r
 
 ```csharp
 // 1. Initialize your request as usual
-var request = new MyCustomRequest
+var request = new GetJobsRequest
 {
-    MyBooleanProperty = false // This will be mapped as a normal boolean false
+    OperationAttributes = new GetJobsOperationAttributes
+    {
+        MyJobs = false // This will be mapped as a normal boolean false
+    }
 };
 
 // 2. Create the raw request message
 IIppRequestMessage rawRequest = client.CreateRawRequest(request);
 
 // 3. Find and replace the attribute manually
-for (var i = 0; i < rawRequest.OperationAttributes.Count; i++)
+for (var i = 0; i < rawRequest.JobAttributes.Count; i++)
 {
-    var attribute = rawRequest.OperationAttributes[i];
-    if (attribute.Name == "my-boolean-attribute")
+    var attribute = rawRequest.JobAttributes[i];
+    if (attribute.Name == JobAttribute.MyJobs)
     {
-        rawRequest.OperationAttributes[i] = new IppAttribute(
+        rawRequest.JobAttributes[i] = new IppAttribute(
             Tag.NoValue, 
             attribute.Name, 
             NoValue.Instance);
@@ -75,7 +78,10 @@ If you need to detect if a boolean attribute in a response was actually a `NoVal
 IIppResponseMessage rawResponse = await client.SendAsync(printerUri, rawRequest);
 
 // Manually look for the attribute in the raw message
-var attribute = rawResponse.AllAttributes().FirstOrDefault(a => a.Name == "my-boolean-attribute");
+// PrinterAttributes is a List<List<IppAttribute>>, so we use SelectMany to flatten it
+var attribute = rawResponse.PrinterAttributes
+    .SelectMany(x => x)
+    .FirstOrDefault(a => a.Name == PrinterAttribute.ColorSupported);
 if (attribute?.Tag == Tag.NoValue)
 {
     // This attribute was sent as NoValue
