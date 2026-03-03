@@ -68,7 +68,22 @@ internal class GetJobAttributesResponseProfile : IProfile
             JobProcessingTime = map.MapFromDicNullable<int?>(src, JobAttribute.JobProcessingTime),
             ErrorsCount = map.MapFromDicNullable<int?>(src, JobAttribute.ErrorsCount),
             WarningsCount = map.MapFromDicNullable<int?>(src, JobAttribute.WarningsCount),
-            PrintContentOptimizeActual = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.PrintContentOptimizeActual)
+            PrintContentOptimizeActual = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.PrintContentOptimizeActual),
+            CopiesActual = map.MapFromDicSetNullable<int[]?>(src, JobAttribute.CopiesActual),
+            FinishingsActual = map.MapFromDicSetNullable<Finishings[]?>(src, JobAttribute.FinishingsActual),
+            JobHoldUntilActual = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.JobHoldUntilActual),
+            JobPriorityActual = map.MapFromDicSetNullable<int[]?>(src, JobAttribute.JobPriorityActual),
+            JobSheetsActual = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.JobSheetsActual),
+            MediaActual = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.MediaActual),
+            MediaColActual = src.ContainsKey(JobAttribute.MediaColActual) ? new[] { map.Map<MediaCol>(src[JobAttribute.MediaColActual].FromBegCollection().ToIppDictionary()) } : null,
+            MultipleDocumentHandlingActual = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.MultipleDocumentHandlingActual),
+            NumberUpActual = map.MapFromDicSetNullable<int[]?>(src, JobAttribute.NumberUpActual),
+            OrientationRequestedActual = map.MapFromDicSetNullable<Orientation[]?>(src, JobAttribute.OrientationRequestedActual),
+            OutputBinActual = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.OutputBinActual),
+            PageRangesActual = map.MapFromDicSetNullable<Protocol.Models.Range[]?>(src, JobAttribute.PageRangesActual),
+            PrintQualityActual = map.MapFromDicSetNullable<PrintQuality[]?>(src, JobAttribute.PrintQualityActual),
+            PrinterResolutionActual = map.MapFromDicSetNullable<Resolution[]?>(src, JobAttribute.PrinterResolutionActual),
+            SidesActual = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.SidesActual)
         });
 
         mapper.CreateMap<JobDescriptionAttributes, IDictionary<string, IppAttribute[]>>((src, map) =>
@@ -142,6 +157,36 @@ internal class GetJobAttributesResponseProfile : IProfile
                 dic.Add(JobAttribute.WarningsCount, [new IppAttribute(Tag.Integer, JobAttribute.WarningsCount, src.WarningsCount.Value)]);
             if (src.PrintContentOptimizeActual != null)
                 dic.Add(JobAttribute.PrintContentOptimizeActual, src.PrintContentOptimizeActual.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.PrintContentOptimizeActual, x)).ToArray());
+            if (src.CopiesActual != null)
+                dic.Add(JobAttribute.CopiesActual, src.CopiesActual.Select(x => new IppAttribute(Tag.Integer, JobAttribute.CopiesActual, x)).ToArray());
+            if (src.FinishingsActual != null)
+                dic.Add(JobAttribute.FinishingsActual, src.FinishingsActual.Select(x => new IppAttribute(Tag.Enum, JobAttribute.FinishingsActual, (int)x)).ToArray());
+            if (src.JobHoldUntilActual != null)
+                dic.Add(JobAttribute.JobHoldUntilActual, src.JobHoldUntilActual.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.JobHoldUntilActual, x)).ToArray());
+            if (src.JobPriorityActual != null)
+                dic.Add(JobAttribute.JobPriorityActual, src.JobPriorityActual.Select(x => new IppAttribute(Tag.Integer, JobAttribute.JobPriorityActual, x)).ToArray());
+            if (src.JobSheetsActual != null)
+                dic.Add(JobAttribute.JobSheetsActual, src.JobSheetsActual.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.JobSheetsActual, x)).ToArray());
+            if (src.MediaActual != null)
+                dic.Add(JobAttribute.MediaActual, src.MediaActual.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.MediaActual, x)).ToArray());
+            if (src.MediaColActual != null)
+                dic.Add(JobAttribute.MediaColActual, src.MediaColActual.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.MediaColActual)).ToArray());
+            if (src.MultipleDocumentHandlingActual != null)
+                dic.Add(JobAttribute.MultipleDocumentHandlingActual, src.MultipleDocumentHandlingActual.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.MultipleDocumentHandlingActual, x)).ToArray());
+            if (src.NumberUpActual != null)
+                dic.Add(JobAttribute.NumberUpActual, src.NumberUpActual.Select(x => new IppAttribute(Tag.Integer, JobAttribute.NumberUpActual, x)).ToArray());
+            if (src.OrientationRequestedActual != null)
+                dic.Add(JobAttribute.OrientationRequestedActual, src.OrientationRequestedActual.Select(x => new IppAttribute(Tag.Enum, JobAttribute.OrientationRequestedActual, (int)x)).ToArray());
+            if (src.OutputBinActual != null)
+                dic.Add(JobAttribute.OutputBinActual, src.OutputBinActual.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.OutputBinActual, x)).ToArray());
+            if (src.PageRangesActual != null)
+                dic.Add(JobAttribute.PageRangesActual, src.PageRangesActual.Select(x => new IppAttribute(Tag.RangeOfInteger, JobAttribute.PageRangesActual, x)).ToArray());
+            if (src.PrintQualityActual != null)
+                dic.Add(JobAttribute.PrintQualityActual, src.PrintQualityActual.Select(x => new IppAttribute(Tag.Enum, JobAttribute.PrintQualityActual, (int)x)).ToArray());
+            if (src.PrinterResolutionActual != null)
+                dic.Add(JobAttribute.PrinterResolutionActual, src.PrinterResolutionActual.Select(x => new IppAttribute(Tag.Resolution, JobAttribute.PrinterResolutionActual, x)).ToArray());
+            if (src.SidesActual != null)
+                dic.Add(JobAttribute.SidesActual, src.SidesActual.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.SidesActual, x)).ToArray());
             return dic;
         });
     }

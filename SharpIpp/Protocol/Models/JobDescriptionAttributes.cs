@@ -362,5 +362,110 @@ namespace SharpIpp.Protocol.Models
         ///     See: PWG 5100.7-2023 Section 6.2.2
         /// </summary>
         public string[]? PrintContentOptimizeActual { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies the actual number of copies
+        ///     that were produced for the Job.
+        ///     See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public int[]? CopiesActual { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies the actual finishing operations
+        ///     that were applied to the Job.
+        ///     See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public Finishings[]? FinishingsActual { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies the actual job-hold-until
+        ///     value(s) used by the Printer.
+        ///     See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public string[]? JobHoldUntilActual { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies the actual job priority
+        ///     value(s) used by the Printer.
+        ///     See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public int[]? JobPriorityActual { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies the actual job sheets
+        ///     value(s) used by the Printer.
+        ///     See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public string[]? JobSheetsActual { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies the actual media
+        ///     value(s) used by the Printer.
+        ///     See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public string[]? MediaActual { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies the actual media-col
+        ///     collection(s) used by the Printer.
+        ///     See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public MediaCol[]? MediaColActual { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies the actual multiple-document-handling
+        ///     value(s) used by the Printer.
+        ///     See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public string[]? MultipleDocumentHandlingActual { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies the actual number-up
+        ///     value(s) used by the Printer.
+        ///     See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public int[]? NumberUpActual { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies the actual orientation
+        ///     value(s) used by the Printer.
+        ///     See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public Orientation[]? OrientationRequestedActual { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies the actual output-bin
+        ///     value(s) used by the Printer.
+        ///     See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public string[]? OutputBinActual { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies the actual page-ranges
+        ///     value(s) used by the Printer.
+        ///     See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public Range[]? PageRangesActual { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies the actual print quality
+        ///     value(s) used by the Printer.
+        ///     See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public PrintQuality[]? PrintQualityActual { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies the actual printer resolution
+        ///     value(s) used by the Printer.
+        ///     See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public Resolution[]? PrinterResolutionActual { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies the actual sides
+        ///     value(s) used by the Printer.
+        ///     See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public string[]? SidesActual { get; set; }
     }
 }

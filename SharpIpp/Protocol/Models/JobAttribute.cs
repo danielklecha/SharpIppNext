@@ -91,5 +91,20 @@ namespace SharpIpp.Protocol.Models
         public const string ErrorsCount = "errors-count";
         public const string WarningsCount = "warnings-count";
         public const string PrintContentOptimizeActual = "print-content-optimize-actual";
+        public const string CopiesActual = "copies-actual";
+        public const string FinishingsActual = "finishings-actual";
+        public const string JobHoldUntilActual = "job-hold-until-actual";
+        public const string JobPriorityActual = "job-priority-actual";
+        public const string JobSheetsActual = "job-sheets-actual";
+        public const string MediaActual = "media-actual";
+        public const string MediaColActual = "media-col-actual";
+        public const string MultipleDocumentHandlingActual = "multiple-document-handling-actual";
+        public const string NumberUpActual = "number-up-actual";
+        public const string OrientationRequestedActual = "orientation-requested-actual";
+        public const string OutputBinActual = "output-bin-actual";
+        public const string PageRangesActual = "page-ranges-actual";
+        public const string PrintQualityActual = "print-quality-actual";
+        public const string PrinterResolutionActual = "printer-resolution-actual";
+        public const string SidesActual = "sides-actual";
     }
 }

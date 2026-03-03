@@ -896,7 +896,26 @@ public class SharpIppIntegrationTests
                     JobProcessingTime = 30,
                     ErrorsCount = 0,
                     WarningsCount = 1,
-                    PrintContentOptimizeActual = ["auto"]
+                    PrintContentOptimizeActual = ["auto"],
+                    CopiesActual = [1],
+                    FinishingsActual = [Finishings.None],
+                    JobHoldUntilActual = ["no-hold"],
+                    JobPriorityActual = [50],
+                    JobSheetsActual = ["none"],
+                    MediaActual = ["iso_a4_210x297mm"],
+                    MediaColActual = [new MediaCol
+                    {
+                        MediaSizeName = "iso_a4_210x297mm",
+                        MediaType = "stationery"
+                    }],
+                    MultipleDocumentHandlingActual = ["separate-documents-uncollated-copies"],
+                    NumberUpActual = [1],
+                    OrientationRequestedActual = [Orientation.Portrait],
+                    OutputBinActual = ["face-down"],
+                    PageRangesActual = [new SharpIpp.Protocol.Models.Range(1, 2)],
+                    PrintQualityActual = [PrintQuality.Normal],
+                    PrinterResolutionActual = [new Resolution(600, 600, ResolutionUnit.DotsPerInch)],
+                    SidesActual = ["one-sided"]
                 },
                 OperationAttributes = new()
                 {
@@ -990,7 +1009,21 @@ public class SharpIppIntegrationTests
                         JobKOctets = 20,
                         JobDetailedStatusMessages = ["message"],
                         JobDocumentAccessErrors = ["error"],
-                        JobMessageFromOperator = "operator message"
+                        JobMessageFromOperator = "operator message",
+                        CopiesActual = [1],
+                        FinishingsActual = [Finishings.None],
+                        JobHoldUntilActual = ["no-hold"],
+                        JobPriorityActual = [50],
+                        JobSheetsActual = ["none"],
+                        MediaActual = ["iso_a4_210x297mm"],
+                        MultipleDocumentHandlingActual = ["separate-documents-uncollated-copies"],
+                        NumberUpActual = [1],
+                        OrientationRequestedActual = [Orientation.Portrait],
+                        OutputBinActual = ["face-down"],
+                        PageRangesActual = [new SharpIpp.Protocol.Models.Range(1, 2)],
+                        PrintQualityActual = [PrintQuality.Normal],
+                        PrinterResolutionActual = [new Resolution(600, 600, ResolutionUnit.DotsPerInch)],
+                        SidesActual = ["one-sided"]
                     }
                 ]
             };
