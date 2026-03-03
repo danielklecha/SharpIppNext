@@ -11,14 +11,15 @@ namespace SharpIpp.Protocol.Models
         ///     attribute as part of the response to a create request.  The 0 value
         ///     is not included to allow for compatibility with SNMP index values
         ///     which also cannot be 0.
-        ///     https://tools.ietf.org/html/rfc2911#section-4.3.2
+        ///     See: RFC 8011 Section 5.3.1
         /// </summary>
         /// <example>63</example>
         /// <code>job-id</code>
         public int? JobId { get; set; }
 
         /// <summary>
-        /// https://tools.ietf.org/html/rfc2911#section-4.3.1
+        ///     This REQUIRED attribute contains the URI for the Job object.
+        ///     See: RFC 8011 Section 5.3.2
         /// </summary>
         public string? JobUri { get; set; }
 
@@ -31,7 +32,7 @@ namespace SharpIpp.Protocol.Models
         ///     object's URI is available to the client.  The client queries the
         ///     creating Printer object to determine which languages, charsets,
         ///     operations, are supported for this Job.
-        ///     https://tools.ietf.org/html/rfc2911#section-4.3.3
+        ///     See: RFC 8011 Section 5.3.3
         /// </summary>
         /// <example>ipp://10.30.254.250:631/ipp/print</example>
         /// <code>job-printer-uri</code>
@@ -46,7 +47,7 @@ namespace SharpIpp.Protocol.Models
         ///     the "job-name" operation attribute is not supplied by the client in
         ///     the create request, the Printer object, on creation of the Job, MUST
         ///     generate a name.
-        ///     https://tools.ietf.org/html/rfc2911#section-4.3.5
+        ///     See: RFC 8011 Section 5.3.5
         /// </summary>
         /// <example>job63</example>
         /// <code>job-name</code>
@@ -60,7 +61,7 @@ namespace SharpIpp.Protocol.Models
         ///     Only if such is not available, does the Printer object use the value
         ///     supplied by the client in the "requesting-user-name" operation
         ///     attribute of the create operation (see Sections 4.4.2, 4.4.3, and 8).
-        ///     https://tools.ietf.org/html/rfc2911#section-4.3.6
+        ///     See: RFC 8011 Section 5.3.6
         /// </summary>
         /// <example>anonymous (en)</example>
         /// <code>job-originating-user-name</code>
@@ -77,7 +78,7 @@ namespace SharpIpp.Protocol.Models
         ///     implementations where multiple copies are produced by the interpreter
         ///     by processing the data for each copy, the final value MUST be a
         ///     multiple of the value of the "job-k-octets" attribute.
-        ///     https://tools.ietf.org/html/rfc2911#section-4.3.18.1
+        ///     See: RFC 8011 Section 5.3.18.1
         /// </summary>
         /// <example>26</example>
         /// <code>job-k-octets-processed</code>
@@ -101,7 +102,7 @@ namespace SharpIpp.Protocol.Models
         ///     other words, this value is always the number of impressions in the
         ///     source document data, rather than a measure of the number of
         ///     impressions to be produced by the job.
-        ///     https://tools.ietf.org/html/rfc2911#section-4.3.17.2
+        ///     See: RFC 8011 Section 5.3.17.2
         /// </summary>
         /// <example>no value</example>
         /// <code>job-impressions</code>
@@ -111,7 +112,7 @@ namespace SharpIpp.Protocol.Models
         ///     This job attribute specifies the number of impressions completed for
         ///     the job so far.  For printing devices, the impressions completed
         ///     includes interpreting, marking, and stacking the output.
-        ///     https://tools.ietf.org/html/rfc2911#section-4.3.18.2
+        ///     See: RFC 8011 Section 5.3.18.2
         /// </summary>
         /// <example>0</example>
         /// <code>job-impressions-completed</code>
@@ -128,25 +129,45 @@ namespace SharpIpp.Protocol.Models
         ///     upper bounds of both (1) the size of the document(s) with "job-k-
         ///     octets-supported" and "job-impressions-supported" and (2) the size of
         ///     the job with "job-media-sheets-supported".
-        ///     https://tools.ietf.org/html/rfc2911#section-4.3.17.3
+        ///     See: RFC 8011 Section 5.3.17.3
         /// </summary>
         /// <example>no value</example>
         /// <code>job-media-sheets</code>
         public int? JobMediaSheets { get; set; }
 
+        /// <summary>
+        ///     This attribute contains a URI used to obtain additional
+        ///     information about the Job object.
+        ///     See: RFC 8011 Section 5.3.4
+        /// </summary>
         public string? JobMoreInfo { get; set; }
 
+        /// <summary>
+        ///     This attribute indicates the number of documents in the Job.
+        ///     See: RFC 8011 Section 5.3.12
+        /// </summary>
         public int? NumberOfDocuments { get; set; }
 
+        /// <summary>
+        ///     This attribute indicates the number of jobs that are
+        ///     "ahead" of this job in the relative chronological order of
+        ///     expected time to complete.
+        ///     See: RFC 8011 Section 5.3.15
+        /// </summary>
         public int? NumberOfInterveningJobs { get; set; }
 
+        /// <summary>
+        ///     This attribute identifies the output device to which the
+        ///     Printer object has assigned this job.
+        ///     See: RFC 8011 Section 5.3.13
+        /// </summary>
         public string? OutputDeviceAssigned { get; set; }
 
         /// <summary>
         ///     This job attribute specifies the media-sheets completed marking and
         ///     stacking for the entire job so far whether those sheets have been
         ///     processed on one side or on both.
-        ///     https://tools.ietf.org/html/rfc2911#section-4.3.18.3
+        ///     See: RFC 8011 Section 5.3.18.3
         /// </summary>
         /// <example>0</example>
         /// <code>job-media-sheets-completed</code>
@@ -160,7 +181,7 @@ namespace SharpIpp.Protocol.Models
         ///     appropriate for the particular implementation.  In other words, a
         ///     Printer supports only those job states implemented by the output
         ///     device and available to the Printer object implementation.
-        ///     https://tools.ietf.org/html/rfc2911#section-4.3.7
+        ///     See: RFC 8011 Section 5.3.7
         /// </summary>
         /// <example>9</example>
         /// <code>job-state</code>
@@ -173,6 +194,7 @@ namespace SharpIpp.Protocol.Models
         ///     this attribute is not returned in the response, the client can
         ///     assume that the "job-state-message" attribute is not supported
         ///     and will not be returned in a subsequent Job object query.
+        ///     See: RFC 8011 Section 5.3.9
         /// </summary>
         /// <example>The job completed successfully</example>
         /// <code>job-state-message</code>
@@ -181,6 +203,7 @@ namespace SharpIpp.Protocol.Models
         /// <summary>
         ///     The Printer object MUST return the Job object's REQUIRED "job-
         ///     state-reasons" attribute.
+        ///     See: RFC 8011 Section 5.3.8
         /// </summary>
         /// <example>job-completed-successfully</example>
         /// <code>job-state-reasons</code>
@@ -189,7 +212,7 @@ namespace SharpIpp.Protocol.Models
         /// <summary>
         ///     This attribute indicates the date and time at which the Job object
         ///     was created.
-        ///     https://tools.ietf.org/html/rfc2911#section-4.3.14.5
+        ///     See: RFC 8011 Section 5.3.14.5
         /// </summary>
         /// <example>22.04.2021 20:13:21 +03:00</example>
         /// <code>date-time-at-creation</code>
@@ -199,7 +222,7 @@ namespace SharpIpp.Protocol.Models
         ///     This attribute indicates the date and time at which the Job object
         ///     first began processing after the create operation or the most recent
         ///     Restart-Job operation.
-        ///     https://tools.ietf.org/html/rfc2911#section-4.3.14.6
+        ///     See: RFC 8011 Section 5.3.14.6
         /// </summary>
         /// <example>22.04.2021 20:13:22 +03:00</example>
         /// <code>date-time-at-processing</code>
@@ -208,7 +231,7 @@ namespace SharpIpp.Protocol.Models
         /// <summary>
         ///     This attribute indicates the date and time at which the Job object
         ///     completed (or was canceled or aborted).
-        ///     https://tools.ietf.org/html/rfc2911#section-4.3.14.7
+        ///     See: RFC 8011 Section 5.3.14.7
         /// </summary>
         /// <example>22.04.2021 20:13:22 +03:00</example>
         /// <code>date-time-at-completed</code>
@@ -217,7 +240,7 @@ namespace SharpIpp.Protocol.Models
         /// <summary>
         ///     This REQUIRED attribute indicates the time at which the Job object
         ///     was created.
-        ///     https://tools.ietf.org/html/rfc2911#section-4.3.14.1
+        ///     See: RFC 8011 Section 5.3.14.1
         /// </summary>
         /// <example>197753</example>
         /// <code>time-at-creation</code>
@@ -228,7 +251,7 @@ namespace SharpIpp.Protocol.Models
         ///     first began processing after the create operation or the most recent
         ///     Restart-Job operation.  The out-of-band 'no-value' value is returned
         ///     if the job has not yet been in the 'processing' state
-        ///     https://tools.ietf.org/html/rfc2911#section-4.3.14.2
+        ///     See: RFC 8011 Section 5.3.14.2
         /// </summary>
         /// <example>197754</example>
         /// <code>time-at-processing</code>
@@ -239,7 +262,7 @@ namespace SharpIpp.Protocol.Models
         ///     completed (or was canceled or aborted).  The out-of-band 'no-value'
         ///     value is returned if the job has not yet completed, been canceled, or
         ///     aborted
-        ///     https://tools.ietf.org/html/rfc2911#section-4.3.14.3
+        ///     See: RFC 8011 Section 5.3.14.3
         /// </summary>
         /// <example>197754</example>
         /// <code>time-at-completed</code>
@@ -250,52 +273,52 @@ namespace SharpIpp.Protocol.Models
         ///     (in seconds) that the Printer implementation has been up and running.
         ///     This attribute is an alias for the "printer-up-time" Printer
         ///     Description attribute (see Section 4.4.29).
-        ///     https://tools.ietf.org/html/rfc2911#section-4.3.14.4
+        ///     See: RFC 8011 Section 5.3.14.4
         /// </summary>
         /// <example>197775</example>
         /// <code>job-printer-up-time</code>
         public int? JobPrinterUpTime { get; set; }
 
         /// <summary>
-        /// This attribute specifies the total size of the document(s) in K
-        /// octets, i.e., in units of 1024 octets requested to be processed in
-        /// the job.The value MUST be rounded up, so that a job between 1 and
-        /// 1024 octets MUST be indicated as being 1, 1025 to 2048 MUST be 2,
-        /// etc.
-        /// https://tools.ietf.org/html/rfc2911#section-4.3.17.1
+        ///     This attribute specifies the total size of the document(s) in K
+        ///     octets, i.e., in units of 1024 octets requested to be processed in
+        ///     the job. The value MUST be rounded up, so that a job between 1 and
+        ///     1024 octets MUST be indicated as being 1, 1025 to 2048 MUST be 2,
+        ///     etc.
+        ///     See: RFC 8011 Section 5.3.17.1
         /// </summary>
         public int? JobKOctets { get; set; }
 
         /// <summary>
-        /// This attribute specifies additional detailed and technical
-        /// information about the job.The Printer NEED NOT localize the
-        /// message(s), since they are intended for use by the system
-        /// administrator or other experienced technical persons.  Localization
-        /// might obscure the technical meaning of such messages.Clients MUST
-        /// NOT attempt to parse the value of this attribute.
-        /// https://datatracker.ietf.org/doc/html/rfc2911#section-4.3.10
+        ///     This attribute specifies additional detailed and technical
+        ///     information about the job. The Printer NEED NOT localize the
+        ///     message(s), since they are intended for use by the system
+        ///     administrator or other experienced technical persons.  Localization
+        ///     might obscure the technical meaning of such messages. Clients MUST
+        ///     NOT attempt to parse the value of this attribute.
+        ///     See: RFC 8011 Section 5.3.10
         /// </summary>
         public string[]? JobDetailedStatusMessages { get; set; }
 
         /// <summary>
-        /// This attribute provides additional information about each document
-        /// access error for this job encountered by the Printer after it
-        /// returned a response to the Print-URI or Send-URI operation and
-        /// subsequently attempted to access document(s) supplied in the Print-
-        /// URI or Send-URI operation.For errors in the protocol that is
-        /// identified by the URI scheme in the "document-uri" operation
-        /// attribute, such as 'http:' or 'ftp:', the error code is returned in
-        /// parentheses, followed by the URI.
-        /// https://datatracker.ietf.org/doc/html/rfc2911#section-4.3.11
+        ///     This attribute provides additional information about each document
+        ///     access error for this job encountered by the Printer after it
+        ///     returned a response to the Print-URI or Send-URI operation and
+        ///     subsequently attempted to access document(s) supplied in the Print-
+        ///     URI or Send-URI operation. For errors in the protocol that is
+        ///     identified by the URI scheme in the "document-uri" operation
+        ///     attribute, such as 'http:' or 'ftp:', the error code is returned in
+        ///     parentheses, followed by the URI.
+        ///     See: RFC 8011 Section 5.3.11
         /// </summary>
         public string[]? JobDocumentAccessErrors { get; set; }
 
         /// <summary>
-        /// This attribute provides a message from an operator, system
-        /// administrator or "intelligent" process to indicate to the end user
-        /// the reasons for modification or other management action taken on a
-        /// job.
-        /// https://datatracker.ietf.org/doc/html/rfc2911#section-4.3.16
+        ///     This attribute provides a message from an operator, system
+        ///     administrator or "intelligent" process to indicate to the end user
+        ///     the reasons for modification or other management action taken on a
+        ///     job.
+        ///     See: RFC 8011 Section 5.3.16
         /// </summary>
         public string? JobMessageFromOperator { get; set; }
 

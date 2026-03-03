@@ -23,17 +23,29 @@ namespace SharpIpp.Protocol.Models
         ///     value of the Printer object's "job-priority-default" at job
         ///     submission time (unlike most Job Template attributes that are used if
         ///     necessary at job processing time).
+        ///     See: RFC 8011 Section 5.2.1
         /// </summary>
         public int? JobPriority { get; set; }
 
         /// <summary>
         ///     This attribute specifies the named time period during which the Job
         ///     MUST become a candidate for printing.
+        ///     See: RFC 8011 Section 5.2.2
         /// </summary>
         public JobHoldUntil? JobHoldUntil { get; set; }
 
+        /// <summary>
+        ///     This attribute specifies how the Printer handles multiple documents
+        ///     within a Job.
+        ///     See: RFC 8011 Section 5.2.4
+        /// </summary>
         public MultipleDocumentHandling? MultipleDocumentHandling { get; set; }
 
+        /// <summary>
+        ///     This attribute specifies which job start/end sheet(s) the Printer
+        ///     uses for the Job.
+        ///     See: RFC 8011 Section 5.2.3
+        /// </summary>
         public JobSheets? JobSheets { get; set; }
 
         /// <summary>
@@ -42,6 +54,7 @@ namespace SharpIpp.Protocol.Models
         ///     limited by the number of physical output bins on the device, and may
         ///     be different from the number of uncollated copies which can be
         ///     supported.
+        ///     See: RFC 8011 Section 5.2.5
         /// </summary>
         public int? Copies { get; set; }
 
@@ -50,6 +63,7 @@ namespace SharpIpp.Protocol.Models
         ///     uses for each copy of each printed document in the Job. For Jobs with
         ///     multiple documents, the "multiple-document-handling" attribute
         ///     determines what constitutes a "copy" for purposes of finishing.
+        ///     See: RFC 8011 Section 5.2.6
         /// </summary>
         public Finishings? Finishings { get; set; }
 
@@ -92,6 +106,7 @@ namespace SharpIpp.Protocol.Models
         ///     "page-ranges-default" attribute.  If the "page-ranges" attribute is
         ///     not supplied by the client, all pages of the document will be
         ///     printed.
+        ///     See: RFC 8011 Section 5.2.7
         /// </summary>
         public Range[]? PageRanges { get; set; }
 
@@ -99,6 +114,7 @@ namespace SharpIpp.Protocol.Models
         ///     This attribute specifies how print-stream pages are to be imposed
         ///     upon the sides of an instance of a selected medium, i.e., an
         ///     impression.
+        ///     See: RFC 8011 Section 5.2.8
         /// </summary>
         public Sides? Sides { get; set; }
 
@@ -117,6 +133,7 @@ namespace SharpIpp.Protocol.Models
         ///     sort of translation, scaling, or rotation).
         ///     This attribute primarily controls the translation, scaling and
         ///     rotation of print-stream pages.
+        ///     See: RFC 8011 Section 5.2.9
         /// </summary>
         public int? NumberUp { get; set; }
 
@@ -141,6 +158,7 @@ namespace SharpIpp.Protocol.Models
         ///     However, a special mention is made here since it is very likely that
         ///     a Printer object will support "orientation-requested" for only a
         ///     subset of the supported document formats.
+        ///     See: RFC 8011 Section 5.2.10
         /// </summary>
         public Orientation? OrientationRequested { get; set; }
 
@@ -164,25 +182,41 @@ namespace SharpIpp.Protocol.Models
         ///     contains the medium specified by the electronic form.  The electronic
         ///     form also implicitly selects an image that the Printer MUST merge
         ///     with the document data as its prints each page.
+        ///     See: RFC 8011 Section 5.2.11
         /// </summary>
         public string? Media { get; set; }
 
         /// <summary>
         ///     This attribute identifies the resolution that Printer uses for the
         ///     Job.
+        ///     See: RFC 8011 Section 5.2.12
         /// </summary>
         public Resolution? PrinterResolution { get; set; }
 
         /// <summary>
         ///     This attribute specifies the print quality that the Printer uses for
         ///     the Job.
+        ///     See: RFC 8011 Section 5.2.13
         /// </summary>
         public PrintQuality? PrintQuality { get; set; }
 
+        /// <summary>
+        ///     This attribute specifies how the Printer scales the content.
+        ///     See: PWG 5100.13-2023 Section 6.2.5
+        /// </summary>
         public PrintScaling? PrintScaling { get; set; }
 
+        /// <summary>
+        ///     This attribute specifies the color mode for the Job.
+        ///     See: PWG 5100.13-2023 Section 6.2.3
+        /// </summary>
         public PrintColorMode? PrintColorMode { get; set; }
 
+        /// <summary>
+        ///     This attribute specifies the media and media-related attributes
+        ///     for the Job using a collection.
+        ///     See: PWG 5100.7-2023
+        /// </summary>
         public MediaCol? MediaCol { get; set; }
 
         /// <summary>
@@ -190,7 +224,7 @@ namespace SharpIpp.Protocol.Models
         ///     is to be delivered.  There are standard values whose attribute
         ///     syntax is 'keyword', but there are no standard values whose
         ///     attribute syntax is 'name'.
-        ///     See: PWG 5100.2-2001
+        ///     See: PWG 5100.2-2001 Section 2.1
         /// </summary>
         public string? OutputBin { get; set; }
 

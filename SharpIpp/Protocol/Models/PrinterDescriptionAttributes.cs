@@ -5,250 +5,338 @@ namespace SharpIpp.Protocol.Models
     public class PrinterDescriptionAttributes
     {
         /// <summary>
-        ///     printer-uri-supported
+        ///     printer-uri-supported (RFC 8011 Section 5.4.1)
         /// </summary>
         public string[]? PrinterUriSupported { get; set; }
 
         /// <summary>
-        ///     uri-security-supported
+        ///     uri-security-supported (RFC 8011 Section 5.4.3)
         /// </summary>
         public UriSecurity[]? UriSecuritySupported { get; set; }
 
         /// <summary>
-        ///     uri-authentication-supported
+        ///     uri-authentication-supported (RFC 8011 Section 5.4.2)
         /// </summary>
         public UriAuthentication[]? UriAuthenticationSupported { get; set; }
 
         /// <summary>
-        ///     printer-name
+        ///     printer-name (RFC 8011 Section 5.4.4)
         /// </summary>
         public string? PrinterName { get; set; }
 
         /// <summary>
-        ///     printer-location
+        ///     printer-location (RFC 8011 Section 5.4.5)
         /// </summary>
         public string? PrinterLocation { get; set; }
 
         /// <summary>
-        ///     printer-info
+        ///     printer-info (RFC 8011 Section 5.4.6)
         /// </summary>
         public string? PrinterInfo { get; set; }
 
         /// <summary>
-        ///     printer-more-info
+        ///     printer-more-info (RFC 8011 Section 5.4.7)
         /// </summary>
         public string? PrinterMoreInfo { get; set; }
 
         /// <summary>
-        ///     printer-driver-installer
+        ///     printer-driver-installer (RFC 8011 Section 5.4.8)
         /// </summary>
         public string? PrinterDriverInstaller { get; set; }
 
         /// <summary>
-        ///     printer-make-and-model
+        ///     printer-make-and-model (RFC 8011 Section 5.4.9)
         /// </summary>
         public string? PrinterMakeAndModel { get; set; }
 
         /// <summary>
-        ///     printer-more-info-manufacturer
+        ///     printer-more-info-manufacturer (RFC 8011 Section 5.4.10)
         /// </summary>
         public string? PrinterMoreInfoManufacturer { get; set; }
 
         /// <summary>
-        ///     printer-state
+        ///     printer-state (RFC 8011 Section 5.4.11)
         /// </summary>
         public PrinterState? PrinterState { get; set; }
 
         /// <summary>
-        ///     printer-state-reasons
+        ///     printer-state-reasons (RFC 8011 Section 5.4.12)
         /// </summary>
         public string[]? PrinterStateReasons { get; set; }
 
         /// <summary>
-        ///     printer-state-message
+        ///     printer-state-message (RFC 8011 Section 5.4.13)
         /// </summary>
         public string? PrinterStateMessage { get; set; }
 
         /// <summary>
-        ///     ipp-versions-supported
+        ///     ipp-versions-supported (RFC 8011 Section 5.4.14)
         /// </summary>
         public IppVersion[]? IppVersionsSupported { get; set; }
 
         /// <summary>
-        ///     operations-supported
+        ///     operations-supported (RFC 8011 Section 5.4.15)
         /// </summary>
         public IppOperation[]? OperationsSupported { get; set; }
 
         /// <summary>
-        ///     multiple-document-jobs-supported
+        ///     multiple-document-jobs-supported (RFC 8011 Section 5.4.16)
         /// </summary>
         public bool? MultipleDocumentJobsSupported { get; set; }
 
         /// <summary>
-        ///     charset-configured
+        ///     charset-configured (RFC 8011 Section 5.4.17)
         /// </summary>
         public string? CharsetConfigured { get; set; }
 
         /// <summary>
-        ///     charset-supported
+        ///     charset-supported (RFC 8011 Section 5.4.18)
         /// </summary>
         public string[]? CharsetSupported { get; set; }
 
         /// <summary>
-        ///     natural-language-configured
+        ///     natural-language-configured (RFC 8011 Section 5.4.19)
         /// </summary>
         public string? NaturalLanguageConfigured { get; set; }
 
         /// <summary>
-        ///     generated-natural-language-supported
+        ///     generated-natural-language-supported (RFC 8011 Section 5.4.20)
         /// </summary>
         public string[]? GeneratedNaturalLanguageSupported { get; set; }
 
         /// <summary>
-        ///     document-format-default
+        ///     document-format-default (RFC 8011 Section 5.4.21)
         /// </summary>
         public string? DocumentFormatDefault { get; set; }
 
         /// <summary>
-        ///     document-format-supported
+        ///     document-format-supported (RFC 8011 Section 5.4.22)
         /// </summary>
         public string[]? DocumentFormatSupported { get; set; }
 
         /// <summary>
-        ///     printer-is-accepting-jobs
+        ///     printer-is-accepting-jobs (RFC 8011 Section 5.4.23)
         /// </summary>
         public bool? PrinterIsAcceptingJobs { get; set; }
 
         /// <summary>
-        ///     queued-job-count
+        ///     queued-job-count (RFC 8011 Section 5.4.24)
         /// </summary>
         public int? QueuedJobCount { get; set; }
 
         /// <summary>
-        ///     printer-message-from-operator
+        ///     printer-message-from-operator (RFC 8011 Section 5.4.25)
         /// </summary>
         public string? PrinterMessageFromOperator { get; set; }
 
         /// <summary>
-        ///     color-supported
+        ///     color-supported (RFC 8011 Section 5.4.26)
         /// </summary>
         public bool? ColorSupported { get; set; }
 
         /// <summary>
-        ///     reference-uri-schemes-supported
+        ///     reference-uri-schemes-supported (RFC 8011 Section 5.4.27)
         /// </summary>
         public UriScheme[]? ReferenceUriSchemesSupported { get; set; }
 
         /// <summary>
-        ///     pdl-override-supported
+        ///     pdl-override-supported (RFC 8011 Section 5.4.28)
         /// </summary>
         public string? PdlOverrideSupported { get; set; }
 
         /// <summary>
-        ///     printer-up-time
+        ///     printer-up-time (RFC 8011 Section 5.4.29)
         /// </summary>
         public int? PrinterUpTime { get; set; }
 
         /// <summary>
-        ///     printer-current-time
+        ///     printer-current-time (RFC 8011 Section 5.4.30)
         /// </summary>
         public DateTimeOffset? PrinterCurrentTime { get; set; }
 
         /// <summary>
-        ///     multiple-operation-time-out
+        ///     multiple-operation-time-out (RFC 8011 Section 5.4.31)
         /// </summary>
         public int? MultipleOperationTimeOut { get; set; }
 
         /// <summary>
-        ///     compression-supported
+        ///     compression-supported (RFC 8011 Section 5.4.32)
         /// </summary>
         public Compression[]? CompressionSupported { get; set; }
 
         /// <summary>
-        ///     job-k-octets-supported
+        ///     job-k-octets-supported (RFC 8011 Section 5.4.33)
         /// </summary>
         public Range? JobKOctetsSupported { get; set; }
 
         /// <summary>
-        ///     jpeg-k-octets-supported
+        ///     jpeg-k-octets-supported (PWG 5100.13-2023 Section 6.5.12)
         /// </summary>
         public Range? JpegKOctetsSupported { get; set; }
 
         /// <summary>
-        ///     pdf-k-octets-supported
+        ///     pdf-k-octets-supported (PWG 5100.13-2023 Section 6.5.20)
         /// </summary>
         public Range? PdfKOctetsSupported { get; set; }
 
         /// <summary>
-        ///     job-impressions-supported
+        ///     job-impressions-supported (RFC 8011 Section 5.4.34)
         /// </summary>
         public Range? JobImpressionsSupported { get; set; }
 
         /// <summary>
-        ///     job-media-sheets-supported
+        ///     job-media-sheets-supported (RFC 8011 Section 5.4.35)
         /// </summary>
         public Range? JobMediaSheetsSupported { get; set; }
 
         /// <summary>
-        ///     pages-per-minute
+        ///     pages-per-minute (RFC 8011 Section 5.4.36)
         /// </summary>
         public int? PagesPerMinute { get; set; }
 
         /// <summary>
-        ///     pages-per-minute-color
+        ///     pages-per-minute-color (RFC 8011 Section 5.4.37)
         /// </summary>
         public int? PagesPerMinuteColor { get; set; }
 
+        /// <summary>
+        ///     print-scaling-default (PWG 5100.13-2023 Section 6.5.29)
+        /// </summary>
         public PrintScaling? PrintScalingDefault { get; set; }
 
+        /// <summary>
+        ///     print-scaling-supported (PWG 5100.13-2023 Section 6.5.30)
+        /// </summary>
         public PrintScaling[]? PrintScalingSupported { get; set; }
 
+        /// <summary>
+        ///     media-default (RFC 8011 Section 5.2.11)
+        /// </summary>
         public string? MediaDefault { get; set; }
 
+        /// <summary>
+        ///     media-supported (RFC 8011 Section 5.2.11)
+        /// </summary>
         public string[]? MediaSupported { get; set; }
 
+        /// <summary>
+        ///     sides-default (RFC 8011 Section 5.2.8)
+        /// </summary>
         public Sides? SidesDefault { get; set; }
 
+        /// <summary>
+        ///     sides-supported (RFC 8011 Section 5.2.8)
+        /// </summary>
         public Sides[]? SidesSupported { get; set; }
 
+        /// <summary>
+        ///     finishings-default (RFC 8011 Section 5.2.6)
+        /// </summary>
         public Finishings? FinishingsDefault { get; set; }
 
+        /// <summary>
+        ///     finishings-supported (RFC 8011 Section 5.2.6)
+        /// </summary>
         public Finishings[]? FinishingsSupported { get; set; }
 
+        /// <summary>
+        ///     printer-resolution-default (RFC 8011 Section 5.2.12)
+        /// </summary>
         public Resolution? PrinterResolutionDefault { get; set; }
 
+        /// <summary>
+        ///     printer-resolution-supported (RFC 8011 Section 5.2.12)
+        /// </summary>
         public Resolution[]? PrinterResolutionSupported { get; set; }
 
+        /// <summary>
+        ///     print-quality-default (RFC 8011 Section 5.2.13)
+        /// </summary>
         public PrintQuality? PrintQualityDefault { get; set; }
 
+        /// <summary>
+        ///     print-quality-supported (RFC 8011 Section 5.2.13)
+        /// </summary>
         public PrintQuality[]? PrintQualitySupported { get; set; }
 
+        /// <summary>
+        ///     job-priority-default (RFC 8011 Section 5.2.1)
+        /// </summary>
         public int? JobPriorityDefault { get; set; }
 
+        /// <summary>
+        ///     job-priority-supported (RFC 8011 Section 5.2.1)
+        /// </summary>
         public int? JobPrioritySupported { get; set; }
 
+        /// <summary>
+        ///     copies-default (RFC 8011 Section 5.2.5)
+        /// </summary>
         public int? CopiesDefault { get; set; }
 
+        /// <summary>
+        ///     copies-supported (RFC 8011 Section 5.2.5)
+        /// </summary>
         public Range? CopiesSupported { get; set; }
 
+        /// <summary>
+        ///     orientation-requested-default (RFC 8011 Section 5.2.10)
+        /// </summary>
         public Orientation? OrientationRequestedDefault { get; set; }
 
+        /// <summary>
+        ///     orientation-requested-supported (RFC 8011 Section 5.2.10)
+        /// </summary>
         public Orientation[]? OrientationRequestedSupported { get; set; }
 
+        /// <summary>
+        ///     page-ranges-supported (RFC 8011 Section 5.2.7)
+        /// </summary>
         public bool? PageRangesSupported { get; set; }
+
+        /// <summary>
+        ///     job-hold-until-supported (RFC 8011 Section 5.2.2)
+        /// </summary>
         public JobHoldUntil[]? JobHoldUntilSupported { get; set; }
+
+        /// <summary>
+        ///     job-hold-until-default (RFC 8011 Section 5.2.2)
+        /// </summary>
         public JobHoldUntil? JobHoldUntilDefault { get; set; }
 
+        /// <summary>
+        ///     output-bin-default (PWG 5100.2-2001 Section 2.1)
+        /// </summary>
         public string? OutputBinDefault { get; set; }
 
+        /// <summary>
+        ///     output-bin-supported (PWG 5100.2-2001 Section 2.1)
+        /// </summary>
         public string[]? OutputBinSupported { get; set; }
+
+        /// <summary>
+        ///     media-col-default (PWG 5100.7-2023)
+        /// </summary>
         public MediaCol? MediaColDefault { get; set; }
 
+        /// <summary>
+        ///     print-color-mode-default (PWG 5100.13-2023 Section 6.5.23)
+        /// </summary>
         public PrintColorMode? PrintColorModeDefault { get; set; }
+
+        /// <summary>
+        ///     print-color-mode-supported (PWG 5100.13-2023 Section 6.5.25)
+        /// </summary>
         public PrintColorMode[]? PrintColorModeSupported { get; set; }
 
+        /// <summary>
+        ///     which-jobs-supported (RFC 8011 Section 4.2.6.1)
+        /// </summary>
         public WhichJobs[]? WhichJobsSupported { get; set; }
 
+        /// <summary>
+        ///     printer-uuid (PWG 5100.13-2023 Section 6.6.14)
+        /// </summary>
         public string? PrinterUUID { get; set; }
 
         /// <summary>
