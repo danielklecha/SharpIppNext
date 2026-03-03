@@ -116,6 +116,18 @@ internal class GetCUPSPrintersResponseProfile : IProfile
                 WhichJobsSupported = map.MapFromDicSetNullable<WhichJobs[]?>(src, PrinterAttribute.WhichJobsSupported),
                 PrinterUUID = map.MapFromDicNullable<string?>(src, PrinterAttribute.PrinterUUID),
                 DocumentCreationAttributesSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.DocumentCreationAttributesSupported),
+                JobAccountIdDefault = map.MapFromDicNullable<string?>(src, PrinterAttribute.JobAccountIdDefault),
+                JobAccountIdSupported = map.MapFromDicNullable<bool?>(src, PrinterAttribute.JobAccountIdSupported),
+                JobAccountingUserIdDefault = map.MapFromDicNullable<string?>(src, PrinterAttribute.JobAccountingUserIdDefault),
+                JobAccountingUserIdSupported = map.MapFromDicNullable<bool?>(src, PrinterAttribute.JobAccountingUserIdSupported),
+                JobCancelAfterDefault = map.MapFromDicNullable<int?>(src, PrinterAttribute.JobCancelAfterDefault),
+                JobCancelAfterSupported = map.MapFromDicNullable<Protocol.Models.Range?>(src, PrinterAttribute.JobCancelAfterSupported),
+                JobSpoolingSupported = map.MapFromDicNullable<string?>(src, PrinterAttribute.JobSpoolingSupported),
+                MaxPageRangesSupported = map.MapFromDicNullable<int?>(src, PrinterAttribute.MaxPageRangesSupported),
+                PrintContentOptimizeDefault = map.MapFromDicNullable<string?>(src, PrinterAttribute.PrintContentOptimizeDefault),
+                PrintContentOptimizeSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrintContentOptimizeSupported),
+                OutputDeviceSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.OutputDeviceSupported),
+                JobCreationAttributesSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.JobCreationAttributesSupported),
             });
 
         mapper.CreateMap<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>((src, map) =>
@@ -257,6 +269,30 @@ internal class GetCUPSPrintersResponseProfile : IProfile
                     dic.Add(PrinterAttribute.PrinterUUID, new IppAttribute[] { new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterUUID, src.PrinterUUID) });
                 if (src.DocumentCreationAttributesSupported != null)
                     dic.Add(PrinterAttribute.DocumentCreationAttributesSupported, src.DocumentCreationAttributesSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.DocumentCreationAttributesSupported, x)).ToArray());
+                if (src.JobAccountIdDefault != null)
+                    dic.Add(PrinterAttribute.JobAccountIdDefault, [new IppAttribute(Tag.NameWithoutLanguage, PrinterAttribute.JobAccountIdDefault, src.JobAccountIdDefault)]);
+                if (src.JobAccountIdSupported != null)
+                    dic.Add(PrinterAttribute.JobAccountIdSupported, [new IppAttribute(Tag.Boolean, PrinterAttribute.JobAccountIdSupported, src.JobAccountIdSupported.Value)]);
+                if (src.JobAccountingUserIdDefault != null)
+                    dic.Add(PrinterAttribute.JobAccountingUserIdDefault, [new IppAttribute(Tag.NameWithoutLanguage, PrinterAttribute.JobAccountingUserIdDefault, src.JobAccountingUserIdDefault)]);
+                if (src.JobAccountingUserIdSupported != null)
+                    dic.Add(PrinterAttribute.JobAccountingUserIdSupported, [new IppAttribute(Tag.Boolean, PrinterAttribute.JobAccountingUserIdSupported, src.JobAccountingUserIdSupported.Value)]);
+                if (src.JobCancelAfterDefault != null)
+                    dic.Add(PrinterAttribute.JobCancelAfterDefault, [new IppAttribute(Tag.Integer, PrinterAttribute.JobCancelAfterDefault, src.JobCancelAfterDefault.Value)]);
+                if (src.JobCancelAfterSupported != null)
+                    dic.Add(PrinterAttribute.JobCancelAfterSupported, [new IppAttribute(Tag.RangeOfInteger, PrinterAttribute.JobCancelAfterSupported, src.JobCancelAfterSupported.Value)]);
+                if (src.JobSpoolingSupported != null)
+                    dic.Add(PrinterAttribute.JobSpoolingSupported, [new IppAttribute(Tag.Keyword, PrinterAttribute.JobSpoolingSupported, src.JobSpoolingSupported)]);
+                if (src.MaxPageRangesSupported != null)
+                    dic.Add(PrinterAttribute.MaxPageRangesSupported, [new IppAttribute(Tag.Integer, PrinterAttribute.MaxPageRangesSupported, src.MaxPageRangesSupported.Value)]);
+                if (src.PrintContentOptimizeDefault != null)
+                    dic.Add(PrinterAttribute.PrintContentOptimizeDefault, [new IppAttribute(Tag.Keyword, PrinterAttribute.PrintContentOptimizeDefault, src.PrintContentOptimizeDefault)]);
+                if (src.PrintContentOptimizeSupported != null)
+                    dic.Add(PrinterAttribute.PrintContentOptimizeSupported, src.PrintContentOptimizeSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PrintContentOptimizeSupported, x)).ToArray());
+                if (src.OutputDeviceSupported != null)
+                    dic.Add(PrinterAttribute.OutputDeviceSupported, src.OutputDeviceSupported.Select(x => new IppAttribute(Tag.NameWithoutLanguage, PrinterAttribute.OutputDeviceSupported, x)).ToArray());
+                if (src.JobCreationAttributesSupported != null)
+                    dic.Add(PrinterAttribute.JobCreationAttributesSupported, src.JobCreationAttributesSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.JobCreationAttributesSupported, x)).ToArray());
                 return dic;
             });
     }

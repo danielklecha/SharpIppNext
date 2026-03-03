@@ -203,7 +203,20 @@ public class SharpIppIntegrationTests
                     MediaTopMargin = 10,
                     MediaType = "stationery",
                     MediaWeightMetric = 80
-                }
+                },
+                OutputBin = "face-down",
+                JobAccountId = "account-123",
+                JobAccountingUserId = "user-456",
+                JobCancelAfter = 3600,
+                JobDelayOutputUntil = "no-delay-output",
+                JobDelayOutputUntilTime = new DateTimeOffset(2024, 6, 1, 12, 0, 0, TimeSpan.Zero),
+                JobHoldUntilTime = new DateTimeOffset(2024, 6, 1, 12, 0, 0, TimeSpan.Zero),
+                JobRetainUntil = "none",
+                JobRetainUntilInterval = 600,
+                JobRetainUntilTime = new DateTimeOffset(2024, 6, 1, 12, 0, 0, TimeSpan.Zero),
+                JobSheetMessage = "Please deliver to room 101",
+                OutputDevice = "printer-1",
+                PrintContentOptimize = "auto"
             }
         };
         IIppRequest? serverRequest = null;
@@ -877,7 +890,13 @@ public class SharpIppIntegrationTests
                     JobKOctets = 20,
                     JobDetailedStatusMessages = ["message"],
                     JobDocumentAccessErrors = ["error"],
-                    JobMessageFromOperator = "operator message"
+                    JobMessageFromOperator = "operator message",
+                    JobPages = 10,
+                    JobPagesCompleted = 5,
+                    JobProcessingTime = 30,
+                    ErrorsCount = 0,
+                    WarningsCount = 1,
+                    PrintContentOptimizeActual = ["auto"]
                 },
                 OperationAttributes = new()
                 {
@@ -1113,7 +1132,19 @@ public class SharpIppIntegrationTests
                     PrintColorModeDefault = PrintColorMode.Color,
                     PrintColorModeSupported = [PrintColorMode.Color],
                     WhichJobsSupported = [WhichJobs.Completed],
-                    PrinterUUID = "{6541A875-C511-4273-909F-18CFBB38D9D0}"
+                    PrinterUUID = "{6541A875-C511-4273-909F-18CFBB38D9D0}",
+                    JobAccountIdDefault = "default-account",
+                    JobAccountIdSupported = true,
+                    JobAccountingUserIdDefault = "default-user",
+                    JobAccountingUserIdSupported = true,
+                    JobCancelAfterDefault = 0,
+                    JobCancelAfterSupported = new SharpIpp.Protocol.Models.Range(0, 86400),
+                    JobSpoolingSupported = "automatic",
+                    MaxPageRangesSupported = 10,
+                    PrintContentOptimizeDefault = "auto",
+                    PrintContentOptimizeSupported = ["auto", "graphic", "photo", "text", "text-and-graphic"],
+                    OutputDeviceSupported = ["printer-1", "printer-2"],
+                    JobCreationAttributesSupported = ["copies", "finishings", "media"]
                 },
                 OperationAttributes = new()
                 {

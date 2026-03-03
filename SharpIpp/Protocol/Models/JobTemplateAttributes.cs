@@ -194,5 +194,86 @@ namespace SharpIpp.Protocol.Models
         /// </summary>
         public string? OutputBin { get; set; }
 
+        /// <summary>
+        ///     This attribute specifies the account associated with the Job.
+        ///     See: PWG 5100.7-2023 Section 6.8.1
+        /// </summary>
+        public string? JobAccountId { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies the user ID associated with the account
+        ///     specified by the "job-account-id" attribute.
+        ///     See: PWG 5100.7-2023 Section 6.8.2
+        /// </summary>
+        public string? JobAccountingUserId { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies the maximum number of seconds allowed
+        ///     for processing a Job.
+        ///     See: PWG 5100.7-2023 Section 6.8.3
+        /// </summary>
+        public int? JobCancelAfter { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies a time period in the future when the
+        ///     Printer will produce the output for the Job.
+        ///     See: PWG 5100.7-2023 Section 6.8.4
+        /// </summary>
+        public string? JobDelayOutputUntil { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies a date and time when the Printer will
+        ///     produce the output for the Job.
+        ///     See: PWG 5100.7-2023 Section 6.8.5
+        /// </summary>
+        public DateTimeOffset? JobDelayOutputUntilTime { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies the date and time after which the Job
+        ///     MUST become a candidate for processing.
+        ///     See: PWG 5100.7-2023 Section 6.8.6
+        /// </summary>
+        public DateTimeOffset? JobHoldUntilTime { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies how long the Job remains in the Job
+        ///     Retention phase of a Job's life cycle.
+        ///     See: PWG 5100.7-2023 Section 6.8.7
+        /// </summary>
+        public string? JobRetainUntil { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies the number of seconds the Job remains
+        ///     in the Job Retention phase of a Job's life cycle.
+        ///     See: PWG 5100.7-2023 Section 6.8.8
+        /// </summary>
+        public int? JobRetainUntilInterval { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies the date and time when the Job can
+        ///     leave the Job Retention phase of a Job's life cycle.
+        ///     See: PWG 5100.7-2023 Section 6.8.9
+        /// </summary>
+        public DateTimeOffset? JobRetainUntilTime { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies a message that is printed on the Job Sheet.
+        ///     See: PWG 5100.7-2023 Section 6.8.10
+        /// </summary>
+        public string? JobSheetMessage { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies the output device requested for the Job.
+        ///     See: PWG 5100.7-2023 Section 6.3.2
+        /// </summary>
+        public string? OutputDevice { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies how the Printer should optimize the
+        ///     content of the document for the output device.
+        ///     See: PWG 5100.7-2023 Section 6.3.3
+        /// </summary>
+        public string? PrintContentOptimize { get; set; }
+
     }
 }

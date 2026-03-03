@@ -78,5 +78,17 @@ namespace SharpIpp.Protocol.Models
         public const string IppFeaturesSupported = "ipp-features-supported";
         public const string MediaTypeSupported = "media-type-supported";
         public const string DocumentCreationAttributesSupported = "document-creation-attributes-supported";
+        public const string JobAccountIdDefault = "job-account-id-default";
+        public const string JobAccountIdSupported = "job-account-id-supported";
+        public const string JobAccountingUserIdDefault = "job-accounting-user-id-default";
+        public const string JobAccountingUserIdSupported = "job-accounting-user-id-supported";
+        public const string JobCancelAfterDefault = "job-cancel-after-default";
+        public const string JobCancelAfterSupported = "job-cancel-after-supported";
+        public const string JobSpoolingSupported = "job-spooling-supported";
+        public const string MaxPageRangesSupported = "max-page-ranges-supported";
+        public const string PrintContentOptimizeDefault = "print-content-optimize-default";
+        public const string PrintContentOptimizeSupported = "print-content-optimize-supported";
+        public const string OutputDeviceSupported = "output-device-supported";
+        public const string JobCreationAttributesSupported = "job-creation-attributes-supported";
     }
 }

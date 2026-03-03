@@ -298,5 +298,46 @@ namespace SharpIpp.Protocol.Models
         /// https://datatracker.ietf.org/doc/html/rfc2911#section-4.3.16
         /// </summary>
         public string? JobMessageFromOperator { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies the total number of pages in the Job.
+        ///     See: PWG 5100.7-2023 Section 6.6.3
+        /// </summary>
+        public int? JobPages { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies the number of pages completed for the
+        ///     Job so far.
+        ///     See: PWG 5100.7-2023 Section 6.7.4
+        /// </summary>
+        public int? JobPagesCompleted { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies the total number of seconds that the
+        ///     Job has been processing.
+        ///     See: PWG 5100.7-2023 Section 6.7.6
+        /// </summary>
+        public int? JobProcessingTime { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies the number of errors that were detected
+        ///     while processing the Job.
+        ///     See: PWG 5100.7-2023 Section 6.2.1
+        /// </summary>
+        public int? ErrorsCount { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies the number of warnings that were detected
+        ///     while processing the Job.
+        ///     See: PWG 5100.7-2023 Section 6.2.3
+        /// </summary>
+        public int? WarningsCount { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies the actual content optimization
+        ///     value(s) used by the Printer.
+        ///     See: PWG 5100.7-2023 Section 6.2.2
+        /// </summary>
+        public string[]? PrintContentOptimizeActual { get; set; }
     }
 }

@@ -73,5 +73,23 @@ namespace SharpIpp.Protocol.Models
         public const string OutputDeviceAssigned = "output-device-assigned";
         public const string MediaCol = "media-col";
         public const string OutputBin = "output-bin";
+        public const string JobAccountId = "job-account-id";
+        public const string JobAccountingUserId = "job-accounting-user-id";
+        public const string JobCancelAfter = "job-cancel-after";
+        public const string JobDelayOutputUntil = "job-delay-output-until";
+        public const string JobDelayOutputUntilTime = "job-delay-output-until-time";
+        public const string JobHoldUntilTime = "job-hold-until-time";
+        public const string JobRetainUntil = "job-retain-until";
+        public const string JobRetainUntilInterval = "job-retain-until-interval";
+        public const string JobRetainUntilTime = "job-retain-until-time";
+        public const string JobSheetMessage = "job-sheet-message";
+        public const string OutputDevice = "output-device";
+        public const string PrintContentOptimize = "print-content-optimize";
+        public const string JobPages = "job-pages";
+        public const string JobPagesCompleted = "job-pages-completed";
+        public const string JobProcessingTime = "job-processing-time";
+        public const string ErrorsCount = "errors-count";
+        public const string WarningsCount = "warnings-count";
+        public const string PrintContentOptimizeActual = "print-content-optimize-actual";
     }
 }

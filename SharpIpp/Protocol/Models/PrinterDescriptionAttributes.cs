@@ -255,5 +255,65 @@ namespace SharpIpp.Protocol.Models
         ///     document-creation-attributes-supported (PWG 5100.5-2024 Section 6.5.1)
         /// </summary>
         public string[]? DocumentCreationAttributesSupported { get; set; }
+
+        /// <summary>
+        ///     job-account-id-default (PWG 5100.7-2023 Section 6.9.7)
+        /// </summary>
+        public string? JobAccountIdDefault { get; set; }
+
+        /// <summary>
+        ///     job-account-id-supported (PWG 5100.7-2023 Section 6.9.8)
+        /// </summary>
+        public bool? JobAccountIdSupported { get; set; }
+
+        /// <summary>
+        ///     job-accounting-user-id-default (PWG 5100.7-2023 Section 6.9.9)
+        /// </summary>
+        public string? JobAccountingUserIdDefault { get; set; }
+
+        /// <summary>
+        ///     job-accounting-user-id-supported (PWG 5100.7-2023 Section 6.9.10)
+        /// </summary>
+        public bool? JobAccountingUserIdSupported { get; set; }
+
+        /// <summary>
+        ///     job-cancel-after-default (PWG 5100.7-2023 Section 6.9.11)
+        /// </summary>
+        public int? JobCancelAfterDefault { get; set; }
+
+        /// <summary>
+        ///     job-cancel-after-supported (PWG 5100.7-2023 Section 6.9.12)
+        /// </summary>
+        public Range? JobCancelAfterSupported { get; set; }
+
+        /// <summary>
+        ///     job-spooling-supported (PWG 5100.7-2023 Section 6.9.31)
+        /// </summary>
+        public string? JobSpoolingSupported { get; set; }
+
+        /// <summary>
+        ///     max-page-ranges-supported (PWG 5100.7-2023 Section 6.9.33)
+        /// </summary>
+        public int? MaxPageRangesSupported { get; set; }
+
+        /// <summary>
+        ///     print-content-optimize-default (PWG 5100.7-2023 Section 6.9.58)
+        /// </summary>
+        public string? PrintContentOptimizeDefault { get; set; }
+
+        /// <summary>
+        ///     print-content-optimize-supported (PWG 5100.7-2023 Section 6.9.59)
+        /// </summary>
+        public string[]? PrintContentOptimizeSupported { get; set; }
+
+        /// <summary>
+        ///     output-device-supported (PWG 5100.7-2023 Section 6.9.57)
+        /// </summary>
+        public string[]? OutputDeviceSupported { get; set; }
+
+        /// <summary>
+        ///     job-creation-attributes-supported (PWG 5100.7-2023 Section 6.9.13)
+        /// </summary>
+        public string[]? JobCreationAttributesSupported { get; set; }
     }
 }

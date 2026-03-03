@@ -62,7 +62,13 @@ internal class GetJobAttributesResponseProfile : IProfile
             JobKOctets = map.MapFromDicNullable<int?>(src, JobAttribute.JobKOctets),
             JobDetailedStatusMessages = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.JobDetailedStatusMessages),
             JobDocumentAccessErrors = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.JobDocumentAccessErrors),
-            JobMessageFromOperator = map.MapFromDicNullable<string?>(src, JobAttribute.JobMessageFromOperator)
+            JobMessageFromOperator = map.MapFromDicNullable<string?>(src, JobAttribute.JobMessageFromOperator),
+            JobPages = map.MapFromDicNullable<int?>(src, JobAttribute.JobPages),
+            JobPagesCompleted = map.MapFromDicNullable<int?>(src, JobAttribute.JobPagesCompleted),
+            JobProcessingTime = map.MapFromDicNullable<int?>(src, JobAttribute.JobProcessingTime),
+            ErrorsCount = map.MapFromDicNullable<int?>(src, JobAttribute.ErrorsCount),
+            WarningsCount = map.MapFromDicNullable<int?>(src, JobAttribute.WarningsCount),
+            PrintContentOptimizeActual = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.PrintContentOptimizeActual)
         });
 
         mapper.CreateMap<JobDescriptionAttributes, IDictionary<string, IppAttribute[]>>((src, map) =>
@@ -124,6 +130,18 @@ internal class GetJobAttributesResponseProfile : IProfile
                 dic.Add(JobAttribute.JobDocumentAccessErrors, src.JobDocumentAccessErrors.Select(x => new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.JobDocumentAccessErrors, x)).ToArray());
             if (src.JobMessageFromOperator != null)
                 dic.Add(JobAttribute.JobMessageFromOperator, new IppAttribute[] { new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.JobMessageFromOperator, src.JobMessageFromOperator) });
+            if (src.JobPages != null)
+                dic.Add(JobAttribute.JobPages, [new IppAttribute(Tag.Integer, JobAttribute.JobPages, src.JobPages.Value)]);
+            if (src.JobPagesCompleted != null)
+                dic.Add(JobAttribute.JobPagesCompleted, [new IppAttribute(Tag.Integer, JobAttribute.JobPagesCompleted, src.JobPagesCompleted.Value)]);
+            if (src.JobProcessingTime != null)
+                dic.Add(JobAttribute.JobProcessingTime, [new IppAttribute(Tag.Integer, JobAttribute.JobProcessingTime, src.JobProcessingTime.Value)]);
+            if (src.ErrorsCount != null)
+                dic.Add(JobAttribute.ErrorsCount, [new IppAttribute(Tag.Integer, JobAttribute.ErrorsCount, src.ErrorsCount.Value)]);
+            if (src.WarningsCount != null)
+                dic.Add(JobAttribute.WarningsCount, [new IppAttribute(Tag.Integer, JobAttribute.WarningsCount, src.WarningsCount.Value)]);
+            if (src.PrintContentOptimizeActual != null)
+                dic.Add(JobAttribute.PrintContentOptimizeActual, src.PrintContentOptimizeActual.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.PrintContentOptimizeActual, x)).ToArray());
             return dic;
         });
     }

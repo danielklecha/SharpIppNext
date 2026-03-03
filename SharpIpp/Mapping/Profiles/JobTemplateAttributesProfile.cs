@@ -106,6 +106,42 @@ internal class JobTemplateAttributesProfile : IProfile
                 job.Add(new IppAttribute(Tag.Keyword, JobAttribute.OutputBin, src.OutputBin));
             }
 
+            if (src.JobAccountId != null)
+                job.Add(new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.JobAccountId, src.JobAccountId));
+
+            if (src.JobAccountingUserId != null)
+                job.Add(new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.JobAccountingUserId, src.JobAccountingUserId));
+
+            if (src.JobCancelAfter != null)
+                job.Add(new IppAttribute(Tag.Integer, JobAttribute.JobCancelAfter, src.JobCancelAfter.Value));
+
+            if (src.JobDelayOutputUntil != null)
+                job.Add(new IppAttribute(Tag.Keyword, JobAttribute.JobDelayOutputUntil, src.JobDelayOutputUntil));
+
+            if (src.JobDelayOutputUntilTime != null)
+                job.Add(new IppAttribute(Tag.DateTime, JobAttribute.JobDelayOutputUntilTime, src.JobDelayOutputUntilTime.Value));
+
+            if (src.JobHoldUntilTime != null)
+                job.Add(new IppAttribute(Tag.DateTime, JobAttribute.JobHoldUntilTime, src.JobHoldUntilTime.Value));
+
+            if (src.JobRetainUntil != null)
+                job.Add(new IppAttribute(Tag.Keyword, JobAttribute.JobRetainUntil, src.JobRetainUntil));
+
+            if (src.JobRetainUntilInterval != null)
+                job.Add(new IppAttribute(Tag.Integer, JobAttribute.JobRetainUntilInterval, src.JobRetainUntilInterval.Value));
+
+            if (src.JobRetainUntilTime != null)
+                job.Add(new IppAttribute(Tag.DateTime, JobAttribute.JobRetainUntilTime, src.JobRetainUntilTime.Value));
+
+            if (src.JobSheetMessage != null)
+                job.Add(new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.JobSheetMessage, src.JobSheetMessage));
+
+            if (src.OutputDevice != null)
+                job.Add(new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.OutputDevice, src.OutputDevice));
+
+            if (src.PrintContentOptimize != null)
+                job.Add(new IppAttribute(Tag.Keyword, JobAttribute.PrintContentOptimize, src.PrintContentOptimize));
+
             return dst;
         });
 
@@ -131,6 +167,18 @@ internal class JobTemplateAttributesProfile : IProfile
             if (jobDict.ContainsKey(JobAttribute.MediaCol))
                 dst.MediaCol = map.Map<MediaCol>(jobDict[JobAttribute.MediaCol].FromBegCollection().ToIppDictionary());
             dst.OutputBin = map.MapFromDicNullable<string?>(jobDict, JobAttribute.OutputBin);
+            dst.JobAccountId = map.MapFromDicNullable<string?>(jobDict, JobAttribute.JobAccountId);
+            dst.JobAccountingUserId = map.MapFromDicNullable<string?>(jobDict, JobAttribute.JobAccountingUserId);
+            dst.JobCancelAfter = map.MapFromDicNullable<int?>(jobDict, JobAttribute.JobCancelAfter);
+            dst.JobDelayOutputUntil = map.MapFromDicNullable<string?>(jobDict, JobAttribute.JobDelayOutputUntil);
+            dst.JobDelayOutputUntilTime = map.MapFromDicNullable<DateTimeOffset?>(jobDict, JobAttribute.JobDelayOutputUntilTime);
+            dst.JobHoldUntilTime = map.MapFromDicNullable<DateTimeOffset?>(jobDict, JobAttribute.JobHoldUntilTime);
+            dst.JobRetainUntil = map.MapFromDicNullable<string?>(jobDict, JobAttribute.JobRetainUntil);
+            dst.JobRetainUntilInterval = map.MapFromDicNullable<int?>(jobDict, JobAttribute.JobRetainUntilInterval);
+            dst.JobRetainUntilTime = map.MapFromDicNullable<DateTimeOffset?>(jobDict, JobAttribute.JobRetainUntilTime);
+            dst.JobSheetMessage = map.MapFromDicNullable<string?>(jobDict, JobAttribute.JobSheetMessage);
+            dst.OutputDevice = map.MapFromDicNullable<string?>(jobDict, JobAttribute.OutputDevice);
+            dst.PrintContentOptimize = map.MapFromDicNullable<string?>(jobDict, JobAttribute.PrintContentOptimize);
             return dst;
         });
     }
