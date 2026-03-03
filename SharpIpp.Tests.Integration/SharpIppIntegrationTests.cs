@@ -231,6 +231,13 @@ public class SharpIppIntegrationTests
                     NumberOfInterveningJobs = 0,
                     JobId = 456,
                     JobUri = "http://127.0.0.1:631/456"
+                },
+                DocumentAttributes = new()
+                {
+                    DocumentNumber = 1,
+                    DocumentState = DocumentState.Pending,
+                    DocumentStateReasons = [DocumentStateReason.None],
+                    DocumentStateMessage = "pending"
                 }
             };
             var memoryStream = new MemoryStream();
@@ -346,6 +353,13 @@ public class SharpIppIntegrationTests
                     NumberOfInterveningJobs = 0,
                     JobId = 456,
                     JobUri = "http://127.0.0.1:631/456"
+                },
+                DocumentAttributes = new()
+                {
+                    DocumentNumber = 1,
+                    DocumentState = DocumentState.Pending,
+                    DocumentStateReasons = [DocumentStateReason.None],
+                    DocumentStateMessage = "pending"
                 }
             };
             var memoryStream = new MemoryStream();
@@ -414,6 +428,13 @@ public class SharpIppIntegrationTests
                     NumberOfInterveningJobs = 0,
                     JobId = 456,
                     JobUri = "http://127.0.0.1:631/456"
+                },
+                DocumentAttributes = new()
+                {
+                    DocumentNumber = 1,
+                    DocumentState = DocumentState.Pending,
+                    DocumentStateReasons = [DocumentStateReason.None],
+                    DocumentStateMessage = "pending"
                 }
             };
             var memoryStream = new MemoryStream();
@@ -527,6 +548,13 @@ public class SharpIppIntegrationTests
                     NumberOfInterveningJobs = 0,
                     JobId = 456,
                     JobUri = "http://127.0.0.1:631/456"
+                },
+                DocumentAttributes = new()
+                {
+                    DocumentNumber = 1,
+                    DocumentState = DocumentState.Pending,
+                    DocumentStateReasons = [DocumentStateReason.None],
+                    DocumentStateMessage = "pending"
                 }
             };
             var memoryStream = new MemoryStream();
@@ -597,6 +625,13 @@ public class SharpIppIntegrationTests
                     NumberOfInterveningJobs = 0,
                     JobId = 456,
                     JobUri = "http://127.0.0.1:631/456"
+                },
+                DocumentAttributes = new()
+                {
+                    DocumentNumber = 1,
+                    DocumentState = DocumentState.Pending,
+                    DocumentStateReasons = [DocumentStateReason.None],
+                    DocumentStateMessage = "pending"
                 }
             };
             var memoryStream = new MemoryStream();
@@ -1476,6 +1511,13 @@ public class SharpIppIntegrationTests
                     NumberOfInterveningJobs = 0,
                     JobId = 456,
                     JobUri = "http://127.0.0.1:631/456"
+                },
+                DocumentAttributes = new()
+                {
+                    DocumentNumber = 1,
+                    DocumentState = DocumentState.Pending,
+                    DocumentStateReasons = [DocumentStateReason.None],
+                    DocumentStateMessage = "pending"
                 }
             };
             var memoryStream = new MemoryStream();
@@ -1726,7 +1768,8 @@ public class SharpIppIntegrationTests
                         PrintColorModeDefault = PrintColorMode.Color,
                         PrintColorModeSupported = [PrintColorMode.Color],
                         WhichJobsSupported = [WhichJobs.Completed],
-                        PrinterUUID = "{6541A875-C511-4273-909F-18CFBB38D9D0}"
+                        PrinterUUID = "{6541A875-C511-4273-909F-18CFBB38D9D0}",
+                        DocumentCreationAttributesSupported = ["copies", "finishings", "sides"]
                     }
                 ]
             };

@@ -77,5 +77,6 @@ namespace SharpIpp.Protocol.Models
         public const string PdfVersionsSupported = "pdf-versions-supported";
         public const string IppFeaturesSupported = "ipp-features-supported";
         public const string MediaTypeSupported = "media-type-supported";
+        public const string DocumentCreationAttributesSupported = "document-creation-attributes-supported";
     }
 }

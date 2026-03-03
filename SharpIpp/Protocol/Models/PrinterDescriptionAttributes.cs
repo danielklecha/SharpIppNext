@@ -250,5 +250,10 @@ namespace SharpIpp.Protocol.Models
         public WhichJobs[]? WhichJobsSupported { get; set; }
 
         public string? PrinterUUID { get; set; }
+
+        /// <summary>
+        ///     document-creation-attributes-supported (PWG 5100.5-2024 Section 6.5.1)
+        /// </summary>
+        public string[]? DocumentCreationAttributesSupported { get; set; }
     }
 }

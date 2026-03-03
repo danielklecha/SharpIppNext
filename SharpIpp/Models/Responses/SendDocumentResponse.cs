@@ -8,4 +8,5 @@ namespace SharpIpp.Models.Responses;
 public class SendDocumentResponse : IppResponse<OperationAttributes>, IIppJobResponse
 {
     public JobAttributes? JobAttributes { get; set; }
+    public DocumentAttributes? DocumentAttributes { get; set; }
 }

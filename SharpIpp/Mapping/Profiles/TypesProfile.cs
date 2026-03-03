@@ -26,6 +26,7 @@ internal class TypesProfile : IProfile
         mapper.CreateIppMap<int, Finishings>((src, map) => (Finishings)src);
         mapper.CreateIppMap<int, IppStatusCode>((src, map) => (IppStatusCode)src);
         mapper.CreateIppMap<int, JobState>((src, map) => (JobState)src);
+        mapper.CreateIppMap<int, DocumentState>((src, map) => (DocumentState)src);
         mapper.CreateIppMap<int, Orientation>((src, map) => (Orientation)src);
         mapper.CreateIppMap<int, PrinterState>((src, map) => (PrinterState)src);
         mapper.CreateIppMap<int, PrintQuality>((src, map) => (PrintQuality)src);
@@ -37,6 +38,7 @@ internal class TypesProfile : IProfile
         mapper.CreateIppMap<NoValue, bool>((src, map) => NoValue.GetNoValue<bool>());
         mapper.CreateIppMap<NoValue, bool?>((src, map) => NoValue.GetNoValue<bool?>());
         mapper.CreateIppMap<NoValue, JobState>((src, map) => NoValue.GetNoValue<JobState>());
+        mapper.CreateIppMap<NoValue, DocumentState>((src, map) => NoValue.GetNoValue<DocumentState>());
         mapper.CreateIppMap<NoValue, PrinterState>((src, map) => NoValue.GetNoValue<PrinterState>());
         mapper.CreateIppMap<NoValue, Finishings>((src, map) => NoValue.GetNoValue<Finishings>());
         mapper.CreateIppMap<NoValue, IppStatusCode>((src, map) => NoValue.GetNoValue<IppStatusCode>());
@@ -82,6 +84,7 @@ internal class TypesProfile : IProfile
         ConfigureKeyword<MediaRecycled>(mapper);
         ConfigureKeyword<MediaTooth>(mapper);
         ConfigureKeyword<PrintColorMode>(mapper);
+        ConfigureKeyword<DocumentStateReason>(mapper);
     }
 
     private static void ConfigureKeyword<T>(IMapperConstructor map) where T : struct, Enum

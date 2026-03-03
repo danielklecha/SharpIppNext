@@ -102,6 +102,16 @@ public class ProfileNullDestTests
                 src.SetupGet(x => x.JobAttributes).Returns(new List<IppAttribute>());
                 yield return [src.Object, typeof(IIppRequestMessage), typeof(JobTemplateAttributes), "IIppRequestMessage -> JobTemplateAttributes"];
             }
+
+            // DocumentAttributesProfile: IDictionary<string, IppAttribute[]> -> DocumentAttributes (dst ??= new DocumentAttributes())
+            {
+                var src = new Dictionary<string, IppAttribute[]>
+                {
+                    { DocumentAttribute.DocumentNumber, [new IppAttribute(Tag.Integer, DocumentAttribute.DocumentNumber, 1)] },
+                    { DocumentAttribute.DocumentState, [new IppAttribute(Tag.Enum, DocumentAttribute.DocumentState, (int)DocumentState.Pending)] }
+                };
+                yield return [(object)src, typeof(IDictionary<string, IppAttribute[]>), typeof(DocumentAttributes), "IDictionary -> DocumentAttributes"];
+            }
         }
     }
 

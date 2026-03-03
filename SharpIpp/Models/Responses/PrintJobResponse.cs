@@ -5,4 +5,5 @@ namespace SharpIpp.Models.Responses;
 public class PrintJobResponse : IppResponse<OperationAttributes>, IIppJobResponse
 {
     public JobAttributes? JobAttributes { get; set; }
+    public DocumentAttributes? DocumentAttributes { get; set; }
 }

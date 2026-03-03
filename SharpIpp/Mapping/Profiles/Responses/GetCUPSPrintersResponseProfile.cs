@@ -115,6 +115,7 @@ internal class GetCUPSPrintersResponseProfile : IProfile
                 PrintColorModeSupported = map.MapFromDicSetNullable<PrintColorMode[]?>(src, PrinterAttribute.PrintColorModeSupported),
                 WhichJobsSupported = map.MapFromDicSetNullable<WhichJobs[]?>(src, PrinterAttribute.WhichJobsSupported),
                 PrinterUUID = map.MapFromDicNullable<string?>(src, PrinterAttribute.PrinterUUID),
+                DocumentCreationAttributesSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.DocumentCreationAttributesSupported),
             });
 
         mapper.CreateMap<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>((src, map) =>
@@ -254,6 +255,8 @@ internal class GetCUPSPrintersResponseProfile : IProfile
                     dic.Add(PrinterAttribute.WhichJobsSupported, src.WhichJobsSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.WhichJobsSupported, map.Map<string>(x))).ToArray());
                 if (src.PrinterUUID != null)
                     dic.Add(PrinterAttribute.PrinterUUID, new IppAttribute[] { new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterUUID, src.PrinterUUID) });
+                if (src.DocumentCreationAttributesSupported != null)
+                    dic.Add(PrinterAttribute.DocumentCreationAttributesSupported, src.DocumentCreationAttributesSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.DocumentCreationAttributesSupported, x)).ToArray());
                 return dic;
             });
     }

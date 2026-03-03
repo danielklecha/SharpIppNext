@@ -38,6 +38,7 @@ public class TypesProfileTest
             yield return ["invalid-value", typeof(string), typeof(JobHoldUntil), (JobHoldUntil)int.MinValue, "String -> JobHoldUntil (invalid)"];
             yield return [NoValue.Instance, typeof(NoValue), typeof(int), int.MinValue, "NoValue -> Int"];
             yield return [NoValue.Instance, typeof(NoValue), typeof(JobState), (JobState)int.MinValue, "NoValue -> JobState"];
+            yield return [NoValue.Instance, typeof(NoValue), typeof(DocumentState), (DocumentState)int.MinValue, "NoValue -> DocumentState"];
             yield return [NoValue.Instance, typeof(NoValue), typeof(PrinterState), (PrinterState)int.MinValue, "NoValue -> PrinterState"];
             yield return [NoValue.Instance, typeof(NoValue), typeof(Finishings), (Finishings)int.MinValue, "NoValue -> Finishings"];
             yield return [NoValue.Instance, typeof(NoValue), typeof(IppStatusCode), (IppStatusCode)short.MinValue, "NoValue -> IppStatusCode"];
