@@ -75,7 +75,7 @@ internal class GetJobAttributesResponseProfile : IProfile
             JobPriorityActual = map.MapFromDicSetNullable<int[]?>(src, JobAttribute.JobPriorityActual),
             JobSheetsActual = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.JobSheetsActual),
             MediaActual = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.MediaActual),
-            MediaColActual = src.ContainsKey(JobAttribute.MediaColActual) ? new[] { map.Map<MediaCol>(src[JobAttribute.MediaColActual].FromBegCollection().ToIppDictionary()) } : null,
+            MediaColActual = src.ContainsKey(JobAttribute.MediaColActual) ? src[JobAttribute.MediaColActual].GroupBegCollection().Select(x => map.Map<MediaCol>(x.FromBegCollection().ToIppDictionary())).ToArray() : null,
             MultipleDocumentHandlingActual = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.MultipleDocumentHandlingActual),
             NumberUpActual = map.MapFromDicSetNullable<int[]?>(src, JobAttribute.NumberUpActual),
             OrientationRequestedActual = map.MapFromDicSetNullable<Orientation[]?>(src, JobAttribute.OrientationRequestedActual),
@@ -83,7 +83,8 @@ internal class GetJobAttributesResponseProfile : IProfile
             PageRangesActual = map.MapFromDicSetNullable<Protocol.Models.Range[]?>(src, JobAttribute.PageRangesActual),
             PrintQualityActual = map.MapFromDicSetNullable<PrintQuality[]?>(src, JobAttribute.PrintQualityActual),
             PrinterResolutionActual = map.MapFromDicSetNullable<Resolution[]?>(src, JobAttribute.PrinterResolutionActual),
-            SidesActual = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.SidesActual)
+            SidesActual = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.SidesActual),
+            FinishingsColActual = src.ContainsKey(JobAttribute.FinishingsColActual) ? src[JobAttribute.FinishingsColActual].GroupBegCollection().Select(x => map.Map<FinishingsCol>(x.FromBegCollection().ToIppDictionary())).ToArray() : null,
         });
 
         mapper.CreateMap<JobDescriptionAttributes, IDictionary<string, IppAttribute[]>>((src, map) =>
@@ -187,6 +188,8 @@ internal class GetJobAttributesResponseProfile : IProfile
                 dic.Add(JobAttribute.PrinterResolutionActual, src.PrinterResolutionActual.Select(x => new IppAttribute(Tag.Resolution, JobAttribute.PrinterResolutionActual, x)).ToArray());
             if (src.SidesActual != null)
                 dic.Add(JobAttribute.SidesActual, src.SidesActual.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.SidesActual, x)).ToArray());
+            if (src.FinishingsColActual != null)
+                dic.Add(JobAttribute.FinishingsColActual, src.FinishingsColActual.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.FinishingsColActual)).ToArray());
             return dic;
         });
     }

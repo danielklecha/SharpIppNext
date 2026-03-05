@@ -42,8 +42,15 @@ public struct NoValue : IEquatable<NoValue>
             StringWithLanguage stringWithLanguage when stringWithLanguage.Equals(default) => true,
             string stringValue when stringValue == string.Empty && tag == Tag.Keyword => true,
             string stringValue when stringValue == NoValueString => true,
+            IIppCollection collection when collection.IsNoValue => true,
+            NoValue => true,
             _ => false
         };
+    }
+
+    public static T GetCollectionNoValue<T>() where T : IIppCollection, new()
+    {
+        return new T { IsNoValue = true };
     }
 
     public static T GetNoValue<T>(Tag tag = Tag.Unknown)
@@ -55,39 +62,39 @@ public struct NoValue : IEquatable<NoValue>
     {
         var underlyingType = Nullable.GetUnderlyingType(type) ?? type;
 
-        if (underlyingType == typeof(int))
-            return int.MinValue;
-
         if (underlyingType.IsEnum)
         {
             var enumUnderlyingType = Enum.GetUnderlyingType(underlyingType);
-            if (enumUnderlyingType == typeof(short))
-                return Enum.ToObject(underlyingType, short.MinValue);
-
-            return Enum.ToObject(underlyingType, int.MinValue);
+            return enumUnderlyingType == typeof(short)
+                ? Enum.ToObject(underlyingType, short.MinValue)
+                : Enum.ToObject(underlyingType, int.MinValue);
         }
 
-        if (underlyingType == typeof(string))
-            return (tag == Tag.Keyword ? string.Empty : NoValueString);
-
-        if (underlyingType == typeof(DateTimeOffset))
-            return DateTimeOffset.MinValue;
-
-        if (underlyingType == typeof(DateTime))
-            return DateTime.MinValue;
-
-        if (underlyingType == typeof(bool))
-            return false;
-
-        if (underlyingType == typeof(Range))
-            return new Range();
-
-        if (underlyingType == typeof(Resolution))
-            return new Resolution();
-
-        if (underlyingType == typeof(StringWithLanguage))
-            return new StringWithLanguage();
-
-        throw new ArgumentException($"Type {type} is not supported for NoValue mapping and has no non-null default value");
+        return underlyingType switch
+        {
+            _ when underlyingType == typeof(int) => int.MinValue,
+            _ when underlyingType == typeof(string) => tag == Tag.Keyword ? string.Empty : NoValueString,
+            _ when underlyingType == typeof(DateTimeOffset) => DateTimeOffset.MinValue,
+            _ when underlyingType == typeof(DateTime) => DateTime.MinValue,
+            _ when underlyingType == typeof(bool) => false,
+            _ when underlyingType == typeof(Range) => new Range(),
+            _ when underlyingType == typeof(Resolution) => new Resolution(),
+            _ when underlyingType == typeof(StringWithLanguage) => new StringWithLanguage(),
+            _ when underlyingType == typeof(MediaCol) => GetCollectionNoValue<MediaCol>(),
+            _ when underlyingType == typeof(MediaSize) => GetCollectionNoValue<MediaSize>(),
+            _ when underlyingType == typeof(MediaSourceProperties) => GetCollectionNoValue<MediaSourceProperties>(),
+            _ when underlyingType == typeof(FinishingsCol) => GetCollectionNoValue<FinishingsCol>(),
+            _ when underlyingType == typeof(Baling) => GetCollectionNoValue<Baling>(),
+            _ when underlyingType == typeof(Binding) => GetCollectionNoValue<Binding>(),
+            _ when underlyingType == typeof(Coating) => GetCollectionNoValue<Coating>(),
+            _ when underlyingType == typeof(Covering) => GetCollectionNoValue<Covering>(),
+            _ when underlyingType == typeof(Folding) => GetCollectionNoValue<Folding>(),
+            _ when underlyingType == typeof(Laminating) => GetCollectionNoValue<Laminating>(),
+            _ when underlyingType == typeof(Punching) => GetCollectionNoValue<Punching>(),
+            _ when underlyingType == typeof(Stitching) => GetCollectionNoValue<Stitching>(),
+            _ when underlyingType == typeof(Trimming) => GetCollectionNoValue<Trimming>(),
+            _ => throw new ArgumentException($"Type {type} is not supported for NoValue mapping and has no non-null default value")
+        };
     }
 }
+

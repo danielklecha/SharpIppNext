@@ -68,6 +68,13 @@ namespace SharpIpp.Protocol.Models
         public Finishings? Finishings { get; set; }
 
         /// <summary>
+        ///     This attribute specifies detailed finishing instructions that cannot
+        ///     be expressed by the "finishings" Job Template attribute.
+        ///     See: PWG 5100.1-2022 Section 5.2
+        /// </summary>
+        public FinishingsCol[]? FinishingsCol { get; set; }
+
+        /// <summary>
         ///     This attribute identifies the range(s) of print-stream pages that the
         ///     Printer object uses for each copy of each document which are to be
         ///     printed.  Nothing is printed for any pages identified that do not
@@ -308,6 +315,13 @@ namespace SharpIpp.Protocol.Models
         ///     See: PWG 5100.7-2023 Section 6.3.3
         /// </summary>
         public string? PrintContentOptimize { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies the number of pages per set
+        ///     for finishing operations.
+        ///     See: PWG 5100.1-2022 Section 5.3
+        /// </summary>
+        public int? JobPagesPerSet { get; set; }
 
     }
 }

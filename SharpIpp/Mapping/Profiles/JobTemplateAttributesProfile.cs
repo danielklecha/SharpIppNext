@@ -101,6 +101,9 @@ internal class JobTemplateAttributesProfile : IProfile
             if (src.MediaCol != null)
                 job.AddRange(map.Map<IEnumerable<IppAttribute>>(src.MediaCol).ToBegCollection(JobAttribute.MediaCol));
 
+            if (src.FinishingsCol != null)
+                job.AddRange(src.FinishingsCol.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.FinishingsCol)));
+
             if (src.OutputBin != null)
             {
                 job.Add(new IppAttribute(Tag.Keyword, JobAttribute.OutputBin, src.OutputBin));
@@ -142,6 +145,9 @@ internal class JobTemplateAttributesProfile : IProfile
             if (src.PrintContentOptimize != null)
                 job.Add(new IppAttribute(Tag.Keyword, JobAttribute.PrintContentOptimize, src.PrintContentOptimize));
 
+            if (src.JobPagesPerSet != null)
+                job.Add(new IppAttribute(Tag.Integer, JobAttribute.JobPagesPerSet, src.JobPagesPerSet.Value));
+
             return dst;
         });
 
@@ -166,6 +172,8 @@ internal class JobTemplateAttributesProfile : IProfile
             dst.PrintColorMode = map.MapFromDicNullable<PrintColorMode?>(jobDict, JobAttribute.PrintColorMode);
             if (jobDict.ContainsKey(JobAttribute.MediaCol))
                 dst.MediaCol = map.Map<MediaCol>(jobDict[JobAttribute.MediaCol].FromBegCollection().ToIppDictionary());
+            if (jobDict.ContainsKey(JobAttribute.FinishingsCol))
+                dst.FinishingsCol = jobDict[JobAttribute.FinishingsCol].GroupBegCollection().Select(x => map.Map<FinishingsCol>(x.FromBegCollection().ToIppDictionary())).ToArray();
             dst.OutputBin = map.MapFromDicNullable<string?>(jobDict, JobAttribute.OutputBin);
             dst.JobAccountId = map.MapFromDicNullable<string?>(jobDict, JobAttribute.JobAccountId);
             dst.JobAccountingUserId = map.MapFromDicNullable<string?>(jobDict, JobAttribute.JobAccountingUserId);
@@ -179,6 +187,7 @@ internal class JobTemplateAttributesProfile : IProfile
             dst.JobSheetMessage = map.MapFromDicNullable<string?>(jobDict, JobAttribute.JobSheetMessage);
             dst.OutputDevice = map.MapFromDicNullable<string?>(jobDict, JobAttribute.OutputDevice);
             dst.PrintContentOptimize = map.MapFromDicNullable<string?>(jobDict, JobAttribute.PrintContentOptimize);
+            dst.JobPagesPerSet = map.MapFromDicNullable<int?>(jobDict, JobAttribute.JobPagesPerSet);
             return dst;
         });
     }

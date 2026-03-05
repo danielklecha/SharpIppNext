@@ -21,7 +21,7 @@ public readonly struct IppAttribute : IEquatable<IppAttribute>
         if (value is null)
             throw new ArgumentNullException(nameof(value));
 
-        if (NoValue.IsNoValue(value, tag))
+        if (tag != Tag.BegCollection && tag != Tag.EndCollection && NoValue.IsNoValue(value, tag))
         {
             tag = Tag.NoValue;
             value = NoValue.Instance;

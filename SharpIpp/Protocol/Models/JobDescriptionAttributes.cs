@@ -467,5 +467,12 @@ namespace SharpIpp.Protocol.Models
         ///     See: PWG 5100.8-2003 Section 3
         /// </summary>
         public string[]? SidesActual { get; set; }
+
+        /// <summary>
+        ///     This attribute specifies the actual finishings-col
+        ///     collection(s) used by the Printer.
+        ///     See: PWG 5100.1-2022 Section 11.2
+        /// </summary>
+        public FinishingsCol[]? FinishingsColActual { get; set; }
     }
 }

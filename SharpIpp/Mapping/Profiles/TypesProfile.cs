@@ -32,6 +32,7 @@ internal class TypesProfile : IProfile
         mapper.CreateIppMap<int, PrintQuality>((src, map) => (PrintQuality)src);
         mapper.CreateIppMap<int, ResolutionUnit>((src, map) => (ResolutionUnit)src);
         mapper.CreateIppMap<int, PrinterType>((src, map) => (PrinterType)src);
+        mapper.CreateIppMap<int, Protocol.Models.Range>((src, map) => new Protocol.Models.Range(src, src));
         mapper.CreateIppMap<string, IppVersion>((src, map) => new IppVersion(src));
         mapper.CreateIppMap<NoValue, int>((src, map) => NoValue.GetNoValue<int>());
         mapper.CreateIppMap<NoValue, int?>((src, map) => NoValue.GetNoValue<int?>());
@@ -85,6 +86,13 @@ internal class TypesProfile : IProfile
         ConfigureKeyword<MediaTooth>(mapper);
         ConfigureKeyword<PrintColorMode>(mapper);
         ConfigureKeyword<DocumentStateReason>(mapper);
+        ConfigureKeyword<FinishingReferenceEdge>(mapper);
+        ConfigureKeyword<BalingWhen>(mapper);
+        ConfigureKeyword<CoatingSides>(mapper);
+        ConfigureKeyword<FoldingDirection>(mapper);
+        ConfigureKeyword<StitchingMethod>(mapper);
+        ConfigureKeyword<TrimmingType>(mapper);
+        ConfigureKeyword<TrimmingWhen>(mapper);
     }
 
     private static void ConfigureKeyword<T>(IMapperConstructor map) where T : struct, Enum

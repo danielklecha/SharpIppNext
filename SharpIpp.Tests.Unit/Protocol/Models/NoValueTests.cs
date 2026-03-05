@@ -154,4 +154,32 @@ public class NoValueTests
         var result = NoValue.GetNoValue<StringWithLanguage>();
         result.Should().Be(new StringWithLanguage());
     }
+
+    [TestMethod]
+    public void IsNoValue_WithCollectionNoValue_ShouldReturnTrue()
+    {
+        var result = NoValue.IsNoValue(new MediaCol { IsNoValue = true });
+        result.Should().BeTrue();
+    }
+
+    [TestMethod]
+    [DataRow(typeof(MediaSize))]
+    [DataRow(typeof(MediaSourceProperties))]
+    [DataRow(typeof(FinishingsCol))]
+    [DataRow(typeof(Baling))]
+    [DataRow(typeof(Binding))]
+    [DataRow(typeof(Coating))]
+    [DataRow(typeof(Covering))]
+    [DataRow(typeof(Folding))]
+    [DataRow(typeof(Laminating))]
+    [DataRow(typeof(Punching))]
+    [DataRow(typeof(Stitching))]
+    [DataRow(typeof(Trimming))]
+    public void GetNoValue_WithCollectionType_ShouldReturnIsNoValueTrue(Type type)
+    {
+        var result = (IIppCollection)NoValue.GetNoValue(type);
+        result.Should().BeAssignableTo(type);
+        result.IsNoValue.Should().BeTrue();
+    }
 }
+

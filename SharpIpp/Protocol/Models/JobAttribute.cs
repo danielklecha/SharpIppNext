@@ -12,6 +12,8 @@ namespace SharpIpp.Protocol.Models
         public const string DocumentFormat = "document-format";
         public const string DocumentName = "document-name";
         public const string Finishings = "finishings";
+        public const string FinishingsCol = "finishings-col";
+        public const string FinishingsColActual = "finishings-col-actual";
         public const string IppAttributeFidelity = "ipp-attribute-fidelity";
         public const string JobUri = "job-uri";
         public const string JobId = "job-id";
@@ -106,5 +108,6 @@ namespace SharpIpp.Protocol.Models
         public const string PrintQualityActual = "print-quality-actual";
         public const string PrinterResolutionActual = "printer-resolution-actual";
         public const string SidesActual = "sides-actual";
+        public const string JobPagesPerSet = "job-pages-per-set";
     }
 }

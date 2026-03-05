@@ -60,6 +60,7 @@ public class TypesProfileTest
             yield return [MultipleDocumentHandling.SeparateDocumentsUncollatedCopies, typeof(MultipleDocumentHandling), typeof(string), "separate-documents-uncollated-copies", "MultipleDocumentHandling -> String"];
             yield return [NoValue.Instance, typeof(NoValue), typeof(MultipleDocumentHandling), (MultipleDocumentHandling)int.MinValue, "NoValue -> MultipleDocumentHandling"];
             yield return [2, typeof(int), typeof(PrinterType), (PrinterType)2, "Int -> PrinterType"];
+            yield return [5, typeof(int), typeof(SharpIpp.Protocol.Models.Range), new SharpIpp.Protocol.Models.Range(5, 5), "Int -> Range"];
         }
     }
 

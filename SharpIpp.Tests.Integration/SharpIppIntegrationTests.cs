@@ -204,6 +204,79 @@ public class SharpIppIntegrationTests
                     MediaType = "stationery",
                     MediaWeightMetric = 80
                 },
+                FinishingsCol = [
+                    new FinishingsCol
+                    {
+                        FinishingTemplate = "staple",
+                        ImpositionTemplate = "signature",
+                        MediaSheetsSupported = new SharpIpp.Protocol.Models.Range(1, 10),
+                        MediaSizeName = "iso_a4_210x297mm",
+                        MediaSize = new MediaSize { XDimension = 21000, YDimension = 29700 },
+                        Stitching = new Stitching
+                        {
+                            StitchingAngle = 90,
+                            StitchingMethod = StitchingMethod.Wire,
+                            StitchingReferenceEdge = FinishingReferenceEdge.Left,
+                            StitchingLocations = [10, 20],
+                            StitchingOffset = 5
+                        },
+                        Binding = new Binding
+                        {
+                            BindingReferenceEdge = FinishingReferenceEdge.Left,
+                            BindingType = "perfect"
+                        }
+                    },
+                    new FinishingsCol
+                    {
+                        Folding = [
+                            new Folding
+                            {
+                                FoldingDirection = FoldingDirection.Inward,
+                                FoldingOffset = 100,
+                                FoldingLocation = 150,
+                                FoldingReferenceEdge = FinishingReferenceEdge.Top
+                            }
+                        ]
+                    },
+                    new FinishingsCol
+                    {
+                        Baling = new Baling
+                        {
+                            BalingType = "band",
+                            BalingWhen = BalingWhen.AfterJob
+                        },
+                        Coating = new Coating
+                        {
+                            CoatingSides = CoatingSides.Both,
+                            CoatingType = "silicone"
+                        },
+                        Covering = new Covering
+                        {
+                            CoveringName = "plain"
+                        },
+                        Laminating = new Laminating
+                        {
+                            LaminatingSides = CoatingSides.Front,
+                            LaminatingType = "polyester"
+                        },
+                        Punching = new Punching
+                        {
+                            PunchingLocations = [50, 100],
+                            PunchingOffset = 10,
+                            PunchingReferenceEdge = FinishingReferenceEdge.Top
+                        },
+                        Trimming = [
+                            new Trimming
+                            {
+                                TrimmingOffset = [5],
+                                TrimmingReferenceEdge = FinishingReferenceEdge.Right,
+                                TrimmingType = TrimmingType.DrawLine,
+                                TrimmingWhen = TrimmingWhen.AfterJob
+                            }
+                        ]
+                    }
+                ],
+                JobPagesPerSet = 1,
                 OutputBin = "face-down",
                 JobAccountId = "account-123",
                 JobAccountingUserId = "user-456",
@@ -338,7 +411,8 @@ public class SharpIppIntegrationTests
                     MediaTopMargin = 10,
                     MediaType = "stationery",
                     MediaWeightMetric = 80
-                }
+                },
+                JobPagesPerSet = 1
             }
         };
         IIppRequest? serverRequest = null;
@@ -533,7 +607,8 @@ public class SharpIppIntegrationTests
                     MediaTopMargin = 10,
                     MediaType = "stationery",
                     MediaWeightMetric = 80
-                }
+                },
+                JobPagesPerSet = 1
             }
         };
         IIppRequest? serverRequest = null;
@@ -915,7 +990,26 @@ public class SharpIppIntegrationTests
                     PageRangesActual = [new SharpIpp.Protocol.Models.Range(1, 2)],
                     PrintQualityActual = [PrintQuality.Normal],
                     PrinterResolutionActual = [new Resolution(600, 600, ResolutionUnit.DotsPerInch)],
-                    SidesActual = ["one-sided"]
+                    SidesActual = ["one-sided"],
+                    FinishingsColActual = [
+                        new FinishingsCol
+                        {
+                            FinishingTemplate = "staple",
+                            Stitching = new Stitching
+                            {
+                                StitchingAngle = 90,
+                                StitchingMethod = StitchingMethod.Wire,
+                                StitchingReferenceEdge = FinishingReferenceEdge.Left,
+                                StitchingLocations = [10, 20],
+                                StitchingOffset = 5
+                            },
+                            Binding = new Binding
+                            {
+                                BindingReferenceEdge = FinishingReferenceEdge.Left,
+                                BindingType = "perfect"
+                            }
+                        }
+                    ]
                 },
                 OperationAttributes = new()
                 {
@@ -1833,7 +1927,54 @@ public class SharpIppIntegrationTests
                         PrintColorModeSupported = [PrintColorMode.Color],
                         WhichJobsSupported = [WhichJobs.Completed],
                         PrinterUUID = "{6541A875-C511-4273-909F-18CFBB38D9D0}",
-                        DocumentCreationAttributesSupported = ["copies", "finishings", "sides"]
+                        DocumentCreationAttributesSupported = ["copies", "finishings", "sides"],
+                        JobAccountIdDefault = "account-123",
+                        JobAccountIdSupported = true,
+                        JobAccountingUserIdDefault = "user-456",
+                        JobAccountingUserIdSupported = true,
+                        JobCancelAfterDefault = 3600,
+                        JobCancelAfterSupported = new SharpIpp.Protocol.Models.Range(10, 3600),
+                        JobSpoolingSupported = "automatic",
+                        MaxPageRangesSupported = 3,
+                        PrintContentOptimizeDefault = "auto",
+                        PrintContentOptimizeSupported = ["auto", "text-and-graphic"],
+                        OutputDeviceSupported = ["device-1"],
+                        JobCreationAttributesSupported = ["copies"],
+                        PunchingHoleDiameterConfigured = 5,
+                        PrinterFinisher = ["finisher=1", "finisher=2"],
+                        PrinterFinisherDescription = ["stapler"],
+                        PrinterFinisherSupplies = ["marker-supply=1", "marker-supply=2"],
+                        PrinterFinisherSuppliesDescription = ["blue ink"],
+                        FinishingTemplateSupported = ["staple", "punch"],
+                        FinishingsColSupported = ["baling", "binding", "coating", "covering", "folding", "laminating", "punching", "stitching", "trimming"],
+                        JobPagesPerSetSupported = true,
+                        FinishingsColDefault = new FinishingsCol { FinishingTemplate = "staple" },
+                        FinishingsColReady = [new FinishingsCol { FinishingTemplate = "punch" }],
+                        BalingTypeSupported = ["band", "wrap"],
+                        BalingWhenSupported = [BalingWhen.AfterJob],
+                        BindingReferenceEdgeSupported = [FinishingReferenceEdge.Left],
+                        BindingTypeSupported = ["adhesive"],
+                        CoatingSidesSupported = [CoatingSides.Both],
+                        CoatingTypeSupported = ["glossy"],
+                        CoveringNameSupported = ["plain"],
+                        FinishingsColDatabase = [new FinishingsCol { FinishingTemplate = "staple" }],
+                        FoldingDirectionSupported = [FoldingDirection.Inward],
+                        FoldingOffsetSupported = [new SharpIpp.Protocol.Models.Range(1, 10)],
+                        FoldingReferenceEdgeSupported = [FinishingReferenceEdge.Top],
+                        LaminatingSidesSupported = [CoatingSides.Both],
+                        LaminatingTypeSupported = ["archival"],
+                        PunchingLocationsSupported = [new SharpIpp.Protocol.Models.Range(10, 20)],
+                        PunchingOffsetSupported = [new SharpIpp.Protocol.Models.Range(0, 100)],
+                        PunchingReferenceEdgeSupported = [FinishingReferenceEdge.Left],
+                        StitchingAngleSupported = [new SharpIpp.Protocol.Models.Range(0, 90)],
+                        StitchingLocationsSupported = [new SharpIpp.Protocol.Models.Range(10, 20)],
+                        StitchingMethodSupported = [StitchingMethod.Wire],
+                        StitchingOffsetSupported = [new SharpIpp.Protocol.Models.Range(0, 5)],
+                        StitchingReferenceEdgeSupported = [FinishingReferenceEdge.Bottom],
+                        TrimmingOffsetSupported = [new SharpIpp.Protocol.Models.Range(0, 2)],
+                        TrimmingReferenceEdgeSupported = [FinishingReferenceEdge.Right],
+                        TrimmingTypeSupported = [TrimmingType.DrawLine, TrimmingType.Full, TrimmingType.Partial],
+                        TrimmingWhenSupported = [TrimmingWhen.AfterDocuments, TrimmingWhen.AfterSheets, TrimmingWhen.AfterSets],
                     }
                 ]
             };
@@ -1944,7 +2085,32 @@ public class SharpIppIntegrationTests
                 new IppAttribute(Tag.NoValue, PrinterAttribute.JobHoldUntilDefault, NoValue.Instance),
                 new IppAttribute(Tag.NoValue, PrinterAttribute.PrintColorModeDefault, NoValue.Instance),
                 new IppAttribute(Tag.NoValue, PrinterAttribute.PrintColorModeSupported, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.WhichJobsSupported, NoValue.Instance)
+                new IppAttribute(Tag.NoValue, PrinterAttribute.WhichJobsSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.BalingTypeSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.BalingWhenSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.BindingReferenceEdgeSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.BindingTypeSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.CoatingSidesSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.CoatingTypeSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.CoveringNameSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.FinishingsColDatabase, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.FoldingDirectionSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.FoldingOffsetSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.FoldingReferenceEdgeSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.LaminatingSidesSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.LaminatingTypeSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.PunchingLocationsSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.PunchingOffsetSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.PunchingReferenceEdgeSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.StitchingAngleSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.StitchingLocationsSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.StitchingMethodSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.StitchingOffsetSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.StitchingReferenceEdgeSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.TrimmingOffsetSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.TrimmingReferenceEdgeSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.TrimmingTypeSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, PrinterAttribute.TrimmingWhenSupported, NoValue.Instance)
             ]);
 
             var memoryStream = new MemoryStream();
@@ -2027,24 +2193,32 @@ public class SharpIppIntegrationTests
                 PrintColorModeDefault = NoValue.GetNoValue<PrintColorMode>(),
                 PrintColorModeSupported = [NoValue.GetNoValue<PrintColorMode>()],
                 WhichJobsSupported = [NoValue.GetNoValue<WhichJobs>()],
-                MediaColDefault = new MediaCol()
-                {
-                    MediaBottomMargin = NoValue.GetNoValue<int>(),
-                    MediaHoleCount = NoValue.GetNoValue<int>(),
-                    MediaLeftMargin = NoValue.GetNoValue<int>(),
-                    MediaOrderCount = NoValue.GetNoValue<int>(),
-                    MediaRightMargin = NoValue.GetNoValue<int>(),
-                    MediaThickness = NoValue.GetNoValue<int>(),
-                    MediaTopMargin = NoValue.GetNoValue<int>(),
-                    MediaWeightMetric = NoValue.GetNoValue<int>(),
-                    MediaBackCoating = NoValue.GetNoValue<MediaCoating>(),
-                    MediaFrontCoating = NoValue.GetNoValue<MediaCoating>(),
-                    MediaGrain = NoValue.GetNoValue<MediaGrain>(),
-                    MediaPrePrinted = NoValue.GetNoValue<MediaPrePrinted>(),
-                    MediaRecycled = NoValue.GetNoValue<MediaRecycled>(),
-                    MediaSource = NoValue.GetNoValue<MediaSource>(),
-                    MediaTooth = NoValue.GetNoValue<MediaTooth>()
-                }
+                BalingTypeSupported = [NoValue.GetNoValue<string>()],
+                BalingWhenSupported = [NoValue.GetNoValue<BalingWhen>()],
+                BindingReferenceEdgeSupported = [NoValue.GetNoValue<FinishingReferenceEdge>()],
+                BindingTypeSupported = [NoValue.GetNoValue<string>()],
+                CoatingSidesSupported = [NoValue.GetNoValue<CoatingSides>()],
+                CoatingTypeSupported = [NoValue.GetNoValue<string>()],
+                CoveringNameSupported = [NoValue.GetNoValue<string>()],
+                FinishingsColDatabase = [NoValue.GetNoValue<FinishingsCol>()],
+                FoldingDirectionSupported = [NoValue.GetNoValue<FoldingDirection>()],
+                FoldingOffsetSupported = [NoValue.GetNoValue<SharpIpp.Protocol.Models.Range>()],
+                FoldingReferenceEdgeSupported = [NoValue.GetNoValue<FinishingReferenceEdge>()],
+                LaminatingSidesSupported = [NoValue.GetNoValue<CoatingSides>()],
+                LaminatingTypeSupported = [NoValue.GetNoValue<string>()],
+                PunchingLocationsSupported = [NoValue.GetNoValue<SharpIpp.Protocol.Models.Range>()],
+                PunchingOffsetSupported = [NoValue.GetNoValue<SharpIpp.Protocol.Models.Range>()],
+                PunchingReferenceEdgeSupported = [NoValue.GetNoValue<FinishingReferenceEdge>()],
+                StitchingAngleSupported = [NoValue.GetNoValue<SharpIpp.Protocol.Models.Range>()],
+                StitchingLocationsSupported = [NoValue.GetNoValue<SharpIpp.Protocol.Models.Range>()],
+                StitchingMethodSupported = [NoValue.GetNoValue<StitchingMethod>()],
+                StitchingOffsetSupported = [NoValue.GetNoValue<SharpIpp.Protocol.Models.Range>()],
+                StitchingReferenceEdgeSupported = [NoValue.GetNoValue<FinishingReferenceEdge>()],
+                TrimmingOffsetSupported = [NoValue.GetNoValue<SharpIpp.Protocol.Models.Range>()],
+                TrimmingReferenceEdgeSupported = [NoValue.GetNoValue<FinishingReferenceEdge>()],
+                TrimmingTypeSupported = [NoValue.GetNoValue<TrimmingType>()],
+                TrimmingWhenSupported = [NoValue.GetNoValue<TrimmingWhen>()],
+                MediaColDefault = NoValue.GetNoValue<MediaCol>()
             }
         };
         
@@ -2074,3 +2248,4 @@ public class SharpIppIntegrationTests
         clientResponse.PrinterAttributes.PrinterResolutionDefault!.Value.Height.Should().Be(NoValue.GetNoValue<Resolution>().Height);
     }
 }
+

@@ -107,10 +107,11 @@ public class MediaColProfileTests
 
         var result = _mapper.Map<MediaCol>(dict);
 
-        // Should return a MediaCol with all properties set to NoValue
-        result.MediaBottomMargin.Should().Be(NoValue.GetNoValue<int>());
-        result.MediaSource.Should().Be(NoValue.GetNoValue<MediaSource>());
-        result.MediaBackCoating.Should().Be(NoValue.GetNoValue<MediaCoating>());
-        // And nullable fields should NOT be null, since the shortcut explicitly sets them to the NoValue representations.
+        // Should return a MediaCol with IsNoValue set to true
+        result.IsNoValue.Should().BeTrue();
+        // Sub-properties remain at their defaults (null) since only IsNoValue is set.
+        result.MediaBottomMargin.Should().BeNull();
+        result.MediaSource.Should().BeNull();
+        result.MediaBackCoating.Should().BeNull();
     }
 }

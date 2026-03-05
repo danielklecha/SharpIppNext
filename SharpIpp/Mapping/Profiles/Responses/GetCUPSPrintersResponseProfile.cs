@@ -46,7 +46,8 @@ internal class GetCUPSPrintersResponseProfile : IProfile
         });
 
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>((src, map) =>
-            new PrinterDescriptionAttributes
+        {
+            return new PrinterDescriptionAttributes
             {
                 CharsetConfigured = map.MapFromDicNullable<string?>(src, PrinterAttribute.CharsetConfigured),
                 CharsetSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.CharsetSupported),
@@ -128,7 +129,43 @@ internal class GetCUPSPrintersResponseProfile : IProfile
                 PrintContentOptimizeSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrintContentOptimizeSupported),
                 OutputDeviceSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.OutputDeviceSupported),
                 JobCreationAttributesSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.JobCreationAttributesSupported),
-            });
+                FinishingTemplateSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.FinishingTemplateSupported),
+                FinishingsColSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.FinishingsColSupported),
+                JobPagesPerSetSupported = map.MapFromDicNullable<bool?>(src, PrinterAttribute.JobPagesPerSetSupported),
+                PunchingHoleDiameterConfigured = map.MapFromDicNullable<int?>(src, PrinterAttribute.PunchingHoleDiameterConfigured),
+                PrinterFinisher = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrinterFinisher),
+                PrinterFinisherDescription = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrinterFinisherDescription),
+                PrinterFinisherSupplies = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrinterFinisherSupplies),
+                PrinterFinisherSuppliesDescription = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrinterFinisherSuppliesDescription),
+                FinishingsColDefault = src.ContainsKey(PrinterAttribute.FinishingsColDefault) ? map.Map<FinishingsCol>(src[PrinterAttribute.FinishingsColDefault].FromBegCollection().ToIppDictionary()) : null,
+                FinishingsColReady = src.ContainsKey(PrinterAttribute.FinishingsColReady) ? src[PrinterAttribute.FinishingsColReady].GroupBegCollection().Select(x => map.Map<FinishingsCol>(x.FromBegCollection().ToIppDictionary())).ToArray() : null,
+                BalingTypeSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.BalingTypeSupported),
+                BalingWhenSupported = map.MapFromDicSetNullable<BalingWhen[]?>(src, PrinterAttribute.BalingWhenSupported),
+                BindingReferenceEdgeSupported = map.MapFromDicSetNullable<FinishingReferenceEdge[]?>(src, PrinterAttribute.BindingReferenceEdgeSupported),
+                BindingTypeSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.BindingTypeSupported),
+                CoatingSidesSupported = map.MapFromDicSetNullable<CoatingSides[]?>(src, PrinterAttribute.CoatingSidesSupported),
+                CoatingTypeSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.CoatingTypeSupported),
+                CoveringNameSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.CoveringNameSupported),
+                FinishingsColDatabase = src.ContainsKey(PrinterAttribute.FinishingsColDatabase) ? src[PrinterAttribute.FinishingsColDatabase].GroupBegCollection().Select(x => map.Map<FinishingsCol>(x.FromBegCollection().ToIppDictionary())).ToArray() : null,
+                FoldingDirectionSupported = map.MapFromDicSetNullable<FoldingDirection[]?>(src, PrinterAttribute.FoldingDirectionSupported),
+                FoldingOffsetSupported = map.MapFromDicSetNullable<Protocol.Models.Range[]?>(src, PrinterAttribute.FoldingOffsetSupported),
+                FoldingReferenceEdgeSupported = map.MapFromDicSetNullable<FinishingReferenceEdge[]?>(src, PrinterAttribute.FoldingReferenceEdgeSupported),
+                LaminatingSidesSupported = map.MapFromDicSetNullable<CoatingSides[]?>(src, PrinterAttribute.LaminatingSidesSupported),
+                LaminatingTypeSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.LaminatingTypeSupported),
+                PunchingLocationsSupported = map.MapFromDicSetNullable<Protocol.Models.Range[]?>(src, PrinterAttribute.PunchingLocationsSupported),
+                PunchingOffsetSupported = map.MapFromDicSetNullable<Protocol.Models.Range[]?>(src, PrinterAttribute.PunchingOffsetSupported),
+                PunchingReferenceEdgeSupported = map.MapFromDicSetNullable<FinishingReferenceEdge[]?>(src, PrinterAttribute.PunchingReferenceEdgeSupported),
+                StitchingAngleSupported = map.MapFromDicSetNullable<Protocol.Models.Range[]?>(src, PrinterAttribute.StitchingAngleSupported),
+                StitchingLocationsSupported = map.MapFromDicSetNullable<Protocol.Models.Range[]?>(src, PrinterAttribute.StitchingLocationsSupported),
+                StitchingMethodSupported = map.MapFromDicSetNullable<StitchingMethod[]?>(src, PrinterAttribute.StitchingMethodSupported),
+                StitchingOffsetSupported = map.MapFromDicSetNullable<Protocol.Models.Range[]?>(src, PrinterAttribute.StitchingOffsetSupported),
+                StitchingReferenceEdgeSupported = map.MapFromDicSetNullable<FinishingReferenceEdge[]?>(src, PrinterAttribute.StitchingReferenceEdgeSupported),
+                TrimmingOffsetSupported = map.MapFromDicSetNullable<Protocol.Models.Range[]?>(src, PrinterAttribute.TrimmingOffsetSupported),
+                TrimmingReferenceEdgeSupported = map.MapFromDicSetNullable<FinishingReferenceEdge[]?>(src, PrinterAttribute.TrimmingReferenceEdgeSupported),
+                TrimmingTypeSupported = map.MapFromDicSetNullable<TrimmingType[]?>(src, PrinterAttribute.TrimmingTypeSupported),
+                TrimmingWhenSupported = map.MapFromDicSetNullable<TrimmingWhen[]?>(src, PrinterAttribute.TrimmingWhenSupported),
+            };
+        });
 
         mapper.CreateMap<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>((src, map) =>
             {
@@ -293,6 +330,76 @@ internal class GetCUPSPrintersResponseProfile : IProfile
                     dic.Add(PrinterAttribute.OutputDeviceSupported, src.OutputDeviceSupported.Select(x => new IppAttribute(Tag.NameWithoutLanguage, PrinterAttribute.OutputDeviceSupported, x)).ToArray());
                 if (src.JobCreationAttributesSupported != null)
                     dic.Add(PrinterAttribute.JobCreationAttributesSupported, src.JobCreationAttributesSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.JobCreationAttributesSupported, x)).ToArray());
+                if (src.FinishingTemplateSupported != null)
+                    dic.Add(PrinterAttribute.FinishingTemplateSupported, src.FinishingTemplateSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.FinishingTemplateSupported, x)).ToArray());
+                if (src.FinishingsColSupported != null)
+                    dic.Add(PrinterAttribute.FinishingsColSupported, src.FinishingsColSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.FinishingsColSupported, x)).ToArray());
+                if (src.JobPagesPerSetSupported != null)
+                    dic.Add(PrinterAttribute.JobPagesPerSetSupported, [new IppAttribute(Tag.Boolean, PrinterAttribute.JobPagesPerSetSupported, src.JobPagesPerSetSupported.Value)]);
+                if (src.PunchingHoleDiameterConfigured != null)
+                    dic.Add(PrinterAttribute.PunchingHoleDiameterConfigured, [new IppAttribute(Tag.Integer, PrinterAttribute.PunchingHoleDiameterConfigured, src.PunchingHoleDiameterConfigured.Value)]);
+                if (src.PrinterFinisher != null)
+                    dic.Add(PrinterAttribute.PrinterFinisher, src.PrinterFinisher.Select(x => new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, PrinterAttribute.PrinterFinisher, x)).ToArray());
+                if (src.PrinterFinisherDescription != null)
+                    dic.Add(PrinterAttribute.PrinterFinisherDescription, src.PrinterFinisherDescription.Select(x => new IppAttribute(Tag.TextWithoutLanguage, PrinterAttribute.PrinterFinisherDescription, x)).ToArray());
+                if (src.PrinterFinisherSupplies != null)
+                    dic.Add(PrinterAttribute.PrinterFinisherSupplies, src.PrinterFinisherSupplies.Select(x => new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, PrinterAttribute.PrinterFinisherSupplies, x)).ToArray());
+                if (src.PrinterFinisherSuppliesDescription != null)
+                    dic.Add(PrinterAttribute.PrinterFinisherSuppliesDescription, src.PrinterFinisherSuppliesDescription.Select(x => new IppAttribute(Tag.TextWithoutLanguage, PrinterAttribute.PrinterFinisherSuppliesDescription, x)).ToArray());
+                if (src.FinishingsColDefault != null)
+                    dic.Add(PrinterAttribute.FinishingsColDefault, map.Map<IEnumerable<IppAttribute>>(src.FinishingsColDefault).ToBegCollection(PrinterAttribute.FinishingsColDefault).ToArray());
+                if (src.FinishingsColReady != null)
+                    dic.Add(PrinterAttribute.FinishingsColReady, src.FinishingsColReady.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(PrinterAttribute.FinishingsColReady)).ToArray());
+                if (src.BalingTypeSupported != null)
+                    dic.Add(PrinterAttribute.BalingTypeSupported, src.BalingTypeSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.BalingTypeSupported, x)).ToArray());
+                if (src.BalingWhenSupported != null)
+                    dic.Add(PrinterAttribute.BalingWhenSupported, src.BalingWhenSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.BalingWhenSupported, map.Map<string>(x))).ToArray());
+                if (src.BindingReferenceEdgeSupported != null)
+                    dic.Add(PrinterAttribute.BindingReferenceEdgeSupported, src.BindingReferenceEdgeSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.BindingReferenceEdgeSupported, map.Map<string>(x))).ToArray());
+                if (src.BindingTypeSupported != null)
+                    dic.Add(PrinterAttribute.BindingTypeSupported, src.BindingTypeSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.BindingTypeSupported, x)).ToArray());
+                if (src.CoatingSidesSupported != null)
+                    dic.Add(PrinterAttribute.CoatingSidesSupported, src.CoatingSidesSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.CoatingSidesSupported, map.Map<string>(x))).ToArray());
+                if (src.CoatingTypeSupported != null)
+                    dic.Add(PrinterAttribute.CoatingTypeSupported, src.CoatingTypeSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.CoatingTypeSupported, x)).ToArray());
+                if (src.CoveringNameSupported != null)
+                    dic.Add(PrinterAttribute.CoveringNameSupported, src.CoveringNameSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.CoveringNameSupported, x)).ToArray());
+                if (src.FinishingsColDatabase != null)
+                    dic.Add(PrinterAttribute.FinishingsColDatabase, src.FinishingsColDatabase.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(PrinterAttribute.FinishingsColDatabase)).ToArray());
+                if (src.FoldingDirectionSupported != null)
+                    dic.Add(PrinterAttribute.FoldingDirectionSupported, src.FoldingDirectionSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.FoldingDirectionSupported, map.Map<string>(x))).ToArray());
+                if (src.FoldingOffsetSupported != null)
+                    dic.Add(PrinterAttribute.FoldingOffsetSupported, src.FoldingOffsetSupported.Select(x => new IppAttribute(Tag.RangeOfInteger, PrinterAttribute.FoldingOffsetSupported, x)).ToArray());
+                if (src.FoldingReferenceEdgeSupported != null)
+                    dic.Add(PrinterAttribute.FoldingReferenceEdgeSupported, src.FoldingReferenceEdgeSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.FoldingReferenceEdgeSupported, map.Map<string>(x))).ToArray());
+                if (src.LaminatingSidesSupported != null)
+                    dic.Add(PrinterAttribute.LaminatingSidesSupported, src.LaminatingSidesSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.LaminatingSidesSupported, map.Map<string>(x))).ToArray());
+                if (src.LaminatingTypeSupported != null)
+                    dic.Add(PrinterAttribute.LaminatingTypeSupported, src.LaminatingTypeSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.LaminatingTypeSupported, x)).ToArray());
+                if (src.PunchingLocationsSupported != null)
+                    dic.Add(PrinterAttribute.PunchingLocationsSupported, src.PunchingLocationsSupported.Select(x => new IppAttribute(Tag.RangeOfInteger, PrinterAttribute.PunchingLocationsSupported, x)).ToArray());
+                if (src.PunchingOffsetSupported != null)
+                    dic.Add(PrinterAttribute.PunchingOffsetSupported, src.PunchingOffsetSupported.Select(x => new IppAttribute(Tag.RangeOfInteger, PrinterAttribute.PunchingOffsetSupported, x)).ToArray());
+                if (src.PunchingReferenceEdgeSupported != null)
+                    dic.Add(PrinterAttribute.PunchingReferenceEdgeSupported, src.PunchingReferenceEdgeSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PunchingReferenceEdgeSupported, map.Map<string>(x))).ToArray());
+                if (src.StitchingAngleSupported != null)
+                    dic.Add(PrinterAttribute.StitchingAngleSupported, src.StitchingAngleSupported.Select(x => new IppAttribute(Tag.RangeOfInteger, PrinterAttribute.StitchingAngleSupported, x)).ToArray());
+                if (src.StitchingLocationsSupported != null)
+                    dic.Add(PrinterAttribute.StitchingLocationsSupported, src.StitchingLocationsSupported.Select(x => new IppAttribute(Tag.RangeOfInteger, PrinterAttribute.StitchingLocationsSupported, x)).ToArray());
+                if (src.StitchingMethodSupported != null)
+                    dic.Add(PrinterAttribute.StitchingMethodSupported, src.StitchingMethodSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.StitchingMethodSupported, map.Map<string>(x))).ToArray());
+                if (src.StitchingOffsetSupported != null)
+                    dic.Add(PrinterAttribute.StitchingOffsetSupported, src.StitchingOffsetSupported.Select(x => new IppAttribute(Tag.RangeOfInteger, PrinterAttribute.StitchingOffsetSupported, x)).ToArray());
+                if (src.StitchingReferenceEdgeSupported != null)
+                    dic.Add(PrinterAttribute.StitchingReferenceEdgeSupported, src.StitchingReferenceEdgeSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.StitchingReferenceEdgeSupported, map.Map<string>(x))).ToArray());
+                if (src.TrimmingOffsetSupported != null)
+                    dic.Add(PrinterAttribute.TrimmingOffsetSupported, src.TrimmingOffsetSupported.Select(x => new IppAttribute(Tag.RangeOfInteger, PrinterAttribute.TrimmingOffsetSupported, x)).ToArray());
+                if (src.TrimmingReferenceEdgeSupported != null)
+                    dic.Add(PrinterAttribute.TrimmingReferenceEdgeSupported, src.TrimmingReferenceEdgeSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.TrimmingReferenceEdgeSupported, map.Map<string>(x))).ToArray());
+                if (src.TrimmingTypeSupported != null)
+                    dic.Add(PrinterAttribute.TrimmingTypeSupported, src.TrimmingTypeSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.TrimmingTypeSupported, map.Map<string>(x))).ToArray());
+                if (src.TrimmingWhenSupported != null)
+                    dic.Add(PrinterAttribute.TrimmingWhenSupported, src.TrimmingWhenSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.TrimmingWhenSupported, map.Map<string>(x))).ToArray());
                 return dic;
             });
     }

@@ -1,6 +1,9 @@
 namespace SharpIpp.Protocol.Models;
-public class MediaSourceProperties
+public class MediaSourceProperties : IIppCollection
 {
+    /// <inheritdoc />
+    public bool IsNoValue { get; set; }
+
     /// <summary>
     /// type2 keyword
     /// </summary>

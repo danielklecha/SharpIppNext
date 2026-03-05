@@ -27,6 +27,12 @@ public static class IppAttributeExtensions
         string? collectionName = null;
         foreach (var attribute in attributes)
         {
+            var groupName = collectionName ?? attribute.Name;
+            if (groups.TryGetValue(groupName, out List<IppAttribute>? value))
+                value.Add(attribute);
+            else
+                groups.Add(groupName, new List<IppAttribute> { attribute });
+
             switch (attribute.Tag)
             {
                 case Tag.BegCollection:
@@ -40,11 +46,6 @@ public static class IppAttributeExtensions
                         collectionName = null;
                     break;
             }
-            var groupName = collectionName ?? attribute.Name;
-            if (groups.TryGetValue(groupName, out List<IppAttribute>? value))
-                value.Add(attribute);
-            else
-                groups.Add(groupName, new List<IppAttribute> { attribute });
         }
         return groups.ToDictionary(x => x.Key, x => x.Value.ToArray());
     }
@@ -91,8 +92,9 @@ public static class IppAttributeExtensions
                 if (!string.IsNullOrEmpty(name))
                 {
                     context.LastMemberName = name;
-                    context.NeedsMemberNameTag = false; // We just emitted the name tag
                 }
+
+                context.NeedsMemberNameTag = false; // We just emitted the name tag
                 yield return new IppAttribute(attribute.Tag, string.Empty, attribute.Value);
                 continue;
             }
@@ -232,6 +234,39 @@ public static class IppAttributeExtensions
             {
                 yield return new IppAttribute(attribute.Tag, nextMemberName!, attribute.Value);
                 nextMemberName = null;
+            }
+        }
+    }
+    /// <summary>
+    /// Groups a collection of <see cref="IppAttribute"/> into multiple collections.
+    /// Each collection starts with <see cref="Tag.BegCollection"/> and ends with its corresponding <see cref="Tag.EndCollection"/>.
+    /// </summary>
+    /// <param name="attributes">The collection of attributes to group.</param>
+    /// <returns>An enumerable of attribute collections.</returns>
+    public static IEnumerable<IEnumerable<IppAttribute>> GroupBegCollection(this IEnumerable<IppAttribute> attributes)
+    {
+        var current = new List<IppAttribute>();
+        int level = 0;
+        foreach (var attribute in attributes)
+        {
+            if (level == 0 && attribute.Tag.IsOutOfBand())
+            {
+                yield return new[] { attribute };
+                continue;
+            }
+            current.Add(attribute);
+            if (attribute.Tag == Tag.BegCollection)
+            {
+                level++;
+            }
+            else if (attribute.Tag == Tag.EndCollection)
+            {
+                level--;
+                if (level == 0)
+                {
+                    yield return current.ToArray();
+                    current.Clear();
+                }
             }
         }
     }

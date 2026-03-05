@@ -47,10 +47,9 @@ public class IppAttributeExtensionsTests
         var result = attributes.ToIppDictionary();
 
         // Assert
+        result.Should().HaveCount(1);
         result.Should().ContainKey("media-col");
-        result["media-col"].Should().HaveCount(6);
-        result.Should().ContainKey("");
-        result[""].Should().HaveCount(1);
+        result["media-col"].Should().HaveCount(7);
     }
 
     [TestMethod]

@@ -403,5 +403,180 @@ namespace SharpIpp.Protocol.Models
         ///     job-creation-attributes-supported (PWG 5100.7-2023 Section 6.9.13)
         /// </summary>
         public string[]? JobCreationAttributesSupported { get; set; }
+
+        /// <summary>
+        ///     finishing-template-supported (PWG 5100.1-2022 Section 6.13)
+        /// </summary>
+        public string[]? FinishingTemplateSupported { get; set; }
+
+        /// <summary>
+        ///     finishings-col-supported (PWG 5100.1-2022 Section 6.12)
+        /// </summary>
+        public string[]? FinishingsColSupported { get; set; }
+
+        /// <summary>
+        ///     finishings-col-default (PWG 5100.1-2022 Section 10.3)
+        /// </summary>
+        public FinishingsCol? FinishingsColDefault { get; set; }
+
+        /// <summary>
+        ///     finishings-col-ready (PWG 5100.1-2022 Section 10.4)
+        /// </summary>
+        public FinishingsCol[]? FinishingsColReady { get; set; }
+
+        /// <summary>
+        ///     job-pages-per-set-supported (PWG 5100.1-2022 Section 6.14)
+        /// </summary>
+        public bool? JobPagesPerSetSupported { get; set; }
+
+        /// <summary>
+        ///     punching-hole-diameter-configured (PWG 5100.1-2022 Section 6.23)
+        /// </summary>
+        public int? PunchingHoleDiameterConfigured { get; set; }
+
+        /// <summary>
+        ///     baling-type-supported (PWG 5100.1-2022 Section 6.1)
+        /// </summary>
+        public string[]? BalingTypeSupported { get; set; }
+
+        /// <summary>
+        ///     baling-when-supported (PWG 5100.1-2022 Section 6.2)
+        /// </summary>
+        public BalingWhen[]? BalingWhenSupported { get; set; }
+
+        /// <summary>
+        ///     binding-reference-edge-supported (PWG 5100.1-2022 Section 6.3)
+        /// </summary>
+        public FinishingReferenceEdge[]? BindingReferenceEdgeSupported { get; set; }
+
+        /// <summary>
+        ///     binding-type-supported (PWG 5100.1-2022 Section 6.4)
+        /// </summary>
+        public string[]? BindingTypeSupported { get; set; }
+
+        /// <summary>
+        ///     coating-sides-supported (PWG 5100.1-2022 Section 6.5)
+        /// </summary>
+        public CoatingSides[]? CoatingSidesSupported { get; set; }
+
+        /// <summary>
+        ///     coating-type-supported (PWG 5100.1-2022 Section 6.6)
+        /// </summary>
+        public string[]? CoatingTypeSupported { get; set; }
+
+        /// <summary>
+        ///     covering-name-supported (PWG 5100.1-2022 Section 6.7)
+        /// </summary>
+        public string[]? CoveringNameSupported { get; set; }
+
+        /// <summary>
+        ///     finishings-col-database (PWG 5100.1-2022 Section 6.9)
+        /// </summary>
+        public FinishingsCol[]? FinishingsColDatabase { get; set; }
+
+        /// <summary>
+        ///     folding-direction-supported (PWG 5100.1-2022 Section 6.13)
+        /// </summary>
+        public FoldingDirection[]? FoldingDirectionSupported { get; set; }
+
+        /// <summary>
+        ///     folding-offset-supported (PWG 5100.1-2022 Section 6.14)
+        /// </summary>
+        public Range[]? FoldingOffsetSupported { get; set; }
+
+        /// <summary>
+        ///     folding-reference-edge-supported (PWG 5100.1-2022 Section 6.15)
+        /// </summary>
+        public FinishingReferenceEdge[]? FoldingReferenceEdgeSupported { get; set; }
+
+        /// <summary>
+        ///     laminating-sides-supported (PWG 5100.1-2022 Section 6.16)
+        /// </summary>
+        public CoatingSides[]? LaminatingSidesSupported { get; set; }
+
+        /// <summary>
+        ///     laminating-type-supported (PWG 5100.1-2022 Section 6.17)
+        /// </summary>
+        public string[]? LaminatingTypeSupported { get; set; }
+
+        /// <summary>
+        ///     punching-locations-supported (PWG 5100.1-2022 Section 6.20)
+        /// </summary>
+        public Range[]? PunchingLocationsSupported { get; set; }
+
+        /// <summary>
+        ///     punching-offset-supported (PWG 5100.1-2022 Section 6.21)
+        /// </summary>
+        public Range[]? PunchingOffsetSupported { get; set; }
+
+        /// <summary>
+        ///     punching-reference-edge-supported (PWG 5100.1-2022 Section 6.22)
+        /// </summary>
+        public FinishingReferenceEdge[]? PunchingReferenceEdgeSupported { get; set; }
+
+        /// <summary>
+        ///     stitching-angle-supported (PWG 5100.1-2022 Section 6.23)
+        /// </summary>
+        public Range[]? StitchingAngleSupported { get; set; }
+
+        /// <summary>
+        ///     stitching-locations-supported (PWG 5100.1-2022 Section 6.24)
+        /// </summary>
+        public Range[]? StitchingLocationsSupported { get; set; }
+
+        /// <summary>
+        ///     stitching-method-supported (PWG 5100.1-2022 Section 6.25)
+        /// </summary>
+        public StitchingMethod[]? StitchingMethodSupported { get; set; }
+
+        /// <summary>
+        ///     stitching-offset-supported (PWG 5100.1-2022 Section 6.26)
+        /// </summary>
+        public Range[]? StitchingOffsetSupported { get; set; }
+
+        /// <summary>
+        ///     stitching-reference-edge-supported (PWG 5100.1-2022 Section 6.27)
+        /// </summary>
+        public FinishingReferenceEdge[]? StitchingReferenceEdgeSupported { get; set; }
+
+        /// <summary>
+        ///     trimming-offset-supported (PWG 5100.1-2022 Section 6.28)
+        /// </summary>
+        public Range[]? TrimmingOffsetSupported { get; set; }
+
+        /// <summary>
+        ///     trimming-reference-edge-supported (PWG 5100.1-2022 Section 6.29)
+        /// </summary>
+        public FinishingReferenceEdge[]? TrimmingReferenceEdgeSupported { get; set; }
+
+        /// <summary>
+        ///     trimming-type-supported (PWG 5100.1-2022 Section 6.30)
+        /// </summary>
+        public TrimmingType[]? TrimmingTypeSupported { get; set; }
+
+        /// <summary>
+        ///     trimming-when-supported (PWG 5100.1-2022 Section 6.31)
+        /// </summary>
+        public TrimmingWhen[]? TrimmingWhenSupported { get; set; }
+
+        /// <summary>
+        ///     printer-finisher (PWG 5100.1-2022 Section 7.1)
+        /// </summary>
+        public string[]? PrinterFinisher { get; set; }
+
+        /// <summary>
+        ///     printer-finisher-description (PWG 5100.1-2022 Section 7.2)
+        /// </summary>
+        public string[]? PrinterFinisherDescription { get; set; }
+
+        /// <summary>
+        ///     printer-finisher-supplies (PWG 5100.1-2022 Section 7.3)
+        /// </summary>
+        public string[]? PrinterFinisherSupplies { get; set; }
+
+        /// <summary>
+        ///     printer-finisher-supplies-description (PWG 5100.1-2022 Section 7.4)
+        /// </summary>
+        public string[]? PrinterFinisherSuppliesDescription { get; set; }
     }
 }

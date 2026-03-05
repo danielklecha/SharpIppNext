@@ -11,7 +11,7 @@ internal class MediaColProfile : IProfile
 {
     public void CreateMaps(IMapperConstructor mapper)
     {
-        mapper.CreateMap<Dictionary<string, IppAttribute[]>, MediaCol>((src, map) =>
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, MediaCol>((src, map) =>
         {
             if (src.Count == 1)
             {
@@ -20,24 +20,7 @@ internal class MediaColProfile : IProfile
                 var first = enumerator.Current.Value;
                 if (first != null && first.Length == 1 && first[0].Tag.IsOutOfBand())
                 {
-                    return new MediaCol
-                {
-                    MediaBackCoating = NoValue.GetNoValue<MediaCoating>(),
-                    MediaBottomMargin = NoValue.GetNoValue<int>(),
-                    MediaFrontCoating = NoValue.GetNoValue<MediaCoating>(),
-                    MediaGrain = NoValue.GetNoValue<MediaGrain>(),
-                    MediaHoleCount = NoValue.GetNoValue<int>(),
-                    MediaLeftMargin = NoValue.GetNoValue<int>(),
-                    MediaOrderCount = NoValue.GetNoValue<int>(),
-                    MediaPrePrinted = NoValue.GetNoValue<MediaPrePrinted>(),
-                    MediaRecycled = NoValue.GetNoValue<MediaRecycled>(),
-                    MediaRightMargin = NoValue.GetNoValue<int>(),
-                    MediaSource = NoValue.GetNoValue<MediaSource>(),
-                    MediaThickness = NoValue.GetNoValue<int>(),
-                    MediaTooth = NoValue.GetNoValue<MediaTooth>(),
-                    MediaTopMargin = NoValue.GetNoValue<int>(),
-                    MediaWeightMetric = NoValue.GetNoValue<int>()
-                };
+                    return NoValue.GetNoValue<MediaCol>();
                 }
             }
 
