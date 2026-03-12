@@ -62,6 +62,7 @@ public partial class SharpIppServer : ISharpIppServer
             throw new ArgumentNullException(nameof(request));
         IIppRequest mappedRequest = request.IppOperation switch
         {
+            IppOperation.CancelDocument => Mapper.Map<IIppRequestMessage, CancelDocumentRequest>(request),
             IppOperation.CancelJob => Mapper.Map<IIppRequestMessage, CancelJobRequest>(request),
             IppOperation.CreateJob => Mapper.Map<IIppRequestMessage, CreateJobRequest>(request),
             IppOperation.GetCUPSPrinters => Mapper.Map<IIppRequestMessage, CUPSGetPrintersRequest>(request),
@@ -79,6 +80,9 @@ public partial class SharpIppServer : ISharpIppServer
             IppOperation.SendDocument => Mapper.Map<IIppRequestMessage, SendDocumentRequest>(request),
             IppOperation.SendUri => Mapper.Map<IIppRequestMessage, SendUriRequest>(request),
             IppOperation.ValidateJob => Mapper.Map<IIppRequestMessage, ValidateJobRequest>(request),
+            IppOperation.GetDocumentAttributes => Mapper.Map<IIppRequestMessage, GetDocumentAttributesRequest>(request),
+            IppOperation.GetDocuments => Mapper.Map<IIppRequestMessage, GetDocumentsRequest>(request),
+            IppOperation.SetDocumentAttributes => Mapper.Map<IIppRequestMessage, SetDocumentAttributesRequest>(request),
             _ => throw new IppRequestException($"Unable to handle {request.IppOperation} operation", request, IppStatusCode.ClientErrorBadRequest)
         };
         cancellationToken.ThrowIfCancellationRequested();

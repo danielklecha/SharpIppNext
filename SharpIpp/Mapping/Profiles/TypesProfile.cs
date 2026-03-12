@@ -93,6 +93,25 @@ internal class TypesProfile : IProfile
         ConfigureKeyword<StitchingMethod>(mapper);
         ConfigureKeyword<TrimmingType>(mapper);
         ConfigureKeyword<TrimmingWhen>(mapper);
+        ConfigureKeyword<JobErrorSheetWhen>(mapper);
+        ConfigureKeyword<PageDelivery>(mapper);
+        ConfigureKeyword<PageOrderReceived>(mapper);
+        ConfigureKeyword<PresentationDirectionNumberUp>(mapper);
+        ConfigureKeyword<XImagePosition>(mapper);
+        ConfigureKeyword<YImagePosition>(mapper);
+        ConfigureKeyword<CoverType>(mapper);
+        ConfigureKeyword<PrinterStateReason>(mapper);
+        ConfigureKeyword<PdlOverride>(mapper);
+        ConfigureKeyword<JobSpooling>(mapper);
+        ConfigureKeyword<PrintContentOptimize>(mapper);
+        ConfigureKeyword<BalingType>(mapper);
+        ConfigureKeyword<BindingType>(mapper);
+        ConfigureKeyword<CoatingType>(mapper);
+        ConfigureKeyword<CoveringName>(mapper);
+        ConfigureKeyword<LaminatingType>(mapper);
+        ConfigureKeyword<MediaInputTrayCheck>(mapper);
+        ConfigureKeyword<JobSheetsType>(mapper);
+        ConfigureKeyword<SeparatorSheetsType>(mapper); ConfigureKeyword<CurrentPageOrder>(mapper);
     }
 
     private static void ConfigureKeyword<T>(IMapperConstructor map) where T : struct, Enum

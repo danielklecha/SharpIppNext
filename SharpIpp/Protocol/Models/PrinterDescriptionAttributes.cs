@@ -62,7 +62,7 @@ namespace SharpIpp.Protocol.Models
         /// <summary>
         ///     printer-state-reasons (RFC 8011 Section 5.4.12)
         /// </summary>
-        public string[]? PrinterStateReasons { get; set; }
+        public PrinterStateReason[]? PrinterStateReasons { get; set; }
 
         /// <summary>
         ///     printer-state-message (RFC 8011 Section 5.4.13)
@@ -142,7 +142,7 @@ namespace SharpIpp.Protocol.Models
         /// <summary>
         ///     pdl-override-supported (RFC 8011 Section 5.4.28)
         /// </summary>
-        public string? PdlOverrideSupported { get; set; }
+        public PdlOverride? PdlOverrideSupported { get; set; }
 
         /// <summary>
         ///     printer-up-time (RFC 8011 Section 5.4.29)
@@ -377,7 +377,7 @@ namespace SharpIpp.Protocol.Models
         /// <summary>
         ///     job-spooling-supported (PWG 5100.7-2023 Section 6.9.31)
         /// </summary>
-        public string? JobSpoolingSupported { get; set; }
+        public JobSpooling? JobSpoolingSupported { get; set; }
 
         /// <summary>
         ///     max-page-ranges-supported (PWG 5100.7-2023 Section 6.9.33)
@@ -387,12 +387,12 @@ namespace SharpIpp.Protocol.Models
         /// <summary>
         ///     print-content-optimize-default (PWG 5100.7-2023 Section 6.9.58)
         /// </summary>
-        public string? PrintContentOptimizeDefault { get; set; }
+        public PrintContentOptimize? PrintContentOptimizeDefault { get; set; }
 
         /// <summary>
         ///     print-content-optimize-supported (PWG 5100.7-2023 Section 6.9.59)
         /// </summary>
-        public string[]? PrintContentOptimizeSupported { get; set; }
+        public PrintContentOptimize[]? PrintContentOptimizeSupported { get; set; }
 
         /// <summary>
         ///     output-device-supported (PWG 5100.7-2023 Section 6.9.57)
@@ -405,7 +405,7 @@ namespace SharpIpp.Protocol.Models
         public string[]? JobCreationAttributesSupported { get; set; }
 
         /// <summary>
-        ///     finishing-template-supported (PWG 5100.1-2022 Section 6.13)
+        ///     finishing-template-supported (PWG 5100.1-2022 Section 6.8)
         /// </summary>
         public string[]? FinishingTemplateSupported { get; set; }
 
@@ -415,29 +415,29 @@ namespace SharpIpp.Protocol.Models
         public string[]? FinishingsColSupported { get; set; }
 
         /// <summary>
-        ///     finishings-col-default (PWG 5100.1-2022 Section 10.3)
+        ///     finishings-col-default (PWG 5100.1-2022 Section 6.10)
         /// </summary>
         public FinishingsCol? FinishingsColDefault { get; set; }
 
         /// <summary>
-        ///     finishings-col-ready (PWG 5100.1-2022 Section 10.4)
+        ///     finishings-col-ready (PWG 5100.1-2022 Section 6.11)
         /// </summary>
         public FinishingsCol[]? FinishingsColReady { get; set; }
 
         /// <summary>
-        ///     job-pages-per-set-supported (PWG 5100.1-2022 Section 6.14)
+        ///     job-pages-per-set-supported (PWG 5100.1-2022 Section 6.18)
         /// </summary>
         public bool? JobPagesPerSetSupported { get; set; }
 
         /// <summary>
-        ///     punching-hole-diameter-configured (PWG 5100.1-2022 Section 6.23)
+        ///     punching-hole-diameter-configured (PWG 5100.1-2022 Section 6.19)
         /// </summary>
         public int? PunchingHoleDiameterConfigured { get; set; }
 
         /// <summary>
         ///     baling-type-supported (PWG 5100.1-2022 Section 6.1)
         /// </summary>
-        public string[]? BalingTypeSupported { get; set; }
+        public BalingType[]? BalingTypeSupported { get; set; }
 
         /// <summary>
         ///     baling-when-supported (PWG 5100.1-2022 Section 6.2)
@@ -452,7 +452,7 @@ namespace SharpIpp.Protocol.Models
         /// <summary>
         ///     binding-type-supported (PWG 5100.1-2022 Section 6.4)
         /// </summary>
-        public string[]? BindingTypeSupported { get; set; }
+        public BindingType[]? BindingTypeSupported { get; set; }
 
         /// <summary>
         ///     coating-sides-supported (PWG 5100.1-2022 Section 6.5)
@@ -462,12 +462,12 @@ namespace SharpIpp.Protocol.Models
         /// <summary>
         ///     coating-type-supported (PWG 5100.1-2022 Section 6.6)
         /// </summary>
-        public string[]? CoatingTypeSupported { get; set; }
+        public CoatingType[]? CoatingTypeSupported { get; set; }
 
         /// <summary>
         ///     covering-name-supported (PWG 5100.1-2022 Section 6.7)
         /// </summary>
-        public string[]? CoveringNameSupported { get; set; }
+        public CoveringName[]? CoveringNameSupported { get; set; }
 
         /// <summary>
         ///     finishings-col-database (PWG 5100.1-2022 Section 6.9)
@@ -497,7 +497,7 @@ namespace SharpIpp.Protocol.Models
         /// <summary>
         ///     laminating-type-supported (PWG 5100.1-2022 Section 6.17)
         /// </summary>
-        public string[]? LaminatingTypeSupported { get; set; }
+        public LaminatingType[]? LaminatingTypeSupported { get; set; }
 
         /// <summary>
         ///     punching-locations-supported (PWG 5100.1-2022 Section 6.20)
@@ -578,5 +578,235 @@ namespace SharpIpp.Protocol.Models
         ///     printer-finisher-supplies-description (PWG 5100.1-2022 Section 7.4)
         /// </summary>
         public string[]? PrinterFinisherSuppliesDescription { get; set; }
+
+        /// <summary>
+        ///     cover-back-default (PWG 5100.3-2023 Section 5.3.1)
+        /// </summary>
+        public Cover? CoverBackDefault { get; set; }
+
+        /// <summary>
+        ///     cover-back-supported (PWG 5100.3-2023 Section 5.3.2)
+        /// </summary>
+        public string[]? CoverBackSupported { get; set; }
+
+        /// <summary>
+        ///     cover-front-default (PWG 5100.3-2023 Section 5.3.3)
+        /// </summary>
+        public Cover? CoverFrontDefault { get; set; }
+
+        /// <summary>
+        ///     cover-front-supported (PWG 5100.3-2023 Section 5.3.4)
+        /// </summary>
+        public string[]? CoverFrontSupported { get; set; }
+
+        /// <summary>
+        ///     cover-type-supported (PWG 5100.3-2023 Section 5.3.5)
+        /// </summary>
+        public CoverType[]? CoverTypeSupported { get; set; }
+
+        /// <summary>
+        ///     force-front-side-supported (PWG 5100.3-2023 Section 5.3.6)
+        /// </summary>
+        public Range? ForceFrontSideSupported { get; set; }
+
+        /// <summary>
+        ///     image-orientation-default (PWG 5100.3-2023 Section 5.3.7)
+        /// </summary>
+        public Orientation? ImageOrientationDefault { get; set; }
+
+        /// <summary>
+        ///     image-orientation-supported (PWG 5100.3-2023 Section 5.3.8)
+        /// </summary>
+        public Orientation[]? ImageOrientationSupported { get; set; }
+
+        /// <summary>
+        ///     imposition-template-default (PWG 5100.3-2023 Section 5.3.9)
+        /// </summary>
+        public string? ImpositionTemplateDefault { get; set; }
+
+        /// <summary>
+        ///     imposition-template-supported (PWG 5100.3-2023 Section 5.3.10)
+        /// </summary>
+        public string[]? ImpositionTemplateSupported { get; set; }
+
+        /// <summary>
+        ///     insert-count-supported (PWG 5100.3-2023 Section 5.3.11)
+        /// </summary>
+        public Range? InsertCountSupported { get; set; }
+
+        /// <summary>
+        ///     insert-sheet-default (PWG 5100.3-2023 Section 5.3.12)
+        /// </summary>
+        public InsertSheet[]? InsertSheetDefault { get; set; }
+
+        /// <summary>
+        ///     insert-sheet-supported (PWG 5100.3-2023 Section 5.3.13)
+        /// </summary>
+        public string[]? InsertSheetSupported { get; set; }
+
+        /// <summary>
+        ///     job-accounting-output-bin-supported (PWG 5100.3-2023 Section 5.3.14)
+        /// </summary>
+        public string[]? JobAccountingOutputBinSupported { get; set; }
+
+        /// <summary>
+        ///     job-accounting-sheets-default (PWG 5100.3-2023 Section 5.3.15)
+        /// </summary>
+        public JobAccountingSheets? JobAccountingSheetsDefault { get; set; }
+
+        /// <summary>
+        ///     job-accounting-sheets-supported (PWG 5100.3-2023 Section 5.3.16)
+        /// </summary>
+        public string[]? JobAccountingSheetsSupported { get; set; }
+
+        /// <summary>
+        ///     job-accounting-sheets-type-supported (PWG 5100.3-2023 Section 5.3.17)
+        /// </summary>
+        public JobSheetsType[]? JobAccountingSheetsTypeSupported { get; set; }
+
+        /// <summary>
+        ///     job-complete-before-supported (PWG 5100.3-2023 Section 5.3.18)
+        /// </summary>
+        public JobHoldUntil[]? JobCompleteBeforeSupported { get; set; }
+
+        /// <summary>
+        ///     job-complete-before-time-supported (PWG 5100.3-2023 Section 5.3.19)
+        /// </summary>
+        public bool? JobCompleteBeforeTimeSupported { get; set; }
+
+        /// <summary>
+        ///     job-error-sheet-default (PWG 5100.3-2023 Section 5.3.20)
+        /// </summary>
+        public JobErrorSheet? JobErrorSheetDefault { get; set; }
+
+        /// <summary>
+        ///     job-error-sheet-supported (PWG 5100.3-2023 Section 5.3.21)
+        /// </summary>
+        public string[]? JobErrorSheetSupported { get; set; }
+
+        /// <summary>
+        ///     job-error-sheet-type-supported (PWG 5100.3-2023 Section 5.3.22)
+        /// </summary>
+        public JobSheetsType[]? JobErrorSheetTypeSupported { get; set; }
+
+        /// <summary>
+        ///     job-error-sheet-when-supported (PWG 5100.3-2023 Section 5.3.23)
+        /// </summary>
+        public JobErrorSheetWhen[]? JobErrorSheetWhenSupported { get; set; }
+
+        /// <summary>
+        ///     job-message-to-operator-supported (PWG 5100.3-2023 Section 5.3.24)
+        /// </summary>
+        public bool? JobMessageToOperatorSupported { get; set; }
+
+        /// <summary>
+        ///     job-phone-number-default (PWG 5100.3-2023 Section 5.3.25)
+        /// </summary>
+        public string? JobPhoneNumberDefault { get; set; }
+
+        /// <summary>
+        ///     job-phone-number-scheme-supported (PWG 5100.3-2023 Section 5.3.26)
+        /// </summary>
+        public string[]? JobPhoneNumberSchemeSupported { get; set; }
+
+        /// <summary>
+        ///     job-phone-number-supported (PWG 5100.3-2023 Section 5.3.27)
+        /// </summary>
+        public bool? JobPhoneNumberSupported { get; set; }
+
+        /// <summary>
+        ///     job-recipient-name-supported (PWG 5100.3-2023 Section 5.3.28)
+        /// </summary>
+        public bool? JobRecipientNameSupported { get; set; }
+
+        /// <summary>
+        ///     job-sheet-message-supported (PWG 5100.3-2023)
+        /// </summary>
+        public bool? JobSheetMessageSupported { get; set; }
+
+        /// <summary>
+        ///     presentation-direction-number-up-default (PWG 5100.3-2023 Section 5.3.29)
+        /// </summary>
+        public PresentationDirectionNumberUp? PresentationDirectionNumberUpDefault { get; set; }
+
+        /// <summary>
+        ///     presentation-direction-number-up-supported (PWG 5100.3-2023 Section 5.3.30)
+        /// </summary>
+        public PresentationDirectionNumberUp[]? PresentationDirectionNumberUpSupported { get; set; }
+
+        /// <summary>
+        ///     separator-sheets-default (PWG 5100.3-2023 Section 5.3.31)
+        /// </summary>
+        public SeparatorSheets? SeparatorSheetsDefault { get; set; }
+
+        /// <summary>
+        ///     separator-sheets-supported (PWG 5100.3-2023 Section 5.3.32)
+        /// </summary>
+        public string[]? SeparatorSheetsSupported { get; set; }
+
+        /// <summary>
+        ///     separator-sheets-type-supported (PWG 5100.3-2023 Section 5.3.33)
+        /// </summary>
+        public SeparatorSheetsType[]? SeparatorSheetsTypeSupported { get; set; }
+
+        /// <summary>
+        ///     x-image-position-default (PWG 5100.3-2023 Section 5.3.34)
+        /// </summary>
+        public XImagePosition? XImagePositionDefault { get; set; }
+
+        /// <summary>
+        ///     x-image-position-supported (PWG 5100.3-2023 Section 5.3.35)
+        /// </summary>
+        public XImagePosition[]? XImagePositionSupported { get; set; }
+
+        /// <summary>
+        ///     x-image-shift-default (PWG 5100.3-2023 Section 5.3.36)
+        /// </summary>
+        public int? XImageShiftDefault { get; set; }
+
+        /// <summary>
+        ///     x-image-shift-supported (PWG 5100.3-2023 Section 5.3.37)
+        /// </summary>
+        public Range? XImageShiftSupported { get; set; }
+
+        /// <summary>
+        ///     x-side1-image-shift-default (PWG 5100.3-2023 Section 5.3.38)
+        /// </summary>
+        public int? XSide1ImageShiftDefault { get; set; }
+
+        /// <summary>
+        ///     x-side2-image-shift-default (PWG 5100.3-2023 Section 5.3.39)
+        /// </summary>
+        public int? XSide2ImageShiftDefault { get; set; }
+
+        /// <summary>
+        ///     y-image-position-default (PWG 5100.3-2023 Section 5.3.40)
+        /// </summary>
+        public YImagePosition? YImagePositionDefault { get; set; }
+
+        /// <summary>
+        ///     y-image-position-supported (PWG 5100.3-2023 Section 5.3.41)
+        /// </summary>
+        public YImagePosition[]? YImagePositionSupported { get; set; }
+
+        /// <summary>
+        ///     y-image-shift-default (PWG 5100.3-2023 Section 5.3.42)
+        /// </summary>
+        public int? YImageShiftDefault { get; set; }
+
+        /// <summary>
+        ///     y-image-shift-supported (PWG 5100.3-2023 Section 5.3.43)
+        /// </summary>
+        public Range? YImageShiftSupported { get; set; }
+
+        /// <summary>
+        ///     y-side1-image-shift-default (PWG 5100.3-2023 Section 5.3.44)
+        /// </summary>
+        public int? YSide1ImageShiftDefault { get; set; }
+
+        /// <summary>
+        ///     y-side2-image-shift-default (PWG 5100.3-2023 Section 5.3.45)
+        /// </summary>
+        public int? YSide2ImageShiftDefault { get; set; }
     }
 }

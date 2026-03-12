@@ -30,6 +30,8 @@ internal class SendDocumentRequestProfile : IProfile
             map.Map<IIppJobRequest, IppRequestMessage>(src, dst);
             if (src.OperationAttributes != null)
                 dst.OperationAttributes.AddRange(map.Map<SendDocumentOperationAttributes, List<IppAttribute>>(src.OperationAttributes));
+            if (src.DocumentTemplateAttributes != null)
+                dst.DocumentAttributes.AddRange(map.Map<DocumentTemplateAttributes, List<IppAttribute>>(src.DocumentTemplateAttributes));
             return dst;
         });
 
@@ -41,6 +43,8 @@ internal class SendDocumentRequestProfile : IProfile
             };
             map.Map<IIppRequestMessage, IIppJobRequest>(src, dst);
             dst.OperationAttributes = map.Map<IDictionary<string, IppAttribute[]>, SendDocumentOperationAttributes>(src.OperationAttributes.ToIppDictionary());
+            if (src.DocumentAttributes.Any())
+                dst.DocumentTemplateAttributes = map.Map<DocumentTemplateAttributes>(src.DocumentAttributes.ToIppDictionary());
             if (!src.OperationAttributes.Any(x => x.Name == JobAttribute.LastDocument))
                 throw new IppRequestException("missing last-document", src, IppStatusCode.ClientErrorBadRequest);
             return dst;

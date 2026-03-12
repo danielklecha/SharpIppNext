@@ -1,0 +1,32 @@
+using System;
+
+namespace SharpIpp.Protocol.Models;
+
+/// <summary>
+///     See: PWG 5100.3-2023 Section 5.2.10
+/// </summary>
+public class JobErrorSheet : IIppCollection
+{
+    /// <inheritdoc />
+    public bool IsNoValue { get; set; }
+
+    /// <summary>
+    /// type2 keyword | name(MAX)
+    /// </summary>
+    public JobSheetsType? JobErrorSheetType { get; set; }
+
+    /// <summary>
+    /// type2 keyword
+    /// </summary>
+    public JobErrorSheetWhen? JobErrorSheetWhen { get; set; }
+
+    /// <summary>
+    /// keyword | name(MAX)
+    /// </summary>
+    public string? Media { get; set; }
+
+    /// <summary>
+    /// collection
+    /// </summary>
+    public MediaCol? MediaCol { get; set; }
+}

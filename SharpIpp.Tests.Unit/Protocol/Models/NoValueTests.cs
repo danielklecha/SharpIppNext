@@ -175,6 +175,12 @@ public class NoValueTests
     [DataRow(typeof(Punching))]
     [DataRow(typeof(Stitching))]
     [DataRow(typeof(Trimming))]
+    [DataRow(typeof(DocumentTemplateAttributes))]
+    [DataRow(typeof(Cover))] 
+    [DataRow(typeof(InsertSheet))]
+    [DataRow(typeof(JobAccountingSheets))]
+    [DataRow(typeof(JobErrorSheet))]
+    [DataRow(typeof(SeparatorSheets))]
     public void GetNoValue_WithCollectionType_ShouldReturnIsNoValueTrue(Type type)
     {
         var result = (IIppCollection)NoValue.GetNoValue(type);

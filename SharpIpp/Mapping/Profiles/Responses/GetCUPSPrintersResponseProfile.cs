@@ -67,7 +67,7 @@ internal class GetCUPSPrintersResponseProfile : IProfile
                 NaturalLanguageConfigured = map.MapFromDicNullable<string?>(src, PrinterAttribute.NaturalLanguageConfigured),
                 OperationsSupported = map.MapFromDicSetNullable<IppOperation[]?>(src, PrinterAttribute.OperationsSupported),
                 PagesPerMinute = map.MapFromDicNullable<int?>(src, PrinterAttribute.PagesPerMinute),
-                PdlOverrideSupported = map.MapFromDicNullable<string?>(src, PrinterAttribute.PdlOverrideSupported),
+                PdlOverrideSupported = map.MapFromDicNullable<PdlOverride?>(src, PrinterAttribute.PdlOverrideSupported),
                 PagesPerMinuteColor = map.MapFromDicNullable<int?>(src, PrinterAttribute.PagesPerMinuteColor),
                 PrinterCurrentTime = map.MapFromDicNullable<DateTimeOffset?>(src, PrinterAttribute.PrinterCurrentTime),
                 PrinterDriverInstaller = map.MapFromDicNullable<string?>(src, PrinterAttribute.PrinterDriverInstaller),
@@ -81,7 +81,7 @@ internal class GetCUPSPrintersResponseProfile : IProfile
                 PrinterName = map.MapFromDicNullable<string?>(src, PrinterAttribute.PrinterName),
                 PrinterState = map.MapFromDicNullable<PrinterState?>(src, PrinterAttribute.PrinterState),
                 PrinterStateMessage = map.MapFromDicNullable<string?>(src, PrinterAttribute.PrinterStateMessage),
-                PrinterStateReasons = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrinterStateReasons),
+                PrinterStateReasons = map.MapFromDicSetNullable<PrinterStateReason[]?>(src, PrinterAttribute.PrinterStateReasons),
                 PrinterUpTime = map.MapFromDicNullable<int?>(src, PrinterAttribute.PrinterUpTime),
                 PrinterUriSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrinterUriSupported),
                 PrintScalingDefault = map.MapFromDicNullable<PrintScaling?>(src, PrinterAttribute.PrintScalingDefault),
@@ -123,10 +123,10 @@ internal class GetCUPSPrintersResponseProfile : IProfile
                 JobAccountingUserIdSupported = map.MapFromDicNullable<bool?>(src, PrinterAttribute.JobAccountingUserIdSupported),
                 JobCancelAfterDefault = map.MapFromDicNullable<int?>(src, PrinterAttribute.JobCancelAfterDefault),
                 JobCancelAfterSupported = map.MapFromDicNullable<Protocol.Models.Range?>(src, PrinterAttribute.JobCancelAfterSupported),
-                JobSpoolingSupported = map.MapFromDicNullable<string?>(src, PrinterAttribute.JobSpoolingSupported),
+                JobSpoolingSupported = map.MapFromDicNullable<JobSpooling?>(src, PrinterAttribute.JobSpoolingSupported),
                 MaxPageRangesSupported = map.MapFromDicNullable<int?>(src, PrinterAttribute.MaxPageRangesSupported),
-                PrintContentOptimizeDefault = map.MapFromDicNullable<string?>(src, PrinterAttribute.PrintContentOptimizeDefault),
-                PrintContentOptimizeSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrintContentOptimizeSupported),
+                PrintContentOptimizeDefault = map.MapFromDicNullable<PrintContentOptimize?>(src, PrinterAttribute.PrintContentOptimizeDefault),
+                PrintContentOptimizeSupported = map.MapFromDicSetNullable<PrintContentOptimize[]?>(src, PrinterAttribute.PrintContentOptimizeSupported),
                 OutputDeviceSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.OutputDeviceSupported),
                 JobCreationAttributesSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.JobCreationAttributesSupported),
                 FinishingTemplateSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.FinishingTemplateSupported),
@@ -139,19 +139,19 @@ internal class GetCUPSPrintersResponseProfile : IProfile
                 PrinterFinisherSuppliesDescription = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrinterFinisherSuppliesDescription),
                 FinishingsColDefault = src.ContainsKey(PrinterAttribute.FinishingsColDefault) ? map.Map<FinishingsCol>(src[PrinterAttribute.FinishingsColDefault].FromBegCollection().ToIppDictionary()) : null,
                 FinishingsColReady = src.ContainsKey(PrinterAttribute.FinishingsColReady) ? src[PrinterAttribute.FinishingsColReady].GroupBegCollection().Select(x => map.Map<FinishingsCol>(x.FromBegCollection().ToIppDictionary())).ToArray() : null,
-                BalingTypeSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.BalingTypeSupported),
+                BalingTypeSupported = map.MapFromDicSetNullable<BalingType[]?>(src, PrinterAttribute.BalingTypeSupported),
                 BalingWhenSupported = map.MapFromDicSetNullable<BalingWhen[]?>(src, PrinterAttribute.BalingWhenSupported),
                 BindingReferenceEdgeSupported = map.MapFromDicSetNullable<FinishingReferenceEdge[]?>(src, PrinterAttribute.BindingReferenceEdgeSupported),
-                BindingTypeSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.BindingTypeSupported),
+                BindingTypeSupported = map.MapFromDicSetNullable<BindingType[]?>(src, PrinterAttribute.BindingTypeSupported),
                 CoatingSidesSupported = map.MapFromDicSetNullable<CoatingSides[]?>(src, PrinterAttribute.CoatingSidesSupported),
-                CoatingTypeSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.CoatingTypeSupported),
-                CoveringNameSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.CoveringNameSupported),
+                CoatingTypeSupported = map.MapFromDicSetNullable<CoatingType[]?>(src, PrinterAttribute.CoatingTypeSupported),
+                CoveringNameSupported = map.MapFromDicSetNullable<CoveringName[]?>(src, PrinterAttribute.CoveringNameSupported),
                 FinishingsColDatabase = src.ContainsKey(PrinterAttribute.FinishingsColDatabase) ? src[PrinterAttribute.FinishingsColDatabase].GroupBegCollection().Select(x => map.Map<FinishingsCol>(x.FromBegCollection().ToIppDictionary())).ToArray() : null,
                 FoldingDirectionSupported = map.MapFromDicSetNullable<FoldingDirection[]?>(src, PrinterAttribute.FoldingDirectionSupported),
                 FoldingOffsetSupported = map.MapFromDicSetNullable<Protocol.Models.Range[]?>(src, PrinterAttribute.FoldingOffsetSupported),
                 FoldingReferenceEdgeSupported = map.MapFromDicSetNullable<FinishingReferenceEdge[]?>(src, PrinterAttribute.FoldingReferenceEdgeSupported),
                 LaminatingSidesSupported = map.MapFromDicSetNullable<CoatingSides[]?>(src, PrinterAttribute.LaminatingSidesSupported),
-                LaminatingTypeSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.LaminatingTypeSupported),
+                LaminatingTypeSupported = map.MapFromDicSetNullable<LaminatingType[]?>(src, PrinterAttribute.LaminatingTypeSupported),
                 PunchingLocationsSupported = map.MapFromDicSetNullable<Protocol.Models.Range[]?>(src, PrinterAttribute.PunchingLocationsSupported),
                 PunchingOffsetSupported = map.MapFromDicSetNullable<Protocol.Models.Range[]?>(src, PrinterAttribute.PunchingOffsetSupported),
                 PunchingReferenceEdgeSupported = map.MapFromDicSetNullable<FinishingReferenceEdge[]?>(src, PrinterAttribute.PunchingReferenceEdgeSupported),
@@ -164,6 +164,52 @@ internal class GetCUPSPrintersResponseProfile : IProfile
                 TrimmingReferenceEdgeSupported = map.MapFromDicSetNullable<FinishingReferenceEdge[]?>(src, PrinterAttribute.TrimmingReferenceEdgeSupported),
                 TrimmingTypeSupported = map.MapFromDicSetNullable<TrimmingType[]?>(src, PrinterAttribute.TrimmingTypeSupported),
                 TrimmingWhenSupported = map.MapFromDicSetNullable<TrimmingWhen[]?>(src, PrinterAttribute.TrimmingWhenSupported),
+                CoverBackDefault = src.ContainsKey(PrinterAttribute.CoverBackDefault) ? map.Map<Cover>(src[PrinterAttribute.CoverBackDefault].FromBegCollection().ToIppDictionary()) : null,
+                CoverBackSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.CoverBackSupported),
+                CoverFrontDefault = src.ContainsKey(PrinterAttribute.CoverFrontDefault) ? map.Map<Cover>(src[PrinterAttribute.CoverFrontDefault].FromBegCollection().ToIppDictionary()) : null,
+                CoverFrontSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.CoverFrontSupported),
+                CoverTypeSupported = map.MapFromDicSetNullable<CoverType[]?>(src, PrinterAttribute.CoverTypeSupported),
+                ForceFrontSideSupported = map.MapFromDicNullable<Protocol.Models.Range?>(src, PrinterAttribute.ForceFrontSideSupported),
+                ImageOrientationDefault = map.MapFromDicNullable<Orientation?>(src, PrinterAttribute.ImageOrientationDefault),
+                ImageOrientationSupported = map.MapFromDicSetNullable<Orientation[]?>(src, PrinterAttribute.ImageOrientationSupported),
+                ImpositionTemplateDefault = map.MapFromDicNullable<string?>(src, PrinterAttribute.ImpositionTemplateDefault),
+                ImpositionTemplateSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.ImpositionTemplateSupported),
+                InsertCountSupported = map.MapFromDicNullable<Protocol.Models.Range?>(src, PrinterAttribute.InsertCountSupported),
+                InsertSheetDefault = src.TryGetValue(PrinterAttribute.InsertSheetDefault, out var insertsheetdefault) && insertsheetdefault.GroupBegCollection().Any() ? insertsheetdefault.GroupBegCollection().Select(x => map.Map<InsertSheet>(x.FromBegCollection().ToIppDictionary())).ToArray() : null,
+                InsertSheetSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.InsertSheetSupported),
+                JobAccountingOutputBinSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.JobAccountingOutputBinSupported),
+                JobAccountingSheetsDefault = src.ContainsKey(PrinterAttribute.JobAccountingSheetsDefault) ? map.Map<JobAccountingSheets>(src[PrinterAttribute.JobAccountingSheetsDefault].FromBegCollection().ToIppDictionary()) : null,
+                JobAccountingSheetsSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.JobAccountingSheetsSupported),
+                JobAccountingSheetsTypeSupported = map.MapFromDicSetNullable<JobSheetsType[]?>(src, PrinterAttribute.JobAccountingSheetsTypeSupported),
+                JobCompleteBeforeSupported = map.MapFromDicSetNullable<JobHoldUntil[]?>(src, PrinterAttribute.JobCompleteBeforeSupported),
+                JobCompleteBeforeTimeSupported = map.MapFromDicNullable<bool?>(src, PrinterAttribute.JobCompleteBeforeTimeSupported),
+                JobErrorSheetDefault = src.ContainsKey(PrinterAttribute.JobErrorSheetDefault) ? map.Map<JobErrorSheet>(src[PrinterAttribute.JobErrorSheetDefault].FromBegCollection().ToIppDictionary()) : null,
+                JobErrorSheetSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.JobErrorSheetSupported),
+                JobErrorSheetTypeSupported = map.MapFromDicSetNullable<JobSheetsType[]?>(src, PrinterAttribute.JobErrorSheetTypeSupported),
+                JobErrorSheetWhenSupported = map.MapFromDicSetNullable<JobErrorSheetWhen[]?>(src, PrinterAttribute.JobErrorSheetWhenSupported),
+                JobMessageToOperatorSupported = map.MapFromDicNullable<bool?>(src, PrinterAttribute.JobMessageToOperatorSupported),
+                JobPhoneNumberDefault = map.MapFromDicNullable<string?>(src, PrinterAttribute.JobPhoneNumberDefault),
+                JobPhoneNumberSchemeSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.JobPhoneNumberSchemeSupported),
+                JobPhoneNumberSupported = map.MapFromDicNullable<bool?>(src, PrinterAttribute.JobPhoneNumberSupported),
+                JobRecipientNameSupported = map.MapFromDicNullable<bool?>(src, PrinterAttribute.JobRecipientNameSupported),
+                JobSheetMessageSupported = map.MapFromDicNullable<bool?>(src, PrinterAttribute.JobSheetMessageSupported),
+                PresentationDirectionNumberUpDefault = map.MapFromDicNullable<PresentationDirectionNumberUp?>(src, PrinterAttribute.PresentationDirectionNumberUpDefault),
+                PresentationDirectionNumberUpSupported = map.MapFromDicSetNullable<PresentationDirectionNumberUp[]?>(src, PrinterAttribute.PresentationDirectionNumberUpSupported),
+                SeparatorSheetsDefault = src.ContainsKey(PrinterAttribute.SeparatorSheetsDefault) ? map.Map<SeparatorSheets>(src[PrinterAttribute.SeparatorSheetsDefault].FromBegCollection().ToIppDictionary()) : null,
+                SeparatorSheetsSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.SeparatorSheetsSupported),
+                SeparatorSheetsTypeSupported = map.MapFromDicSetNullable<SeparatorSheetsType[]?>(src, PrinterAttribute.SeparatorSheetsTypeSupported),
+                XImagePositionDefault = map.MapFromDicNullable<XImagePosition?>(src, PrinterAttribute.XImagePositionDefault),
+                XImagePositionSupported = map.MapFromDicSetNullable<XImagePosition[]?>(src, PrinterAttribute.XImagePositionSupported),
+                XImageShiftDefault = map.MapFromDicNullable<int?>(src, PrinterAttribute.XImageShiftDefault),
+                XImageShiftSupported = map.MapFromDicNullable<Protocol.Models.Range?>(src, PrinterAttribute.XImageShiftSupported),
+                XSide1ImageShiftDefault = map.MapFromDicNullable<int?>(src, PrinterAttribute.XSide1ImageShiftDefault),
+                XSide2ImageShiftDefault = map.MapFromDicNullable<int?>(src, PrinterAttribute.XSide2ImageShiftDefault),
+                YImagePositionDefault = map.MapFromDicNullable<YImagePosition?>(src, PrinterAttribute.YImagePositionDefault),
+                YImagePositionSupported = map.MapFromDicSetNullable<YImagePosition[]?>(src, PrinterAttribute.YImagePositionSupported),
+                YImageShiftDefault = map.MapFromDicNullable<int?>(src, PrinterAttribute.YImageShiftDefault),
+                YImageShiftSupported = map.MapFromDicNullable<Protocol.Models.Range?>(src, PrinterAttribute.YImageShiftSupported),
+                YSide1ImageShiftDefault = map.MapFromDicNullable<int?>(src, PrinterAttribute.YSide1ImageShiftDefault),
+                YSide2ImageShiftDefault = map.MapFromDicNullable<int?>(src, PrinterAttribute.YSide2ImageShiftDefault),
             };
         });
 
@@ -400,6 +446,98 @@ internal class GetCUPSPrintersResponseProfile : IProfile
                     dic.Add(PrinterAttribute.TrimmingTypeSupported, src.TrimmingTypeSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.TrimmingTypeSupported, map.Map<string>(x))).ToArray());
                 if (src.TrimmingWhenSupported != null)
                     dic.Add(PrinterAttribute.TrimmingWhenSupported, src.TrimmingWhenSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.TrimmingWhenSupported, map.Map<string>(x))).ToArray());
+                if (src.CoverBackDefault != null)
+                    dic.Add(PrinterAttribute.CoverBackDefault, map.Map<IEnumerable<IppAttribute>>(src.CoverBackDefault).ToBegCollection(PrinterAttribute.CoverBackDefault).ToArray());
+                if (src.CoverBackSupported != null)
+                    dic.Add(PrinterAttribute.CoverBackSupported, src.CoverBackSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.CoverBackSupported, x)).ToArray());
+                if (src.CoverFrontDefault != null)
+                    dic.Add(PrinterAttribute.CoverFrontDefault, map.Map<IEnumerable<IppAttribute>>(src.CoverFrontDefault).ToBegCollection(PrinterAttribute.CoverFrontDefault).ToArray());
+                if (src.CoverFrontSupported != null)
+                    dic.Add(PrinterAttribute.CoverFrontSupported, src.CoverFrontSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.CoverFrontSupported, x)).ToArray());
+                if (src.CoverTypeSupported != null)
+                    dic.Add(PrinterAttribute.CoverTypeSupported, src.CoverTypeSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.CoverTypeSupported, map.Map<string>(x))).ToArray());
+                if (src.ForceFrontSideSupported != null)
+                    dic.Add(PrinterAttribute.ForceFrontSideSupported, [new IppAttribute(Tag.RangeOfInteger, PrinterAttribute.ForceFrontSideSupported, src.ForceFrontSideSupported.Value)]);
+                if (src.ImageOrientationDefault != null)
+                    dic.Add(PrinterAttribute.ImageOrientationDefault, [new IppAttribute(Tag.Enum, PrinterAttribute.ImageOrientationDefault, (int)src.ImageOrientationDefault.Value)]);
+                if (src.ImageOrientationSupported != null)
+                    dic.Add(PrinterAttribute.ImageOrientationSupported, src.ImageOrientationSupported.Select(x => new IppAttribute(Tag.Enum, PrinterAttribute.ImageOrientationSupported, (int)x)).ToArray());
+                if (src.ImpositionTemplateDefault != null)
+                    dic.Add(PrinterAttribute.ImpositionTemplateDefault, [new IppAttribute(Tag.Keyword, PrinterAttribute.ImpositionTemplateDefault, src.ImpositionTemplateDefault)]);
+                if (src.ImpositionTemplateSupported != null)
+                    dic.Add(PrinterAttribute.ImpositionTemplateSupported, src.ImpositionTemplateSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.ImpositionTemplateSupported, x)).ToArray());
+                if (src.InsertCountSupported != null)
+                    dic.Add(PrinterAttribute.InsertCountSupported, [new IppAttribute(Tag.RangeOfInteger, PrinterAttribute.InsertCountSupported, src.InsertCountSupported.Value)]);
+                if (src.InsertSheetDefault != null)
+                    dic.Add(PrinterAttribute.InsertSheetDefault, src.InsertSheetDefault.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(PrinterAttribute.InsertSheetDefault)).ToArray());
+                if (src.InsertSheetSupported != null)
+                    dic.Add(PrinterAttribute.InsertSheetSupported, src.InsertSheetSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.InsertSheetSupported, x)).ToArray());
+                if (src.JobAccountingOutputBinSupported != null)
+                    dic.Add(PrinterAttribute.JobAccountingOutputBinSupported, src.JobAccountingOutputBinSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.JobAccountingOutputBinSupported, x)).ToArray());
+                if (src.JobAccountingSheetsDefault != null)
+                    dic.Add(PrinterAttribute.JobAccountingSheetsDefault, map.Map<IEnumerable<IppAttribute>>(src.JobAccountingSheetsDefault).ToBegCollection(PrinterAttribute.JobAccountingSheetsDefault).ToArray());
+                if (src.JobAccountingSheetsSupported != null)
+                    dic.Add(PrinterAttribute.JobAccountingSheetsSupported, src.JobAccountingSheetsSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.JobAccountingSheetsSupported, x)).ToArray());
+                if (src.JobAccountingSheetsTypeSupported != null)
+                    dic.Add(PrinterAttribute.JobAccountingSheetsTypeSupported, src.JobAccountingSheetsTypeSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.JobAccountingSheetsTypeSupported, x)).ToArray());
+                if (src.JobCompleteBeforeSupported != null)
+                    dic.Add(PrinterAttribute.JobCompleteBeforeSupported, src.JobCompleteBeforeSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.JobCompleteBeforeSupported, x)).ToArray());
+                if (src.JobCompleteBeforeTimeSupported != null)
+                    dic.Add(PrinterAttribute.JobCompleteBeforeTimeSupported, [new IppAttribute(Tag.Boolean, PrinterAttribute.JobCompleteBeforeTimeSupported, src.JobCompleteBeforeTimeSupported.Value)]);
+                if (src.JobErrorSheetDefault != null)
+                    dic.Add(PrinterAttribute.JobErrorSheetDefault, map.Map<IEnumerable<IppAttribute>>(src.JobErrorSheetDefault).ToBegCollection(PrinterAttribute.JobErrorSheetDefault).ToArray());
+                if (src.JobErrorSheetSupported != null)
+                    dic.Add(PrinterAttribute.JobErrorSheetSupported, src.JobErrorSheetSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.JobErrorSheetSupported, x)).ToArray());
+                if (src.JobErrorSheetTypeSupported != null)
+                    dic.Add(PrinterAttribute.JobErrorSheetTypeSupported, src.JobErrorSheetTypeSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.JobErrorSheetTypeSupported, x)).ToArray());
+                if (src.JobErrorSheetWhenSupported != null)
+                    dic.Add(PrinterAttribute.JobErrorSheetWhenSupported, src.JobErrorSheetWhenSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.JobErrorSheetWhenSupported, x)).ToArray());
+                if (src.JobMessageToOperatorSupported != null)
+                    dic.Add(PrinterAttribute.JobMessageToOperatorSupported, [new IppAttribute(Tag.Boolean, PrinterAttribute.JobMessageToOperatorSupported, src.JobMessageToOperatorSupported.Value)]);
+                if (src.JobPhoneNumberDefault != null)
+                    dic.Add(PrinterAttribute.JobPhoneNumberDefault, [new IppAttribute(Tag.Keyword, PrinterAttribute.JobPhoneNumberDefault, src.JobPhoneNumberDefault)]);
+                if (src.JobPhoneNumberSchemeSupported != null)
+                    dic.Add(PrinterAttribute.JobPhoneNumberSchemeSupported, src.JobPhoneNumberSchemeSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.JobPhoneNumberSchemeSupported, x)).ToArray());
+                if (src.JobPhoneNumberSupported != null)
+                    dic.Add(PrinterAttribute.JobPhoneNumberSupported, [new IppAttribute(Tag.Boolean, PrinterAttribute.JobPhoneNumberSupported, src.JobPhoneNumberSupported.Value)]);
+                if (src.JobRecipientNameSupported != null)
+                    dic.Add(PrinterAttribute.JobRecipientNameSupported, [new IppAttribute(Tag.Boolean, PrinterAttribute.JobRecipientNameSupported, src.JobRecipientNameSupported.Value)]);
+                if (src.JobSheetMessageSupported != null)
+                    dic.Add(PrinterAttribute.JobSheetMessageSupported, [new IppAttribute(Tag.Boolean, PrinterAttribute.JobSheetMessageSupported, src.JobSheetMessageSupported.Value)]);
+                if (src.PresentationDirectionNumberUpDefault != null)
+                    dic.Add(PrinterAttribute.PresentationDirectionNumberUpDefault, [new IppAttribute(Tag.Keyword, PrinterAttribute.PresentationDirectionNumberUpDefault, map.Map<string>(src.PresentationDirectionNumberUpDefault.Value))]);
+                if (src.PresentationDirectionNumberUpSupported != null)
+                    dic.Add(PrinterAttribute.PresentationDirectionNumberUpSupported, src.PresentationDirectionNumberUpSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PresentationDirectionNumberUpSupported, map.Map<string>(x))).ToArray());
+                if (src.SeparatorSheetsDefault != null)
+                    dic.Add(PrinterAttribute.SeparatorSheetsDefault, map.Map<IEnumerable<IppAttribute>>(src.SeparatorSheetsDefault).ToBegCollection(PrinterAttribute.SeparatorSheetsDefault).ToArray());
+                if (src.SeparatorSheetsSupported != null)
+                    dic.Add(PrinterAttribute.SeparatorSheetsSupported, src.SeparatorSheetsSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.SeparatorSheetsSupported, x)).ToArray());
+                if (src.SeparatorSheetsTypeSupported != null)
+                    dic.Add(PrinterAttribute.SeparatorSheetsTypeSupported, src.SeparatorSheetsTypeSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.SeparatorSheetsTypeSupported, x)).ToArray());
+                if (src.XImagePositionDefault != null)
+                    dic.Add(PrinterAttribute.XImagePositionDefault, [new IppAttribute(Tag.Keyword, PrinterAttribute.XImagePositionDefault, map.Map<string>(src.XImagePositionDefault.Value))]);
+                if (src.XImagePositionSupported != null)
+                    dic.Add(PrinterAttribute.XImagePositionSupported, src.XImagePositionSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.XImagePositionSupported, map.Map<string>(x))).ToArray());
+                if (src.XImageShiftDefault != null)
+                    dic.Add(PrinterAttribute.XImageShiftDefault, [new IppAttribute(Tag.Integer, PrinterAttribute.XImageShiftDefault, src.XImageShiftDefault.Value)]);
+                if (src.XImageShiftSupported != null)
+                    dic.Add(PrinterAttribute.XImageShiftSupported, [new IppAttribute(Tag.RangeOfInteger, PrinterAttribute.XImageShiftSupported, src.XImageShiftSupported.Value)]);
+                if (src.XSide1ImageShiftDefault != null)
+                    dic.Add(PrinterAttribute.XSide1ImageShiftDefault, [new IppAttribute(Tag.Integer, PrinterAttribute.XSide1ImageShiftDefault, src.XSide1ImageShiftDefault.Value)]);
+                if (src.XSide2ImageShiftDefault != null)
+                    dic.Add(PrinterAttribute.XSide2ImageShiftDefault, [new IppAttribute(Tag.Integer, PrinterAttribute.XSide2ImageShiftDefault, src.XSide2ImageShiftDefault.Value)]);
+                if (src.YImagePositionDefault != null)
+                    dic.Add(PrinterAttribute.YImagePositionDefault, [new IppAttribute(Tag.Keyword, PrinterAttribute.YImagePositionDefault, map.Map<string>(src.YImagePositionDefault.Value))]);
+                if (src.YImagePositionSupported != null)
+                    dic.Add(PrinterAttribute.YImagePositionSupported, src.YImagePositionSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.YImagePositionSupported, map.Map<string>(x))).ToArray());
+                if (src.YImageShiftDefault != null)
+                    dic.Add(PrinterAttribute.YImageShiftDefault, [new IppAttribute(Tag.Integer, PrinterAttribute.YImageShiftDefault, src.YImageShiftDefault.Value)]);
+                if (src.YImageShiftSupported != null)
+                    dic.Add(PrinterAttribute.YImageShiftSupported, [new IppAttribute(Tag.RangeOfInteger, PrinterAttribute.YImageShiftSupported, src.YImageShiftSupported.Value)]);
+                if (src.YSide1ImageShiftDefault != null)
+                    dic.Add(PrinterAttribute.YSide1ImageShiftDefault, [new IppAttribute(Tag.Integer, PrinterAttribute.YSide1ImageShiftDefault, src.YSide1ImageShiftDefault.Value)]);
+                if (src.YSide2ImageShiftDefault != null)
+                    dic.Add(PrinterAttribute.YSide2ImageShiftDefault, [new IppAttribute(Tag.Integer, PrinterAttribute.YSide2ImageShiftDefault, src.YSide2ImageShiftDefault.Value)]);
                 return dic;
             });
     }

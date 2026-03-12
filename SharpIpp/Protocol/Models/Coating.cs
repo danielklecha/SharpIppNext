@@ -19,6 +19,6 @@ public class Coating : IIppCollection
     /// type2 keyword | name(MAX)
     /// See: PWG 5100.1-2022 Section 5.2.3.2
     /// </summary>
-    public string? CoatingType { get; set; }
+    public CoatingType? CoatingType { get; set; }
 }
 

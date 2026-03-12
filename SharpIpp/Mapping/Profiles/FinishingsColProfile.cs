@@ -90,7 +90,7 @@ internal class FinishingsColProfile : IProfile
 
         mapper.CreateMap<Dictionary<string, IppAttribute[]>, Baling>((src, map) => new Baling
         {
-            BalingType = map.MapFromDicNullable<string?>(src, "baling-type"),
+            BalingType = map.MapFromDicNullable<BalingType?>(src, "baling-type"),
             BalingWhen = map.MapFromDicNullable<BalingWhen?>(src, "baling-when")
         });
 
@@ -105,7 +105,7 @@ internal class FinishingsColProfile : IProfile
         mapper.CreateMap<Dictionary<string, IppAttribute[]>, Binding>((src, map) => new Binding
         {
             BindingReferenceEdge = map.MapFromDicNullable<FinishingReferenceEdge?>(src, "binding-reference-edge"),
-            BindingType = map.MapFromDicNullable<string?>(src, "binding-type")
+            BindingType = map.MapFromDicNullable<BindingType?>(src, "binding-type")
         });
 
         mapper.CreateMap<Binding, IEnumerable<IppAttribute>>((src, map) =>
@@ -119,7 +119,7 @@ internal class FinishingsColProfile : IProfile
         mapper.CreateMap<Dictionary<string, IppAttribute[]>, Coating>((src, map) => new Coating
         {
             CoatingSides = map.MapFromDicNullable<CoatingSides?>(src, "coating-sides"),
-            CoatingType = map.MapFromDicNullable<string?>(src, "coating-type")
+            CoatingType = map.MapFromDicNullable<CoatingType?>(src, "coating-type")
         });
 
         mapper.CreateMap<Coating, IEnumerable<IppAttribute>>((src, map) =>
@@ -132,7 +132,7 @@ internal class FinishingsColProfile : IProfile
 
         mapper.CreateMap<Dictionary<string, IppAttribute[]>, Covering>((src, map) => new Covering
         {
-            CoveringName = map.MapFromDicNullable<string?>(src, "covering-name")
+            CoveringName = map.MapFromDicNullable<CoveringName?>(src, "covering-name")
         });
 
         mapper.CreateMap<Covering, IEnumerable<IppAttribute>>((src, map) =>
@@ -163,7 +163,7 @@ internal class FinishingsColProfile : IProfile
         mapper.CreateMap<Dictionary<string, IppAttribute[]>, Laminating>((src, map) => new Laminating
         {
             LaminatingSides = map.MapFromDicNullable<CoatingSides?>(src, "laminating-sides"),
-            LaminatingType = map.MapFromDicNullable<string?>(src, "laminating-type")
+            LaminatingType = map.MapFromDicNullable<LaminatingType?>(src, "laminating-type")
         });
 
         mapper.CreateMap<Laminating, IEnumerable<IppAttribute>>((src, map) =>

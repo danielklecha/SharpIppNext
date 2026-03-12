@@ -13,7 +13,7 @@ public class Baling : IIppCollection
     /// type2 keyword | name(MAX)
     /// See: PWG 5100.1-2022 Section 5.2.1.1
     /// </summary>
-    public string? BalingType { get; set; }
+    public BalingType? BalingType { get; set; }
 
     /// <summary>
     /// type2 keyword

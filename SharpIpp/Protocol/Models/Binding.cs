@@ -19,6 +19,6 @@ public class Binding : IIppCollection
     /// type2 keyword | name(MAX)
     /// See: PWG 5100.1-2022 Section 5.2.2.2
     /// </summary>
-    public string? BindingType { get; set; }
+    public BindingType? BindingType { get; set; }
 }
 

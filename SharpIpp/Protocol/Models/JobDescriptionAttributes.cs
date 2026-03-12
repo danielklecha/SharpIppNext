@@ -361,7 +361,7 @@ namespace SharpIpp.Protocol.Models
         ///     value(s) used by the Printer.
         ///     See: PWG 5100.7-2023 Section 6.2.2
         /// </summary>
-        public string[]? PrintContentOptimizeActual { get; set; }
+        public PrintContentOptimize[]? PrintContentOptimizeActual { get; set; }
 
         /// <summary>
         ///     This attribute specifies the actual number of copies
@@ -382,7 +382,7 @@ namespace SharpIpp.Protocol.Models
         ///     value(s) used by the Printer.
         ///     See: PWG 5100.8-2003 Section 3
         /// </summary>
-        public string[]? JobHoldUntilActual { get; set; }
+        public JobHoldUntil[]? JobHoldUntilActual { get; set; }
 
         /// <summary>
         ///     This attribute specifies the actual job priority
@@ -396,7 +396,7 @@ namespace SharpIpp.Protocol.Models
         ///     value(s) used by the Printer.
         ///     See: PWG 5100.8-2003 Section 3
         /// </summary>
-        public string[]? JobSheetsActual { get; set; }
+        public JobSheets[]? JobSheetsActual { get; set; }
 
         /// <summary>
         ///     This attribute specifies the actual media
@@ -417,7 +417,7 @@ namespace SharpIpp.Protocol.Models
         ///     value(s) used by the Printer.
         ///     See: PWG 5100.8-2003 Section 3
         /// </summary>
-        public string[]? MultipleDocumentHandlingActual { get; set; }
+        public MultipleDocumentHandling[]? MultipleDocumentHandlingActual { get; set; }
 
         /// <summary>
         ///     This attribute specifies the actual number-up
@@ -466,7 +466,7 @@ namespace SharpIpp.Protocol.Models
         ///     value(s) used by the Printer.
         ///     See: PWG 5100.8-2003 Section 3
         /// </summary>
-        public string[]? SidesActual { get; set; }
+        public Sides[]? SidesActual { get; set; }
 
         /// <summary>
         ///     This attribute specifies the actual finishings-col
@@ -474,5 +474,10 @@ namespace SharpIpp.Protocol.Models
         ///     See: PWG 5100.1-2022 Section 11.2
         /// </summary>
         public FinishingsCol[]? FinishingsColActual { get; set; }
+
+        public DateTimeOffset? DateTimeAtCompletedEstimated { get; set; }
+        public DateTimeOffset? DateTimeAtProcessingEstimated { get; set; }
+        public int? TimeAtCompletedEstimated { get; set; }
+        public int? TimeAtProcessingEstimated { get; set; }
     }
 }

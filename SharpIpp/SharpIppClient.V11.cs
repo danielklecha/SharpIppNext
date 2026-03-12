@@ -102,4 +102,28 @@ public partial class SharpIppClient
     {
         return SendAsync<ValidateJobRequest, ValidateJobResponse>(request, cancellationToken);
     }
+    
+    /// <inheritdoc />
+    public Task<CancelDocumentResponse> CancelDocumentAsync(CancelDocumentRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<CancelDocumentRequest, CancelDocumentResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<GetDocumentAttributesResponse> GetDocumentAttributesAsync(GetDocumentAttributesRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<GetDocumentAttributesRequest, GetDocumentAttributesResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<GetDocumentsResponse> GetDocumentsAsync(GetDocumentsRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<GetDocumentsRequest, GetDocumentsResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<SetDocumentAttributesResponse> SetDocumentAttributesAsync(SetDocumentAttributesRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<SetDocumentAttributesRequest, SetDocumentAttributesResponse>(request, cancellationToken);
+    }
 }

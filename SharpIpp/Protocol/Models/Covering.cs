@@ -13,6 +13,6 @@ public class Covering : IIppCollection
     /// type2 keyword | name(MAX)
     /// See: PWG 5100.1-2022 Section 5.2.4.1
     /// </summary>
-    public string? CoveringName { get; set; }
+    public CoveringName? CoveringName { get; set; }
 }
 

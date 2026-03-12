@@ -111,6 +111,7 @@ internal class OperationAttributesRequestProfile : IProfile
             return dst;
         });
 
+
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, CUPSGetPrintersOperationAttributes>((src, dst, map) =>
         {
             dst ??= new CUPSGetPrintersOperationAttributes();
@@ -162,6 +163,82 @@ internal class OperationAttributesRequestProfile : IProfile
             map.Map<JobOperationAttributes, List<IppAttribute>>(src, dst);
             if (src.RequestedAttributes != null)
                 dst.AddRange(src.RequestedAttributes.Select(requestedAttribute => new IppAttribute(Tag.Keyword, JobAttribute.RequestedAttributes, requestedAttribute)));
+            return dst;
+        });
+
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, GetDocumentAttributesOperationAttributes>((src, dst, map) =>
+        {
+            dst ??= new GetDocumentAttributesOperationAttributes();
+            map.Map<IDictionary<string, IppAttribute[]>, JobOperationAttributes>(src, dst);
+            dst.DocumentNumber = map.MapFromDicNullable<int?>(src, DocumentAttribute.DocumentNumber) ?? 0;
+            var requestedAttributes = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.RequestedAttributes);
+            if (requestedAttributes?.Any() ?? false)
+                dst.RequestedAttributes = requestedAttributes;
+            return dst;
+        });
+
+        mapper.CreateMap<GetDocumentAttributesOperationAttributes, List<IppAttribute>>((src, dst, map) =>
+        {
+            dst ??= new List<IppAttribute>();
+            map.Map<JobOperationAttributes, List<IppAttribute>>(src, dst);
+            dst.Add(new IppAttribute(Tag.Integer, DocumentAttribute.DocumentNumber, src.DocumentNumber));
+            if (src.RequestedAttributes != null)
+                dst.AddRange(src.RequestedAttributes.Select(requestedAttribute => new IppAttribute(Tag.Keyword, JobAttribute.RequestedAttributes, requestedAttribute)));
+            return dst;
+        });
+
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, SetDocumentAttributesOperationAttributes>((src, dst, map) =>
+        {
+            dst ??= new SetDocumentAttributesOperationAttributes();
+            map.Map<IDictionary<string, IppAttribute[]>, JobOperationAttributes>(src, dst);
+            dst.DocumentNumber = map.MapFromDicNullable<int?>(src, DocumentAttribute.DocumentNumber) ?? 0;
+            return dst;
+        });
+
+        mapper.CreateMap<SetDocumentAttributesOperationAttributes, List<IppAttribute>>((src, dst, map) =>
+        {
+            dst ??= new List<IppAttribute>();
+            map.Map<JobOperationAttributes, List<IppAttribute>>(src, dst);
+            dst.Add(new IppAttribute(Tag.Integer, DocumentAttribute.DocumentNumber, src.DocumentNumber));
+            return dst;
+        });
+
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, GetDocumentsOperationAttributes>((src, dst, map) =>
+        {
+            dst ??= new GetDocumentsOperationAttributes();
+            map.Map<IDictionary<string, IppAttribute[]>, JobOperationAttributes>(src, dst);
+            dst.Limit = map.MapFromDicNullable<int?>(src, JobAttribute.Limit);
+            dst.RequestedAttributes = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.RequestedAttributes);
+            return dst;
+        });
+
+        mapper.CreateMap<GetDocumentsOperationAttributes, List<IppAttribute>>((src, dst, map) =>
+        {
+            dst ??= new List<IppAttribute>();
+            map.Map<JobOperationAttributes, List<IppAttribute>>(src, dst);
+            if (src.Limit.HasValue)
+                dst.Add(new IppAttribute(Tag.Integer, JobAttribute.Limit, src.Limit.Value));
+            if (src.RequestedAttributes != null)
+                dst.AddRange(src.RequestedAttributes.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.RequestedAttributes, x)));
+            return dst;
+        });
+
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, CancelDocumentOperationAttributes>((src, dst, map) =>
+        {
+            dst ??= new CancelDocumentOperationAttributes();
+            map.Map<IDictionary<string, IppAttribute[]>, JobOperationAttributes>(src, dst);
+            dst.DocumentNumber = map.MapFromDicNullable<int?>(src, DocumentAttribute.DocumentNumber) ?? 0;
+            dst.DocumentMessage = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentMessage);
+            return dst;
+        });
+
+        mapper.CreateMap<CancelDocumentOperationAttributes, List<IppAttribute>>((src, dst, map) =>
+        {
+            dst ??= new List<IppAttribute>();
+            map.Map<JobOperationAttributes, List<IppAttribute>>(src, dst);
+            dst.Add(new IppAttribute(Tag.Integer, DocumentAttribute.DocumentNumber, src.DocumentNumber));
+            if (src.DocumentMessage != null)
+                dst.Add(new IppAttribute(Tag.TextWithoutLanguage, DocumentAttribute.DocumentMessage, src.DocumentMessage));
             return dst;
         });
 
@@ -244,6 +321,7 @@ internal class OperationAttributesRequestProfile : IProfile
             dst.Compression = map.MapFromDicNullable<Compression?>(src, JobAttribute.Compression);
             dst.DocumentFormat = map.MapFromDicNullable<string?>(src, JobAttribute.DocumentFormat);
             dst.DocumentNaturalLanguage = map.MapFromDicNullable<string?>(src, JobAttribute.DocumentNaturalLanguage);
+            dst.DocumentCharset = map.MapFromDicNullable<string?>(src, JobAttribute.DocumentCharset);
             return dst;
         });
 
@@ -258,7 +336,7 @@ internal class OperationAttributesRequestProfile : IProfile
             if (src.DocumentFormat != null)
                 dst.Add(new IppAttribute(Tag.MimeMediaType, JobAttribute.DocumentFormat, src.DocumentFormat));
             if (src.DocumentNaturalLanguage != null)
-                dst.Add(new IppAttribute(Tag.NaturalLanguage, JobAttribute.DocumentNaturalLanguage, src.DocumentNaturalLanguage));
+                dst.Add(new IppAttribute(Tag.NaturalLanguage, JobAttribute.DocumentNaturalLanguage, src.DocumentNaturalLanguage)); if (src.DocumentCharset != null) dst.Add(new IppAttribute(Tag.Charset, JobAttribute.DocumentCharset, src.DocumentCharset));
             return dst;
         });
 
@@ -304,6 +382,7 @@ internal class OperationAttributesRequestProfile : IProfile
             dst.Compression = map.MapFromDicNullable<Compression?>(src, JobAttribute.Compression);
             dst.DocumentFormat = map.MapFromDicNullable<string?>(src, JobAttribute.DocumentFormat);
             dst.DocumentNaturalLanguage = map.MapFromDicNullable<string?>(src, JobAttribute.DocumentNaturalLanguage);
+            dst.DocumentCharset = map.MapFromDicNullable<string?>(src, JobAttribute.DocumentCharset);
             var lastDocument = map.MapFromDicNullable<bool?>(src, JobAttribute.LastDocument);
             if (lastDocument.HasValue)
                 dst.LastDocument = lastDocument.Value;
@@ -322,6 +401,8 @@ internal class OperationAttributesRequestProfile : IProfile
                 dst.Add(new IppAttribute(Tag.MimeMediaType, JobAttribute.DocumentFormat, src.DocumentFormat));
             if (src.DocumentNaturalLanguage != null)
                 dst.Add(new IppAttribute(Tag.NaturalLanguage, JobAttribute.DocumentNaturalLanguage, src.DocumentNaturalLanguage));
+            if (src.DocumentCharset != null)
+                dst.Add(new IppAttribute(Tag.Charset, JobAttribute.DocumentCharset, src.DocumentCharset));
             dst.Add(new IppAttribute(Tag.Boolean, JobAttribute.LastDocument, src.LastDocument));
             return dst;
         });
@@ -436,7 +517,7 @@ internal class OperationAttributesRequestProfile : IProfile
             if (src.DocumentFormat != null)
                 dst.Add(new IppAttribute(Tag.MimeMediaType, JobAttribute.DocumentFormat, src.DocumentFormat));
             if (src.DocumentNaturalLanguage != null)
-                dst.Add(new IppAttribute(Tag.NaturalLanguage, JobAttribute.DocumentNaturalLanguage, src.DocumentNaturalLanguage));
+                dst.Add(new IppAttribute(Tag.NaturalLanguage, JobAttribute.DocumentNaturalLanguage, src.DocumentNaturalLanguage)); if (src.DocumentCharset != null) dst.Add(new IppAttribute(Tag.Charset, JobAttribute.DocumentCharset, src.DocumentCharset));
             return dst;
         });
     }

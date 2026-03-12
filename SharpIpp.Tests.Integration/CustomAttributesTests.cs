@@ -77,7 +77,7 @@ public class CustomAttributesTests
                 PrinterAttributes = new()
                 {
                     PrinterState = PrinterState.Idle,
-                    PrinterStateReasons = ["none"],
+                    PrinterStateReasons = [PrinterStateReason.None],
                 }
             };
             var memoryStream = new MemoryStream();

@@ -59,5 +59,6 @@ public class PrintJobOperationAttributes : CreateJobOperationAttributes
     ///     support.
     /// </summary>
     public string? DocumentNaturalLanguage { get; set; }
+    public string? DocumentCharset { get; set; }
 
 }

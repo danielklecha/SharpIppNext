@@ -19,5 +19,7 @@ namespace SharpIpp.Models.Requests
     public class SendDocumentRequest : IppRequest<SendDocumentOperationAttributes>, IIppJobRequest
     {
         public Stream? Document { get; set; }
+
+        public DocumentTemplateAttributes? DocumentTemplateAttributes { get; set; }
     }
 }

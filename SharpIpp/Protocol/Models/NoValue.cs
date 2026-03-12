@@ -80,6 +80,7 @@ public struct NoValue : IEquatable<NoValue>
             _ when underlyingType == typeof(Range) => new Range(),
             _ when underlyingType == typeof(Resolution) => new Resolution(),
             _ when underlyingType == typeof(StringWithLanguage) => new StringWithLanguage(),
+            _ when underlyingType == typeof(DocumentTemplateAttributes) => GetCollectionNoValue<DocumentTemplateAttributes>(),
             _ when underlyingType == typeof(MediaCol) => GetCollectionNoValue<MediaCol>(),
             _ when underlyingType == typeof(MediaSize) => GetCollectionNoValue<MediaSize>(),
             _ when underlyingType == typeof(MediaSourceProperties) => GetCollectionNoValue<MediaSourceProperties>(),
@@ -93,6 +94,11 @@ public struct NoValue : IEquatable<NoValue>
             _ when underlyingType == typeof(Punching) => GetCollectionNoValue<Punching>(),
             _ when underlyingType == typeof(Stitching) => GetCollectionNoValue<Stitching>(),
             _ when underlyingType == typeof(Trimming) => GetCollectionNoValue<Trimming>(),
+            _ when underlyingType == typeof(Cover) => GetCollectionNoValue<Cover>(),
+            _ when underlyingType == typeof(InsertSheet) => GetCollectionNoValue<InsertSheet>(),
+            _ when underlyingType == typeof(JobAccountingSheets) => GetCollectionNoValue<JobAccountingSheets>(),
+            _ when underlyingType == typeof(JobErrorSheet) => GetCollectionNoValue<JobErrorSheet>(),
+            _ when underlyingType == typeof(SeparatorSheets) => GetCollectionNoValue<SeparatorSheets>(),
             _ => throw new ArgumentException($"Type {type} is not supported for NoValue mapping and has no non-null default value")
         };
     }

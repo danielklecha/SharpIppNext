@@ -244,6 +244,39 @@ public interface ISharpIppClient : IDisposable
 
     #endregion
 
+    #region PWG 5100.5-2024 (Document Object)
+
+    /// <summary>
+    ///     <a href="https://ftp.pwg.org/pub/pwg/candidates/cs-ippdocobject12-20240212-5100.5.pdf#page=19">Cancel-Document Operation</a>
+    ///     This REQUIRED operation allows a client to cancel a Document from
+    ///     the time the Document is created up to the time it is completed, canceled,
+    ///     or aborted.
+    /// </summary>
+    Task<CancelDocumentResponse> CancelDocumentAsync(CancelDocumentRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    ///     <a href="https://ftp.pwg.org/pub/pwg/candidates/cs-ippdocobject12-20240212-5100.5.pdf#page=20">Get-Document-Attributes Operation</a>
+    ///     This REQUIRED operation allows a client to request the values of
+    ///     attributes of a Document object.
+    /// </summary>
+    Task<GetDocumentAttributesResponse> GetDocumentAttributesAsync(GetDocumentAttributesRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    ///     <a href="https://ftp.pwg.org/pub/pwg/candidates/cs-ippdocobject12-20240212-5100.5.pdf#page=27">Get-Documents Operation</a>
+    ///     This REQUIRED operation allows a client to retrieve the list of Document
+    ///     objects belonging to the target Job object.
+    /// </summary>
+    Task<GetDocumentsResponse> GetDocumentsAsync(GetDocumentsRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    ///     <a href="https://ftp.pwg.org/pub/pwg/candidates/cs-ippdocobject12-20240212-5100.5.pdf#page=22">Set-Document-Attributes Operation</a>
+    ///     This REQUIRED operation allows a client to set the values of
+    ///     attributes of a Document object.
+    /// </summary>
+    Task<SetDocumentAttributesResponse> SetDocumentAttributesAsync(SetDocumentAttributesRequest request, CancellationToken cancellationToken = default);
+
+    #endregion
+
 
     #region CUPS10
 

@@ -18,7 +18,7 @@ internal class PrintJobResponseProfile : IProfile
         {
             var dst = new PrintJobResponse();
             map.Map<IppResponseMessage, IIppJobResponse>(src, dst);
-            if (src.DocumentAttributes.Any())
+            if (src.DocumentAttributes.Count > 0)
             {
                 var docAttrs = new DocumentAttributes();
                 map.Map(src.DocumentAttributes.SelectMany(x => x).ToIppDictionary(), docAttrs);
@@ -33,9 +33,9 @@ internal class PrintJobResponseProfile : IProfile
             map.Map<IIppJobResponse, IppResponseMessage>(src, dst);
             if (src.DocumentAttributes != null)
             {
-                var docAttrs = new List<IppAttribute>();
-                docAttrs.AddRange(map.Map<DocumentAttributes, IDictionary<string, IppAttribute[]>>(src.DocumentAttributes).Values.SelectMany(x => x));
-                dst.DocumentAttributes.Add(docAttrs);
+                var docAttrsDict = map.Map<DocumentAttributes, IDictionary<string, IppAttribute[]>>(src.DocumentAttributes); dst.DocumentAttributes.Clear(); dst.DocumentAttributes.Add(docAttrsDict.Values.SelectMany(x => x).ToList());
+                
+                
             }
             return dst;
         });

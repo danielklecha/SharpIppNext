@@ -58,6 +58,7 @@ public class SendDocumentOperationAttributes : JobOperationAttributes
     ///     support.
     /// </summary>
     public string? DocumentNaturalLanguage { get; set; }
+    public string? DocumentCharset { get; set; }
 
     /// <summary>
     ///     The client MUST supply this attribute.  The Printer object MUST

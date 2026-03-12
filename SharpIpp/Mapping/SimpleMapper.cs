@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Mapping;
 
@@ -145,7 +146,14 @@ public class SimpleMapper : IMapper
                 case MapType.Simple:
                     if (_dictionary.TryGetValue(map, out var mapFunc))
                     {
-                        return mapFunc(source, dest, this);
+                        var result = mapFunc(source, dest, this);
+
+                        //if (result is IIppCollection { IsNoValue: true })
+                        //{
+                        //    return null;
+                        //}
+
+                        return result;
                     }
                     break;
             }

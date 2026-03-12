@@ -260,7 +260,7 @@ namespace SharpIpp.Protocol.Models
         ///     Printer will produce the output for the Job.
         ///     See: PWG 5100.7-2023 Section 6.8.4
         /// </summary>
-        public string? JobDelayOutputUntil { get; set; }
+        public JobHoldUntil? JobDelayOutputUntil { get; set; }
 
         /// <summary>
         ///     This attribute specifies a date and time when the Printer will
@@ -281,7 +281,7 @@ namespace SharpIpp.Protocol.Models
         ///     Retention phase of a Job's life cycle.
         ///     See: PWG 5100.7-2023 Section 6.8.7
         /// </summary>
-        public string? JobRetainUntil { get; set; }
+        public JobHoldUntil? JobRetainUntil { get; set; }
 
         /// <summary>
         ///     This attribute specifies the number of seconds the Job remains
@@ -314,7 +314,7 @@ namespace SharpIpp.Protocol.Models
         ///     content of the document for the output device.
         ///     See: PWG 5100.7-2023 Section 6.3.3
         /// </summary>
-        public string? PrintContentOptimize { get; set; }
+        public PrintContentOptimize? PrintContentOptimize { get; set; }
 
         /// <summary>
         ///     This attribute specifies the number of pages per set
@@ -322,6 +322,131 @@ namespace SharpIpp.Protocol.Models
         ///     See: PWG 5100.1-2022 Section 5.3
         /// </summary>
         public int? JobPagesPerSet { get; set; }
+
+        /// <summary>
+        ///     PWG 5100.3-2023 Section 5.2.1
+        /// </summary>
+        public Cover? CoverBack { get; set; }
+
+        /// <summary>
+        ///     PWG 5100.3-2023 Section 5.2.2
+        /// </summary>
+        public Cover? CoverFront { get; set; }
+
+        /// <summary>
+        ///     PWG 5100.3-2023 Section 5.2.3
+        /// </summary>
+        public int[]? ForceFrontSide { get; set; }
+
+        /// <summary>
+        ///     PWG 5100.3-2023 Section 5.2.4
+        /// </summary>
+        public Orientation? ImageOrientation { get; set; }
+
+        /// <summary>
+        ///     PWG 5100.3-2023 Section 5.2.5
+        /// </summary>
+        public string? ImpositionTemplate { get; set; }
+
+        /// <summary>
+        ///     PWG 5100.3-2023 Section 5.2.6
+        /// </summary>
+        public InsertSheet[]? InsertSheet { get; set; }
+
+        /// <summary>
+        ///     PWG 5100.3-2023 Section 5.2.7
+        /// </summary>
+        public JobAccountingSheets? JobAccountingSheets { get; set; }
+
+        /// <summary>
+        ///     PWG 5100.3-2023 Section 5.2.8
+        /// </summary>
+        public JobHoldUntil? JobCompleteBefore { get; set; }
+
+        /// <summary>
+        ///     PWG 5100.3-2023 Section 5.2.9
+        /// </summary>
+        public DateTimeOffset? JobCompleteBeforeTime { get; set; }
+
+        /// <summary>
+        ///     PWG 5100.3-2023 Section 5.2.10
+        /// </summary>
+        public JobErrorSheet? JobErrorSheet { get; set; }
+
+        /// <summary>
+        ///     PWG 5100.3-2023 Section 5.2.11
+        /// </summary>
+        public string? JobMessageToOperator { get; set; }
+
+        /// <summary>
+        ///     PWG 5100.3-2023 Section 5.2.12
+        /// </summary>
+        public string? JobPhoneNumber { get; set; }
+
+        /// <summary>
+        ///     PWG 5100.3-2023 Section 5.2.13
+        /// </summary>
+        public string? JobRecipientName { get; set; }
+
+        /// <summary>
+        ///     PWG 5100.3-2023 Section 5.2.14
+        /// </summary>
+        public MediaInputTrayCheck? MediaInputTrayCheck { get; set; }
+
+        /// <summary>
+        ///     PWG 5100.3-2023 Section 5.2.16
+        /// </summary>
+        public PageDelivery? PageDelivery { get; set; }
+
+        /// <summary>
+        ///     PWG 5100.3-2023 Section 5.2.17
+        /// </summary>
+        public PresentationDirectionNumberUp? PresentationDirectionNumberUp { get; set; }
+
+        /// <summary>
+        ///     PWG 5100.3-2023 Section 5.2.18
+        /// </summary>
+        public SeparatorSheets? SeparatorSheets { get; set; }
+
+        /// <summary>
+        ///     PWG 5100.3-2023 Section 5.2.19
+        /// </summary>
+        public XImagePosition? XImagePosition { get; set; }
+
+        /// <summary>
+        ///     PWG 5100.3-2023 Section 5.2.20
+        /// </summary>
+        public int? XImageShift { get; set; }
+
+        /// <summary>
+        ///     PWG 5100.3-2023 Section 5.2.21
+        /// </summary>
+        public int? XSide1ImageShift { get; set; }
+
+        /// <summary>
+        ///     PWG 5100.3-2023 Section 5.2.22
+        /// </summary>
+        public int? XSide2ImageShift { get; set; }
+
+        /// <summary>
+        ///     PWG 5100.3-2023 Section 5.2.23
+        /// </summary>
+        public YImagePosition? YImagePosition { get; set; }
+
+        /// <summary>
+        ///     PWG 5100.3-2023 Section 5.2.24
+        /// </summary>
+        public int? YImageShift { get; set; }
+
+        /// <summary>
+        ///     PWG 5100.3-2023 Section 5.2.25
+        /// </summary>
+        public int? YSide1ImageShift { get; set; }
+
+        /// <summary>
+        ///     PWG 5100.3-2023 Section 5.2.26
+        /// </summary>
+        public int? YSide2ImageShift { get; set; }
 
     }
 }

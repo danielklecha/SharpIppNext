@@ -18,7 +18,7 @@ internal class PrintUriResponseProfile : IProfile
         {
             var dst = new PrintUriResponse();
             map.Map<IppResponseMessage, IIppJobResponse>(src, dst);
-            if (src.DocumentAttributes.Any())
+            if (src.DocumentAttributes.Count > 0)
             {
                 var docAttrs = new DocumentAttributes();
                 map.Map(src.DocumentAttributes.SelectMany(x => x).ToIppDictionary(), docAttrs);

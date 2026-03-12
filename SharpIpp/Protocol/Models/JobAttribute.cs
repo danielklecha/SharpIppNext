@@ -44,6 +44,7 @@ namespace SharpIpp.Protocol.Models
         public const string NumberOfInterveningJobs = "number-of-intervening-jobs";
         public const string JobPriority = "job-priority";
         public const string JobHoldUntil = "job-hold-until";
+        public const string PageOrderReceived = "page-order-received";
         public const string PageRanges = "page-ranges";
         public const string PrintScaling = "print-scaling";
         public const string RequestingUserName = "requesting-user-name";
@@ -109,5 +110,36 @@ namespace SharpIpp.Protocol.Models
         public const string PrinterResolutionActual = "printer-resolution-actual";
         public const string SidesActual = "sides-actual";
         public const string JobPagesPerSet = "job-pages-per-set";
+        public const string CoverBack = "cover-back";
+        public const string CoverFront = "cover-front";
+        public const string ForceFrontSide = "force-front-side";
+        public const string ImageOrientation = "image-orientation";
+        public const string ImpositionTemplate = "imposition-template";
+        public const string InsertSheet = "insert-sheet";
+        public const string JobAccountingSheets = "job-accounting-sheets";
+        public const string JobCompleteBefore = "job-complete-before";
+        public const string JobCompleteBeforeTime = "job-complete-before-time";
+        public const string JobErrorSheet = "job-error-sheet";
+        public const string JobMessageToOperator = "job-message-to-operator";
+        public const string JobPhoneNumber = "job-phone-number";
+        public const string JobRecipientName = "job-recipient-name";
+        public const string MediaInputTrayCheck = "media-input-tray-check";
+        public const string PageDelivery = "page-delivery";
+        public const string PresentationDirectionNumberUp = "presentation-direction-number-up";
+        public const string SeparatorSheets = "separator-sheets";
+        public const string XImagePosition = "x-image-position";
+        public const string XImageShift = "x-image-shift";
+        public const string XSide1ImageShift = "x-side1-image-shift";
+        public const string XSide2ImageShift = "x-side2-image-shift";
+        public const string YImagePosition = "y-image-position";
+        public const string YImageShift = "y-image-shift";
+        public const string YSide1ImageShift = "y-side1-image-shift";
+        public const string YSide2ImageShift = "y-side2-image-shift";
+
+        public const string DateTimeAtCompletedEstimated = "date-time-at-completed-estimated";
+        public const string DateTimeAtProcessingEstimated = "date-time-at-processing-estimated";
+        public const string TimeAtCompletedEstimated = "time-at-completed-estimated";
+        public const string TimeAtProcessingEstimated = "time-at-processing-estimated";
+        public const string DocumentCharset = "document-charset";
     }
 }
