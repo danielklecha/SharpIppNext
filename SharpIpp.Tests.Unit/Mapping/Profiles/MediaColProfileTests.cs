@@ -25,93 +25,98 @@ public class MediaColProfileTests
         _mapper = mapper;
     }
 
-    [TestMethod]
-    public void Map_MediaCol_WithOutOfBandCondition_WhenCount1_Length1_NotOutOfBand()
+    public static IEnumerable<object[]> MapMediaColData
     {
-        // Assert: src.Count == 1, first.Length == 1, but Tag != IsOutOfBand
-        // It should map to a typical MediaCol instead of falling into the IsOutOfBand shortcut.
-        var dict = new Dictionary<string, IppAttribute[]>
+        get
         {
-            { "media-bottom-margin", new[] { new IppAttribute(Tag.Integer, "media-bottom-margin", 100) } }
-        };
+            yield return new object[]
+            {
+                new Dictionary<string, IppAttribute[]>
+                {
+                    { "media-bottom-margin", new[] { new IppAttribute(Tag.Integer, "media-bottom-margin", 100) } }
+                },
+                new Action<MediaCol>(result =>
+                {
+                    result.MediaBottomMargin.Should().Be(100);
+                    result.MediaLeftMargin.Should().BeNull();
+                    result.IsNoValue.Should().BeFalse();
+                }),
+                "Count 1, Length 1, Not OutOfBand"
+            };
 
-        var result = _mapper.Map<MediaCol>(dict);
+            yield return new object[]
+            {
+                new Dictionary<string, IppAttribute[]>
+                {
+                    { "media-bottom-margin", new[]
+                        {
+                            new IppAttribute(Tag.Integer, "media-bottom-margin", 10),
+                            new IppAttribute(Tag.Integer, "media-bottom-margin", 20)
+                        }
+                    }
+                },
+                new Action<MediaCol>(result =>
+                {
+                    result.MediaBottomMargin.Should().Be(10);
+                    result.MediaLeftMargin.Should().BeNull();
+                    result.IsNoValue.Should().BeFalse();
+                }),
+                "Count 1, Length 2"
+            };
 
-        result.MediaBottomMargin.Should().Be(100);
-        
-        // This confirms it did NOT construct the "NoValue" version
-        result.MediaLeftMargin.Should().BeNull();
+            yield return new object[]
+            {
+                new Dictionary<string, IppAttribute[]>
+                {
+                    { "media-bottom-margin", new[] { new IppAttribute(Tag.Integer, "media-bottom-margin", 100) } },
+                    { "media-left-margin", new[] { new IppAttribute(Tag.Integer, "media-left-margin", 200) } }
+                },
+                new Action<MediaCol>(result =>
+                {
+                    result.MediaBottomMargin.Should().Be(100);
+                    result.MediaLeftMargin.Should().Be(200);
+                    result.IsNoValue.Should().BeFalse();
+                }),
+                "Count > 1"
+            };
+
+            yield return new object[]
+            {
+                new Dictionary<string, IppAttribute[]>
+                {
+                    { "media-bottom-margin", Array.Empty<IppAttribute>() }
+                },
+                new Action<MediaCol>(result =>
+                {
+                    result.MediaBottomMargin.Should().BeNull();
+                    result.MediaLeftMargin.Should().BeNull();
+                    result.IsNoValue.Should().BeFalse();
+                }),
+                "Array is empty"
+            };
+
+            yield return new object[]
+            {
+                new Dictionary<string, IppAttribute[]>
+                {
+                    { "media-col", new[] { new IppAttribute(Tag.NoValue, "media-col", NoValue.Instance) } }
+                },
+                new Action<MediaCol>(result =>
+                {
+                    result.IsNoValue.Should().BeTrue();
+                    result.MediaBottomMargin.Should().BeNull();
+                    result.MediaLeftMargin.Should().BeNull();
+                }),
+                "Count 1, Length 1, IsOutOfBand"
+            };
+        }
     }
 
     [TestMethod]
-    public void Map_MediaCol_WithOutOfBandCondition_WhenCount1_Length2()
+    [DynamicData(nameof(MapMediaColData))]
+    public void Map_MediaCol(Dictionary<string, IppAttribute[]> dict, Action<MediaCol> assert, string description)
     {
-        // Assert: src.Count == 1, but first.Length > 1
-        var dict = new Dictionary<string, IppAttribute[]>
-        {
-            { "media-bottom-margin", new[] 
-                { 
-                    new IppAttribute(Tag.Integer, "media-bottom-margin", 10),
-                    new IppAttribute(Tag.Integer, "media-bottom-margin", 20)
-                } 
-            }
-        };
-
-        // Even though mapping multi-value to `int?` will just take the first value via MapFromDicNullable,
-        // it verifies we don't crash and don't take the `no-value` shortcut path.
         var result = _mapper.Map<MediaCol>(dict);
-
-        result.MediaBottomMargin.Should().Be(10); 
-        result.MediaLeftMargin.Should().BeNull();
-    }
-
-    [TestMethod]
-    public void Map_MediaCol_WithOutOfBandCondition_WhenCountGreaterThan1()
-    {
-        // Assert: src.Count > 1
-        var dict = new Dictionary<string, IppAttribute[]>
-        {
-            { "media-bottom-margin", new[] { new IppAttribute(Tag.Integer, "media-bottom-margin", 100) } },
-            { "media-left-margin", new[] { new IppAttribute(Tag.Integer, "media-left-margin", 200) } }
-        };
-
-        var result = _mapper.Map<MediaCol>(dict);
-
-        result.MediaBottomMargin.Should().Be(100);
-        result.MediaLeftMargin.Should().Be(200);
-    }
-
-    [TestMethod]
-    public void Map_MediaCol_WithOutOfBandCondition_WhenArrayIsEmpty()
-    {
-        // Assert: src.Count == 1, but first.Length == 0 (empty array)
-        var dict = new Dictionary<string, IppAttribute[]>
-        {
-            { "media-bottom-margin", Array.Empty<IppAttribute>() }
-        };
-
-        var result = _mapper.Map<MediaCol>(dict);
-
-        result.MediaBottomMargin.Should().BeNull();
-        result.MediaLeftMargin.Should().BeNull();
-    }
-
-    [TestMethod]
-    public void Map_MediaCol_WithOutOfBandCondition_WhenCount1_Length1_IsOutOfBand()
-    {
-        // Assert: src.Count == 1, first.Length == 1, and Tag == IsOutOfBand (e.g., NoValue)
-        var dict = new Dictionary<string, IppAttribute[]>
-        {
-            { "media-col", new[] { new IppAttribute(Tag.NoValue, "media-col", NoValue.Instance) } }
-        };
-
-        var result = _mapper.Map<MediaCol>(dict);
-
-        // Should return a MediaCol with IsNoValue set to true
-        result.IsNoValue.Should().BeTrue();
-        // Sub-properties remain at their defaults (null) since only IsNoValue is set.
-        result.MediaBottomMargin.Should().BeNull();
-        result.MediaSource.Should().BeNull();
-        result.MediaBackCoating.Should().BeNull();
+        assert(result);
     }
 }

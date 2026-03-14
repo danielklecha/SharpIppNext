@@ -33,9 +33,8 @@ internal class SendDocumentResponseProfile : IProfile
             map.Map<IIppJobResponse, IppResponseMessage>(src, dst);
             if (src.DocumentAttributes != null)
             {
-                var docAttrsDict = map.Map<DocumentAttributes, IDictionary<string, IppAttribute[]>>(src.DocumentAttributes); dst.DocumentAttributes.Clear(); dst.DocumentAttributes.Add(docAttrsDict.Values.SelectMany(x => x).ToList());
-                
-                
+                var docAttrsDict = map.Map<DocumentAttributes, IDictionary<string, IppAttribute[]>>(src.DocumentAttributes);
+                dst.DocumentAttributes.Add(docAttrsDict.Values.SelectMany(x => x).ToList());
             }
             return dst;
         });
