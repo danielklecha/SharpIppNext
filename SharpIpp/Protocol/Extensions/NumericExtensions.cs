@@ -8,7 +8,7 @@ namespace SharpIpp.Protocol.Extensions
     public static class NumericExtensions
     {
         /// <summary>
-        ///     Flip the bytes in an UInt16.
+        /// Flip the bytes in an UInt16.
         /// </summary>
         /// <param name="value">The value to flip.</param>
         /// <returns>An UInt16 with flipped bytes.</returns>
@@ -18,7 +18,7 @@ namespace SharpIpp.Protocol.Extensions
         }
 
         /// <summary>
-        ///     Flip the bytes in an Int16.
+        /// Flip the bytes in an Int16.
         /// </summary>
         /// <param name="value">The value to flip.</param>
         /// <returns>An Int16 with flipped bytes.</returns>
@@ -28,7 +28,7 @@ namespace SharpIpp.Protocol.Extensions
         }
 
         /// <summary>
-        ///     Reverse the bytes in an UInt32.
+        /// Reverse the bytes in an UInt32.
         /// </summary>
         /// <param name="value">The value to reverse.</param>
         /// <returns>An UInt32 with reversed bytes.</returns>
@@ -39,7 +39,7 @@ namespace SharpIpp.Protocol.Extensions
         }
 
         /// <summary>
-        ///     Reverse the bytes in an Int32.
+        /// Reverse the bytes in an Int32.
         /// </summary>
         /// <param name="value">The value to reverse.</param>
         /// <returns>An Int32 with reversed bytes.</returns>
@@ -49,7 +49,7 @@ namespace SharpIpp.Protocol.Extensions
         }
 
         /// <summary>
-        ///     Reverse the bytes in an UInt64.
+        /// Reverse the bytes in an UInt64.
         /// </summary>
         /// <param name="value">The value to reverse.</param>
         /// <returns>An UInt64 with reversed bytes.</returns>
@@ -62,7 +62,7 @@ namespace SharpIpp.Protocol.Extensions
         }
 
         /// <summary>
-        ///     Reverse the bytes in an Int64.
+        /// Reverse the bytes in an Int64.
         /// </summary>
         /// <param name="value">The value to reverse.</param>
         /// <returns>An Int64 with reversed bytes.</returns>
@@ -72,7 +72,7 @@ namespace SharpIpp.Protocol.Extensions
         }
 
         /// <summary>
-        ///     Reverse the bytes in a Single.
+        /// Reverse the bytes in a Single.
         /// </summary>
         /// <param name="value">The value to reverse.</param>
         /// <returns>A Single with reversed bytes.</returns>
@@ -84,7 +84,7 @@ namespace SharpIpp.Protocol.Extensions
         }
 
         /// <summary>
-        ///     Reverse the bytes in a Double.
+        /// Reverse the bytes in a Double.
         /// </summary>
         /// <param name="value">The value to reverse.</param>
         /// <returns>A Double with reversed bytes.</returns>

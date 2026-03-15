@@ -2,10 +2,16 @@
   href: Operations.md
 - name: Standard Operations Examples
   items:
+    - name: Cancel-Document
+      href: CancelDocument.md
     - name: Cancel-Job
       href: CancelJob.md
     - name: Create-Job
       href: CreateJob.md
+    - name: Get-Document-Attributes
+      href: GetDocumentAttributes.md
+    - name: Get-Documents
+      href: GetDocuments.md
     - name: Get-Job-Attributes
       href: GetJobAttributes.md
     - name: Get-Jobs
@@ -26,6 +32,8 @@
       href: SendDocument.md
     - name: Send-URI
       href: SendUri.md
+    - name: Set-Document-Attributes
+      href: SetDocumentAttributes.md
     - name: Validate-Job
       href: ValidateJob.md
     - name: Get-Printer-Attributes

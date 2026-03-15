@@ -3,8 +3,9 @@ using System;
 namespace SharpIpp.Protocol.Models
 {
     /// <summary>
-    ///     <para>Type flags for requesting specific types of printers.</para>
-    ///     <para><see href="https://www.cups.org/doc/spec-ipp.html#printer-type">See here</see> for docs</para>
+    /// <para>Type flags for requesting specific types of printers.</para>
+    /// <para><see href="https://www.cups.org/doc/spec-ipp.html#printer-type">See here</see> for docs</para>
+    /// See: CUPS Implementation of IPP
     /// </summary>
     [Flags]
     public enum PrinterType

@@ -4,15 +4,15 @@ namespace SharpIpp.Protocol.Models
     {
 
         /// <summary>
-        ///     This includes any Job object whose state is
-        ///     'completed', 'canceled', or 'aborted'.
+        /// This includes any Job object whose state is
+        /// 'completed', 'canceled', or 'aborted'.
         /// </summary>
         Completed,
 
         /// <summary>
-        ///     This includes any Job object whose state is
-        ///     'pending', 'processing', 'processing-stopped', or 'pending-
-        ///     held'.
+        /// This includes any Job object whose state is
+        /// 'pending', 'processing', 'processing-stopped', or 'pending-
+        /// held'.
         /// </summary>
         NotCompleted,
     }

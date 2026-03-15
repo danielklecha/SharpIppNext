@@ -1,8 +1,8 @@
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
-///     Specifies where to cut, perforate, or score the Media Sheets.
-///     See: PWG 5100.1-2022 Section 5.2.10
+/// Specifies where to cut, perforate, or score the Media Sheets.
+/// See: PWG 5100.1-2022 Section 5.2.10
 /// </summary>
 public class Trimming : IIppCollection
 {

@@ -1,7 +1,7 @@
 namespace SharpIpp.Protocol.Models
 {
     /// <summary>
-    ///     PWG 5100.5-2024 - Document attribute name constants.
+    /// PWG 5100.5-2024 - Document attribute name constants.
     /// </summary>
     public static class DocumentAttribute
     {

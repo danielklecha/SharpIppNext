@@ -1,39 +1,39 @@
 namespace SharpIpp.Protocol.Models
 {
     /// <summary>
-    ///     https://tools.ietf.org/html/rfc8010#section-3.5.2
+    /// See:  Section 3.5.2
     /// </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1720:Identifier contains type name", Justification = "<Pending>")]
     public enum Tag : byte
     {
         /// <summary>
-        ///     unsupported
+        /// unsupported
         /// </summary>
         Unsupported = 0x10,
 
         /// <summary>
-        ///     unknown
+        /// unknown
         /// </summary>
         Unknown = 0x12,
 
         /// <summary>
-        ///     no-value
+        /// no-value
         /// </summary>
         NoValue = 0x13,
         IntegerUnassigned20 = 0x20,
 
         /// <summary>
-        ///     integer
+        /// integer
         /// </summary>
         Integer = 0x21,
 
         /// <summary>
-        ///     boolean
+        /// boolean
         /// </summary>
         Boolean = 0x22,
 
         /// <summary>
-        ///     enum
+        /// enum
         /// </summary>
         Enum = 0x23,
         IntegerUnassigned24 = 0x24,
@@ -50,42 +50,42 @@ namespace SharpIpp.Protocol.Models
         IntegerUnassigned2F = 0x2F,
 
         /// <summary>
-        ///     octetString with an unspecified format
+        /// octetString with an unspecified format
         /// </summary>
         OctetStringWithAnUnspecifiedFormat = 0x30,
 
         /// <summary>
-        ///     dateTime
+        /// dateTime
         /// </summary>
         DateTime = 0x31,
 
         /// <summary>
-        ///     resolution
+        /// resolution
         /// </summary>
         Resolution = 0x32,
 
         /// <summary>
-        ///     rangeOfInteger
+        /// rangeOfInteger
         /// </summary>
         RangeOfInteger = 0x33,
 
         /// <summary>
-        ///     begCollection
+        /// begCollection
         /// </summary>
         BegCollection = 0x34,
 
         /// <summary>
-        ///     textWithLanguage
+        /// textWithLanguage
         /// </summary>
         TextWithLanguage = 0x35,
 
         /// <summary>
-        ///     nameWithLanguage
+        /// nameWithLanguage
         /// </summary>
         NameWithLanguage = 0x36,
 
         /// <summary>
-        ///     endCollection
+        /// endCollection
         /// </summary>
         EndCollection = 0x37,
         OctetStringUnassigned38 = 0x38,
@@ -100,49 +100,49 @@ namespace SharpIpp.Protocol.Models
         StringUnassigned40 = 0x40,
 
         /// <summary>
-        ///     textWithoutLanguage
+        /// textWithoutLanguage
         /// </summary>
         TextWithoutLanguage = 0x41,
 
         /// <summary>
-        ///     nameWithoutLanguage
+        /// nameWithoutLanguage
         /// </summary>
         NameWithoutLanguage = 0x42,
 
         StringUnassigned43 = 0x43,
 
         /// <summary>
-        ///     keyword
+        /// keyword
         /// </summary>
         Keyword = 0x44,
 
         /// <summary>
-        ///     uri
+        /// uri
         /// </summary>
         Uri = 0x45,
 
         /// <summary>
-        ///     uriScheme
+        /// uriScheme
         /// </summary>
         UriScheme = 0x46,
 
         /// <summary>
-        ///     charset
+        /// charset
         /// </summary>
         Charset = 0x47,
 
         /// <summary>
-        ///     naturalLanguage
+        /// naturalLanguage
         /// </summary>
         NaturalLanguage = 0x48,
 
         /// <summary>
-        ///     mimeMediaType
+        /// mimeMediaType
         /// </summary>
         MimeMediaType = 0x49,
 
         /// <summary>
-        ///     memberAttrName
+        /// memberAttrName
         /// </summary>
         MemberAttrName = 0x4a,
         StringUnassigned4B = 0x4b,

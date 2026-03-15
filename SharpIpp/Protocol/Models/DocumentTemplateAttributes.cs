@@ -4,8 +4,8 @@ using System.Collections.Generic;
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
-///     PWG 5100.5-2024 Section 6.3
-///     Document Template attributes that override Job Template attributes for a specific Document.
+/// PWG 5100.5-2024 Section 6.3
+/// Document Template attributes that override Job Template attributes for a specific Document.
 /// </summary>
 public class DocumentTemplateAttributes : IIppCollection
 {

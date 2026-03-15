@@ -9,10 +9,10 @@ namespace SharpIpp.Models.Requests;
 public class RestartJobOperationAttributes :  CancelJobOperationAttributes
 {
     /// <summary>
-    ///     The client OPTIONALLY supplies this attribute.  The Printer object
-    ///     MUST support this attribute.  It indicates the time period during
-    ///     which the job shall be held.
+    /// The client OPTIONALLY supplies this attribute. The Printer object MUST support this attribute. It indicates the time period during which the job shall be held
+    /// See: pwg5100.13 - IPP Driver Replacement Extensions v2.0 Section 6.1.5
     /// </summary>
+    /// <code>job-hold-until</code>
     public JobHoldUntil? JobHoldUntil { get; set; }
 
 }

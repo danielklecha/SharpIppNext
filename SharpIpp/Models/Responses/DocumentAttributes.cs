@@ -2,202 +2,240 @@ using System;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Responses;
-
 /// <summary>
-///     PWG 5100.5-2024 Section 6.2 / Section 8.3-8.5
-///     Document Status attributes returned in Document Creation responses.
+/// PWG 5100.5-2024 Section 6.2 / Section 8.3-8.5
+/// Document Status attributes returned in Document Creation responses.
 /// </summary>
 public class DocumentAttributes : IIppCollection
 {
     public bool IsNoValue { get; set; }
-
     /// <summary>
-    ///     The document-number attribute is the ordinal number of the Document within the Job.
+    /// The document-number IPP attribute.
+    /// See: PWG 5100.5-2024 Section 6.2.4
     /// </summary>
+    /// <code>document-number</code>
     public int? DocumentNumber { get; set; }
-
     /// <summary>
-    ///     The document-state attribute indicates the current state of the Document.
+    /// The document-state IPP attribute.
+    /// See: PWG 5100.5-2024
     /// </summary>
+    /// <code>document-state</code>
     public DocumentState? DocumentState { get; set; }
-
     /// <summary>
-    ///     The document-state-reasons attribute provides additional information about the document's current state.
+    /// The document-state-reasons IPP attribute.
+    /// See: pwg5100.13 - IPP Driver Replacement Extensions v2.0 Section 9.1
     /// </summary>
+    /// <code>document-state-reasons</code>
     public DocumentStateReason[]? DocumentStateReasons { get; set; }
-
     /// <summary>
-    ///     The document-state-message attribute provides a localized description of the document-state and document-state-reasons.
+    /// The document-state-message IPP attribute.
+    /// See: pwg5100.18 - IPP Shared Infrastructure Extensions v1.1
     /// </summary>
+    /// <code>document-state-message</code>
     public string? DocumentStateMessage { get; set; }
     /// <summary>
-    ///     The print-content-optimize attribute indicates the optimization for the print content.
+    /// The print-content-optimize IPP attribute.
+    /// See: PWG 5100.7-2023 Section 6.3.3
     /// </summary>
+    /// <code>print-content-optimize</code>
     public PrintContentOptimize? PrintContentOptimize { get; set; }
-
     /// <summary>
-    ///     The print-content-optimize-supported attribute identifies the supported optimizations for the print content.
+    /// The print-content-optimize-supported IPP attribute.
+    /// See: PWG 5100.7-2023 Section 6.9.59
     /// </summary>
+    /// <code>print-content-optimize-supported</code>
     public PrintContentOptimize[]? PrintContentOptimizeSupported { get; set; }
-
     /// <summary>
-    ///     The printer-state-reasons attribute provides additional information about the printer's current state.
+    /// The printer-state-reasons IPP attribute.
+    /// See: pwg5100.11 - IPP Enterprise Printing Extensions v2.0 Section 8.3
     /// </summary>
+    /// <code>printer-state-reasons</code>
     public PrinterStateReason[]? PrinterStateReasons { get; set; }
-
     /// <summary>
-    ///     The attributes-charset attribute specifies the charset used for the attributes.
+    /// The attributes-charset IPP attribute.
+    /// See: RFC 8011 Section 5.3.19
     /// </summary>
+    /// <code>attributes-charset</code>
     public string? AttributesCharset { get; set; }
-
     /// <summary>
-    ///     The attributes-natural-language attribute specifies the natural language used for the attributes.
+    /// The attributes-natural-language IPP attribute.
+    /// See: RFC 8011 Section 5.3.20
     /// </summary>
+    /// <code>attributes-natural-language</code>
     public string? AttributesNaturalLanguage { get; set; }
-
     /// <summary>
-    ///     The current-page-order attribute identifies the order of pages.
+    /// The current-page-order IPP attribute.
+    /// See: pwg5100.3-2023
     /// </summary>
+    /// <code>current-page-order</code>
     public CurrentPageOrder? CurrentPageOrder { get; set; }
-
     /// <summary>
-    ///     The date-time-at-completed attribute indicates when the document moved to 'completed', 'canceled', or 'aborted' state.
+    /// The date-time-at-completed IPP attribute.
+    /// See: pwg5100.15 - IPP FaxOut Service Section 7.4.18
     /// </summary>
+    /// <code>date-time-at-completed</code>
     public DateTimeOffset? DateTimeAtCompleted { get; set; }
-
     /// <summary>
-    ///     The date-time-at-creation attribute indicates when the document was created.
+    /// The date-time-at-creation IPP attribute.
+    /// See: pwg5100.15 - IPP FaxOut Service Section 7.4.18
     /// </summary>
+    /// <code>date-time-at-creation</code>
     public DateTimeOffset? DateTimeAtCreation { get; set; }
-
     /// <summary>
-    ///     The date-time-at-processing attribute indicates when the document first began processing.
+    /// The date-time-at-processing IPP attribute.
+    /// See: pwg5100.15 - IPP FaxOut Service Section 7.4.18
     /// </summary>
+    /// <code>date-time-at-processing</code>
     public DateTimeOffset? DateTimeAtProcessing { get; set; }
-
     /// <summary>
-    ///     The detailed-status-messages attribute provides more detail about the document's status.
+    /// The detailed-status-messages IPP attribute.
+    /// See: pwg5100.11 - IPP Enterprise Printing Extensions v2.0 Section 14.1
     /// </summary>
+    /// <code>detailed-status-messages</code>
     public string[]? DetailedStatusMessages { get; set; }
-
     /// <summary>
-    ///     The document-access-errors attribute contains a list of errors occurred during document access.
+    /// The document-access-errors IPP attribute.
+    /// See: pwg5100.5-2024
     /// </summary>
+    /// <code>document-access-errors</code>
     public string[]? DocumentAccessErrors { get; set; }
-
     /// <summary>
-    ///     The document-charset attribute specifies the charset used in the document data.
+    /// The document-charset IPP attribute.
+    /// See: pwg5100.5-2024 Section 6.2.1
     /// </summary>
+    /// <code>document-charset</code>
     public string? DocumentCharset { get; set; }
-
     /// <summary>
-    ///     The document-format attribute identify the format of the document data.
+    /// The document-format IPP attribute.
+    /// See: RFC 8011
     /// </summary>
+    /// <code>document-format</code>
     public string? DocumentFormat { get; set; }
-
     /// <summary>
-    ///     The document-format-detected attribute indicates the format of the document data as detected by the printer.
+    /// The document-format-detected IPP attribute.
+    /// See: pwg5100.5-2024 Section 6.2.2
     /// </summary>
+    /// <code>document-format-detected</code>
     public string? DocumentFormatDetected { get; set; }
-
     /// <summary>
-    ///     The document-job-id attribute identifies the job to which the document belongs.
+    /// The document-job-id IPP attribute.
+    /// See: pwg5100.18 - IPP Shared Infrastructure Extensions v1.1 Section 3.1.4
     /// </summary>
+    /// <code>document-job-id</code>
     public int? DocumentJobId { get; set; }
-
     /// <summary>
-    ///     The document-job-uri attribute identifies the job to which the document belongs.
+    /// The document-job-uri IPP attribute.
+    /// See: pwg5100.5-2024
     /// </summary>
+    /// <code>document-job-uri</code>
     public string? DocumentJobUri { get; set; }
-
     /// <summary>
-    ///     The document-message attribute contains a message from the user or operator.
+    /// The document-message IPP attribute.
+    /// See: pwg5100.5-2024 Section 6.2.3
     /// </summary>
+    /// <code>document-message</code>
     public string? DocumentMessage { get; set; }
-
     /// <summary>
-    ///     The document-name attribute specifies the name of the document.
+    /// The document-name IPP attribute.
+    /// See: PWG 5100.5-2024 Section 6.1.1
     /// </summary>
+    /// <code>document-name</code>
     public string? DocumentName { get; set; }
-
     /// <summary>
-    ///     The document-natural-language attribute specifies the natural language of the document.
+    /// The document-natural-language IPP attribute.
+    /// See: pwg5100.5-2024
     /// </summary>
+    /// <code>document-natural-language</code>
     public string? DocumentNaturalLanguage { get; set; }
-
     /// <summary>
-    ///     The document-printer-uri attribute identifies the printer that created the document.
+    /// The document-printer-uri IPP attribute.
+    /// See: pwg5100.18 - IPP Shared Infrastructure Extensions v1.1 Section 3.1.4
     /// </summary>
+    /// <code>document-printer-uri</code>
     public string? DocumentPrinterUri { get; set; }
-
     /// <summary>
-    ///     The document-uri attribute identifies the source location of the document data.
+    /// The document-uri IPP attribute.
+    /// See: pwg5100.18 - IPP Shared Infrastructure Extensions v1.1 Section 7.1.4
     /// </summary>
+    /// <code>document-uri</code>
     public string? DocumentUri { get; set; }
-
     /// <summary>
-    ///     The impressions attribute specifies the total size of the document in impressions.
+    /// The impressions IPP attribute.
+    /// See: pwg5100.1-2022 Section 5.2.1
     /// </summary>
+    /// <code>impressions</code>
     public int? Impressions { get; set; }
-
     /// <summary>
-    ///     The impressions-completed attribute specifies the number of impressions completed.
+    /// The impressions-completed IPP attribute.
+    /// See: pwg5100.15 - IPP FaxOut Service Section 7.4.18
     /// </summary>
+    /// <code>impressions-completed</code>
     public int? ImpressionsCompleted { get; set; }
-
     /// <summary>
-    ///     The k-octets attribute specifies the total size of the document in K octets.
+    /// The k-octets IPP attribute.
+    /// See: pwg5100.13 - IPP Driver Replacement Extensions v2.0
     /// </summary>
+    /// <code>k-octets</code>
     public int? KOctets { get; set; }
-
     /// <summary>
-    ///     The k-octets-processed attribute specifies the number of K octets processed.
+    /// The k-octets-processed IPP attribute.
+    /// See: pwg5100.18 - IPP Shared Infrastructure Extensions v1.1 Section 3.1.4
     /// </summary>
+    /// <code>k-octets-processed</code>
     public int? KOctetsProcessed { get; set; }
-
     /// <summary>
-    ///     The last-document attribute indicates whether this is the last document in the job.
+    /// The last-document IPP attribute.
+    /// See: PWG 5100.5-2024 Section 6.2.5
     /// </summary>
+    /// <code>last-document</code>
     public bool? LastDocument { get; set; }
-
     /// <summary>
-    ///     The media-sheets attribute specifies the total size of the document in media sheets.
+    /// The media-sheets IPP attribute.
+    /// See: pwg5100.1-2022 Section 2.2
     /// </summary>
+    /// <code>media-sheets</code>
     public int? MediaSheets { get; set; }
-
     /// <summary>
-    ///     The media-sheets-completed attribute specifies the number of media sheets completed.
+    /// The media-sheets-completed IPP attribute.
+    /// See: pwg5100.18 - IPP Shared Infrastructure Extensions v1.1 Section 3.1.4
     /// </summary>
+    /// <code>media-sheets-completed</code>
     public int? MediaSheetsCompleted { get; set; }
-
     /// <summary>
-    ///     The more-info attribute specifies a URI that contains more information about the document.
+    /// The more-info IPP attribute.
+    /// See: pwg5100.15 - IPP FaxOut Service Section 7.4.18
     /// </summary>
+    /// <code>more-info</code>
     public string? MoreInfo { get; set; }
-
     /// <summary>
-    ///     The output-device-assigned attribute identifies the output device assigned to the document.
+    /// The output-device-assigned IPP attribute.
+    /// See: pwg5100.15 - IPP FaxOut Service Section 7.2.2
     /// </summary>
+    /// <code>output-device-assigned</code>
     public string? OutputDeviceAssigned { get; set; }
-
     /// <summary>
-    ///     The printer-up-time attribute indicates the time at which the printer was started.
+    /// The printer-up-time IPP attribute.
+    /// See: pwg5100.13 - IPP Driver Replacement Extensions v2.0 Section 6.6.5
     /// </summary>
+    /// <code>printer-up-time</code>
     public int? PrinterUpTime { get; set; }
-
     /// <summary>
-    ///     The time-at-completed attribute indicates when the document moved to 'completed', 'canceled', or 'aborted' state.
+    /// The time-at-completed IPP attribute.
+    /// See: pwg5100.15 - IPP FaxOut Service Section 7.4.18
     /// </summary>
+    /// <code>time-at-completed</code>
     public int? TimeAtCompleted { get; set; }
-
     /// <summary>
-    ///     The time-at-creation attribute indicates when the document was created.
+    /// The time-at-creation IPP attribute.
+    /// See: pwg5100.15 - IPP FaxOut Service Section 7.4.18
     /// </summary>
+    /// <code>time-at-creation</code>
     public int? TimeAtCreation { get; set; }
-
     /// <summary>
-    ///     The time-at-processing attribute indicates when the document first began processing.
+    /// The time-at-processing IPP attribute.
+    /// See: pwg5100.15 - IPP FaxOut Service Section 7.4.18
     /// </summary>
+    /// <code>time-at-processing</code>
     public int? TimeAtProcessing { get; set; }
 
 }

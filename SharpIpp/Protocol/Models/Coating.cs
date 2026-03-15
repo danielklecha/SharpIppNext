@@ -1,8 +1,8 @@
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
-///     Specifies the coating to apply to Media Sheets.
-///     See: PWG 5100.1-2022 Section 5.2.3
+/// Specifies the coating to apply to Media Sheets.
+/// See: PWG 5100.1-2022 Section 5.2.3
 /// </summary>
 public class Coating : IIppCollection
 {

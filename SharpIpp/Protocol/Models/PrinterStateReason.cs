@@ -1,8 +1,8 @@
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
-///     Specifies the reason for the current state of a Printer.
-///     See: RFC 8011 Section 5.4.12
+/// Specifies the reason for the current state of a Printer.
+/// See: RFC 8011 Section 5.4.12
 /// </summary>
 public enum PrinterStateReason
 {

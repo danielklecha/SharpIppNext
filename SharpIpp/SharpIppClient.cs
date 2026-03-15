@@ -53,9 +53,9 @@ public partial class SharpIppClient : ISharpIppClient
     private IMapper Mapper => MapperSingleton.Value;
 
     /// <summary>
-    ///     Status codes of <see cref="HttpResponseMessage" /> that are not successful,
-    ///     but response still contains valid ipp-data in the body that can be parsed for better error description
-    ///     Seems like they are printer specific
+    /// Status codes of <see cref="HttpResponseMessage" /> that are not successful,
+    /// but response still contains valid ipp-data in the body that can be parsed for better error description
+    /// Seems like they are printer specific
     /// </summary>
     private static readonly HttpStatusCode[] _plausibleHttpStatusCodes = [
         HttpStatusCode.Continue,

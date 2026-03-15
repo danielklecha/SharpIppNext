@@ -9,16 +9,9 @@ namespace SharpIpp.Models.Requests;
 public class GetJobAttributesOperationAttributes : JobOperationAttributes
 {
     /// <summary>
-    ///     The client OPTIONALLY supplies this attribute.  The Printer
-    ///     object MUST support this attribute.  It is a set of Job
-    ///     attribute names and/or attribute groups names in whose values
-    ///     the requester is interested.  This set of attributes is
-    ///     returned for each Job object that is returned.  The allowed
-    ///     attribute group names are the same as those defined in the
-    ///     Get-Job-Attributes operation in section 3.3.4.  If the client
-    ///     does not supply this attribute, the Printer MUST respond as if
-    ///     the client had supplied this attribute with two values: 'job-
-    ///     uri' and 'job-id'.
+    /// The client OPTIONALLY supplies this attribute. The Printer object MUST support this attribute. It is a set of Job attribute names and/or attribute groups names in whose values the requester is interested. This set of attributes is returned for each Job object that is returned. The allowed attribute group names are the same as those defined in the Get-Job-Attributes operation in section 3.3.4. If the client does not supply this attribute, the Printer MUST respond as if the client had supplied this attribute with two values: 'job- uri' and 'job-id'
+    /// See: pwg5100.1-2022 Section 6.9.4
     /// </summary>
+    /// <code>requested-attributes</code>
     public string[]? RequestedAttributes { get; set; }
 }

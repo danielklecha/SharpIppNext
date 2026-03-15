@@ -9,6 +9,10 @@ public class CUPSGetPrintersResponse : IppResponse<OperationAttributes>
     {
         Version = IppVersion.CUPS10;
     }
-
+    /// <summary>
+    /// The printers-attributes IPP attribute.
+    /// See: IPP
+    /// </summary>
+    /// <code>printers-attributes</code>
     public PrinterDescriptionAttributes[]? PrintersAttributes { get; set; }
 }

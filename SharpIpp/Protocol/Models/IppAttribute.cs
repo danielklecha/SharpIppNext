@@ -68,15 +68,15 @@ public readonly struct IppAttribute : IEquatable<IppAttribute>
     public string Name { get; }
 
     /// <summary>
-    ///     Possible values:
-    ///     <see cref="int"/>
-    ///     <see cref="bool"/>
-    ///     <see cref="string" />
-    ///     <see cref="DateTimeOffset" />
-    ///     <see cref="NoValue" />
-    ///     <see cref="Range" />
-    ///     <see cref="Resolution" />
-    ///     <see cref="StringWithLanguage" />
+    /// Possible values:
+    /// <see cref="int"/>
+    /// <see cref="bool"/>
+    /// <see cref="string" />
+    /// <see cref="DateTimeOffset" />
+    /// <see cref="NoValue" />
+    /// <see cref="Range" />
+    /// <see cref="Resolution" />
+    /// <see cref="StringWithLanguage" />
     /// </summary>
     public object Value { get; }
 

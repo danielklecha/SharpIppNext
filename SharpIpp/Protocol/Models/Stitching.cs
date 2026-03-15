@@ -1,8 +1,8 @@
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
-///     Specifies the locations of stitches, staples, or crimps.
-///     See: PWG 5100.1-2022 Section 5.2.9
+/// Specifies the locations of stitches, staples, or crimps.
+/// See: PWG 5100.1-2022 Section 5.2.9
 /// </summary>
 public class Stitching : IIppCollection
 {

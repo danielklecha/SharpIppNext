@@ -30,6 +30,17 @@ The `ISharpIppClient` interface provides a comprehensive set of operations defin
 | **Pause-Printer**          | `PausePrinterAsync`         | Stops the Printer object from scheduling jobs on all its devices. |
 | **Resume-Printer**         | `ResumePrinterAsync`        | Resumes the Printer object scheduling jobs on all its devices.    |
 
+## Supported PWG 5100.5-2024 Operations
+
+### Document Object Operations
+
+| Operation                   | Method                       | Description                                                              |
+| --------------------------- | ---------------------------- | ------------------------------------------------------------------------ |
+| **Cancel-Document**         | `CancelDocumentAsync`        | Cancels a specific Document in a Print Job.                              |
+| **Get-Document-Attributes** | `GetDocumentAttributesAsync` | Requests the values of attributes of a specific Document object.          |
+| **Get-Documents**           | `GetDocumentsAsync`          | Retrieves the list of Document objects belonging to the target Job object. |
+| **Set-Document-Attributes** | `SetDocumentAttributesAsync` | Sets the values of attributes of a specific Document object.             |
+
 ## CUPS Specific Operations
 
 | Operation             | Method                 | Description                                                           |

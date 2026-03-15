@@ -14,23 +14,23 @@ using SharpIpp.Protocol.Models;
 namespace SharpIpp.Protocol
 {
     /// <summary>
-    ///     Ipp protocol reader-writer.
-    ///     Ipp protocol only supports common types:
-    ///     <see cref="int"/>
-    ///     <see cref="bool"/>
-    ///     <see cref="string" />
-    ///     <see cref="DateTimeOffset" />
-    ///     <see cref="NoValue" />
-    ///     <see cref="Range" />
-    ///     <see cref="Resolution" />
-    ///     <see cref="StringWithLanguage" />
-    ///     all other types must be mapped via IMapper in-onto these
+    /// Ipp protocol reader-writer.
+    /// Ipp protocol only supports common types:
+    /// <see cref="int"/>
+    /// <see cref="bool"/>
+    /// <see cref="string" />
+    /// <see cref="DateTimeOffset" />
+    /// <see cref="NoValue" />
+    /// <see cref="Range" />
+    /// <see cref="Resolution" />
+    /// <see cref="StringWithLanguage" />
+    /// all other types must be mapped via IMapper in-onto these
     /// </summary>
     public partial class IppProtocol : IIppProtocol
     {
         /// <summary>
         /// Controls the behavior of ReadIppRequestAsync() method.
-        /// If true, the whole incoming document is read into a memory stream, 
+        /// If true, the whole incoming document is read into a memory stream,
         /// and can be accessed via message.Document.
         /// If false, the document is not read into a memory stream, and it should
         /// be consumed from the input stream by the caller.

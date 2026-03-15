@@ -1,8 +1,8 @@
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
-///     Specifies the location and type of binding to apply.
-///     See: PWG 5100.1-2022 Section 5.2.2
+/// Specifies the location and type of binding to apply.
+/// See: PWG 5100.1-2022 Section 5.2.2
 /// </summary>
 public class Binding : IIppCollection
 {

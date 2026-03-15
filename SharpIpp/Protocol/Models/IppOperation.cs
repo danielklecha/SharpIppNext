@@ -1,7 +1,7 @@
 namespace SharpIpp.Protocol.Models
 {
     /// <summary>
-    ///     https://tools.ietf.org/html/rfc2911#section-4.4.15
+    /// See: RFC 2911 Section 4.4.15
     /// </summary>
     public enum IppOperation : short
     {

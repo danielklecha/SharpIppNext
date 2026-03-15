@@ -1,9 +1,9 @@
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
-///     Specifies detailed finishing instructions that cannot be expressed
-///     by the "finishings" Job Template attribute.
-///     See: PWG 5100.1-2022 Section 5.2
+/// Specifies detailed finishing instructions that cannot be expressed
+/// by the "finishings" Job Template attribute.
+/// See: PWG 5100.1-2022 Section 5.2
 /// </summary>
 public class FinishingsCol : IIppCollection
 {

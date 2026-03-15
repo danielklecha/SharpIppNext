@@ -5,7 +5,7 @@ using System.Text;
 namespace SharpIpp.Protocol.Models
 {
     /// <summary>
-    /// https://tools.ietf.org/html/rfc8011#section-5.1.7
+    /// See: RFC 8011 Section 5.1.7
     /// </summary>
     public enum UriScheme
     {

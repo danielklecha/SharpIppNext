@@ -1,8 +1,8 @@
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
-///     Specifies the locations of holes to make in the hardcopy output.
-///     See: PWG 5100.1-2022 Section 5.2.8
+/// Specifies the locations of holes to make in the hardcopy output.
+/// See: PWG 5100.1-2022 Section 5.2.8
 /// </summary>
 public class Punching : IIppCollection
 {
