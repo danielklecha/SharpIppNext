@@ -59,12 +59,19 @@ public static class IppAttributeExtensions
     /// <returns>An enumerable of attributes including the collection tags.</returns>
     public static IEnumerable<IppAttribute> ToBegCollection(this IEnumerable<IppAttribute> attributes, string collectionName)
     {
+        var attributeList = attributes as IList<IppAttribute> ?? attributes.ToList();
+        if (attributeList.Count == 1 && attributeList[0].Tag == Tag.NoValue)
+        {
+            yield return attributeList[0];
+            yield break;
+        }
+
         var stack = new Stack<CollectionContext>();
         stack.Push(new CollectionContext()); // Root context
         
         yield return new IppAttribute(Tag.BegCollection, collectionName, NoValue.Instance);
         
-        foreach (var attribute in attributes)
+        foreach (var attribute in attributeList)
         {
 
 

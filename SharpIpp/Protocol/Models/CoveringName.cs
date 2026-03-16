@@ -7,6 +7,7 @@ namespace SharpIpp.Protocol.Models;
 public readonly record struct CoveringName(string Value)
 {
     public static readonly CoveringName Plain = new("plain");
+    public static readonly CoveringName PreCut = new("pre-cut");
     public static readonly CoveringName PrePrinted = new("pre-printed");
 
     public override string ToString() => Value;

@@ -54,8 +54,20 @@ internal class GetJobAttributesResponseProfile : IProfile
             JobName = map.MapFromDicNullable<string?>(src, JobAttribute.JobName),
             JobKOctetsProcessed = map.MapFromDicNullable<int?>(src, JobAttribute.JobKOctetsProcessed),
             JobImpressions = map.MapFromDicNullable<int?>(src, JobAttribute.JobImpressions),
+            JobImpressionsCol = src.ContainsKey(JobAttribute.JobImpressionsCol)
+                ? map.Map<JobCounter>(src[JobAttribute.JobImpressionsCol].FromBegCollection().ToIppDictionary())
+                : null,
             JobMediaSheets = map.MapFromDicNullable<int?>(src, JobAttribute.JobMediaSheets),
+            JobMediaSheetsCol = src.ContainsKey(JobAttribute.JobMediaSheetsCol)
+                ? map.Map<JobCounter>(src[JobAttribute.JobMediaSheetsCol].FromBegCollection().ToIppDictionary())
+                : null,
             JobMoreInfo = map.MapFromDicNullable<string?>(src, JobAttribute.JobMoreInfo),
+            DocumentFormatDetails = src.ContainsKey(JobAttribute.DocumentFormatDetails)
+                ? map.Map<DocumentFormatDetails>(src[JobAttribute.DocumentFormatDetails].FromBegCollection().ToIppDictionary())
+                : null,
+            DocumentFormatDetailsDetected = src.ContainsKey(JobAttribute.DocumentFormatDetailsDetected)
+                ? map.Map<DocumentFormatDetails>(src[JobAttribute.DocumentFormatDetailsDetected].FromBegCollection().ToIppDictionary())
+                : null,
             NumberOfDocuments = map.MapFromDicNullable<int?>(src, JobAttribute.NumberOfDocuments),
             NumberOfInterveningJobs = map.MapFromDicNullable<int?>(src, JobAttribute.NumberOfInterveningJobs),
             OutputDeviceAssigned = map.MapFromDicNullable<string?>(src, JobAttribute.OutputDeviceAssigned),
@@ -64,8 +76,26 @@ internal class GetJobAttributesResponseProfile : IProfile
             JobDocumentAccessErrors = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.JobDocumentAccessErrors),
             JobMessageFromOperator = map.MapFromDicNullable<string?>(src, JobAttribute.JobMessageFromOperator),
             JobPages = map.MapFromDicNullable<int?>(src, JobAttribute.JobPages),
+            JobPagesCol = src.ContainsKey(JobAttribute.JobPagesCol)
+                ? map.Map<JobCounter>(src[JobAttribute.JobPagesCol].FromBegCollection().ToIppDictionary())
+                : null,
             JobPagesCompleted = map.MapFromDicNullable<int?>(src, JobAttribute.JobPagesCompleted),
+            JobImpressionsCompletedCol = src.ContainsKey(JobAttribute.JobImpressionsCompletedCol)
+                ? map.Map<JobCounter>(src[JobAttribute.JobImpressionsCompletedCol].FromBegCollection().ToIppDictionary())
+                : null,
+            JobMediaSheetsCompletedCol = src.ContainsKey(JobAttribute.JobMediaSheetsCompletedCol)
+                ? map.Map<JobCounter>(src[JobAttribute.JobMediaSheetsCompletedCol].FromBegCollection().ToIppDictionary())
+                : null,
+            JobPagesCompletedCol = src.ContainsKey(JobAttribute.JobPagesCompletedCol)
+                ? map.Map<JobCounter>(src[JobAttribute.JobPagesCompletedCol].FromBegCollection().ToIppDictionary())
+                : null,
             JobProcessingTime = map.MapFromDicNullable<int?>(src, JobAttribute.JobProcessingTime),
+            ClientInfo = src.TryGetValue(JobAttribute.ClientInfo, out var clientInfo) && clientInfo.GroupBegCollection().Any()
+                ? clientInfo.GroupBegCollection().Select(x => map.Map<ClientInfo>(x.FromBegCollection().ToIppDictionary())).ToArray()
+                : null,
+            JobSheetsCol = src.ContainsKey(JobAttribute.JobSheetsCol)
+                ? map.Map<JobSheetsCol>(src[JobAttribute.JobSheetsCol].FromBegCollection().ToIppDictionary())
+                : null,
             ErrorsCount = map.MapFromDicNullable<int?>(src, JobAttribute.ErrorsCount),
             WarningsCount = map.MapFromDicNullable<int?>(src, JobAttribute.WarningsCount),
             PrintContentOptimizeActual = map.MapFromDicSetNullable<PrintContentOptimize[]?>(src, JobAttribute.PrintContentOptimizeActual),
@@ -136,10 +166,18 @@ internal class GetJobAttributesResponseProfile : IProfile
                 dic.Add(JobAttribute.JobKOctetsProcessed, [new IppAttribute(Tag.Integer, JobAttribute.JobKOctetsProcessed, src.JobKOctetsProcessed.Value)]);
             if (src.JobImpressions != null)
                 dic.Add(JobAttribute.JobImpressions, [new IppAttribute(Tag.Integer, JobAttribute.JobImpressions, src.JobImpressions.Value)]);
+            if (src.JobImpressionsCol != null)
+                dic.Add(JobAttribute.JobImpressionsCol, map.Map<IEnumerable<IppAttribute>>(src.JobImpressionsCol).ToBegCollection(JobAttribute.JobImpressionsCol).ToArray());
             if (src.JobMediaSheets != null)
                 dic.Add(JobAttribute.JobMediaSheets, [new IppAttribute(Tag.Integer, JobAttribute.JobMediaSheets, src.JobMediaSheets.Value)]);
+            if (src.JobMediaSheetsCol != null)
+                dic.Add(JobAttribute.JobMediaSheetsCol, map.Map<IEnumerable<IppAttribute>>(src.JobMediaSheetsCol).ToBegCollection(JobAttribute.JobMediaSheetsCol).ToArray());
             if (src.JobMoreInfo != null)
                 dic.Add(JobAttribute.JobMoreInfo, new IppAttribute[] { new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.JobMoreInfo, src.JobMoreInfo) });
+            if (src.DocumentFormatDetails != null)
+                dic.Add(JobAttribute.DocumentFormatDetails, map.Map<IEnumerable<IppAttribute>>(src.DocumentFormatDetails).ToBegCollection(JobAttribute.DocumentFormatDetails).ToArray());
+            if (src.DocumentFormatDetailsDetected != null)
+                dic.Add(JobAttribute.DocumentFormatDetailsDetected, map.Map<IEnumerable<IppAttribute>>(src.DocumentFormatDetailsDetected).ToBegCollection(JobAttribute.DocumentFormatDetailsDetected).ToArray());
             if (src.NumberOfDocuments != null)
                 dic.Add(JobAttribute.NumberOfDocuments, [new IppAttribute(Tag.Integer, JobAttribute.NumberOfDocuments, src.NumberOfDocuments.Value)]);
             if (src.NumberOfInterveningJobs != null)
@@ -156,10 +194,22 @@ internal class GetJobAttributesResponseProfile : IProfile
                 dic.Add(JobAttribute.JobMessageFromOperator, new IppAttribute[] { new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.JobMessageFromOperator, src.JobMessageFromOperator) });
             if (src.JobPages != null)
                 dic.Add(JobAttribute.JobPages, [new IppAttribute(Tag.Integer, JobAttribute.JobPages, src.JobPages.Value)]);
+            if (src.JobPagesCol != null)
+                dic.Add(JobAttribute.JobPagesCol, map.Map<IEnumerable<IppAttribute>>(src.JobPagesCol).ToBegCollection(JobAttribute.JobPagesCol).ToArray());
             if (src.JobPagesCompleted != null)
                 dic.Add(JobAttribute.JobPagesCompleted, [new IppAttribute(Tag.Integer, JobAttribute.JobPagesCompleted, src.JobPagesCompleted.Value)]);
+            if (src.JobImpressionsCompletedCol != null)
+                dic.Add(JobAttribute.JobImpressionsCompletedCol, map.Map<IEnumerable<IppAttribute>>(src.JobImpressionsCompletedCol).ToBegCollection(JobAttribute.JobImpressionsCompletedCol).ToArray());
+            if (src.JobMediaSheetsCompletedCol != null)
+                dic.Add(JobAttribute.JobMediaSheetsCompletedCol, map.Map<IEnumerable<IppAttribute>>(src.JobMediaSheetsCompletedCol).ToBegCollection(JobAttribute.JobMediaSheetsCompletedCol).ToArray());
+            if (src.JobPagesCompletedCol != null)
+                dic.Add(JobAttribute.JobPagesCompletedCol, map.Map<IEnumerable<IppAttribute>>(src.JobPagesCompletedCol).ToBegCollection(JobAttribute.JobPagesCompletedCol).ToArray());
             if (src.JobProcessingTime != null)
                 dic.Add(JobAttribute.JobProcessingTime, [new IppAttribute(Tag.Integer, JobAttribute.JobProcessingTime, src.JobProcessingTime.Value)]);
+            if (src.ClientInfo != null)
+                dic.Add(JobAttribute.ClientInfo, src.ClientInfo.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.ClientInfo)).ToArray());
+            if (src.JobSheetsCol != null)
+                dic.Add(JobAttribute.JobSheetsCol, map.Map<IEnumerable<IppAttribute>>(src.JobSheetsCol).ToBegCollection(JobAttribute.JobSheetsCol).ToArray());
             if (src.ErrorsCount != null)
                 dic.Add(JobAttribute.ErrorsCount, [new IppAttribute(Tag.Integer, JobAttribute.ErrorsCount, src.ErrorsCount.Value)]);
             if (src.WarningsCount != null)
@@ -187,7 +237,11 @@ internal class GetJobAttributesResponseProfile : IProfile
             if (src.OrientationRequestedActual != null)
                 dic.Add(JobAttribute.OrientationRequestedActual, src.OrientationRequestedActual.Select(x => new IppAttribute(Tag.Enum, JobAttribute.OrientationRequestedActual, (int)x)).ToArray());
             if (src.OutputBinActual != null)
-                dic.Add(JobAttribute.OutputBinActual, src.OutputBinActual.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.OutputBinActual, x)).ToArray());
+                dic.Add(JobAttribute.OutputBinActual, src.OutputBinActual.Select(x =>
+                {
+                    var outputBin = map.Map<string>(x);
+                    return new IppAttribute(outputBin.GetKeywordOrNameTag(OutputBin.KeywordRegex), JobAttribute.OutputBinActual, outputBin);
+                }).ToArray());
             if (src.PageRangesActual != null)
                 dic.Add(JobAttribute.PageRangesActual, src.PageRangesActual.Select(x => new IppAttribute(Tag.RangeOfInteger, JobAttribute.PageRangesActual, x)).ToArray());
             if (src.PrintQualityActual != null)

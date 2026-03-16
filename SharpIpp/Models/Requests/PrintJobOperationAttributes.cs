@@ -59,4 +59,11 @@ public class PrintJobOperationAttributes : CreateJobOperationAttributes
     /// <code>document-charset</code>
     public string? DocumentCharset { get; set; }
 
+    /// <summary>
+    /// The document-message IPP attribute.
+    /// See: PWG 5100.5-2024 Section 8.3 Table 6
+    /// </summary>
+    /// <code>document-message</code>
+    public string? DocumentMessage { get; set; }
+
 }

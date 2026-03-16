@@ -24,6 +24,8 @@ internal class SendUriRequestProfile : IProfile
             map.Map<IIppJobRequest, IppRequestMessage>(src, dst);
             if (src.OperationAttributes != null)
                 dst.OperationAttributes.AddRange(map.Map<SendUriOperationAttributes, List<IppAttribute>>(src.OperationAttributes));
+            if (src.DocumentTemplateAttributes != null)
+                dst.DocumentAttributes.AddRange(map.Map<DocumentTemplateAttributes, List<IppAttribute>>(src.DocumentTemplateAttributes));
             return dst;
         });
 
@@ -32,6 +34,8 @@ internal class SendUriRequestProfile : IProfile
             var dst = new SendUriRequest();
             map.Map<IIppRequestMessage, IIppJobRequest>(src, dst);
             dst.OperationAttributes = map.Map<IDictionary<string, IppAttribute[]>, SendUriOperationAttributes>(src.OperationAttributes.ToIppDictionary());
+            if (src.DocumentAttributes.Count > 0)
+                dst.DocumentTemplateAttributes = map.Map<DocumentTemplateAttributes>(src.DocumentAttributes.ToIppDictionary());
             return dst;
         });
     }

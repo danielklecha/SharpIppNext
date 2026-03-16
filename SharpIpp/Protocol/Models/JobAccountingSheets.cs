@@ -3,7 +3,9 @@ using System;
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
-/// See: PWG 5100.3-2023 Section 5.2.7
+/// Represents the <c>job-accounting-sheets</c> collection.
+/// See: PWG 5100.3-2023 Section 5.2.6
+/// Deprecated in: PWG 5100.3-2023 Section 5.2.6
 /// </summary>
 public class JobAccountingSheets : IIppCollection
 {

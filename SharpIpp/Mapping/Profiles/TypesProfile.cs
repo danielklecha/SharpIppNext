@@ -27,6 +27,7 @@ internal class TypesProfile : IProfile
         mapper.CreateIppMap<int, IppStatusCode>((src, map) => (IppStatusCode)src);
         mapper.CreateIppMap<int, JobState>((src, map) => (JobState)src);
         mapper.CreateIppMap<int, DocumentState>((src, map) => (DocumentState)src);
+        mapper.CreateIppMap<int, ClientType>((src, map) => (ClientType)src);
         mapper.CreateIppMap<int, Orientation>((src, map) => (Orientation)src);
         mapper.CreateIppMap<int, PrinterState>((src, map) => (PrinterState)src);
         mapper.CreateIppMap<int, PrintQuality>((src, map) => (PrintQuality)src);
@@ -95,7 +96,6 @@ internal class TypesProfile : IProfile
         ConfigureSmartEnum<TrimmingWhen>(mapper);
         ConfigureSmartEnum<JobErrorSheetWhen>(mapper);
         ConfigureSmartEnum<PageDelivery>(mapper);
-        ConfigureSmartEnum<PageOrderReceived>(mapper);
         ConfigureSmartEnum<PresentationDirectionNumberUp>(mapper);
         ConfigureSmartEnum<XImagePosition>(mapper);
         ConfigureSmartEnum<YImagePosition>(mapper);
@@ -112,13 +112,13 @@ internal class TypesProfile : IProfile
         ConfigureSmartEnum<MediaInputTrayCheck>(mapper);
         ConfigureSmartEnum<JobSheetsType>(mapper);
         ConfigureSmartEnum<SeparatorSheetsType>(mapper);
-        ConfigureSmartEnum<CurrentPageOrder>(mapper);
 
         ConfigureSmartEnum<OutputBin>(mapper);
         ConfigureSmartEnum<ImpositionTemplate>(mapper);
         ConfigureSmartEnum<JobPhoneNumberScheme>(mapper);
         ConfigureSmartEnum<FinishingTemplate>(mapper);
         ConfigureSmartEnum<Media>(mapper);
+        ConfigureSmartEnum<MediaKey>(mapper);
         ConfigureSmartEnum<MediaColor>(mapper);
         ConfigureSmartEnum<MediaType>(mapper);
     }

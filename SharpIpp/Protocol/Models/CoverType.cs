@@ -2,7 +2,7 @@ namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the cover type.
-/// See: PWG 5100.1-2022 Section 6.5
+/// See: PWG 5100.3-2023 Section 5.2.1.3
 /// </summary>
 public readonly record struct CoverType(string Value)
 {

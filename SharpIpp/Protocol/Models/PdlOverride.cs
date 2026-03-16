@@ -8,6 +8,7 @@ public readonly record struct PdlOverride(string Value)
 {
     public static readonly PdlOverride Attempted = new("attempted");
     public static readonly PdlOverride NotAttempted = new("not-attempted");
+    public static readonly PdlOverride Guaranteed = new("guaranteed");
 
     public override string ToString() => Value;
     public static implicit operator string(PdlOverride bin) => bin.Value;

@@ -1,7 +1,8 @@
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
-/// PWG 5100.3-2023 Section 5.2.10.2
+/// Specifies the <c>job-error-sheet-when</c> member values.
+/// See: PWG 5100.3-2023 Section 5.2.9.2
 /// </summary>
 public readonly record struct JobErrorSheetWhen(string Value)
 {

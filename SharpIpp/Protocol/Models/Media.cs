@@ -16,6 +16,7 @@ public readonly record struct Media(string Value)
     public static readonly Media NaIndex4x6in = new("na_index-4x6_4x6in");
     public static readonly Media NaIndex5x8in = new("na_index-5x8_5x8in");
     public static readonly Media NaNumber10Envelope4125x95in = new("na_number-10-envelope_4.125x9.5in");
+    public static readonly Media ChoiceIsoA4210x297mmNaLetter85x11in = new("choice_iso_a4_210x297mm_na_letter_8.5x11in");
 
     public override string ToString() => Value;
     public static implicit operator string(Media bin) => bin.Value;

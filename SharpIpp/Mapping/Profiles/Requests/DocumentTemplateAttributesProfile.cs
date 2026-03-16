@@ -14,21 +14,47 @@ internal class DocumentTemplateAttributesProfile : IProfile
         mapper.CreateMap<DocumentTemplateAttributes, List<IppAttribute>>((src, map) =>
         {
             var dst = new List<IppAttribute>();
+            if (src.Finishings != null && src.FinishingsCol != null)
+                throw new System.ArgumentException("'finishings' and 'finishings-col' are conflicting attributes and cannot be supplied together.");
             if (src.Copies.HasValue) dst.Add(new IppAttribute(Tag.Integer, JobAttribute.Copies, src.Copies.Value));
             if (src.CoverBack != null) dst.AddRange(map.Map<IEnumerable<IppAttribute>>(src.CoverBack).ToBegCollection(JobAttribute.CoverBack));
             if (src.CoverFront != null) dst.AddRange(map.Map<IEnumerable<IppAttribute>>(src.CoverFront).ToBegCollection(JobAttribute.CoverFront));
-            if (src.Finishings.HasValue) dst.Add(new IppAttribute(Tag.Enum, JobAttribute.Finishings, (int)src.Finishings.Value));
-            if (src.FinishingsCol != null) dst.AddRange(src.FinishingsCol.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.FinishingsCol)));
+            if (src.Finishings != null)
+            {
+                var finishings = src.Finishings;
+                if (finishings.Length > 1)
+                    finishings = finishings.Where(x => x != Finishings.None).ToArray();
+
+                dst.AddRange(finishings.Select(x => new IppAttribute(Tag.Enum, JobAttribute.Finishings, (int)x)));
+            }
+            if (src.FinishingsCol != null)
+            {
+                foreach (var finishingsCol in src.FinishingsCol)
+                {
+                    dst.AddRange(map.Map<IEnumerable<IppAttribute>>(finishingsCol).ToBegCollection(JobAttribute.FinishingsCol));
+                }
+            }
             if (src.ForceFrontSide != null) dst.AddRange(src.ForceFrontSide.Select(x => new IppAttribute(Tag.Integer, JobAttribute.ForceFrontSide, x)));
-            if (src.ImpositionTemplate != null) dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.ImpositionTemplate, map.Map<string>(src.ImpositionTemplate)));
-            if (src.Media != null) dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.Media, map.Map<string>(src.Media)));
+            if (src.ImpositionTemplate != null)
+            {
+                var impositionTemplate = map.Map<string>(src.ImpositionTemplate.Value);
+                dst.Add(new IppAttribute(impositionTemplate.GetKeywordOrNameTag(), JobAttribute.ImpositionTemplate, impositionTemplate));
+            }
+            if (src.Media != null)
+            {
+                var media = map.Map<string>(src.Media.Value);
+                dst.Add(new IppAttribute(media.GetKeywordOrNameTag(), JobAttribute.Media, media));
+            }
             if (src.MediaCol != null) dst.AddRange(map.Map<IEnumerable<IppAttribute>>(src.MediaCol).ToBegCollection(JobAttribute.MediaCol));
             if (src.MediaInputTrayCheck != null) dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.MediaInputTrayCheck, map.Map<string>(src.MediaInputTrayCheck)));
             if (src.NumberUp.HasValue) dst.Add(new IppAttribute(Tag.Integer, JobAttribute.NumberUp, src.NumberUp.Value));
             if (src.OrientationRequested.HasValue) dst.Add(new IppAttribute(Tag.Enum, JobAttribute.OrientationRequested, (int)src.OrientationRequested.Value));
-            if (src.OutputBin != null) dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.OutputBin, map.Map<string>(src.OutputBin.Value)));
+            if (src.OutputBin != null)
+            {
+                var outputBin = map.Map<string>(src.OutputBin.Value);
+                dst.Add(new IppAttribute(outputBin.GetKeywordOrNameTag(OutputBin.KeywordRegex), JobAttribute.OutputBin, outputBin));
+            }
             if (src.PageDelivery.HasValue) dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.PageDelivery, map.Map<string>(src.PageDelivery.Value)));
-            if (src.PageOrderReceived.HasValue) dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.PageOrderReceived, map.Map<string>(src.PageOrderReceived.Value)));
             if (src.PageRanges != null) dst.AddRange(src.PageRanges.Select(x => new IppAttribute(Tag.RangeOfInteger, JobAttribute.PageRanges, x)));
             if (src.PresentationDirectionNumberUp.HasValue) dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.PresentationDirectionNumberUp, map.Map<string>(src.PresentationDirectionNumberUp.Value)));
             if (src.PrintQuality.HasValue) dst.Add(new IppAttribute(Tag.Enum, JobAttribute.PrintQuality, (int)src.PrintQuality.Value));
@@ -53,7 +79,7 @@ internal class DocumentTemplateAttributesProfile : IProfile
                 dst.CoverBack = map.Map<Cover>(src[JobAttribute.CoverBack].FromBegCollection().ToIppDictionary());
             if (src.ContainsKey(JobAttribute.CoverFront))
                 dst.CoverFront = map.Map<Cover>(src[JobAttribute.CoverFront].FromBegCollection().ToIppDictionary());
-            dst.Finishings = map.MapFromDicNullable<Finishings?>(src, JobAttribute.Finishings);
+            dst.Finishings = map.MapFromDicSetNullable<Finishings[]?>(src, JobAttribute.Finishings);
             if (src.ContainsKey(JobAttribute.FinishingsCol))
                 dst.FinishingsCol = src[JobAttribute.FinishingsCol].GroupBegCollection().Select(x => map.Map<FinishingsCol>(x.FromBegCollection().ToIppDictionary())).ToArray();
             dst.ForceFrontSide = map.MapFromDicSetNullable<int[]?>(src, JobAttribute.ForceFrontSide);
@@ -66,7 +92,6 @@ internal class DocumentTemplateAttributesProfile : IProfile
             dst.OrientationRequested = map.MapFromDicNullable<Orientation?>(src, JobAttribute.OrientationRequested);
             dst.OutputBin = map.MapFromDicNullable<OutputBin?>(src, JobAttribute.OutputBin);
             dst.PageDelivery = map.MapFromDicNullable<PageDelivery?>(src, JobAttribute.PageDelivery);
-            dst.PageOrderReceived = map.MapFromDicNullable<PageOrderReceived?>(src, JobAttribute.PageOrderReceived);
             dst.PageRanges = map.MapFromDicSetNullable<Range[]?>(src, JobAttribute.PageRanges);
             dst.PresentationDirectionNumberUp = map.MapFromDicNullable<PresentationDirectionNumberUp?>(src, JobAttribute.PresentationDirectionNumberUp);
             dst.PrintQuality = map.MapFromDicNullable<PrintQuality?>(src, JobAttribute.PrintQuality);
@@ -83,4 +108,5 @@ internal class DocumentTemplateAttributesProfile : IProfile
             return dst;
         });
     }
+
 }

@@ -22,12 +22,6 @@ public class Folding : IIppCollection
     public int? FoldingOffset { get; set; }
 
     /// <summary>
-    /// integer(0:MAX) in hundredths of millimeters (1/2540th of an inch)
-    /// See: PWG 5100.1-2022 Section 5.2.6.2
-    /// </summary>
-    public int? FoldingLocation { get; set; }
-
-    /// <summary>
     /// type1 keyword
     /// See: PWG 5100.1-2022 Section 5.2.6.3
     /// </summary>

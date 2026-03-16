@@ -9,6 +9,13 @@ namespace SharpIpp.Models.Requests;
 public class SendDocumentOperationAttributes : JobOperationAttributes
 {
     /// <summary>
+    /// This DEPRECATED operation attribute specifies details about the source of the Document data and can be included in any Job or Document Creation request.
+    /// See: PWG 5100.7-2023 Section 6.1.2
+    /// </summary>
+    /// <code>document-format-details</code>
+    public DocumentFormatDetails? DocumentFormatDetails { get; set; }
+
+    /// <summary>
     /// The client OPTIONALLY supplies this attribute.  The Printer
     /// object MUST support this attribute.   It contains the client
     /// supplied document name.  The document name MAY be different
@@ -57,6 +64,14 @@ public class SendDocumentOperationAttributes : JobOperationAttributes
     /// </summary>
     /// <code>document-charset</code>
     public string? DocumentCharset { get; set; }
+
+    /// <summary>
+    /// The document-message IPP attribute.
+    /// See: PWG 5100.5-2024 Section 8.4 Table 6
+    /// </summary>
+    /// <code>document-message</code>
+    public string? DocumentMessage { get; set; }
+
     /// <summary>
     /// The client MUST supply this attribute. The Printer object MUST support this attribute. It is a boolean flag that is set to 'true' if this is the last document for the Job, 'false' otherwise
     /// See: PWG 5100.5-2024 Section 6.2.5

@@ -64,12 +64,6 @@ public class DocumentAttributes : IIppCollection
     /// <code>attributes-natural-language</code>
     public string? AttributesNaturalLanguage { get; set; }
     /// <summary>
-    /// The current-page-order IPP attribute.
-    /// See: pwg5100.3-2023
-    /// </summary>
-    /// <code>current-page-order</code>
-    public CurrentPageOrder? CurrentPageOrder { get; set; }
-    /// <summary>
     /// The date-time-at-completed IPP attribute.
     /// See: pwg5100.15 - IPP FaxOut Service Section 7.4.18
     /// </summary>
@@ -117,6 +111,43 @@ public class DocumentAttributes : IIppCollection
     /// </summary>
     /// <code>document-format-detected</code>
     public string? DocumentFormatDetected { get; set; }
+
+    /// <summary>
+    /// The document-format-details IPP attribute.
+    /// DEPRECATED.
+    /// See: PWG 5100.7-2023 Section 6.2.1
+    /// </summary>
+    /// <code>document-format-details</code>
+    public DocumentFormatDetails? DocumentFormatDetails { get; set; }
+
+    /// <summary>
+    /// The document-format-details-detected IPP attribute.
+    /// DEPRECATED.
+    /// See: PWG 5100.7-2023 Section 6.2.2
+    /// </summary>
+    /// <code>document-format-details-detected</code>
+    public DocumentFormatDetails? DocumentFormatDetailsDetected { get; set; }
+
+    /// <summary>
+    /// The errors-count IPP attribute.
+    /// See: PWG 5100.7-2023 Section 6.2.3
+    /// </summary>
+    /// <code>errors-count</code>
+    public int? ErrorsCount { get; set; }
+
+    /// <summary>
+    /// The warnings-count IPP attribute.
+    /// See: PWG 5100.7-2023 Section 6.2.5
+    /// </summary>
+    /// <code>warnings-count</code>
+    public int? WarningsCount { get; set; }
+
+    /// <summary>
+    /// The print-content-optimize-actual IPP attribute.
+    /// See: PWG 5100.7-2023 Section 6.2.4
+    /// </summary>
+    /// <code>print-content-optimize-actual</code>
+    public PrintContentOptimize[]? PrintContentOptimizeActual { get; set; }
     /// <summary>
     /// The document-job-id IPP attribute.
     /// See: pwg5100.18 - IPP Shared Infrastructure Extensions v1.1 Section 3.1.4
@@ -237,5 +268,16 @@ public class DocumentAttributes : IIppCollection
     /// </summary>
     /// <code>time-at-processing</code>
     public int? TimeAtProcessing { get; set; }
-
+    /// <summary>
+    /// The pages IPP attribute.
+    /// See: PWG 5100.7-2023 Section 6.4.1
+    /// </summary>
+    /// <code>pages</code>
+    public int? Pages { get; set; }
+    /// <summary>
+    /// The pages-completed IPP attribute.
+    /// See: PWG 5100.7-2023 Section 6.5.1
+    /// </summary>
+    /// <code>pages-completed</code>
+    public int? PagesCompleted { get; set; }
 }

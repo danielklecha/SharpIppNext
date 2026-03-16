@@ -9,6 +9,9 @@ The `ISharpIppClient` interface provides a comprehensive set of operations defin
 | Operation              | Method                  | Description                                                                                                                                              |
 | ---------------------- | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Cancel-Job**         | `CancelJobAsync`        | Allows a client to cancel a Print Job from the time the job is created up to the time it is completed, canceled, or aborted.                             |
+| **Cancel-Jobs**        | `CancelJobsAsync`       | Allows a client to cancel multiple Jobs at once.                                                                                                         |
+| **Cancel-My-Jobs**     | `CancelMyJobsAsync`     | Allows a client to cancel multiple Jobs associated with the requesting user.                                                                             |
+| **Close-Job**          | `CloseJobAsync`         | Closes a multi-document Job so that no more documents can be added.                                                                                      |
 | **Create-Job**         | `CreateJobAsync`        | Similar to the Print-Job operation except that in the Create-Job request, a client does not supply document data. Followed by Send-Document or Send-URI. |
 | **Get-Job-Attributes** | `GetJobAttributesAsync` | Requests the values of attributes of a specific Job object.                                                                                              |
 | **Get-Jobs**           | `GetJobsAsync`          | Retrieves the list of Job objects belonging to the target Printer object.                                                                                |
@@ -18,6 +21,7 @@ The `ISharpIppClient` interface provides a comprehensive set of operations defin
 | **Purge-Jobs**         | `PurgeJobsAsync`        | Removes all jobs from an IPP Printer object, regardless of their job states.                                                                             |
 | **Release-Job**        | `ReleaseJobAsync`       | Releases a previously held job so that it is again eligible for scheduling.                                                                              |
 | **Restart-Job**        | `RestartJobAsync`       | Restarts a job that is retained in the queue after processing has completed.                                                                             |
+| **Resubmit-Job**       | `ResubmitJobAsync`      | Creates a new Job based on an existing Job.                                                                                                              |
 | **Send-Document**      | `SendDocumentAsync`     | Adds a document to a multi-document Job object created by `Create-Job`.                                                                                  |
 | **Send-URI**           | `SendUriAsync`          | Adds a document (via URI reference) to a multi-document Job object.                                                                                      |
 | **Validate-Job**       | `ValidateJobAsync`      | Verifies capabilities of a printer object against supplied attributes without actually creating a job.                                                   |

@@ -1,17 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Models.Requests;
-using SharpIpp.Protocol.Models;
 using SharpIpp.Protocol;
+using SharpIpp.Protocol.Models;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace SharpIpp.Tests.Unit.Mapping.Profiles;
 
 [TestClass]
+[ExcludeFromCodeCoverage]
 public class OperationAttributesRequestProfileTests
 {
     private SimpleMapper _mapper = null!;
@@ -94,5 +96,36 @@ public class OperationAttributesRequestProfileTests
 
         // Assert
         dst.RequestedAttributes.Should().Contain("existing");
+    }
+
+    [TestMethod]
+    public void Map_PrintJobOperationAttributes_WithDocumentMessage_MapsToIppAttributes()
+    {
+        var src = new PrintJobOperationAttributes
+        {
+            AttributesCharset = "utf-8",
+            AttributesNaturalLanguage = "en",
+            DocumentMessage = "operator note"
+        };
+
+        var dst = _mapper.Map<PrintJobOperationAttributes, List<IppAttribute>>(src);
+
+        dst.Should().Contain(x => x.Name == DocumentAttribute.DocumentMessage && Equals(x.Value, "operator note"));
+    }
+
+    [TestMethod]
+    public void Map_SendDocumentOperationAttributes_WithDocumentMessage_MapsFromIppAttributes()
+    {
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { JobAttribute.AttributesCharset, [new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8")] },
+            { JobAttribute.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en")] },
+            { DocumentAttribute.DocumentMessage, [new IppAttribute(Tag.TextWithoutLanguage, DocumentAttribute.DocumentMessage, "doc note")] },
+            { JobAttribute.LastDocument, [new IppAttribute(Tag.Boolean, JobAttribute.LastDocument, true)] }
+        };
+
+        var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, SendDocumentOperationAttributes>(src);
+
+        dst.DocumentMessage.Should().Be("doc note");
     }
 }

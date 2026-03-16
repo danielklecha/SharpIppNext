@@ -112,6 +112,25 @@ public class OperationAttributesTests
     }
 
     [TestMethod]
+    public void Create_ShouldMapRequestingUserUri_WhenPresent()
+    {
+        // Arrange
+        var dict = new Dictionary<string, IppAttribute[]>
+        {
+            { JobAttribute.RequestingUserUri, new[] { new IppAttribute(Tag.Uri, JobAttribute.RequestingUserUri, "urn:uuid:00000000-0000-0000-0000-000000000000") } }
+        };
+        var mapper = new SimpleMapper();
+        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
+        mapper.FillFromAssembly(assembly!);
+
+        // Act
+        var attributes = mapper.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(dict);
+
+        // Assert
+        attributes.RequestingUserUri.Should().Be(new Uri("urn:uuid:00000000-0000-0000-0000-000000000000"));
+    }
+
+    [TestMethod]
     public void Create_ShouldNotSetPrinterUri_WhenPrinterUriIsInvalid()
     {
         // Arrange
@@ -223,6 +242,131 @@ public class OperationAttributesTests
         
         // Assert
         result.MyJobs.Should().BeTrue();
+    }
+
+    [TestMethod]
+    public void Map_ToGetJobsOperationAttributes_ShouldMapJobIds_WhenPresent()
+    {
+        // Arrange
+        var dict = new Dictionary<string, IppAttribute[]>
+        {
+            { JobAttribute.JobIds, new[] { new IppAttribute(Tag.Integer, JobAttribute.JobIds, 123), new IppAttribute(Tag.Integer, JobAttribute.JobIds, 456) } }
+        };
+        var mapper = new SimpleMapper();
+        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
+        mapper.FillFromAssembly(assembly!);
+
+        // Act
+        var result = mapper.Map<IDictionary<string, IppAttribute[]>, GetJobsOperationAttributes>(dict);
+
+        // Assert
+        result.JobIds.Should().BeEquivalentTo(new[] { 123, 456 });
+    }
+
+    [TestMethod]
+    public void Map_ToCreateJobOperationAttributes_ShouldMapPwg51007OperationAttributes_WhenPresent()
+    {
+        // Arrange
+        var dict = new Dictionary<string, IppAttribute[]>
+        {
+            {
+                JobAttribute.ClientInfo,
+                new[]
+                {
+                    new IppAttribute(Tag.BegCollection, JobAttribute.ClientInfo, NoValue.Instance),
+                    new IppAttribute(Tag.MemberAttrName, "", "client-name"),
+                    new IppAttribute(Tag.NameWithoutLanguage, "", "MyClient"),
+                    new IppAttribute(Tag.MemberAttrName, "", "client-type"),
+                    new IppAttribute(Tag.Integer, "", 3),
+                    new IppAttribute(Tag.EndCollection, "", NoValue.Instance)
+                }
+            },
+            {
+                JobAttribute.DocumentFormatDetails,
+                new[]
+                {
+                    new IppAttribute(Tag.BegCollection, JobAttribute.DocumentFormatDetails, NoValue.Instance),
+                    new IppAttribute(Tag.MemberAttrName, "", "document-source-application-name"),
+                    new IppAttribute(Tag.NameWithoutLanguage, "", "MyApp"),
+                    new IppAttribute(Tag.MemberAttrName, "", "document-source-os-name"),
+                    new IppAttribute(Tag.NameWithoutLanguage, "", "MyOS"),
+                    new IppAttribute(Tag.EndCollection, "", NoValue.Instance)
+                }
+            },
+            {
+                JobAttribute.JobMandatoryAttributes,
+                new[]
+                {
+                    new IppAttribute(Tag.Keyword, JobAttribute.JobMandatoryAttributes, "copies"),
+                    new IppAttribute(Tag.Keyword, JobAttribute.JobMandatoryAttributes, "media")
+                }
+            }
+        };
+        var mapper = new SimpleMapper();
+        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
+        mapper.FillFromAssembly(assembly!);
+
+        // Act
+        var result = mapper.Map<IDictionary<string, IppAttribute[]>, CreateJobOperationAttributes>(dict);
+
+        // Assert
+        result.ClientInfo.Should().NotBeNull().And.HaveCount(1);
+        result.ClientInfo![0].ClientName.Should().Be("MyClient");
+        result.ClientInfo![0].ClientType.Should().Be(ClientType.Application);
+        result.DocumentFormatDetails.Should().NotBeNull();
+        result.DocumentFormatDetails!.DocumentSourceApplicationName.Should().Be("MyApp");
+        result.DocumentFormatDetails!.DocumentSourceOsName.Should().Be("MyOS");
+        result.JobMandatoryAttributes.Should().BeEquivalentTo(new[] { "copies", "media" });
+    }
+
+    [TestMethod]
+    public void Map_FromCancelJobsOperationAttributes_ShouldWriteJobIdsAndMessage()
+    {
+        // Arrange
+        var src = new CancelJobsOperationAttributes
+        {
+            AttributesCharset = "utf-8",
+            AttributesNaturalLanguage = "en-us",
+            PrinterUri = new Uri("ipp://printer"),
+            JobIds = new[] { 10, 20 },
+            Message = "test"
+        };
+        var mapper = new SimpleMapper();
+        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
+        mapper.FillFromAssembly(assembly!);
+
+        // Act
+        var result = mapper.Map<CancelJobsOperationAttributes, List<IppAttribute>>(src);
+
+        // Assert
+        result.Should().Contain(x => x.Name == JobAttribute.JobIds && (int)x.Value == 10);
+        result.Should().Contain(x => x.Name == JobAttribute.JobIds && (int)x.Value == 20);
+        result.Should().Contain(x => x.Name == JobAttribute.Message && (string)x.Value == "test");
+    }
+
+    [TestMethod]
+    public void Map_FromResubmitJobOperationAttributes_ShouldWriteAdditionalProperties()
+    {
+        // Arrange
+        var src = new ResubmitJobOperationAttributes
+        {
+            AttributesCharset = "utf-8",
+            AttributesNaturalLanguage = "en-us",
+            PrinterUri = new Uri("ipp://printer"),
+            JobId = 123,
+            IppAttributeFidelity = true,
+            JobMandatoryAttributes = new[] { "copies" }
+        };
+        var mapper = new SimpleMapper();
+        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
+        mapper.FillFromAssembly(assembly!);
+
+        // Act
+        var result = mapper.Map<ResubmitJobOperationAttributes, List<IppAttribute>>(src);
+
+        // Assert
+        result.Should().Contain(x => x.Name == JobAttribute.IppAttributeFidelity && (bool)x.Value == true);
+        result.Should().Contain(x => x.Name == JobAttribute.JobMandatoryAttributes && (string)x.Value == "copies");
     }
     [TestMethod]
     public void Map_FromValidateJobOperationAttributes_ShouldMapAdditionalProperties()

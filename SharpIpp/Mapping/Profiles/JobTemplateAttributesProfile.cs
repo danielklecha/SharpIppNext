@@ -18,6 +18,9 @@ internal class JobTemplateAttributesProfile : IProfile
             dst ??= new IppRequestMessage();
             var job = dst.JobAttributes;
 
+            if (src.Finishings != null && src.FinishingsCol != null)
+                throw new ArgumentException("'finishings' and 'finishings-col' are conflicting attributes and cannot be supplied together.");
+
             if (src.JobPriority != null)
             {
                 job.Add(new IppAttribute(Tag.Integer, JobAttribute.JobPriority, src.JobPriority.Value));
@@ -44,6 +47,9 @@ internal class JobTemplateAttributesProfile : IProfile
                     map.Map<string>(src.JobSheets.Value)));
             }
 
+            if (src.JobSheetsCol != null)
+                job.AddRange(map.Map<IEnumerable<IppAttribute>>(src.JobSheetsCol).ToBegCollection(JobAttribute.JobSheetsCol));
+
             if (src.Copies != null)
             {
                 job.Add(new IppAttribute(Tag.Integer, JobAttribute.Copies, src.Copies.Value));
@@ -51,7 +57,11 @@ internal class JobTemplateAttributesProfile : IProfile
 
             if (src.Finishings != null)
             {
-                job.Add(new IppAttribute(Tag.Enum, JobAttribute.Finishings, (int)src.Finishings.Value));
+                var finishings = src.Finishings;
+                if (finishings.Length > 1)
+                    finishings = finishings.Where(x => x != Finishings.None).ToArray();
+
+                job.AddRange(finishings.Select(x => new IppAttribute(Tag.Enum, JobAttribute.Finishings, (int)x)));
             }
 
             if (src.PageRanges != null)
@@ -77,7 +87,8 @@ internal class JobTemplateAttributesProfile : IProfile
 
             if (src.Media != null)
             {
-                job.Add(new IppAttribute(Tag.Keyword, JobAttribute.Media, map.Map<string>(src.Media.Value)));
+                var media = map.Map<string>(src.Media.Value);
+                job.Add(new IppAttribute(media.GetKeywordOrNameTag(), JobAttribute.Media, media));
             }
 
             if (src.PrinterResolution != null)
@@ -102,11 +113,17 @@ internal class JobTemplateAttributesProfile : IProfile
                 job.AddRange(map.Map<IEnumerable<IppAttribute>>(src.MediaCol).ToBegCollection(JobAttribute.MediaCol));
 
             if (src.FinishingsCol != null)
-                job.AddRange(src.FinishingsCol.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.FinishingsCol)));
+            {
+                foreach (var finishingsCol in src.FinishingsCol)
+                {
+                    job.AddRange(map.Map<IEnumerable<IppAttribute>>(finishingsCol).ToBegCollection(JobAttribute.FinishingsCol));
+                }
+            }
 
             if (src.OutputBin != null)
             {
-                job.Add(new IppAttribute(Tag.Keyword, JobAttribute.OutputBin, map.Map<string>(src.OutputBin.Value)));
+                var outputBin = map.Map<string>(src.OutputBin.Value);
+                job.Add(new IppAttribute(outputBin.GetKeywordOrNameTag(OutputBin.KeywordRegex), JobAttribute.OutputBin, outputBin));
             }
 
             if (src.JobAccountId != null)
@@ -161,7 +178,10 @@ internal class JobTemplateAttributesProfile : IProfile
                 job.Add(new IppAttribute(Tag.Enum, JobAttribute.ImageOrientation, (int)src.ImageOrientation.Value));
 
             if (src.ImpositionTemplate != null)
-                job.Add(new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.ImpositionTemplate, map.Map<string>(src.ImpositionTemplate.Value)));
+            {
+                var impositionTemplate = map.Map<string>(src.ImpositionTemplate.Value);
+                job.Add(new IppAttribute(impositionTemplate.GetKeywordOrNameTag(), JobAttribute.ImpositionTemplate, impositionTemplate));
+            }
 
             if (src.InsertSheet != null)
                 job.AddRange(src.InsertSheet.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.InsertSheet)));
@@ -234,8 +254,10 @@ internal class JobTemplateAttributesProfile : IProfile
             dst.JobHoldUntil = map.MapFromDicNullable<JobHoldUntil?>(jobDict, JobAttribute.JobHoldUntil);
             dst.MultipleDocumentHandling = map.MapFromDicNullable<MultipleDocumentHandling?>(jobDict, JobAttribute.MultipleDocumentHandling);
             dst.JobSheets = map.MapFromDicNullable<JobSheets?>(jobDict, JobAttribute.JobSheets);
+            if (jobDict.ContainsKey(JobAttribute.JobSheetsCol))
+                dst.JobSheetsCol = map.Map<JobSheetsCol>(jobDict[JobAttribute.JobSheetsCol].FromBegCollection().ToIppDictionary());
             dst.Copies = map.MapFromDicNullable<int?>(jobDict, JobAttribute.Copies);
-            dst.Finishings = map.MapFromDicNullable<Finishings?>(jobDict, JobAttribute.Finishings);
+            dst.Finishings = map.MapFromDicSetNullable<Finishings[]?>(jobDict, JobAttribute.Finishings);
             dst.PageRanges = map.MapFromDicSetNullable<Protocol.Models.Range[]?>(jobDict, JobAttribute.PageRanges);
             dst.Sides = map.MapFromDicNullable<Sides?>(jobDict, JobAttribute.Sides);
             dst.NumberUp = map.MapFromDicNullable<int?>(jobDict, JobAttribute.NumberUp);

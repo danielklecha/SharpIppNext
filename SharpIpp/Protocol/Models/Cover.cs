@@ -3,7 +3,9 @@ using System;
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
-/// See: PWG 5100.3-2023 Section 5.2.1 / 5.2.2
+/// Represents the <c>cover-front</c> / <c>cover-back</c> collection value.
+/// See: PWG 5100.3-2023 Section 5.2.1
+/// Deprecated in: PWG 5100.3-2023 Section 5.2.1
 /// </summary>
 public class Cover : IIppCollection
 {

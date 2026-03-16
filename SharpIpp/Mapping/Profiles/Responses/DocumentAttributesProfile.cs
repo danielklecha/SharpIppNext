@@ -26,7 +26,6 @@ internal class DocumentAttributesProfile : IProfile
             dst.DocumentStateMessage = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentStateMessage);
             dst.AttributesCharset = map.MapFromDicNullable<string?>(src, DocumentAttribute.AttributesCharset);
             dst.AttributesNaturalLanguage = map.MapFromDicNullable<string?>(src, DocumentAttribute.AttributesNaturalLanguage);
-            dst.CurrentPageOrder = map.MapFromDicNullable<CurrentPageOrder?>(src, DocumentAttribute.CurrentPageOrder);
             dst.DateTimeAtCompleted = map.MapFromDicNullable<DateTimeOffset?>(src, DocumentAttribute.DateTimeAtCompleted);
             dst.DateTimeAtCreation = map.MapFromDicNullable<DateTimeOffset?>(src, DocumentAttribute.DateTimeAtCreation);
             dst.DateTimeAtProcessing = map.MapFromDicNullable<DateTimeOffset?>(src, DocumentAttribute.DateTimeAtProcessing);
@@ -35,6 +34,13 @@ internal class DocumentAttributesProfile : IProfile
             dst.DocumentCharset = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentCharset);
             dst.DocumentFormat = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentFormat);
             dst.DocumentFormatDetected = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentFormatDetected);
+            if (src.ContainsKey(DocumentAttribute.DocumentFormatDetails))
+                dst.DocumentFormatDetails = map.Map<DocumentFormatDetails>(src[DocumentAttribute.DocumentFormatDetails].FromBegCollection().ToIppDictionary());
+            if (src.ContainsKey(DocumentAttribute.DocumentFormatDetailsDetected))
+                dst.DocumentFormatDetailsDetected = map.Map<DocumentFormatDetails>(src[DocumentAttribute.DocumentFormatDetailsDetected].FromBegCollection().ToIppDictionary());
+            dst.ErrorsCount = map.MapFromDicNullable<int?>(src, DocumentAttribute.ErrorsCount);
+            dst.WarningsCount = map.MapFromDicNullable<int?>(src, DocumentAttribute.WarningsCount);
+            dst.PrintContentOptimizeActual = map.MapFromDicSetNullable<PrintContentOptimize[]?>(src, DocumentAttribute.PrintContentOptimizeActual);
             dst.DocumentJobId = map.MapFromDicNullable<int?>(src, DocumentAttribute.DocumentJobId);
             dst.DocumentJobUri = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentJobUri);
             dst.DocumentMessage = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentMessage);
@@ -55,6 +61,8 @@ internal class DocumentAttributesProfile : IProfile
             dst.TimeAtCompleted = map.MapFromDicNullable<int?>(src, DocumentAttribute.TimeAtCompleted);
             dst.TimeAtCreation = map.MapFromDicNullable<int?>(src, DocumentAttribute.TimeAtCreation);
             dst.TimeAtProcessing = map.MapFromDicNullable<int?>(src, DocumentAttribute.TimeAtProcessing);
+            dst.Pages = map.MapFromDicNullable<int?>(src, DocumentAttribute.Pages);
+            dst.PagesCompleted = map.MapFromDicNullable<int?>(src, DocumentAttribute.PagesCompleted);
             dst.PrintContentOptimize = map.MapFromDicNullable<PrintContentOptimize?>(src, DocumentAttribute.PrintContentOptimize);
             dst.PrintContentOptimizeSupported = map.MapFromDicSetNullable<PrintContentOptimize[]?>(src, DocumentAttribute.PrintContentOptimizeSupported);
             dst.PrinterStateReasons = map.MapFromDicSetNullable<PrinterStateReason[]?>(src, DocumentAttribute.PrinterStateReasons);
@@ -79,8 +87,6 @@ internal class DocumentAttributesProfile : IProfile
                 dst.Add(DocumentAttribute.AttributesCharset, [new IppAttribute(Tag.Charset, DocumentAttribute.AttributesCharset, src.AttributesCharset)]);
             if (src.AttributesNaturalLanguage != null)
                 dst.Add(DocumentAttribute.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, DocumentAttribute.AttributesNaturalLanguage, src.AttributesNaturalLanguage)]);
-            if (src.CurrentPageOrder != null)
-                dst.Add(DocumentAttribute.CurrentPageOrder, [new IppAttribute(Tag.Keyword, DocumentAttribute.CurrentPageOrder, map.Map<string>(src.CurrentPageOrder.Value))]);
             if (src.DateTimeAtCompleted != null)
                 dst.Add(DocumentAttribute.DateTimeAtCompleted, [new IppAttribute(Tag.DateTime, DocumentAttribute.DateTimeAtCompleted, src.DateTimeAtCompleted.Value)]);
             if (src.DateTimeAtCreation != null)
@@ -97,6 +103,16 @@ internal class DocumentAttributesProfile : IProfile
                 dst.Add(DocumentAttribute.DocumentFormat, [new IppAttribute(Tag.MimeMediaType, DocumentAttribute.DocumentFormat, src.DocumentFormat)]);
             if (src.DocumentFormatDetected != null)
                 dst.Add(DocumentAttribute.DocumentFormatDetected, [new IppAttribute(Tag.MimeMediaType, DocumentAttribute.DocumentFormatDetected, src.DocumentFormatDetected)]);
+            if (src.DocumentFormatDetails != null)
+                dst.Add(DocumentAttribute.DocumentFormatDetails, map.Map<IEnumerable<IppAttribute>>(src.DocumentFormatDetails).ToBegCollection(DocumentAttribute.DocumentFormatDetails).ToArray());
+            if (src.DocumentFormatDetailsDetected != null)
+                dst.Add(DocumentAttribute.DocumentFormatDetailsDetected, map.Map<IEnumerable<IppAttribute>>(src.DocumentFormatDetailsDetected).ToBegCollection(DocumentAttribute.DocumentFormatDetailsDetected).ToArray());
+            if (src.ErrorsCount != null)
+                dst.Add(DocumentAttribute.ErrorsCount, [new IppAttribute(Tag.Integer, DocumentAttribute.ErrorsCount, src.ErrorsCount.Value)]);
+            if (src.WarningsCount != null)
+                dst.Add(DocumentAttribute.WarningsCount, [new IppAttribute(Tag.Integer, DocumentAttribute.WarningsCount, src.WarningsCount.Value)]);
+            if (src.PrintContentOptimizeActual != null)
+                dst.Add(DocumentAttribute.PrintContentOptimizeActual, src.PrintContentOptimizeActual.Select(x => new IppAttribute(Tag.Keyword, DocumentAttribute.PrintContentOptimizeActual, map.Map<string>(x))).ToArray());
             if (src.DocumentJobId != null)
                 dst.Add(DocumentAttribute.DocumentJobId, [new IppAttribute(Tag.Integer, DocumentAttribute.DocumentJobId, src.DocumentJobId.Value)]);
             if (src.DocumentJobUri != null)
@@ -137,6 +153,10 @@ internal class DocumentAttributesProfile : IProfile
                 dst.Add(DocumentAttribute.TimeAtCreation, [new IppAttribute(Tag.Integer, DocumentAttribute.TimeAtCreation, src.TimeAtCreation.Value)]);
             if (src.TimeAtProcessing != null)
                 dst.Add(DocumentAttribute.TimeAtProcessing, [new IppAttribute(Tag.Integer, DocumentAttribute.TimeAtProcessing, src.TimeAtProcessing.Value)]);
+            if (src.Pages != null)
+                dst.Add(DocumentAttribute.Pages, [new IppAttribute(Tag.Integer, DocumentAttribute.Pages, src.Pages.Value)]);
+            if (src.PagesCompleted != null)
+                dst.Add(DocumentAttribute.PagesCompleted, [new IppAttribute(Tag.Integer, DocumentAttribute.PagesCompleted, src.PagesCompleted.Value)]);
             if (src.PrintContentOptimize != null)
                 dst.Add(DocumentAttribute.PrintContentOptimize, [new IppAttribute(Tag.Keyword, DocumentAttribute.PrintContentOptimize, map.Map<string>(src.PrintContentOptimize.Value))]);
             if (src.PrintContentOptimizeSupported != null)
@@ -146,4 +166,5 @@ internal class DocumentAttributesProfile : IProfile
             return dst;
         });
     }
+
 }

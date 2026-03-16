@@ -1,15 +1,14 @@
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
-/// Specifies whether the media-input-tray-check attribute is supported.
-/// See: PWG 5100.1-2022 Section 6.13
+/// Specifies the <c>media-input-tray-check</c> value.
+/// See: PWG 5100.3-2023 Section 5.2.13
+/// 
+/// Note: This attribute uses tray keyword/name values (MSN2 tray keywords).
+/// No PPX-defined fixed keyword set is provided.
 /// </summary>
 public readonly record struct MediaInputTrayCheck(string Value)
 {
-    public static readonly MediaInputTrayCheck None = new("none");
-    public static readonly MediaInputTrayCheck Trace = new("trace");
-    public static readonly MediaInputTrayCheck AllowTrayCheck = new("allow-tray-check");
-
     public override string ToString() => Value;
     public static implicit operator string(MediaInputTrayCheck bin) => bin.Value;
     public static explicit operator MediaInputTrayCheck(string value) => new(value);

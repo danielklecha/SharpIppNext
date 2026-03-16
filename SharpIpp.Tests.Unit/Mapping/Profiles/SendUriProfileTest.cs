@@ -38,4 +38,29 @@ public class SendUriProfileTest
         // Assert
         act.Should().Throw<ArgumentException>().WithMessage($"{nameof(SendUriOperationAttributes.DocumentUri)} must be set for non-last document");
     }
+
+    [TestMethod]
+    public void Map_SendUriRequest_WithDocumentTemplateAttributes_MapsDocumentAttributesGroup()
+    {
+        var mapper = new SimpleMapper();
+        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
+        mapper.FillFromAssembly(assembly!);
+
+        var request = new SendUriRequest
+        {
+            OperationAttributes = new SendUriOperationAttributes
+            {
+                LastDocument = true,
+                DocumentUri = new Uri("http://example.com/doc.pdf")
+            },
+            DocumentTemplateAttributes = new DocumentTemplateAttributes
+            {
+                Copies = 2
+            }
+        };
+
+        var ippRequest = mapper.Map<SendUriRequest, IppRequestMessage>(request);
+
+        ippRequest.DocumentAttributes.Should().NotBeEmpty();
+    }
 }

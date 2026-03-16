@@ -14,7 +14,7 @@ public class FinishingsCol : IIppCollection
     /// type2 keyword | name(MAX)
     /// See: PWG 5100.1-2022 Section 5.2.5
     /// </summary>
-    public string? FinishingTemplate { get; set; }
+    public FinishingTemplate? FinishingTemplate { get; set; }
 
     /// <summary>
     /// collection
@@ -74,7 +74,7 @@ public class FinishingsCol : IIppCollection
     /// type2 keyword | name(MAX)
     /// See: PWG 5100.1-2022 Section 6.9.1
     /// </summary>
-    public string? ImpositionTemplate { get; set; }
+    public ImpositionTemplate? ImpositionTemplate { get; set; }
 
     /// <summary>
     /// rangeOfInteger(1:MAX)
@@ -92,6 +92,6 @@ public class FinishingsCol : IIppCollection
     /// type2 keyword | name(MAX)
     /// See: PWG 5100.1-2022 Section 6.9.4
     /// </summary>
-    public string? MediaSizeName { get; set; }
+    public Media? MediaSizeName { get; set; }
 }
 

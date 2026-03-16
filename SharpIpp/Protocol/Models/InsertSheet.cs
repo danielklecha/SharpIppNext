@@ -3,7 +3,9 @@ using System;
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
-/// See: PWG 5100.3-2023 Section 5.2.6
+/// Represents the <c>insert-sheet</c> collection.
+/// See: PWG 5100.3-2023 Section 5.2.5
+/// Deprecated in: PWG 5100.3-2023 Section 5.2.5
 /// </summary>
 public class InsertSheet : IIppCollection
 {

@@ -80,6 +80,12 @@ public partial class SharpIppClient
     }
 
     /// <inheritdoc />
+    public Task<SetJobAttributesResponse> SetJobAttributesAsync(SetJobAttributesRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<SetJobAttributesRequest, SetJobAttributesResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
     public Task<ResumePrinterResponse> ResumePrinterAsync(ResumePrinterRequest request, CancellationToken cancellationToken = default)
     {
         return SendAsync<ResumePrinterRequest, ResumePrinterResponse>(request, cancellationToken);
@@ -101,6 +107,30 @@ public partial class SharpIppClient
     public Task<ValidateJobResponse> ValidateJobAsync(ValidateJobRequest request, CancellationToken cancellationToken = default)
     {
         return SendAsync<ValidateJobRequest, ValidateJobResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<CancelJobsResponse> CancelJobsAsync(CancelJobsRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<CancelJobsRequest, CancelJobsResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<CancelMyJobsResponse> CancelMyJobsAsync(CancelMyJobsRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<CancelMyJobsRequest, CancelMyJobsResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<ResubmitJobResponse> ResubmitJobAsync(ResubmitJobRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<ResubmitJobRequest, ResubmitJobResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<CloseJobResponse> CloseJobAsync(CloseJobRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<CloseJobRequest, CloseJobResponse>(request, cancellationToken);
     }
     
     /// <inheritdoc />

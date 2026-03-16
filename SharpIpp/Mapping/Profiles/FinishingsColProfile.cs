@@ -56,15 +56,27 @@ internal class FinishingsColProfile : IProfile
 
         mapper.CreateMap<FinishingsCol, IEnumerable<IppAttribute>>((src, map) =>
         {
+            if (src.IsNoValue)
+                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.FinishingsCol, NoValue.Instance) };
+
             var attributes = new List<IppAttribute>();
-            if (src.FinishingTemplate != null)
-                attributes.Add(new IppAttribute(Tag.Keyword, "finishing-template", src.FinishingTemplate));
-            if (src.ImpositionTemplate != null)
-                attributes.Add(new IppAttribute(Tag.Keyword, "imposition-template", src.ImpositionTemplate));
+            if (src.FinishingTemplate.HasValue)
+            {
+                var finishingTemplate = map.Map<string>(src.FinishingTemplate.Value);
+                attributes.Add(new IppAttribute(finishingTemplate.GetKeywordOrNameTag(), "finishing-template", finishingTemplate));
+            }
+            if (src.ImpositionTemplate.HasValue)
+            {
+                var impositionTemplate = map.Map<string>(src.ImpositionTemplate.Value);
+                attributes.Add(new IppAttribute(impositionTemplate.GetKeywordOrNameTag(), "imposition-template", impositionTemplate));
+            }
             if (src.MediaSheetsSupported != null)
                 attributes.Add(new IppAttribute(Tag.RangeOfInteger, "media-sheets-supported", src.MediaSheetsSupported.Value));
-            if (src.MediaSizeName != null)
-                attributes.Add(new IppAttribute(Tag.Keyword, "media-size-name", src.MediaSizeName));
+            if (src.MediaSizeName.HasValue)
+            {
+                var mediaSizeName = map.Map<string>(src.MediaSizeName.Value);
+                attributes.Add(new IppAttribute(mediaSizeName.GetKeywordOrNameTag(), "media-size-name", mediaSizeName));
+            }
             if (src.MediaSize != null)
                 attributes.AddRange(map.Map<IEnumerable<IppAttribute>>(src.MediaSize).ToBegCollection("media-size"));
             if (src.Baling != null)
@@ -97,8 +109,14 @@ internal class FinishingsColProfile : IProfile
         mapper.CreateMap<Baling, IEnumerable<IppAttribute>>((src, map) =>
         {
             var attributes = new List<IppAttribute>();
-            if (src.BalingType != null) attributes.Add(new IppAttribute(Tag.Keyword, "baling-type", map.Map<string>(src.BalingType.Value)));
-            if (src.BalingWhen.HasValue) attributes.Add(new IppAttribute(Tag.Keyword, "baling-when", map.Map<string>(src.BalingWhen.Value)));
+            if (src.BalingType != null)
+            {
+                var balingType = map.Map<string>(src.BalingType.Value);
+                attributes.Add(new IppAttribute(balingType.GetKeywordOrNameTag(), "baling-type", balingType));
+            }
+                
+            if (src.BalingWhen.HasValue)
+                attributes.Add(new IppAttribute(Tag.Keyword, "baling-when", map.Map<string>(src.BalingWhen.Value)));
             return attributes;
         });
 
@@ -112,7 +130,7 @@ internal class FinishingsColProfile : IProfile
         {
             var attributes = new List<IppAttribute>();
             if (src.BindingReferenceEdge.HasValue) attributes.Add(new IppAttribute(Tag.Keyword, "binding-reference-edge", map.Map<string>(src.BindingReferenceEdge.Value)));
-            if (src.BindingType != null) attributes.Add(new IppAttribute(Tag.Keyword, "binding-type", map.Map<string>(src.BindingType.Value)));
+            if (src.BindingType != null) attributes.Add(new IppAttribute(map.Map<string>(src.BindingType.Value).GetKeywordOrNameTag(), "binding-type", map.Map<string>(src.BindingType.Value)));
             return attributes;
         });
 
@@ -126,7 +144,7 @@ internal class FinishingsColProfile : IProfile
         {
             var attributes = new List<IppAttribute>();
             if (src.CoatingSides.HasValue) attributes.Add(new IppAttribute(Tag.Keyword, "coating-sides", map.Map<string>(src.CoatingSides.Value)));
-            if (src.CoatingType != null) attributes.Add(new IppAttribute(Tag.Keyword, "coating-type", map.Map<string>(src.CoatingType.Value)));
+            if (src.CoatingType != null) attributes.Add(new IppAttribute(map.Map<string>(src.CoatingType.Value).GetKeywordOrNameTag(), "coating-type", map.Map<string>(src.CoatingType.Value)));
             return attributes;
         });
 
@@ -138,7 +156,7 @@ internal class FinishingsColProfile : IProfile
         mapper.CreateMap<Covering, IEnumerable<IppAttribute>>((src, map) =>
         {
             var attributes = new List<IppAttribute>();
-            if (src.CoveringName != null) attributes.Add(new IppAttribute(Tag.Keyword, "covering-name", map.Map<string>(src.CoveringName.Value)));
+            if (src.CoveringName != null) attributes.Add(new IppAttribute(map.Map<string>(src.CoveringName.Value).GetKeywordOrNameTag(), "covering-name", map.Map<string>(src.CoveringName.Value)));
             return attributes;
         });
 
@@ -146,7 +164,6 @@ internal class FinishingsColProfile : IProfile
         {
             FoldingDirection = map.MapFromDicNullable<FoldingDirection?>(src, "folding-direction"),
             FoldingOffset = map.MapFromDicNullable<int?>(src, "folding-offset"),
-            FoldingLocation = map.MapFromDicNullable<int?>(src, "folding-location"),
             FoldingReferenceEdge = map.MapFromDicNullable<FinishingReferenceEdge?>(src, "folding-reference-edge")
         });
 
@@ -155,7 +172,6 @@ internal class FinishingsColProfile : IProfile
             var attributes = new List<IppAttribute>();
             if (src.FoldingDirection.HasValue) attributes.Add(new IppAttribute(Tag.Keyword, "folding-direction", map.Map<string>(src.FoldingDirection.Value)));
             if (src.FoldingOffset.HasValue) attributes.Add(new IppAttribute(Tag.Integer, "folding-offset", src.FoldingOffset.Value));
-            if (src.FoldingLocation.HasValue) attributes.Add(new IppAttribute(Tag.Integer, "folding-location", src.FoldingLocation.Value));
             if (src.FoldingReferenceEdge.HasValue) attributes.Add(new IppAttribute(Tag.Keyword, "folding-reference-edge", map.Map<string>(src.FoldingReferenceEdge.Value)));
             return attributes;
         });
@@ -170,7 +186,7 @@ internal class FinishingsColProfile : IProfile
         {
             var attributes = new List<IppAttribute>();
             if (src.LaminatingSides.HasValue) attributes.Add(new IppAttribute(Tag.Keyword, "laminating-sides", map.Map<string>(src.LaminatingSides.Value)));
-            if (src.LaminatingType != null) attributes.Add(new IppAttribute(Tag.Keyword, "laminating-type", map.Map<string>(src.LaminatingType.Value)));
+            if (src.LaminatingType != null) attributes.Add(new IppAttribute(map.Map<string>(src.LaminatingType.Value).GetKeywordOrNameTag(), "laminating-type", map.Map<string>(src.LaminatingType.Value)));
             return attributes;
         });
 
@@ -223,7 +239,7 @@ internal class FinishingsColProfile : IProfile
             var attributes = new List<IppAttribute>();
             if (src.TrimmingOffset != null) attributes.AddRange(src.TrimmingOffset.Select(x => new IppAttribute(Tag.Integer, "trimming-offset", x)));
             if (src.TrimmingReferenceEdge.HasValue) attributes.Add(new IppAttribute(Tag.Keyword, "trimming-reference-edge", map.Map<string>(src.TrimmingReferenceEdge.Value)));
-            if (src.TrimmingType.HasValue) attributes.Add(new IppAttribute(Tag.Keyword, "trimming-type", map.Map<string>(src.TrimmingType.Value)));
+            if (src.TrimmingType.HasValue) attributes.Add(new IppAttribute(map.Map<string>(src.TrimmingType.Value).GetKeywordOrNameTag(), "trimming-type", map.Map<string>(src.TrimmingType.Value)));
             if (src.TrimmingWhen.HasValue) attributes.Add(new IppAttribute(Tag.Keyword, "trimming-when", map.Map<string>(src.TrimmingWhen.Value)));
             return attributes;
         });

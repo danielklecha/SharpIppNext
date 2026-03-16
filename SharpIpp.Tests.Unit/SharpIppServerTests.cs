@@ -299,7 +299,7 @@ public class SharpIppServerTests
                     new IppAttribute( Tag.Keyword, JobAttribute.OrientationRequested, 4)
                 } },
                 null!,
-                new CreateJobRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("ipp://127.0.0.1:631/"), RequestingUserName = "test-user" }, JobTemplateAttributes = new() { JobPriority = 99, JobHoldUntil = JobHoldUntil.DayTime, Copies = 2, Finishings = Finishings.Staple, Sides = Sides.TwoSidedLongEdge, OrientationRequested = Orientation.Landscape } },
+                new CreateJobRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("ipp://127.0.0.1:631/"), RequestingUserName = "test-user" }, JobTemplateAttributes = new() { JobPriority = 99, JobHoldUntil = JobHoldUntil.DayTime, Copies = 2, Finishings = new[] { Finishings.Staple }, Sides = Sides.TwoSidedLongEdge, OrientationRequested = Orientation.Landscape } },
                 "CreateJob with attributes"
             ];
             yield return [

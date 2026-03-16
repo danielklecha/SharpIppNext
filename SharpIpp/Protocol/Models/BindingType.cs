@@ -11,7 +11,6 @@ public readonly record struct BindingType(string Value)
     public static readonly BindingType Flat = new("flat");
     public static readonly BindingType Padding = new("padding");
     public static readonly BindingType Perfect = new("perfect");
-    public static readonly BindingType PlasticComb = new("plastic-comb");
     public static readonly BindingType Spiral = new("spiral");
     public static readonly BindingType Tape = new("tape");
     public static readonly BindingType Velo = new("velo");

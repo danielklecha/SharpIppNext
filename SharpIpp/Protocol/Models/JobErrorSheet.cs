@@ -3,7 +3,8 @@ using System;
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
-/// See: PWG 5100.3-2023 Section 5.2.10
+/// Represents the <c>job-error-sheet</c> collection.
+/// See: PWG 5100.3-2023 Section 5.2.9
 /// </summary>
 public class JobErrorSheet : IIppCollection
 {

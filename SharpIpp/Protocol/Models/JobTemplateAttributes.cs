@@ -49,6 +49,12 @@ namespace SharpIpp.Protocol.Models
         public JobSheets? JobSheets { get; set; }
 
         /// <summary>
+        /// This attribute augments the "job-sheets" Job Template attribute and allows a Client to specify distinct media.
+        /// See: PWG 5100.7-2023 Section 6.8.11
+        /// </summary>
+        public JobSheetsCol? JobSheetsCol { get; set; }
+
+        /// <summary>
         /// This attribute specifies the number of copies to be printed.
         /// On many devices the supported number of collated copies will be
         /// limited by the number of physical output bins on the device, and may
@@ -65,7 +71,7 @@ namespace SharpIpp.Protocol.Models
         /// determines what constitutes a "copy" for purposes of finishing.
         /// See: RFC 8011 Section 5.2.6
         /// </summary>
-        public Finishings? Finishings { get; set; }
+        public Finishings[]? Finishings { get; set; }
 
         /// <summary>
         /// This attribute specifies detailed finishing instructions that cannot
@@ -324,127 +330,158 @@ namespace SharpIpp.Protocol.Models
         public int? JobPagesPerSet { get; set; }
 
         /// <summary>
-        /// PWG 5100.3-2023 Section 5.2.1
+        /// The <c>cover-back</c> Job Template attribute.
+        /// See: PWG 5100.3-2023 Section 5.2.1
+        /// Deprecated in: PWG 5100.3-2023 Section 5.2.1
         /// </summary>
         public Cover? CoverBack { get; set; }
 
         /// <summary>
-        /// PWG 5100.3-2023 Section 5.2.2
+        /// The <c>cover-front</c> Job Template attribute.
+        /// See: PWG 5100.3-2023 Section 5.2.1
+        /// Deprecated in: PWG 5100.3-2023 Section 5.2.1
         /// </summary>
         public Cover? CoverFront { get; set; }
 
         /// <summary>
-        /// PWG 5100.3-2023 Section 5.2.3
+        /// The <c>force-front-side</c> Job Template attribute.
+        /// See: PWG 5100.3-2023 Section 5.2.2
         /// </summary>
         public int[]? ForceFrontSide { get; set; }
 
         /// <summary>
-        /// PWG 5100.3-2023 Section 5.2.4
+        /// The <c>image-orientation</c> Job Template attribute.
+        /// See: PWG 5100.3-2023 Section 5.2.3
         /// </summary>
         public Orientation? ImageOrientation { get; set; }
 
         /// <summary>
-        /// PWG 5100.3-2023 Section 5.2.5
+        /// The <c>imposition-template</c> Job Template attribute.
+        /// See: PWG 5100.3-2023 Section 5.2.4
         /// </summary>
         public ImpositionTemplate? ImpositionTemplate { get; set; }
 
         /// <summary>
-        /// PWG 5100.3-2023 Section 5.2.6
+        /// The <c>insert-sheet</c> Job Template attribute.
+        /// See: PWG 5100.3-2023 Section 5.2.5
+        /// Deprecated in: PWG 5100.3-2023 Section 5.2.5
         /// </summary>
         public InsertSheet[]? InsertSheet { get; set; }
 
         /// <summary>
-        /// PWG 5100.3-2023 Section 5.2.7
+        /// The <c>job-accounting-sheets</c> Job Template attribute.
+        /// See: PWG 5100.3-2023 Section 5.2.6
+        /// Deprecated in: PWG 5100.3-2023 Section 5.2.6
         /// </summary>
         public JobAccountingSheets? JobAccountingSheets { get; set; }
 
         /// <summary>
-        /// PWG 5100.3-2023 Section 5.2.8
+        /// The <c>job-complete-before</c> Job Template attribute.
+        /// See: PWG 5100.3-2023 Section 5.2.7
         /// </summary>
         public JobHoldUntil? JobCompleteBefore { get; set; }
 
         /// <summary>
-        /// PWG 5100.3-2023 Section 5.2.9
+        /// The <c>job-complete-before-time</c> Job Template attribute.
+        /// See: PWG 5100.3-2023 Section 5.2.8
         /// </summary>
         public DateTimeOffset? JobCompleteBeforeTime { get; set; }
 
         /// <summary>
-        /// PWG 5100.3-2023 Section 5.2.10
+        /// The <c>job-error-sheet</c> Job Template attribute.
+        /// See: PWG 5100.3-2023 Section 5.2.9
         /// </summary>
         public JobErrorSheet? JobErrorSheet { get; set; }
 
         /// <summary>
-        /// PWG 5100.3-2023 Section 5.2.11
+        /// The <c>job-message-to-operator</c> Job Template attribute.
+        /// See: PWG 5100.3-2023 Section 5.2.10
         /// </summary>
         public string? JobMessageToOperator { get; set; }
 
         /// <summary>
-        /// PWG 5100.3-2023 Section 5.2.12
+        /// The <c>job-phone-number</c> Job Template attribute.
+        /// See: PWG 5100.3-2023 Section 5.2.11
         /// </summary>
         public string? JobPhoneNumber { get; set; }
 
         /// <summary>
-        /// PWG 5100.3-2023 Section 5.2.13
+        /// The <c>job-recipient-name</c> Job Template attribute.
+        /// See: PWG 5100.3-2023 Section 5.2.12
         /// </summary>
         public string? JobRecipientName { get; set; }
 
         /// <summary>
-        /// PWG 5100.3-2023 Section 5.2.14
+        /// The <c>media-input-tray-check</c> Job Template attribute.
+        /// See: PWG 5100.3-2023 Section 5.2.13
+        /// Deprecated in: PWG 5100.3-2023 Section 5.2.13
         /// </summary>
         public MediaInputTrayCheck? MediaInputTrayCheck { get; set; }
 
         /// <summary>
-        /// PWG 5100.3-2023 Section 5.2.16
+        /// The <c>page-delivery</c> Job Template attribute.
+        /// See: PWG 5100.3-2023 Section 5.2.14
         /// </summary>
         public PageDelivery? PageDelivery { get; set; }
 
         /// <summary>
-        /// PWG 5100.3-2023 Section 5.2.17
+        /// The <c>presentation-direction-number-up</c> Job Template attribute.
+        /// See: PWG 5100.3-2023 Section 5.2.15
+        /// Deprecated in: PWG 5100.3-2023 Section 5.2.15
         /// </summary>
         public PresentationDirectionNumberUp? PresentationDirectionNumberUp { get; set; }
 
         /// <summary>
-        /// PWG 5100.3-2023 Section 5.2.18
+        /// The <c>separator-sheets</c> Job Template attribute.
+        /// See: PWG 5100.3-2023 Section 5.2.16
         /// </summary>
         public SeparatorSheets? SeparatorSheets { get; set; }
 
         /// <summary>
-        /// PWG 5100.3-2023 Section 5.2.19
+        /// The <c>x-image-position</c> Job Template attribute.
+        /// See: PWG 5100.3-2023 Section 5.2.17
         /// </summary>
         public XImagePosition? XImagePosition { get; set; }
 
         /// <summary>
-        /// PWG 5100.3-2023 Section 5.2.20
+        /// The <c>x-image-shift</c> Job Template attribute.
+        /// See: PWG 5100.3-2023 Section 5.2.18
         /// </summary>
         public int? XImageShift { get; set; }
 
         /// <summary>
-        /// PWG 5100.3-2023 Section 5.2.21
+        /// The <c>x-side1-image-shift</c> Job Template attribute.
+        /// See: PWG 5100.3-2023 Section 5.2.19
         /// </summary>
         public int? XSide1ImageShift { get; set; }
 
         /// <summary>
-        /// PWG 5100.3-2023 Section 5.2.22
+        /// The <c>x-side2-image-shift</c> Job Template attribute.
+        /// See: PWG 5100.3-2023 Section 5.2.20
         /// </summary>
         public int? XSide2ImageShift { get; set; }
 
         /// <summary>
-        /// PWG 5100.3-2023 Section 5.2.23
+        /// The <c>y-image-position</c> Job Template attribute.
+        /// See: PWG 5100.3-2023 Section 5.2.21
         /// </summary>
         public YImagePosition? YImagePosition { get; set; }
 
         /// <summary>
-        /// PWG 5100.3-2023 Section 5.2.24
+        /// The <c>y-image-shift</c> Job Template attribute.
+        /// See: PWG 5100.3-2023 Section 5.2.22
         /// </summary>
         public int? YImageShift { get; set; }
 
         /// <summary>
-        /// PWG 5100.3-2023 Section 5.2.25
+        /// The <c>y-side1-image-shift</c> Job Template attribute.
+        /// See: PWG 5100.3-2023 Section 5.2.23
         /// </summary>
         public int? YSide1ImageShift { get; set; }
 
         /// <summary>
-        /// PWG 5100.3-2023 Section 5.2.26
+        /// The <c>y-side2-image-shift</c> Job Template attribute.
+        /// See: PWG 5100.3-2023 Section 5.2.24
         /// </summary>
         public int? YSide2ImageShift { get; set; }
 

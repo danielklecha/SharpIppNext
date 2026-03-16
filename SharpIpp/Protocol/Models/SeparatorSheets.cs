@@ -3,7 +3,8 @@ using System;
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
-/// See: PWG 5100.3-2023 Section 5.2.18
+/// Represents the <c>separator-sheets</c> collection.
+/// See: PWG 5100.3-2023 Section 5.2.16
 /// </summary>
 public class SeparatorSheets : IIppCollection
 {

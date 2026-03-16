@@ -219,6 +219,93 @@ public class CollectionProfilesTests
     }
 
     [TestMethod]
+    public void Map_Dictionary_To_JobCounter_Coverage()
+    {
+        // Arrange
+        var dict = new Dictionary<string, IppAttribute[]>
+        {
+            { "blank", [new IppAttribute(Tag.Integer, "blank", 1)] },
+            { "full-color", [new IppAttribute(Tag.Integer, "full-color", 2)] },
+            { "monochrome-two-sided", [new IppAttribute(Tag.Integer, "monochrome-two-sided", 3)] },
+        };
+
+        // Act
+        var result = _mapper.Map<JobCounter>(dict);
+
+        // Assert
+        result.Blank.Should().Be(1);
+        result.FullColor.Should().Be(2);
+        result.MonochromeTwoSided.Should().Be(3);
+        result.HighlightColor.Should().BeNull();
+    }
+
+    [TestMethod]
+    public void Map_JobCounter_To_Attributes_Coverage()
+    {
+        // Arrange
+        var counter = new JobCounter
+        {
+            Blank = 1,
+            FullColor = 2,
+            MonochromeTwoSided = 3
+        };
+
+        // Act
+        var result = _mapper.Map<IEnumerable<IppAttribute>>(counter).ToList();
+
+        // Assert
+        result.Should().Contain(a => a.Name == "blank");
+        result.Should().Contain(a => a.Name == "full-color");
+        result.Should().Contain(a => a.Name == "monochrome-two-sided");
+        result.Should().NotContain(a => a.Name == "highlight-color");
+    }
+
+    [TestMethod]
+    public void Map_Dictionary_To_JobSheetsCol_Coverage()
+    {
+        // Arrange
+        var dict = new Dictionary<string, IppAttribute[]>
+        {
+            { "job-sheets", [new IppAttribute(Tag.Keyword, "job-sheets", "standard")] },
+            { "media", [new IppAttribute(Tag.Keyword, "media", "iso_a4_210x297mm")] },
+            { "media-col", [
+                new IppAttribute(Tag.BegCollection, "media-col", NoValue.Instance),
+                new IppAttribute(Tag.MemberAttrName, "", "media-color"),
+                new IppAttribute(Tag.Keyword, "", "blue"),
+                new IppAttribute(Tag.EndCollection, "", NoValue.Instance)
+            ] },
+        };
+
+        // Act
+        var result = _mapper.Map<JobSheetsCol>(dict);
+
+        // Assert
+        result.JobSheets.Should().Be(JobSheets.Standard);
+        result.Media.Should().Be((Media)"iso_a4_210x297mm");
+        result.MediaCol.Should().NotBeNull();
+    }
+
+    [TestMethod]
+    public void Map_JobSheetsCol_To_Attributes_Coverage()
+    {
+        // Arrange
+        var sheets = new JobSheetsCol
+        {
+            JobSheets = JobSheets.Standard,
+            Media = (Media)"iso_a4_210x297mm",
+            MediaCol = new MediaCol { MediaColor = (MediaColor)"blue" }
+        };
+
+        // Act
+        var result = _mapper.Map<IEnumerable<IppAttribute>>(sheets).ToList();
+
+        // Assert
+        result.Should().Contain(a => a.Name == "job-sheets");
+        result.Should().Contain(a => a.Name == "media");
+        result.Should().Contain(a => a.Name == "media-col");
+    }
+
+    [TestMethod]
     [DataRow(true, true, true, DisplayName = "All present")]
     [DataRow(false, false, false, DisplayName = "None present")]
     public void Map_Dictionary_To_SeparatorSheets_Coverage(bool h1, bool h2, bool h3)

@@ -6,6 +6,12 @@
       href: CancelDocument.md
     - name: Cancel-Job
       href: CancelJob.md
+    - name: Cancel-Jobs
+      href: CancelJobs.md
+    - name: Cancel-My-Jobs
+      href: CancelMyJobs.md
+    - name: Close-Job
+      href: CloseJob.md
     - name: Create-Job
       href: CreateJob.md
     - name: Get-Document-Attributes
@@ -28,6 +34,8 @@
       href: ReleaseJob.md
     - name: Restart-Job
       href: RestartJob.md
+    - name: Resubmit-Job
+      href: ResubmitJob.md
     - name: Send-Document
       href: SendDocument.md
     - name: Send-URI

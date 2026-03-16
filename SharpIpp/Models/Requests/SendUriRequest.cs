@@ -21,6 +21,11 @@ namespace SharpIpp.Models.Requests
     /// </summary>
     public class SendUriRequest : IppRequest<SendUriOperationAttributes>, IIppJobRequest
     {
-
+        /// <summary>
+        /// The document-template-attributes IPP attribute.
+        /// See: PWG 5100.5-2024 Section 8.5.1
+        /// </summary>
+        /// <code>document-template-attributes</code>
+        public DocumentTemplateAttributes? DocumentTemplateAttributes { get; set; }
     }
 }

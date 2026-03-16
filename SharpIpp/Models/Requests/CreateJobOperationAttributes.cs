@@ -10,6 +10,20 @@ namespace SharpIpp.Models.Requests;
 public class CreateJobOperationAttributes : OperationAttributes
 {
     /// <summary>
+    /// This DEPRECATED operation attribute specifies details about the source of the Document data and can be included in any Job or Document Creation request.
+    /// See: PWG 5100.7-2023 Section 6.1.2
+    /// </summary>
+    /// <code>document-format-details</code>
+    public DocumentFormatDetails? DocumentFormatDetails { get; set; }
+
+    /// <summary>
+    /// This REQUIRED operation attribute identifies which Job Template attributes the Printer MUST support in order to accept the Job.
+    /// See: PWG 5100.7-2023 Section 6.1.5
+    /// </summary>
+    /// <code>job-mandatory-attributes</code>
+    public string[]? JobMandatoryAttributes { get; set; }
+
+    /// <summary>
     /// This REQUIRED attribute is the name of the job. It is a name that is more user friendly than the "job-uri" attribute value. It does not need to be unique between Jobs. The Job's "job-name" attribute is set to the value supplied by the client in the "job-name" operation attribute in the create request. If, however, the "job-name" operation attribute is not supplied by the client in the create request, the Printer object, on creation of the Job, MUST generate a name.
     /// See: RFC 8011 Section 5.3.5
     /// </summary>

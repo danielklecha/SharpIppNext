@@ -64,6 +64,9 @@ public partial class SharpIppServer : ISharpIppServer
         {
             IppOperation.CancelDocument => Mapper.Map<IIppRequestMessage, CancelDocumentRequest>(request),
             IppOperation.CancelJob => Mapper.Map<IIppRequestMessage, CancelJobRequest>(request),
+                IppOperation.CancelJobs => Mapper.Map<IIppRequestMessage, CancelJobsRequest>(request),
+                IppOperation.CancelMyJobs => Mapper.Map<IIppRequestMessage, CancelMyJobsRequest>(request),
+                IppOperation.CloseJob => Mapper.Map<IIppRequestMessage, CloseJobRequest>(request),
             IppOperation.CreateJob => Mapper.Map<IIppRequestMessage, CreateJobRequest>(request),
             IppOperation.GetCUPSPrinters => Mapper.Map<IIppRequestMessage, CUPSGetPrintersRequest>(request),
             IppOperation.GetJobAttributes => Mapper.Map<IIppRequestMessage, GetJobAttributesRequest>(request),
@@ -76,6 +79,8 @@ public partial class SharpIppServer : ISharpIppServer
             IppOperation.PurgeJobs => Mapper.Map<IIppRequestMessage, PurgeJobsRequest>(request),
             IppOperation.ReleaseJob => Mapper.Map<IIppRequestMessage, ReleaseJobRequest>(request),
             IppOperation.RestartJob => Mapper.Map<IIppRequestMessage, RestartJobRequest>(request),
+            IppOperation.SetJobAttributes => Mapper.Map<IIppRequestMessage, SetJobAttributesRequest>(request),
+            IppOperation.ResubmitJob => Mapper.Map<IIppRequestMessage, ResubmitJobRequest>(request),
             IppOperation.ResumePrinter => Mapper.Map<IIppRequestMessage, ResumePrinterRequest>(request),
             IppOperation.SendDocument => Mapper.Map<IIppRequestMessage, SendDocumentRequest>(request),
             IppOperation.SendUri => Mapper.Map<IIppRequestMessage, SendUriRequest>(request),

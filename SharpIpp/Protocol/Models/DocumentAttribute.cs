@@ -11,7 +11,6 @@ namespace SharpIpp.Protocol.Models
         public const string DocumentStateMessage = "document-state-message";
         public const string AttributesCharset = "attributes-charset";
         public const string AttributesNaturalLanguage = "attributes-natural-language";
-        public const string CurrentPageOrder = "current-page-order";
         public const string DateTimeAtCompleted = "date-time-at-completed";
         public const string DateTimeAtCreation = "date-time-at-creation";
         public const string DateTimeAtProcessing = "date-time-at-processing";
@@ -40,8 +39,15 @@ namespace SharpIpp.Protocol.Models
         public const string TimeAtCompleted = "time-at-completed";
         public const string TimeAtCreation = "time-at-creation";
         public const string TimeAtProcessing = "time-at-processing";
+        public const string Pages = "pages";
+        public const string PagesCompleted = "pages-completed";
         public const string PrintContentOptimize = "print-content-optimize";
         public const string PrintContentOptimizeSupported = "print-content-optimize-supported";
+        public const string DocumentFormatDetails = "document-format-details";
+        public const string DocumentFormatDetailsDetected = "document-format-details-detected";
+        public const string ErrorsCount = "errors-count";
+        public const string WarningsCount = "warnings-count";
+        public const string PrintContentOptimizeActual = "print-content-optimize-actual";
         public const string PrinterStateReasons = "printer-state-reasons";
         public const string DocumentCompleted = "document-completed";
         public const string DocumentConfigChanged = "document-config-changed";

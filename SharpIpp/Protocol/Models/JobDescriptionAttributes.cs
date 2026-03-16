@@ -109,6 +109,13 @@ namespace SharpIpp.Protocol.Models
         public int? JobImpressions { get; set; }
 
         /// <summary>
+        /// This attribute specifies detailed impression counters for the Job.
+        /// See: PWG 5100.7-2023 Section 6.6.1
+        /// </summary>
+        /// <code>job-impressions-col</code>
+        public JobCounter? JobImpressionsCol { get; set; }
+
+        /// <summary>
         /// This job attribute specifies the number of impressions completed for
         /// the job so far.  For printing devices, the impressions completed
         /// includes interpreting, marking, and stacking the output.
@@ -136,11 +143,34 @@ namespace SharpIpp.Protocol.Models
         public int? JobMediaSheets { get; set; }
 
         /// <summary>
+        /// This attribute specifies detailed media sheet counters for the Job.
+        /// See: PWG 5100.7-2023 Section 6.6.2
+        /// </summary>
+        /// <code>job-media-sheets-col</code>
+        public JobCounter? JobMediaSheetsCol { get; set; }
+
+        /// <summary>
         /// This attribute contains a URI used to obtain additional
         /// information about the Job object.
         /// See: RFC 8011 Section 5.3.4
         /// </summary>
         public string? JobMoreInfo { get; set; }
+
+        /// <summary>
+        /// This attribute specifies details about the source of the Document data.
+        /// DEPRECATED.
+        /// See: PWG 5100.7-2023 Section 6.2.1
+        /// </summary>
+        /// <code>document-format-details</code>
+        public DocumentFormatDetails? DocumentFormatDetails { get; set; }
+
+        /// <summary>
+        /// This attribute specifies details about the source of the Document data as detected by the Printer.
+        /// DEPRECATED.
+        /// See: PWG 5100.7-2023 Section 6.2.2
+        /// </summary>
+        /// <code>document-format-details-detected</code>
+        public DocumentFormatDetails? DocumentFormatDetailsDetected { get; set; }
 
         /// <summary>
         /// This attribute indicates the number of documents in the Job.
@@ -329,11 +359,53 @@ namespace SharpIpp.Protocol.Models
         public int? JobPages { get; set; }
 
         /// <summary>
+        /// This attribute specifies detailed page counters for the Job.
+        /// See: PWG 5100.7-2023 Section 6.6.4
+        /// </summary>
+        /// <code>job-pages-col</code>
+        public JobCounter? JobPagesCol { get; set; }
+
+        /// <summary>
         /// This attribute specifies the number of pages completed for the
         /// Job so far.
         /// See: PWG 5100.7-2023 Section 6.7.4
         /// </summary>
         public int? JobPagesCompleted { get; set; }
+
+        /// <summary>
+        /// This attribute specifies detailed impression counters completed for the Job so far.
+        /// See: PWG 5100.7-2023 Section 6.7.2
+        /// </summary>
+        /// <code>job-impressions-completed-col</code>
+        public JobCounter? JobImpressionsCompletedCol { get; set; }
+
+        /// <summary>
+        /// This attribute specifies detailed media sheet counters completed for the Job so far.
+        /// See: PWG 5100.7-2023 Section 6.7.3
+        /// </summary>
+        /// <code>job-media-sheets-completed-col</code>
+        public JobCounter? JobMediaSheetsCompletedCol { get; set; }
+
+        /// <summary>
+        /// This attribute specifies detailed page counters completed for the Job so far.
+        /// See: PWG 5100.7-2023 Section 6.7.5
+        /// </summary>
+        /// <code>job-pages-completed-col</code>
+        public JobCounter? JobPagesCompletedCol { get; set; }
+
+        /// <summary>
+        /// This attribute lists the name and version information for the Client that created the Job.
+        /// See: PWG 5100.7-2023 Section 6.7.1
+        /// </summary>
+        /// <code>client-info</code>
+        public ClientInfo[]? ClientInfo { get; set; }
+
+        /// <summary>
+        /// This attribute augments the "job-sheets" Job Template attribute and allows specifying distinct media.
+        /// See: PWG 5100.7-2023 Section 6.8.11
+        /// </summary>
+        /// <code>job-sheets-col</code>
+        public JobSheetsCol? JobSheetsCol { get; set; }
 
         /// <summary>
         /// This attribute specifies the total number of seconds that the

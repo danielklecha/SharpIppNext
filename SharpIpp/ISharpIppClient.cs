@@ -190,6 +190,12 @@ public interface ISharpIppClient : IDisposable
     Task<RestartJobResponse> RestartJobAsync(RestartJobRequest request, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Set-Job-Attributes Operation
+    /// This operation allows a client to update settable Job attributes.
+    /// </summary>
+    Task<SetJobAttributesResponse> SetJobAttributesAsync(SetJobAttributesRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Resume-Printer Operation
     /// This operation allows a client to resume the Printer object
     /// scheduling jobs on all its devices.  The Printer object MUST remove
@@ -254,6 +260,38 @@ public interface ISharpIppClient : IDisposable
 
     #endregion
 
+    #region PWG 5100.7-2023 (IPP Job Extensions v2.1)
+
+    /// <summary>
+    /// Cancel-Jobs Operation
+    /// This operation allows a client to cancel multiple Jobs at once.
+    /// See: PWG 5100.7-2023
+    /// </summary>
+    Task<CancelJobsResponse> CancelJobsAsync(CancelJobsRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Cancel-My-Jobs Operation
+    /// This operation allows a client to cancel multiple Jobs associated with the requesting user.
+    /// See: PWG 5100.7-2023
+    /// </summary>
+    Task<CancelMyJobsResponse> CancelMyJobsAsync(CancelMyJobsRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Resubmit-Job Operation
+    /// This operation allows a client to create a new Job based on an existing Job.
+    /// See: PWG 5100.7-2023
+    /// </summary>
+    Task<ResubmitJobResponse> ResubmitJobAsync(ResubmitJobRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Close-Job Operation
+    /// This operation allows a client to close a multi-document Job so that no more documents can be added.
+    /// See: PWG 5100.7-2023
+    /// </summary>
+    Task<CloseJobResponse> CloseJobAsync(CloseJobRequest request, CancellationToken cancellationToken = default);
+
+    #endregion
+
     #region PWG 5100.5-2024 (Document Object)
 
     /// <summary>
@@ -283,7 +321,7 @@ public interface ISharpIppClient : IDisposable
 
     /// <summary>
     /// Set-Document-Attributes Operation
-    /// This REQUIRED operation allows a client to set the values of
+    /// This OPTIONAL operation allows a client to set the values of
     /// attributes of a Document object.
     /// See: PWG 5100.5-2024 Section 5.1.3
     /// </summary>

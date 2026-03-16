@@ -202,11 +202,16 @@ public class NoValueTests
     [DataRow(typeof(Punching))]
     [DataRow(typeof(Stitching))]
     [DataRow(typeof(Trimming))]
+    [DataRow(typeof(ClientInfo))]
+    [DataRow(typeof(DocumentFormatDetails))]
     [DataRow(typeof(DocumentTemplateAttributes))]
     [DataRow(typeof(Cover))] 
     [DataRow(typeof(InsertSheet))]
     [DataRow(typeof(JobAccountingSheets))]
+    [DataRow(typeof(JobCounter))]
     [DataRow(typeof(JobErrorSheet))]
+    [DataRow(typeof(JobSheetsCol))]
+    [DataRow(typeof(MediaSizeSupported))]
     [DataRow(typeof(SeparatorSheets))]
     public void GetNoValue_WithCollectionType_ShouldReturnIsNoValueTrue(Type type)
     {

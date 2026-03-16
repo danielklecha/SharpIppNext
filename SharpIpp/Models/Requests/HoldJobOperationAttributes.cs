@@ -14,4 +14,5 @@ public class HoldJobOperationAttributes : CancelJobOperationAttributes
     /// </summary>
     /// <code>job-hold-until</code>
     public JobHoldUntil? JobHoldUntil { get; set; }
+
 }

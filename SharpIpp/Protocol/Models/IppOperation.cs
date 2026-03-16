@@ -24,10 +24,15 @@ namespace SharpIpp.Protocol.Models
         PausePrinter = 0x0010,
         ResumePrinter = 0x0011,
         PurgeJobs = 0x0012,
+        SetJobAttributes = 0x0014,
         CancelDocument = 0x0033,
         GetDocumentAttributes = 0x0034,
         GetDocuments = 0x0035,
         SetDocumentAttributes = 0x0037,
+        CancelJobs = 0x0038,
+        CancelMyJobs = 0x0039,
+        ResubmitJob = 0x003A,
+        CloseJob = 0x003B,
         GetCUPSPrinters = 0x4002,
     }
 }

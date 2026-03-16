@@ -1,4 +1,5 @@
 using SharpIpp.Protocol.Models;
+using System.Collections.Generic;
 
 namespace SharpIpp.Models.Responses;
 
@@ -40,4 +41,46 @@ public class JobAttributes
     /// </summary>
     /// <code>number-of-intervening-jobs</code>
     public int? NumberOfInterveningJobs { get; set; }
+
+    /// <summary>
+    /// The client-info IPP attribute.
+    /// See: PWG 5100.7-2023 Section 6.7.1
+    /// </summary>
+    /// <code>client-info</code>
+    public IReadOnlyCollection<ClientInfo>? ClientInfo { get; set; }
+
+    /// <summary>
+    /// The job-impressions-completed-col IPP attribute.
+    /// See: PWG 5100.7-2023 Section 6.7.2
+    /// </summary>
+    /// <code>job-impressions-completed-col</code>
+    public JobCounter? JobImpressionsCompletedCol { get; set; }
+
+    /// <summary>
+    /// The job-media-sheets-completed-col IPP attribute.
+    /// See: PWG 5100.7-2023 Section 6.7.3
+    /// </summary>
+    /// <code>job-media-sheets-completed-col</code>
+    public JobCounter? JobMediaSheetsCompletedCol { get; set; }
+
+    /// <summary>
+    /// The job-pages-completed IPP attribute.
+    /// See: PWG 5100.7-2023 Section 6.7.4
+    /// </summary>
+    /// <code>job-pages-completed</code>
+    public int? JobPagesCompleted { get; set; }
+
+    /// <summary>
+    /// The job-pages-completed-col IPP attribute.
+    /// See: PWG 5100.7-2023 Section 6.7.5
+    /// </summary>
+    /// <code>job-pages-completed-col</code>
+    public JobCounter? JobPagesCompletedCol { get; set; }
+
+    /// <summary>
+    /// The job-processing-time IPP attribute.
+    /// See: PWG 5100.7-2023 Section 6.7.6
+    /// </summary>
+    /// <code>job-processing-time</code>
+    public int? JobProcessingTime { get; set; }
 }

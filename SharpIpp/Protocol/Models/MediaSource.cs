@@ -55,6 +55,7 @@ public readonly record struct MediaSource(string Value)
     public static readonly MediaSource Tray7 = new("tray-7");
     public static readonly MediaSource Tray8 = new("tray-8");
     public static readonly MediaSource Tray9 = new("tray-9");
+    public static readonly MediaSource Virtual = new("virtual");
 
     public override string ToString() => Value;
     public static implicit operator string(MediaSource bin) => bin.Value;

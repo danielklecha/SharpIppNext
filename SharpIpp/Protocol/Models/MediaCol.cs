@@ -43,7 +43,7 @@ public class MediaCol : IIppCollection
     /// <summary>
     /// type2 keyword | name(MAX)
     /// </summary>
-    public string? MediaKey { get; set; }
+    public MediaKey? MediaKey { get; set; }
 
     /// <summary>
     /// integer(0:MAX)

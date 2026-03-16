@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
+using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Protocol.Extensions
 {
@@ -10,6 +12,8 @@ namespace SharpIpp.Protocol.Extensions
     /// </summary>
     public static class StringExtensions
     {
+        private static readonly Regex KeywordRegex = new("^[a-z0-9][a-z0-9\\-.]*$", RegexOptions.Compiled);
+
         /// <summary>
         /// Converts a dash-separated string to CamelCase.
         /// </summary>
@@ -30,6 +34,16 @@ namespace SharpIpp.Protocol.Extensions
             return string.Concat(input.Select((x, i) => i > 0 && char.IsUpper(x) && (char.IsLower(input[i - 1]) || i < input.Length - 1 && char.IsLower(input[i + 1]))
                 ? "-" + x
                 : x.ToString())).ToLowerInvariant();
+        }
+
+        /// <summary>
+        /// Returns the best matching IPP tag for keyword-or-name values.
+        /// </summary>
+        /// <param name="input">The raw value.</param>
+        /// <returns><see cref="Tag.Keyword"/> for keyword-like values; otherwise <see cref="Tag.NameWithoutLanguage"/>.</returns>
+        public static Tag GetKeywordOrNameTag(this string input, Regex? keywordRegex = null)
+        {
+            return (keywordRegex ?? KeywordRegex).IsMatch(input) ? Tag.Keyword : Tag.NameWithoutLanguage;
         }
     }
 }

@@ -1,14 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Protocol.Models;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Reflection;
 
 namespace SharpIpp.Tests.Unit.Protocol.Models;
 
 [TestClass]
+[ExcludeFromCodeCoverage]
 public class SmartEnumTests
 {
     [TestMethod]
@@ -40,7 +42,6 @@ public class SmartEnumTests
             yield return [typeof(Compression), "gzip"];
             yield return [typeof(CoverType), "no-cover"];
             yield return [typeof(CoveringName), "plain"];
-            yield return [typeof(CurrentPageOrder), "1-to-n-order"];
             yield return [typeof(DocumentStateReason), "none"];
             yield return [typeof(FinishingReferenceEdge), "bottom"];
             yield return [typeof(FinishingTemplate), "staple"];
@@ -55,10 +56,11 @@ public class SmartEnumTests
             yield return [typeof(JobStateReason), "none"];
             yield return [typeof(LaminatingType), "archival"];
             yield return [typeof(Media), "iso_a4_210x297mm"];
+            yield return [typeof(MediaKey), "media-key"];
             yield return [typeof(MediaCoating), "none"];
             yield return [typeof(MediaColor), "white"];
             yield return [typeof(MediaGrain), "x-direction"];
-            yield return [typeof(MediaInputTrayCheck), "none"];
+            yield return [typeof(MediaInputTrayCheck), "main"];
             yield return [typeof(MediaPrePrinted), "blank"];
             yield return [typeof(MediaRecycled), "none"];
             yield return [typeof(MediaSource), "main"];
@@ -68,7 +70,6 @@ public class SmartEnumTests
             yield return [typeof(MultipleDocumentHandling), "separate-documents-uncollated-copies"];
             yield return [typeof(OutputBin), "top"];
             yield return [typeof(PageDelivery), "same-order-face-up"];
-            yield return [typeof(PageOrderReceived), "1-to-n"];
             yield return [typeof(PdlOverride), "attempted"];
             yield return [typeof(PresentationDirectionNumberUp), "tobottom-toleft"];
             yield return [typeof(PrintColorMode), "auto"];

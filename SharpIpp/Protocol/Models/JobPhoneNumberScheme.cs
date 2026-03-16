@@ -1,12 +1,19 @@
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
-/// Specifies the job-phone-number-scheme-supported attribute.
+/// Specifies the <c>job-phone-number-scheme-supported</c> attribute.
+/// See: PWG 5100.3-2023 Section 5.3.26
 /// </summary>
 public readonly record struct JobPhoneNumberScheme(string Value)
 {
+    /// <summary>
+    /// See: PWG 5100.3-2023 Section 5.3.26
+    /// </summary>
     public static readonly JobPhoneNumberScheme Tel = new("tel");
-    public static readonly JobPhoneNumberScheme Uri = new("uri");
+
+    /// <summary>
+    /// See: RFC 2806 (optional in implementation)
+    /// </summary>
     public static readonly JobPhoneNumberScheme Fax = new("fax");
 
     public override string ToString() => Value;

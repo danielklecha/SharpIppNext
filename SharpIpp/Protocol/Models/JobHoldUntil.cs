@@ -45,6 +45,31 @@ public readonly record struct JobHoldUntil(string Value)
     /// </summary>
     public static readonly JobHoldUntil ThirdShift = new("third-shift");
 
+    /// <summary>
+    /// 'no-delay-output': do not delay output.
+    /// </summary>
+    public static readonly JobHoldUntil NoDelayOutput = new("no-delay-output");
+
+    /// <summary>
+    /// 'end-of-day': retain until end of the current day.
+    /// </summary>
+    public static readonly JobHoldUntil EndOfDay = new("end-of-day");
+
+    /// <summary>
+    /// 'end-of-week': retain until end of the current week.
+    /// </summary>
+    public static readonly JobHoldUntil EndOfWeek = new("end-of-week");
+
+    /// <summary>
+    /// 'end-of-month': retain until end of the current month.
+    /// </summary>
+    public static readonly JobHoldUntil EndOfMonth = new("end-of-month");
+
+    /// <summary>
+    /// 'none': do not retain the Job.
+    /// </summary>
+    public static readonly JobHoldUntil None = new("none");
+
     public override string ToString() => Value;
     public static implicit operator string(JobHoldUntil bin) => bin.Value;
     public static explicit operator JobHoldUntil(string value) => new(value);

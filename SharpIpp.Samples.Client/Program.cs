@@ -24,7 +24,7 @@ try
         {
             Copies = 1,
             MultipleDocumentHandling = MultipleDocumentHandling.SeparateDocumentsCollatedCopies,
-            Finishings = Finishings.None,
+            Finishings = new[] { Finishings.None },
             PageRanges = [new SharpIpp.Protocol.Models.Range(1, 1)],
             Sides = Sides.OneSided,
             NumberUp = 1,
