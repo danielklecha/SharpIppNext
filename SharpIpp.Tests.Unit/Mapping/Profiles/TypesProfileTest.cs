@@ -35,7 +35,7 @@ public class TypesProfileTest
             yield return [3, typeof(int), typeof(ResolutionUnit), ResolutionUnit.DotsPerInch, "Int -> ResolutionUnit"];
             yield return [new StringWithLanguage("en", "Test Value"), typeof(StringWithLanguage), typeof(string), "Test Value", "StringWithLanguage -> String"];
             yield return ["no-hold", typeof(string), typeof(JobHoldUntil), JobHoldUntil.NoHold, "String -> JobHoldUntil (valid)"];
-            yield return ["invalid-value", typeof(string), typeof(JobHoldUntil), (JobHoldUntil)int.MinValue, "String -> JobHoldUntil (invalid)"];
+            yield return ["invalid-value", typeof(string), typeof(JobHoldUntil), new JobHoldUntil("invalid-value"), "String -> JobHoldUntil (invalid)"];
             yield return [NoValue.Instance, typeof(NoValue), typeof(int), int.MinValue, "NoValue -> Int"];
             yield return [NoValue.Instance, typeof(NoValue), typeof(JobState), (JobState)int.MinValue, "NoValue -> JobState"];
             yield return [NoValue.Instance, typeof(NoValue), typeof(DocumentState), (DocumentState)int.MinValue, "NoValue -> DocumentState"];
@@ -56,11 +56,29 @@ public class TypesProfileTest
             yield return [NoValue.Instance, typeof(NoValue), typeof(string), NoValue.GetNoValue<string>(), "NoValue -> String"];
             yield return [NoValue.Instance, typeof(NoValue), typeof(string), NoValue.GetNoValue<string?>(), "NoValue -> String?"];
             yield return ["separate-documents-uncollated-copies", typeof(string), typeof(MultipleDocumentHandling), MultipleDocumentHandling.SeparateDocumentsUncollatedCopies, "String -> MultipleDocumentHandling (valid)"];
-            yield return ["invalid-value", typeof(string), typeof(MultipleDocumentHandling), (MultipleDocumentHandling)int.MinValue, "String -> MultipleDocumentHandling (invalid)"];
+            yield return ["invalid-value", typeof(string), typeof(MultipleDocumentHandling), new MultipleDocumentHandling("invalid-value"), "String -> MultipleDocumentHandling (invalid)"];
             yield return [MultipleDocumentHandling.SeparateDocumentsUncollatedCopies, typeof(MultipleDocumentHandling), typeof(string), "separate-documents-uncollated-copies", "MultipleDocumentHandling -> String"];
-            yield return [NoValue.Instance, typeof(NoValue), typeof(MultipleDocumentHandling), (MultipleDocumentHandling)int.MinValue, "NoValue -> MultipleDocumentHandling"];
+            yield return [NoValue.Instance, typeof(NoValue), typeof(MultipleDocumentHandling), NoValue.GetNoValue<MultipleDocumentHandling>(), "NoValue -> MultipleDocumentHandling"];
+            yield return ["auto", typeof(string), typeof(PrintScaling), PrintScaling.Auto, "String -> PrintScaling (valid)"];
+            yield return ["invalid", typeof(string), typeof(PrintScaling), new PrintScaling("invalid"), "String -> PrintScaling (invalid)"];
+            yield return [PrintScaling.Auto, typeof(PrintScaling), typeof(string), "auto", "PrintScaling -> String"];
+            yield return [NoValue.Instance, typeof(NoValue), typeof(PrintScaling), NoValue.GetNoValue<PrintScaling>(), "NoValue -> PrintScaling"];
+            yield return ["completed", typeof(string), typeof(WhichJobs), WhichJobs.Completed, "String -> WhichJobs (valid)"];
+            yield return ["invalid", typeof(string), typeof(WhichJobs), new WhichJobs("invalid"), "String -> WhichJobs (invalid)"];
+            yield return [WhichJobs.Completed, typeof(WhichJobs), typeof(string), "completed", "WhichJobs -> String"];
+            yield return [NoValue.Instance, typeof(NoValue), typeof(WhichJobs), NoValue.GetNoValue<WhichJobs>(), "NoValue -> WhichJobs"];
+            yield return ["job-incoming", typeof(string), typeof(JobStateReason), JobStateReason.JobIncoming, "String -> JobStateReason (valid)"];
+            yield return ["invalid", typeof(string), typeof(JobStateReason), new JobStateReason("invalid"), "String -> JobStateReason (invalid)"];
+            yield return [JobStateReason.JobIncoming, typeof(JobStateReason), typeof(string), "job-incoming", "JobStateReason -> String"];
+            yield return [NoValue.Instance, typeof(NoValue), typeof(JobStateReason), NoValue.GetNoValue<JobStateReason>(), "NoValue -> JobStateReason"];
+            yield return ["ipp", typeof(string), typeof(UriScheme), UriScheme.Ipp, "String -> UriScheme (valid)"];
+            yield return ["invalid", typeof(string), typeof(UriScheme), new UriScheme("invalid"), "String -> UriScheme (invalid)"];
+            yield return [UriScheme.Ipp, typeof(UriScheme), typeof(string), "ipp", "UriScheme -> String"];
+            yield return [NoValue.Instance, typeof(NoValue), typeof(UriScheme), NoValue.GetNoValue<UriScheme>(), "NoValue -> UriScheme"];
             yield return [2, typeof(int), typeof(PrinterType), (PrinterType)2, "Int -> PrinterType"];
             yield return [5, typeof(int), typeof(SharpIpp.Protocol.Models.Range), new SharpIpp.Protocol.Models.Range(5, 5), "Int -> Range"];
+            yield return [new[] { "auto", "auto-fit" }, typeof(string[]), typeof(PrintScaling[]), new[] { PrintScaling.Auto, PrintScaling.AutoFit }, "string[] -> PrintScaling[]"];
+            yield return [new object[] { "auto", "auto-fit" }, typeof(object[]), typeof(PrintScaling[]), new[] { PrintScaling.Auto, PrintScaling.AutoFit }, "object[] -> PrintScaling[]"];
         }
     }
 
@@ -72,7 +90,7 @@ public class TypesProfileTest
         var result = _mapper.Map(source, sourceType, destType);
 
         // Assert
-        result.Should().Be(expected, description);
+        result.Should().BeEquivalentTo(expected, description);
     }
 
     [TestMethod]

@@ -16,13 +16,13 @@ public class DocumentTemplateAttributes : IIppCollection
     public Finishings? Finishings { get; set; }
     public FinishingsCol[]? FinishingsCol { get; set; }
     public int[]? ForceFrontSide { get; set; }
-    public string? ImpositionTemplate { get; set; }
-    public string? Media { get; set; }
+    public ImpositionTemplate? ImpositionTemplate { get; set; }
+    public Media? Media { get; set; }
     public MediaCol? MediaCol { get; set; }
     public MediaInputTrayCheck? MediaInputTrayCheck { get; set; }
     public int? NumberUp { get; set; }
     public Orientation? OrientationRequested { get; set; }
-    public string? OutputBin { get; set; }
+    public OutputBin? OutputBin { get; set; }
     public PageDelivery? PageDelivery { get; set; }
     public PageOrderReceived? PageOrderReceived { get; set; }
     public Range[]? PageRanges { get; set; }

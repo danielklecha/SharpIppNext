@@ -1,13 +1,18 @@
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
-/// Specifies the type of content optimization.
-/// See: PWG 5100.7-2023 Section 6.9.58
+/// Specifies the print-content-optimize.
+/// See: PWG 5100.1-2022 Section 6.20
 /// </summary>
-public enum PrintContentOptimize
+public readonly record struct PrintContentOptimize(string Value)
 {
-    Graphic,
-    Photo,
-    Text,
-    TextAndGraphic
+    public static readonly PrintContentOptimize Auto = new("auto");
+    public static readonly PrintContentOptimize Graphic = new("graphic");
+    public static readonly PrintContentOptimize Photo = new("photo");
+    public static readonly PrintContentOptimize Text = new("text");
+    public static readonly PrintContentOptimize TextAndGraphic = new("text-and-graphic");
+
+    public override string ToString() => Value;
+    public static implicit operator string(PrintContentOptimize bin) => bin.Value;
+    public static explicit operator PrintContentOptimize(string value) => new(value);
 }

@@ -175,7 +175,7 @@ public class SharpIppIntegrationTests
                 Sides = Sides.OneSided,
                 NumberUp = 1,
                 OrientationRequested = Orientation.Portrait,
-                Media = "iso_a4_210x297mm",
+                Media = (Media)"iso_a4_210x297mm",
                 PrinterResolution = new Resolution(600, 600, ResolutionUnit.DotsPerInch),
                 PrintQuality = PrintQuality.Normal,
                 PrintScaling = PrintScaling.Auto,
@@ -184,7 +184,7 @@ public class SharpIppIntegrationTests
                 {
                     MediaBackCoating = MediaCoating.Glossy,
                     MediaBottomMargin = 10,
-                    MediaColor = "white",
+                    MediaColor = (MediaColor)"white",
                     MediaFrontCoating = MediaCoating.Glossy,
                     MediaGrain = MediaGrain.XDirection,
                     MediaHoleCount = 0,
@@ -196,22 +196,22 @@ public class SharpIppIntegrationTests
                     MediaRecycled = MediaRecycled.None,
                     MediaRightMargin = 10,
                     MediaSize = new MediaSize { XDimension = 21000, YDimension = 29700 }, // 1/100 mm for A4
-                    MediaSizeName = "iso_a4_210x297mm",
+                    MediaSizeName = (Media)"iso_a4_210x297mm",
                     MediaSource = MediaSource.Main,
                     MediaSourceProperties = new MediaSourceProperties { MediaSourceFeedDirection = MediaSourceFeedDirection.LongEdgeFirst, MediaSourceFeedOrientation = Orientation.Portrait },
                     MediaThickness = 10,
                     MediaTooth = MediaTooth.Medium,
                     MediaTopMargin = 10,
-                    MediaType = "stationery",
+                    MediaType = (MediaType)"stationery",
                     MediaWeightMetric = 80
                 },
                 FinishingsCol = [
                     new FinishingsCol
                     {
-                        FinishingTemplate = "staple",
-                        ImpositionTemplate = "signature",
+                        FinishingTemplate = (FinishingTemplate)"staple",
+                        ImpositionTemplate = (ImpositionTemplate)"signature",
                         MediaSheetsSupported = new SharpIpp.Protocol.Models.Range(1, 10),
-                        MediaSizeName = "iso_a4_210x297mm",
+                        MediaSizeName = (Media)"iso_a4_210x297mm",
                         MediaSize = new MediaSize { XDimension = 21000, YDimension = 29700 },
                         Stitching = new Stitching
                         {
@@ -278,7 +278,7 @@ public class SharpIppIntegrationTests
                     }
                 ],
                 JobPagesPerSet = 1,
-                OutputBin = "face-down",
+                OutputBin = (OutputBin)"face-down",
                 JobAccountId = "account-123",
                 JobAccountingUserId = "user-456",
                 JobCancelAfter = 3600,
@@ -294,46 +294,46 @@ public class SharpIppIntegrationTests
                 CoverFront = new Cover
                 {
                     CoverType = CoverType.PrintBoth,
-                    Media = "iso_a4_210x297mm",
-                    MediaCol = new MediaCol { MediaColor = "blue" }
+                    Media = (Media)"iso_a4_210x297mm",
+                    MediaCol = new MediaCol { MediaColor = (MediaColor)"blue" }
                 },
                 CoverBack = new Cover
                 {
                     CoverType = CoverType.PrintNone,
-                    Media = "iso_a4_210x297mm"
+                    Media = (Media)"iso_a4_210x297mm"
                 },
                 InsertSheet = [
                     new InsertSheet
                     {
                         InsertAfterPageNumber = 1,
                         InsertCount = 2,
-                        Media = "iso_a4_210x297mm",
-                        MediaCol = new MediaCol { MediaColor = "red" }
+                        Media = (Media)"iso_a4_210x297mm",
+                        MediaCol = new MediaCol { MediaColor = (MediaColor)"red" }
                     }
                 ],
                 JobAccountingSheets = new JobAccountingSheets
                 {
-                    JobAccountingOutputBin = "top",
+                    JobAccountingOutputBin = (OutputBin)"top",
                     JobAccountingSheetsType = JobSheetsType.Standard,
-                    Media = "iso_a4_210x297mm",
-                    MediaCol = new MediaCol { MediaColor = "green" }
+                    Media = (Media)"iso_a4_210x297mm",
+                    MediaCol = new MediaCol { MediaColor = (MediaColor)"green" }
                 },
                 JobErrorSheet = new JobErrorSheet
                 {
                     JobErrorSheetType = JobSheetsType.Standard,
                     JobErrorSheetWhen = JobErrorSheetWhen.OnError,
-                    Media = "iso_a4_210x297mm",
-                    MediaCol = new MediaCol { MediaColor = "yellow" }
+                    Media = (Media)"iso_a4_210x297mm",
+                    MediaCol = new MediaCol { MediaColor = (MediaColor)"yellow" }
                 },
                 SeparatorSheets = new SeparatorSheets
                 {
                     SeparatorSheetsType = [SeparatorSheetsType.SlipSheets],
-                    Media = "iso_a4_210x297mm",
-                    MediaCol = new MediaCol { MediaColor = "black" }
+                    Media = (Media)"iso_a4_210x297mm",
+                    MediaCol = new MediaCol { MediaColor = (MediaColor)"black" }
                 },
                 ForceFrontSide = [1, 2],
                 ImageOrientation = Orientation.Portrait,
-                ImpositionTemplate = "imp-template",
+                ImpositionTemplate = (ImpositionTemplate)"imp-template",
                 JobCompleteBefore = JobHoldUntil.NoHold,
                 JobCompleteBeforeTime = new DateTimeOffset(2024, 6, 2, 12, 0, 0, TimeSpan.Zero),
                 JobMessageToOperator = "Please check finishing",
@@ -474,7 +474,7 @@ public class SharpIppIntegrationTests
                 Sides = Sides.OneSided,
                 NumberUp = 1,
                 OrientationRequested = Orientation.Portrait,
-                Media = "iso_a4_210x297mm",
+                Media = (Media)"iso_a4_210x297mm",
                 PrinterResolution = new Resolution(600, 600, ResolutionUnit.DotsPerInch),
                 PrintQuality = PrintQuality.Normal,
                 PrintScaling = PrintScaling.Auto,
@@ -483,7 +483,7 @@ public class SharpIppIntegrationTests
                 {
                     MediaBackCoating = MediaCoating.Glossy,
                     MediaBottomMargin = 10,
-                    MediaColor = "white",
+                    MediaColor = (MediaColor)"white",
                     MediaFrontCoating = MediaCoating.Glossy,
                     MediaGrain = MediaGrain.XDirection,
                     MediaHoleCount = 0,
@@ -495,13 +495,13 @@ public class SharpIppIntegrationTests
                     MediaRecycled = MediaRecycled.None,
                     MediaRightMargin = 10,
                     MediaSize = new MediaSize { XDimension = 21000, YDimension = 29700 }, // 1/100 mm for A4
-                    MediaSizeName = "iso_a4_210x297mm",
+                    MediaSizeName = (Media)"iso_a4_210x297mm",
                     MediaSource = MediaSource.Main,
                     MediaSourceProperties = new MediaSourceProperties { MediaSourceFeedDirection = MediaSourceFeedDirection.LongEdgeFirst, MediaSourceFeedOrientation = Orientation.Portrait },
                     MediaThickness = 10,
                     MediaTooth = MediaTooth.Medium,
                     MediaTopMargin = 10,
-                    MediaType = "stationery",
+                    MediaType = (MediaType)"stationery",
                     MediaWeightMetric = 80
                 },
                 JobPagesPerSet = 1
@@ -704,7 +704,7 @@ public class SharpIppIntegrationTests
                 Sides = Sides.OneSided,
                 NumberUp = 1,
                 OrientationRequested = Orientation.Portrait,
-                Media = "iso_a4_210x297mm",
+                Media = (Media)"iso_a4_210x297mm",
                 PrinterResolution = new Resolution(600, 600, ResolutionUnit.DotsPerInch),
                 PrintQuality = PrintQuality.Normal,
                 PrintScaling = PrintScaling.Auto,
@@ -713,7 +713,7 @@ public class SharpIppIntegrationTests
                 {
                     MediaBackCoating = MediaCoating.Glossy,
                     MediaBottomMargin = 10,
-                    MediaColor = "white",
+                    MediaColor = (MediaColor)"white",
                     MediaFrontCoating = MediaCoating.Glossy,
                     MediaGrain = MediaGrain.XDirection,
                     MediaHoleCount = 0,
@@ -725,59 +725,59 @@ public class SharpIppIntegrationTests
                     MediaRecycled = MediaRecycled.None,
                     MediaRightMargin = 10,
                     MediaSize = new MediaSize { XDimension = 21000, YDimension = 29700 }, // 1/100 mm for A4
-                    MediaSizeName = "iso_a4_210x297mm",
+                    MediaSizeName = (Media)"iso_a4_210x297mm",
                     MediaSource = MediaSource.Main,
                     MediaSourceProperties = new MediaSourceProperties { MediaSourceFeedDirection = MediaSourceFeedDirection.LongEdgeFirst, MediaSourceFeedOrientation = Orientation.Portrait },
                     MediaThickness = 10,
                     MediaTooth = MediaTooth.Medium,
                     MediaTopMargin = 10,
-                    MediaType = "stationery",
+                    MediaType = (MediaType)"stationery",
                     MediaWeightMetric = 80
                 },
                 JobPagesPerSet = 1,
                 CoverFront = new Cover
                 {
                     CoverType = CoverType.PrintBoth,
-                    Media = "iso_a4_210x297mm",
-                    MediaCol = new MediaCol { MediaColor = "blue" }
+                    Media = (Media)"iso_a4_210x297mm",
+                    MediaCol = new MediaCol { MediaColor = (MediaColor)"blue" }
                 },
                 CoverBack = new Cover
                 {
                     CoverType = CoverType.PrintNone,
-                    Media = "iso_a4_210x297mm"
+                    Media = (Media)"iso_a4_210x297mm"
                 },
                 InsertSheet = [
                     new InsertSheet
                     {
                         InsertAfterPageNumber = 1,
                         InsertCount = 2,
-                        Media = "iso_a4_210x297mm",
-                        MediaCol = new MediaCol { MediaColor = "red" }
+                        Media = (Media)"iso_a4_210x297mm",
+                        MediaCol = new MediaCol { MediaColor = (MediaColor)"red" }
                     }
                 ],
                 JobAccountingSheets = new JobAccountingSheets
                 {
-                    JobAccountingOutputBin = "top",
+                    JobAccountingOutputBin = (OutputBin)"top",
                     JobAccountingSheetsType = JobSheetsType.Standard,
-                    Media = "iso_a4_210x297mm",
-                    MediaCol = new MediaCol { MediaColor = "green" }
+                    Media = (Media)"iso_a4_210x297mm",
+                    MediaCol = new MediaCol { MediaColor = (MediaColor)"green" }
                 },
                 JobErrorSheet = new JobErrorSheet
                 {
                     JobErrorSheetType = JobSheetsType.Standard,
                     JobErrorSheetWhen = JobErrorSheetWhen.OnError,
-                    Media = "iso_a4_210x297mm",
-                    MediaCol = new MediaCol { MediaColor = "yellow" }
+                    Media = (Media)"iso_a4_210x297mm",
+                    MediaCol = new MediaCol { MediaColor = (MediaColor)"yellow" }
                 },
                 SeparatorSheets = new SeparatorSheets
                 {
                     SeparatorSheetsType = [SeparatorSheetsType.SlipSheets],
-                    Media = "iso_a4_210x297mm",
-                    MediaCol = new MediaCol { MediaColor = "black" }
+                    Media = (Media)"iso_a4_210x297mm",
+                    MediaCol = new MediaCol { MediaColor = (MediaColor)"black" }
                 },
                 ForceFrontSide = [1, 2],
                 ImageOrientation = Orientation.Portrait,
-                ImpositionTemplate = "imp-template",
+                ImpositionTemplate = (ImpositionTemplate)"imp-template",
                 JobCompleteBefore = JobHoldUntil.NoHold,
                 JobCompleteBeforeTime = new DateTimeOffset(2024, 6, 2, 12, 0, 0, TimeSpan.Zero),
                 JobMessageToOperator = "Please check finishing",
@@ -880,22 +880,22 @@ public class SharpIppIntegrationTests
                 CoverBack = new Cover
                 {
                     CoverType = CoverType.PrintNone,
-                    Media = "iso_a4_210x297mm"
+                    Media = (Media)"iso_a4_210x297mm"
                 },
                 CoverFront = new Cover
                 {
                     CoverType = CoverType.PrintBoth,
-                    Media = "iso_a4_210x297mm",
-                    MediaCol = new MediaCol { MediaColor = "blue" }
+                    Media = (Media)"iso_a4_210x297mm",
+                    MediaCol = new MediaCol { MediaColor = (MediaColor)"blue" }
                 },
                 Finishings = Finishings.None,
                 FinishingsCol = [
                     new FinishingsCol
                     {
-                        FinishingTemplate = "staple",
-                        ImpositionTemplate = "signature",
+                        FinishingTemplate = (FinishingTemplate)"staple",
+                        ImpositionTemplate = (ImpositionTemplate)"signature",
                         MediaSheetsSupported = new SharpIpp.Protocol.Models.Range(1, 10),
-                        MediaSizeName = "iso_a4_210x297mm",
+                        MediaSizeName = (Media)"iso_a4_210x297mm",
                         MediaSize = new MediaSize { XDimension = 21000, YDimension = 29700 },
                         Stitching = new Stitching
                         {
@@ -913,13 +913,13 @@ public class SharpIppIntegrationTests
                     }
                 ],
                 ForceFrontSide = [1, 2],
-                ImpositionTemplate = "imp-template",
-                Media = "iso_a4_210x297mm",
+                ImpositionTemplate = (ImpositionTemplate)"imp-template",
+                Media = (Media)"iso_a4_210x297mm",
                 MediaCol = new MediaCol
                 {
                     MediaBackCoating = MediaCoating.Glossy,
                     MediaBottomMargin = 10,
-                    MediaColor = "white",
+                    MediaColor = (MediaColor)"white",
                     MediaFrontCoating = MediaCoating.Glossy,
                     MediaGrain = MediaGrain.XDirection,
                     MediaHoleCount = 0,
@@ -931,19 +931,19 @@ public class SharpIppIntegrationTests
                     MediaRecycled = MediaRecycled.None,
                     MediaRightMargin = 10,
                     MediaSize = new MediaSize { XDimension = 21000, YDimension = 29700 }, // 1/100 mm for A4
-                    MediaSizeName = "iso_a4_210x297mm",
+                    MediaSizeName = (Media)"iso_a4_210x297mm",
                     MediaSource = MediaSource.Main,
                     MediaSourceProperties = new MediaSourceProperties { MediaSourceFeedDirection = MediaSourceFeedDirection.LongEdgeFirst, MediaSourceFeedOrientation = Orientation.Portrait },
                     MediaThickness = 10,
                     MediaTooth = MediaTooth.Medium,
                     MediaTopMargin = 10,
-                    MediaType = "stationery",
+                    MediaType = (MediaType)"stationery",
                     MediaWeightMetric = 80
                 },
                 MediaInputTrayCheck = MediaInputTrayCheck.AllowTrayCheck,
                 NumberUp = 1,
                 OrientationRequested = Orientation.Portrait,
-                OutputBin = "face-down",
+                OutputBin = (OutputBin)"face-down",
                 PageDelivery = PageDelivery.SameOrderFaceUp,
                 PageOrderReceived = PageOrderReceived.OneToNOrder,
                 PageRanges = [new SharpIpp.Protocol.Models.Range(1, 2)],
@@ -1097,21 +1097,21 @@ public class SharpIppIntegrationTests
                 CoverBack = new Cover
                 {
                     CoverType = CoverType.PrintNone,
-                    Media = "iso_a4_210x297mm"
+                    Media = (Media)"iso_a4_210x297mm"
                 },
                 CoverFront = new Cover
                 {
                     CoverType = CoverType.PrintBoth,
-                    Media = "iso_a4_210x297mm",
-                    MediaCol = new MediaCol { MediaColor = "blue" }
+                    Media = (Media)"iso_a4_210x297mm",
+                    MediaCol = new MediaCol { MediaColor = (MediaColor)"blue" }
                 },
                 FinishingsCol = [
                     new FinishingsCol
                     {
-                        FinishingTemplate = "staple",
-                        ImpositionTemplate = "signature",
+                        FinishingTemplate = (FinishingTemplate)"staple",
+                        ImpositionTemplate = (ImpositionTemplate)"signature",
                         MediaSheetsSupported = new SharpIpp.Protocol.Models.Range(1, 10),
-                        MediaSizeName = "iso_a4_210x297mm",
+                        MediaSizeName = (Media)"iso_a4_210x297mm",
                         MediaSize = new MediaSize { XDimension = 21000, YDimension = 29700 },
                         Stitching = new Stitching
                         {
@@ -1132,7 +1132,7 @@ public class SharpIppIntegrationTests
                 {
                     MediaBackCoating = MediaCoating.Glossy,
                     MediaBottomMargin = 10,
-                    MediaColor = "white",
+                    MediaColor = (MediaColor)"white",
                     MediaFrontCoating = MediaCoating.Glossy,
                     MediaGrain = MediaGrain.XDirection,
                     MediaHoleCount = 0,
@@ -1144,22 +1144,22 @@ public class SharpIppIntegrationTests
                     MediaRecycled = MediaRecycled.None,
                     MediaRightMargin = 10,
                     MediaSize = new MediaSize { XDimension = 21000, YDimension = 29700 }, // 1/100 mm for A4
-                    MediaSizeName = "iso_a4_210x297mm",
+                    MediaSizeName = (Media)"iso_a4_210x297mm",
                     MediaSource = MediaSource.Main,
                     MediaSourceProperties = new MediaSourceProperties { MediaSourceFeedDirection = MediaSourceFeedDirection.LongEdgeFirst, MediaSourceFeedOrientation = Orientation.Portrait },
                     MediaThickness = 10,
                     MediaTooth = MediaTooth.Medium,
                     MediaTopMargin = 10,
-                    MediaType = "stationery",
+                    MediaType = (MediaType)"stationery",
                     MediaWeightMetric = 80
                 },
                 Finishings = Finishings.Staple,
                 ForceFrontSide = [1, 2],
-                ImpositionTemplate = "none",
-                Media = "iso_a4_210x297mm",
+                ImpositionTemplate = (ImpositionTemplate)"none",
+                Media = (Media)"iso_a4_210x297mm",
                 MediaInputTrayCheck = MediaInputTrayCheck.AllowTrayCheck,
                 NumberUp = 1,
-                OutputBin = "top",
+                OutputBin = (OutputBin)"top",
                 PageDelivery = PageDelivery.SameOrderFaceUp,
                 PageOrderReceived = PageOrderReceived.OneToNOrder,
                 PageRanges = [new SharpIpp.Protocol.Models.Range(1, 1)],
@@ -1476,7 +1476,7 @@ public class SharpIppIntegrationTests
                 Sides = Sides.OneSided,
                 NumberUp = 1,
                 OrientationRequested = Orientation.Portrait,
-                Media = "iso_a4_210x297mm",
+                Media = (Media)"iso_a4_210x297mm",
                 PrinterResolution = new Resolution(600, 600, ResolutionUnit.DotsPerInch),
                 PrintQuality = PrintQuality.Normal,
                 PrintScaling = PrintScaling.Auto,
@@ -1485,7 +1485,7 @@ public class SharpIppIntegrationTests
                 {
                     MediaBackCoating = MediaCoating.Glossy,
                     MediaBottomMargin = 10,
-                    MediaColor = "white",
+                    MediaColor = (MediaColor)"white",
                     MediaFrontCoating = MediaCoating.Glossy,
                     MediaGrain = MediaGrain.XDirection,
                     MediaHoleCount = 0,
@@ -1497,16 +1497,16 @@ public class SharpIppIntegrationTests
                     MediaRecycled = MediaRecycled.None,
                     MediaRightMargin = 10,
                     MediaSize = new MediaSize { XDimension = 21000, YDimension = 29700 }, // 1/100 mm for A4
-                    MediaSizeName = "iso_a4_210x297mm",
+                    MediaSizeName = (Media)"iso_a4_210x297mm",
                     MediaSource = MediaSource.Main,
                     MediaSourceProperties = new MediaSourceProperties { MediaSourceFeedDirection = MediaSourceFeedDirection.LongEdgeFirst, MediaSourceFeedOrientation = Orientation.Portrait },
                     MediaThickness = 10,
                     MediaTooth = MediaTooth.Medium,
                     MediaTopMargin = 10,
-                    MediaType = "stationery",
+                    MediaType = (MediaType)"stationery",
                     MediaWeightMetric = 80
                 },
-                OutputBin = "face-down",
+                OutputBin = (OutputBin)"face-down",
             }
         };
         IIppRequest? serverRequest = null;
@@ -1629,16 +1629,16 @@ public class SharpIppIntegrationTests
                     JobHoldUntilActual = [JobHoldUntil.NoHold],
                     JobPriorityActual = [50],
                     JobSheetsActual = [JobSheets.None],
-                    MediaActual = ["iso_a4_210x297mm"],
+                    MediaActual = [(Media)"iso_a4_210x297mm"],
                     MediaColActual = [new MediaCol
                     {
-                        MediaSizeName = "iso_a4_210x297mm",
-                        MediaType = "stationery"
+                        MediaSizeName = (Media)"iso_a4_210x297mm",
+                        MediaType = (MediaType)"stationery"
                     }],
                     MultipleDocumentHandlingActual = [MultipleDocumentHandling.SeparateDocumentsUncollatedCopies],
                     NumberUpActual = [1],
                     OrientationRequestedActual = [Orientation.Portrait],
-                    OutputBinActual = ["face-down"],
+                    OutputBinActual = [(OutputBin)"face-down"],
                     PageRangesActual = [new SharpIpp.Protocol.Models.Range(1, 2)],
                     PrintQualityActual = [PrintQuality.Normal],
                     PrinterResolutionActual = [new Resolution(600, 600, ResolutionUnit.DotsPerInch)],
@@ -1646,7 +1646,7 @@ public class SharpIppIntegrationTests
                     FinishingsColActual = [
                         new FinishingsCol
                         {
-                            FinishingTemplate = "staple",
+                            FinishingTemplate = (FinishingTemplate)"staple",
                             Stitching = new Stitching
                             {
                                 StitchingAngle = 90,
@@ -1997,11 +1997,11 @@ public class SharpIppIntegrationTests
                         JobHoldUntilActual = [JobHoldUntil.NoHold],
                         JobPriorityActual = [50],
                         JobSheetsActual = [JobSheets.None],
-                        MediaActual = ["iso_a4_210x297mm"],
+                        MediaActual = [(Media)"iso_a4_210x297mm"],
                         MultipleDocumentHandlingActual = [MultipleDocumentHandling.SeparateDocumentsUncollatedCopies],
                         NumberUpActual = [1],
                         OrientationRequestedActual = [Orientation.Portrait],
-                        OutputBinActual = ["face-down"],
+                        OutputBinActual = [(OutputBin)"face-down"],
                         PageRangesActual = [new SharpIpp.Protocol.Models.Range(1, 2)],
                         PrintQualityActual = [PrintQuality.Normal],
                         PrinterResolutionActual = [new Resolution(600, 600, ResolutionUnit.DotsPerInch)],
@@ -2098,8 +2098,8 @@ public class SharpIppIntegrationTests
                     PagesPerMinuteColor = 10,
                     PrintScalingDefault = PrintScaling.Auto,
                     PrintScalingSupported = [PrintScaling.Auto],
-                    MediaDefault = "iso_a4_210x297mm",
-                    MediaSupported = ["iso_a4_210x297mm"],
+                    MediaDefault = (Media)"iso_a4_210x297mm",
+                    MediaSupported = [(Media)"iso_a4_210x297mm"],
                     SidesDefault = Sides.OneSided,
                     SidesSupported = [Sides.OneSided],
                     FinishingsDefault = Finishings.None,
@@ -2117,13 +2117,13 @@ public class SharpIppIntegrationTests
                     PageRangesSupported = true,
                     JobHoldUntilSupported = [JobHoldUntil.NoHold],
                     JobHoldUntilDefault = JobHoldUntil.NoHold,
-                    OutputBinDefault = "face-down",
-                    OutputBinSupported = ["face-down"],
+                    OutputBinDefault = (OutputBin)"face-down",
+                    OutputBinSupported = [(OutputBin)"face-down"],
                     MediaColDefault =  new MediaCol
                     {
                         MediaBackCoating = MediaCoating.Glossy,
                         MediaBottomMargin = 10,
-                        MediaColor = "white",
+                        MediaColor = (MediaColor)"white",
                         MediaFrontCoating = MediaCoating.Glossy,
                         MediaGrain = MediaGrain.XDirection,
                         MediaHoleCount = 0,
@@ -2135,13 +2135,13 @@ public class SharpIppIntegrationTests
                         MediaRecycled = MediaRecycled.None,
                         MediaRightMargin = 10,
                         MediaSize = new MediaSize { XDimension = 21000, YDimension = 29700 }, // 1/100 mm for A4
-                        MediaSizeName = "iso_a4_210x297mm",
+                        MediaSizeName = (Media)"iso_a4_210x297mm",
                         MediaSource = MediaSource.Main,
                         MediaSourceProperties = new MediaSourceProperties { MediaSourceFeedDirection = MediaSourceFeedDirection.LongEdgeFirst, MediaSourceFeedOrientation = Orientation.Portrait },
                         MediaThickness = 10,
                         MediaTooth = MediaTooth.Medium,
                         MediaTopMargin = 10,
-                        MediaType = "stationery",
+                        MediaType = (MediaType)"stationery",
                         MediaWeightMetric = 80
                     },
                     PrintColorModeDefault = PrintColorMode.Color,
@@ -2617,7 +2617,7 @@ public class SharpIppIntegrationTests
                 Sides = Sides.OneSided,
                 NumberUp = 1,
                 OrientationRequested = Orientation.Portrait,
-                Media = "iso_a4_210x297mm",
+                Media = (Media)"iso_a4_210x297mm",
                 PrinterResolution = new Resolution(600, 600, ResolutionUnit.DotsPerInch),
                 PrintQuality = PrintQuality.Normal,
                 PrintScaling = PrintScaling.Auto,
@@ -2626,7 +2626,7 @@ public class SharpIppIntegrationTests
                 {
                     MediaBackCoating = MediaCoating.Glossy,
                     MediaBottomMargin = 10,
-                    MediaColor = "white",
+                    MediaColor = (MediaColor)"white",
                     MediaFrontCoating = MediaCoating.Glossy,
                     MediaGrain = MediaGrain.XDirection,
                     MediaHoleCount = 0,
@@ -2638,13 +2638,13 @@ public class SharpIppIntegrationTests
                     MediaRecycled = MediaRecycled.None,
                     MediaRightMargin = 10,
                     MediaSize = new MediaSize { XDimension = 21000, YDimension = 29700 }, // 1/100 mm for A4
-                    MediaSizeName = "iso_a4_210x297mm",
+                    MediaSizeName = (Media)"iso_a4_210x297mm",
                     MediaSource = MediaSource.Main,
                     MediaSourceProperties = new MediaSourceProperties { MediaSourceFeedDirection = MediaSourceFeedDirection.LongEdgeFirst, MediaSourceFeedOrientation = Orientation.Portrait },
                     MediaThickness = 10,
                     MediaTooth = MediaTooth.Medium,
                     MediaTopMargin = 10,
-                    MediaType = "stationery",
+                    MediaType = (MediaType)"stationery",
                 },
             }
         };
@@ -2768,8 +2768,8 @@ public class SharpIppIntegrationTests
                         PagesPerMinuteColor = 10,
                         PrintScalingDefault = PrintScaling.Auto,
                         PrintScalingSupported = [PrintScaling.Auto],
-                        MediaDefault = "iso_a4_210x297mm",
-                        MediaSupported = ["iso_a4_210x297mm"],
+                        MediaDefault = (Media)"iso_a4_210x297mm",
+                        MediaSupported = [(Media)"iso_a4_210x297mm"],
                         SidesDefault = Sides.OneSided,
                         SidesSupported = [Sides.OneSided],
                         FinishingsDefault = Finishings.None,
@@ -2787,13 +2787,13 @@ public class SharpIppIntegrationTests
                         PageRangesSupported = true,
                         JobHoldUntilSupported = [JobHoldUntil.NoHold],
                         JobHoldUntilDefault = JobHoldUntil.NoHold,
-                        OutputBinDefault = "face-down",
-                        OutputBinSupported = ["face-down"],
+                        OutputBinDefault = (OutputBin)"face-down",
+                        OutputBinSupported = [(OutputBin)"face-down"],
                         MediaColDefault =  new MediaCol
                         {
                             MediaBackCoating = MediaCoating.Glossy,
                             MediaBottomMargin = 10,
-                            MediaColor = "white",
+                            MediaColor = (MediaColor)"white",
                             MediaFrontCoating = MediaCoating.Glossy,
                             MediaGrain = MediaGrain.XDirection,
                             MediaHoleCount = 0,
@@ -2805,13 +2805,13 @@ public class SharpIppIntegrationTests
                             MediaRecycled = MediaRecycled.None,
                             MediaRightMargin = 10,
                             MediaSize = new MediaSize { XDimension = 21000, YDimension = 29700 }, // 1/100 mm for A4
-                            MediaSizeName = "iso_a4_210x297mm",
+                            MediaSizeName = (Media)"iso_a4_210x297mm",
                             MediaSource = MediaSource.Main,
                             MediaSourceProperties = new MediaSourceProperties { MediaSourceFeedDirection = MediaSourceFeedDirection.LongEdgeFirst, MediaSourceFeedOrientation = Orientation.Portrait },
                             MediaThickness = 10,
                             MediaTooth = MediaTooth.Medium,
                             MediaTopMargin = 10,
-                            MediaType = "stationery",
+                            MediaType = (MediaType)"stationery",
                             MediaWeightMetric = 80
                         },
                         PrintColorModeDefault = PrintColorMode.Color,
@@ -2836,11 +2836,11 @@ public class SharpIppIntegrationTests
                         PrinterFinisherDescription = ["stapler"],
                         PrinterFinisherSupplies = ["marker-supply=1", "marker-supply=2"],
                         PrinterFinisherSuppliesDescription = ["blue ink"],
-                        FinishingTemplateSupported = ["staple", "punch"],
+                        FinishingTemplateSupported = [(FinishingTemplate)"staple", (FinishingTemplate)"punch"],
                         FinishingsColSupported = ["baling", "binding", "coating", "covering", "folding", "laminating", "punching", "stitching", "trimming"],
                         JobPagesPerSetSupported = true,
-                        FinishingsColDefault = new FinishingsCol { FinishingTemplate = "staple" },
-                        FinishingsColReady = [new FinishingsCol { FinishingTemplate = "punch" }],
+                        FinishingsColDefault = new FinishingsCol { FinishingTemplate = (FinishingTemplate)"staple" },
+                        FinishingsColReady = [new FinishingsCol { FinishingTemplate = (FinishingTemplate)"punch" }],
                         BalingTypeSupported = [BalingType.Band, BalingType.Wrap],
                         BalingWhenSupported = [BalingWhen.AfterJob],
                         BindingReferenceEdgeSupported = [FinishingReferenceEdge.Left],
@@ -2866,32 +2866,32 @@ public class SharpIppIntegrationTests
                         TrimmingReferenceEdgeSupported = [FinishingReferenceEdge.Right],
                         TrimmingTypeSupported = [TrimmingType.DrawLine, TrimmingType.Full, TrimmingType.Partial],
                         TrimmingWhenSupported = [TrimmingWhen.AfterDocuments, TrimmingWhen.AfterSheets, TrimmingWhen.AfterSets],
-                        CoverBackDefault = new Cover { CoverType = CoverType.PrintBack, Media = "iso_a4_210x297mm" },
-                        CoverBackSupported = ["iso_a4_210x297mm"],
-                        CoverFrontDefault = new Cover { CoverType = CoverType.PrintFront, Media = "iso_a4_210x297mm" },
-                        CoverFrontSupported = ["iso_a4_210x297mm"],
+                        CoverBackDefault = new Cover { CoverType = CoverType.PrintBack, Media = (Media)"iso_a4_210x297mm" },
+                        CoverBackSupported = [(Media)"iso_a4_210x297mm"],
+                        CoverFrontDefault = new Cover { CoverType = CoverType.PrintFront, Media = (Media)"iso_a4_210x297mm" },
+                        CoverFrontSupported = [(Media)"iso_a4_210x297mm"],
                         CoverTypeSupported = [CoverType.PrintBoth],
                         ForceFrontSideSupported = new SharpIpp.Protocol.Models.Range(1, 10),
                         ImageOrientationDefault = Orientation.Portrait,
                         ImageOrientationSupported = [Orientation.Portrait],
-                        ImpositionTemplateDefault = "stamp",
-                        ImpositionTemplateSupported = ["stamp"],
+                        ImpositionTemplateDefault = (ImpositionTemplate)"stamp",
+                        ImpositionTemplateSupported = [(ImpositionTemplate)"stamp"],
                         InsertCountSupported = new SharpIpp.Protocol.Models.Range(1, 10),
                         InsertSheetDefault = [new InsertSheet { InsertAfterPageNumber = 1, InsertCount = 1 }],
-                        InsertSheetSupported = ["iso_a4_210x297mm"],
-                        JobAccountingOutputBinSupported = ["face-down"],
-                        JobAccountingSheetsDefault = new JobAccountingSheets { JobAccountingOutputBin = "face-down", JobAccountingSheetsType = JobSheetsType.Standard },
-                        JobAccountingSheetsSupported = ["iso_a4_210x297mm"],
+                        InsertSheetSupported = [(Media)"iso_a4_210x297mm"],
+                        JobAccountingOutputBinSupported = [(OutputBin)"face-down"],
+                        JobAccountingSheetsDefault = new JobAccountingSheets { JobAccountingOutputBin = (OutputBin)"face-down", JobAccountingSheetsType = JobSheetsType.Standard },
+                        JobAccountingSheetsSupported = [(Media)"iso_a4_210x297mm"],
                         JobAccountingSheetsTypeSupported = [JobSheetsType.Standard],
                         JobCompleteBeforeSupported = [JobHoldUntil.NoHold],
                         JobCompleteBeforeTimeSupported = true,
                         JobErrorSheetDefault = new JobErrorSheet { JobErrorSheetType = JobSheetsType.Standard, JobErrorSheetWhen = JobErrorSheetWhen.Always },
-                        JobErrorSheetSupported = ["iso_a4_210x297mm"],
+                        JobErrorSheetSupported = [(Media)"iso_a4_210x297mm"],
                         JobErrorSheetTypeSupported = [JobSheetsType.Standard],
                         JobErrorSheetWhenSupported = [JobErrorSheetWhen.Always],
                         JobMessageToOperatorSupported = true,
                         JobPhoneNumberDefault = "123456789",
-                        JobPhoneNumberSchemeSupported = ["tel"],
+                        JobPhoneNumberSchemeSupported = [(JobPhoneNumberScheme)"tel"],
                         JobPhoneNumberSupported = true,
                         JobRecipientNameSupported = true,
                         JobSheetMessageSupported = true,

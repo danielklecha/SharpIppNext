@@ -162,6 +162,33 @@ public class NoValueTests
         result.Should().BeTrue();
     }
 
+    public static IEnumerable<object[]> SmartEnumData => SmartEnumTests.SmartEnumData;
+
+    [TestMethod]
+    [DynamicData(nameof(SmartEnumData))]
+    public void IsNoValue_WithDefaultSmartEnum_ShouldReturnTrue(Type type, string _)
+    {
+        var result = NoValue.IsNoValue(Activator.CreateInstance(type, string.Empty)!);
+        result.Should().BeTrue($"{type.Name} with string.Empty should be NoValue");
+    }
+
+    [TestMethod]
+    [DynamicData(nameof(SmartEnumData))]
+    public void IsNoValue_WithPopulatedSmartEnum_ShouldReturnFalse(Type type, string value)
+    {
+        var result = NoValue.IsNoValue(Activator.CreateInstance(type, value)!);
+        result.Should().BeFalse($"{type.Name} with value should not be NoValue");
+    }
+
+    [TestMethod]
+    [DynamicData(nameof(SmartEnumData))]
+    public void GetNoValue_WithSmartEnumType_ShouldReturnEmptyValue(Type type, string _)
+    {
+        var result = NoValue.GetNoValue(type);
+        NoValue.IsNoValue(result).Should().BeTrue($"{type.Name} NoValue should be recognized as NoValue");
+        result.ToString().Should().Be(string.Empty, $"{type.Name} NoValue should have empty string value");
+    }
+
     [TestMethod]
     [DataRow(typeof(MediaSize))]
     [DataRow(typeof(MediaSourceProperties))]

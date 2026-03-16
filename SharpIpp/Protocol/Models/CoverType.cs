@@ -1,15 +1,18 @@
-using System;
-
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
-/// PWG 5100.3-2023 Section 5.3.5 / 5.2.1
+/// Specifies the cover type.
+/// See: PWG 5100.1-2022 Section 6.5
 /// </summary>
-public enum CoverType
+public readonly record struct CoverType(string Value)
 {
-    NoCover,
-    PrintNone,
-    PrintFront,
-    PrintBack,
-    PrintBoth
+    public static readonly CoverType NoCover = new("no-cover");
+    public static readonly CoverType PrintBack = new("print-back");
+    public static readonly CoverType PrintBoth = new("print-both");
+    public static readonly CoverType PrintFront = new("print-front");
+    public static readonly CoverType PrintNone = new("print-none");
+
+    public override string ToString() => Value;
+    public static implicit operator string(CoverType bin) => bin.Value;
+    public static explicit operator CoverType(string value) => new(value);
 }

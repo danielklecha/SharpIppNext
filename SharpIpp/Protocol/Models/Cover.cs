@@ -18,7 +18,7 @@ public class Cover : IIppCollection
     /// <summary>
     /// keyword | name(MAX)
     /// </summary>
-    public string? Media { get; set; }
+    public Media? Media { get; set; }
 
     /// <summary>
     /// collection

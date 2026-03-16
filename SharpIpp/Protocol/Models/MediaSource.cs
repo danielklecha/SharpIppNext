@@ -3,56 +3,60 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace SharpIpp.Protocol.Models;
-public enum MediaSource
+public readonly record struct MediaSource(string Value)
 {
-    Alternate,
-    AlternateRoll,
-    Auto,
-    Bottom,
-    ByPassTray,
-    Center,
-    Disc,
-    Envelope,
-    Hagaki,
-    LargeCapacity,
-    Left,
-    Main,
-    MainRoll,
-    Manual,
-    Middle,
-    Photo,
-    Rear,
-    Right,
-    Roll1,
-    Roll10,
-    Roll2,
-    Roll3,
-    Roll4,
-    Roll5,
-    Roll6,
-    Roll7,
-    Roll8,
-    Roll9,
-    Side,
-    Top,
-    Tray1,
-    Tray10,
-    Tray11,
-    Tray12,
-    Tray13,
-    Tray14,
-    Tray15,
-    Tray16,
-    Tray17,
-    Tray18,
-    Tray19,
-    Tray2,
-    Tray20,
-    Tray3,
-    Tray4,
-    Tray5,
-    Tray6,
-    Tray7,
-    Tray8,
-    Tray9
+    public static readonly MediaSource Alternate = new("alternate");
+    public static readonly MediaSource AlternateRoll = new("alternate-roll");
+    public static readonly MediaSource Auto = new("auto");
+    public static readonly MediaSource Bottom = new("bottom");
+    public static readonly MediaSource ByPassTray = new("by-pass-tray");
+    public static readonly MediaSource Center = new("center");
+    public static readonly MediaSource Disc = new("disc");
+    public static readonly MediaSource Envelope = new("envelope");
+    public static readonly MediaSource Hagaki = new("hagaki");
+    public static readonly MediaSource LargeCapacity = new("large-capacity");
+    public static readonly MediaSource Left = new("left");
+    public static readonly MediaSource Main = new("main");
+    public static readonly MediaSource MainRoll = new("main-roll");
+    public static readonly MediaSource Manual = new("manual");
+    public static readonly MediaSource Middle = new("middle");
+    public static readonly MediaSource Photo = new("photo");
+    public static readonly MediaSource Rear = new("rear");
+    public static readonly MediaSource Right = new("right");
+    public static readonly MediaSource Roll1 = new("roll-1");
+    public static readonly MediaSource Roll10 = new("roll-10");
+    public static readonly MediaSource Roll2 = new("roll-2");
+    public static readonly MediaSource Roll3 = new("roll-3");
+    public static readonly MediaSource Roll4 = new("roll-4");
+    public static readonly MediaSource Roll5 = new("roll-5");
+    public static readonly MediaSource Roll6 = new("roll-6");
+    public static readonly MediaSource Roll7 = new("roll-7");
+    public static readonly MediaSource Roll8 = new("roll-8");
+    public static readonly MediaSource Roll9 = new("roll-9");
+    public static readonly MediaSource Side = new("side");
+    public static readonly MediaSource Top = new("top");
+    public static readonly MediaSource Tray1 = new("tray-1");
+    public static readonly MediaSource Tray10 = new("tray-10");
+    public static readonly MediaSource Tray11 = new("tray-11");
+    public static readonly MediaSource Tray12 = new("tray-12");
+    public static readonly MediaSource Tray13 = new("tray-13");
+    public static readonly MediaSource Tray14 = new("tray-14");
+    public static readonly MediaSource Tray15 = new("tray-15");
+    public static readonly MediaSource Tray16 = new("tray-16");
+    public static readonly MediaSource Tray17 = new("tray-17");
+    public static readonly MediaSource Tray18 = new("tray-18");
+    public static readonly MediaSource Tray19 = new("tray-19");
+    public static readonly MediaSource Tray2 = new("tray-2");
+    public static readonly MediaSource Tray20 = new("tray-20");
+    public static readonly MediaSource Tray3 = new("tray-3");
+    public static readonly MediaSource Tray4 = new("tray-4");
+    public static readonly MediaSource Tray5 = new("tray-5");
+    public static readonly MediaSource Tray6 = new("tray-6");
+    public static readonly MediaSource Tray7 = new("tray-7");
+    public static readonly MediaSource Tray8 = new("tray-8");
+    public static readonly MediaSource Tray9 = new("tray-9");
+
+    public override string ToString() => Value;
+    public static implicit operator string(MediaSource bin) => bin.Value;
+    public static explicit operator MediaSource(string value) => new(value);
 }

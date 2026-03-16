@@ -4,12 +4,16 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the type of trimming to perform.
 /// See: PWG 5100.1-2022 Section 6.30
 /// </summary>
-public enum TrimmingType
+public readonly record struct TrimmingType(string Value)
 {
-    DrawLine,
-    Full,
-    Partial,
-    Perforate,
-    Score,
-    Tab
+    public static readonly TrimmingType DrawLine = new("draw-line");
+    public static readonly TrimmingType Full = new("full");
+    public static readonly TrimmingType Partial = new("partial");
+    public static readonly TrimmingType Perforate = new("perforate");
+    public static readonly TrimmingType Score = new("score");
+    public static readonly TrimmingType Tab = new("tab");
+
+    public override string ToString() => Value;
+    public static implicit operator string(TrimmingType bin) => bin.Value;
+    public static explicit operator TrimmingType(string value) => new(value);
 }

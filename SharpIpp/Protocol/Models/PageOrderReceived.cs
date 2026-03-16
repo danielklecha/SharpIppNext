@@ -1,18 +1,16 @@
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
-/// The "page-order-received" Job Template attribute (section 6.3.1) specifies the order of pages
-/// recorded in the Document data.
+/// Specifies the page-order-received.
+/// See: PWG 5100.1-2022 Section 6.18
 /// </summary>
-public enum PageOrderReceived
+public readonly record struct PageOrderReceived(string Value)
 {
-    /// <summary>
-    /// The Document data contains pages in the order 1, 2, 3, ...
-    /// </summary>
-    OneToNOrder = 3,
+    public static readonly PageOrderReceived Forward = new("forward");
+    public static readonly PageOrderReceived Reverse = new("reverse");
+    public static readonly PageOrderReceived OneToNOrder = new("1-to-n-order");
 
-    /// <summary>
-    /// The Document data contains pages in the order n, n-1, n-2, ...
-    /// </summary>
-    NTo1Order = 4
+    public override string ToString() => Value;
+    public static implicit operator string(PageOrderReceived bin) => bin.Value;
+    public static explicit operator PageOrderReceived(string value) => new(value);
 }

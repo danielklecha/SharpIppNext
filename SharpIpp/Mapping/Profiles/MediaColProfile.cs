@@ -28,7 +28,7 @@ internal class MediaColProfile : IProfile
             {
                 MediaBackCoating = map.MapFromDicNullable<MediaCoating?>(src, nameof(MediaCol.MediaBackCoating).ConvertCamelCaseToKebabCase()),
                 MediaBottomMargin = map.MapFromDicNullable<int?>(src, nameof(MediaCol.MediaBottomMargin).ConvertCamelCaseToKebabCase()),
-                MediaColor = map.MapFromDicNullable<string?>(src, nameof(MediaCol.MediaColor).ConvertCamelCaseToKebabCase()),
+                MediaColor = map.MapFromDicNullable<MediaColor?>(src, nameof(MediaCol.MediaColor).ConvertCamelCaseToKebabCase()),
                 MediaFrontCoating = map.MapFromDicNullable<MediaCoating?>(src, nameof(MediaCol.MediaFrontCoating).ConvertCamelCaseToKebabCase()),
                 MediaGrain = map.MapFromDicNullable<MediaGrain?>(src, nameof(MediaCol.MediaGrain).ConvertCamelCaseToKebabCase()),
                 MediaHoleCount = map.MapFromDicNullable<int?>(src, nameof(MediaCol.MediaHoleCount).ConvertCamelCaseToKebabCase()),
@@ -39,12 +39,12 @@ internal class MediaColProfile : IProfile
                 MediaPrePrinted = map.MapFromDicNullable<MediaPrePrinted?>(src, nameof(MediaCol.MediaPrePrinted).ConvertCamelCaseToKebabCase()),
                 MediaRecycled = map.MapFromDicNullable<MediaRecycled?>(src, nameof(MediaCol.MediaRecycled).ConvertCamelCaseToKebabCase()),
                 MediaRightMargin = map.MapFromDicNullable<int?>(src, nameof(MediaCol.MediaRightMargin).ConvertCamelCaseToKebabCase()),
-                MediaSizeName = map.MapFromDicNullable<string?>(src, nameof(MediaCol.MediaSizeName).ConvertCamelCaseToKebabCase()),
+                MediaSizeName = map.MapFromDicNullable<Media?>(src, nameof(MediaCol.MediaSizeName).ConvertCamelCaseToKebabCase()),
                 MediaSource = map.MapFromDicNullable<MediaSource?>(src, nameof(MediaCol.MediaSource).ConvertCamelCaseToKebabCase()),
                 MediaThickness = map.MapFromDicNullable<int?>(src, nameof(MediaCol.MediaThickness).ConvertCamelCaseToKebabCase()),
                 MediaTooth = map.MapFromDicNullable<MediaTooth?>(src, nameof(MediaCol.MediaTooth).ConvertCamelCaseToKebabCase()),
                 MediaTopMargin = map.MapFromDicNullable<int?>(src, nameof(MediaCol.MediaTopMargin).ConvertCamelCaseToKebabCase()),
-                MediaType = map.MapFromDicNullable<string?>(src, nameof(MediaCol.MediaType).ConvertCamelCaseToKebabCase()),
+                MediaType = map.MapFromDicNullable<MediaType?>(src, nameof(MediaCol.MediaType).ConvertCamelCaseToKebabCase()),
                 MediaWeightMetric = map.MapFromDicNullable<int?>(src, nameof(MediaCol.MediaWeightMetric).ConvertCamelCaseToKebabCase())
             };
             if (src.ContainsKey(nameof(MediaCol.MediaSize).ConvertCamelCaseToKebabCase()))
@@ -62,7 +62,7 @@ internal class MediaColProfile : IProfile
             if (src.MediaBottomMargin.HasValue)
                 attributes.Add(new IppAttribute(Tag.Integer, nameof(MediaCol.MediaBottomMargin).ConvertCamelCaseToKebabCase(), src.MediaBottomMargin.Value));
             if (src.MediaColor != null)
-                attributes.Add(new IppAttribute(Tag.Keyword, nameof(MediaCol.MediaColor).ConvertCamelCaseToKebabCase(), src.MediaColor));
+                attributes.Add(new IppAttribute(Tag.Keyword, nameof(MediaCol.MediaColor).ConvertCamelCaseToKebabCase(), map.Map<string>(src.MediaColor)));
             if (src.MediaFrontCoating.HasValue)
                 attributes.Add(new IppAttribute(Tag.Keyword, nameof(MediaCol.MediaFrontCoating).ConvertCamelCaseToKebabCase(), map.Map<string>(src.MediaFrontCoating.Value)));
             if (src.MediaGrain.HasValue)
@@ -86,7 +86,7 @@ internal class MediaColProfile : IProfile
             if (src.MediaSize != null)
                 attributes.AddRange(map.Map<IEnumerable<IppAttribute>>(src.MediaSize).ToBegCollection(nameof(MediaCol.MediaSize).ConvertCamelCaseToKebabCase()));
             if (src.MediaSizeName != null)
-                attributes.Add(new IppAttribute(Tag.Keyword, nameof(MediaCol.MediaSizeName).ConvertCamelCaseToKebabCase(), src.MediaSizeName));
+                attributes.Add(new IppAttribute(Tag.Keyword, nameof(MediaCol.MediaSizeName).ConvertCamelCaseToKebabCase(), map.Map<string>(src.MediaSizeName)));
             if (src.MediaSource.HasValue)
                 attributes.Add(new IppAttribute(Tag.Keyword, nameof(MediaCol.MediaSource).ConvertCamelCaseToKebabCase(), map.Map<string>(src.MediaSource.Value)));
             if (src.MediaSourceProperties != null)
@@ -98,7 +98,7 @@ internal class MediaColProfile : IProfile
             if (src.MediaTopMargin.HasValue)
                 attributes.Add(new IppAttribute(Tag.Integer, nameof(MediaCol.MediaTopMargin).ConvertCamelCaseToKebabCase(), src.MediaTopMargin.Value));
             if (src.MediaType != null)
-                attributes.Add(new IppAttribute(Tag.Keyword, nameof(MediaCol.MediaType).ConvertCamelCaseToKebabCase(), src.MediaType));
+                attributes.Add(new IppAttribute(Tag.Keyword, nameof(MediaCol.MediaType).ConvertCamelCaseToKebabCase(), map.Map<string>(src.MediaType)));
             if (src.MediaWeightMetric.HasValue)
                 attributes.Add(new IppAttribute(Tag.Integer, nameof(MediaCol.MediaWeightMetric).ConvertCamelCaseToKebabCase(), src.MediaWeightMetric.Value));
             return attributes;

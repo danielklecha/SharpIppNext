@@ -4,11 +4,15 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the type of separator sheets.
 /// See: PWG 5100.3 Section 5.2.18
 /// </summary>
-public enum SeparatorSheetsType
+public readonly record struct SeparatorSheetsType(string Value)
 {
-    None,
-    SlipSheets,
-    StartSheet,
-    EndSheet,
-    BothSheets
+    public static readonly SeparatorSheetsType None = new("none");
+    public static readonly SeparatorSheetsType SlipSheets = new("slip-sheets");
+    public static readonly SeparatorSheetsType StartSheet = new("start-sheet");
+    public static readonly SeparatorSheetsType EndSheet = new("end-sheet");
+    public static readonly SeparatorSheetsType BothSheets = new("both-sheets");
+
+    public override string ToString() => Value;
+    public static implicit operator string(SeparatorSheetsType bin) => bin.Value;
+    public static explicit operator SeparatorSheetsType(string value) => new(value);
 }

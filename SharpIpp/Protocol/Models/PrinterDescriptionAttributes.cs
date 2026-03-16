@@ -212,12 +212,12 @@ namespace SharpIpp.Protocol.Models
         /// <summary>
         /// media-default (RFC 8011 Section 5.2.11)
         /// </summary>
-        public string? MediaDefault { get; set; }
+        public Media? MediaDefault { get; set; }
 
         /// <summary>
         /// media-supported (RFC 8011 Section 5.2.11)
         /// </summary>
-        public string[]? MediaSupported { get; set; }
+        public Media[]? MediaSupported { get; set; }
 
         /// <summary>
         /// sides-default (RFC 8011 Section 5.2.8)
@@ -307,12 +307,12 @@ namespace SharpIpp.Protocol.Models
         /// <summary>
         /// output-bin-default (PWG 5100.2-2001 Section 2.1)
         /// </summary>
-        public string? OutputBinDefault { get; set; }
+        public OutputBin? OutputBinDefault { get; set; }
 
         /// <summary>
         /// output-bin-supported (PWG 5100.2-2001 Section 2.1)
         /// </summary>
-        public string[]? OutputBinSupported { get; set; }
+        public OutputBin[]? OutputBinSupported { get; set; }
 
         /// <summary>
         /// media-col-default (PWG 5100.7-2023)
@@ -407,7 +407,7 @@ namespace SharpIpp.Protocol.Models
         /// <summary>
         /// finishing-template-supported (PWG 5100.1-2022 Section 6.8)
         /// </summary>
-        public string[]? FinishingTemplateSupported { get; set; }
+        public FinishingTemplate[]? FinishingTemplateSupported { get; set; }
 
         /// <summary>
         /// finishings-col-supported (PWG 5100.1-2022 Section 6.12)
@@ -622,12 +622,12 @@ namespace SharpIpp.Protocol.Models
         /// <summary>
         /// imposition-template-default (PWG 5100.3-2023 Section 5.3.9)
         /// </summary>
-        public string? ImpositionTemplateDefault { get; set; }
+        public ImpositionTemplate? ImpositionTemplateDefault { get; set; }
 
         /// <summary>
         /// imposition-template-supported (PWG 5100.3-2023 Section 5.3.10)
         /// </summary>
-        public string[]? ImpositionTemplateSupported { get; set; }
+        public ImpositionTemplate[]? ImpositionTemplateSupported { get; set; }
 
         /// <summary>
         /// insert-count-supported (PWG 5100.3-2023 Section 5.3.11)
@@ -707,7 +707,7 @@ namespace SharpIpp.Protocol.Models
         /// <summary>
         /// job-phone-number-scheme-supported (PWG 5100.3-2023 Section 5.3.26)
         /// </summary>
-        public string[]? JobPhoneNumberSchemeSupported { get; set; }
+        public JobPhoneNumberScheme[]? JobPhoneNumberSchemeSupported { get; set; }
 
         /// <summary>
         /// job-phone-number-supported (PWG 5100.3-2023 Section 5.3.27)

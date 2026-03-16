@@ -13,7 +13,7 @@ public class JobAccountingSheets : IIppCollection
     /// <summary>
     /// type2 keyword | name(MAX)
     /// </summary>
-    public string? JobAccountingOutputBin { get; set; }
+    public OutputBin? JobAccountingOutputBin { get; set; }
 
     /// <summary>
     /// type2 keyword | name(MAX)
@@ -23,7 +23,7 @@ public class JobAccountingSheets : IIppCollection
     /// <summary>
     /// keyword | name(MAX)
     /// </summary>
-    public string? Media { get; set; }
+    public Media? Media { get; set; }
 
     /// <summary>
     /// collection

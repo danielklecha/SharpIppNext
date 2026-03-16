@@ -191,7 +191,7 @@ namespace SharpIpp.Protocol.Models
         /// with the document data as its prints each page.
         /// See: RFC 8011 Section 5.2.11
         /// </summary>
-        public string? Media { get; set; }
+        public Media? Media { get; set; }
 
         /// <summary>
         /// This attribute identifies the resolution that Printer uses for the
@@ -233,7 +233,7 @@ namespace SharpIpp.Protocol.Models
         /// attribute syntax is 'name'.
         /// See: PWG 5100.2-2001 Section 2.1
         /// </summary>
-        public string? OutputBin { get; set; }
+        public OutputBin? OutputBin { get; set; }
 
         /// <summary>
         /// This attribute specifies the account associated with the Job.
@@ -346,7 +346,7 @@ namespace SharpIpp.Protocol.Models
         /// <summary>
         /// PWG 5100.3-2023 Section 5.2.5
         /// </summary>
-        public string? ImpositionTemplate { get; set; }
+        public ImpositionTemplate? ImpositionTemplate { get; set; }
 
         /// <summary>
         /// PWG 5100.3-2023 Section 5.2.6

@@ -1,23 +1,23 @@
-namespace SharpIpp.Protocol.Models
+namespace SharpIpp.Protocol.Models;
+
+/// <summary>
+/// This attribute determines which job start/end sheet(s), if any, MUST
+/// be printed with a job.
+/// See: RFC 2911 Section 4.2.3
+/// </summary>
+public readonly record struct JobSheets(string Value)
 {
     /// <summary>
-    /// This attribute determines which job start/end sheet(s), if any, MUST
-    /// be printed with a job.
-    /// See: RFC 2911 Section 4.2.3
+    /// no job sheet is printed
     /// </summary>
-    public enum JobSheets
-    {
+    public static readonly JobSheets None = new("none");
 
-        /// <summary>
-        /// no job sheet is printed
-        /// </summary>
-        None,
+    /// <summary>
+    /// one or more site specific standard job sheets are printed
+    /// </summary>
+    public static readonly JobSheets Standard = new("standard");
 
-        /// <summary>
-        /// one or more site specific standard job sheets are
-        /// printed, e.g. a single start sheet or both start and end sheet is
-        /// printed
-        /// </summary>
-        Standard,
-    }
+    public override string ToString() => Value;
+    public static implicit operator string(JobSheets bin) => bin.Value;
+    public static explicit operator JobSheets(string value) => new(value);
 }

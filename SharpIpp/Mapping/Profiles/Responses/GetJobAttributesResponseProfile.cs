@@ -74,14 +74,14 @@ internal class GetJobAttributesResponseProfile : IProfile
             JobHoldUntilActual = map.MapFromDicSetNullable<JobHoldUntil[]?>(src, JobAttribute.JobHoldUntilActual),
             JobPriorityActual = map.MapFromDicSetNullable<int[]?>(src, JobAttribute.JobPriorityActual),
             JobSheetsActual = map.MapFromDicSetNullable<JobSheets[]?>(src, JobAttribute.JobSheetsActual),
-            MediaActual = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.MediaActual),
+            MediaActual = map.MapFromDicSetNullable<Media[]?>(src, JobAttribute.MediaActual),
             MediaColActual = src.TryGetValue(JobAttribute.MediaColActual, out var mediaColActual) && mediaColActual.GroupBegCollection().Any()
                 ? mediaColActual.GroupBegCollection().Select(x => map.Map<MediaCol>(x.FromBegCollection().ToIppDictionary())).ToArray()
                 : null,
             MultipleDocumentHandlingActual = map.MapFromDicSetNullable<MultipleDocumentHandling[]?>(src, JobAttribute.MultipleDocumentHandlingActual),
             NumberUpActual = map.MapFromDicSetNullable<int[]?>(src, JobAttribute.NumberUpActual),
             OrientationRequestedActual = map.MapFromDicSetNullable<Orientation[]?>(src, JobAttribute.OrientationRequestedActual),
-            OutputBinActual = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.OutputBinActual),
+            OutputBinActual = map.MapFromDicSetNullable<OutputBin[]?>(src, JobAttribute.OutputBinActual),
             PageRangesActual = map.MapFromDicSetNullable<Protocol.Models.Range[]?>(src, JobAttribute.PageRangesActual),
             PrintQualityActual = map.MapFromDicSetNullable<PrintQuality[]?>(src, JobAttribute.PrintQualityActual),
             PrinterResolutionActual = map.MapFromDicSetNullable<Resolution[]?>(src, JobAttribute.PrinterResolutionActual),

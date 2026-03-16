@@ -20,13 +20,13 @@ internal class DocumentTemplateAttributesProfile : IProfile
             if (src.Finishings.HasValue) dst.Add(new IppAttribute(Tag.Enum, JobAttribute.Finishings, (int)src.Finishings.Value));
             if (src.FinishingsCol != null) dst.AddRange(src.FinishingsCol.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.FinishingsCol)));
             if (src.ForceFrontSide != null) dst.AddRange(src.ForceFrontSide.Select(x => new IppAttribute(Tag.Integer, JobAttribute.ForceFrontSide, x)));
-            if (src.ImpositionTemplate != null) dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.ImpositionTemplate, src.ImpositionTemplate));
-            if (src.Media != null) dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.Media, src.Media));
+            if (src.ImpositionTemplate != null) dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.ImpositionTemplate, map.Map<string>(src.ImpositionTemplate)));
+            if (src.Media != null) dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.Media, map.Map<string>(src.Media)));
             if (src.MediaCol != null) dst.AddRange(map.Map<IEnumerable<IppAttribute>>(src.MediaCol).ToBegCollection(JobAttribute.MediaCol));
             if (src.MediaInputTrayCheck != null) dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.MediaInputTrayCheck, map.Map<string>(src.MediaInputTrayCheck)));
             if (src.NumberUp.HasValue) dst.Add(new IppAttribute(Tag.Integer, JobAttribute.NumberUp, src.NumberUp.Value));
             if (src.OrientationRequested.HasValue) dst.Add(new IppAttribute(Tag.Enum, JobAttribute.OrientationRequested, (int)src.OrientationRequested.Value));
-            if (src.OutputBin != null) dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.OutputBin, src.OutputBin));
+            if (src.OutputBin != null) dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.OutputBin, map.Map<string>(src.OutputBin.Value)));
             if (src.PageDelivery.HasValue) dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.PageDelivery, map.Map<string>(src.PageDelivery.Value)));
             if (src.PageOrderReceived.HasValue) dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.PageOrderReceived, map.Map<string>(src.PageOrderReceived.Value)));
             if (src.PageRanges != null) dst.AddRange(src.PageRanges.Select(x => new IppAttribute(Tag.RangeOfInteger, JobAttribute.PageRanges, x)));
@@ -57,14 +57,14 @@ internal class DocumentTemplateAttributesProfile : IProfile
             if (src.ContainsKey(JobAttribute.FinishingsCol))
                 dst.FinishingsCol = src[JobAttribute.FinishingsCol].GroupBegCollection().Select(x => map.Map<FinishingsCol>(x.FromBegCollection().ToIppDictionary())).ToArray();
             dst.ForceFrontSide = map.MapFromDicSetNullable<int[]?>(src, JobAttribute.ForceFrontSide);
-            dst.ImpositionTemplate = map.MapFromDicNullable<string?>(src, JobAttribute.ImpositionTemplate);
-            dst.Media = map.MapFromDicNullable<string?>(src, JobAttribute.Media);
+            dst.ImpositionTemplate = map.MapFromDicNullable<ImpositionTemplate?>(src, JobAttribute.ImpositionTemplate);
+            dst.Media = map.MapFromDicNullable<Media?>(src, JobAttribute.Media);
             if (src.ContainsKey(JobAttribute.MediaCol))
                 dst.MediaCol = map.Map<MediaCol>(src[JobAttribute.MediaCol].FromBegCollection().ToIppDictionary());
             dst.MediaInputTrayCheck = map.MapFromDicNullable<MediaInputTrayCheck?>(src, JobAttribute.MediaInputTrayCheck);
             dst.NumberUp = map.MapFromDicNullable<int?>(src, JobAttribute.NumberUp);
             dst.OrientationRequested = map.MapFromDicNullable<Orientation?>(src, JobAttribute.OrientationRequested);
-            dst.OutputBin = map.MapFromDicNullable<string?>(src, JobAttribute.OutputBin);
+            dst.OutputBin = map.MapFromDicNullable<OutputBin?>(src, JobAttribute.OutputBin);
             dst.PageDelivery = map.MapFromDicNullable<PageDelivery?>(src, JobAttribute.PageDelivery);
             dst.PageOrderReceived = map.MapFromDicNullable<PageOrderReceived?>(src, JobAttribute.PageOrderReceived);
             dst.PageRanges = map.MapFromDicSetNullable<Range[]?>(src, JobAttribute.PageRanges);

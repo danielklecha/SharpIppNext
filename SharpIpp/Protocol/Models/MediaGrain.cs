@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace SharpIpp.Protocol.Models;
-public enum MediaGrain
+public readonly record struct MediaGrain(string Value)
 {
-    XDirection,
-    YDirection
+    public static readonly MediaGrain XDirection = new("x-direction");
+    public static readonly MediaGrain YDirection = new("y-direction");
+
+    public override string ToString() => Value;
+    public static implicit operator string(MediaGrain bin) => bin.Value;
+    public static explicit operator MediaGrain(string value) => new(value);
 }

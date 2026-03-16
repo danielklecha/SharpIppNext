@@ -90,8 +90,8 @@ internal class GetCUPSPrintersResponseProfile : IProfile
                 ReferenceUriSchemesSupported = map.MapFromDicSetNullable<UriScheme[]?>(src, PrinterAttribute.ReferenceUriSchemesSupported),
                 UriAuthenticationSupported = map.MapFromDicSetNullable<UriAuthentication[]?>(src, PrinterAttribute.UriAuthenticationSupported),
                 UriSecuritySupported = map.MapFromDicSetNullable<UriSecurity[]?>(src, PrinterAttribute.UriSecuritySupported),
-                MediaDefault = map.MapFromDicNullable<string?>(src, PrinterAttribute.MediaDefault),
-                MediaSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.MediaSupported),
+                MediaDefault = map.MapFromDicNullable<Media?>(src, PrinterAttribute.MediaDefault),
+                MediaSupported = map.MapFromDicSetNullable<Media[]?>(src, PrinterAttribute.MediaSupported),
                 SidesDefault = map.MapFromDicNullable<Sides?>(src, PrinterAttribute.SidesDefault),
                 SidesSupported = map.MapFromDicSetNullable<Sides[]?>(src, PrinterAttribute.SidesSupported),
                 FinishingsDefault = map.MapFromDicNullable<Finishings?>(src, PrinterAttribute.FinishingsDefault),
@@ -109,8 +109,8 @@ internal class GetCUPSPrintersResponseProfile : IProfile
                 PageRangesSupported = map.MapFromDicNullable<bool?>(src, PrinterAttribute.PageRangesSupported),
                 JobHoldUntilDefault = map.MapFromDicNullable<JobHoldUntil?>(src, PrinterAttribute.JobHoldUntilDefault),
                 JobHoldUntilSupported = map.MapFromDicSetNullable<JobHoldUntil[]?>(src, PrinterAttribute.JobHoldUntilSupported),
-                OutputBinDefault = map.MapFromDicNullable<string?>(src, PrinterAttribute.OutputBinDefault),
-                OutputBinSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.OutputBinSupported),
+                OutputBinDefault = map.MapFromDicNullable<OutputBin?>(src, PrinterAttribute.OutputBinDefault),
+                OutputBinSupported = map.MapFromDicSetNullable<OutputBin[]?>(src, PrinterAttribute.OutputBinSupported),
                 MediaColDefault = src.ContainsKey(PrinterAttribute.MediaColDefault) ? map.Map<MediaCol>(src[PrinterAttribute.MediaColDefault].FromBegCollection().ToIppDictionary()) : null,
                 PrintColorModeDefault = map.MapFromDicNullable<PrintColorMode?>(src, PrinterAttribute.PrintColorModeDefault),
                 PrintColorModeSupported = map.MapFromDicSetNullable<PrintColorMode[]?>(src, PrinterAttribute.PrintColorModeSupported),
@@ -129,7 +129,7 @@ internal class GetCUPSPrintersResponseProfile : IProfile
                 PrintContentOptimizeSupported = map.MapFromDicSetNullable<PrintContentOptimize[]?>(src, PrinterAttribute.PrintContentOptimizeSupported),
                 OutputDeviceSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.OutputDeviceSupported),
                 JobCreationAttributesSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.JobCreationAttributesSupported),
-                FinishingTemplateSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.FinishingTemplateSupported),
+                FinishingTemplateSupported = map.MapFromDicSetNullable<FinishingTemplate[]?>(src, PrinterAttribute.FinishingTemplateSupported),
                 FinishingsColSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.FinishingsColSupported),
                 JobPagesPerSetSupported = map.MapFromDicNullable<bool?>(src, PrinterAttribute.JobPagesPerSetSupported),
                 PunchingHoleDiameterConfigured = map.MapFromDicNullable<int?>(src, PrinterAttribute.PunchingHoleDiameterConfigured),
@@ -172,8 +172,8 @@ internal class GetCUPSPrintersResponseProfile : IProfile
                 ForceFrontSideSupported = map.MapFromDicNullable<Protocol.Models.Range?>(src, PrinterAttribute.ForceFrontSideSupported),
                 ImageOrientationDefault = map.MapFromDicNullable<Orientation?>(src, PrinterAttribute.ImageOrientationDefault),
                 ImageOrientationSupported = map.MapFromDicSetNullable<Orientation[]?>(src, PrinterAttribute.ImageOrientationSupported),
-                ImpositionTemplateDefault = map.MapFromDicNullable<string?>(src, PrinterAttribute.ImpositionTemplateDefault),
-                ImpositionTemplateSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.ImpositionTemplateSupported),
+                ImpositionTemplateDefault = map.MapFromDicNullable<ImpositionTemplate?>(src, PrinterAttribute.ImpositionTemplateDefault),
+                ImpositionTemplateSupported = map.MapFromDicSetNullable<ImpositionTemplate[]?>(src, PrinterAttribute.ImpositionTemplateSupported),
                 InsertCountSupported = map.MapFromDicNullable<Protocol.Models.Range?>(src, PrinterAttribute.InsertCountSupported),
                 InsertSheetDefault = src.TryGetValue(PrinterAttribute.InsertSheetDefault, out var insertsheetdefault) && insertsheetdefault.GroupBegCollection().Any() ? insertsheetdefault.GroupBegCollection().Select(x => map.Map<InsertSheet>(x.FromBegCollection().ToIppDictionary())).ToArray() : null,
                 InsertSheetSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.InsertSheetSupported),
@@ -189,7 +189,7 @@ internal class GetCUPSPrintersResponseProfile : IProfile
                 JobErrorSheetWhenSupported = map.MapFromDicSetNullable<JobErrorSheetWhen[]?>(src, PrinterAttribute.JobErrorSheetWhenSupported),
                 JobMessageToOperatorSupported = map.MapFromDicNullable<bool?>(src, PrinterAttribute.JobMessageToOperatorSupported),
                 JobPhoneNumberDefault = map.MapFromDicNullable<string?>(src, PrinterAttribute.JobPhoneNumberDefault),
-                JobPhoneNumberSchemeSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.JobPhoneNumberSchemeSupported),
+                JobPhoneNumberSchemeSupported = map.MapFromDicSetNullable<JobPhoneNumberScheme[]?>(src, PrinterAttribute.JobPhoneNumberSchemeSupported),
                 JobPhoneNumberSupported = map.MapFromDicNullable<bool?>(src, PrinterAttribute.JobPhoneNumberSupported),
                 JobRecipientNameSupported = map.MapFromDicNullable<bool?>(src, PrinterAttribute.JobRecipientNameSupported),
                 JobSheetMessageSupported = map.MapFromDicNullable<bool?>(src, PrinterAttribute.JobSheetMessageSupported),
@@ -253,7 +253,7 @@ internal class GetCUPSPrintersResponseProfile : IProfile
                 if (src.PagesPerMinute != null)
                     dic.Add(PrinterAttribute.PagesPerMinute, new IppAttribute[] { new IppAttribute(Tag.Integer, PrinterAttribute.PagesPerMinute, src.PagesPerMinute.Value) });
                 if (src.PdlOverrideSupported != null)
-                    dic.Add(PrinterAttribute.PdlOverrideSupported, new IppAttribute[] { new IppAttribute(Tag.Keyword, PrinterAttribute.PdlOverrideSupported, src.PdlOverrideSupported) });
+                    dic.Add(PrinterAttribute.PdlOverrideSupported, new IppAttribute[] { new IppAttribute(Tag.Keyword, PrinterAttribute.PdlOverrideSupported, src.PdlOverrideSupported.Value) });
                 if (src.PagesPerMinuteColor != null)
                     dic.Add(PrinterAttribute.PagesPerMinuteColor, [new IppAttribute(Tag.Integer, PrinterAttribute.PagesPerMinuteColor, src.PagesPerMinuteColor.Value)]);
                 if (src.PrinterCurrentTime != null)
@@ -299,9 +299,9 @@ internal class GetCUPSPrintersResponseProfile : IProfile
                 if (src.UriSecuritySupported != null)
                     dic.Add(PrinterAttribute.UriSecuritySupported, src.UriSecuritySupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.UriSecuritySupported, map.Map<string>(x))).ToArray());
                 if (src.MediaDefault != null)
-                    dic.Add(PrinterAttribute.MediaDefault, new IppAttribute[] { new IppAttribute(Tag.Keyword, PrinterAttribute.MediaDefault, src.MediaDefault) });
+                    dic.Add(PrinterAttribute.MediaDefault, new IppAttribute[] { new IppAttribute(Tag.Keyword, PrinterAttribute.MediaDefault, map.Map<string>(src.MediaDefault)) });
                 if (src.MediaSupported != null)
-                    dic.Add(PrinterAttribute.MediaSupported, src.MediaSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.MediaSupported, x)).ToArray());
+                    dic.Add(PrinterAttribute.MediaSupported, src.MediaSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.MediaSupported, map.Map<string>(x))).ToArray());
                 if (src.SidesDefault != null)
                     dic.Add(PrinterAttribute.SidesDefault, new IppAttribute[] { new IppAttribute(Tag.Keyword, PrinterAttribute.SidesDefault, map.Map<string>(src.SidesDefault)) });
                 if (src.SidesSupported != null)
@@ -337,9 +337,9 @@ internal class GetCUPSPrintersResponseProfile : IProfile
                 if (src.JobHoldUntilSupported != null)
                     dic.Add(PrinterAttribute.JobHoldUntilSupported, src.JobHoldUntilSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.JobHoldUntilSupported, map.Map<string>(x))).ToArray());
                 if (src.OutputBinDefault != null)
-                    dic.Add(PrinterAttribute.OutputBinDefault, new IppAttribute[] { new IppAttribute(Tag.Keyword, PrinterAttribute.OutputBinDefault, src.OutputBinDefault) });
+                    dic.Add(PrinterAttribute.OutputBinDefault, new IppAttribute[] { new IppAttribute(Tag.Keyword, PrinterAttribute.OutputBinDefault, map.Map<string>(src.OutputBinDefault)) });
                 if (src.OutputBinSupported != null)
-                    dic.Add(PrinterAttribute.OutputBinSupported, src.OutputBinSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.OutputBinSupported, x)).ToArray());
+                    dic.Add(PrinterAttribute.OutputBinSupported, src.OutputBinSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.OutputBinSupported, map.Map<string>(x))).ToArray());
                 if (src.MediaColDefault != null)
                     dic.Add(PrinterAttribute.MediaColDefault, map.Map<IEnumerable<IppAttribute>>(src.MediaColDefault).ToBegCollection(PrinterAttribute.MediaColDefault).ToArray());
                 if (src.PrintColorModeDefault != null)
@@ -365,11 +365,11 @@ internal class GetCUPSPrintersResponseProfile : IProfile
                 if (src.JobCancelAfterSupported != null)
                     dic.Add(PrinterAttribute.JobCancelAfterSupported, [new IppAttribute(Tag.RangeOfInteger, PrinterAttribute.JobCancelAfterSupported, src.JobCancelAfterSupported.Value)]);
                 if (src.JobSpoolingSupported != null)
-                    dic.Add(PrinterAttribute.JobSpoolingSupported, [new IppAttribute(Tag.Keyword, PrinterAttribute.JobSpoolingSupported, src.JobSpoolingSupported)]);
+                    dic.Add(PrinterAttribute.JobSpoolingSupported, [new IppAttribute(Tag.Keyword, PrinterAttribute.JobSpoolingSupported, src.JobSpoolingSupported.Value)]);
                 if (src.MaxPageRangesSupported != null)
                     dic.Add(PrinterAttribute.MaxPageRangesSupported, [new IppAttribute(Tag.Integer, PrinterAttribute.MaxPageRangesSupported, src.MaxPageRangesSupported.Value)]);
                 if (src.PrintContentOptimizeDefault != null)
-                    dic.Add(PrinterAttribute.PrintContentOptimizeDefault, [new IppAttribute(Tag.Keyword, PrinterAttribute.PrintContentOptimizeDefault, src.PrintContentOptimizeDefault)]);
+                    dic.Add(PrinterAttribute.PrintContentOptimizeDefault, [new IppAttribute(Tag.Keyword, PrinterAttribute.PrintContentOptimizeDefault, src.PrintContentOptimizeDefault.Value)]);
                 if (src.PrintContentOptimizeSupported != null)
                     dic.Add(PrinterAttribute.PrintContentOptimizeSupported, src.PrintContentOptimizeSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PrintContentOptimizeSupported, x)).ToArray());
                 if (src.OutputDeviceSupported != null)
@@ -463,9 +463,9 @@ internal class GetCUPSPrintersResponseProfile : IProfile
                 if (src.ImageOrientationSupported != null)
                     dic.Add(PrinterAttribute.ImageOrientationSupported, src.ImageOrientationSupported.Select(x => new IppAttribute(Tag.Enum, PrinterAttribute.ImageOrientationSupported, (int)x)).ToArray());
                 if (src.ImpositionTemplateDefault != null)
-                    dic.Add(PrinterAttribute.ImpositionTemplateDefault, [new IppAttribute(Tag.Keyword, PrinterAttribute.ImpositionTemplateDefault, src.ImpositionTemplateDefault)]);
+                    dic.Add(PrinterAttribute.ImpositionTemplateDefault, [new IppAttribute(Tag.Keyword, PrinterAttribute.ImpositionTemplateDefault, map.Map<string>(src.ImpositionTemplateDefault))]);
                 if (src.ImpositionTemplateSupported != null)
-                    dic.Add(PrinterAttribute.ImpositionTemplateSupported, src.ImpositionTemplateSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.ImpositionTemplateSupported, x)).ToArray());
+                    dic.Add(PrinterAttribute.ImpositionTemplateSupported, src.ImpositionTemplateSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.ImpositionTemplateSupported, map.Map<string>(x))).ToArray());
                 if (src.InsertCountSupported != null)
                     dic.Add(PrinterAttribute.InsertCountSupported, [new IppAttribute(Tag.RangeOfInteger, PrinterAttribute.InsertCountSupported, src.InsertCountSupported.Value)]);
                 if (src.InsertSheetDefault != null)
@@ -497,7 +497,7 @@ internal class GetCUPSPrintersResponseProfile : IProfile
                 if (src.JobPhoneNumberDefault != null)
                     dic.Add(PrinterAttribute.JobPhoneNumberDefault, [new IppAttribute(Tag.Keyword, PrinterAttribute.JobPhoneNumberDefault, src.JobPhoneNumberDefault)]);
                 if (src.JobPhoneNumberSchemeSupported != null)
-                    dic.Add(PrinterAttribute.JobPhoneNumberSchemeSupported, src.JobPhoneNumberSchemeSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.JobPhoneNumberSchemeSupported, x)).ToArray());
+                    dic.Add(PrinterAttribute.JobPhoneNumberSchemeSupported, src.JobPhoneNumberSchemeSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.JobPhoneNumberSchemeSupported, map.Map<string>(x))).ToArray());
                 if (src.JobPhoneNumberSupported != null)
                     dic.Add(PrinterAttribute.JobPhoneNumberSupported, [new IppAttribute(Tag.Boolean, PrinterAttribute.JobPhoneNumberSupported, src.JobPhoneNumberSupported.Value)]);
                 if (src.JobRecipientNameSupported != null)

@@ -77,7 +77,7 @@ internal class JobTemplateAttributesProfile : IProfile
 
             if (src.Media != null)
             {
-                job.Add(new IppAttribute(Tag.Keyword, JobAttribute.Media, src.Media));
+                job.Add(new IppAttribute(Tag.Keyword, JobAttribute.Media, map.Map<string>(src.Media.Value)));
             }
 
             if (src.PrinterResolution != null)
@@ -106,7 +106,7 @@ internal class JobTemplateAttributesProfile : IProfile
 
             if (src.OutputBin != null)
             {
-                job.Add(new IppAttribute(Tag.Keyword, JobAttribute.OutputBin, src.OutputBin));
+                job.Add(new IppAttribute(Tag.Keyword, JobAttribute.OutputBin, map.Map<string>(src.OutputBin.Value)));
             }
 
             if (src.JobAccountId != null)
@@ -161,7 +161,7 @@ internal class JobTemplateAttributesProfile : IProfile
                 job.Add(new IppAttribute(Tag.Enum, JobAttribute.ImageOrientation, (int)src.ImageOrientation.Value));
 
             if (src.ImpositionTemplate != null)
-                job.Add(new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.ImpositionTemplate, src.ImpositionTemplate));
+                job.Add(new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.ImpositionTemplate, map.Map<string>(src.ImpositionTemplate.Value)));
 
             if (src.InsertSheet != null)
                 job.AddRange(src.InsertSheet.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.InsertSheet)));
@@ -240,7 +240,7 @@ internal class JobTemplateAttributesProfile : IProfile
             dst.Sides = map.MapFromDicNullable<Sides?>(jobDict, JobAttribute.Sides);
             dst.NumberUp = map.MapFromDicNullable<int?>(jobDict, JobAttribute.NumberUp);
             dst.OrientationRequested = map.MapFromDicNullable<Orientation?>(jobDict, JobAttribute.OrientationRequested);
-            dst.Media = map.MapFromDicNullable<string?>(jobDict, JobAttribute.Media);
+            dst.Media = map.MapFromDicNullable<Media?>(jobDict, JobAttribute.Media);
             dst.PrinterResolution = map.MapFromDicNullable<Resolution?>(jobDict, JobAttribute.PrinterResolution);
             dst.PrintQuality = map.MapFromDicNullable<PrintQuality?>(jobDict, JobAttribute.PrintQuality);
             dst.PrintScaling = map.MapFromDicNullable<PrintScaling?>(jobDict, JobAttribute.PrintScaling);
@@ -249,7 +249,7 @@ internal class JobTemplateAttributesProfile : IProfile
                 dst.MediaCol = map.Map<MediaCol>(jobDict[JobAttribute.MediaCol].FromBegCollection().ToIppDictionary());
             if (jobDict.ContainsKey(JobAttribute.FinishingsCol))
                 dst.FinishingsCol = jobDict[JobAttribute.FinishingsCol].GroupBegCollection().Select(x => map.Map<FinishingsCol>(x.FromBegCollection().ToIppDictionary())).ToArray();
-            dst.OutputBin = map.MapFromDicNullable<string?>(jobDict, JobAttribute.OutputBin);
+            dst.OutputBin = map.MapFromDicNullable<OutputBin?>(jobDict, JobAttribute.OutputBin);
             dst.JobAccountId = map.MapFromDicNullable<string?>(jobDict, JobAttribute.JobAccountId);
             dst.JobAccountingUserId = map.MapFromDicNullable<string?>(jobDict, JobAttribute.JobAccountingUserId);
             dst.JobCancelAfter = map.MapFromDicNullable<int?>(jobDict, JobAttribute.JobCancelAfter);
@@ -269,7 +269,7 @@ internal class JobTemplateAttributesProfile : IProfile
                 dst.CoverFront = map.Map<Cover>(jobDict[JobAttribute.CoverFront].FromBegCollection().ToIppDictionary());
             dst.ForceFrontSide = map.MapFromDicSetNullable<int[]?>(jobDict, JobAttribute.ForceFrontSide);
             dst.ImageOrientation = map.MapFromDicNullable<Orientation?>(jobDict, JobAttribute.ImageOrientation);
-            dst.ImpositionTemplate = map.MapFromDicNullable<string?>(jobDict, JobAttribute.ImpositionTemplate);
+            dst.ImpositionTemplate = map.MapFromDicNullable<ImpositionTemplate?>(jobDict, JobAttribute.ImpositionTemplate);
             if (jobDict.ContainsKey(JobAttribute.InsertSheet))
                 dst.InsertSheet = jobDict[JobAttribute.InsertSheet].GroupBegCollection().Select(x => map.Map<InsertSheet>(x.FromBegCollection().ToIppDictionary())).ToArray();
             if (jobDict.ContainsKey(JobAttribute.JobAccountingSheets))

@@ -403,7 +403,7 @@ namespace SharpIpp.Protocol.Models
         /// value(s) used by the Printer.
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
-        public string[]? MediaActual { get; set; }
+        public Media[]? MediaActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual media-col
@@ -438,7 +438,7 @@ namespace SharpIpp.Protocol.Models
         /// value(s) used by the Printer.
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
-        public string[]? OutputBinActual { get; set; }
+        public OutputBin[]? OutputBinActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual page-ranges
