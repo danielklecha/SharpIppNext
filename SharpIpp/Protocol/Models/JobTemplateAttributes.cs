@@ -185,5 +185,7 @@ namespace SharpIpp.Protocol.Models
 
         public MediaCol? MediaCol { get; set; }
 
+        public MediaSource? MediaSource { get; set; }
+
     }
 }
