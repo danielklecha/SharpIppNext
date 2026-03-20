@@ -40,5 +40,19 @@ internal class IppRequestProfile : IProfile
             map.Map<IIppRequestMessage, IIppRequest>(src, dst);
             return dst;
         });
+
+        mapper.CreateMap<IIppSystemRequest, IppRequestMessage>((src, dst, map) =>
+        {
+            dst ??= new IppRequestMessage();
+            map.Map<IIppRequest, IppRequestMessage>(src, dst);
+            return dst;
+        });
+
+        mapper.CreateMap<IIppRequestMessage, IIppSystemRequest>((src, dst, map) =>
+        {
+            dst = dst ?? throw new ArgumentNullException(nameof(dst));
+            map.Map<IIppRequestMessage, IIppRequest>(src, dst);
+            return dst;
+        });
     }
 }

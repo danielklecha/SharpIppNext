@@ -3,6 +3,7 @@ namespace SharpIpp.Protocol.Models
     /// <summary>
     /// Specifies values for the <c>job-state-reasons</c> Job Status attribute.
     /// See: RFC 8011 Section 5.3.8
+    /// Additional value from: RFC 2911 Section 4.3.8
     /// Additional value from: PWG 5100.3-2023 Section 6.1
     /// </summary>
     public readonly record struct JobStateReason(string Value)
@@ -14,6 +15,9 @@ namespace SharpIpp.Protocol.Models
         public static readonly JobStateReason SubmissionInterrupted = new("submission-interrupted");
         public static readonly JobStateReason JobOutgoing = new("job-outgoing");
         public static readonly JobStateReason JobHoldUntilSpecified = new("job-hold-until-specified");
+        /// <summary>RFC 2911 §4.3.8 original value, renamed to <see cref="ResourcesAreNotSupported"/> in RFC 8011 §5.3.8.</summary>
+        public static readonly JobStateReason ResourcesAreNotReady = new("resources-are-not-ready");
+        /// <summary>RFC 8011 §5.3.8 rename of <see cref="ResourcesAreNotReady"/>.</summary>
         public static readonly JobStateReason ResourcesAreNotSupported = new("resources-are-not-supported");
         public static readonly JobStateReason PrinterStoppedPartly = new("printer-stopped-partly");
         public static readonly JobStateReason PrinterStopped = new("printer-stopped");

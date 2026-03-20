@@ -114,6 +114,13 @@ namespace SharpIpp.Protocol
                     case SectionTag.EndOfAttributesTag:
                         return;
                     default:
+                        if ((byte)sectionTag <= 0x0F)
+                        {
+                            // Future/unknown group tag: parse attributes but drop the group.
+                            currentAttributes = [];
+                            currentSectionTag = sectionTag;
+                            break;
+                        }
                         if (currentAttributes is null)
                         {
                             throw new ArgumentException($"<Hex dump> Expected section tag, found {data:X2}");
@@ -122,7 +129,6 @@ namespace SharpIpp.Protocol
                         switch (attribute.Tag)
                         {
                             case Tag.Charset when currentSectionTag == SectionTag.OperationAttributesTag && attribute.Name == JobAttribute.AttributesCharset:
-                                //note: charset tag is read as string
                                 encoding = Encoding.GetEncoding((string)attribute.Value);
                                 break;
                             case Tag.BegCollection:
@@ -184,6 +190,12 @@ namespace SharpIpp.Protocol
                     case SectionTag.EndOfAttributesTag:
                         return;
                     default:
+                        if ((byte)sectionTag <= 0x0F)
+                        {
+                            // Future/unknown group tag: parse attributes but do not expose on the request model.
+                            attributes = [];
+                            break;
+                        }
                         if ( attributes is null )
                         {
                             reader.BaseStream.Position--;
@@ -193,7 +205,6 @@ namespace SharpIpp.Protocol
                         switch (attribute.Tag)
                         {
                             case Tag.Charset when attributes == res.OperationAttributes && attribute.Name == JobAttribute.AttributesCharset:
-                                //note: charset tag is read as string
                                 encoding = Encoding.GetEncoding((string)attribute.Value);
                                 break;
                             case Tag.BegCollection:
@@ -401,6 +412,15 @@ namespace SharpIpp.Protocol
                 case YImagePosition v:
                     Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
                     break;
+                case ExtendedValue v:
+                    stream.WriteBigEndian((short)(4 + v.Raw.Length));
+                    stream.WriteBigEndian(v.ExtendedTag);
+                    stream.Write(v.Raw);
+                    break;
+                case UnknownValue v:
+                    stream.WriteBigEndian((short)v.Raw.Length);
+                    stream.Write(v.Raw);
+                    break;
                 default:
                     throw new ArgumentException($"Type {value.GetType()} not supported in ipp");
             }
@@ -502,7 +522,8 @@ namespace SharpIpp.Protocol
                 Tag.StringUnassigned5D => ReadString(stream),
                 Tag.StringUnassigned5E => ReadString(stream),
                 Tag.StringUnassigned5F => ReadString(stream),
-                _ => throw new ArgumentException($"Ipp tag {tag} not supported")
+                Tag.Extended => ReadExtended(stream),
+                _ => ReadUnknown(stream, tag)
             };
         }
 

@@ -19,6 +19,10 @@ namespace SharpIpp.Protocol.Models
         public const string PrinterStateReasons = "printer-state-reasons";
         public const string PrinterStateMessage = "printer-state-message";
         public const string PrinterDetailedStatusMessages = "printer-detailed-status-messages";
+        public const string PrinterStateChangeTime = "printer-state-change-time";
+        public const string PrinterStateChangeDateTime = "printer-state-change-date-time";
+        public const string PrinterConfigChangeTime = "printer-config-change-time";
+        public const string PrinterConfigChangeDateTime = "printer-config-change-date-time";
         public const string IppVersionsSupported = "ipp-versions-supported";
         public const string OperationsSupported = "operations-supported";
         public const string MultipleDocumentJobsSupported = "multiple-document-jobs-supported";
@@ -90,6 +94,8 @@ namespace SharpIpp.Protocol.Models
         public const string JobAccountIdSupported = "job-account-id-supported";
         public const string JobAccountingUserIdDefault = "job-accounting-user-id-default";
         public const string JobAccountingUserIdSupported = "job-accounting-user-id-supported";
+        public const string JobAccountTypeDefault = "job-account-type-default";
+        public const string JobAccountTypeSupported = "job-account-type-supported";
         public const string JobCancelAfterDefault = "job-cancel-after-default";
         public const string JobCancelAfterSupported = "job-cancel-after-supported";
         public const string JobSpoolingSupported = "job-spooling-supported";
@@ -109,6 +115,8 @@ namespace SharpIpp.Protocol.Models
         public const string PrintContentOptimizeSupported = "print-content-optimize-supported";
         public const string OutputDeviceSupported = "output-device-supported";
         public const string JobCreationAttributesSupported = "job-creation-attributes-supported";
+        public const string JobAuthorizationUriSupported = "job-authorization-uri-supported";
+        public const string JobPasswordEncryptionSupported = "job-password-encryption-supported";
         public const string FinishingTemplateSupported = "finishing-template-supported";
         public const string FinishingsColSupported = "finishings-col-supported";
         public const string JobPagesPerSetSupported = "job-pages-per-set-supported";
@@ -225,5 +233,39 @@ namespace SharpIpp.Protocol.Models
         public const string YSide2ImageShiftDefault = "y-side2-image-shift-default";
         public const string PageDeliveryDefault = "page-delivery-default";
         public const string PageDeliverySupported = "page-delivery-supported";
+        public const string PrinterAlert = "printer-alert";
+        public const string PrinterAlertDescription = "printer-alert-description";
+        public const string PrinterSupply = "printer-supply";
+        public const string PrinterSupplyDescription = "printer-supply-description";
+        public const string PrinterChargeInfo = "printer-charge-info";
+        public const string PrinterChargeInfoUri = "printer-charge-info-uri";
+        public const string PrinterMandatoryJobAttributes = "printer-mandatory-job-attributes";
+        public const string OutputDeviceUuidSupported = "output-device-uuid-supported";
+        /// <summary>
+        /// The URI(s) of the Printer object, as requested by the client (operation attribute).
+        /// See: PWG 5100.22-2025 Section 7.1.10
+        /// </summary>
+        public const string PrinterXriRequested = "printer-xri-requested";
+        /// <summary>
+        /// The list of resource IDs currently allocated to this Printer (Printer Status attribute).
+        /// Defined in PWG 5100.22-2025 Sections 6.1.1 and 6.1.2 (response Group 3: Printer Attributes).
+        /// </summary>
+        public const string PrinterResourceIds = "printer-resource-ids";
+        /// <summary>
+        /// The type(s) of print service provided by the Printer.
+        /// As operation attribute (1setOf keyword): PWG 5100.22-2025 Section 7.1.9.
+        /// As Printer Status attribute (keyword): PWG 5100.22-2025 Section 7.7.9.
+        /// </summary>
+        public const string PrinterServiceType = "printer-service-type";
+        /// <summary>
+        /// The accuracy units supported by the 3D Printer.
+        /// See: PWG 5100.21-2019 Section 8.1
+        /// </summary>
+        public const string AccuracyUnitsSupported = "accuracy-units-supported";
+        /// <summary>
+        /// The URI(s) of camera image(s) for the 3D Printer.
+        /// See: PWG 5100.21-2019 Section 8.17
+        /// </summary>
+        public const string PrinterCameraImageUri = "printer-camera-image-uri";
     }
 }

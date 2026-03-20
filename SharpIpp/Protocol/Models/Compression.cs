@@ -23,6 +23,12 @@ public readonly record struct Compression(string Value)
     /// </summary>
     public static readonly Compression Gzip = new("gzip");
 
+    /// <summary>
+    /// UNIX compression technology in RFC 1977
+    /// See: RFC 2911 Section 4.4.32
+    /// </summary>
+    public static readonly Compression Compress = new("compress");
+
     public override string ToString() => Value;
     public static implicit operator string(Compression bin) => bin.Value;
     public static explicit operator Compression(string value) => new(value);

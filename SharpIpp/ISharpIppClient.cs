@@ -110,6 +110,13 @@ public interface ISharpIppClient : IDisposable
     Task<PausePrinterResponse> PausePrinterAsync(PausePrinterRequest request, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Identify-Printer Operation.
+    /// This operation allows a client to request physical identification actions on a Printer.
+    /// See: PWG 5100.13-2023 Section 6.8.4
+    /// </summary>
+    Task<IdentifyPrinterResponse> IdentifyPrinterAsync(IdentifyPrinterRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Print-Job Operation
     /// This REQUIRED operation allows a client to submit a print job with
     /// only one document and supply the document data (rather than just a
@@ -194,6 +201,13 @@ public interface ISharpIppClient : IDisposable
     /// This operation allows a client to update settable Job attributes.
     /// </summary>
     Task<SetJobAttributesResponse> SetJobAttributesAsync(SetJobAttributesRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Set-Printer-Attributes Operation
+    /// This operation allows a client to update settable Printer attributes.
+    /// See: RFC 8011 Section 4.4.15
+    /// </summary>
+    Task<SetPrinterAttributesResponse> SetPrinterAttributesAsync(SetPrinterAttributesRequest request, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Resume-Printer Operation
@@ -326,6 +340,96 @@ public interface ISharpIppClient : IDisposable
     /// See: PWG 5100.5-2024 Section 5.1.3
     /// </summary>
     Task<SetDocumentAttributesResponse> SetDocumentAttributesAsync(SetDocumentAttributesRequest request, CancellationToken cancellationToken = default);
+
+    #endregion
+
+    #region PWG 5100.18-2025 (Shared Infrastructure Extensions)
+
+    /// <summary>
+    /// Acknowledge-Document Operation.
+    /// See: PWG 5100.18-2025 Section 5.1
+    /// </summary>
+    Task<AcknowledgeDocumentResponse> AcknowledgeDocumentAsync(AcknowledgeDocumentRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Acknowledge-Job Operation.
+    /// See: PWG 5100.18-2025 Section 5.3
+    /// </summary>
+    Task<AcknowledgeJobResponse> AcknowledgeJobAsync(AcknowledgeJobRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Fetch-Document Operation.
+    /// See: PWG 5100.18-2025 Section 5.5
+    /// </summary>
+    Task<FetchDocumentResponse> FetchDocumentAsync(FetchDocumentRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get-Output-Device-Attributes Operation.
+    /// See: PWG 5100.18-2025
+    /// </summary>
+    Task<GetOutputDeviceAttributesResponse> GetOutputDeviceAttributesAsync(GetOutputDeviceAttributesRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Update-Active-Jobs Operation.
+    /// See: PWG 5100.18-2025 Section 5.7
+    /// </summary>
+    Task<UpdateActiveJobsResponse> UpdateActiveJobsAsync(UpdateActiveJobsRequest request, CancellationToken cancellationToken = default);
+
+    #endregion
+
+    #region PWG 5100.22-2025 (System Service)
+
+    /// <summary>
+    /// Allocate-Printer-Resources Operation.
+    /// See: PWG 5100.22-2025 Section 6.1.1
+    /// </summary>
+    Task<AllocatePrinterResourcesResponse> AllocatePrinterResourcesAsync(AllocatePrinterResourcesRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Create-Printer Operation.
+    /// See: PWG 5100.22-2025 Section 6.3.1
+    /// </summary>
+    Task<CreatePrinterResponse> CreatePrinterAsync(CreatePrinterRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get-System-Attributes Operation.
+    /// See: PWG 5100.22-2025 Section 6.3.8
+    /// </summary>
+    Task<GetSystemAttributesResponse> GetSystemAttributesAsync(GetSystemAttributesRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get-System-Supported-Values Operation.
+    /// See: PWG 5100.22-2025 Section 6.3.9
+    /// </summary>
+    Task<GetSystemSupportedValuesResponse> GetSystemSupportedValuesAsync(GetSystemSupportedValuesRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Register-Output-Device Operation.
+    /// See: PWG 5100.22-2025 Section 6.3.12
+    /// </summary>
+    Task<RegisterOutputDeviceResponse> RegisterOutputDeviceAsync(RegisterOutputDeviceRequest request, CancellationToken cancellationToken = default);
+
+    #endregion
+
+    #region PWG 5100.11/5100.15/5100.17 Extensions
+
+    /// <summary>
+    /// Get-User-Printer-Attributes Operation.
+    /// See: PWG 5100.11-2024 Section 5.1
+    /// </summary>
+    Task<GetUserPrinterAttributesResponse> GetUserPrinterAttributesAsync(GetUserPrinterAttributesRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Add-Document-Images Operation.
+    /// See: PWG 5100.15-2013 Section 6.4
+    /// </summary>
+    Task<AddDocumentImagesResponse> AddDocumentImagesAsync(AddDocumentImagesRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get-Next-Document-Data Operation.
+    /// See: PWG 5100.17-2014 Section 6.1
+    /// </summary>
+    Task<GetNextDocumentDataResponse> GetNextDocumentDataAsync(GetNextDocumentDataRequest request, CancellationToken cancellationToken = default);
 
     #endregion
 

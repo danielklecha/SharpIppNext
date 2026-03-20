@@ -157,6 +157,12 @@ namespace SharpIpp.Protocol.Models
         public string? JobMoreInfo { get; set; }
 
         /// <summary>
+        /// The <c>job-charge-info</c> Job Description attribute.
+        /// See: PWG 5100.11-2024 Section 5.4.2
+        /// </summary>
+        public string? JobChargeInfo { get; set; }
+
+        /// <summary>
         /// This attribute specifies details about the source of the Document data.
         /// DEPRECATED.
         /// See: PWG 5100.7-2023 Section 6.2.1
@@ -551,5 +557,19 @@ namespace SharpIpp.Protocol.Models
         public DateTimeOffset? DateTimeAtProcessingEstimated { get; set; }
         public int? TimeAtCompletedEstimated { get; set; }
         public int? TimeAtProcessingEstimated { get; set; }
+
+        /// <summary>
+        /// The output-device-job-state attribute reports the job state on the output device.
+        /// See: PWG 5100.18-2025
+        /// </summary>
+        /// <code>output-device-job-state</code>
+        public JobState? OutputDeviceJobState { get; set; }
+
+        /// <summary>
+        /// The actual materials used to process the 3D job.
+        /// See: PWG 5100.21-2019 Section 7.1
+        /// </summary>
+        /// <code>materials-col-actual</code>
+        public Material[]? MaterialsColActual { get; set; }
     }
 }

@@ -53,6 +53,11 @@ public class SmartEnumTests
             yield return [typeof(JobSheets), "none"];
             yield return [typeof(JobSheetsType), "job-sheets"];
             yield return [typeof(JobSpooling), "automatic"];
+            yield return [typeof(JobErrorAction), "abandon-job"];
+            yield return [typeof(JobReleaseAction), "release-to-printer"];
+            yield return [typeof(JobAccountType), "none"];
+            yield return [typeof(JobPasswordEncryption), "none"];
+            yield return [typeof(IdentifyAction), "display"];
             yield return [typeof(JobStateReason), "none"];
             yield return [typeof(LaminatingType), "archival"];
             yield return [typeof(Media), "iso_a4_210x297mm"];
@@ -74,6 +79,7 @@ public class SmartEnumTests
             yield return [typeof(PresentationDirectionNumberUp), "tobottom-toleft"];
             yield return [typeof(PrintColorMode), "auto"];
             yield return [typeof(PrintContentOptimize), "auto"];
+            yield return [typeof(PrintRenderingIntent), "relative"];
             yield return [typeof(PrintScaling), "auto"];
             yield return [typeof(PrinterStateReason), "none"];
             yield return [typeof(SeparatorSheetsType), "none"];

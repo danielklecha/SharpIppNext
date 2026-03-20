@@ -7,6 +7,7 @@ using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
+using SharpIpp.Protocol.Extensions;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Tests.Unit.Mapping.Profiles;
@@ -345,5 +346,65 @@ public class CollectionProfilesTests
         if (h1) result.Should().Contain(a => a.Name == "media"); else result.Should().NotContain(a => a.Name == "media");
         if (h2) result.Should().Contain(a => a.Name == "separator-sheets-type"); else result.Should().NotContain(a => a.Name == "separator-sheets-type");
         if (h3) result.Should().Contain(a => a.Name == "media-col"); else result.Should().NotContain(a => a.Name == "media-col");
+    }
+
+    [TestMethod]
+    public void Map_Dictionary_To_ProofPrint_Should_Map_MediaCol()
+    {
+        // Arrange
+        var mediaCol = new MediaCol { MediaLeftMargin = 5 };
+        var mediaColCollection = _mapper.Map<IEnumerable<IppAttribute>>(mediaCol).ToBegCollection("media-col").ToArray();
+        var dict = new Dictionary<string, IppAttribute[]>
+        {
+            { "media-col", mediaColCollection }
+        };
+
+        // Act
+        var result = _mapper.Map<ProofPrint>(dict);
+
+        // Assert
+        result.MediaCol.Should().NotBeNull();
+        result.MediaCol!.MediaLeftMargin.Should().Be(5);
+    }
+
+    [TestMethod]
+    public void Map_ProofPrint_To_Attributes_Should_Include_MediaCol()
+    {
+        // Arrange
+        var proofPrint = new ProofPrint
+        {
+            MediaCol = new MediaCol { MediaBottomMargin = 7 }
+        };
+
+        // Act
+        var result = _mapper.Map<IEnumerable<IppAttribute>>(proofPrint).ToList();
+
+        // Assert
+        result.Should().Contain(a => a.Name == "media-col" && a.Tag == Tag.BegCollection);
+        result.Should().Contain(a => a.Tag == Tag.MemberAttrName && a.Value!.Equals("media-bottom-margin"));
+        result.Should().Contain(a => a.Tag == Tag.Integer && a.Value!.Equals(7));
+    }
+
+    [TestMethod]
+    public void Map_CoverSheetInfo_To_Attributes_Should_Include_TextFields()
+    {
+        // Arrange
+        var coverSheetInfo = new CoverSheetInfo
+        {
+            FromName = "from",
+            Logo = "logo",
+            Message = "message",
+            OrganizationName = "org",
+            Subject = "subject",
+            ToName = "to"
+        };
+
+        // Act
+        var result = _mapper.Map<IEnumerable<IppAttribute>>(coverSheetInfo).ToList();
+
+        // Assert
+        result.Should().Contain(a => a.Name == "logo" && a.Tag == Tag.TextWithoutLanguage && a.Value!.Equals("logo"));
+        result.Should().Contain(a => a.Name == "message" && a.Tag == Tag.TextWithoutLanguage && a.Value!.Equals("message"));
+        result.Should().Contain(a => a.Name == "organization-name" && a.Tag == Tag.TextWithoutLanguage && a.Value!.Equals("org"));
     }
 }

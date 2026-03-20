@@ -22,7 +22,7 @@ public class CUPSGetPrintersOperationAttributes : OperationAttributes
     public int? Limit { get; set; }
     /// <summary>
     /// The client OPTIONALLY supplies this attribute to select which printer is returned
-    /// See: pwg5100.22 - IPP System Service v1.1 Section 7.1.5
+    /// See: PWG 5100.22-2025 Section 7.1.5
     /// </summary>
     /// <code>printer-id</code>
     public int? PrinterId { get; set; }

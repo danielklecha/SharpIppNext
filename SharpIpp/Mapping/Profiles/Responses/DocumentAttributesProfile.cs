@@ -64,8 +64,6 @@ internal class DocumentAttributesProfile : IProfile
             dst.Pages = map.MapFromDicNullable<int?>(src, DocumentAttribute.Pages);
             dst.PagesCompleted = map.MapFromDicNullable<int?>(src, DocumentAttribute.PagesCompleted);
             dst.PrintContentOptimize = map.MapFromDicNullable<PrintContentOptimize?>(src, DocumentAttribute.PrintContentOptimize);
-            dst.PrintContentOptimizeSupported = map.MapFromDicSetNullable<PrintContentOptimize[]?>(src, DocumentAttribute.PrintContentOptimizeSupported);
-            dst.PrinterStateReasons = map.MapFromDicSetNullable<PrinterStateReason[]?>(src, DocumentAttribute.PrinterStateReasons);
             return dst;
         });
 
@@ -159,10 +157,6 @@ internal class DocumentAttributesProfile : IProfile
                 dst.Add(DocumentAttribute.PagesCompleted, [new IppAttribute(Tag.Integer, DocumentAttribute.PagesCompleted, src.PagesCompleted.Value)]);
             if (src.PrintContentOptimize != null)
                 dst.Add(DocumentAttribute.PrintContentOptimize, [new IppAttribute(Tag.Keyword, DocumentAttribute.PrintContentOptimize, map.Map<string>(src.PrintContentOptimize.Value))]);
-            if (src.PrintContentOptimizeSupported != null)
-                dst.Add(DocumentAttribute.PrintContentOptimizeSupported, src.PrintContentOptimizeSupported.Select(x => new IppAttribute(Tag.Keyword, DocumentAttribute.PrintContentOptimizeSupported, map.Map<string>(x))).ToArray());
-            if (src.PrinterStateReasons != null)
-                dst.Add(DocumentAttribute.PrinterStateReasons, src.PrinterStateReasons.Select(x => new IppAttribute(Tag.Keyword, DocumentAttribute.PrinterStateReasons, map.Map<string>(x))).ToArray());
             return dst;
         });
     }

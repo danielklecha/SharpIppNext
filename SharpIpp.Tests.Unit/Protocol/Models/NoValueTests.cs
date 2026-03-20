@@ -212,7 +212,17 @@ public class NoValueTests
     [DataRow(typeof(JobErrorSheet))]
     [DataRow(typeof(JobSheetsCol))]
     [DataRow(typeof(MediaSizeSupported))]
+    [DataRow(typeof(CoverSheetInfo))]
     [DataRow(typeof(SeparatorSheets))]
+    [DataRow(typeof(DestinationUri))]
+    [DataRow(typeof(DocumentAccess))]
+    [DataRow(typeof(JobStorage))]
+    [DataRow(typeof(Material))]
+    [DataRow(typeof(OutputAttributes))]
+    [DataRow(typeof(OverrideInstruction))]
+    [DataRow(typeof(PrintAccuracy))]
+    [DataRow(typeof(PrintObject))]
+    [DataRow(typeof(ProofPrint))]
     public void GetNoValue_WithCollectionType_ShouldReturnIsNoValueTrue(Type type)
     {
         var result = (IIppCollection)NoValue.GetNoValue(type);

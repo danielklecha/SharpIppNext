@@ -6,109 +6,127 @@ namespace SharpIpp.Protocol.Models
     public enum IppStatusCode : short
     {
         /// <summary>
-        /// successful-ok (https://tools.ietf.org/html/RFC8011)
+        /// successful-ok
+        /// See: https://tools.ietf.org/html/RFC8011
         /// See: RFC 8011
         /// </summary>
         SuccessfulOk = 0x0000,
 
         /// <summary>
-        /// successful-ok-ignored-or-substituted-attributes (https://tools.ietf.org/html/RFC8011)
+        /// successful-ok-ignored-or-substituted-attributes
+        /// See: https://tools.ietf.org/html/RFC8011
         /// See: RFC 8011
         /// </summary>
         SuccessfulOkIgnoredOrSubstitutedAttributes = 0x0001,
 
         /// <summary>
-        /// successful-ok-conflicting-attributes (https://tools.ietf.org/html/RFC8011)
+        /// successful-ok-conflicting-attributes
+        /// See: https://tools.ietf.org/html/RFC8011
         /// See: RFC 8011
         /// </summary>
         SuccessfulOkConflictingAttributes = 0x0002,
 
         /// <summary>
-        /// successful-ok-ignored-subscriptions (https://tools.ietf.org/html/RFC3995)
+        /// successful-ok-ignored-subscriptions
+        /// See: https://tools.ietf.org/html/RFC3995
         /// See: https://tools.ietf.org/html/RFC3995)
         /// </summary>
         SuccessfulOkIgnoredSubscriptions = 0x0003,
 
         /// <summary>
-        /// successful-ok-too-many-events (https://tools.ietf.org/html/RFC3995)
+        /// successful-ok-too-many-events
+        /// See: https://tools.ietf.org/html/RFC3995
         /// See: https://tools.ietf.org/html/RFC3995)
         /// </summary>
         SuccessfulOkTooManyEvents = 0x0005,
 
         /// <summary>
-        /// successful-ok-events-complete (https://tools.ietf.org/html/RFC3996)
+        /// successful-ok-events-complete
+        /// See: https://tools.ietf.org/html/RFC3996
         /// See: https://tools.ietf.org/html/RFC3996)
         /// </summary>
         SuccessfulOkEventsComplete = 0x0007,
 
         /// <summary>
-        /// client-error-bad-request (https://tools.ietf.org/html/RFC8011)
+        /// client-error-bad-request
+        /// See: https://tools.ietf.org/html/RFC8011
         /// See: RFC 8011
         /// </summary>
         ClientErrorBadRequest = 0x0400,
 
         /// <summary>
-        /// client-error-forbidden (https://tools.ietf.org/html/RFC8011)
+        /// client-error-forbidden
+        /// See: https://tools.ietf.org/html/RFC8011
         /// See: RFC 8011
         /// </summary>
         ClientErrorForbidden = 0x0401,
 
         /// <summary>
-        /// client-error-not-authenticated (https://tools.ietf.org/html/RFC8011)
+        /// client-error-not-authenticated
+        /// See: https://tools.ietf.org/html/RFC8011
         /// See: RFC 8011
         /// </summary>
         ClientErrorNotAuthenticated = 0x0402,
 
         /// <summary>
-        /// client-error-not-authorized (https://tools.ietf.org/html/RFC8011)
+        /// client-error-not-authorized
+        /// See: https://tools.ietf.org/html/RFC8011
         /// See: RFC 8011
         /// </summary>
         ClientErrorNotAuthorized = 0x0403,
 
         /// <summary>
-        /// client-error-not-possible (https://tools.ietf.org/html/RFC8011)
+        /// client-error-not-possible
+        /// See: https://tools.ietf.org/html/RFC8011
         /// See: RFC 8011
         /// </summary>
         ClientErrorNotPossible = 0x0404,
 
         /// <summary>
-        /// client-error-timeout (https://tools.ietf.org/html/RFC8011)
+        /// client-error-timeout
+        /// See: https://tools.ietf.org/html/RFC8011
         /// See: RFC 8011
         /// </summary>
         ClientErrorTimeout = 0x0405,
 
         /// <summary>
-        /// client-error-not-found (https://tools.ietf.org/html/RFC8011)
+        /// client-error-not-found
+        /// See: https://tools.ietf.org/html/RFC8011
         /// See: RFC 8011
         /// </summary>
         ClientErrorNotFound = 0x0406,
 
         /// <summary>
-        /// client-error-gone (https://tools.ietf.org/html/RFC8011)
+        /// client-error-gone
+        /// See: https://tools.ietf.org/html/RFC8011
         /// See: RFC 8011
         /// </summary>
         ClientErrorGone = 0x0407,
 
         /// <summary>
-        /// client-error-request-entity-too-large (https://tools.ietf.org/html/RFC8011)
+        /// client-error-request-entity-too-large
+        /// See: https://tools.ietf.org/html/RFC8011
         /// See: RFC 8011
         /// </summary>
         ClientErrorRequestEntityTooLarge = 0x0408,
 
         /// <summary>
-        /// client-error-request-value-too-long (https://tools.ietf.org/html/RFC8011)
+        /// client-error-request-value-too-long
+        /// See: https://tools.ietf.org/html/RFC8011
         /// See: RFC 8011
         /// </summary>
         ClientErrorRequestValueTooLong = 0x0409,
 
         /// <summary>
-        /// client-error-document-format-not-supported (https://tools.ietf.org/html/RFC8011)
+        /// client-error-document-format-not-supported
+        /// See: https://tools.ietf.org/html/RFC8011
         /// See: RFC 8011
         /// </summary>
         ClientErrorDocumentFormatNotSupported = 0x040A,
 
         /// <summary>
-        /// client-error-attributes-or-values-not-supported (https://tools.ietf.org/html/RFC8011)
+        /// client-error-attributes-or-values-not-supported
+        /// See: https://tools.ietf.org/html/RFC8011
         /// See: RFC 8011
         /// </summary>
         ClientErrorAttributesOrValuesNotSupported = 0x040B,
@@ -120,80 +138,86 @@ namespace SharpIpp.Protocol.Models
         ClientErrorUriSchemeNotSupported = 0x040C,
 
         /// <summary>
-        /// client-error-charset-not-supported (https://tools.ietf.org/html/RFC8011)
+        /// client-error-charset-not-supported
+        /// See: https://tools.ietf.org/html/RFC8011
         /// See: RFC 8011
         /// </summary>
         ClientErrorCharsetNotSupported = 0x040D,
 
         /// <summary>
-        /// client-error-conflicting-attributes (https://tools.ietf.org/html/RFC8011)
+        /// client-error-conflicting-attributes
+        /// See: https://tools.ietf.org/html/RFC8011
         /// See: RFC 8011
         /// </summary>
         ClientErrorConflictingAttributes = 0x040E,
 
         /// <summary>
-        /// client-error-compression-not-supported (https://tools.ietf.org/html/RFC8011)
+        /// client-error-compression-not-supported
+        /// See: https://tools.ietf.org/html/RFC8011
         /// See: RFC 8011
         /// </summary>
         ClientErrorCompressionNotSupported = 0x040F,
 
         /// <summary>
-        /// client-error-compression-error (https://tools.ietf.org/html/RFC8011)
+        /// client-error-compression-error
+        /// See: https://tools.ietf.org/html/RFC8011
         /// See: RFC 8011
         /// </summary>
         ClientErrorCompressionError = 0x0410,
 
         /// <summary>
-        /// client-error-document-format-error (https://tools.ietf.org/html/RFC8011)
+        /// client-error-document-format-error
+        /// See: https://tools.ietf.org/html/RFC8011
         /// See: RFC 8011
         /// </summary>
         ClientErrorDocumentFormatError = 0x0411,
 
         /// <summary>
-        /// client-error-document-access-error (https://tools.ietf.org/html/RFC8011)
+        /// client-error-document-access-error
+        /// See: https://tools.ietf.org/html/RFC8011
         /// See: RFC 8011
         /// </summary>
         ClientErrorDocumentAccessError = 0x0412,
 
         /// <summary>
-        /// client-error-attributes-not-settable (https://tools.ietf.org/html/RFC3380)
-        /// See: https://tools.ietf.org/html/RFC3380)
+        /// client-error-attributes-not-settable
+        /// See: https://tools.ietf.org/html/RFC3380
         /// </summary>
         ClientErrorAttributesNotSettable = 0x0413,
 
         /// <summary>
-        /// client-error-ignored-all-subscriptions (https://tools.ietf.org/html/RFC3995)
-        /// See: https://tools.ietf.org/html/RFC3995)
+        /// client-error-ignored-all-subscriptions
+        /// See: https://tools.ietf.org/html/RFC3995
         /// </summary>
         ClientErrorIgnoredAllSubscriptions = 0x0414,
 
         /// <summary>
-        /// client-error-too-many-subscriptions (https://tools.ietf.org/html/RFC3995)
-        /// See: https://tools.ietf.org/html/RFC3995)
+        /// client-error-too-many-subscriptions
+        /// See: https://tools.ietf.org/html/RFC3995
         /// </summary>
         ClientErrorTooManySubscriptions = 0x0415,
 
         /// <summary>
-        /// client-error-document-password-error (https://tools.ietf.org/html/PWG510013])
-        /// See: https://tools.ietf.org/html/PWG510013])
+        /// client-error-document-password-error
+        /// See: https://tools.ietf.org/html/PWG510013
         /// </summary>
         ClientErrorDocumentPasswordError = 0x0418,
 
         /// <summary>
-        /// client-error-document-permission-error (https://tools.ietf.org/html/PWG510013])
-        /// See: https://tools.ietf.org/html/PWG510013])
+        /// client-error-document-permission-error
+        /// See: https://tools.ietf.org/html/PWG510013
         /// </summary>
         ClientErrorDocumentPermissionError = 0x0419,
 
         /// <summary>
-        /// client-error-document-security-error (https://tools.ietf.org/html/PWG510013])
-        /// See: https://tools.ietf.org/html/PWG510013])
+        /// client-error-document-security-error
+        /// See: https://tools.ietf.org/html/PWG510013
         /// </summary>
         ClientErrorDocumentSecurityError = 0x041A,
 
         /// <summary>
-        /// client-error-document-unprintable-error (https://tools.ietf.org/html/PWG510013])
-        /// See: https://tools.ietf.org/html/PWG510013])
+        /// client-error-document-unprintable-error
+        /// See: https://tools.ietf.org/html/PWG510013
         /// </summary>
         ClientErrorDocumentUnprintableError = 0x041B,
 

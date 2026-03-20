@@ -33,6 +33,7 @@ The `ISharpIppClient` interface provides a comprehensive set of operations defin
 | **Get-Printer-Attributes** | `GetPrinterAttributesAsync` | Requests the values of attributes of a Printer object.            |
 | **Pause-Printer**          | `PausePrinterAsync`         | Stops the Printer object from scheduling jobs on all its devices. |
 | **Resume-Printer**         | `ResumePrinterAsync`        | Resumes the Printer object scheduling jobs on all its devices.    |
+| **Set-Printer-Attributes** | `SetPrinterAttributesAsync` | Updates settable Printer attributes.                              |
 
 ## Supported PWG 5100.5-2024 Operations
 

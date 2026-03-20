@@ -135,6 +135,30 @@ public class IppProtocolTests
     }
 
     [TestMethod]
+    public void WriteValue_ExtendedValue_ShouldBeWritten()
+    {
+        var protocol = new IppProtocol();
+        using MemoryStream memoryStream = new();
+        using BinaryWriter binaryWriter = new(memoryStream);
+
+        protocol.WriteValue(new ExtendedValue(0x01020304, new byte[] { 0xAA, 0xBB }), binaryWriter);
+
+        memoryStream.ToArray().Should().Equal(0x00, 0x06, 0x01, 0x02, 0x03, 0x04, 0xAA, 0xBB);
+    }
+
+    [TestMethod]
+    public void WriteValue_UnknownValue_ShouldBeWritten()
+    {
+        var protocol = new IppProtocol();
+        using MemoryStream memoryStream = new();
+        using BinaryWriter binaryWriter = new(memoryStream);
+
+        protocol.WriteValue(new UnknownValue((Tag)0x60, new byte[] { 0xDE, 0xAD }), binaryWriter);
+
+        memoryStream.ToArray().Should().Equal(0x00, 0x02, 0xDE, 0xAD);
+    }
+
+    [TestMethod]
     public void WriteValue_UnsupportedType_ThrowsArgumentException()
     {
         // Arrange
@@ -508,6 +532,60 @@ public class IppProtocolTests
     }
 
     [TestMethod]
+    public async Task ReadIppRequestAsync_FutureGroup_ShouldIgnoreAndSucceed()
+    {
+        var protocol = new IppProtocol();
+        // version 1.1, op Print-Job, request-id 1
+        // operation group with attributes-charset=utf-8, then future group 0x0B containing one keyword, then end tag
+        var bytes = new byte[]
+        {
+            0x01, 0x01, 0x00, 0x02, 0x00, 0x00, 0x00, 0x01,
+            0x01, // operation-attributes-tag
+            0x47, 0x00, 0x12, // charset name length 18
+            0x61, 0x74, 0x74, 0x72, 0x69, 0x62, 0x75, 0x74, 0x65, 0x73, 0x2D, 0x63, 0x68, 0x61, 0x72, 0x73, 0x65, 0x74,
+            0x00, 0x05, 0x75, 0x74, 0x66, 0x2D, 0x38,
+            0x0B, // future group tag
+            0x44, 0x00, 0x03, 0x66, 0x6F, 0x6F, 0x00, 0x03, 0x62, 0x61, 0x72,
+            0x03
+        };
+        using MemoryStream requestStream = new(bytes);
+
+        var result = await protocol.ReadIppRequestAsync(requestStream);
+
+        result.OperationAttributes.Should().HaveCount(1);
+        result.OperationAttributes[0].Name.Should().Be(JobAttribute.AttributesCharset);
+        result.OperationAttributes[0].Value.Should().Be("utf-8");
+        result.JobAttributes.Should().BeEmpty();
+    }
+
+    [TestMethod]
+    public async Task ReadIppResponseAsync_FutureGroup_ShouldIgnoreAndSucceed()
+    {
+        var protocol = new IppProtocol();
+        // version 1.1, status 0, request-id 1, operation group charset, future group 0x0C with keyword, end tag
+        var bytes = new byte[]
+        {
+            0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01,
+            0x01, // operation-attributes-tag
+            0x47, 0x00, 0x12,
+            0x61, 0x74, 0x74, 0x72, 0x69, 0x62, 0x75, 0x74, 0x65, 0x73, 0x2D, 0x63, 0x68, 0x61, 0x72, 0x73, 0x65, 0x74,
+            0x00, 0x05, 0x75, 0x74, 0x66, 0x2D, 0x38,
+            0x0C, // future group tag
+            0x44, 0x00, 0x03, 0x66, 0x6F, 0x6F, 0x00, 0x03, 0x62, 0x61, 0x72,
+            0x03
+        };
+        using MemoryStream stream = new(bytes);
+
+        var result = await protocol.ReadIppResponseAsync(stream);
+
+        result.OperationAttributes.Should().HaveCount(1);
+        result.OperationAttributes[0].Should().ContainSingle();
+        result.OperationAttributes[0][0].Name.Should().Be(JobAttribute.AttributesCharset);
+        result.OperationAttributes[0][0].Value.Should().Be("utf-8");
+        result.JobAttributes.Should().BeEmpty();
+    }
+
+    [TestMethod]
     public async Task ReadIppResponseAsync_MissingSectionTag_ShouldThrowException()
     {
         // Arrange
@@ -615,6 +693,31 @@ public class IppProtocolTests
         Func<object> act = () => protocol.ReadValue( binaryReader, tag );
         // Assert
         act.Should().NotThrow().Which.Should().BeEquivalentTo( "Lorem" );
+    }
+
+    [TestMethod]
+    public void ReadValue_ExtendedTag_ReturnsExtendedValue()
+    {
+        var protocol = new IppProtocol();
+        using MemoryStream memoryStream = new(new byte[] { 0x00, 0x06, 0x00, 0x00, 0x01, 0x02, 0xAA, 0xBB });
+        using BinaryReader binaryReader = new(memoryStream);
+
+        var result = protocol.ReadValue(binaryReader, Tag.Extended);
+
+        result.Should().BeEquivalentTo(new ExtendedValue(0x00000102, new byte[] { 0xAA, 0xBB }));
+    }
+
+    [TestMethod]
+    public void ReadValue_UnknownTag_ReturnsUnknownValue()
+    {
+        var protocol = new IppProtocol();
+        using MemoryStream memoryStream = new(new byte[] { 0x00, 0x02, 0xDE, 0xAD });
+        using BinaryReader binaryReader = new(memoryStream);
+
+        var tag = (Tag)0x60;
+        var result = protocol.ReadValue(binaryReader, tag);
+
+        result.Should().BeEquivalentTo(new UnknownValue(tag, new byte[] { 0xDE, 0xAD }));
     }
 
     [TestMethod]

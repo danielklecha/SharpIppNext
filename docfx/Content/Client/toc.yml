@@ -50,6 +50,8 @@
       href: PausePrinter.md
     - name: Resume-Printer
       href: ResumePrinter.md
+    - name: Set-Printer-Attributes
+      href: SetPrinterAttributes.md
     - name: CUPS-Get-Printers
       href: CUPSGetPrinters.md
 - name: Advanced Custom Requests

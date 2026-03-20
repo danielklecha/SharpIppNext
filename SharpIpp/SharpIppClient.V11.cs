@@ -50,6 +50,12 @@ public partial class SharpIppClient
     }
 
     /// <inheritdoc />
+    public Task<IdentifyPrinterResponse> IdentifyPrinterAsync(IdentifyPrinterRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<IdentifyPrinterRequest, IdentifyPrinterResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
     public Task<PrintJobResponse> PrintJobAsync(PrintJobRequest request, CancellationToken cancellationToken = default)
     {
         return SendAsync<PrintJobRequest, PrintJobResponse>(request, cancellationToken);
@@ -83,6 +89,12 @@ public partial class SharpIppClient
     public Task<SetJobAttributesResponse> SetJobAttributesAsync(SetJobAttributesRequest request, CancellationToken cancellationToken = default)
     {
         return SendAsync<SetJobAttributesRequest, SetJobAttributesResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<SetPrinterAttributesResponse> SetPrinterAttributesAsync(SetPrinterAttributesRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<SetPrinterAttributesRequest, SetPrinterAttributesResponse>(request, cancellationToken);
     }
 
     /// <inheritdoc />
@@ -155,5 +167,83 @@ public partial class SharpIppClient
     public Task<SetDocumentAttributesResponse> SetDocumentAttributesAsync(SetDocumentAttributesRequest request, CancellationToken cancellationToken = default)
     {
         return SendAsync<SetDocumentAttributesRequest, SetDocumentAttributesResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<AcknowledgeDocumentResponse> AcknowledgeDocumentAsync(AcknowledgeDocumentRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<AcknowledgeDocumentRequest, AcknowledgeDocumentResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<AcknowledgeJobResponse> AcknowledgeJobAsync(AcknowledgeJobRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<AcknowledgeJobRequest, AcknowledgeJobResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<FetchDocumentResponse> FetchDocumentAsync(FetchDocumentRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<FetchDocumentRequest, FetchDocumentResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<GetOutputDeviceAttributesResponse> GetOutputDeviceAttributesAsync(GetOutputDeviceAttributesRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<GetOutputDeviceAttributesRequest, GetOutputDeviceAttributesResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<UpdateActiveJobsResponse> UpdateActiveJobsAsync(UpdateActiveJobsRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<UpdateActiveJobsRequest, UpdateActiveJobsResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<AllocatePrinterResourcesResponse> AllocatePrinterResourcesAsync(AllocatePrinterResourcesRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<AllocatePrinterResourcesRequest, AllocatePrinterResourcesResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<CreatePrinterResponse> CreatePrinterAsync(CreatePrinterRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<CreatePrinterRequest, CreatePrinterResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<GetSystemAttributesResponse> GetSystemAttributesAsync(GetSystemAttributesRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<GetSystemAttributesRequest, GetSystemAttributesResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<GetSystemSupportedValuesResponse> GetSystemSupportedValuesAsync(GetSystemSupportedValuesRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<GetSystemSupportedValuesRequest, GetSystemSupportedValuesResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<RegisterOutputDeviceResponse> RegisterOutputDeviceAsync(RegisterOutputDeviceRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<RegisterOutputDeviceRequest, RegisterOutputDeviceResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<GetUserPrinterAttributesResponse> GetUserPrinterAttributesAsync(GetUserPrinterAttributesRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<GetUserPrinterAttributesRequest, GetUserPrinterAttributesResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<AddDocumentImagesResponse> AddDocumentImagesAsync(AddDocumentImagesRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<AddDocumentImagesRequest, AddDocumentImagesResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<GetNextDocumentDataResponse> GetNextDocumentDataAsync(GetNextDocumentDataRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<GetNextDocumentDataRequest, GetNextDocumentDataResponse>(request, cancellationToken);
     }
 }

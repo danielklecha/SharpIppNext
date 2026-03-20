@@ -51,11 +51,56 @@ public class SharpIppIntegrationTests
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
                 DocumentName = "のデフォルト値を保存するメソッドを呼び出します.pdf",
-                DocumentFormat = "application/pdf"
+                DocumentFormat = "application/pdf",
+                JobPassword = "hashed-secret",
+                JobPasswordEncryption = JobPasswordEncryption.Sha2256,
+                JobReleaseAction = JobReleaseAction.JobPassword,
+                JobAuthorizationUri = new Uri("https://example.local/auth/abc"),
+                JobImpressionsEstimated = 12,
+                ChargeInfoMessage = "charge preview",
+                ProofCopies = 1,
+                JobStorage = new JobStorage { JobStorageAccess = "owner", JobStorageDisposition = "store-only", JobStorageGroup = "default" },
+                ProofPrint = new ProofPrint { ProofPrintCopies = 1, Media = (Media)"iso_a4_210x297mm" },
+                CoverSheetInfo = new CoverSheetInfo { FromName = "sender", ToName = "receiver", Subject = "subject" },
+                DestinationUris = [new DestinationUri { DestinationUriValue = "tel:+123456789", PostDialString = "#", PreDialString = "9", T33Subaddress = "12345" }],
+                OutputAttributes = new OutputAttributes { NoiseRemoval = true, OutputCompressionQualityFactor = 80 }
             },
             JobTemplateAttributes = new()
             {
-                Copies = 1
+                Copies = 1,
+                PrintRenderingIntent = PrintRenderingIntent.Relative,
+                JobErrorAction = JobErrorAction.ContinueJob,
+                JobAccountType = JobAccountType.General,
+                ConfirmationSheetPrint = true,
+                NumberOfRetries = 2,
+                MaterialsCol =
+                [
+                    new Material
+                    {
+                        MaterialAmount = 1,
+                        MaterialColor = "blue",
+                        MaterialDiameter = 2,
+                        MaterialFillDensity = 3,
+                        MaterialKey = "pla-blue",
+                        MaterialName = "PLA Blue",
+                        MaterialPurpose = "model",
+                        MaterialRate = 4,
+                        MaterialRateUnits = "mm-per-second",
+                        MaterialShellThickness = 5,
+                        MaterialTemperature = 200,
+                        MaterialType = "pla"
+                    }
+                ],
+                PrintObjects =
+                [
+                    new PrintObject
+                    {
+                        DocumentNumber = 1,
+                        PrintObjectsSource = "https://example.local/objects/1",
+                        TransformationMatrix = [1, 0, 0, 0, 1, 0]
+                    }
+                ],
+                Overrides = [new OverrideInstruction { Pages = "1-2", DocumentCopies = 1, DocumentNumbers = [1] }]
             }
         };
         var client = new SharpIppClient();
@@ -65,6 +110,123 @@ public class SharpIppIntegrationTests
         var serverRequest = (await server.ReceiveRequestAsync(clientRawRequest));
         // Assert
         clientRequest.Should().BeEquivalentTo(serverRequest);
+    }
+
+    [TestMethod()]
+    public async Task PrintUriAsync_WhenSendingMessageWithDocumentAccess_ServerReceivesSameRequest()
+    {
+        // Arrange
+        var clientRequest = new PrintUriRequest
+        {
+            Version = new IppVersion(2, 0),
+            OperationAttributes = new()
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631"),
+                DocumentUri = new Uri("https://example.local/document.pdf"),
+                DocumentAccess = new DocumentAccess
+                {
+                    AccessOAuthToken = "oauth-token",
+                    AccessOAuthUri = "https://example.local/oauth",
+                    AccessPassword = "password",
+                    AccessPin = "1234",
+                    AccessUserName = "user",
+                    AccessX509Certificate = "certificate"
+                }
+            },
+            JobTemplateAttributes = new()
+            {
+                Copies = 1,
+                MaterialsCol =
+                [
+                    new Material
+                    {
+                        MaterialAmount = 6,
+                        MaterialColor = "red",
+                        MaterialDiameter = 7,
+                        MaterialFillDensity = 8,
+                        MaterialKey = "abs-red",
+                        MaterialName = "ABS Red",
+                        MaterialPurpose = "support",
+                        MaterialRate = 9,
+                        MaterialRateUnits = "mm-per-second",
+                        MaterialShellThickness = 10,
+                        MaterialTemperature = 230,
+                        MaterialType = "abs"
+                    }
+                ],
+                PrintObjects =
+                [
+                    new PrintObject
+                    {
+                        DocumentNumber = 2,
+                        PrintObjectsSource = "https://example.local/objects/2",
+                        TransformationMatrix = [0, 1, 0, 1, 0, 0]
+                    }
+                ]
+            }
+        };
+        var client = new SharpIppClient();
+        var server = new SharpIppServer();
+
+        // Act
+        var clientRawRequest = client.CreateRawRequest(clientRequest);
+        var serverRequest = (await server.ReceiveRequestAsync(clientRawRequest));
+
+        // Assert
+        clientRequest.Should().BeEquivalentTo(serverRequest);
+    }
+
+    [TestMethod]
+    public async Task IdentifyPrinterAsync_WhenSendingRequestAndReceivingResponse_ServerReceivesSameRequestAndReturnsExpectedResponse()
+    {
+        // Arrange
+        var clientRequest = new IdentifyPrinterRequest
+        {
+            RequestId = 794,
+            Version = new IppVersion(2, 0),
+            OperationAttributes = new()
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631"),
+                IdentifyActions = [IdentifyAction.Display, IdentifyAction.Sound],
+                OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174000"),
+                JobId = 12
+            }
+        };
+        IdentifyPrinterResponse? serverResponse = null;
+        IIppRequest? serverRequest = null;
+        HttpStatusCode statusCode = HttpStatusCode.OK;
+        var server = new SharpIppServer();
+        async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
+        {
+            serverRequest = (await server.ReceiveRequestAsync(s, c));
+            serverResponse = new IdentifyPrinterResponse
+            {
+                RequestId = serverRequest.RequestId,
+                Version = serverRequest.Version,
+                StatusCode = IppStatusCode.SuccessfulOk,
+                OperationAttributes = new()
+                {
+                    StatusMessage = "successful-ok",
+                    DetailedStatusMessage = ["identify detail"],
+                }
+            };
+            var memoryStream = new MemoryStream();
+            await server.SendResponseAsync(serverResponse, memoryStream, c);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return new HttpResponseMessage()
+            {
+                StatusCode = statusCode,
+                Content = new StreamContent(memoryStream)
+            };
+        }
+        var client = new SharpIppClient(new(GetMockOfHttpMessageHandler(func).Object));
+
+        // Act
+        IdentifyPrinterResponse? clientResponse = await client.IdentifyPrinterAsync(clientRequest);
+
+        // Assert
+        clientRequest.Should().BeEquivalentTo(serverRequest);
+        clientResponse.Should().BeEquivalentTo(serverResponse);
     }
 
     [TestMethod()]
@@ -449,6 +611,56 @@ public class SharpIppIntegrationTests
     }
 
     [TestMethod()]
+    public async Task SetPrinterAttributesAsync_WhenSendingRequestAndReceivingResponse_ServerReceivesSameRequestAndReturnsExpectedResponse()
+    {
+        // Arrange
+        var clientRequest = new SetPrinterAttributesRequest
+        {
+            RequestId = 794,
+            Version = new IppVersion(2, 0),
+            OperationAttributes = new()
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631")
+            }
+        };
+        SetPrinterAttributesResponse? serverResponse = null;
+        IIppRequest? serverRequest = null;
+        HttpStatusCode statusCode = HttpStatusCode.OK;
+        var server = new SharpIppServer();
+        async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
+        {
+            serverRequest = (await server.ReceiveRequestAsync(s, c));
+            serverResponse = new SetPrinterAttributesResponse
+            {
+                RequestId = serverRequest.RequestId,
+                Version = serverRequest.Version,
+                StatusCode = IppStatusCode.SuccessfulOk,
+                OperationAttributes = new()
+                {
+                    StatusMessage = "successful-ok",
+                    DetailedStatusMessage = ["set-printer-attributes detail"],
+                }
+            };
+            var memoryStream = new MemoryStream();
+            await server.SendResponseAsync(serverResponse, memoryStream, c);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return new HttpResponseMessage()
+            {
+                StatusCode = statusCode,
+                Content = new StreamContent(memoryStream)
+            };
+        }
+        var client = new SharpIppClient(new(GetMockOfHttpMessageHandler(func).Object));
+
+        // Act
+        SetPrinterAttributesResponse? clientResponse = await client.SetPrinterAttributesAsync(clientRequest);
+
+        // Assert
+        clientRequest.Should().BeEquivalentTo(serverRequest);
+        clientResponse.Should().BeEquivalentTo(serverResponse);
+    }
+
+    [TestMethod()]
     public async Task CreateJobAsync_WhenUsingPwg51007OperationAttributes_ServerReceivesSameRequest()
     {
         // Arrange
@@ -565,6 +777,31 @@ public class SharpIppIntegrationTests
         // Assert
         clientRawRequest.Should().NotBeNull().And.BeEquivalentTo(serverRawRequest, options => options.Excluding(x => x!.Document));
         clientRawResponse.Should().BeEquivalentTo(serverRawResponse);
+    }
+
+    [TestMethod()]
+    public async Task AllocatePrinterResourcesAsync_WhenSendingMessage_ServerReceivesSameRequest()
+    {
+        // Arrange
+        var clientRequest = new AllocatePrinterResourcesRequest
+        {
+            Version = new IppVersion(2, 0),
+            OperationAttributes = new()
+            {
+                SystemUri = new Uri("ipp://example.com/ipp/system"),
+                PrinterId = 42,
+                ResourceIds = new[] { 10, 11 }
+            }
+        };
+        var client = new SharpIppClient();
+        var server = new SharpIppServer();
+
+        // Act
+        var clientRawRequest = client.CreateRawRequest(clientRequest);
+        var serverRequest = (await server.ReceiveRequestAsync(clientRawRequest));
+
+        // Assert
+        clientRequest.Should().BeEquivalentTo(serverRequest);
     }
 
     [TestMethod()]
@@ -2154,6 +2391,7 @@ public class SharpIppIntegrationTests
                         MonochromeTwoSided = 6
                     },
                     JobMoreInfo = "more info",
+                    JobChargeInfo = "charge info",
                     DocumentFormatDetails = new DocumentFormatDetails
                     {
                         DocumentSourceApplicationName = "MyApp",
@@ -2179,6 +2417,7 @@ public class SharpIppIntegrationTests
                     TimeAtCompleted = 120,
                     TimeAtCompletedEstimated = 120,
                     TimeAtProcessingEstimated = 110,
+                    OutputDeviceJobState = JobState.Processing,
                     JobPrinterUpTime = 200,
                     JobKOctets = 20,
                     JobDetailedStatusMessages = ["message"],
@@ -2264,6 +2503,14 @@ public class SharpIppIntegrationTests
                                 BindingReferenceEdge = FinishingReferenceEdge.Left,
                                 BindingType = BindingType.Perfect
                             }
+                        }
+                    ],
+                    MaterialsColActual =
+                    [
+                        new Material
+                        {
+                            MaterialName = "matte-paper",
+                            MaterialColor = "white"
                         }
                     ]
                 },
@@ -2372,8 +2619,6 @@ public class SharpIppIntegrationTests
                     DateTimeAtCreation = new DateTimeOffset(2024, 1, 1, 1, 1, 1, TimeSpan.Zero),
                     DateTimeAtProcessing = new DateTimeOffset(2024, 1, 1, 1, 1, 1, TimeSpan.Zero),
                     DateTimeAtCompleted = new DateTimeOffset(2024, 1, 1, 1, 1, 1, TimeSpan.Zero),
-                    PrinterStateReasons = [PrinterStateReason.None],
-                    PrintContentOptimizeSupported = [PrintContentOptimize.Text],
                 },
                 OperationAttributes = new()
                 {
@@ -3219,6 +3464,15 @@ public class SharpIppIntegrationTests
                 DocumentCharset = "utf-8",
                 LastDocument = true,
                 DocumentUri = new Uri("ftp://document.pdf"),
+                DocumentAccess = new DocumentAccess
+                {
+                    AccessUserName = "ftp-user",
+                    AccessPassword = "ftp-pass",
+                    AccessOAuthUri = "https://auth.example.com/token",
+                    AccessOAuthToken = "token",
+                    AccessPin = "1234",
+                    AccessX509Certificate = "-----BEGIN CERTIFICATE-----"
+                },
             },
             DocumentTemplateAttributes = new()
             {
@@ -3303,6 +3557,13 @@ public class SharpIppIntegrationTests
                 JobImpressions = 5,
                 JobMediaSheets = 2,
                 DocumentCharset = "utf-8",
+                JobPassword = "hashed-secret",
+                JobPasswordEncryption = JobPasswordEncryption.Sha2256,
+                JobReleaseAction = JobReleaseAction.JobPassword,
+                JobAuthorizationUri = new Uri("https://example.local/auth/validate"),
+                JobImpressionsEstimated = 11,
+                ChargeInfoMessage = "charge preview",
+                ProofCopies = 2,
             },
             JobTemplateAttributes = new()
             {
@@ -3525,9 +3786,16 @@ public class SharpIppIntegrationTests
                         PrinterUUID = "{6541A875-C511-4273-909F-18CFBB38D9D0}",
                         DocumentCreationAttributesSupported = ["copies", "finishings", "sides"],
                         JobAccountIdDefault = "account-123",
+                        JobAccountTypeDefault = JobAccountType.General,
+                        JobAccountTypeSupported = [JobAccountType.General, JobAccountType.None],
                         JobAccountIdSupported = true,
                         JobAccountingUserIdDefault = "user-456",
                         JobAccountingUserIdSupported = true,
+                        JobPasswordEncryptionSupported = [JobPasswordEncryption.None, JobPasswordEncryption.Sha2256],
+                        JobAuthorizationUriSupported = true,
+                        PrinterChargeInfo = "charge-info",
+                        PrinterChargeInfoUri = "https://example.local/printer-charge-info",
+                        PrinterMandatoryJobAttributes = ["job-name", "copies"],
                         JobCancelAfterDefault = 3600,
                         JobCancelAfterSupported = new SharpIpp.Protocol.Models.Range(10, 3600),
                         JobSpoolingSupported = JobSpooling.Automatic,
@@ -3535,6 +3803,7 @@ public class SharpIppIntegrationTests
                         PrintContentOptimizeDefault = PrintContentOptimize.Text,
                         PrintContentOptimizeSupported = [PrintContentOptimize.Text, PrintContentOptimize.TextAndGraphic],
                         OutputDeviceSupported = ["device-1"],
+                        OutputDeviceUuidSupported = ["urn:uuid:123e4567-e89b-12d3-a456-426614174000"],
                         JobCreationAttributesSupported = ["copies"],
                         PunchingHoleDiameterConfigured = 5,
                         PrinterFinisher = ["finisher=1", "finisher=2"],
@@ -3890,6 +4159,548 @@ public class SharpIppIntegrationTests
         clientResponse.PrinterAttributes.PrinterResolutionDefault.HasValue.Should().BeTrue();
         clientResponse.PrinterAttributes.PrinterResolutionDefault!.Value.Width.Should().Be(NoValue.GetNoValue<Resolution>().Width);
         clientResponse.PrinterAttributes.PrinterResolutionDefault!.Value.Height.Should().Be(NoValue.GetNoValue<Resolution>().Height);
+    }
+
+    [TestMethod]
+    public async Task AcknowledgeDocumentAsync_WhenSendingRequestAndReceivingResponse_ServerReceivesSameRequestAndReturnsExpectedResponse()
+    {
+        var clientRequest = new AcknowledgeDocumentRequest
+        {
+            RequestId = 800,
+            Version = new IppVersion(2, 0),
+            OperationAttributes = new()
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631"),
+                JobId = 10,
+                DocumentNumber = 1,
+                OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174001"),
+                FetchStatusCode = IppStatusCode.ClientErrorNotFound,
+                FetchStatusMessage = "document-not-found"
+            }
+        };
+
+        IIppRequest? serverRequest = null;
+        AcknowledgeDocumentResponse? serverResponse = null;
+        async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
+        {
+            var server = new SharpIppServer();
+            serverRequest = await server.ReceiveRequestAsync(s, c);
+            serverResponse = new AcknowledgeDocumentResponse
+            {
+                RequestId = serverRequest.RequestId,
+                Version = serverRequest.Version,
+                StatusCode = IppStatusCode.SuccessfulOk,
+                OperationAttributes = new() { StatusMessage = "successful-ok" }
+            };
+            var ms = new MemoryStream();
+            await server.SendResponseAsync(serverResponse, ms, c);
+            ms.Seek(0, SeekOrigin.Begin);
+            return new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StreamContent(ms) };
+        }
+
+        var client = new SharpIppClient(new(GetMockOfHttpMessageHandler(func).Object));
+        var clientResponse = await client.AcknowledgeDocumentAsync(clientRequest);
+
+        clientRequest.Should().BeEquivalentTo(serverRequest);
+        clientResponse.Should().BeEquivalentTo(serverResponse);
+    }
+
+    [TestMethod]
+    public async Task AcknowledgeJobAsync_WhenSendingRequestAndReceivingResponse_ServerReceivesSameRequestAndReturnsExpectedResponse()
+    {
+        var clientRequest = new AcknowledgeJobRequest
+        {
+            RequestId = 801,
+            Version = new IppVersion(2, 0),
+            OperationAttributes = new()
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631"),
+                JobId = 11,
+                OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174002"),
+                OutputDeviceJobStates = [JobState.Processing]
+            }
+        };
+
+        IIppRequest? serverRequest = null;
+        AcknowledgeJobResponse? serverResponse = null;
+        async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
+        {
+            var server = new SharpIppServer();
+            serverRequest = await server.ReceiveRequestAsync(s, c);
+            serverResponse = new AcknowledgeJobResponse
+            {
+                RequestId = serverRequest.RequestId,
+                Version = serverRequest.Version,
+                StatusCode = IppStatusCode.SuccessfulOk,
+                OperationAttributes = new() { StatusMessage = "successful-ok" }
+            };
+            var ms = new MemoryStream();
+            await server.SendResponseAsync(serverResponse, ms, c);
+            ms.Seek(0, SeekOrigin.Begin);
+            return new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StreamContent(ms) };
+        }
+
+        var client = new SharpIppClient(new(GetMockOfHttpMessageHandler(func).Object));
+        var clientResponse = await client.AcknowledgeJobAsync(clientRequest);
+
+        clientRequest.Should().BeEquivalentTo(serverRequest);
+        clientResponse.Should().BeEquivalentTo(serverResponse);
+    }
+
+    [TestMethod]
+    public async Task FetchDocumentAsync_WhenSendingRequestAndReceivingResponse_ServerReceivesSameRequestAndReturnsExpectedResponse()
+    {
+        var clientRequest = new FetchDocumentRequest
+        {
+            RequestId = 802,
+            Version = new IppVersion(2, 0),
+            OperationAttributes = new()
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631"),
+                JobId = 12,
+                DocumentNumber = 1,
+                CompressionAccepted = [Compression.None],
+                DocumentFormatAccepted = ["application/pdf"]
+            }
+        };
+
+        IIppRequest? serverRequest = null;
+        FetchDocumentResponse? serverResponse = null;
+        async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
+        {
+            var server = new SharpIppServer();
+            serverRequest = await server.ReceiveRequestAsync(s, c);
+            serverResponse = new FetchDocumentResponse
+            {
+                RequestId = serverRequest.RequestId,
+                Version = serverRequest.Version,
+                StatusCode = IppStatusCode.SuccessfulOk,
+                OperationAttributes = new() { StatusMessage = "successful-ok" }
+            };
+            var ms = new MemoryStream();
+            await server.SendResponseAsync(serverResponse, ms, c);
+            ms.Seek(0, SeekOrigin.Begin);
+            return new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StreamContent(ms) };
+        }
+
+        var client = new SharpIppClient(new(GetMockOfHttpMessageHandler(func).Object));
+        var clientResponse = await client.FetchDocumentAsync(clientRequest);
+
+        clientRequest.Should().BeEquivalentTo(serverRequest);
+        clientResponse.Should().BeEquivalentTo(serverResponse);
+    }
+
+    [TestMethod]
+    public async Task GetOutputDeviceAttributesAsync_WhenSendingRequestAndReceivingResponse_ServerReceivesSameRequestAndReturnsExpectedResponse()
+    {
+        var clientRequest = new GetOutputDeviceAttributesRequest
+        {
+            RequestId = 803,
+            Version = new IppVersion(2, 0),
+            OperationAttributes = new()
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631"),
+                RequestedAttributes = ["all"],
+                OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174003")
+            }
+        };
+
+        IIppRequest? serverRequest = null;
+        GetOutputDeviceAttributesResponse? serverResponse = null;
+        async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
+        {
+            var server = new SharpIppServer();
+            serverRequest = await server.ReceiveRequestAsync(s, c);
+            serverResponse = new GetOutputDeviceAttributesResponse
+            {
+                RequestId = serverRequest.RequestId,
+                Version = serverRequest.Version,
+                StatusCode = IppStatusCode.SuccessfulOk,
+                OperationAttributes = new() { StatusMessage = "successful-ok" }
+            };
+            var ms = new MemoryStream();
+            await server.SendResponseAsync(serverResponse, ms, c);
+            ms.Seek(0, SeekOrigin.Begin);
+            return new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StreamContent(ms) };
+        }
+
+        var client = new SharpIppClient(new(GetMockOfHttpMessageHandler(func).Object));
+        var clientResponse = await client.GetOutputDeviceAttributesAsync(clientRequest);
+
+        clientRequest.Should().BeEquivalentTo(serverRequest);
+        clientResponse.Should().BeEquivalentTo(serverResponse);
+    }
+
+    [TestMethod]
+    public async Task UpdateActiveJobsAsync_WhenSendingRequestAndReceivingResponse_ServerReceivesSameRequestAndReturnsExpectedResponse()
+    {
+        var clientRequest = new UpdateActiveJobsRequest
+        {
+            RequestId = 804,
+            Version = new IppVersion(2, 0),
+            OperationAttributes = new()
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631"),
+                OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174004"),
+                OutputDeviceJobStates = [JobState.Pending, JobState.Processing]
+            }
+        };
+
+        IIppRequest? serverRequest = null;
+        UpdateActiveJobsResponse? serverResponse = null;
+        async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
+        {
+            var server = new SharpIppServer();
+            serverRequest = await server.ReceiveRequestAsync(s, c);
+            serverResponse = new UpdateActiveJobsResponse
+            {
+                RequestId = serverRequest.RequestId,
+                Version = serverRequest.Version,
+                StatusCode = IppStatusCode.SuccessfulOk,
+                OperationAttributes = new() { StatusMessage = "successful-ok" }
+            };
+            var ms = new MemoryStream();
+            await server.SendResponseAsync(serverResponse, ms, c);
+            ms.Seek(0, SeekOrigin.Begin);
+            return new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StreamContent(ms) };
+        }
+
+        var client = new SharpIppClient(new(GetMockOfHttpMessageHandler(func).Object));
+        var clientResponse = await client.UpdateActiveJobsAsync(clientRequest);
+
+        clientRequest.Should().BeEquivalentTo(serverRequest);
+        clientResponse.Should().BeEquivalentTo(serverResponse);
+    }
+
+    [TestMethod]
+    public async Task AllocatePrinterResourcesAsync_WhenSendingRequestAndReceivingResponse_ServerReceivesSameRequestAndReturnsExpectedResponse()
+    {
+        var clientRequest = new AllocatePrinterResourcesRequest
+        {
+            RequestId = 805,
+            Version = new IppVersion(2, 0),
+            OperationAttributes = new()
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631"),
+                SystemUri = new Uri("ipp://127.0.0.1:8631/system"),
+                PrinterId = 99,
+                ResourceIds = [1, 2]
+            }
+        };
+
+        IIppRequest? serverRequest = null;
+        AllocatePrinterResourcesResponse? serverResponse = null;
+        async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
+        {
+            var server = new SharpIppServer();
+            serverRequest = await server.ReceiveRequestAsync(s, c);
+            serverResponse = new AllocatePrinterResourcesResponse { RequestId = serverRequest.RequestId, Version = serverRequest.Version, StatusCode = IppStatusCode.SuccessfulOk, PrinterResourceIds = [1, 2] };
+            var ms = new MemoryStream();
+            await server.SendResponseAsync(serverResponse, ms, c);
+            ms.Seek(0, SeekOrigin.Begin);
+            return new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StreamContent(ms) };
+        }
+
+        var client = new SharpIppClient(new(GetMockOfHttpMessageHandler(func).Object));
+        var clientResponse = await client.AllocatePrinterResourcesAsync(clientRequest);
+        clientRequest.Should().BeEquivalentTo(serverRequest);
+        clientResponse.Should().BeEquivalentTo(serverResponse);
+    }
+
+    [TestMethod]
+    public async Task CreatePrinterAsync_WhenSendingRequestAndReceivingResponse_ServerReceivesSameRequestAndReturnsExpectedResponse()
+    {
+        var clientRequest = new CreatePrinterRequest
+        {
+            RequestId = 806,
+            Version = new IppVersion(2, 0),
+            OperationAttributes = new()
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631"),
+                SystemUri = new Uri("ipp://127.0.0.1:8631/system"),
+                ResourceIds = [10],
+                PrinterServiceType = ["print-ws"],
+                PrinterXriRequested = ["xri-security"]
+            }
+        };
+
+        IIppRequest? serverRequest = null;
+        CreatePrinterResponse? serverResponse = null;
+        async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
+        {
+            var server = new SharpIppServer();
+            serverRequest = await server.ReceiveRequestAsync(s, c);
+            serverResponse = new CreatePrinterResponse { RequestId = serverRequest.RequestId, Version = serverRequest.Version, StatusCode = IppStatusCode.SuccessfulOk };
+            var ms = new MemoryStream();
+            await server.SendResponseAsync(serverResponse, ms, c);
+            ms.Seek(0, SeekOrigin.Begin);
+            return new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StreamContent(ms) };
+        }
+
+        var client = new SharpIppClient(new(GetMockOfHttpMessageHandler(func).Object));
+        var clientResponse = await client.CreatePrinterAsync(clientRequest);
+        clientRequest.Should().BeEquivalentTo(serverRequest);
+        clientResponse.Should().BeEquivalentTo(serverResponse);
+    }
+
+    [TestMethod]
+    public async Task GetSystemAttributesAsync_WhenSendingRequestAndReceivingResponse_ServerReceivesSameRequestAndReturnsExpectedResponse()
+    {
+        var clientRequest = new GetSystemAttributesRequest
+        {
+            RequestId = 807,
+            Version = new IppVersion(2, 0),
+            OperationAttributes = new()
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631"),
+                SystemUri = new Uri("ipp://127.0.0.1:8631/system"),
+                RequestedAttributes = ["system-description"]
+            }
+        };
+
+        IIppRequest? serverRequest = null;
+        GetSystemAttributesResponse? serverResponse = null;
+        async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
+        {
+            var server = new SharpIppServer();
+            serverRequest = await server.ReceiveRequestAsync(s, c);
+            serverResponse = new GetSystemAttributesResponse
+            {
+                RequestId = serverRequest.RequestId,
+                Version = serverRequest.Version,
+                StatusCode = IppStatusCode.SuccessfulOk,
+                SystemAttributes = new()
+                {
+                    SystemState = PrinterState.Processing
+                }
+            };
+            var ms = new MemoryStream();
+            await server.SendResponseAsync(serverResponse, ms, c);
+            ms.Seek(0, SeekOrigin.Begin);
+            return new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StreamContent(ms) };
+        }
+
+        var client = new SharpIppClient(new(GetMockOfHttpMessageHandler(func).Object));
+        var clientResponse = await client.GetSystemAttributesAsync(clientRequest);
+        clientRequest.Should().BeEquivalentTo(serverRequest);
+        clientResponse.Should().BeEquivalentTo(serverResponse);
+    }
+
+    [TestMethod]
+    public async Task CreateResponse_WhenMappingRawGetSystemAttributesResponse_ToSystemStatusAttributes_ReturnsExpectedProperties()
+    {
+        var clientRequest = new GetSystemAttributesRequest
+        {
+            RequestId = 807,
+            Version = new IppVersion(2, 0),
+            OperationAttributes = new()
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631"),
+                SystemUri = new Uri("ipp://127.0.0.1:8631/system"),
+                RequestedAttributes = ["system-state"]
+            }
+        };
+
+        IIppRequest? serverRequest = null;
+        GetSystemAttributesResponse? serverResponse = null;
+        async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
+        {
+            var server = new SharpIppServer();
+            serverRequest = await server.ReceiveRequestAsync(s, c);
+            serverResponse = new GetSystemAttributesResponse
+            {
+                RequestId = serverRequest.RequestId,
+                Version = serverRequest.Version,
+                StatusCode = IppStatusCode.SuccessfulOk,
+                SystemAttributes = new()
+                {
+                    SystemState = PrinterState.Stopped
+                }
+            };
+            var ms = new MemoryStream();
+            await server.SendResponseAsync(serverResponse, ms, c);
+            ms.Seek(0, SeekOrigin.Begin);
+            return new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StreamContent(ms) };
+        }
+
+        var client = new SharpIppClient(new(GetMockOfHttpMessageHandler(func).Object));
+        var rawRequest = client.CreateRawRequest(clientRequest);
+        var rawResponse = await client.SendAsync(clientRequest.OperationAttributes.PrinterUri, rawRequest);
+        var clientResponse = client.CreateResponse(typeof(SystemStatusAttributes), rawResponse);
+
+        clientRequest.Should().BeEquivalentTo(serverRequest);
+        clientResponse.Should().BeOfType<SystemStatusAttributes>();
+        clientResponse.Should().BeEquivalentTo(serverResponse!.SystemAttributes);
+    }
+
+    [TestMethod]
+    public async Task GetSystemSupportedValuesAsync_WhenSendingRequestAndReceivingResponse_ServerReceivesSameRequestAndReturnsExpectedResponse()
+    {
+        var clientRequest = new GetSystemSupportedValuesRequest
+        {
+            RequestId = 808,
+            Version = new IppVersion(2, 0),
+            OperationAttributes = new()
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631"),
+                SystemUri = new Uri("ipp://127.0.0.1:8631/system"),
+                RequestedAttributes = ["system-status"]
+            }
+        };
+
+        IIppRequest? serverRequest = null;
+        GetSystemSupportedValuesResponse? serverResponse = null;
+        async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
+        {
+            var server = new SharpIppServer();
+            serverRequest = await server.ReceiveRequestAsync(s, c);
+            serverResponse = new GetSystemSupportedValuesResponse { RequestId = serverRequest.RequestId, Version = serverRequest.Version, StatusCode = IppStatusCode.SuccessfulOk };
+            var ms = new MemoryStream();
+            await server.SendResponseAsync(serverResponse, ms, c);
+            ms.Seek(0, SeekOrigin.Begin);
+            return new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StreamContent(ms) };
+        }
+
+        var client = new SharpIppClient(new(GetMockOfHttpMessageHandler(func).Object));
+        var clientResponse = await client.GetSystemSupportedValuesAsync(clientRequest);
+        clientRequest.Should().BeEquivalentTo(serverRequest);
+        clientResponse.Should().BeEquivalentTo(serverResponse);
+    }
+
+    [TestMethod]
+    public async Task RegisterOutputDeviceAsync_WhenSendingRequestAndReceivingResponse_ServerReceivesSameRequestAndReturnsExpectedResponse()
+    {
+        var clientRequest = new RegisterOutputDeviceRequest
+        {
+            RequestId = 809,
+            Version = new IppVersion(2, 0),
+            OperationAttributes = new()
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631"),
+                SystemUri = new Uri("ipp://127.0.0.1:8631/system"),
+                OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174999"),
+                OutputDeviceX509Certificate = ["-----BEGIN CERTIFICATE-----"],
+                OutputDeviceX509Request = ["-----BEGIN CERTIFICATE REQUEST-----"],
+                PrinterServiceType = ["print-ws"],
+                PrinterXriRequested = ["xri-security"]
+            }
+        };
+
+        IIppRequest? serverRequest = null;
+        RegisterOutputDeviceResponse? serverResponse = null;
+        async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
+        {
+            var server = new SharpIppServer();
+            serverRequest = await server.ReceiveRequestAsync(s, c);
+            serverResponse = new RegisterOutputDeviceResponse { RequestId = serverRequest.RequestId, Version = serverRequest.Version, StatusCode = IppStatusCode.SuccessfulOk };
+            var ms = new MemoryStream();
+            await server.SendResponseAsync(serverResponse, ms, c);
+            ms.Seek(0, SeekOrigin.Begin);
+            return new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StreamContent(ms) };
+        }
+
+        var client = new SharpIppClient(new(GetMockOfHttpMessageHandler(func).Object));
+        var clientResponse = await client.RegisterOutputDeviceAsync(clientRequest);
+        clientRequest.Should().BeEquivalentTo(serverRequest);
+        clientResponse.Should().BeEquivalentTo(serverResponse);
+    }
+
+    [TestMethod]
+    public async Task GetUserPrinterAttributesAsync_WhenSendingRequestAndReceivingResponse_ServerReceivesSameRequestAndReturnsExpectedResponse()
+    {
+        var clientRequest = new GetUserPrinterAttributesRequest
+        {
+            RequestId = 810,
+            Version = new IppVersion(2, 0),
+            OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestedAttributes = ["printer-name"] }
+        };
+
+        IIppRequest? serverRequest = null;
+        GetUserPrinterAttributesResponse? serverResponse = null;
+        async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
+        {
+            var server = new SharpIppServer();
+            serverRequest = await server.ReceiveRequestAsync(s, c);
+            serverResponse = new GetUserPrinterAttributesResponse
+            {
+                RequestId = serverRequest.RequestId,
+                Version = serverRequest.Version,
+                StatusCode = IppStatusCode.SuccessfulOk,
+                PrinterAttributes = new PrinterDescriptionAttributes { PrinterName = "UserScopedPrinter" }
+            };
+            var ms = new MemoryStream();
+            await server.SendResponseAsync(serverResponse, ms, c);
+            ms.Seek(0, SeekOrigin.Begin);
+            return new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StreamContent(ms) };
+        }
+
+        var client = new SharpIppClient(new(GetMockOfHttpMessageHandler(func).Object));
+        var clientResponse = await client.GetUserPrinterAttributesAsync(clientRequest);
+        clientRequest.Should().BeEquivalentTo(serverRequest);
+        clientResponse.Should().BeEquivalentTo(serverResponse);
+    }
+
+    [TestMethod]
+    public async Task AddDocumentImagesAsync_WhenSendingRequestAndReceivingResponse_ServerReceivesSameRequestAndReturnsExpectedResponse()
+    {
+        var clientRequest = new AddDocumentImagesRequest
+        {
+            RequestId = 811,
+            Version = new IppVersion(2, 0),
+            OperationAttributes = new()
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631"),
+                JobId = 20,
+                InputAttributes = new DocumentTemplateAttributes { Media = (Media)"iso_a4_210x297mm" }
+            }
+        };
+
+        IIppRequest? serverRequest = null;
+        AddDocumentImagesResponse? serverResponse = null;
+        async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
+        {
+            var server = new SharpIppServer();
+            serverRequest = await server.ReceiveRequestAsync(s, c);
+            serverResponse = new AddDocumentImagesResponse { RequestId = serverRequest.RequestId, Version = serverRequest.Version, StatusCode = IppStatusCode.SuccessfulOk };
+            var ms = new MemoryStream();
+            await server.SendResponseAsync(serverResponse, ms, c);
+            ms.Seek(0, SeekOrigin.Begin);
+            return new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StreamContent(ms) };
+        }
+
+        var client = new SharpIppClient(new(GetMockOfHttpMessageHandler(func).Object));
+        var clientResponse = await client.AddDocumentImagesAsync(clientRequest);
+        clientRequest.Should().BeEquivalentTo(serverRequest);
+        clientResponse.Should().BeEquivalentTo(serverResponse);
+    }
+
+    [TestMethod]
+    public async Task GetNextDocumentDataAsync_WhenSendingRequestAndReceivingResponse_ServerReceivesSameRequestAndReturnsExpectedResponse()
+    {
+        var clientRequest = new GetNextDocumentDataRequest
+        {
+            RequestId = 812,
+            Version = new IppVersion(2, 0),
+            OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), JobId = 21, DocumentDataWait = true }
+        };
+
+        IIppRequest? serverRequest = null;
+        GetNextDocumentDataResponse? serverResponse = null;
+        async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
+        {
+            var server = new SharpIppServer();
+            serverRequest = await server.ReceiveRequestAsync(s, c);
+            serverResponse = new GetNextDocumentDataResponse { RequestId = serverRequest.RequestId, Version = serverRequest.Version, StatusCode = IppStatusCode.SuccessfulOk };
+            var ms = new MemoryStream();
+            await server.SendResponseAsync(serverResponse, ms, c);
+            ms.Seek(0, SeekOrigin.Begin);
+            return new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StreamContent(ms) };
+        }
+
+        var client = new SharpIppClient(new(GetMockOfHttpMessageHandler(func).Object));
+        var clientResponse = await client.GetNextDocumentDataAsync(clientRequest);
+        clientRequest.Should().BeEquivalentTo(serverRequest);
+        clientResponse.Should().BeEquivalentTo(serverResponse);
     }
 }
 

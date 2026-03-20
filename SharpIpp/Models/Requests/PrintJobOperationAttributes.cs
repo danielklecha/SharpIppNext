@@ -65,5 +65,4 @@ public class PrintJobOperationAttributes : CreateJobOperationAttributes
     /// </summary>
     /// <code>document-message</code>
     public string? DocumentMessage { get; set; }
-
 }

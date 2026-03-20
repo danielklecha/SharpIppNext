@@ -184,6 +184,47 @@ namespace SharpIpp.Protocol
             return ReadStringWithLength(stream, encoding).Value;
         }
 
+        private static UnknownValue ReadUnknown(BinaryReader stream, Tag tag)
+        {
+            var remaining = stream.BaseStream.Length - stream.BaseStream.Position;
+            if (remaining < 2)
+            {
+                throw new ArgumentException("Invalid unknown value payload", nameof(stream));
+            }
+
+            var len = stream.ReadInt16BigEndian();
+            if (len < 0 || remaining - 2 < len)
+            {
+                throw new ArgumentException("Invalid unknown value payload", nameof(stream));
+            }
+
+            var raw = stream.ReadBytes(len);
+            return new UnknownValue(tag, raw);
+        }
+
+        private static ExtendedValue ReadExtended(BinaryReader stream)
+        {
+            var remaining = stream.BaseStream.Length - stream.BaseStream.Position;
+            if (remaining < 2)
+            {
+                throw new ArgumentException("Invalid extended value payload", nameof(stream));
+            }
+
+            var len = stream.ReadInt16BigEndian();
+            if (len < 4)
+            {
+                throw new ArgumentException($"Expected extended value length >= 4, actual: {len}");
+            }
+            if (remaining - 2 < len)
+            {
+                throw new ArgumentException("Invalid extended value payload", nameof(stream));
+            }
+
+            var extendedTag = stream.ReadInt32BigEndian();
+            var raw = stream.ReadBytes(len - 4);
+            return new ExtendedValue(extendedTag, raw);
+        }
+
         private static (string Value, short Length) ReadStringWithLength(BinaryReader stream, Encoding? encoding = null)
         {
             var len = stream.ReadInt16BigEndian();

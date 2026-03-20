@@ -226,6 +226,18 @@ namespace SharpIpp.Protocol.Models
         public PrintColorMode? PrintColorMode { get; set; }
 
         /// <summary>
+        /// This attribute specifies the rendering intent for color conversion.
+        /// See: PWG 5100.13-2023 Section 6.2.4
+        /// </summary>
+        public PrintRenderingIntent? PrintRenderingIntent { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the action to take when the Printer encounters a Job processing error.
+        /// See: PWG 5100.13-2023 Section 6.2.6
+        /// </summary>
+        public JobErrorAction? JobErrorAction { get; set; }
+
+        /// <summary>
         /// This attribute specifies the media and media-related attributes
         /// for the Job using a collection.
         /// See: PWG 5100.7-2023
@@ -246,6 +258,12 @@ namespace SharpIpp.Protocol.Models
         /// See: PWG 5100.7-2023 Section 6.8.1
         /// </summary>
         public string? JobAccountId { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the type of value in <c>job-account-id</c>.
+        /// See: PWG 5100.11-2024 Section 5.3.5
+        /// </summary>
+        public JobAccountType? JobAccountType { get; set; }
 
         /// <summary>
         /// This attribute specifies the user ID associated with the account
@@ -484,6 +502,66 @@ namespace SharpIpp.Protocol.Models
         /// See: PWG 5100.3-2023 Section 5.2.24
         /// </summary>
         public int? YSide2ImageShift { get; set; }
+
+        /// <summary>
+        /// The <c>confirmation-sheet-print</c> Job Template attribute.
+        /// See: PWG 5100.15-2013 Section 7.4.7
+        /// </summary>
+        public bool? ConfirmationSheetPrint { get; set; }
+
+        /// <summary>
+        /// The <c>number-of-retries</c> Job Template attribute.
+        /// See: PWG 5100.15-2013 Section 7.4.20
+        /// </summary>
+        public int? NumberOfRetries { get; set; }
+
+        /// <summary>
+        /// The <c>materials-col</c> Job Template attribute.
+        /// See: PWG 5100.21-2019 Section 6.8.11
+        /// </summary>
+        public Material[]? MaterialsCol { get; set; }
+
+        /// <summary>
+        /// The <c>multiple-object-handling</c> Job Template attribute.
+        /// See: PWG 5100.21-2019 Section 6.8.12
+        /// </summary>
+        public string? MultipleObjectHandling { get; set; }
+
+        /// <summary>
+        /// The <c>platform-temperature</c> Job Template attribute.
+        /// See: PWG 5100.21-2019 Section 6.8.13
+        /// </summary>
+        public int? PlatformTemperature { get; set; }
+
+        /// <summary>
+        /// The <c>print-accuracy</c> Job Template attribute.
+        /// See: PWG 5100.21-2019 Section 6.8.14
+        /// </summary>
+        public PrintAccuracy? PrintAccuracy { get; set; }
+
+        /// <summary>
+        /// The <c>print-base</c> Job Template attribute.
+        /// See: PWG 5100.21-2019 Section 6.8.15
+        /// </summary>
+        public string? PrintBase { get; set; }
+
+        /// <summary>
+        /// The <c>print-objects</c> Job Template attribute.
+        /// See: PWG 5100.21-2019 Section 6.8.16
+        /// </summary>
+        public PrintObject[]? PrintObjects { get; set; }
+
+        /// <summary>
+        /// The <c>print-supports</c> Job Template attribute.
+        /// See: PWG 5100.21-2019 Section 6.8.17
+        /// </summary>
+        public string? PrintSupports { get; set; }
+
+        /// <summary>
+        /// The <c>overrides</c> Job Template attribute.
+        /// See: PWG 5100.6-2003 Section 8.2.4
+        /// </summary>
+        public OverrideInstruction[]? Overrides { get; set; }
 
     }
 }

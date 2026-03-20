@@ -16,7 +16,7 @@ public class MediaCol : IIppCollection
 
     /// <summary>
     /// type2 keyword | name(MAX)
-    /// PWG Media Standardized Names v2.0 (MSN2) [PWG5101.1]
+    /// See: PWG Media Standardized Names v2.0 (MSN2) [PWG5101.1]
     /// </summary>
     public MediaColor? MediaColor { get; set; }
 
@@ -77,7 +77,7 @@ public class MediaCol : IIppCollection
 
     /// <summary>
     /// type2 keyword | name(MAX)
-    /// PWG media size name [PWG5101.1]
+    /// See: PWG media size name [PWG5101.1]
     /// </summary>
     public Media? MediaSizeName { get; set; }
 

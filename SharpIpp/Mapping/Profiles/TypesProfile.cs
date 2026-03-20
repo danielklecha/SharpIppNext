@@ -73,6 +73,12 @@ internal class TypesProfile : IProfile
         ConfigureSmartEnum<JobSheets>(mapper);
         ConfigureSmartEnum<Compression>(mapper);
         ConfigureSmartEnum<PrintScaling>(mapper);
+        ConfigureSmartEnum<PrintRenderingIntent>(mapper);
+        ConfigureSmartEnum<JobErrorAction>(mapper);
+        ConfigureSmartEnum<IdentifyAction>(mapper);
+        ConfigureSmartEnum<JobAccountType>(mapper);
+        ConfigureSmartEnum<JobPasswordEncryption>(mapper);
+        ConfigureSmartEnum<JobReleaseAction>(mapper);
         ConfigureSmartEnum<WhichJobs>(mapper);
         ConfigureSmartEnum<JobStateReason>(mapper);
         ConfigureSmartEnum<UriScheme>(mapper);

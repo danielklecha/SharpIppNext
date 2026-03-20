@@ -59,4 +59,76 @@ public class CreateJobOperationAttributes : OperationAttributes
     /// <example>26</example>
     public int? JobKOctets { get; set; }
 
+    /// <summary>
+    /// The <c>job-password</c> operation attribute.
+    /// See: PWG 5100.11-2024 Section 5.2.2
+    /// </summary>
+    public string? JobPassword { get; set; }
+
+    /// <summary>
+    /// The <c>job-password-encryption</c> operation attribute.
+    /// See: PWG 5100.11-2024 Section 5.2.3
+    /// </summary>
+    public JobPasswordEncryption? JobPasswordEncryption { get; set; }
+
+    /// <summary>
+    /// The <c>job-release-action</c> operation attribute.
+    /// See: PWG 5100.11-2024 Section 5.2.4
+    /// </summary>
+    public JobReleaseAction? JobReleaseAction { get; set; }
+
+    /// <summary>
+    /// The <c>job-authorization-uri</c> operation attribute.
+    /// See: PWG 5100.11-2024 Section 5.3.7
+    /// </summary>
+    public Uri? JobAuthorizationUri { get; set; }
+
+    /// <summary>
+    /// The <c>job-impressions-estimated</c> operation attribute.
+    /// See: PWG 5100.11-2024 Section 5.3.8
+    /// </summary>
+    public int? JobImpressionsEstimated { get; set; }
+
+    /// <summary>
+    /// The <c>charge-info-message</c> operation attribute.
+    /// See: PWG 5100.11-2024 Section 5.3.1
+    /// </summary>
+    public string? ChargeInfoMessage { get; set; }
+
+    /// <summary>
+    /// The <c>proof-copies</c> operation attribute.
+    /// See: PWG 5100.11-2024 Section 5.2.7
+    /// </summary>
+    public int? ProofCopies { get; set; }
+
+    /// <summary>
+    /// The <c>proof-print</c> operation attribute.
+    /// See: PWG 5100.11-2024 Section 5.2.6
+    /// </summary>
+    public ProofPrint? ProofPrint { get; set; }
+
+    /// <summary>
+    /// The <c>job-storage</c> operation attribute.
+    /// See: PWG 5100.11-2024 Section 5.2.5
+    /// </summary>
+    public JobStorage? JobStorage { get; set; }
+
+    /// <summary>
+    /// The <c>cover-sheet-info</c> operation attribute.
+    /// See: PWG 5100.15-2013 Section 7.4.8
+    /// </summary>
+    public CoverSheetInfo? CoverSheetInfo { get; set; }
+
+    /// <summary>
+    /// The <c>destination-uris</c> operation attribute.
+    /// See: PWG 5100.15-2013 Section 7.4.10
+    /// </summary>
+    public DestinationUri[]? DestinationUris { get; set; }
+
+    /// <summary>
+    /// The <c>output-attributes</c> operation attribute.
+    /// See: PWG 5100.17-2014 Section 6.2.8
+    /// </summary>
+    public OutputAttributes? OutputAttributes { get; set; }
+
 }

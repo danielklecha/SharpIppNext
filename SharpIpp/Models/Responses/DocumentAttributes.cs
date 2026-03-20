@@ -40,18 +40,6 @@ public class DocumentAttributes : IIppCollection
     /// <code>print-content-optimize</code>
     public PrintContentOptimize? PrintContentOptimize { get; set; }
     /// <summary>
-    /// The print-content-optimize-supported IPP attribute.
-    /// See: PWG 5100.7-2023 Section 6.9.59
-    /// </summary>
-    /// <code>print-content-optimize-supported</code>
-    public PrintContentOptimize[]? PrintContentOptimizeSupported { get; set; }
-    /// <summary>
-    /// The printer-state-reasons IPP attribute.
-    /// See: pwg5100.11 - IPP Enterprise Printing Extensions v2.0 Section 8.3
-    /// </summary>
-    /// <code>printer-state-reasons</code>
-    public PrinterStateReason[]? PrinterStateReasons { get; set; }
-    /// <summary>
     /// The attributes-charset IPP attribute.
     /// See: RFC 8011 Section 5.3.19
     /// </summary>
@@ -150,7 +138,7 @@ public class DocumentAttributes : IIppCollection
     public PrintContentOptimize[]? PrintContentOptimizeActual { get; set; }
     /// <summary>
     /// The document-job-id IPP attribute.
-    /// See: pwg5100.18 - IPP Shared Infrastructure Extensions v1.1 Section 3.1.4
+    /// See: PWG 5100.18-2025
     /// </summary>
     /// <code>document-job-id</code>
     public int? DocumentJobId { get; set; }
@@ -180,13 +168,13 @@ public class DocumentAttributes : IIppCollection
     public string? DocumentNaturalLanguage { get; set; }
     /// <summary>
     /// The document-printer-uri IPP attribute.
-    /// See: pwg5100.18 - IPP Shared Infrastructure Extensions v1.1 Section 3.1.4
+    /// See: PWG 5100.18-2025
     /// </summary>
     /// <code>document-printer-uri</code>
     public string? DocumentPrinterUri { get; set; }
     /// <summary>
     /// The document-uri IPP attribute.
-    /// See: pwg5100.18 - IPP Shared Infrastructure Extensions v1.1 Section 7.1.4
+    /// See: PWG 5100.5-2024 Section 6.1.2
     /// </summary>
     /// <code>document-uri</code>
     public string? DocumentUri { get; set; }
@@ -210,7 +198,7 @@ public class DocumentAttributes : IIppCollection
     public int? KOctets { get; set; }
     /// <summary>
     /// The k-octets-processed IPP attribute.
-    /// See: pwg5100.18 - IPP Shared Infrastructure Extensions v1.1 Section 3.1.4
+    /// See: PWG 5100.5-2024
     /// </summary>
     /// <code>k-octets-processed</code>
     public int? KOctetsProcessed { get; set; }
@@ -228,7 +216,7 @@ public class DocumentAttributes : IIppCollection
     public int? MediaSheets { get; set; }
     /// <summary>
     /// The media-sheets-completed IPP attribute.
-    /// See: pwg5100.18 - IPP Shared Infrastructure Extensions v1.1 Section 3.1.4
+    /// See: PWG 5100.5-2024
     /// </summary>
     /// <code>media-sheets-completed</code>
     public int? MediaSheetsCompleted { get; set; }

@@ -166,5 +166,10 @@ namespace SharpIpp.Protocol.Models
         StringUnassigned5D = 0x5d,
         StringUnassigned5E = 0x5e,
         StringUnassigned5F = 0x5f,
+
+        /// <summary>
+        /// Extended tag indicator; value length begins with a 4-byte extended tag id (RFC 8010 Section 3.5.2)
+        /// </summary>
+        Extended = 0x7f,
     }
 }

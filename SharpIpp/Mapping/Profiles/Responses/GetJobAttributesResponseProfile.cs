@@ -62,6 +62,7 @@ internal class GetJobAttributesResponseProfile : IProfile
                 ? map.Map<JobCounter>(src[JobAttribute.JobMediaSheetsCol].FromBegCollection().ToIppDictionary())
                 : null,
             JobMoreInfo = map.MapFromDicNullable<string?>(src, JobAttribute.JobMoreInfo),
+            JobChargeInfo = map.MapFromDicNullable<string?>(src, JobAttribute.JobChargeInfo),
             DocumentFormatDetails = src.ContainsKey(JobAttribute.DocumentFormatDetails)
                 ? map.Map<DocumentFormatDetails>(src[JobAttribute.DocumentFormatDetails].FromBegCollection().ToIppDictionary())
                 : null,
@@ -123,6 +124,10 @@ internal class GetJobAttributesResponseProfile : IProfile
             DateTimeAtProcessingEstimated = map.MapFromDicNullable<DateTimeOffset?>(src, JobAttribute.DateTimeAtProcessingEstimated),
             TimeAtCompletedEstimated = map.MapFromDicNullable<int?>(src, JobAttribute.TimeAtCompletedEstimated),
             TimeAtProcessingEstimated = map.MapFromDicNullable<int?>(src, JobAttribute.TimeAtProcessingEstimated),
+            OutputDeviceJobState = map.MapFromDicNullable<JobState?>(src, JobAttribute.OutputDeviceJobState),
+            MaterialsColActual = src.TryGetValue(JobAttribute.MaterialsColActual, out var materialsColActual) && materialsColActual.GroupBegCollection().Any()
+                ? materialsColActual.GroupBegCollection().Select(x => map.Map<Material>(x.FromBegCollection().ToIppDictionary())).ToArray()
+                : null,
         });
 
         mapper.CreateMap<JobDescriptionAttributes, IDictionary<string, IppAttribute[]>>((src, map) =>
@@ -174,6 +179,8 @@ internal class GetJobAttributesResponseProfile : IProfile
                 dic.Add(JobAttribute.JobMediaSheetsCol, map.Map<IEnumerable<IppAttribute>>(src.JobMediaSheetsCol).ToBegCollection(JobAttribute.JobMediaSheetsCol).ToArray());
             if (src.JobMoreInfo != null)
                 dic.Add(JobAttribute.JobMoreInfo, new IppAttribute[] { new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.JobMoreInfo, src.JobMoreInfo) });
+            if (src.JobChargeInfo != null)
+                dic.Add(JobAttribute.JobChargeInfo, [new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.JobChargeInfo, src.JobChargeInfo)]);
             if (src.DocumentFormatDetails != null)
                 dic.Add(JobAttribute.DocumentFormatDetails, map.Map<IEnumerable<IppAttribute>>(src.DocumentFormatDetails).ToBegCollection(JobAttribute.DocumentFormatDetails).ToArray());
             if (src.DocumentFormatDetailsDetected != null)
@@ -260,6 +267,10 @@ internal class GetJobAttributesResponseProfile : IProfile
                 dic.Add(JobAttribute.TimeAtCompletedEstimated, [new IppAttribute(Tag.Integer, JobAttribute.TimeAtCompletedEstimated, src.TimeAtCompletedEstimated.Value)]);
             if (src.TimeAtProcessingEstimated != null)
                 dic.Add(JobAttribute.TimeAtProcessingEstimated, [new IppAttribute(Tag.Integer, JobAttribute.TimeAtProcessingEstimated, src.TimeAtProcessingEstimated.Value)]);
+            if (src.OutputDeviceJobState != null)
+                dic.Add(JobAttribute.OutputDeviceJobState, [new IppAttribute(Tag.Enum, JobAttribute.OutputDeviceJobState, (int)src.OutputDeviceJobState.Value)]);
+            if (src.MaterialsColActual != null)
+                dic.Add(JobAttribute.MaterialsColActual, src.MaterialsColActual.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.MaterialsColActual)).ToArray());
             return dic;
         });
     }

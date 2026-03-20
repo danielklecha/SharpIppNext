@@ -58,6 +58,16 @@ namespace SharpIpp.Protocol.Models
         /// <summary>
         /// system-attributes-tag
         /// </summary>
-        SystemAttributesTag = 0x0A
+        SystemAttributesTag = 0x0A,
+
+        /// <summary>
+        /// Future extension group tags (0x0B-0x0F) as per RFC 8010 Section 3.5.1.
+        /// Parsed to allow forward-compatible decoding; currently not surfaced on the public model.
+        /// </summary>
+        Future0B = 0x0B,
+        Future0C = 0x0C,
+        Future0D = 0x0D,
+        Future0E = 0x0E,
+        Future0F = 0x0F,
     }
 }

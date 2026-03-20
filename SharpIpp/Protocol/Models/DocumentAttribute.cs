@@ -42,13 +42,11 @@ namespace SharpIpp.Protocol.Models
         public const string Pages = "pages";
         public const string PagesCompleted = "pages-completed";
         public const string PrintContentOptimize = "print-content-optimize";
-        public const string PrintContentOptimizeSupported = "print-content-optimize-supported";
         public const string DocumentFormatDetails = "document-format-details";
         public const string DocumentFormatDetailsDetected = "document-format-details-detected";
         public const string ErrorsCount = "errors-count";
         public const string WarningsCount = "warnings-count";
         public const string PrintContentOptimizeActual = "print-content-optimize-actual";
-        public const string PrinterStateReasons = "printer-state-reasons";
         public const string DocumentCompleted = "document-completed";
         public const string DocumentConfigChanged = "document-config-changed";
         public const string DocumentCreated = "document-created";
