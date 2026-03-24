@@ -67,6 +67,7 @@ namespace SharpIpp.Protocol.Models
         public const string JobHoldUntilSupported = "job-hold-until-supported";
         public const string OutputBinDefault = "output-bin-default";
         public const string OutputBinSupported = "output-bin-supported";
+        public const string MediaColDatabase = "media-col-database";
         public const string MediaColDefault = "media-col-default";
         public const string MediaColSupported = "media-col-supported";
         public const string MediaColReady = "media-col-ready";
