@@ -61,6 +61,11 @@ internal class MediaSizeProfile : IProfile
                 attributes.Add(new IppAttribute(Tag.Integer, nameof(MediaSize.XDimension).ConvertCamelCaseToKebabCase(), src.XDimension.Value));
             if (src.YDimension.HasValue)
                 attributes.Add(new IppAttribute(Tag.Integer, nameof(MediaSize.YDimension).ConvertCamelCaseToKebabCase(), src.YDimension.Value));
+            if (src.XDimensionRange.HasValue)
+                attributes.Add(new IppAttribute(Tag.RangeOfInteger, nameof(MediaSize.XDimension).ConvertCamelCaseToKebabCase(), src.XDimensionRange.Value));
+            if (src.YDimensionRange.HasValue)
+                attributes.Add(new IppAttribute(Tag.RangeOfInteger, nameof(MediaSize.YDimension).ConvertCamelCaseToKebabCase(), src.YDimensionRange.Value));
+
             return attributes;
         });
     }
