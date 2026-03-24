@@ -243,7 +243,7 @@ namespace SharpIpp.Protocol.Models
 
         public string[]? OutputBinSupported { get; set; }
         public MediaCol? MediaColDefault { get; set; }
-
+        public MediaCol? MediaColReady { get; set; }
         public PrintColorMode? PrintColorModeDefault { get; set; }
         public PrintColorMode[]? PrintColorModeSupported { get; set; }
 

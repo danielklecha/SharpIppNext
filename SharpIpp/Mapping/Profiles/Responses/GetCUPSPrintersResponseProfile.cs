@@ -111,6 +111,7 @@ internal class GetCUPSPrintersResponseProfile : IProfile
                 OutputBinDefault = map.MapFromDicNullable<string?>(src, PrinterAttribute.OutputBinDefault),
                 OutputBinSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.OutputBinSupported),
                 MediaColDefault = src.ContainsKey(PrinterAttribute.MediaColDefault) ? map.Map<MediaCol>(src[PrinterAttribute.MediaColDefault].FromBegCollection().ToIppDictionary()) : null,
+                MediaColReady = src.ContainsKey(PrinterAttribute.MediaColReady) ? map.Map<MediaCol>(src[PrinterAttribute.MediaColReady].FromBegCollection().ToIppDictionary()) : null,
                 PrintColorModeDefault = map.MapFromDicNullable<PrintColorMode?>(src, PrinterAttribute.PrintColorModeDefault),
                 PrintColorModeSupported = map.MapFromDicSetNullable<PrintColorMode[]?>(src, PrinterAttribute.PrintColorModeSupported),
                 WhichJobsSupported = map.MapFromDicSetNullable<WhichJobs[]?>(src, PrinterAttribute.WhichJobsSupported),
@@ -246,6 +247,8 @@ internal class GetCUPSPrintersResponseProfile : IProfile
                     dic.Add(PrinterAttribute.OutputBinSupported, src.OutputBinSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.OutputBinSupported, x)).ToArray());
                 if (src.MediaColDefault != null)
                     dic.Add(PrinterAttribute.MediaColDefault, map.Map<IEnumerable<IppAttribute>>(src.MediaColDefault).ToBegCollection(PrinterAttribute.MediaColDefault).ToArray());
+                if (src.MediaColDefault != null)
+                    dic.Add(PrinterAttribute.MediaColReady, map.Map<IEnumerable<IppAttribute>>(src.MediaColReady).ToBegCollection(PrinterAttribute.MediaColReady).ToArray());
                 if (src.PrintColorModeDefault != null)
                     dic.Add(PrinterAttribute.PrintColorModeDefault, new IppAttribute[] { new IppAttribute(Tag.Keyword, PrinterAttribute.PrintColorModeDefault, map.Map<string>(src.PrintColorModeDefault.Value)) });
                 if (src.PrintColorModeSupported != null)
