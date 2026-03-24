@@ -235,4 +235,37 @@ public static class IppAttributeExtensions
             }
         }
     }
+
+    /// <summary>
+    /// Splits a collection of <see cref="IppAttribute"/> to a smaller collections to be further processed by
+    /// <see cref="FromBegCollection"/> each.
+    /// </summary>
+    /// <param name="attributes">The collection of attributes starting with a collection tag.</param>
+    /// <param name="collectionName">The collection name</param>
+    /// <returns>An enumerable of list of attributes.</returns>
+    public static IEnumerable<IEnumerable<IppAttribute>> SplitBegCollection(this IEnumerable<IppAttribute> attributes,
+        string collectionName)
+    {
+        var isFirst = true;
+
+        var innerList = new List<IppAttribute>();
+        
+        foreach (var attribute in attributes)
+        {
+            if (attribute.Tag == Tag.BegCollection && attribute.Name == collectionName)
+            {
+                if (!isFirst)
+                {
+                    yield return innerList;
+                    innerList = new List<IppAttribute>();
+                }
+
+                isFirst = false;
+            }
+                
+            innerList.Add(new IppAttribute(attribute.Tag, attribute.Name, attribute.Value));
+        }
+
+        yield return innerList;
+    }
 }

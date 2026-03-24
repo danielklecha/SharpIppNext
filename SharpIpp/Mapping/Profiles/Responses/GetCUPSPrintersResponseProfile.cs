@@ -110,6 +110,7 @@ internal class GetCUPSPrintersResponseProfile : IProfile
                 JobHoldUntilSupported = map.MapFromDicSetNullable<JobHoldUntil[]?>(src, PrinterAttribute.JobHoldUntilSupported),
                 OutputBinDefault = map.MapFromDicNullable<string?>(src, PrinterAttribute.OutputBinDefault),
                 OutputBinSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.OutputBinSupported),
+                MediaColDatabase = src.ContainsKey(PrinterAttribute.MediaColDatabase) ? src[PrinterAttribute.MediaColDatabase].SplitBegCollection(PrinterAttribute.MediaColDatabase).Select(x => map.Map<MediaCol>(x.FromBegCollection().ToIppDictionary())).ToArray() : null,
                 MediaColDefault = src.ContainsKey(PrinterAttribute.MediaColDefault) ? map.Map<MediaCol>(src[PrinterAttribute.MediaColDefault].FromBegCollection().ToIppDictionary()) : null,
                 PrintColorModeDefault = map.MapFromDicNullable<PrintColorMode?>(src, PrinterAttribute.PrintColorModeDefault),
                 PrintColorModeSupported = map.MapFromDicSetNullable<PrintColorMode[]?>(src, PrinterAttribute.PrintColorModeSupported),
@@ -244,6 +245,8 @@ internal class GetCUPSPrintersResponseProfile : IProfile
                     dic.Add(PrinterAttribute.OutputBinDefault, new IppAttribute[] { new IppAttribute(Tag.Keyword, PrinterAttribute.OutputBinDefault, src.OutputBinDefault) });
                 if (src.OutputBinSupported != null)
                     dic.Add(PrinterAttribute.OutputBinSupported, src.OutputBinSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.OutputBinSupported, x)).ToArray());
+                if (src.MediaColDatabase != null)
+                    dic.Add(PrinterAttribute.MediaColDatabase, src.MediaColDatabase.Select(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(PrinterAttribute.MediaColDatabase).ToArray()).SelectMany(array => array).ToArray());
                 if (src.MediaColDefault != null)
                     dic.Add(PrinterAttribute.MediaColDefault, map.Map<IEnumerable<IppAttribute>>(src.MediaColDefault).ToBegCollection(PrinterAttribute.MediaColDefault).ToArray());
                 if (src.PrintColorModeDefault != null)

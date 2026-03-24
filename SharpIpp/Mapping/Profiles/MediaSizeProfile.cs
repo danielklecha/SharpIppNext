@@ -11,11 +11,48 @@ internal class MediaSizeProfile : IProfile
     public void CreateMaps(IMapperConstructor mapper)
     {
         mapper.CreateMap<Dictionary<string, IppAttribute[]>, MediaSize>((src, map) =>
-            new MediaSize
+        {
+            int? xDimension = null;
+            int? yDimension = null;
+            Range? xDimensionRange = null;
+            Range? yDimensionRange = null;
+
+            try
             {
-                XDimension = map.MapFromDicNullable<int?>(src, nameof(MediaSize.XDimension).ConvertCamelCaseToKebabCase()),
-                YDimension = map.MapFromDicNullable<int?>(src, nameof(MediaSize.YDimension).ConvertCamelCaseToKebabCase())
-            });
+                xDimension =
+                    map.MapFromDicNullable<int?>(src, nameof(MediaSize.XDimension).ConvertCamelCaseToKebabCase());
+            }
+            catch (System.ArgumentException) { }
+            
+            try
+            {
+                yDimension =
+                    map.MapFromDicNullable<int?>(src, nameof(MediaSize.YDimension).ConvertCamelCaseToKebabCase());
+            }
+            catch (System.ArgumentException) { }
+            
+            try
+            {
+                xDimensionRange =
+                    map.MapFromDicNullable<Range?>(src, nameof(MediaSize.XDimension).ConvertCamelCaseToKebabCase());
+            }
+            catch (System.ArgumentException) { }
+            
+            try
+            {
+                yDimensionRange =
+                    map.MapFromDicNullable<Range?>(src, nameof(MediaSize.YDimension).ConvertCamelCaseToKebabCase());
+            }
+            catch (System.ArgumentException) { }
+            
+            return new MediaSize
+            {
+                XDimension = xDimension,
+                YDimension = yDimension,
+                XDimensionRange = xDimensionRange,
+                YDimensionRange = yDimensionRange
+            };
+        });
 
         mapper.CreateMap<MediaSize, IEnumerable<IppAttribute>>((src, map) =>
         {
@@ -24,6 +61,11 @@ internal class MediaSizeProfile : IProfile
                 attributes.Add(new IppAttribute(Tag.Integer, nameof(MediaSize.XDimension).ConvertCamelCaseToKebabCase(), src.XDimension.Value));
             if (src.YDimension.HasValue)
                 attributes.Add(new IppAttribute(Tag.Integer, nameof(MediaSize.YDimension).ConvertCamelCaseToKebabCase(), src.YDimension.Value));
+            if (src.XDimensionRange.HasValue)
+                attributes.Add(new IppAttribute(Tag.RangeOfInteger, nameof(MediaSize.XDimension).ConvertCamelCaseToKebabCase(), src.XDimensionRange.Value));
+            if (src.YDimensionRange.HasValue)
+                attributes.Add(new IppAttribute(Tag.RangeOfInteger, nameof(MediaSize.YDimension).ConvertCamelCaseToKebabCase(), src.YDimensionRange.Value));
+
             return attributes;
         });
     }
