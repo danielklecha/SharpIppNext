@@ -171,6 +171,7 @@ public struct NoValue : IEquatable<NoValue>
             _ when underlyingType == typeof(OutputAttributes) => GetCollectionNoValue<OutputAttributes>(),
             _ when underlyingType == typeof(Material) => GetCollectionNoValue<Material>(),
             _ when underlyingType == typeof(PrintAccuracy) => GetCollectionNoValue<PrintAccuracy>(),
+            _ when underlyingType == typeof(PrintObject) => GetCollectionNoValue<PrintObject>(),
             _ when underlyingType == typeof(OverrideInstruction) => GetCollectionNoValue<OverrideInstruction>(),
             _ when underlyingType == typeof(OutputBin) => new OutputBin(string.Empty),
             _ when underlyingType == typeof(ImpositionTemplate) => new ImpositionTemplate(string.Empty),

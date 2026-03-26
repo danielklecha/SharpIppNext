@@ -38,7 +38,7 @@ public class FinishingsColProfileTests
         var result = _mapper.Map<FinishingsCol>(dict);
 
         // Should return a FinishingsCol with IsNoValue set to true
-        result.IsNoValue.Should().BeTrue();
+        ((IIppCollection)result).IsNoValue.Should().BeTrue();
         // Sub-properties remain at their defaults (null) since only IsNoValue is set.
         result.FinishingTemplate.Should().BeNull();
         result.Stitching.Should().BeNull();
@@ -46,19 +46,17 @@ public class FinishingsColProfileTests
     }
 
     [TestMethod]
-    public void Map_FinishingsCol_ToAttributes_WithIsNoValue_ReturnsNoValueAttribute()
+    public void Map_FinishingsCol_NoValue_ReturnsNoValueTag()
     {
-        var src = NoValue.GetNoValue<FinishingsCol>();
+        var finishingsCol = NoValue.GetNoValue<FinishingsCol>();
+        var result = _mapper.Map<IEnumerable<IppAttribute>>(finishingsCol).ToList();
 
-        var attributes = _mapper.Map<IEnumerable<IppAttribute>>(src).ToArray();
-
-        attributes.Should().HaveCount(1);
-        attributes[0].Tag.Should().Be(Tag.NoValue);
-        attributes[0].Name.Should().Be(JobAttribute.FinishingsCol);
-        attributes[0].Value.Should().Be(NoValue.Instance);
+        result.Should().HaveCount(1);
+        result[0].Tag.Should().Be(Tag.NoValue);
+        result[0].Name.Should().Be(JobAttribute.FinishingsCol);
+        result[0].Value.Should().Be(NoValue.Instance);
     }
 
-    [TestMethod]
     public void Map_FinishingsCol_FromDictionary_WithComplexMembers_MapsMediaSizeAndFinishingCollections()
     {
         var dict = new Dictionary<string, IppAttribute[]>

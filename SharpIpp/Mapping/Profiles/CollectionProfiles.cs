@@ -8,11 +8,19 @@ namespace SharpIpp.Mapping.Profiles;
 
 internal class CollectionProfiles : IProfile
 {
+    private static bool IsOutOfBandNoValue(IDictionary<string, IppAttribute[]> src)
+    {
+        return src.Count == 1 && src.Values.First().Length == 1 && src.Values.First()[0].Tag.IsOutOfBand();
+    }
+
     public void CreateMaps(IMapperConstructor mapper)
     {
         // Cover
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, Cover>((src, map) =>
         {
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<Cover>();
+
             var dst = new Cover
             {
                 CoverType = map.MapFromDicNullable<CoverType?>(src, nameof(Cover.CoverType).ConvertCamelCaseToKebabCase()),
@@ -24,6 +32,9 @@ internal class CollectionProfiles : IProfile
         });
         mapper.CreateMap<Cover, IEnumerable<IppAttribute>>((src, map) =>
         {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, "cover", NoValue.Instance) };
+
             var attributes = new List<IppAttribute>();
             if (src.CoverType.HasValue)
                 attributes.Add(new IppAttribute(Tag.Keyword, nameof(Cover.CoverType).ConvertCamelCaseToKebabCase(), map.Map<string>(src.CoverType.Value)));
@@ -37,6 +48,9 @@ internal class CollectionProfiles : IProfile
         // InsertSheet
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, InsertSheet>((src, map) =>
         {
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<InsertSheet>();
+
             var dst = new InsertSheet
             {
                 InsertAfterPageNumber = map.MapFromDicNullable<int?>(src, nameof(InsertSheet.InsertAfterPageNumber).ConvertCamelCaseToKebabCase()),
@@ -49,6 +63,9 @@ internal class CollectionProfiles : IProfile
         });
         mapper.CreateMap<InsertSheet, IEnumerable<IppAttribute>>((src, map) =>
         {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, "insert-sheet", NoValue.Instance) };
+
             var attributes = new List<IppAttribute>();
             if (src.InsertAfterPageNumber.HasValue)
                 attributes.Add(new IppAttribute(Tag.Integer, nameof(InsertSheet.InsertAfterPageNumber).ConvertCamelCaseToKebabCase(), src.InsertAfterPageNumber.Value));
@@ -64,6 +81,9 @@ internal class CollectionProfiles : IProfile
         // JobAccountingSheets
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, JobAccountingSheets>((src, map) =>
         {
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<JobAccountingSheets>();
+
             var dst = new JobAccountingSheets
             {
                 JobAccountingOutputBin = map.MapFromDicNullable<OutputBin?>(src, nameof(JobAccountingSheets.JobAccountingOutputBin).ConvertCamelCaseToKebabCase()),
@@ -76,6 +96,9 @@ internal class CollectionProfiles : IProfile
         });
         mapper.CreateMap<JobAccountingSheets, IEnumerable<IppAttribute>>((src, map) =>
         {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.JobAccountingSheets, NoValue.Instance) };
+
             var attributes = new List<IppAttribute>();
             if (src.JobAccountingOutputBin != null)
                 attributes.Add(new IppAttribute(Tag.Keyword, nameof(JobAccountingSheets.JobAccountingOutputBin).ConvertCamelCaseToKebabCase(), map.Map<string>(src.JobAccountingOutputBin)));
@@ -91,6 +114,9 @@ internal class CollectionProfiles : IProfile
         // JobErrorSheet
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, JobErrorSheet>((src, map) =>
         {
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<JobErrorSheet>();
+
             var dst = new JobErrorSheet
             {
                 JobErrorSheetType = map.MapFromDicNullable<JobSheetsType?>(src, nameof(JobErrorSheet.JobErrorSheetType).ConvertCamelCaseToKebabCase()),
@@ -103,6 +129,9 @@ internal class CollectionProfiles : IProfile
         });
         mapper.CreateMap<JobErrorSheet, IEnumerable<IppAttribute>>((src, map) =>
         {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.JobErrorSheet, NoValue.Instance) };
+
             var attributes = new List<IppAttribute>();
             if (src.JobErrorSheetType.HasValue)
                 attributes.Add(new IppAttribute(Tag.Keyword, nameof(JobErrorSheet.JobErrorSheetType).ConvertCamelCaseToKebabCase(), map.Map<string>(src.JobErrorSheetType.Value)));
@@ -118,6 +147,9 @@ internal class CollectionProfiles : IProfile
         // SeparatorSheets
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, SeparatorSheets>((src, map) =>
         {
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<SeparatorSheets>();
+
             var dst = new SeparatorSheets
             {
                 Media = map.MapFromDicNullable<Media?>(src, nameof(SeparatorSheets.Media).ConvertCamelCaseToKebabCase()),
@@ -129,6 +161,9 @@ internal class CollectionProfiles : IProfile
         });
         mapper.CreateMap<SeparatorSheets, IEnumerable<IppAttribute>>((src, map) =>
         {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.SeparatorSheets, NoValue.Instance) };
+
             var attributes = new List<IppAttribute>();
             if (src.Media != null)
                 attributes.Add(new IppAttribute(Tag.Keyword, nameof(SeparatorSheets.Media).ConvertCamelCaseToKebabCase(), map.Map<string>(src.Media)));
@@ -142,6 +177,9 @@ internal class CollectionProfiles : IProfile
         // ClientInfo
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, ClientInfo>((src, map) =>
         {
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<ClientInfo>();
+
             var dst = new ClientInfo
             {
                 ClientName = map.MapFromDicNullable<string?>(src, nameof(ClientInfo.ClientName).ConvertCamelCaseToKebabCase()),
@@ -158,6 +196,9 @@ internal class CollectionProfiles : IProfile
         });
         mapper.CreateMap<ClientInfo, IEnumerable<IppAttribute>>((src, map) =>
         {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.ClientInfo, NoValue.Instance) };
+
             var attributes = new List<IppAttribute>();
             if (src.ClientName != null)
                 attributes.Add(new IppAttribute(Tag.NameWithoutLanguage, nameof(ClientInfo.ClientName).ConvertCamelCaseToKebabCase(), src.ClientName));
@@ -175,6 +216,9 @@ internal class CollectionProfiles : IProfile
         // DocumentFormatDetails
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, DocumentFormatDetails>((src, map) =>
         {
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<DocumentFormatDetails>();
+
             var dst = new DocumentFormatDetails
             {
                 DocumentSourceApplicationName = map.MapFromDicNullable<string?>(src, nameof(DocumentFormatDetails.DocumentSourceApplicationName).ConvertCamelCaseToKebabCase()),
@@ -186,6 +230,9 @@ internal class CollectionProfiles : IProfile
         });
         mapper.CreateMap<DocumentFormatDetails, IEnumerable<IppAttribute>>((src, map) =>
         {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.DocumentFormatDetails, NoValue.Instance) };
+
             var attributes = new List<IppAttribute>();
             if (src.DocumentSourceApplicationName != null)
                 attributes.Add(new IppAttribute(Tag.NameWithoutLanguage, nameof(DocumentFormatDetails.DocumentSourceApplicationName).ConvertCamelCaseToKebabCase(), src.DocumentSourceApplicationName));
@@ -201,6 +248,9 @@ internal class CollectionProfiles : IProfile
         // JobCounter
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, JobCounter>((src, map) =>
         {
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<JobCounter>();
+
             return new JobCounter
             {
                 Blank = map.MapFromDicNullable<int?>(src, nameof(JobCounter.Blank).ConvertCamelCaseToKebabCase()),
@@ -215,6 +265,9 @@ internal class CollectionProfiles : IProfile
         });
         mapper.CreateMap<JobCounter, IEnumerable<IppAttribute>>((src, map) =>
         {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, "job-counter", NoValue.Instance) };
+
             var attributes = new List<IppAttribute>();
             if (src.Blank.HasValue)
                 attributes.Add(new IppAttribute(Tag.Integer, nameof(JobCounter.Blank).ConvertCamelCaseToKebabCase(), src.Blank.Value));
@@ -238,6 +291,9 @@ internal class CollectionProfiles : IProfile
         // JobSheetsCol
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, JobSheetsCol>((src, map) =>
         {
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<JobSheetsCol>();
+
             var dst = new JobSheetsCol
             {
                 JobSheets = map.MapFromDicNullable<JobSheets?>(src, nameof(JobSheetsCol.JobSheets).ConvertCamelCaseToKebabCase()),
@@ -251,6 +307,9 @@ internal class CollectionProfiles : IProfile
         });
         mapper.CreateMap<JobSheetsCol, IEnumerable<IppAttribute>>((src, map) =>
         {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.JobSheetsCol, NoValue.Instance) };
+
             var attributes = new List<IppAttribute>();
             if (src.JobSheets.HasValue)
                 attributes.Add(new IppAttribute(Tag.Keyword, nameof(JobSheetsCol.JobSheets).ConvertCamelCaseToKebabCase(), map.Map<string>(src.JobSheets.Value)));
@@ -263,6 +322,9 @@ internal class CollectionProfiles : IProfile
 
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, ProofPrint>((src, map) =>
         {
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<ProofPrint>();
+
             var dst = new ProofPrint
             {
                 ProofPrintCopies = map.MapFromDicNullable<int?>(src, nameof(ProofPrint.ProofPrintCopies).ConvertCamelCaseToKebabCase()),
@@ -274,6 +336,9 @@ internal class CollectionProfiles : IProfile
         });
         mapper.CreateMap<ProofPrint, IEnumerable<IppAttribute>>((src, map) =>
         {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.ProofPrint, NoValue.Instance) };
+
             var attributes = new List<IppAttribute>();
             if (src.ProofPrintCopies.HasValue)
                 attributes.Add(new IppAttribute(Tag.Integer, nameof(ProofPrint.ProofPrintCopies).ConvertCamelCaseToKebabCase(), src.ProofPrintCopies.Value));
@@ -284,14 +349,23 @@ internal class CollectionProfiles : IProfile
             return attributes;
         });
 
-        mapper.CreateMap<IDictionary<string, IppAttribute[]>, JobStorage>((src, map) => new JobStorage
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, JobStorage>((src, map) =>
         {
-            JobStorageAccess = map.MapFromDicNullable<string?>(src, nameof(JobStorage.JobStorageAccess).ConvertCamelCaseToKebabCase()),
-            JobStorageDisposition = map.MapFromDicNullable<string?>(src, nameof(JobStorage.JobStorageDisposition).ConvertCamelCaseToKebabCase()),
-            JobStorageGroup = map.MapFromDicNullable<string?>(src, nameof(JobStorage.JobStorageGroup).ConvertCamelCaseToKebabCase())
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<JobStorage>();
+
+            return new JobStorage
+            {
+                JobStorageAccess = map.MapFromDicNullable<string?>(src, nameof(JobStorage.JobStorageAccess).ConvertCamelCaseToKebabCase()),
+                JobStorageDisposition = map.MapFromDicNullable<string?>(src, nameof(JobStorage.JobStorageDisposition).ConvertCamelCaseToKebabCase()),
+                JobStorageGroup = map.MapFromDicNullable<string?>(src, nameof(JobStorage.JobStorageGroup).ConvertCamelCaseToKebabCase())
+            };
         });
         mapper.CreateMap<JobStorage, IEnumerable<IppAttribute>>((src, map) =>
         {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.JobStorage, NoValue.Instance) };
+
             var attributes = new List<IppAttribute>();
             if (src.JobStorageAccess != null)
                 attributes.Add(new IppAttribute(Tag.Keyword, nameof(JobStorage.JobStorageAccess).ConvertCamelCaseToKebabCase(), src.JobStorageAccess));
@@ -302,17 +376,26 @@ internal class CollectionProfiles : IProfile
             return attributes;
         });
 
-        mapper.CreateMap<IDictionary<string, IppAttribute[]>, DocumentAccess>((src, map) => new DocumentAccess
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, DocumentAccess>((src, map) =>
         {
-            AccessOAuthToken = map.MapFromDicNullable<string?>(src, nameof(DocumentAccess.AccessOAuthToken).ConvertCamelCaseToKebabCase()),
-            AccessOAuthUri = map.MapFromDicNullable<string?>(src, nameof(DocumentAccess.AccessOAuthUri).ConvertCamelCaseToKebabCase()),
-            AccessPassword = map.MapFromDicNullable<string?>(src, nameof(DocumentAccess.AccessPassword).ConvertCamelCaseToKebabCase()),
-            AccessPin = map.MapFromDicNullable<string?>(src, nameof(DocumentAccess.AccessPin).ConvertCamelCaseToKebabCase()),
-            AccessUserName = map.MapFromDicNullable<string?>(src, nameof(DocumentAccess.AccessUserName).ConvertCamelCaseToKebabCase()),
-            AccessX509Certificate = map.MapFromDicNullable<string?>(src, nameof(DocumentAccess.AccessX509Certificate).ConvertCamelCaseToKebabCase())
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<DocumentAccess>();
+
+            return new DocumentAccess
+            {
+                AccessOAuthToken = map.MapFromDicNullable<string?>(src, nameof(DocumentAccess.AccessOAuthToken).ConvertCamelCaseToKebabCase()),
+                AccessOAuthUri = map.MapFromDicNullable<string?>(src, nameof(DocumentAccess.AccessOAuthUri).ConvertCamelCaseToKebabCase()),
+                AccessPassword = map.MapFromDicNullable<string?>(src, nameof(DocumentAccess.AccessPassword).ConvertCamelCaseToKebabCase()),
+                AccessPin = map.MapFromDicNullable<string?>(src, nameof(DocumentAccess.AccessPin).ConvertCamelCaseToKebabCase()),
+                AccessUserName = map.MapFromDicNullable<string?>(src, nameof(DocumentAccess.AccessUserName).ConvertCamelCaseToKebabCase()),
+                AccessX509Certificate = map.MapFromDicNullable<string?>(src, nameof(DocumentAccess.AccessX509Certificate).ConvertCamelCaseToKebabCase())
+            };
         });
         mapper.CreateMap<DocumentAccess, IEnumerable<IppAttribute>>((src, map) =>
         {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.DocumentAccess, NoValue.Instance) };
+
             var attributes = new List<IppAttribute>();
             if (src.AccessOAuthToken != null)
                 attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, nameof(DocumentAccess.AccessOAuthToken).ConvertCamelCaseToKebabCase(), src.AccessOAuthToken));
@@ -329,17 +412,26 @@ internal class CollectionProfiles : IProfile
             return attributes;
         });
 
-        mapper.CreateMap<IDictionary<string, IppAttribute[]>, CoverSheetInfo>((src, map) => new CoverSheetInfo
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, CoverSheetInfo>((src, map) =>
         {
-            FromName = map.MapFromDicNullable<string?>(src, nameof(CoverSheetInfo.FromName).ConvertCamelCaseToKebabCase()),
-            Logo = map.MapFromDicNullable<string?>(src, nameof(CoverSheetInfo.Logo).ConvertCamelCaseToKebabCase()),
-            Message = map.MapFromDicNullable<string?>(src, nameof(CoverSheetInfo.Message).ConvertCamelCaseToKebabCase()),
-            OrganizationName = map.MapFromDicNullable<string?>(src, nameof(CoverSheetInfo.OrganizationName).ConvertCamelCaseToKebabCase()),
-            Subject = map.MapFromDicNullable<string?>(src, nameof(CoverSheetInfo.Subject).ConvertCamelCaseToKebabCase()),
-            ToName = map.MapFromDicNullable<string?>(src, nameof(CoverSheetInfo.ToName).ConvertCamelCaseToKebabCase())
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<CoverSheetInfo>();
+
+            return new CoverSheetInfo
+            {
+                FromName = map.MapFromDicNullable<string?>(src, nameof(CoverSheetInfo.FromName).ConvertCamelCaseToKebabCase()),
+                Logo = map.MapFromDicNullable<string?>(src, nameof(CoverSheetInfo.Logo).ConvertCamelCaseToKebabCase()),
+                Message = map.MapFromDicNullable<string?>(src, nameof(CoverSheetInfo.Message).ConvertCamelCaseToKebabCase()),
+                OrganizationName = map.MapFromDicNullable<string?>(src, nameof(CoverSheetInfo.OrganizationName).ConvertCamelCaseToKebabCase()),
+                Subject = map.MapFromDicNullable<string?>(src, nameof(CoverSheetInfo.Subject).ConvertCamelCaseToKebabCase()),
+                ToName = map.MapFromDicNullable<string?>(src, nameof(CoverSheetInfo.ToName).ConvertCamelCaseToKebabCase())
+            };
         });
         mapper.CreateMap<CoverSheetInfo, IEnumerable<IppAttribute>>((src, map) =>
         {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.CoverSheetInfo, NoValue.Instance) };
+
             var attributes = new List<IppAttribute>();
             if (src.FromName != null) attributes.Add(new IppAttribute(Tag.NameWithoutLanguage, nameof(CoverSheetInfo.FromName).ConvertCamelCaseToKebabCase(), src.FromName));
             if (src.Logo != null) attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, nameof(CoverSheetInfo.Logo).ConvertCamelCaseToKebabCase(), src.Logo));
@@ -350,45 +442,64 @@ internal class CollectionProfiles : IProfile
             return attributes;
         });
 
-        mapper.CreateMap<IDictionary<string, IppAttribute[]>, DestinationUri>((src, map) => new DestinationUri
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, DestinationUri>((src, map) =>
         {
-            DestinationUriValue = map.MapFromDicNullable<string?>(src, "destination-uri"),
-            PostDialString = map.MapFromDicNullable<string?>(src, nameof(DestinationUri.PostDialString).ConvertCamelCaseToKebabCase()),
-            PreDialString = map.MapFromDicNullable<string?>(src, nameof(DestinationUri.PreDialString).ConvertCamelCaseToKebabCase()),
-            T33Subaddress = map.MapFromDicNullable<string?>(src, nameof(DestinationUri.T33Subaddress).ConvertCamelCaseToKebabCase())
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<DestinationUri>();
+
+            return new DestinationUri
+            {
+                DestinationUriValue = map.MapFromDicNullable<string?>(src, "destination-uri"),
+                PostDialString = map.MapFromDicNullable<string?>(src, nameof(DestinationUri.PostDialString).ConvertCamelCaseToKebabCase()),
+                PreDialString = map.MapFromDicNullable<string?>(src, nameof(DestinationUri.PreDialString).ConvertCamelCaseToKebabCase()),
+                T33Subaddress = map.MapFromDicNullable<string?>(src, nameof(DestinationUri.T33Subaddress).ConvertCamelCaseToKebabCase())
+            };
         });
         mapper.CreateMap<DestinationUri, IEnumerable<IppAttribute>>((src, map) =>
         {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.DestinationUris, NoValue.Instance) };
+
             var attributes = new List<IppAttribute>();
-            if (src.DestinationUriValue != null)
-                attributes.Add(new IppAttribute(Tag.Uri, "destination-uri", src.DestinationUriValue));
-            if (src.PostDialString != null)
-                attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, nameof(DestinationUri.PostDialString).ConvertCamelCaseToKebabCase(), src.PostDialString));
-            if (src.PreDialString != null)
-                attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, nameof(DestinationUri.PreDialString).ConvertCamelCaseToKebabCase(), src.PreDialString));
-            if (src.T33Subaddress != null)
-                attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, nameof(DestinationUri.T33Subaddress).ConvertCamelCaseToKebabCase(), src.T33Subaddress));
+            if (src.DestinationUriValue != null) attributes.Add(new IppAttribute(Tag.Uri, "destination-uri", src.DestinationUriValue));
+            if (src.PostDialString != null) attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, nameof(DestinationUri.PostDialString).ConvertCamelCaseToKebabCase(), src.PostDialString));
+            if (src.PreDialString != null) attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, nameof(DestinationUri.PreDialString).ConvertCamelCaseToKebabCase(), src.PreDialString));
+            if (src.T33Subaddress != null) attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, nameof(DestinationUri.T33Subaddress).ConvertCamelCaseToKebabCase(), src.T33Subaddress));
             return attributes;
         });
 
-        mapper.CreateMap<IDictionary<string, IppAttribute[]>, OutputAttributes>((src, map) => new OutputAttributes
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, OutputAttributes>((src, map) =>
         {
-            NoiseRemoval = map.MapFromDicNullable<bool?>(src, nameof(OutputAttributes.NoiseRemoval).ConvertCamelCaseToKebabCase()),
-            OutputCompressionQualityFactor = map.MapFromDicNullable<int?>(src, nameof(OutputAttributes.OutputCompressionQualityFactor).ConvertCamelCaseToKebabCase())
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<OutputAttributes>();
+
+            return new OutputAttributes
+            {
+                NoiseRemoval = map.MapFromDicNullable<bool?>(src, nameof(OutputAttributes.NoiseRemoval).ConvertCamelCaseToKebabCase()),
+                OutputCompressionQualityFactor = map.MapFromDicNullable<int?>(src, nameof(OutputAttributes.OutputCompressionQualityFactor).ConvertCamelCaseToKebabCase())
+            };
         });
         mapper.CreateMap<OutputAttributes, IEnumerable<IppAttribute>>((src, map) =>
         {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.OutputAttributes, NoValue.Instance) };
+
             var attributes = new List<IppAttribute>();
             if (src.NoiseRemoval.HasValue) attributes.Add(new IppAttribute(Tag.Boolean, nameof(OutputAttributes.NoiseRemoval).ConvertCamelCaseToKebabCase(), src.NoiseRemoval.Value));
             if (src.OutputCompressionQualityFactor.HasValue) attributes.Add(new IppAttribute(Tag.Integer, nameof(OutputAttributes.OutputCompressionQualityFactor).ConvertCamelCaseToKebabCase(), src.OutputCompressionQualityFactor.Value));
             return attributes;
         });
 
-        mapper.CreateMap<IDictionary<string, IppAttribute[]>, Material>((src, map) => new Material
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, Material>((src, map) =>
         {
-            MaterialAmount = map.MapFromDicNullable<int?>(src, nameof(Material.MaterialAmount).ConvertCamelCaseToKebabCase()),
-            MaterialColor = map.MapFromDicNullable<string?>(src, nameof(Material.MaterialColor).ConvertCamelCaseToKebabCase()),
-            MaterialDiameter = map.MapFromDicNullable<int?>(src, nameof(Material.MaterialDiameter).ConvertCamelCaseToKebabCase()),
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<Material>();
+
+            return new Material
+            {
+                MaterialAmount = map.MapFromDicNullable<int?>(src, nameof(Material.MaterialAmount).ConvertCamelCaseToKebabCase()),
+                MaterialColor = map.MapFromDicNullable<string?>(src, nameof(Material.MaterialColor).ConvertCamelCaseToKebabCase()),
+                MaterialDiameter = map.MapFromDicNullable<int?>(src, nameof(Material.MaterialDiameter).ConvertCamelCaseToKebabCase()),
             MaterialFillDensity = map.MapFromDicNullable<int?>(src, nameof(Material.MaterialFillDensity).ConvertCamelCaseToKebabCase()),
             MaterialKey = map.MapFromDicNullable<string?>(src, nameof(Material.MaterialKey).ConvertCamelCaseToKebabCase()),
             MaterialName = map.MapFromDicNullable<string?>(src, nameof(Material.MaterialName).ConvertCamelCaseToKebabCase()),
@@ -398,9 +509,13 @@ internal class CollectionProfiles : IProfile
             MaterialShellThickness = map.MapFromDicNullable<int?>(src, nameof(Material.MaterialShellThickness).ConvertCamelCaseToKebabCase()),
             MaterialTemperature = map.MapFromDicNullable<int?>(src, nameof(Material.MaterialTemperature).ConvertCamelCaseToKebabCase()),
             MaterialType = map.MapFromDicNullable<string?>(src, nameof(Material.MaterialType).ConvertCamelCaseToKebabCase())
+            };
         });
         mapper.CreateMap<Material, IEnumerable<IppAttribute>>((src, map) =>
         {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.MaterialsCol, NoValue.Instance) };
+
             var attributes = new List<IppAttribute>();
             if (src.MaterialAmount.HasValue) attributes.Add(new IppAttribute(Tag.Integer, nameof(Material.MaterialAmount).ConvertCamelCaseToKebabCase(), src.MaterialAmount.Value));
             if (src.MaterialColor != null) attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, nameof(Material.MaterialColor).ConvertCamelCaseToKebabCase(), src.MaterialColor));
@@ -417,15 +532,24 @@ internal class CollectionProfiles : IProfile
             return attributes;
         });
 
-        mapper.CreateMap<IDictionary<string, IppAttribute[]>, PrintAccuracy>((src, map) => new PrintAccuracy
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, PrintAccuracy>((src, map) =>
         {
-            AccuracyUnits = map.MapFromDicNullable<string?>(src, nameof(PrintAccuracy.AccuracyUnits).ConvertCamelCaseToKebabCase()),
-            XAccuracy = map.MapFromDicNullable<int?>(src, nameof(PrintAccuracy.XAccuracy).ConvertCamelCaseToKebabCase()),
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<PrintAccuracy>();
+
+            return new PrintAccuracy
+            {
+                AccuracyUnits = map.MapFromDicNullable<string?>(src, nameof(PrintAccuracy.AccuracyUnits).ConvertCamelCaseToKebabCase()),
+                XAccuracy = map.MapFromDicNullable<int?>(src, nameof(PrintAccuracy.XAccuracy).ConvertCamelCaseToKebabCase()),
             YAccuracy = map.MapFromDicNullable<int?>(src, nameof(PrintAccuracy.YAccuracy).ConvertCamelCaseToKebabCase()),
             ZAccuracy = map.MapFromDicNullable<int?>(src, nameof(PrintAccuracy.ZAccuracy).ConvertCamelCaseToKebabCase())
+            };
         });
         mapper.CreateMap<PrintAccuracy, IEnumerable<IppAttribute>>((src, map) =>
         {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.PrintAccuracy, NoValue.Instance) };
+
             var attributes = new List<IppAttribute>();
             if (src.AccuracyUnits != null) attributes.Add(new IppAttribute(Tag.Keyword, nameof(PrintAccuracy.AccuracyUnits).ConvertCamelCaseToKebabCase(), src.AccuracyUnits));
             if (src.XAccuracy.HasValue) attributes.Add(new IppAttribute(Tag.Integer, nameof(PrintAccuracy.XAccuracy).ConvertCamelCaseToKebabCase(), src.XAccuracy.Value));
@@ -434,14 +558,23 @@ internal class CollectionProfiles : IProfile
             return attributes;
         });
 
-        mapper.CreateMap<IDictionary<string, IppAttribute[]>, PrintObject>((src, map) => new PrintObject
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, PrintObject>((src, map) =>
         {
-            DocumentNumber = map.MapFromDicNullable<int?>(src, nameof(PrintObject.DocumentNumber).ConvertCamelCaseToKebabCase()),
-            PrintObjectsSource = map.MapFromDicNullable<string?>(src, "print-objects-source"),
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<PrintObject>();
+
+            return new PrintObject
+            {
+                DocumentNumber = map.MapFromDicNullable<int?>(src, nameof(PrintObject.DocumentNumber).ConvertCamelCaseToKebabCase()),
+                PrintObjectsSource = map.MapFromDicNullable<string?>(src, "print-objects-source"),
             TransformationMatrix = map.MapFromDicSetNullable<int[]?>(src, nameof(PrintObject.TransformationMatrix).ConvertCamelCaseToKebabCase())
+            };
         });
         mapper.CreateMap<PrintObject, IEnumerable<IppAttribute>>((src, map) =>
         {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.PrintObjects, NoValue.Instance) };
+
             var attributes = new List<IppAttribute>();
             if (src.DocumentNumber.HasValue) attributes.Add(new IppAttribute(Tag.Integer, nameof(PrintObject.DocumentNumber).ConvertCamelCaseToKebabCase(), src.DocumentNumber.Value));
             if (src.PrintObjectsSource != null) attributes.Add(new IppAttribute(Tag.Uri, "print-objects-source", src.PrintObjectsSource));
@@ -450,14 +583,23 @@ internal class CollectionProfiles : IProfile
             return attributes;
         });
 
-        mapper.CreateMap<IDictionary<string, IppAttribute[]>, OverrideInstruction>((src, map) => new OverrideInstruction
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, OverrideInstruction>((src, map) =>
         {
-            Pages = map.MapFromDicNullable<string?>(src, nameof(OverrideInstruction.Pages).ConvertCamelCaseToKebabCase()),
-            DocumentNumbers = map.MapFromDicSetNullable<int[]?>(src, nameof(OverrideInstruction.DocumentNumbers).ConvertCamelCaseToKebabCase()),
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<OverrideInstruction>();
+
+            return new OverrideInstruction
+            {
+                Pages = map.MapFromDicNullable<string?>(src, nameof(OverrideInstruction.Pages).ConvertCamelCaseToKebabCase()),
+                DocumentNumbers = map.MapFromDicSetNullable<int[]?>(src, nameof(OverrideInstruction.DocumentNumbers).ConvertCamelCaseToKebabCase()),
             DocumentCopies = map.MapFromDicNullable<int?>(src, nameof(OverrideInstruction.DocumentCopies).ConvertCamelCaseToKebabCase())
+            };
         });
         mapper.CreateMap<OverrideInstruction, IEnumerable<IppAttribute>>((src, map) =>
         {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.Overrides, NoValue.Instance) };
+
             var attributes = new List<IppAttribute>();
             if (src.Pages != null) attributes.Add(new IppAttribute(Tag.Keyword, nameof(OverrideInstruction.Pages).ConvertCamelCaseToKebabCase(), src.Pages));
             if (src.DocumentNumbers != null) attributes.AddRange(src.DocumentNumbers.Select(x => new IppAttribute(Tag.Integer, nameof(OverrideInstruction.DocumentNumbers).ConvertCamelCaseToKebabCase(), x)));

@@ -19,9 +19,12 @@ internal class IppJobResponseProfile : IProfile
         {
             dst = dst ?? throw new ArgumentNullException(nameof(dst));
             map.Map<IppResponseMessage, IIppResponse>(src, dst);
-            var jobAttrs = new JobAttributes();
-            map.Map(src.JobAttributes.SelectMany(x => x).ToIppDictionary(), jobAttrs);
-            dst.JobAttributes = jobAttrs;
+            if(src.JobAttributes.Count > 0)
+            {
+                var jobAttrs = new JobAttributes();
+                map.Map(src.JobAttributes.SelectMany(x => x).ToIppDictionary(), jobAttrs);
+                dst.JobAttributes = jobAttrs;
+            }
             return dst;
         });
 

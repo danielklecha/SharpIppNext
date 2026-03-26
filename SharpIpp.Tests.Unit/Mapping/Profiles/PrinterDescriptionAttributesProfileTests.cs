@@ -25,6 +25,31 @@ public class PrinterDescriptionAttributesProfileTests
     }
 
     [TestMethod]
+    public void Map_PrinterFinisherSupply_StringToModelAndBack_MapsCorrectly()
+    {
+        var raw = "class=supplyThatIsConsumed; type=staples; unit=items; max=500; level=100; color=silver; index=8; deviceIndex=finisher1; test=test;";
+
+        var supply = _mapper.Map<string, PrinterFinisherSupply>(raw);
+
+        supply.Should().BeEquivalentTo(new PrinterFinisherSupply
+        {
+            Class = "supplyThatIsConsumed",
+            Type = "staples",
+            Unit = "items",
+            Max = 500,
+            Level = 100,
+            Color = "silver",
+            Index = 8,
+            DeviceIndex = "finisher1",
+            Extensions = new Dictionary<string, string> { { "test", "test" } }
+        });
+
+        var serialized = _mapper.Map<PrinterFinisherSupply, string>(supply);
+
+        serialized.Should().Be("class=supplyThatIsConsumed; type=staples; unit=items; max=500; level=100; color=silver; index=8; deviceIndex=finisher1; test=test;");
+    }
+
+    [TestMethod]
     public void Map_PrinterDescriptionAttributes_FromDictionary_Maps3DPrinterAttributes()
     {
         var src = new Dictionary<string, IppAttribute[]>

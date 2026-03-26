@@ -8,7 +8,7 @@ namespace SharpIpp.Protocol.Models;
 public class DocumentFormatDetails : IIppCollection
 {
     /// <inheritdoc />
-    public bool IsNoValue { get; set; }
+    bool IIppCollection.IsNoValue { get; set; }
 
     /// <summary>
     /// name(MAX)

@@ -6,7 +6,7 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public class Material : IIppCollection
 {
-    public bool IsNoValue { get; set; }
+    bool IIppCollection.IsNoValue { get; set; }
     public int? MaterialAmount { get; set; }
     public string? MaterialColor { get; set; }
     public int? MaterialDiameter { get; set; }

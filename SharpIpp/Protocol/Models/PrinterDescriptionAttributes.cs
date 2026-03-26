@@ -1052,7 +1052,7 @@ public class PrinterDescriptionAttributes
     /// printer-finisher
     /// See: PWG 5100.1-2022 Section 7.1
     /// </summary>
-    public string[]? PrinterFinisher { get; set; }
+    public PrinterFinisher[]? PrinterFinisher { get; set; }
 
     /// <summary>
     /// printer-finisher-description
@@ -1064,7 +1064,7 @@ public class PrinterDescriptionAttributes
     /// printer-finisher-supplies
     /// See: PWG 5100.1-2022 Section 7.3
     /// </summary>
-    public string[]? PrinterFinisherSupplies { get; set; }
+    public PrinterFinisherSupply[]? PrinterFinisherSupplies { get; set; }
 
     /// <summary>
     /// printer-finisher-supplies-description

@@ -6,7 +6,7 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public class PrintObject : IIppCollection
 {
-    public bool IsNoValue { get; set; }
+    bool IIppCollection.IsNoValue { get; set; }
     public int? DocumentNumber { get; set; }
     public string? PrintObjectsSource { get; set; }
     public int[]? TransformationMatrix { get; set; }

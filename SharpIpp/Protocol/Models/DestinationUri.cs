@@ -6,7 +6,7 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public class DestinationUri : IIppCollection
 {
-    public bool IsNoValue { get; set; }
+    bool IIppCollection.IsNoValue { get; set; }
     public string? DestinationUriValue { get; set; }
     public string? PostDialString { get; set; }
     public string? PreDialString { get; set; }

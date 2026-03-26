@@ -9,20 +9,17 @@ namespace SharpIpp.Mapping.Profiles;
 // ReSharper disable once UnusedMember.Global
 internal class FinishingsColProfile : IProfile
 {
+    private static bool IsOutOfBandNoValue(IDictionary<string, IppAttribute[]> src)
+    {
+        return src.Count == 1 && src.Values.First().Length == 1 && src.Values.First()[0].Tag.IsOutOfBand();
+    }
+
     public void CreateMaps(IMapperConstructor mapper)
     {
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, FinishingsCol>((src, map) =>
         {
-            if (src.Count == 1)
-            {
-                using var enumerator = src.GetEnumerator();
-                enumerator.MoveNext();
-                var first = enumerator.Current.Value;
-                if (first != null && first.Length == 1 && first[0].Tag.IsOutOfBand())
-                {
-                    return NoValue.GetNoValue<FinishingsCol>();
-                }
-            }
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<FinishingsCol>();
 
             var finishingsCol = new FinishingsCol
             {
@@ -56,8 +53,8 @@ internal class FinishingsColProfile : IProfile
 
         mapper.CreateMap<FinishingsCol, IEnumerable<IppAttribute>>((src, map) =>
         {
-            if (src.IsNoValue)
-                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.FinishingsCol, NoValue.Instance) };
+            if (NoValue.IsNoValue(src))
+                return [new IppAttribute(Tag.NoValue, JobAttribute.FinishingsCol, NoValue.Instance)];
 
             var attributes = new List<IppAttribute>();
             if (src.FinishingTemplate.HasValue)
@@ -100,14 +97,23 @@ internal class FinishingsColProfile : IProfile
             return attributes;
         });
 
-        mapper.CreateMap<Dictionary<string, IppAttribute[]>, Baling>((src, map) => new Baling
+        mapper.CreateMap<Dictionary<string, IppAttribute[]>, Baling>((src, map) =>
         {
-            BalingType = map.MapFromDicNullable<BalingType?>(src, "baling-type"),
-            BalingWhen = map.MapFromDicNullable<BalingWhen?>(src, "baling-when")
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<Baling>();
+
+            return new Baling
+            {
+                BalingType = map.MapFromDicNullable<BalingType?>(src, "baling-type"),
+                BalingWhen = map.MapFromDicNullable<BalingWhen?>(src, "baling-when")
+            };
         });
 
         mapper.CreateMap<Baling, IEnumerable<IppAttribute>>((src, map) =>
         {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, "baling", NoValue.Instance) };
+
             var attributes = new List<IppAttribute>();
             if (src.BalingType != null)
             {
@@ -120,55 +126,91 @@ internal class FinishingsColProfile : IProfile
             return attributes;
         });
 
-        mapper.CreateMap<Dictionary<string, IppAttribute[]>, Binding>((src, map) => new Binding
+        mapper.CreateMap<Dictionary<string, IppAttribute[]>, Binding>((src, map) =>
         {
-            BindingReferenceEdge = map.MapFromDicNullable<FinishingReferenceEdge?>(src, "binding-reference-edge"),
-            BindingType = map.MapFromDicNullable<BindingType?>(src, "binding-type")
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<Binding>();
+
+            return new Binding
+            {
+                BindingReferenceEdge = map.MapFromDicNullable<FinishingReferenceEdge?>(src, "binding-reference-edge"),
+                BindingType = map.MapFromDicNullable<BindingType?>(src, "binding-type")
+            };
         });
 
         mapper.CreateMap<Binding, IEnumerable<IppAttribute>>((src, map) =>
         {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, "binding", NoValue.Instance) };
+
             var attributes = new List<IppAttribute>();
             if (src.BindingReferenceEdge.HasValue) attributes.Add(new IppAttribute(Tag.Keyword, "binding-reference-edge", map.Map<string>(src.BindingReferenceEdge.Value)));
             if (src.BindingType != null) attributes.Add(new IppAttribute(map.Map<string>(src.BindingType.Value).GetKeywordOrNameTag(), "binding-type", map.Map<string>(src.BindingType.Value)));
             return attributes;
         });
 
-        mapper.CreateMap<Dictionary<string, IppAttribute[]>, Coating>((src, map) => new Coating
+        mapper.CreateMap<Dictionary<string, IppAttribute[]>, Coating>((src, map) =>
         {
-            CoatingSides = map.MapFromDicNullable<CoatingSides?>(src, "coating-sides"),
-            CoatingType = map.MapFromDicNullable<CoatingType?>(src, "coating-type")
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<Coating>();
+
+            return new Coating
+            {
+                CoatingSides = map.MapFromDicNullable<CoatingSides?>(src, "coating-sides"),
+                CoatingType = map.MapFromDicNullable<CoatingType?>(src, "coating-type")
+            };
         });
 
         mapper.CreateMap<Coating, IEnumerable<IppAttribute>>((src, map) =>
         {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, "coating", NoValue.Instance) };
+
             var attributes = new List<IppAttribute>();
             if (src.CoatingSides.HasValue) attributes.Add(new IppAttribute(Tag.Keyword, "coating-sides", map.Map<string>(src.CoatingSides.Value)));
             if (src.CoatingType != null) attributes.Add(new IppAttribute(map.Map<string>(src.CoatingType.Value).GetKeywordOrNameTag(), "coating-type", map.Map<string>(src.CoatingType.Value)));
             return attributes;
         });
 
-        mapper.CreateMap<Dictionary<string, IppAttribute[]>, Covering>((src, map) => new Covering
+        mapper.CreateMap<Dictionary<string, IppAttribute[]>, Covering>((src, map) =>
         {
-            CoveringName = map.MapFromDicNullable<CoveringName?>(src, "covering-name")
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<Covering>();
+
+            return new Covering
+            {
+                CoveringName = map.MapFromDicNullable<CoveringName?>(src, "covering-name")
+            };
         });
 
         mapper.CreateMap<Covering, IEnumerable<IppAttribute>>((src, map) =>
         {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, "covering", NoValue.Instance) };
+
             var attributes = new List<IppAttribute>();
             if (src.CoveringName != null) attributes.Add(new IppAttribute(map.Map<string>(src.CoveringName.Value).GetKeywordOrNameTag(), "covering-name", map.Map<string>(src.CoveringName.Value)));
             return attributes;
         });
 
-        mapper.CreateMap<Dictionary<string, IppAttribute[]>, Folding>((src, map) => new Folding
+        mapper.CreateMap<Dictionary<string, IppAttribute[]>, Folding>((src, map) =>
         {
-            FoldingDirection = map.MapFromDicNullable<FoldingDirection?>(src, "folding-direction"),
-            FoldingOffset = map.MapFromDicNullable<int?>(src, "folding-offset"),
-            FoldingReferenceEdge = map.MapFromDicNullable<FinishingReferenceEdge?>(src, "folding-reference-edge")
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<Folding>();
+
+            return new Folding
+            {
+                FoldingDirection = map.MapFromDicNullable<FoldingDirection?>(src, "folding-direction"),
+                FoldingOffset = map.MapFromDicNullable<int?>(src, "folding-offset"),
+                FoldingReferenceEdge = map.MapFromDicNullable<FinishingReferenceEdge?>(src, "folding-reference-edge")
+            };
         });
 
         mapper.CreateMap<Folding, IEnumerable<IppAttribute>>((src, map) =>
         {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, "folding", NoValue.Instance) };
+
             var attributes = new List<IppAttribute>();
             if (src.FoldingDirection.HasValue) attributes.Add(new IppAttribute(Tag.Keyword, "folding-direction", map.Map<string>(src.FoldingDirection.Value)));
             if (src.FoldingOffset.HasValue) attributes.Add(new IppAttribute(Tag.Integer, "folding-offset", src.FoldingOffset.Value));
@@ -176,29 +218,47 @@ internal class FinishingsColProfile : IProfile
             return attributes;
         });
 
-        mapper.CreateMap<Dictionary<string, IppAttribute[]>, Laminating>((src, map) => new Laminating
+        mapper.CreateMap<Dictionary<string, IppAttribute[]>, Laminating>((src, map) =>
         {
-            LaminatingSides = map.MapFromDicNullable<CoatingSides?>(src, "laminating-sides"),
-            LaminatingType = map.MapFromDicNullable<LaminatingType?>(src, "laminating-type")
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<Laminating>();
+
+            return new Laminating
+            {
+                LaminatingSides = map.MapFromDicNullable<CoatingSides?>(src, "laminating-sides"),
+                LaminatingType = map.MapFromDicNullable<LaminatingType?>(src, "laminating-type")
+            };
         });
 
         mapper.CreateMap<Laminating, IEnumerable<IppAttribute>>((src, map) =>
         {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, "laminating", NoValue.Instance) };
+
             var attributes = new List<IppAttribute>();
             if (src.LaminatingSides.HasValue) attributes.Add(new IppAttribute(Tag.Keyword, "laminating-sides", map.Map<string>(src.LaminatingSides.Value)));
             if (src.LaminatingType != null) attributes.Add(new IppAttribute(map.Map<string>(src.LaminatingType.Value).GetKeywordOrNameTag(), "laminating-type", map.Map<string>(src.LaminatingType.Value)));
             return attributes;
         });
 
-        mapper.CreateMap<Dictionary<string, IppAttribute[]>, Punching>((src, map) => new Punching
+        mapper.CreateMap<Dictionary<string, IppAttribute[]>, Punching>((src, map) =>
         {
-            PunchingLocations = map.MapFromDicSetNullable<int[]?>(src, "punching-locations"),
-            PunchingOffset = map.MapFromDicNullable<int?>(src, "punching-offset"),
-            PunchingReferenceEdge = map.MapFromDicNullable<FinishingReferenceEdge?>(src, "punching-reference-edge")
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<Punching>();
+
+            return new Punching
+            {
+                PunchingLocations = map.MapFromDicSetNullable<int[]?>(src, "punching-locations"),
+                PunchingOffset = map.MapFromDicNullable<int?>(src, "punching-offset"),
+                PunchingReferenceEdge = map.MapFromDicNullable<FinishingReferenceEdge?>(src, "punching-reference-edge")
+            };
         });
 
         mapper.CreateMap<Punching, IEnumerable<IppAttribute>>((src, map) =>
         {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, "punching", NoValue.Instance) };
+
             var attributes = new List<IppAttribute>();
             if (src.PunchingLocations != null) attributes.AddRange(src.PunchingLocations.Select(x => new IppAttribute(Tag.Integer, "punching-locations", x)));
             if (src.PunchingOffset.HasValue) attributes.Add(new IppAttribute(Tag.Integer, "punching-offset", src.PunchingOffset.Value));
@@ -206,17 +266,26 @@ internal class FinishingsColProfile : IProfile
             return attributes;
         });
 
-        mapper.CreateMap<Dictionary<string, IppAttribute[]>, Stitching>((src, map) => new Stitching
+        mapper.CreateMap<Dictionary<string, IppAttribute[]>, Stitching>((src, map) =>
         {
-            StitchingAngle = map.MapFromDicNullable<int?>(src, "stitching-angle"),
-            StitchingLocations = map.MapFromDicSetNullable<int[]?>(src, "stitching-locations"),
-            StitchingMethod = map.MapFromDicNullable<StitchingMethod?>(src, "stitching-method"),
-            StitchingOffset = map.MapFromDicNullable<int?>(src, "stitching-offset"),
-            StitchingReferenceEdge = map.MapFromDicNullable<FinishingReferenceEdge?>(src, "stitching-reference-edge")
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<Stitching>();
+
+            return new Stitching
+            {
+                StitchingAngle = map.MapFromDicNullable<int?>(src, "stitching-angle"),
+                StitchingLocations = map.MapFromDicSetNullable<int[]?>(src, "stitching-locations"),
+                StitchingMethod = map.MapFromDicNullable<StitchingMethod?>(src, "stitching-method"),
+                StitchingOffset = map.MapFromDicNullable<int?>(src, "stitching-offset"),
+                StitchingReferenceEdge = map.MapFromDicNullable<FinishingReferenceEdge?>(src, "stitching-reference-edge")
+            };
         });
 
         mapper.CreateMap<Stitching, IEnumerable<IppAttribute>>((src, map) =>
         {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, "stitching", NoValue.Instance) };
+
             var attributes = new List<IppAttribute>();
             if (src.StitchingAngle.HasValue) attributes.Add(new IppAttribute(Tag.Integer, "stitching-angle", src.StitchingAngle.Value));
             if (src.StitchingLocations != null) attributes.AddRange(src.StitchingLocations.Select(x => new IppAttribute(Tag.Integer, "stitching-locations", x)));
@@ -226,16 +295,25 @@ internal class FinishingsColProfile : IProfile
             return attributes;
         });
 
-        mapper.CreateMap<Dictionary<string, IppAttribute[]>, Trimming>((src, map) => new Trimming
+        mapper.CreateMap<Dictionary<string, IppAttribute[]>, Trimming>((src, map) =>
         {
-            TrimmingOffset = map.MapFromDicSetNullable<int[]?>(src, "trimming-offset"),
-            TrimmingReferenceEdge = map.MapFromDicNullable<FinishingReferenceEdge?>(src, "trimming-reference-edge"),
-            TrimmingType = map.MapFromDicNullable<TrimmingType?>(src, "trimming-type"),
-            TrimmingWhen = map.MapFromDicNullable<TrimmingWhen?>(src, "trimming-when")
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<Trimming>();
+
+            return new Trimming
+            {
+                TrimmingOffset = map.MapFromDicSetNullable<int[]?>(src, "trimming-offset"),
+                TrimmingReferenceEdge = map.MapFromDicNullable<FinishingReferenceEdge?>(src, "trimming-reference-edge"),
+                TrimmingType = map.MapFromDicNullable<TrimmingType?>(src, "trimming-type"),
+                TrimmingWhen = map.MapFromDicNullable<TrimmingWhen?>(src, "trimming-when")
+            };
         });
 
         mapper.CreateMap<Trimming, IEnumerable<IppAttribute>>((src, map) =>
         {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, "trimming", NoValue.Instance) };
+
             var attributes = new List<IppAttribute>();
             if (src.TrimmingOffset != null) attributes.AddRange(src.TrimmingOffset.Select(x => new IppAttribute(Tag.Integer, "trimming-offset", x)));
             if (src.TrimmingReferenceEdge.HasValue) attributes.Add(new IppAttribute(Tag.Keyword, "trimming-reference-edge", map.Map<string>(src.TrimmingReferenceEdge.Value)));

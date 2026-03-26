@@ -7,7 +7,7 @@ namespace SharpIpp.Protocol.Models;
 public class ClientInfo : IIppCollection
 {
     /// <inheritdoc />
-    public bool IsNoValue { get; set; }
+    bool IIppCollection.IsNoValue { get; set; }
 
     /// <summary>
     /// name(127)

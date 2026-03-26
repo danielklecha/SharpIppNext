@@ -1,19 +1,19 @@
-using System;
-using System.IO;
-using System.Net;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Moq.Protected;
 using SharpIpp;
+using SharpIpp.Models.Requests;
+using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Models;
+using System;
 using System.Diagnostics.CodeAnalysis;
-using SharpIpp.Models.Responses;
-using SharpIpp.Models.Requests;
+using System.IO;
+using System.Net;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SharpIpp.Tests.Integration;
 
@@ -67,7 +67,7 @@ public class CustomAttributesTests
         {
             // Server side receives RAW request
             serverRequest = await server.ReceiveRawRequestAsync(s, c);
-            
+
             // Just return dummy response to satisfy the client call
             serverResponse = new GetPrinterAttributesResponse
             {
@@ -95,10 +95,10 @@ public class CustomAttributesTests
         // Act
         // 1. Create Raw Request from Typed Request
         var rawRequest = client.CreateRawRequest(clientRequest);
-        
+
         // 2. Add Custom Attributes manually
         rawRequest.OperationAttributes.Add(new IppAttribute(Tag.Keyword, "custom-op-attr", "custom-value"));
-        
+
         // 3. Send Raw Request using SendAsync (which accepts IIppRequestMessage)
         var response = await client.SendAsync(clientRequest.OperationAttributes.PrinterUri, rawRequest);
 

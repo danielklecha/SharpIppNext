@@ -13,6 +13,9 @@ internal class DocumentTemplateAttributesProfile : IProfile
     {
         mapper.CreateMap<DocumentTemplateAttributes, List<IppAttribute>>((src, map) =>
         {
+            if (NoValue.IsNoValue(src))
+                return new List<IppAttribute> { new IppAttribute(Tag.NoValue, "document-template-attributes", NoValue.Instance) };
+
             var dst = new List<IppAttribute>();
             if (src.Finishings != null && src.FinishingsCol != null)
                 throw new System.ArgumentException("'finishings' and 'finishings-col' are conflicting attributes and cannot be supplied together.");
@@ -71,8 +74,13 @@ internal class DocumentTemplateAttributesProfile : IProfile
             return dst;
         });
 
+        mapper.CreateMap<DocumentTemplateAttributes, IEnumerable<IppAttribute>>((src, map) => map.Map<DocumentTemplateAttributes, List<IppAttribute>>(src));
+
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, DocumentTemplateAttributes>((src, dst, map) =>
         {
+            if (src.Count == 1 && src.Values.First().Length == 1 && src.Values.First()[0].Tag.IsOutOfBand())
+                return NoValue.GetNoValue<DocumentTemplateAttributes>();
+
             dst ??= new DocumentTemplateAttributes();
             dst.Copies = map.MapFromDicNullable<int?>(src, JobAttribute.Copies);
             if (src.ContainsKey(JobAttribute.CoverBack))

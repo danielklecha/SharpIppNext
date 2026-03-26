@@ -38,7 +38,7 @@ public class IppProtocolWriteValueTests
     }
 
     [TestMethod]
-    [DynamicData(nameof(GetKebabCaseEnumsData), DynamicDataSourceType.Method)]
+    [DynamicData(nameof(GetKebabCaseEnumsData))]
     public void WriteValue_KebabCaseEnums_ShouldBeWrittenAsKebabCaseStrings(object value, byte[] expected)
     {
         GetBytes(value).Should().Equal(expected);
@@ -59,7 +59,7 @@ public class IppProtocolWriteValueTests
     }
 
     [TestMethod]
-    [DynamicData(nameof(GetMoreKebabCaseEnumsData), DynamicDataSourceType.Method)]
+    [DynamicData(nameof(GetMoreKebabCaseEnumsData))]
     public void WriteValue_MoreKebabCaseEnums_ShouldBeWrittenAsKebabCaseStrings(object value, byte[] expected)
     {
         GetBytes(value).Should().Equal(expected);

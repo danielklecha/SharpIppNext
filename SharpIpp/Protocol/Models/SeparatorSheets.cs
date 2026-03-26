@@ -9,7 +9,7 @@ namespace SharpIpp.Protocol.Models;
 public class SeparatorSheets : IIppCollection
 {
     /// <inheritdoc />
-    public bool IsNoValue { get; set; }
+    bool IIppCollection.IsNoValue { get; set; }
 
     /// <summary>
     /// keyword | name(MAX)

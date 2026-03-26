@@ -23,6 +23,9 @@ internal class OperationAttributesRequestProfile : IProfile
             dst.RequestingUserName = map.MapFromDicNullable<string?>(src, JobAttribute.RequestingUserName);
             dst.RequestingUserUri = map.MapFromDicNullable<Uri?>(src, JobAttribute.RequestingUserUri);
             dst.PrinterUri = map.MapFromDicNullable<Uri?>(src, JobAttribute.PrinterUri);
+            if (src.TryGetValue(JobAttribute.ClientInfo, out var clientInfo))
+                dst.ClientInfo = clientInfo.GroupBegCollection().Select(x => map.Map<ClientInfo>(x.FromBegCollection().ToIppDictionary())).ToArray();
+            dst.JobHoldUntilTime = map.MapFromDicNullable<DateTimeOffset?>(src, JobAttribute.JobHoldUntilTime);
             return dst;
         });
 
@@ -45,6 +48,11 @@ internal class OperationAttributesRequestProfile : IProfile
 
             if (src.RequestingUserUri != null)
                 dst.Add(new IppAttribute(Tag.Uri, JobAttribute.RequestingUserUri, src.RequestingUserUri.ToString()));
+
+            if (src.ClientInfo != null)
+                dst.AddRange(src.ClientInfo.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.ClientInfo)));
+            if (src.JobHoldUntilTime != null)
+                dst.Add(new IppAttribute(Tag.DateTime, JobAttribute.JobHoldUntilTime, src.JobHoldUntilTime.Value));
 
             return dst;
         });
@@ -109,8 +117,6 @@ internal class OperationAttributesRequestProfile : IProfile
             map.Map<OperationAttributes, List<IppAttribute>>(src, dst);
             if (src.JobMandatoryAttributes != null)
                 dst.AddRange(src.JobMandatoryAttributes.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.JobMandatoryAttributes, x)));
-            if (src.ClientInfo != null)
-                dst.AddRange(src.ClientInfo.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.ClientInfo)));
             if (src.DocumentFormatDetails != null)
                 dst.AddRange(map.Map<IEnumerable<IppAttribute>>(src.DocumentFormatDetails).ToBegCollection(JobAttribute.DocumentFormatDetails));
             if (src.JobName != null)
@@ -553,8 +559,6 @@ internal class OperationAttributesRequestProfile : IProfile
         {
             dst ??= new SendDocumentOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, JobOperationAttributes>(src, dst);
-            if (src.TryGetValue(JobAttribute.ClientInfo, out var clientInfo))
-                dst.ClientInfo = clientInfo.GroupBegCollection().Select(x => map.Map<ClientInfo>(x.FromBegCollection().ToIppDictionary())).ToArray();
             if (src.TryGetValue(JobAttribute.DocumentFormatDetails, out var documentFormatDetails))
                 dst.DocumentFormatDetails = map.Map<DocumentFormatDetails>(documentFormatDetails.GroupBegCollection().First().FromBegCollection().ToIppDictionary());
             dst.DocumentName = map.MapFromDicNullable<string?>(src, JobAttribute.DocumentName);
@@ -573,8 +577,6 @@ internal class OperationAttributesRequestProfile : IProfile
         {
             dst ??= new List<IppAttribute>();
             map.Map<JobOperationAttributes, List<IppAttribute>>(src, dst);
-            if (src.ClientInfo != null)
-                dst.AddRange(src.ClientInfo.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.ClientInfo)));
             if (src.DocumentFormatDetails != null)
                 dst.AddRange(map.Map<IEnumerable<IppAttribute>>(src.DocumentFormatDetails).ToBegCollection(JobAttribute.DocumentFormatDetails));
             if (src.DocumentName != null)

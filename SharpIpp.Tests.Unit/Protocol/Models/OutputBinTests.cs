@@ -8,7 +8,7 @@ namespace SharpIpp.Tests.Unit.Protocol.Models;
 [ExcludeFromCodeCoverage]
 public class OutputBinTests
 {
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("top", true)]
     [DataRow("stacker-1", true)]
     [DataRow("stacker-0", true)]
@@ -21,7 +21,7 @@ public class OutputBinTests
         IsOutputBinKeyword(value).Should().Be(expected);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("top")]
     [DataRow("middle")]
     [DataRow("bottom")]
@@ -44,7 +44,7 @@ public class OutputBinTests
         IsOutputBinKeyword(value).Should().BeTrue();
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(null)]
     [DataRow("")]
     [DataRow(" ")]

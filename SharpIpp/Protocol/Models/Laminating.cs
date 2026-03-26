@@ -7,7 +7,7 @@ namespace SharpIpp.Protocol.Models;
 public class Laminating : IIppCollection
 {
     /// <inheritdoc />
-    public bool IsNoValue { get; set; }
+    bool IIppCollection.IsNoValue { get; set; }
 
     /// <summary>
     /// type2 keyword

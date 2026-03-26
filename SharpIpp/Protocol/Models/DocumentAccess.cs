@@ -6,7 +6,7 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public class DocumentAccess : IIppCollection
 {
-    public bool IsNoValue { get; set; }
+    bool IIppCollection.IsNoValue { get; set; }
     public string? AccessOAuthToken { get; set; }
     public string? AccessOAuthUri { get; set; }
     public string? AccessPassword { get; set; }

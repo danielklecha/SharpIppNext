@@ -2,7 +2,7 @@ namespace SharpIpp.Protocol.Models;
 public class MediaCol : IIppCollection
 {
     /// <inheritdoc />
-    public bool IsNoValue { get; set; }
+    bool IIppCollection.IsNoValue { get; set; }
 
     /// <summary>
     /// type2 keyword | name(MAX)

@@ -122,6 +122,21 @@ public class JobTemplateAttributesProfileTests
     }
 
     [TestMethod]
+    public void Map_ToRequest_WithNoValueMediaCol_WritesOutOfBandNoValue()
+    {
+        var src = new JobTemplateAttributes
+        {
+            MediaCol = NoValue.GetNoValue<MediaCol>()
+        };
+
+        var request = _mapper.Map<IppRequestMessage>(src);
+
+        var mediaCol = request.JobAttributes.Single(a => a.Name == JobAttribute.MediaCol);
+        mediaCol.Tag.Should().Be(Tag.NoValue);
+        mediaCol.Value.Should().Be(NoValue.Instance);
+    }
+
+    [TestMethod]
     public void Map_ToRequest_With3DJobTemplateAttributes_WritesJobAttributes()
     {
         var src = new JobTemplateAttributes

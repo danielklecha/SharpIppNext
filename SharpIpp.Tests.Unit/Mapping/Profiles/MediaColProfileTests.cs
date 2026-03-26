@@ -39,7 +39,6 @@ public class MediaColProfileTests
                 {
                     result.MediaBottomMargin.Should().Be(100);
                     result.MediaLeftMargin.Should().BeNull();
-                    result.IsNoValue.Should().BeFalse();
                 }),
                 "Count 1, Length 1, Not OutOfBand"
             };
@@ -59,7 +58,6 @@ public class MediaColProfileTests
                 {
                     result.MediaBottomMargin.Should().Be(10);
                     result.MediaLeftMargin.Should().BeNull();
-                    result.IsNoValue.Should().BeFalse();
                 }),
                 "Count 1, Length 2"
             };
@@ -75,7 +73,6 @@ public class MediaColProfileTests
                 {
                     result.MediaBottomMargin.Should().Be(100);
                     result.MediaLeftMargin.Should().Be(200);
-                    result.IsNoValue.Should().BeFalse();
                 }),
                 "Count > 1"
             };
@@ -90,7 +87,6 @@ public class MediaColProfileTests
                 {
                     result.MediaBottomMargin.Should().BeNull();
                     result.MediaLeftMargin.Should().BeNull();
-                    result.IsNoValue.Should().BeFalse();
                 }),
                 "Array is empty"
             };
@@ -103,7 +99,7 @@ public class MediaColProfileTests
                 },
                 new Action<MediaCol>(result =>
                 {
-                    result.IsNoValue.Should().BeTrue();
+                    ((IIppCollection)result).IsNoValue.Should().BeTrue();
                     result.MediaBottomMargin.Should().BeNull();
                     result.MediaLeftMargin.Should().BeNull();
                 }),

@@ -1,7 +1,10 @@
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpIpp.Mapping;
+using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Models;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
 namespace SharpIpp.Tests.Unit.Protocol.Models;
 
@@ -9,6 +12,108 @@ namespace SharpIpp.Tests.Unit.Protocol.Models;
 [ExcludeFromCodeCoverage]
 public class NoValueTests
 {
+    private IMapper? _mapper;
+
+    [TestInitialize]
+    public void TestInitialize()
+    {
+        var mapper = new SimpleMapper();
+        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
+        mapper.FillFromAssembly(assembly!);
+        _mapper = mapper;
+    }
+
+    [TestMethod]
+    [DataRow(typeof(MediaSize))]
+    [DataRow(typeof(MediaSourceProperties))]
+    [DataRow(typeof(FinishingsCol))]
+    [DataRow(typeof(Baling))]
+    [DataRow(typeof(Binding))]
+    [DataRow(typeof(Coating))]
+    [DataRow(typeof(Covering))]
+    [DataRow(typeof(Folding))]
+    [DataRow(typeof(Laminating))]
+    [DataRow(typeof(Punching))]
+    [DataRow(typeof(Stitching))]
+    [DataRow(typeof(Trimming))]
+    [DataRow(typeof(ClientInfo))]
+    [DataRow(typeof(DocumentFormatDetails))]
+    [DataRow(typeof(DocumentTemplateAttributes))]
+    [DataRow(typeof(Cover))]
+    [DataRow(typeof(InsertSheet))]
+    [DataRow(typeof(JobAccountingSheets))]
+    [DataRow(typeof(JobCounter))]
+    [DataRow(typeof(JobErrorSheet))]
+    [DataRow(typeof(JobSheetsCol))]
+    [DataRow(typeof(MediaSizeSupported))]
+    [DataRow(typeof(CoverSheetInfo))]
+    [DataRow(typeof(SeparatorSheets))]
+    [DataRow(typeof(DestinationUri))]
+    [DataRow(typeof(DocumentAccess))]
+    [DataRow(typeof(JobStorage))]
+    [DataRow(typeof(Material))]
+    [DataRow(typeof(OutputAttributes))]
+    [DataRow(typeof(OverrideInstruction))]
+    [DataRow(typeof(PrintAccuracy))]
+    [DataRow(typeof(PrintObject))]
+    [DataRow(typeof(ProofPrint))]
+    public void Map_Dictionary_WithOutOfBandAttribute_ShouldReturnCollectionNoValue(Type collectionType)
+    {
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            ["dummy"] = [ new IppAttribute(Tag.NoValue, "dummy", NoValue.Instance) ]
+        };
+
+        var result = _mapper!.Map(src, src.GetType(), collectionType);
+
+        NoValue.IsNoValue(result).Should().BeTrue($"{collectionType.Name} should map out-of-band dictionary to NoValue");
+    }
+
+    [TestMethod]
+    [DataRow(typeof(MediaSize))]
+    [DataRow(typeof(MediaSourceProperties))]
+    [DataRow(typeof(FinishingsCol))]
+    [DataRow(typeof(Baling))]
+    [DataRow(typeof(Binding))]
+    [DataRow(typeof(Coating))]
+    [DataRow(typeof(Covering))]
+    [DataRow(typeof(Folding))]
+    [DataRow(typeof(Laminating))]
+    [DataRow(typeof(Punching))]
+    [DataRow(typeof(Stitching))]
+    [DataRow(typeof(Trimming))]
+    [DataRow(typeof(ClientInfo))]
+    [DataRow(typeof(DocumentFormatDetails))]
+    [DataRow(typeof(DocumentTemplateAttributes))]
+    [DataRow(typeof(Cover))]
+    [DataRow(typeof(InsertSheet))]
+    [DataRow(typeof(JobAccountingSheets))]
+    [DataRow(typeof(JobCounter))]
+    [DataRow(typeof(JobErrorSheet))]
+    [DataRow(typeof(JobSheetsCol))]
+    [DataRow(typeof(MediaSizeSupported))]
+    [DataRow(typeof(CoverSheetInfo))]
+    [DataRow(typeof(SeparatorSheets))]
+    [DataRow(typeof(DestinationUri))]
+    [DataRow(typeof(DocumentAccess))]
+    [DataRow(typeof(JobStorage))]
+    [DataRow(typeof(Material))]
+    [DataRow(typeof(OutputAttributes))]
+    [DataRow(typeof(OverrideInstruction))]
+    [DataRow(typeof(PrintAccuracy))]
+    [DataRow(typeof(PrintObject))]
+    [DataRow(typeof(ProofPrint))]
+    public void Map_CollectionNoValue_ToNoValueAttribute_ShouldReturnIppNoValue(Type collectionType)
+    {
+        var source = NoValue.GetNoValue(collectionType);
+
+        var result = _mapper!.Map<IEnumerable<IppAttribute>>(source);
+
+        result.Should().HaveCount(1);
+        result.First().Tag.Should().Be(Tag.NoValue);
+        result.First().Value.Should().Be(NoValue.Instance);
+    }
+
     [TestMethod]
     public void ToString_ShouldReturnNoValueString()
     {
@@ -158,7 +263,9 @@ public class NoValueTests
     [TestMethod]
     public void IsNoValue_WithCollectionNoValue_ShouldReturnTrue()
     {
-        var result = NoValue.IsNoValue(new MediaCol { IsNoValue = true });
+        var mediaCol = new MediaCol();
+        ((IIppCollection)mediaCol).IsNoValue = true;
+        var result = NoValue.IsNoValue(mediaCol);
         result.Should().BeTrue();
     }
 

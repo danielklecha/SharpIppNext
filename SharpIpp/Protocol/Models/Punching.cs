@@ -7,7 +7,7 @@ namespace SharpIpp.Protocol.Models;
 public class Punching : IIppCollection
 {
     /// <inheritdoc />
-    public bool IsNoValue { get; set; }
+    bool IIppCollection.IsNoValue { get; set; }
 
     /// <summary>
     /// 1setOf integer(0:MAX) in hundredths of millimeters (1/2540th of an inch)

@@ -7,7 +7,7 @@ namespace SharpIpp.Protocol.Models;
 public class Stitching : IIppCollection
 {
     /// <inheritdoc />
-    public bool IsNoValue { get; set; }
+    bool IIppCollection.IsNoValue { get; set; }
 
     /// <summary>
     /// integer(0:359) degrees counterclockwise

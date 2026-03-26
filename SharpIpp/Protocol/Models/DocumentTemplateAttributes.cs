@@ -7,7 +7,7 @@ namespace SharpIpp.Protocol.Models;
 public class DocumentTemplateAttributes : IIppCollection
 {
     /// <inheritdoc />
-    public bool IsNoValue { get; set; }
+    bool IIppCollection.IsNoValue { get; set; }
 
     /// <summary>
     /// The <c>copies</c> Document Template attribute.

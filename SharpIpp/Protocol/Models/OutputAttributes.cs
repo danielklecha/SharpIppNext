@@ -6,7 +6,7 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public class OutputAttributes : IIppCollection
 {
-    public bool IsNoValue { get; set; }
+    bool IIppCollection.IsNoValue { get; set; }
     public bool? NoiseRemoval { get; set; }
     public int? OutputCompressionQualityFactor { get; set; }
 }
