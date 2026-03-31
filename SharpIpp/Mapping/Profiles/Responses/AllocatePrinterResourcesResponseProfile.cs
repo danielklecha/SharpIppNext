@@ -25,13 +25,10 @@ internal class AllocatePrinterResourcesResponseProfile : IProfile
         {
             var dst = new IppResponseMessage();
             map.Map<IIppResponse, IppResponseMessage>(src, dst);
-            if (src.PrinterResourceIds != null && src.PrinterResourceIds.Length > 0)
-            {
-                var attrs = src.PrinterResourceIds
+            if (src.PrinterResourceIds != null)
+                dst.PrinterAttributes.Add(src.PrinterResourceIds
                     .Select(id => new IppAttribute(Tag.Integer, PrinterAttribute.PrinterResourceIds, id))
-                    .ToList();
-                dst.PrinterAttributes.Add(attrs);
-            }
+                    .ToList());
             return dst;
         });
     }

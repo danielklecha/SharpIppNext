@@ -8,7 +8,7 @@ namespace SharpIpp.Models.Responses;
 /// </summary>
 public class DocumentAttributes : IIppCollection
 {
-    bool IIppCollection.IsNoValue { get; set; }
+    public bool IsValue { get; set; } = true;
     /// <summary>
     /// The document-number IPP attribute.
     /// See: PWG 5100.5-2024 Section 6.2.4
@@ -160,6 +160,13 @@ public class DocumentAttributes : IIppCollection
     /// </summary>
     /// <code>document-name</code>
     public string? DocumentName { get; set; }
+
+    /// <summary>
+    /// The document-resource-ids IPP attribute.
+    /// See: PWG 5100.22-2025 Section 7.4.1
+    /// </summary>
+    /// <code>document-resource-ids</code>
+    public int[]? DocumentResourceIds { get; set; }
     /// <summary>
     /// The document-natural-language IPP attribute.
     /// See: pwg5100.5-2024

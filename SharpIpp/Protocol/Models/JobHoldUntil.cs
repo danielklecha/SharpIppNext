@@ -3,7 +3,7 @@ namespace SharpIpp.Protocol.Models;
 /// <summary>
 /// Specifies when a job should be held.
 /// </summary>
-public readonly record struct JobHoldUntil(string Value)
+public readonly record struct JobHoldUntil(string Value, bool IsValue = true) : ISmartEnum 
 {
     /// <summary>
     /// 'no-hold': immediately, if there are not other reasons to hold the job

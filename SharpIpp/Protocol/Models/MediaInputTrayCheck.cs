@@ -7,7 +7,7 @@ namespace SharpIpp.Protocol.Models;
 /// Note: This attribute uses tray keyword/name values (MSN2 tray keywords).
 /// No PPX-defined fixed keyword set is provided.
 /// </summary>
-public readonly record struct MediaInputTrayCheck(string Value)
+public readonly record struct MediaInputTrayCheck(string Value, bool IsValue = true) : ISmartEnum 
 {
     public override string ToString() => Value;
     public static implicit operator string(MediaInputTrayCheck bin) => bin.Value;

@@ -8,7 +8,7 @@ namespace SharpIpp.Protocol.Models;
 public class FinishingsCol : IIppCollection
 {
     /// <inheritdoc />
-    bool IIppCollection.IsNoValue { get; set; }
+    public bool IsValue { get; set; } = true;
 
     /// <summary>
     /// type2 keyword | name(MAX)

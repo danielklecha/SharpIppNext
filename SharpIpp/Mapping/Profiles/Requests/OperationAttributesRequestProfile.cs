@@ -511,7 +511,9 @@ internal class OperationAttributesRequestProfile : IProfile
             if (src.DocumentFormat != null)
                 dst.Add(new IppAttribute(Tag.MimeMediaType, JobAttribute.DocumentFormat, src.DocumentFormat));
             if (src.DocumentNaturalLanguage != null)
-                dst.Add(new IppAttribute(Tag.NaturalLanguage, JobAttribute.DocumentNaturalLanguage, src.DocumentNaturalLanguage)); if (src.DocumentCharset != null) dst.Add(new IppAttribute(Tag.Charset, JobAttribute.DocumentCharset, src.DocumentCharset));
+                dst.Add(new IppAttribute(Tag.NaturalLanguage, JobAttribute.DocumentNaturalLanguage, src.DocumentNaturalLanguage));
+            if (src.DocumentCharset != null)
+                dst.Add(new IppAttribute(Tag.Charset, JobAttribute.DocumentCharset, src.DocumentCharset));
             if (src.DocumentMessage != null)
                 dst.Add(new IppAttribute(Tag.TextWithoutLanguage, DocumentAttribute.DocumentMessage, src.DocumentMessage));
             return dst;
@@ -762,9 +764,23 @@ internal class OperationAttributesRequestProfile : IProfile
 
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, SystemOperationAttributes>((src, dst, map) =>
         {
-            dst = dst ?? throw new ArgumentNullException(nameof(dst));
-            map.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(src, dst);
+            dst ??= new SystemOperationAttributes();
+            dst.AttributesCharset = map.MapFromDicNullable<string?>(src, JobAttribute.AttributesCharset) ?? "utf-8";
+            dst.AttributesNaturalLanguage = map.MapFromDicNullable<string?>(src, JobAttribute.AttributesNaturalLanguage) ?? "en";
+            dst.RequestingUserName = map.MapFromDicNullable<string?>(src, JobAttribute.RequestingUserName);
+            dst.RequestingUserUri = map.MapFromDicNullable<Uri?>(src, JobAttribute.RequestingUserUri);
+            dst.PrinterUri = map.MapFromDicNullable<Uri?>(src, JobAttribute.PrinterUri);
+            dst.PrinterId = map.MapFromDicNullable<int?>(src, JobAttribute.PrinterId);
+            if (src.TryGetValue(JobAttribute.ClientInfo, out var clientInfo))
+                dst.ClientInfo = clientInfo.GroupBegCollection().Select(x => map.Map<ClientInfo>(x.FromBegCollection().ToIppDictionary())).ToArray();
+            dst.JobHoldUntilTime = map.MapFromDicNullable<DateTimeOffset?>(src, JobAttribute.JobHoldUntilTime);
             dst.SystemUri = map.MapFromDicNullable<Uri?>(src, SystemAttribute.SystemUri);
+            dst.NotifyPrinterIds = map.MapFromDicSetNullable<int[]?>(src, SystemAttribute.NotifyPrinterIds);
+            dst.NotifyResourceId = map.MapFromDicNullable<int?>(src, SystemAttribute.NotifyResourceId);
+            dst.NotifySystemUpTime = map.MapFromDicNullable<int?>(src, SystemAttribute.NotifySystemUpTime);
+            dst.NotifySystemUri = map.MapFromDicNullable<Uri?>(src, SystemAttribute.NotifySystemUri);
+            dst.RestartGetInterval = map.MapFromDicNullable<int?>(src, SystemAttribute.RestartGetInterval);
+            dst.WhichPrinters = map.MapFromDicNullable<string?>(src, SystemAttribute.WhichPrinters);
             return dst;
         });
 
@@ -774,13 +790,28 @@ internal class OperationAttributesRequestProfile : IProfile
             map.Map<OperationAttributes, List<IppAttribute>>(src, dst);
             if (src.SystemUri != null)
                 dst.Add(new IppAttribute(Tag.Uri, SystemAttribute.SystemUri, src.SystemUri.ToString()));
+            if (src.PrinterId.HasValue)
+                dst.Add(new IppAttribute(Tag.Integer, JobAttribute.PrinterId, src.PrinterId.Value));
+            if (src.NotifyPrinterIds != null)
+                dst.AddRange(src.NotifyPrinterIds.Select(x => new IppAttribute(Tag.Integer, SystemAttribute.NotifyPrinterIds, x)));
+            if (src.NotifyResourceId.HasValue)
+                dst.Add(new IppAttribute(Tag.Integer, SystemAttribute.NotifyResourceId, src.NotifyResourceId.Value));
+            if (src.NotifySystemUpTime.HasValue)
+                dst.Add(new IppAttribute(Tag.Integer, SystemAttribute.NotifySystemUpTime, src.NotifySystemUpTime.Value));
+            if (src.NotifySystemUri != null)
+                dst.Add(new IppAttribute(Tag.Uri, SystemAttribute.NotifySystemUri, src.NotifySystemUri.ToString()));
+            if (src.RestartGetInterval.HasValue)
+                dst.Add(new IppAttribute(Tag.Integer, SystemAttribute.RestartGetInterval, src.RestartGetInterval.Value));
+            if (src.WhichPrinters != null)
+                dst.Add(new IppAttribute(Tag.Keyword, SystemAttribute.WhichPrinters, src.WhichPrinters));
             return dst;
         });
 
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, AllocatePrinterResourcesOperationAttributes>((src, dst, map) =>
         {
             dst ??= new AllocatePrinterResourcesOperationAttributes();
-            map.Map<IDictionary<string, IppAttribute[]>, SystemOperationAttributes>(src, dst);
+            map.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(src, dst);
+            dst.SystemUri = map.MapFromDicNullable<Uri?>(src, SystemAttribute.SystemUri);
             dst.PrinterId = map.MapFromDicNullable<int?>(src, JobAttribute.PrinterId);
             dst.ResourceIds = map.MapFromDicSetNullable<int[]?>(src, SystemAttribute.ResourceIds);
             return dst;
@@ -800,10 +831,12 @@ internal class OperationAttributesRequestProfile : IProfile
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, CreatePrinterOperationAttributes>((src, dst, map) =>
         {
             dst ??= new CreatePrinterOperationAttributes();
-            map.Map<IDictionary<string, IppAttribute[]>, SystemOperationAttributes>(src, dst);
+            map.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(src, dst);
+            dst.SystemUri = map.MapFromDicNullable<Uri?>(src, SystemAttribute.SystemUri);
             dst.ResourceIds = map.MapFromDicSetNullable<int[]?>(src, SystemAttribute.ResourceIds);
-            dst.PrinterServiceType = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrinterServiceType);
-            dst.PrinterXriRequested = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrinterXriRequested);
+            dst.PrinterServiceType = map.MapFromDicSetNullable<PrinterServiceType[]?>(src, PrinterAttribute.PrinterServiceType);
+            if(src.ContainsKey(PrinterAttribute.PrinterXriRequested))
+                dst.PrinterXriRequested = src[PrinterAttribute.PrinterXriRequested].GroupBegCollection().Select(x => map.Map<SystemXri>(x.FromBegCollection().ToIppDictionary())).ToArray();
             return dst;
         });
 
@@ -814,16 +847,17 @@ internal class OperationAttributesRequestProfile : IProfile
             if (src.ResourceIds != null)
                 dst.AddRange(src.ResourceIds.Select(x => new IppAttribute(Tag.Integer, SystemAttribute.ResourceIds, x)));
             if (src.PrinterServiceType != null)
-                dst.AddRange(src.PrinterServiceType.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterServiceType, x)));
+                dst.AddRange(src.PrinterServiceType.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterServiceType, map.Map<string>(x))));
             if (src.PrinterXriRequested != null)
-                dst.AddRange(src.PrinterXriRequested.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterXriRequested, x)));
+                dst.AddRange(src.PrinterXriRequested.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(PrinterAttribute.PrinterXriRequested)));
             return dst;
         });
 
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, GetSystemAttributesOperationAttributes>((src, dst, map) =>
         {
             dst ??= new GetSystemAttributesOperationAttributes();
-            map.Map<IDictionary<string, IppAttribute[]>, SystemOperationAttributes>(src, dst);
+            map.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(src, dst);
+            dst.SystemUri = map.MapFromDicNullable<Uri?>(src, SystemAttribute.SystemUri);
             dst.RequestedAttributes = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.RequestedAttributes);
             return dst;
         });
@@ -837,10 +871,53 @@ internal class OperationAttributesRequestProfile : IProfile
             return dst;
         });
 
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, GetResourcesOperationAttributes>((src, dst, map) =>
+        {
+            dst ??= new GetResourcesOperationAttributes();
+            map.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(src, dst);
+            dst.SystemUri = map.MapFromDicNullable<Uri?>(src, SystemAttribute.SystemUri);
+            dst.ResourceIds = map.MapFromDicSetNullable<int[]?>(src, SystemAttribute.ResourceIds);
+            dst.RequestedAttributes = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.RequestedAttributes);
+            return dst;
+        });
+
+        mapper.CreateMap<GetResourcesOperationAttributes, List<IppAttribute>>((src, dst, map) =>
+        {
+            dst ??= new List<IppAttribute>();
+            map.Map<SystemOperationAttributes, List<IppAttribute>>(src, dst);
+            if (src.ResourceIds != null)
+                dst.AddRange(src.ResourceIds.Select(x => new IppAttribute(Tag.Integer, SystemAttribute.ResourceIds, x)));
+            if (src.RequestedAttributes != null)
+                dst.AddRange(src.RequestedAttributes.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.RequestedAttributes, x)));
+            return dst;
+        });
+
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, GetResourceAttributesOperationAttributes>((src, dst, map) =>
+        {
+            dst ??= new GetResourceAttributesOperationAttributes();
+            map.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(src, dst);
+            dst.SystemUri = map.MapFromDicNullable<Uri?>(src, SystemAttribute.SystemUri);
+            dst.ResourceId = map.MapFromDicNullable<int?>(src, SystemAttribute.ResourceId);
+            dst.RequestedAttributes = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.RequestedAttributes);
+            return dst;
+        });
+
+        mapper.CreateMap<GetResourceAttributesOperationAttributes, List<IppAttribute>>((src, dst, map) =>
+        {
+            dst ??= new List<IppAttribute>();
+            map.Map<SystemOperationAttributes, List<IppAttribute>>(src, dst);
+            if (src.ResourceId.HasValue)
+                dst.Add(new IppAttribute(Tag.Integer, SystemAttribute.ResourceId, src.ResourceId.Value));
+            if (src.RequestedAttributes != null)
+                dst.AddRange(src.RequestedAttributes.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.RequestedAttributes, x)));
+            return dst;
+        });
+
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, GetSystemSupportedValuesOperationAttributes>((src, dst, map) =>
         {
             dst ??= new GetSystemSupportedValuesOperationAttributes();
-            map.Map<IDictionary<string, IppAttribute[]>, SystemOperationAttributes>(src, dst);
+            map.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(src, dst);
+            dst.SystemUri = map.MapFromDicNullable<Uri?>(src, SystemAttribute.SystemUri);
             dst.RequestedAttributes = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.RequestedAttributes);
             return dst;
         });
@@ -857,12 +934,14 @@ internal class OperationAttributesRequestProfile : IProfile
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, RegisterOutputDeviceOperationAttributes>((src, dst, map) =>
         {
             dst ??= new RegisterOutputDeviceOperationAttributes();
-            map.Map<IDictionary<string, IppAttribute[]>, SystemOperationAttributes>(src, dst);
+            map.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(src, dst);
+            dst.SystemUri = map.MapFromDicNullable<Uri?>(src, SystemAttribute.SystemUri);
             dst.OutputDeviceUuid = map.MapFromDicNullable<Uri?>(src, JobAttribute.OutputDeviceUuid);
             dst.OutputDeviceX509Certificate = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.OutputDeviceX509Certificate);
             dst.OutputDeviceX509Request = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.OutputDeviceX509Request);
-            dst.PrinterServiceType = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrinterServiceType);
-            dst.PrinterXriRequested = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrinterXriRequested);
+            dst.PrinterServiceType = map.MapFromDicSetNullable<PrinterServiceType[]?>(src, PrinterAttribute.PrinterServiceType);
+            if(src.ContainsKey(PrinterAttribute.PrinterXriRequested))
+                dst.PrinterXriRequested = src[PrinterAttribute.PrinterXriRequested].GroupBegCollection().Select(x => map.Map<SystemXri>(x.FromBegCollection().ToIppDictionary())).ToArray();
             return dst;
         });
 
@@ -877,9 +956,9 @@ internal class OperationAttributesRequestProfile : IProfile
             if (src.OutputDeviceX509Request != null)
                 dst.AddRange(src.OutputDeviceX509Request.Select(x => new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.OutputDeviceX509Request, x)));
             if (src.PrinterServiceType != null)
-                dst.AddRange(src.PrinterServiceType.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterServiceType, x)));
+                dst.AddRange(src.PrinterServiceType.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterServiceType, map.Map<string>(x))));
             if (src.PrinterXriRequested != null)
-                dst.AddRange(src.PrinterXriRequested.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterXriRequested, x)));
+                dst.AddRange(src.PrinterXriRequested.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(PrinterAttribute.PrinterXriRequested)));
             return dst;
         });
 
@@ -1018,7 +1097,9 @@ internal class OperationAttributesRequestProfile : IProfile
             if (src.DocumentFormat != null)
                 dst.Add(new IppAttribute(Tag.MimeMediaType, JobAttribute.DocumentFormat, src.DocumentFormat));
             if (src.DocumentNaturalLanguage != null)
-                dst.Add(new IppAttribute(Tag.NaturalLanguage, JobAttribute.DocumentNaturalLanguage, src.DocumentNaturalLanguage)); if (src.DocumentCharset != null) dst.Add(new IppAttribute(Tag.Charset, JobAttribute.DocumentCharset, src.DocumentCharset));
+                dst.Add(new IppAttribute(Tag.NaturalLanguage, JobAttribute.DocumentNaturalLanguage, src.DocumentNaturalLanguage));
+            if (src.DocumentCharset != null)
+                dst.Add(new IppAttribute(Tag.Charset, JobAttribute.DocumentCharset, src.DocumentCharset));
             if (src.JobPassword != null)
                 dst.Add(new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, JobAttribute.JobPassword, src.JobPassword));
             if (src.JobPasswordEncryption != null)

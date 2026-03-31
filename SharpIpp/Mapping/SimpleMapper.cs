@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -148,22 +149,200 @@ public class SimpleMapper : IMapper
                     {
                         var result = mapFunc(source, dest, this);
 
-                        //if (result is IIppCollection { IsNoValue: true })
-                        //{
-                        //    return null;
-                        //}
-
                         return result;
                     }
                     break;
             }
         }
 
+        if (TryMapEnumerableToCollection(source, destType, out var collectionResult))
+        {
+            return collectionResult;
+        }
+
         throw new ArgumentException($"No mapping found for types {sourceType.FullName} -> {destType.FullName}. Source: {source}");
+    }
+
+    private bool TryMapEnumerableToCollection(object source, Type destType, out object? result)
+    {
+        result = null;
+
+        if (source is string || source is not IEnumerable sourceEnumerable)
+        {
+            return false;
+        }
+
+        if (!TryGetCollectionElementType(destType, out var destElementType, out var isArray))
+        {
+            return false;
+        }
+
+        var mappedItems = new List<object?>();
+        foreach (var item in sourceEnumerable)
+        {
+            var sourceItemType = item?.GetType() ?? destElementType;
+            mappedItems.Add(MapNullable(item, sourceItemType, destElementType, null));
+        }
+
+        if (isArray)
+        {
+            var array = Array.CreateInstance(destElementType, mappedItems.Count);
+            for (var i = 0; i < mappedItems.Count; i++)
+            {
+                var value = mappedItems[i];
+                if (value == null && destElementType.IsValueType)
+                {
+                    value = Activator.CreateInstance(destElementType);
+                }
+
+                array.SetValue(value, i);
+            }
+
+            result = array;
+            return true;
+        }
+
+        var listType = typeof(List<>).MakeGenericType(destElementType);
+        var list = (IList)Activator.CreateInstance(listType)!;
+        foreach (var item in mappedItems)
+        {
+            if (item == null && destElementType.IsValueType)
+            {
+                list.Add(Activator.CreateInstance(destElementType));
+            }
+            else
+            {
+                list.Add(item);
+            }
+        }
+
+        if (destType.IsAssignableFrom(listType))
+        {
+            result = list;
+            return true;
+        }
+
+        if (!destType.IsInterface && !destType.IsAbstract)
+        {
+            var enumerableType = typeof(IEnumerable<>).MakeGenericType(destElementType);
+            var enumerableCtor = destType.GetConstructor(new[] { enumerableType });
+            if (enumerableCtor != null)
+            {
+                result = enumerableCtor.Invoke(new object[] { list });
+                return true;
+            }
+
+            if (typeof(IList).IsAssignableFrom(destType) && destType.GetConstructor(Type.EmptyTypes) != null)
+            {
+                var destinationList = (IList)Activator.CreateInstance(destType)!;
+                foreach (var item in list)
+                {
+                    destinationList.Add(item);
+                }
+
+                result = destinationList;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static bool TryGetCollectionElementType(Type type, out Type elementType, out bool isArray)
+    {
+        isArray = false;
+
+        if (type.IsArray)
+        {
+            elementType = type.GetElementType()!;
+            isArray = true;
+            return true;
+        }
+
+        if (TryGetCollectionElementTypeFromGenericType(type, out elementType))
+        {
+            return true;
+        }
+
+        foreach (var interfaceType in type.GetInterfaces())
+        {
+            if (TryGetCollectionElementTypeFromGenericType(interfaceType, out elementType))
+            {
+                return true;
+            }
+        }
+
+        elementType = typeof(object);
+        return false;
+    }
+
+    private static bool TryGetCollectionElementTypeFromGenericType(Type type, out Type elementType)
+    {
+        if (!type.IsGenericType)
+        {
+            elementType = typeof(object);
+            return false;
+        }
+
+        var genericDefinition = type.GetGenericTypeDefinition();
+        if (genericDefinition != typeof(List<>)
+            && genericDefinition != typeof(IEnumerable<>)
+            && genericDefinition != typeof(ICollection<>)
+            && genericDefinition != typeof(IList<>)
+            && genericDefinition != typeof(IReadOnlyCollection<>)
+            && genericDefinition != typeof(IReadOnlyList<>)
+            && genericDefinition != typeof(ISet<>))
+        {
+            elementType = typeof(object);
+            return false;
+        }
+
+        elementType = type.GetGenericArguments()[0];
+        return true;
     }
 
     private static IEnumerable<((Type src, Type dst) map, MapType type)> PossiblePairs(Type sourceType, Type destType)
     {
+        var visited = new HashSet<(Type src, Type dst)>();
+
+        static IEnumerable<Type> SourceCandidates(Type src)
+        {
+            yield return src;
+            foreach (var ifc in src.GetInterfaces())
+            {
+                yield return ifc;
+            }
+        }
+
+        static IEnumerable<Type> DestinationCandidates(Type dst)
+        {
+            yield return dst;
+
+            var underlying = Nullable.GetUnderlyingType(dst);
+            if (underlying != null)
+            {
+                yield return underlying;
+            }
+
+            if (!dst.IsValueType)
+            {
+                for (var baseType = dst.BaseType; baseType != null; baseType = baseType.BaseType)
+                {
+                    yield return baseType;
+                }
+
+                foreach (var ifc in dst.GetInterfaces())
+                {
+                    yield return ifc;
+                }
+            }
+        }
+
+        static bool TryAdd(HashSet<(Type src, Type dst)> set, Type src, Type dst)
+        {
+            return set.Add((src, dst));
+        }
+
         var underlying = Nullable.GetUnderlyingType(destType);
 
         if (underlying != null && underlying == sourceType)
@@ -171,11 +350,15 @@ public class SimpleMapper : IMapper
             yield return ((sourceType, destType), MapType.Cast);
         }
 
-        yield return ((sourceType, destType), MapType.Simple);
-
-        foreach (var ifc in sourceType.GetInterfaces())
+        foreach (var src in SourceCandidates(sourceType))
         {
-            yield return ((ifc, destType), MapType.Simple);
+            foreach (var dst in DestinationCandidates(destType))
+            {
+                if (TryAdd(visited, src, dst))
+                {
+                    yield return ((src, dst), MapType.Simple);
+                }
+            }
         }
     }
 

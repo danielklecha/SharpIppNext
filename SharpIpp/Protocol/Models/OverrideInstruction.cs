@@ -6,7 +6,7 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public class OverrideInstruction : IIppCollection
 {
-    bool IIppCollection.IsNoValue { get; set; }
+    public bool IsValue { get; set; } = true;
     public string? Pages { get; set; }
     public int[]? DocumentNumbers { get; set; }
     public int? DocumentCopies { get; set; }

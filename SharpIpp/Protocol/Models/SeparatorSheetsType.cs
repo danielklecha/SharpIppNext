@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the type of separator sheets.
 /// See: PWG 5100.3-2023 Section 5.2.16.1
 /// </summary>
-public readonly record struct SeparatorSheetsType(string Value)
+public readonly record struct SeparatorSheetsType(string Value, bool IsValue = true) : ISmartEnum 
 {
     public static readonly SeparatorSheetsType None = new("none");
     public static readonly SeparatorSheetsType SlipSheets = new("slip-sheets");

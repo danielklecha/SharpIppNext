@@ -154,4 +154,106 @@ public class GetDocumentAttributesTests : SharpIppIntegrationTestBase
         clientRequest.Should().BeEquivalentTo(serverRequest);
         clientResponse.DocumentAttributes.Should().BeNull();
     }
+
+    [TestMethod()]
+    public async Task GetDocumentAttributesResponseMapping_IncludesDocumentResourceIds()
+    {
+        SharpIppServer server = new();
+        GetDocumentAttributesRequest clientRequest = new()
+        {
+            RequestId = 124,
+            Version = new IppVersion(2, 0),
+            OperationAttributes = new()
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631"),
+                JobId = 1,
+                DocumentNumber = 1,
+                RequestedAttributes = ["document-number", "document-resource-ids"]
+            }
+        };
+
+        IIppRequest? serverRequest = null;
+        GetDocumentAttributesResponse? serverResponse = null;
+
+        async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
+        {
+            serverRequest = await server.ReceiveRequestAsync(s, c);
+            serverResponse = new GetDocumentAttributesResponse
+            {
+                RequestId = serverRequest.RequestId,
+                Version = serverRequest.Version,
+                StatusCode = IppStatusCode.SuccessfulOk,
+                DocumentAttributes = new DocumentAttributes
+                {
+                    DocumentNumber = 1,
+                    DocumentResourceIds = new[] { 201, 202 }
+                }
+            };
+
+            var responseStream = new MemoryStream();
+            await server.SendResponseAsync(serverResponse, responseStream, c);
+            responseStream.Seek(0, SeekOrigin.Begin);
+            return new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StreamContent(responseStream) };
+        }
+
+        SharpIppClient client = new(new(GetMockOfHttpMessageHandler(func).Object));
+
+        GetDocumentAttributesResponse? clientResponse = await client.GetDocumentAttributesAsync(clientRequest);
+
+        clientRequest.Should().BeEquivalentTo(serverRequest);
+        clientResponse!.DocumentAttributes!.DocumentResourceIds.Should().BeEquivalentTo(new[] { 201, 202 });
+    }
+
+    [TestMethod()]
+    public async Task GetDocumentAttributesResponseMapping_IncludesPrintContentOptimizeValues()
+    {
+        SharpIppServer server = new();
+        GetDocumentAttributesRequest clientRequest = new()
+        {
+            RequestId = 125,
+            Version = new IppVersion(2, 0),
+            OperationAttributes = new()
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631"),
+                JobId = 1,
+                DocumentNumber = 1,
+                RequestedAttributes = ["print-content-optimize", "print-content-optimize-actual"]
+            }
+        };
+
+        GetDocumentAttributesResponse? serverResponse = null;
+        IIppRequest? serverRequest = null;
+
+        async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
+        {
+            serverRequest = await server.ReceiveRequestAsync(s, c);
+            serverResponse = new GetDocumentAttributesResponse
+            {
+                RequestId = serverRequest.RequestId,
+                Version = serverRequest.Version,
+                StatusCode = IppStatusCode.SuccessfulOk,
+                DocumentAttributes = new DocumentAttributes
+                {
+                    PrintContentOptimize = PrintContentOptimize.Text,
+                    PrintContentOptimizeActual = [PrintContentOptimize.Text]
+                },
+                OperationAttributes = new()
+                {
+                    StatusMessage = "successful-ok"
+                }
+            };
+
+            var responseStream = new MemoryStream();
+            await server.SendResponseAsync(serverResponse, responseStream, c);
+            responseStream.Seek(0, SeekOrigin.Begin);
+            return new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StreamContent(responseStream) };
+        }
+
+        SharpIppClient client = new(new(GetMockOfHttpMessageHandler(func).Object));
+        GetDocumentAttributesResponse? clientResponse = await client.GetDocumentAttributesAsync(clientRequest);
+
+        clientRequest.Should().BeEquivalentTo(serverRequest);
+        clientResponse!.DocumentAttributes!.PrintContentOptimize.Should().Be(PrintContentOptimize.Text);
+        clientResponse.DocumentAttributes.PrintContentOptimizeActual.Should().BeEquivalentTo(new[] { PrintContentOptimize.Text });
+    }
 }

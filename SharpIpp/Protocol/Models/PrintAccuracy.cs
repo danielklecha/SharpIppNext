@@ -6,7 +6,7 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public class PrintAccuracy : IIppCollection
 {
-    bool IIppCollection.IsNoValue { get; set; }
+    public bool IsValue { get; set; } = true;
     public string? AccuracyUnits { get; set; }
     public int? XAccuracy { get; set; }
     public int? YAccuracy { get; set; }

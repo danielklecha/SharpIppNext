@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the type of binding.
 /// See: PWG 5100.1-2022 Section 5.2.2.2
 /// </summary>
-public readonly record struct BindingType(string Value)
+public readonly record struct BindingType(string Value, bool IsValue = true) : ISmartEnum 
 {
     public static readonly BindingType Adhesive = new("adhesive");
     public static readonly BindingType Comb = new("comb");

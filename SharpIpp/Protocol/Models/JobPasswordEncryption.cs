@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// The <c>job-password-encryption</c> keyword values.
 /// See: PWG 5100.11-2024 Section 5.2.3
 /// </summary>
-public readonly record struct JobPasswordEncryption(string Value)
+public readonly record struct JobPasswordEncryption(string Value, bool IsValue = true) : ISmartEnum 
 {
     public static readonly JobPasswordEncryption None = new("none");
     public static readonly JobPasswordEncryption Sha2256 = new("sha2-256");

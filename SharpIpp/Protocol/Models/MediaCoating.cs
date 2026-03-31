@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SharpIpp.Protocol.Models
 {
-    public readonly record struct MediaCoating(string Value)
+    public readonly record struct MediaCoating(string Value, bool IsValue = true) : ISmartEnum
     {
         public static readonly MediaCoating None = new("none");
         public static readonly MediaCoating Glossy = new("glossy");

@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the job spooling.
 /// See: PWG 5100.1-2022 Section 6.11
 /// </summary>
-public readonly record struct JobSpooling(string Value)
+public readonly record struct JobSpooling(string Value, bool IsValue = true) : ISmartEnum 
 {
     public static readonly JobSpooling Spool = new("spool");
     public static readonly JobSpooling Stream = new("stream");

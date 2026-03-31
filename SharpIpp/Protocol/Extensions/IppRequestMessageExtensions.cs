@@ -21,7 +21,8 @@ public static class IppRequestMessageExtensions
             throw new IppRequestException("attributes-natural-language MUST be the second attribute", request, IppStatusCode.ClientErrorBadRequest);
         if (request.Version < new IppVersion(1, 0))
             throw new IppRequestException("Unsupported IPP version", request, IppStatusCode.ServerErrorVersionNotSupported);
-        if (!request.OperationAttributes.Any(x => x.Name == JobAttribute.PrinterUri))
-            throw new IppRequestException("No printer-uri operation attribute", request, IppStatusCode.ClientErrorBadRequest);
+        if (!request.OperationAttributes.Any(x => x.Name == JobAttribute.PrinterUri)
+            && !request.OperationAttributes.Any(x => x.Name == SystemAttribute.SystemUri))
+            throw new IppRequestException("No printer-uri or system-uri operation attribute", request, IppStatusCode.ClientErrorBadRequest);
     }
 }

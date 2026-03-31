@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace SharpIpp.Protocol.Models;
-public readonly record struct MediaPrePrinted(string Value)
+public readonly record struct MediaPrePrinted(string Value, bool IsValue = true) : ISmartEnum 
 {
     public static readonly MediaPrePrinted Blank = new("blank");
     public static readonly MediaPrePrinted PrePrinted = new("pre-printed");

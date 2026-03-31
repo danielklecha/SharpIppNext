@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the <c>job-phone-number-scheme-supported</c> attribute.
 /// See: PWG 5100.3-2023 Section 5.3.26
 /// </summary>
-public readonly record struct JobPhoneNumberScheme(string Value)
+public readonly record struct JobPhoneNumberScheme(string Value, bool IsValue = true) : ISmartEnum 
 {
     /// <summary>
     /// See: PWG 5100.3-2023 Section 5.3.26

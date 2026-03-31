@@ -37,9 +37,9 @@ public class FinishingsColProfileTests
 
         var result = _mapper.Map<FinishingsCol>(dict);
 
-        // Should return a FinishingsCol with IsNoValue set to true
-        ((IIppCollection)result).IsNoValue.Should().BeTrue();
-        // Sub-properties remain at their defaults (null) since only IsNoValue is set.
+        // Should return a FinishingsCol with IsValue set to false.
+        ((IIppCollection)result).IsValue.Should().BeFalse();
+        // Sub-properties remain at their defaults (null) since only IsValue is changed.
         result.FinishingTemplate.Should().BeNull();
         result.Stitching.Should().BeNull();
         result.Binding.Should().BeNull();

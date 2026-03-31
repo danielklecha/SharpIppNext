@@ -22,7 +22,18 @@ public class AllocatePrinterResourcesTests : SharpIppIntegrationTestBase
             {
                 SystemUri = new Uri("ipp://example.com/ipp/system"),
                 PrinterId = 42,
-                ResourceIds = new[] { 10, 11 }
+                ResourceIds = new[] { 10, 11 },
+                ClientInfo = new[]
+                {
+                    new Protocol.Models.ClientInfo
+                    {
+                        ClientName = "MyClient",
+                        ClientType = Protocol.Models.ClientType.Application,
+                        ClientStringVersion = "1.2.3",
+                        ClientVersion = "1.2.3",
+                        ClientPatches = "patch-1"
+                    }
+                }
             }
         };
         var client = new SharpIppClient();
@@ -46,9 +57,20 @@ public class AllocatePrinterResourcesTests : SharpIppIntegrationTestBase
                 PrinterUri = new Uri("http://127.0.0.1:631"),
                 SystemUri = new Uri("ipp://127.0.0.1:8631/system"),
                 PrinterId = 99,
-                ResourceIds = [1, 2]
+                ResourceIds = [1, 2],
+                ClientInfo = new[]
+                {
+                    new Protocol.Models.ClientInfo
+                    {
+                        ClientName = "MyClient",
+                        ClientType = Protocol.Models.ClientType.Application,
+                        ClientStringVersion = "1.2.3",
+                        ClientVersion = "1.2.3",
+                        ClientPatches = "patch-1"
+                    }
+                }
             }
-        };
+        }; 
 
         IIppRequest? serverRequest = null;
         AllocatePrinterResourcesResponse? serverResponse = null;

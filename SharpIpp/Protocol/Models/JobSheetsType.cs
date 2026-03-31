@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the job-sheets-type.
 /// See: PWG 5100.1-2022 Section 6.10
 /// </summary>
-public readonly record struct JobSheetsType(string Value)
+public readonly record struct JobSheetsType(string Value, bool IsValue = true) : ISmartEnum 
 {
     /// <summary>
     /// See: PWG 5100.3-2023 Sections 5.2.6.1 and 5.2.9.1

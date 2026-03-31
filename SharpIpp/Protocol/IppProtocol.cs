@@ -280,137 +280,20 @@ namespace SharpIpp.Protocol
                 case StringWithLanguage v:
                     Write(v, stream, encoding);
                     break;
+                case byte[] v:
+                    Write(v, stream);
+                    break;
                 case Tag v:
                     Write((byte)v, stream);
                     break;
-                case IppStatusCode v:
-                    Write((int)v, stream);
+                case Enum v when Enum.GetUnderlyingType(v.GetType()) == typeof(short):
+                    Write(Convert.ToInt16(v), stream);
                     break;
-                case IppOperation v:
-                    Write((short)v, stream);
+                case Enum v when Enum.GetUnderlyingType(v.GetType()) == typeof(int):
+                    Write(Convert.ToInt32(v), stream);
                     break;
-                case JobState v:
-                    Write((int)v, stream);
-                    break;
-                case DocumentState v:
-                    Write((int)v, stream);
-                    break;
-                case PrinterState v:
-                    Write((int)v, stream);
-                    break;
-                case PrintQuality v:
-                    Write((int)v, stream);
-                    break;
-                case ResolutionUnit v:
-                    Write((int)v, stream);
-                    break;
-                case PrinterType v:
-                    Write((int)v, stream);
-                    break;
-                case Orientation v:
-                    Write((int)v, stream);
-                    break;
-                case PdlOverride v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case BalingType v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case BindingType v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case CoatingType v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case CoveringName v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case LaminatingType v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case PrinterStateReason v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case JobHoldUntil v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case JobSheets v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case MultipleDocumentHandling v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case Sides v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case PrintScaling v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case Compression v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case UriScheme v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case UriAuthentication v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case UriSecurity v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case PrintColorMode v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case WhichJobs v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case JobSpooling v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case PrintContentOptimize v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case BalingWhen v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case FinishingReferenceEdge v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case CoatingSides v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case FoldingDirection v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case StitchingMethod v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case TrimmingType v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case TrimmingWhen v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case CoverType v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case JobSheetsType v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case JobErrorSheetWhen v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case PresentationDirectionNumberUp v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case SeparatorSheetsType v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case XImagePosition v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
-                    break;
-                case YImagePosition v:
-                    Write(v.ToString().ConvertCamelCaseToKebabCase(), stream, encoding);
+                case ISmartEnum v:
+                    Write(v.Value, stream, encoding);
                     break;
                 case ExtendedValue v:
                     stream.WriteBigEndian((short)(4 + v.Raw.Length));
@@ -461,7 +344,7 @@ namespace SharpIpp.Protocol
                 Tag.Integer => ReadInt(stream),
                 Tag.Enum => ReadInt(stream),
                 Tag.Boolean => ReadBool(stream),
-                Tag.OctetStringWithAnUnspecifiedFormat => ReadString(stream),
+                Tag.OctetStringWithAnUnspecifiedFormat => ReadOctetString(stream),
                 Tag.DateTime => ReadDateTimeOffset(stream),
                 Tag.Resolution => ReadResolution(stream),
                 Tag.RangeOfInteger => ReadRange(stream),
@@ -478,14 +361,14 @@ namespace SharpIpp.Protocol
                 Tag.NaturalLanguage => ReadString(stream),
                 Tag.MimeMediaType => ReadString(stream),
                 Tag.MemberAttrName => ReadString(stream),
-                Tag.OctetStringUnassigned38 => ReadString(stream),
-                Tag.OctetStringUnassigned39 => ReadString(stream),
-                Tag.OctetStringUnassigned3A => ReadString(stream),
-                Tag.OctetStringUnassigned3B => ReadString(stream),
-                Tag.OctetStringUnassigned3C => ReadString(stream),
-                Tag.OctetStringUnassigned3D => ReadString(stream),
-                Tag.OctetStringUnassigned3E => ReadString(stream),
-                Tag.OctetStringUnassigned3F => ReadString(stream),
+                Tag.OctetStringUnassigned38 => ReadOctetString(stream),
+                Tag.OctetStringUnassigned39 => ReadOctetString(stream),
+                Tag.OctetStringUnassigned3A => ReadOctetString(stream),
+                Tag.OctetStringUnassigned3B => ReadOctetString(stream),
+                Tag.OctetStringUnassigned3C => ReadOctetString(stream),
+                Tag.OctetStringUnassigned3D => ReadOctetString(stream),
+                Tag.OctetStringUnassigned3E => ReadOctetString(stream),
+                Tag.OctetStringUnassigned3F => ReadOctetString(stream),
                 Tag.IntegerUnassigned20 => ReadInt(stream),
                 Tag.IntegerUnassigned24 => ReadInt(stream),
                 Tag.IntegerUnassigned25 => ReadInt(stream),

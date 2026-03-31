@@ -26,7 +26,7 @@ internal class GetDocumentsResponseProfile : IProfile
             var dst = new IppResponseMessage();
             map.Map<IIppResponse, IppResponseMessage>(src, dst);
             if (src.Documents != null)
-                dst.DocumentAttributes.AddRange(src.Documents.Select(x => map.Map<IDictionary<string, IppAttribute[]>>(x).SelectMany(y => y.Value).ToList()));
+                dst.DocumentAttributes.AddRange(src.Documents.Select(x => map.Map<IEnumerable<IppAttribute>>(x).ToList()));
             return dst;
         });
     }

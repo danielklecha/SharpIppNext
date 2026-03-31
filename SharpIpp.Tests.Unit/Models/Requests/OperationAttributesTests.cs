@@ -112,6 +112,27 @@ public class OperationAttributesTests
     }
 
     [TestMethod]
+    public void Create_ShouldDefaultAttributesCharsetAndNaturalLanguage_WhenNotPresent()
+    {
+        // Arrange
+        var dict = new Dictionary<string, IppAttribute[]>
+        {
+            { JobAttribute.PrinterUri, new[] { new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://printer") } }
+        };
+        var mapper = new SimpleMapper();
+        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
+        mapper.FillFromAssembly(assembly!);
+
+        // Act
+        var attributes = mapper.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(dict);
+
+        // Assert
+        attributes.AttributesCharset.Should().Be("utf-8");
+        attributes.AttributesNaturalLanguage.Should().Be("en");
+        attributes.PrinterUri.Should().Be(new Uri("ipp://printer"));
+    }
+
+    [TestMethod]
     public void Create_ShouldMapRequestingUserUri_WhenPresent()
     {
         // Arrange

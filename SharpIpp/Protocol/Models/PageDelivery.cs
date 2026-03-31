@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the <c>page-delivery</c> Job/Document Template attribute values.
 /// See: PWG 5100.3-2023 Section 5.2.14
 /// </summary>
-public readonly record struct PageDelivery(string Value)
+public readonly record struct PageDelivery(string Value, bool IsValue = true) : ISmartEnum 
 {
     public static readonly PageDelivery SameOrderFaceUp = new("same-order-face-up");
     public static readonly PageDelivery SameOrderFaceDown = new("same-order-face-down");

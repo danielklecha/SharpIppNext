@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SharpIpp.Protocol.Models
 {
-    public readonly record struct UriSecurity(string Value)
+    public readonly record struct UriSecurity(string Value, bool IsValue = true) : ISmartEnum
     {
         public static readonly UriSecurity None = new("none");
         public static readonly UriSecurity Ssl3 = new("ssl3");

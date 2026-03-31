@@ -140,9 +140,17 @@ public partial class SharpIppClient : ISharpIppClient
         where TOut : IIppResponse
     {
         var ippRequest = CreateRawRequest(data);
-        if (data.OperationAttributes == null || data.OperationAttributes.PrinterUri == null)
-            throw new Exception("PrinterUri is not set");
-        var ippResponse = await SendAsync(data.OperationAttributes.PrinterUri, ippRequest, cancellationToken).ConfigureAwait(false);
+        if (data.OperationAttributes == null)
+            throw new Exception("OperationAttributes is not set");
+
+        var targetUri = data.OperationAttributes.PrinterUri;
+        if (targetUri == null && data.OperationAttributes is SystemOperationAttributes systemAttrs)
+            targetUri = systemAttrs.SystemUri;
+
+        if (targetUri == null)
+            throw new Exception("PrinterUri or SystemUri is not set");
+
+        var ippResponse = await SendAsync(targetUri, ippRequest, cancellationToken).ConfigureAwait(false);
         var res = CreateResponse<TOut>(ippResponse);
         return res;
     }

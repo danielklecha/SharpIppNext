@@ -13,12 +13,18 @@ namespace SharpIpp.Mapping.Profiles.Responses;
 internal class DocumentAttributesProfile : IProfile
 {
     public void CreateMaps(IMapperConstructor mapper)
-    {
+    {        static bool IsOutOfBandNoValue(IDictionary<string, IppAttribute[]> src)
+        {
+            return src.Count == 1 && src.Values.First().Length == 1 && src.Values.First()[0].Tag.IsOutOfBand();
+        }
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, DocumentAttributes>((
             src,
             dst,
             map) =>
         {
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<DocumentAttributes>();
+
             dst ??= new DocumentAttributes();
             dst.DocumentNumber = map.MapFromDicNullable<int?>(src, DocumentAttribute.DocumentNumber);
             dst.DocumentState = map.MapFromDicNullable<DocumentState?>(src, DocumentAttribute.DocumentState);
@@ -45,6 +51,7 @@ internal class DocumentAttributesProfile : IProfile
             dst.DocumentJobUri = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentJobUri);
             dst.DocumentMessage = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentMessage);
             dst.DocumentName = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentName);
+            dst.DocumentResourceIds = map.MapFromDicSetNullable<int[]?>(src, DocumentAttribute.DocumentResourceIds);
             dst.DocumentNaturalLanguage = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentNaturalLanguage);
             dst.DocumentPrinterUri = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentPrinterUri);
             dst.DocumentUri = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentUri);
@@ -119,6 +126,8 @@ internal class DocumentAttributesProfile : IProfile
                 dst.Add(DocumentAttribute.DocumentMessage, [new IppAttribute(Tag.TextWithoutLanguage, DocumentAttribute.DocumentMessage, src.DocumentMessage)]);
             if (src.DocumentName != null)
                 dst.Add(DocumentAttribute.DocumentName, [new IppAttribute(Tag.NameWithoutLanguage, DocumentAttribute.DocumentName, src.DocumentName)]);
+            if (src.DocumentResourceIds != null)
+                dst.Add(DocumentAttribute.DocumentResourceIds, src.DocumentResourceIds.Select(x => new IppAttribute(Tag.Integer, DocumentAttribute.DocumentResourceIds, x)).ToArray());
             if (src.DocumentNaturalLanguage != null)
                 dst.Add(DocumentAttribute.DocumentNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, DocumentAttribute.DocumentNaturalLanguage, src.DocumentNaturalLanguage)]);
             if (src.DocumentPrinterUri != null)
@@ -158,6 +167,15 @@ internal class DocumentAttributesProfile : IProfile
             if (src.PrintContentOptimize != null)
                 dst.Add(DocumentAttribute.PrintContentOptimize, [new IppAttribute(Tag.Keyword, DocumentAttribute.PrintContentOptimize, map.Map<string>(src.PrintContentOptimize.Value))]);
             return dst;
+        });
+
+        mapper.CreateMap<DocumentAttributes, IEnumerable<IppAttribute>>((src, map) =>
+        {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, "document-attributes", NoValue.Instance) };
+
+            var dict = map.Map<IDictionary<string, IppAttribute[]>>(src);
+            return dict.Values.SelectMany(x => x);
         });
     }
 

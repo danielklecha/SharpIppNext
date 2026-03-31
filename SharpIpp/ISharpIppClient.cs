@@ -409,6 +409,154 @@ public interface ISharpIppClient : IDisposable
     /// </summary>
     Task<RegisterOutputDeviceResponse> RegisterOutputDeviceAsync(RegisterOutputDeviceRequest request, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Get-Resources Operation.
+    /// See: PWG 5100.22-2025 Section 6.3.7
+    /// </summary>
+    Task<GetResourcesResponse> GetResourcesAsync(GetResourcesRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get-Resource-Attributes Operation.
+    /// See: PWG 5100.22-2025 Section 6.2.3
+    /// </summary>
+    Task<GetResourceAttributesResponse> GetResourceAttributesAsync(GetResourceAttributesRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Deallocate-Printer-Resources Operation.
+    /// See: PWG 5100.22-2025 Section 6.1.2
+    /// </summary>
+    Task<DeallocatePrinterResourcesResponse> DeallocatePrinterResourcesAsync(DeallocatePrinterResourcesRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Delete-Printer Operation.
+    /// See: PWG 5100.22-2025 Section 6.1.3 and 6.3.4
+    /// </summary>
+    Task<DeletePrinterResponse> DeletePrinterAsync(DeletePrinterRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get-Printers Operation.
+    /// See: PWG 5100.22-2025 Section 6.1.4
+    /// </summary>
+    Task<GetPrintersResponse> GetPrintersAsync(GetPrintersRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get-Printer-Resources Operation.
+    /// See: PWG 5100.22-2025 Section 6.1.5
+    /// </summary>
+    Task<GetPrinterResourcesResponse> GetPrinterResourcesAsync(GetPrinterResourcesRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Shutdown-One-Printer Operation.
+    /// See: PWG 5100.22-2025 Section 6.1.7
+    /// </summary>
+    Task<ShutdownOnePrinterResponse> ShutdownOnePrinterAsync(ShutdownOnePrinterRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Startup-One-Printer Operation.
+    /// See: PWG 5100.22-2025 Section 6.1.8
+    /// </summary>
+    Task<StartupOnePrinterResponse> StartupOnePrinterAsync(StartupOnePrinterRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Create-Resource-Subscriptions Operation.
+    /// See: PWG 5100.22-2025 Section 6.2.2
+    /// </summary>
+    Task<CreateResourceSubscriptionsResponse> CreateResourceSubscriptionsAsync(CreateResourceSubscriptionsRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Create-System-Subscriptions Operation.
+    /// See: PWG 5100.22-2025 Section 6.3.3
+    /// </summary>
+    Task<CreateSystemSubscriptionsResponse> CreateSystemSubscriptionsAsync(CreateSystemSubscriptionsRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Cancel-Subscription Operation.
+    /// See: RFC3995 in PWG 5100.22
+    /// </summary>
+    Task<CancelSubscriptionResponse> CancelSubscriptionAsync(CancelSubscriptionRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get-Notifications Operation.
+    /// See: RFC3996 in PWG 5100.22
+    /// </summary>
+    Task<GetNotificationsResponse> GetNotificationsAsync(GetNotificationsRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get-Subscription-Attributes Operation.
+    /// See: RFC3995 in PWG 5100.22
+    /// </summary>
+    Task<GetSubscriptionAttributesResponse> GetSubscriptionAttributesAsync(GetSubscriptionAttributesRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get-Subscriptions Operation.
+    /// See: RFC3995 in PWG 5100.22
+    /// </summary>
+    Task<GetSubscriptionsResponse> GetSubscriptionsAsync(GetSubscriptionsRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Renew-Subscription Operation.
+    /// See: RFC3995 in PWG 5100.22
+    /// </summary>
+    Task<RenewSubscriptionResponse> RenewSubscriptionAsync(RenewSubscriptionRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Disable-All-Printers Operation.
+    /// See: PWG 5100.22-2025 Section 6.3.5
+    /// </summary>
+    Task<DisableAllPrintersResponse> DisableAllPrintersAsync(DisableAllPrintersRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Enable-All-Printers Operation.
+    /// See: PWG 5100.22-2025 Section 6.3.6
+    /// </summary>
+    Task<EnableAllPrintersResponse> EnableAllPrintersAsync(EnableAllPrintersRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Pause-All-Printers Operation.
+    /// See: PWG 5100.22-2025 Section 6.3.10
+    /// </summary>
+    Task<PauseAllPrintersResponse> PauseAllPrintersAsync(PauseAllPrintersRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Pause-All-Printers-After-Current-Job Operation.
+    /// See: PWG 5100.22-2025 Section 6.3.11
+    /// </summary>
+    Task<PauseAllPrintersAfterCurrentJobResponse> PauseAllPrintersAfterCurrentJobAsync(PauseAllPrintersAfterCurrentJobRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Restart-System Operation.
+    /// See: PWG 5100.22-2025 Section 6.3.13
+    /// </summary>
+    Task<RestartSystemResponse> RestartSystemAsync(RestartSystemRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Resume-All-Printers Operation.
+    /// See: PWG 5100.22-2025 Section 6.3.14
+    /// </summary>
+    Task<ResumeAllPrintersResponse> ResumeAllPrintersAsync(ResumeAllPrintersRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Set-System-Attributes Operation.
+    /// See: PWG 5100.22-2025 Section 6.3.15
+    /// </summary>
+    Task<SetSystemAttributesResponse> SetSystemAttributesAsync(SetSystemAttributesRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Shutdown-All-Printers Operation.
+    /// See: PWG 5100.22-2025 Section 6.3.16
+    /// </summary>
+    Task<ShutdownAllPrintersResponse> ShutdownAllPrintersAsync(ShutdownAllPrintersRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Startup-All-Printers Operation.
+    /// See: PWG 5100.22-2025 Section 6.3.17
+    /// </summary>
+    Task<StartupAllPrintersResponse> StartupAllPrintersAsync(StartupAllPrintersRequest request, CancellationToken cancellationToken = default);
+    /// <summary>
+    /// Restart-One-Printer Operation.
+    /// See: PWG 5100.22-2025 Section 6.1.6 (and 6.3.??)
+    /// </summary>
+    Task<RestartOnePrinterResponse> RestartOnePrinterAsync(RestartOnePrinterRequest request, CancellationToken cancellationToken = default);
     #endregion
 
     #region PWG 5100.11/5100.15/5100.17 Extensions

@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the type of coating.
 /// See: PWG 5100.1-2022 Section 5.2.3.2
 /// </summary>
-public readonly record struct CoatingType(string Value)
+public readonly record struct CoatingType(string Value, bool IsValue = true) : ISmartEnum 
 {
     public static readonly CoatingType Archival = new("archival");
     public static readonly CoatingType ArchivalGlossy = new("archival-glossy");

@@ -26,8 +26,8 @@ public class RegisterOutputDeviceTests : SharpIppIntegrationTestBase
                 OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174999"),
                 OutputDeviceX509Certificate = ["-----BEGIN CERTIFICATE-----"],
                 OutputDeviceX509Request = ["-----BEGIN CERTIFICATE REQUEST-----"],
-                PrinterServiceType = ["print-ws"],
-                PrinterXriRequested = ["xri-security"]
+                PrinterServiceType = [(PrinterServiceType)"print-ws"],
+                PrinterXriRequested = [new SystemXri { XriSecurity = "xri-security" }]
             }
         };
 

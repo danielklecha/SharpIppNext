@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the y-image-position.
 /// See: PWG 5100.1-2022 Section 6.28
 /// </summary>
-public readonly record struct YImagePosition(string Value)
+public readonly record struct YImagePosition(string Value, bool IsValue = true) : ISmartEnum 
 {
     public static readonly YImagePosition Center = new("center");
     public static readonly YImagePosition None = new("none");

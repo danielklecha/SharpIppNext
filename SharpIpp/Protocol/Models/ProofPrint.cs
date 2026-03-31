@@ -6,7 +6,7 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public class ProofPrint : IIppCollection
 {
-    bool IIppCollection.IsNoValue { get; set; }
+    public bool IsValue { get; set; } = true;
     public int? ProofPrintCopies { get; set; }
     public Media? Media { get; set; }
     public MediaCol? MediaCol { get; set; }

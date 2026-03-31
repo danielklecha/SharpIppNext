@@ -7,7 +7,7 @@ namespace SharpIpp.Protocol.Models
     /// <summary>
     /// See: RFC 8011 Section 5.1.7
     /// </summary>
-    public readonly record struct UriScheme(string Value)
+    public readonly record struct UriScheme(string Value, bool IsValue = true) : ISmartEnum
     {
         public static readonly UriScheme Ipp = new("ipp");
         public static readonly UriScheme Ipps = new("ipps");

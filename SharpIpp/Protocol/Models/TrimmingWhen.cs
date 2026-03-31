@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies when output is trimmed.
 /// See: PWG 5100.1-2022 Section 6.31
 /// </summary>
-public readonly record struct TrimmingWhen(string Value)
+public readonly record struct TrimmingWhen(string Value, bool IsValue = true) : ISmartEnum 
 {
     public static readonly TrimmingWhen AfterSheets = new("after-sheets");
     public static readonly TrimmingWhen AfterDocuments = new("after-documents");

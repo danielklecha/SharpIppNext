@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the media-type attribute.
 /// See: PWG 5101.1
 /// </summary>
-public readonly record struct MediaType(string Value)
+public readonly record struct MediaType(string Value, bool IsValue = true) : ISmartEnum 
 {
     public static readonly MediaType Stationery = new("stationery");
     public static readonly MediaType Transparency = new("transparency");

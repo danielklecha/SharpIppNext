@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// The <c>identify-actions</c> keyword values.
 /// See: PWG 5100.13-2023 Section 6.8.4
 /// </summary>
-public readonly record struct IdentifyAction(string Value)
+public readonly record struct IdentifyAction(string Value, bool IsValue = true) : ISmartEnum 
 {
     public static readonly IdentifyAction Display = new("display");
     public static readonly IdentifyAction Flash = new("flash");

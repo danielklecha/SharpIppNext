@@ -2,6 +2,7 @@ using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
+using SharpIpp.Models.Responses;
 using SharpIpp.Protocol.Models;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
@@ -14,6 +15,29 @@ public class NoValueTests
 {
     private IMapper? _mapper;
 
+    public static IEnumerable<object[]> IppCollectionTypes =>
+        typeof(IIppCollection).Assembly
+            .GetTypes()
+            .Where(type => typeof(IIppCollection).IsAssignableFrom(type)
+                && type.IsClass
+                && !type.IsAbstract
+                && !type.ContainsGenericParameters
+                && SupportsNoValue(type))
+            .Select(type => new object[] { type });
+
+    private static bool SupportsNoValue(Type type)
+    {
+        try
+        {
+            _ = NoValue.GetNoValue(type);
+            return true;
+        }
+        catch (ArgumentException)
+        {
+            return false;
+        }
+    }
+
     [TestInitialize]
     public void TestInitialize()
     {
@@ -24,39 +48,7 @@ public class NoValueTests
     }
 
     [TestMethod]
-    [DataRow(typeof(MediaSize))]
-    [DataRow(typeof(MediaSourceProperties))]
-    [DataRow(typeof(FinishingsCol))]
-    [DataRow(typeof(Baling))]
-    [DataRow(typeof(Binding))]
-    [DataRow(typeof(Coating))]
-    [DataRow(typeof(Covering))]
-    [DataRow(typeof(Folding))]
-    [DataRow(typeof(Laminating))]
-    [DataRow(typeof(Punching))]
-    [DataRow(typeof(Stitching))]
-    [DataRow(typeof(Trimming))]
-    [DataRow(typeof(ClientInfo))]
-    [DataRow(typeof(DocumentFormatDetails))]
-    [DataRow(typeof(DocumentTemplateAttributes))]
-    [DataRow(typeof(Cover))]
-    [DataRow(typeof(InsertSheet))]
-    [DataRow(typeof(JobAccountingSheets))]
-    [DataRow(typeof(JobCounter))]
-    [DataRow(typeof(JobErrorSheet))]
-    [DataRow(typeof(JobSheetsCol))]
-    [DataRow(typeof(MediaSizeSupported))]
-    [DataRow(typeof(CoverSheetInfo))]
-    [DataRow(typeof(SeparatorSheets))]
-    [DataRow(typeof(DestinationUri))]
-    [DataRow(typeof(DocumentAccess))]
-    [DataRow(typeof(JobStorage))]
-    [DataRow(typeof(Material))]
-    [DataRow(typeof(OutputAttributes))]
-    [DataRow(typeof(OverrideInstruction))]
-    [DataRow(typeof(PrintAccuracy))]
-    [DataRow(typeof(PrintObject))]
-    [DataRow(typeof(ProofPrint))]
+    [DynamicData(nameof(IppCollectionTypes))]
     public void Map_Dictionary_WithOutOfBandAttribute_ShouldReturnCollectionNoValue(Type collectionType)
     {
         var src = new Dictionary<string, IppAttribute[]>
@@ -70,39 +62,7 @@ public class NoValueTests
     }
 
     [TestMethod]
-    [DataRow(typeof(MediaSize))]
-    [DataRow(typeof(MediaSourceProperties))]
-    [DataRow(typeof(FinishingsCol))]
-    [DataRow(typeof(Baling))]
-    [DataRow(typeof(Binding))]
-    [DataRow(typeof(Coating))]
-    [DataRow(typeof(Covering))]
-    [DataRow(typeof(Folding))]
-    [DataRow(typeof(Laminating))]
-    [DataRow(typeof(Punching))]
-    [DataRow(typeof(Stitching))]
-    [DataRow(typeof(Trimming))]
-    [DataRow(typeof(ClientInfo))]
-    [DataRow(typeof(DocumentFormatDetails))]
-    [DataRow(typeof(DocumentTemplateAttributes))]
-    [DataRow(typeof(Cover))]
-    [DataRow(typeof(InsertSheet))]
-    [DataRow(typeof(JobAccountingSheets))]
-    [DataRow(typeof(JobCounter))]
-    [DataRow(typeof(JobErrorSheet))]
-    [DataRow(typeof(JobSheetsCol))]
-    [DataRow(typeof(MediaSizeSupported))]
-    [DataRow(typeof(CoverSheetInfo))]
-    [DataRow(typeof(SeparatorSheets))]
-    [DataRow(typeof(DestinationUri))]
-    [DataRow(typeof(DocumentAccess))]
-    [DataRow(typeof(JobStorage))]
-    [DataRow(typeof(Material))]
-    [DataRow(typeof(OutputAttributes))]
-    [DataRow(typeof(OverrideInstruction))]
-    [DataRow(typeof(PrintAccuracy))]
-    [DataRow(typeof(PrintObject))]
-    [DataRow(typeof(ProofPrint))]
+    [DynamicData(nameof(IppCollectionTypes))]
     public void Map_CollectionNoValue_ToNoValueAttribute_ShouldReturnIppNoValue(Type collectionType)
     {
         var source = NoValue.GetNoValue(collectionType);
@@ -263,8 +223,7 @@ public class NoValueTests
     [TestMethod]
     public void IsNoValue_WithCollectionNoValue_ShouldReturnTrue()
     {
-        var mediaCol = new MediaCol();
-        ((IIppCollection)mediaCol).IsNoValue = true;
+        var mediaCol = new MediaCol { IsValue = false };
         var result = NoValue.IsNoValue(mediaCol);
         result.Should().BeTrue();
     }
@@ -275,15 +234,15 @@ public class NoValueTests
     [DynamicData(nameof(SmartEnumData))]
     public void IsNoValue_WithDefaultSmartEnum_ShouldReturnTrue(Type type, string _)
     {
-        var result = NoValue.IsNoValue(Activator.CreateInstance(type, string.Empty)!);
-        result.Should().BeTrue($"{type.Name} with string.Empty should be NoValue");
+        var result = NoValue.IsNoValue(Activator.CreateInstance(type)!);
+        result.Should().BeTrue($"{type.Name} default should be NoValue");
     }
 
     [TestMethod]
     [DynamicData(nameof(SmartEnumData))]
     public void IsNoValue_WithPopulatedSmartEnum_ShouldReturnFalse(Type type, string value)
     {
-        var result = NoValue.IsNoValue(Activator.CreateInstance(type, value)!);
+        var result = NoValue.IsNoValue(Activator.CreateInstance(type, value, true)!);
         result.Should().BeFalse($"{type.Name} with value should not be NoValue");
     }
 
@@ -293,48 +252,17 @@ public class NoValueTests
     {
         var result = NoValue.GetNoValue(type);
         NoValue.IsNoValue(result).Should().BeTrue($"{type.Name} NoValue should be recognized as NoValue");
-        result.ToString().Should().Be(string.Empty, $"{type.Name} NoValue should have empty string value");
+        result.Should().BeAssignableTo<INoValue>();
+        ((INoValue)result).IsValue.Should().BeFalse($"{type.Name} NoValue should have IsValue false");
     }
 
     [TestMethod]
-    [DataRow(typeof(MediaSize))]
-    [DataRow(typeof(MediaSourceProperties))]
-    [DataRow(typeof(FinishingsCol))]
-    [DataRow(typeof(Baling))]
-    [DataRow(typeof(Binding))]
-    [DataRow(typeof(Coating))]
-    [DataRow(typeof(Covering))]
-    [DataRow(typeof(Folding))]
-    [DataRow(typeof(Laminating))]
-    [DataRow(typeof(Punching))]
-    [DataRow(typeof(Stitching))]
-    [DataRow(typeof(Trimming))]
-    [DataRow(typeof(ClientInfo))]
-    [DataRow(typeof(DocumentFormatDetails))]
-    [DataRow(typeof(DocumentTemplateAttributes))]
-    [DataRow(typeof(Cover))] 
-    [DataRow(typeof(InsertSheet))]
-    [DataRow(typeof(JobAccountingSheets))]
-    [DataRow(typeof(JobCounter))]
-    [DataRow(typeof(JobErrorSheet))]
-    [DataRow(typeof(JobSheetsCol))]
-    [DataRow(typeof(MediaSizeSupported))]
-    [DataRow(typeof(CoverSheetInfo))]
-    [DataRow(typeof(SeparatorSheets))]
-    [DataRow(typeof(DestinationUri))]
-    [DataRow(typeof(DocumentAccess))]
-    [DataRow(typeof(JobStorage))]
-    [DataRow(typeof(Material))]
-    [DataRow(typeof(OutputAttributes))]
-    [DataRow(typeof(OverrideInstruction))]
-    [DataRow(typeof(PrintAccuracy))]
-    [DataRow(typeof(PrintObject))]
-    [DataRow(typeof(ProofPrint))]
-    public void GetNoValue_WithCollectionType_ShouldReturnIsNoValueTrue(Type type)
+    [DynamicData(nameof(IppCollectionTypes))]
+    public void GetNoValue_WithCollectionType_ShouldReturnIsValueFalse(Type type)
     {
         var result = (IIppCollection)NoValue.GetNoValue(type);
         result.Should().BeAssignableTo(type);
-        result.IsNoValue.Should().BeTrue();
+        result.IsValue.Should().BeFalse();
     }
 }
 

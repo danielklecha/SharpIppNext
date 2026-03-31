@@ -230,6 +230,156 @@ public partial class SharpIppClient
     }
 
     /// <inheritdoc />
+    public Task<GetResourcesResponse> GetResourcesAsync(GetResourcesRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<GetResourcesRequest, GetResourcesResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<GetResourceAttributesResponse> GetResourceAttributesAsync(GetResourceAttributesRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<GetResourceAttributesRequest, GetResourceAttributesResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<DeallocatePrinterResourcesResponse> DeallocatePrinterResourcesAsync(DeallocatePrinterResourcesRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<DeallocatePrinterResourcesRequest, DeallocatePrinterResourcesResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<DeletePrinterResponse> DeletePrinterAsync(DeletePrinterRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<DeletePrinterRequest, DeletePrinterResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<GetPrintersResponse> GetPrintersAsync(GetPrintersRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<GetPrintersRequest, GetPrintersResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<GetPrinterResourcesResponse> GetPrinterResourcesAsync(GetPrinterResourcesRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<GetPrinterResourcesRequest, GetPrinterResourcesResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<ShutdownOnePrinterResponse> ShutdownOnePrinterAsync(ShutdownOnePrinterRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<ShutdownOnePrinterRequest, ShutdownOnePrinterResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<StartupOnePrinterResponse> StartupOnePrinterAsync(StartupOnePrinterRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<StartupOnePrinterRequest, StartupOnePrinterResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<RestartOnePrinterResponse> RestartOnePrinterAsync(RestartOnePrinterRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<RestartOnePrinterRequest, RestartOnePrinterResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<CreateResourceSubscriptionsResponse> CreateResourceSubscriptionsAsync(CreateResourceSubscriptionsRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<CreateResourceSubscriptionsRequest, CreateResourceSubscriptionsResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<CreateSystemSubscriptionsResponse> CreateSystemSubscriptionsAsync(CreateSystemSubscriptionsRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<CreateSystemSubscriptionsRequest, CreateSystemSubscriptionsResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<CancelSubscriptionResponse> CancelSubscriptionAsync(CancelSubscriptionRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<CancelSubscriptionRequest, CancelSubscriptionResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<GetNotificationsResponse> GetNotificationsAsync(GetNotificationsRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<GetNotificationsRequest, GetNotificationsResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<GetSubscriptionAttributesResponse> GetSubscriptionAttributesAsync(GetSubscriptionAttributesRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<GetSubscriptionAttributesRequest, GetSubscriptionAttributesResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<GetSubscriptionsResponse> GetSubscriptionsAsync(GetSubscriptionsRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<GetSubscriptionsRequest, GetSubscriptionsResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<RenewSubscriptionResponse> RenewSubscriptionAsync(RenewSubscriptionRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<RenewSubscriptionRequest, RenewSubscriptionResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<DisableAllPrintersResponse> DisableAllPrintersAsync(DisableAllPrintersRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<DisableAllPrintersRequest, DisableAllPrintersResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<EnableAllPrintersResponse> EnableAllPrintersAsync(EnableAllPrintersRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<EnableAllPrintersRequest, EnableAllPrintersResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<PauseAllPrintersResponse> PauseAllPrintersAsync(PauseAllPrintersRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<PauseAllPrintersRequest, PauseAllPrintersResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<PauseAllPrintersAfterCurrentJobResponse> PauseAllPrintersAfterCurrentJobAsync(PauseAllPrintersAfterCurrentJobRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<PauseAllPrintersAfterCurrentJobRequest, PauseAllPrintersAfterCurrentJobResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<RestartSystemResponse> RestartSystemAsync(RestartSystemRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<RestartSystemRequest, RestartSystemResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<ResumeAllPrintersResponse> ResumeAllPrintersAsync(ResumeAllPrintersRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<ResumeAllPrintersRequest, ResumeAllPrintersResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<SetSystemAttributesResponse> SetSystemAttributesAsync(SetSystemAttributesRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<SetSystemAttributesRequest, SetSystemAttributesResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<ShutdownAllPrintersResponse> ShutdownAllPrintersAsync(ShutdownAllPrintersRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<ShutdownAllPrintersRequest, ShutdownAllPrintersResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<StartupAllPrintersResponse> StartupAllPrintersAsync(StartupAllPrintersRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<StartupAllPrintersRequest, StartupAllPrintersResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
     public Task<GetUserPrinterAttributesResponse> GetUserPrinterAttributesAsync(GetUserPrinterAttributesRequest request, CancellationToken cancellationToken = default)
     {
         return SendAsync<GetUserPrinterAttributesRequest, GetUserPrinterAttributesResponse>(request, cancellationToken);

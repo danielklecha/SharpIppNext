@@ -7,7 +7,7 @@ namespace SharpIpp.Protocol.Models;
 public class MediaSizeSupported : IIppCollection
 {
     /// <inheritdoc />
-    bool IIppCollection.IsNoValue { get; set; }
+    public bool IsValue { get; set; } = true;
 
     /// <summary>
     /// integer(1:MAX) | rangeOfInteger(1:MAX)

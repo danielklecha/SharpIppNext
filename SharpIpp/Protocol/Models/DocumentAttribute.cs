@@ -23,6 +23,7 @@ namespace SharpIpp.Protocol.Models
         public const string DocumentJobUri = "document-job-uri";
         public const string DocumentMessage = "document-message";
         public const string DocumentName = "document-name";
+        public const string DocumentResourceIds = "document-resource-ids";
         public const string DocumentNaturalLanguage = "document-natural-language";
         public const string DocumentPrinterUri = "document-printer-uri";
         public const string DocumentUri = "document-uri";

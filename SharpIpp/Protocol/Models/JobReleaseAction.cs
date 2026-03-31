@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// The <c>job-release-action</c> keyword values.
 /// See: PWG 5100.11-2024 Section 5.2.4
 /// </summary>
-public readonly record struct JobReleaseAction(string Value)
+public readonly record struct JobReleaseAction(string Value, bool IsValue = true) : ISmartEnum 
 {
     public static readonly JobReleaseAction None = new("none");
     public static readonly JobReleaseAction ButtonPress = new("button-press");

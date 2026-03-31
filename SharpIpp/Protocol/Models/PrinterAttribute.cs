@@ -23,6 +23,16 @@ namespace SharpIpp.Protocol.Models
         public const string PrinterStateChangeDateTime = "printer-state-change-date-time";
         public const string PrinterConfigChangeTime = "printer-config-change-time";
         public const string PrinterConfigChangeDateTime = "printer-config-change-date-time";
+        public const string PrinterConfigChanges = "printer-config-changes";
+        public const string PrinterContactCol = "printer-contact-col";
+        public const string PrinterGeoLocation = "printer-geo-location";
+        public const string PrinterIds = "printer-ids";
+        public const string PrinterImpressionsCompleted = "printer-impressions-completed";
+        public const string PrinterImpressionsCompletedCol = "printer-impressions-completed-col";
+        public const string PrinterMediaSheetsCompleted = "printer-media-sheets-completed";
+        public const string PrinterMediaSheetsCompletedCol = "printer-media-sheets-completed-col";
+        public const string PrinterPagesCompleted = "printer-pages-completed";
+        public const string PrinterPagesCompletedCol = "printer-pages-completed-col";
         public const string IppVersionsSupported = "ipp-versions-supported";
         public const string OperationsSupported = "operations-supported";
         public const string MultipleDocumentJobsSupported = "multiple-document-jobs-supported";
@@ -241,6 +251,13 @@ namespace SharpIpp.Protocol.Models
         public const string PrinterChargeInfoUri = "printer-charge-info-uri";
         public const string PrinterMandatoryJobAttributes = "printer-mandatory-job-attributes";
         public const string OutputDeviceUuidSupported = "output-device-uuid-supported";
+
+        /// <summary>
+        /// The XRI(s) of the Printer object, as requested by the client (operation attribute).
+        /// See: PWG 5100.22-2025 Section 7.1.10
+        /// </summary>
+        public const string PrinterXriSupported = "printer-xri-supported";
+
         /// <summary>
         /// The URI(s) of the Printer object, as requested by the client (operation attribute).
         /// See: PWG 5100.22-2025 Section 7.1.10

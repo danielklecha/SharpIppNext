@@ -1,3 +1,5 @@
+using SharpIpp.Protocol.Models;
+
 namespace SharpIpp.Models.Requests;
 
 /// <summary>
@@ -16,11 +18,11 @@ public class CreatePrinterOperationAttributes : SystemOperationAttributes
     /// The <c>printer-service-type</c> operation attribute specifying the type(s) of print service.
     /// See: PWG 5100.22-2025 Section 7.1.9
     /// </summary>
-    public string[]? PrinterServiceType { get; set; }
+    public PrinterServiceType[]? PrinterServiceType { get; set; }
 
     /// <summary>
     /// The <c>printer-xri-requested</c> operation attribute.
     /// See: PWG 5100.22-2025 Section 7.1.10
     /// </summary>
-    public string[]? PrinterXriRequested { get; set; }
+    public SystemXri[]? PrinterXriRequested { get; set; }
 }

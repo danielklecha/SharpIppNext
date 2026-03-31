@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the cover type.
 /// See: PWG 5100.3-2023 Section 5.2.1.3
 /// </summary>
-public readonly record struct CoverType(string Value)
+public readonly record struct CoverType(string Value, bool IsValue = true) : ISmartEnum 
 {
     public static readonly CoverType NoCover = new("no-cover");
     public static readonly CoverType PrintBack = new("print-back");

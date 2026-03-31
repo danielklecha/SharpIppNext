@@ -30,8 +30,8 @@ internal class GetDocumentAttributesResponseProfile : IProfile
             map.Map<IIppResponse, IppResponseMessage>(src, dst);
             if (src.DocumentAttributes != null)
             {
-                var docAttrsDict = map.Map<DocumentAttributes, IDictionary<string, IppAttribute[]>>(src.DocumentAttributes);
-                dst.DocumentAttributes.Add(docAttrsDict.Values.SelectMany(x => x).ToList());
+                var docAttrs = map.Map<IEnumerable<IppAttribute>>(src.DocumentAttributes).ToList();
+                dst.DocumentAttributes.Add(docAttrs);
             }
             return dst;
         });

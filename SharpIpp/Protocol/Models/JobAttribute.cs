@@ -56,6 +56,7 @@ namespace SharpIpp.Protocol.Models
         public const string FirstPrinterName = "first-printer-name";
         public const string PrinterId = "printer-id";
         public const string PrinterLocation = "printer-location";
+        public const string JobResourceIds = "job-resource-ids";
         public const string PrinterType = "printer-type";
         public const string PrinterTypeMask = "printer-type-mask";
         public const string RequestedAttributes = "requested-attributes";

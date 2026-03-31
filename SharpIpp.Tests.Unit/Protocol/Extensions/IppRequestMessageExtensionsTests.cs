@@ -174,7 +174,7 @@ public class IppRequestMessageExtensionsTests
         Action act = () => message.Validate();
         // Assert
         act.Should().Throw<IppRequestException>()
-            .WithMessage("No printer-uri operation attribute")
+            .WithMessage("No printer-uri or system-uri operation attribute")
             .Which.RequestMessage.Should().Be(message);
     }
 

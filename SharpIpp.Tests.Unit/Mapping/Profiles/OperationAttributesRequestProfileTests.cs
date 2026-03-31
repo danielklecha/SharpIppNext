@@ -128,4 +128,43 @@ public class OperationAttributesRequestProfileTests
 
         dst.DocumentMessage.Should().Be("doc note");
     }
+
+    [TestMethod]
+    public void Map_GetOutputDeviceAttributesOperationAttributes_WithRequestedAttributesAndOutputDeviceUuid_MapsToIppAttributes()
+    {
+        // Arrange
+        var src = new GetOutputDeviceAttributesOperationAttributes
+        {
+            AttributesCharset = "utf-8",
+            AttributesNaturalLanguage = "en",
+            RequestedAttributes = new[] { "printer-name", "printer-state" },
+            OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174003")
+        };
+
+        // Act
+        var dst = _mapper.Map<GetOutputDeviceAttributesOperationAttributes, List<IppAttribute>>(src);
+
+        // Assert
+        dst.Should().Contain(x => x.Name == JobAttribute.OutputDeviceUuid && x.Tag == Tag.Uri && x.Value.Equals("urn:uuid:123e4567-e89b-12d3-a456-426614174003"));
+        dst.Should().Contain(x => x.Name == JobAttribute.RequestedAttributes && x.Tag == Tag.Keyword && x.Value.Equals("printer-name"));
+        dst.Should().Contain(x => x.Name == JobAttribute.RequestedAttributes && x.Tag == Tag.Keyword && x.Value.Equals("printer-state"));
+    }
+
+    [TestMethod]
+    public void Map_SystemOperationAttributes_WithoutCharsetAndNaturalLanguage_DefaultsValues()
+    {
+        // Arrange
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { SystemAttribute.SystemUri, [new IppAttribute(Tag.Uri, SystemAttribute.SystemUri, "ipp://system")] }
+        };
+
+        // Act
+        var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, SystemOperationAttributes>(src);
+
+        // Assert
+        dst.AttributesCharset.Should().Be("utf-8");
+        dst.AttributesNaturalLanguage.Should().Be("en");
+        dst.SystemUri.Should().Be(new Uri("ipp://system"));
+    }
 }

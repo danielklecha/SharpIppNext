@@ -5,7 +5,7 @@ namespace SharpIpp.Protocol.Models;
 /// be printed with a job.
 /// See: RFC 2911 Section 4.2.3
 /// </summary>
-public readonly record struct JobSheets(string Value)
+public readonly record struct JobSheets(string Value, bool IsValue = true) : ISmartEnum 
 {
     /// <summary>
     /// no job sheet is printed

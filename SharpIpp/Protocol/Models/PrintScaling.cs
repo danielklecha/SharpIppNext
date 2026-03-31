@@ -1,6 +1,6 @@
 namespace SharpIpp.Protocol.Models
 {
-    public readonly record struct PrintScaling(string Value)
+    public readonly record struct PrintScaling(string Value, bool IsValue = true) : ISmartEnum
     {
         public static readonly PrintScaling Auto = new("auto");
         public static readonly PrintScaling AutoFit = new("auto-fit");

@@ -39,6 +39,13 @@ namespace SharpIpp.Protocol.Models
         public string? JobPrinterUri { get; set; }
 
         /// <summary>
+        /// List of resource IDs allocated to this job.
+        /// See: PWG 5100.22-2025 Section 7.1.15
+        /// </summary>
+        /// <code>job-resource-ids</code>
+        public int[]? JobResourceIds { get; set; }
+
+        /// <summary>
         /// This REQUIRED attribute is the name of the job.  It is a name that is
         /// more user friendly than the "job-uri" attribute value.  It does not
         /// need to be unique between Jobs.  The Job's "job-name" attribute is

@@ -129,9 +129,9 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                         MediaColDefault = new MediaCol { MediaSizeName = Media.IsoA4210x297mm },
                         MediaColDatabase = new[] { new MediaCol { MediaSizeName = Media.IsoA4210x297mm } },
                         MediaColReady = new[] { new MediaCol { MediaSizeName = Media.IsoA4210x297mm } },
-                        MediaColSupported = new[] { "media-col" },
+                        MediaColSupported = new[] { MediaColMember.MediaSizeName },
                         MediaSizeSupported = new[] { new MediaSizeSupported { XDimension = new Range(210,210), YDimension = new Range(297,297) } },
-                        MediaKeySupported = new[] { "key1" },
+                        MediaKeySupported = new[] { (MediaKey)"key1" },
                         MediaSourceSupported = new[] { MediaSource.Auto },
                         MediaTypeSupported = new[] { MediaType.Stationery },
                         MediaBackCoatingSupported = new[] { MediaCoating.None },
@@ -150,9 +150,9 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                         MediaRightMarginSupported = new[] { 0 },
                         MediaTopMarginSupported = new[] { 0 },
                         PrintColorModeSupported = new[] { PrintColorMode.Color },
-                        JobCreationAttributesSupported = new[] { "copies", "finishings", "media" },
+                        JobCreationAttributesSupported = new[] { JobCreationAttribute.Copies, JobCreationAttribute.Finishings, JobCreationAttribute.Media },
                         PrinterUUID = "uuid-1234",
-                        DocumentCreationAttributesSupported = new[] { "attr1" },
+                        DocumentCreationAttributesSupported = new[] { DocumentCreationAttribute.DocumentName },
                         JobAccountIdDefault = "account-1",
                         JobAccountTypeDefault = JobAccountType.None,
                         JobAccountTypeSupported = new[] { JobAccountType.None },
@@ -174,15 +174,15 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                         MaxPageRangesSupported = 5,
                         PrintContentOptimizeDefault = PrintContentOptimize.Auto,
                         PrintContentOptimizeSupported = new[] { PrintContentOptimize.Auto },
-                        OutputDeviceSupported = new[] { "device-1" },
+                        OutputDeviceSupported = new[] { (OutputDevice)"device-1" },
                         OutputDeviceUuidSupported = new[] { "http://device.uuid/1" },
                         PrinterRequestedClientType = new[] { ClientType.OperatingSystem },
-                        PdfVersionsSupported = new[] { "1.7" },
-                        PrinterServiceType = new[] { "office-print" },
+                        PdfVersionsSupported = new[] { PdfVersion.Adobe17 },
+                        PrinterServiceType = new[] { (PrinterServiceType)"office-print" },
                         PrinterCameraImageUri = new[] { "http://camera.example.com/image" },
                         PrinterResourceIds = new[] { 42 },
                         FinishingTemplateSupported = new[] { FinishingTemplate.None },
-                        FinishingsColSupported = new[] { "finishings-col" },
+                        FinishingsColSupported = new[] { FinishingsColMember.FinishingTemplate },
                         FinishingsColDefault = new[] { new FinishingsCol { } },
                         FinishingsColReady = new[] { new FinishingsCol { } },
                         BalingTypeSupported = new[] { BalingType.Wrap },
@@ -228,7 +228,7 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                                 MediaKey = (MediaKey)"media-key"
                             }
                         },
-                        CoverBackSupported = new[] { "cover-back" },
+                        CoverBackSupported = new[] { CoverMember.Media },
                         CoverFrontDefault = new Cover
                         {
                             CoverType = CoverType.NoCover,
@@ -247,7 +247,7 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                                 MediaKey = (MediaKey)"media-key"
                             }
                         },
-                        CoverFrontSupported = new[] { "cover-front" },
+                        CoverFrontSupported = new[] { CoverMember.Media },
                         CoverTypeSupported = new[] { CoverType.NoCover },
                         ForceFrontSideSupported = new Range(0,0),
                         ImageOrientationDefault = Orientation.Portrait,
@@ -256,8 +256,8 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                         ImpositionTemplateSupported = new[] { ImpositionTemplate.None },
                         InsertCountSupported = new Range(0,0),
                         InsertSheetDefault = new[] { new InsertSheet { } },
-                        InsertSheetSupported = new[] { "insert-sheet" },
-                        JobAccountingOutputBinSupported = new[] { "bin1" },
+                        InsertSheetSupported = new[] { InsertSheetMember.InsertCount },
+                        JobAccountingOutputBinSupported = new[] { (OutputBin)"bin1" },
                         JobAccountingSheetsDefault = new JobAccountingSheets
                         {
                             JobAccountingOutputBin = OutputBin.Auto,
@@ -277,7 +277,7 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                                 MediaKey = (MediaKey)"media-key"
                             }
                         },
-                        JobAccountingSheetsSupported = new[] { "sheets1" },
+                        JobAccountingSheetsSupported = new[] { JobAccountingSheetsMember.JobAccountingSheetsType },
                         JobAccountingSheetsTypeSupported = new[] { JobSheetsType.None },
                         JobCompleteBeforeSupported = new[] { JobHoldUntil.None },
                         JobCompleteBeforeTimeSupported = true,
@@ -300,7 +300,7 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                                 MediaKey = (MediaKey)"media-key"
                             }
                         },
-                        JobErrorSheetSupported = new[] { "error-sheet" },
+                        JobErrorSheetSupported = new[] { JobErrorSheetMember.JobErrorSheetType },
                         JobErrorSheetTypeSupported = new[] { JobSheetsType.None },
                         JobErrorSheetWhenSupported = new[] { JobErrorSheetWhen.OnError },
                         JobMessageToOperatorSupported = true,
@@ -331,7 +331,7 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                                 MediaKey = (MediaKey)"media-key"
                             }
                         },
-                        SeparatorSheetsSupported = new[] { "sep1" },
+                        SeparatorSheetsSupported = new[] { SeparatorSheetsMember.SeparatorSheetsType },
                         SeparatorSheetsTypeSupported = new[] { SeparatorSheetsType.None },
                         XImagePositionDefault = XImagePosition.Left,
                         XImagePositionSupported = new[] { XImagePosition.Left },
@@ -354,7 +354,7 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                         DocumentFormatDetailsSupported = ["test"],
                         DocumentNaturalLanguageDefault = "en",
                         DocumentNaturalLanguageSupported = ["en"],
-                        IppFeaturesSupported = ["test"],
+                        IppFeaturesSupported = [(IppFeature)"test"],
                         JobIdsSupported = true,
                         JobImpressionsSupported = new Range(0,1),
                         JobKOctetsSupported = new Range(0,1),
@@ -390,7 +390,7 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                             }
                         },
                         JobSheetsSupported = new[] { JobSheets.Standard },
-                        JobSheetsColSupported = ["test"],
+                        JobSheetsColSupported = [(JobSheetsColMember)"test"],
                         JobSheetsDefault = JobSheets.Standard,
                         NumberUpDefault = 1,
                         NumberUpSupported = new[] { new Range(1, 4) },
@@ -398,7 +398,20 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                         PrinterFinisherDescription = new[] { "finisher-desc" },
                         PrinterFinisherSupplies = new[] { new PrinterFinisherSupply { Type = "toner", Unit = "percent", Max = 100, Level = 80 } },
                         PrinterFinisherSuppliesDescription = new[] { "finisher-supplies-desc" },
-                        
+                        PrinterConfigChanges = 1,
+                        PrinterContactCol = [new() {
+                            ContactName = "user",
+                            ContactUri = new Uri("http://test.com"),
+                            ContactVcard = ["vcard"]
+                        }],
+                        PrinterGeoLocation = new Uri("http://test.com"),
+                        PrinterIds = [1],
+                        PrinterImpressionsCompleted = 2,
+                        PrinterImpressionsCompletedCol = 2,
+                        PrinterMediaSheetsCompleted = 3,
+                        PrinterMediaSheetsCompletedCol = 3,
+                        PrinterPagesCompleted = 4,
+                        PrinterPagesCompletedCol = 5
                     },
                     OperationAttributes = new()
                     {

@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models
     /// PWG 5100.5-2024 Section 6.2 - document-state-reasons
     /// Reuses the same keyword vocabulary as job-state-reasons.
     /// </summary>
-    public readonly record struct DocumentStateReason(string Value)
+    public readonly record struct DocumentStateReason(string Value, bool IsValue = true) : ISmartEnum
     {
         public static readonly DocumentStateReason None = new("none");
         public static readonly DocumentStateReason DocumentIncoming = new("document-incoming");

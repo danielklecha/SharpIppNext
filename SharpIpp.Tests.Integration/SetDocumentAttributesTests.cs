@@ -33,20 +33,29 @@ public class SetDocumentAttributesTests : SharpIppIntegrationTestBase
             DocumentTemplateAttributes = new()
             {
                 Copies = 1,
-                Sides = Sides.TwoSidedLongEdge,
-                OrientationRequested = Orientation.Landscape,
                 CoverBack = new Cover { CoverType = CoverType.PrintNone, Media = (Media)"iso_a4_210x297mm" },
                 CoverFront = new Cover { CoverType = CoverType.PrintBoth, Media = (Media)"iso_a4_210x297mm", MediaCol = new MediaCol { MediaColor = (MediaColor)"blue" } },
+                // Either Finishings OR FinishingsCol is allowed (they are mutually exclusive in mapping), so use FinishingsCol here to keep a rich case.
                 FinishingsCol = [new FinishingsCol
                 {
                     FinishingTemplate = (FinishingTemplate)"staple",
+                    Baling = new Baling { BalingType = BalingType.Band, BalingWhen = BalingWhen.AfterJob },
+                    Binding = new Binding { BindingReferenceEdge = FinishingReferenceEdge.Left, BindingType = BindingType.Perfect },
+                    Coating = new Coating { CoatingSides = CoatingSides.Front, CoatingType = CoatingType.Glossy },
+                    Covering = new Covering { CoveringName = CoveringName.Plain },
+                    Folding = [new Folding { FoldingDirection = FoldingDirection.Inward, FoldingOffset = 500, FoldingReferenceEdge = FinishingReferenceEdge.Bottom }],
+                    Laminating = new Laminating { LaminatingSides = CoatingSides.Both, LaminatingType = LaminatingType.Matte },
+                    Punching = new Punching { PunchingLocations = [15, 30], PunchingOffset = 20, PunchingReferenceEdge = FinishingReferenceEdge.Right },
+                    Stitching = new Stitching { StitchingAngle = 90, StitchingMethod = StitchingMethod.Wire, StitchingReferenceEdge = FinishingReferenceEdge.Left, StitchingLocations = [10, 20], StitchingOffset = 5 },
+                    Trimming = [new Trimming { TrimmingOffset = [100, 200], TrimmingReferenceEdge = FinishingReferenceEdge.Top, TrimmingType = TrimmingType.Full, TrimmingWhen = TrimmingWhen.AfterJob }],
                     ImpositionTemplate = (ImpositionTemplate)"signature",
                     MediaSheetsSupported = new SharpIpp.Protocol.Models.Range(1, 10),
                     MediaSizeName = (Media)"iso_a4_210x297mm",
-                    MediaSize = new MediaSize { XDimension = 21000, YDimension = 29700 },
-                    Stitching = new Stitching { StitchingAngle = 90, StitchingMethod = StitchingMethod.Wire, StitchingReferenceEdge = FinishingReferenceEdge.Left, StitchingLocations = [10, 20], StitchingOffset = 5 },
-                    Binding = new Binding { BindingReferenceEdge = FinishingReferenceEdge.Left, BindingType = BindingType.Perfect }
+                    MediaSize = new MediaSize { XDimension = 21000, YDimension = 29700 }
                 }],
+                ForceFrontSide = [1, 2],
+                ImpositionTemplate = (ImpositionTemplate)"none",
+                Media = (Media)"iso_a4_210x297mm",
                 MediaCol = new MediaCol
                 {
                     MediaBackCoating = MediaCoating.Glossy,
@@ -72,17 +81,16 @@ public class SetDocumentAttributesTests : SharpIppIntegrationTestBase
                     MediaType = (MediaType)"stationery",
                     MediaWeightMetric = 80
                 },
-                ForceFrontSide = [1, 2],
-                ImpositionTemplate = (ImpositionTemplate)"none",
-                Media = (Media)"iso_a4_210x297mm",
                 MediaInputTrayCheck = (MediaInputTrayCheck)"main",
                 NumberUp = 1,
+                OrientationRequested = Orientation.Landscape,
                 OutputBin = (OutputBin)"top",
                 PageDelivery = PageDelivery.SameOrderFaceUp,
                 PageRanges = [new SharpIpp.Protocol.Models.Range(1, 1)],
                 PresentationDirectionNumberUp = PresentationDirectionNumberUp.TobottomToleft,
                 PrintQuality = PrintQuality.High,
                 PrinterResolution = new Resolution(600, 600, ResolutionUnit.DotsPerInch),
+                Sides = Sides.TwoSidedLongEdge,
                 XImagePosition = XImagePosition.Center,
                 XImageShift = 0,
                 XSide1ImageShift = 0,

@@ -99,7 +99,7 @@ public class MediaColProfileTests
                 },
                 new Action<MediaCol>(result =>
                 {
-                    ((IIppCollection)result).IsNoValue.Should().BeTrue();
+                    ((IIppCollection)result).IsValue.Should().BeFalse();
                     result.MediaBottomMargin.Should().BeNull();
                     result.MediaLeftMargin.Should().BeNull();
                 }),

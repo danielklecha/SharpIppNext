@@ -8,7 +8,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the output-bin attribute.
 /// See: PWG 5100.2
 /// </summary>
-public readonly record struct OutputBin(string Value)
+public readonly record struct OutputBin(string Value, bool IsValue = true) : ISmartEnum 
 {
     public static readonly Regex KeywordRegex = new(
         "^(?:top|middle|bottom|side|left|right|center|rear|face-up|face-down|large-capacity|my-mailbox|auto|stacker-\\d+|mailbox-\\d+|tray-\\d+)$",

@@ -108,6 +108,21 @@ public class IppProtocolTests
     }
 
     [TestMethod]
+    public void WriteValue_ResourceState_ShouldBeWritten()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        using MemoryStream memoryStream = new();
+        using BinaryWriter binaryWriter = new( memoryStream );
+
+        // Act
+        protocol.WriteValue( ResourceState.Available, binaryWriter );
+
+        // Assert
+        memoryStream.ToArray().Should().Equal( 0x00, 0x04, 0x00, 0x00, 0x00, 0x04 );
+    }
+
+    [TestMethod]
     [DataRow( "en-us", "Lorem", new byte[] { 0x00, 0x0E, 0x00, 0x05, 0x65, 0x6E, 0x2D, 0x75, 0x73, 0x00, 0x05, 0x4C, 0x6F, 0x72, 0x65, 0x6D } )]
     public void Write_StringWithLanguage_ShouldBeWritten( string language, string text, byte[] expected )
     {
@@ -642,7 +657,6 @@ public class IppProtocolTests
     }
 
     [TestMethod]
-    [DataRow( Tag.OctetStringWithAnUnspecifiedFormat )]
     [DataRow( Tag.TextWithoutLanguage )]
     [DataRow( Tag.NameWithoutLanguage )]
     [DataRow( Tag.Keyword )]
@@ -652,14 +666,6 @@ public class IppProtocolTests
     [DataRow( Tag.NaturalLanguage )]
     [DataRow( Tag.MimeMediaType )]
     [DataRow( Tag.MemberAttrName )]
-    [DataRow( Tag.OctetStringUnassigned38 )]
-    [DataRow( Tag.OctetStringUnassigned39 )]
-    [DataRow( Tag.OctetStringUnassigned3A )]
-    [DataRow( Tag.OctetStringUnassigned3B )]
-    [DataRow( Tag.OctetStringUnassigned3C )]
-    [DataRow( Tag.OctetStringUnassigned3D )]
-    [DataRow( Tag.OctetStringUnassigned3E )]
-    [DataRow( Tag.OctetStringUnassigned3F )]
     [DataRow( Tag.StringUnassigned40 )]
     [DataRow( Tag.StringUnassigned43 )]
     [DataRow( Tag.StringUnassigned4B )]
@@ -696,6 +702,28 @@ public class IppProtocolTests
     }
 
     [TestMethod]
+    [DataRow( Tag.OctetStringWithAnUnspecifiedFormat )]
+    [DataRow( Tag.OctetStringUnassigned38 )]
+    [DataRow( Tag.OctetStringUnassigned39 )]
+    [DataRow( Tag.OctetStringUnassigned3A )]
+    [DataRow( Tag.OctetStringUnassigned3B )]
+    [DataRow( Tag.OctetStringUnassigned3C )]
+    [DataRow( Tag.OctetStringUnassigned3D )]
+    [DataRow( Tag.OctetStringUnassigned3E )]
+    [DataRow( Tag.OctetStringUnassigned3F )]
+    public void ReadValue_OctetStrings_ReturnsByteArray( Tag tag )
+    {
+        var protocol = new IppProtocol();
+        using MemoryStream memoryStream = new( new byte[] { 0x00, 0x05, 0x4C, 0x6F, 0x72, 0x65, 0x6D } );
+        using BinaryReader binaryReader = new( memoryStream );
+
+        var result = protocol.ReadValue(binaryReader, tag);
+
+        result.Should().BeOfType<byte[]>();
+        ((byte[])result).Should().BeEquivalentTo(new byte[] { 0x4C, 0x6F, 0x72, 0x65, 0x6D });
+    }
+
+    [TestMethod]
     public void ReadValue_ExtendedTag_ReturnsExtendedValue()
     {
         var protocol = new IppProtocol();
@@ -705,6 +733,90 @@ public class IppProtocolTests
         var result = protocol.ReadValue(binaryReader, Tag.Extended);
 
         result.Should().BeEquivalentTo(new ExtendedValue(0x00000102, new byte[] { 0xAA, 0xBB }));
+    }
+
+    [TestMethod]
+    public void ReadValue_ExtendedTag_WithPayloadShorterThanLengthPrefix_ThrowsArgumentException()
+    {
+        var protocol = new IppProtocol();
+        using MemoryStream memoryStream = new(new byte[] { 0x00 });
+        using BinaryReader binaryReader = new(memoryStream);
+
+        Action act = () => protocol.ReadValue(binaryReader, Tag.Extended);
+
+        act.Should().Throw<ArgumentException>().WithMessage("Invalid extended value payload*");
+    }
+
+    [TestMethod]
+    public void ReadValue_ExtendedTag_LengthLessThan4_ThrowsArgumentException()
+    {
+        var protocol = new IppProtocol();
+        using MemoryStream memoryStream = new(new byte[] { 0x00, 0x03, 0xAA, 0xBB, 0xCC });
+        using BinaryReader binaryReader = new(memoryStream);
+
+        Action act = () => protocol.ReadValue(binaryReader, Tag.Extended);
+
+        act.Should().Throw<ArgumentException>().WithMessage("Expected extended value length >= 4, actual: 3*");
+    }
+
+    [TestMethod]
+    public void ReadValue_ExtendedTag_InvalidPayloadLength_ThrowsArgumentException()
+    {
+        var protocol = new IppProtocol();
+        using MemoryStream memoryStream = new(new byte[] { 0x00, 0x05, 0x00, 0x00, 0x01, 0x02 });
+        using BinaryReader binaryReader = new(memoryStream);
+
+        Action act = () => protocol.ReadValue(binaryReader, Tag.Extended);
+
+        act.Should().Throw<ArgumentException>().WithMessage("Invalid extended value payload*");
+    }
+
+    [TestMethod]
+    public void ReadWriteValue_ExtendedValue_RoundTrips()
+    {
+        var protocol = new IppProtocol();
+        var inputValue = new ExtendedValue(0x0A0B0C0D, new byte[] { 0xA1, 0xB2 });
+
+        using MemoryStream writeStream = new();
+        using BinaryWriter binaryWriter = new(writeStream);
+        protocol.WriteValue(inputValue, binaryWriter);
+
+        using BinaryReader binaryReader = new(new MemoryStream(writeStream.ToArray()));
+        var result = protocol.ReadValue(binaryReader, Tag.Extended);
+
+        result.Should().BeEquivalentTo(inputValue);
+    }
+
+    [TestMethod]
+    public void ExtendedValue_WithExpression_CopiesAllValues()
+    {
+        var original = new ExtendedValue(unchecked((int)0xDEADBEEF), new byte[] { 0xAA, 0xBB, 0xCC });
+
+        var copy = original with { };
+
+        copy.Should().NotBeNull();
+        copy.Should().BeEquivalentTo(original);
+        copy.ExtendedTag.Should().Be(original.ExtendedTag);
+        copy.Raw.Should().BeSameAs(original.Raw);
+    }
+
+    [TestMethod]
+    public void ExtendedValue_Reflection_Setters_Coverage()
+    {
+        var value = new ExtendedValue(0, new byte[] { 0x01 });
+
+        var type = typeof(ExtendedValue);
+        var extendedTagSetter = type.GetProperty(nameof(ExtendedValue.ExtendedTag))?.SetMethod;
+        var rawSetter = type.GetProperty(nameof(ExtendedValue.Raw))?.SetMethod;
+
+        extendedTagSetter.Should().NotBeNull();
+        rawSetter.Should().NotBeNull();
+
+        extendedTagSetter!.Invoke(value, new object[] { 0x12345678 });
+        rawSetter!.Invoke(value, new object[] { new byte[] { 0x99 } });
+
+        value.ExtendedTag.Should().Be(0x12345678);
+        value.Raw.Should().BeEquivalentTo(new byte[] { 0x99 });
     }
 
     [TestMethod]
@@ -718,6 +830,93 @@ public class IppProtocolTests
         var result = protocol.ReadValue(binaryReader, tag);
 
         result.Should().BeEquivalentTo(new UnknownValue(tag, new byte[] { 0xDE, 0xAD }));
+    }
+
+    [TestMethod]
+    public void ReadValue_UnknownTag_WithPayloadShorterThanLengthPrefix_ThrowsArgumentException()
+    {
+        var protocol = new IppProtocol();
+        using MemoryStream memoryStream = new(new byte[] { 0x00 });
+        using BinaryReader binaryReader = new(memoryStream);
+
+        var tag = (Tag)0x60;
+        Action act = () => protocol.ReadValue(binaryReader, tag);
+
+        act.Should().Throw<ArgumentException>().WithMessage("Invalid unknown value payload*");
+    }
+
+    [TestMethod]
+    public void ReadValue_UnknownTag_WithDeclaredLengthGreaterThanPayload_ThrowsArgumentException()
+    {
+        var protocol = new IppProtocol();
+        using MemoryStream memoryStream = new(new byte[] { 0x00, 0x02, 0xDE });
+        using BinaryReader binaryReader = new(memoryStream);
+
+        var tag = (Tag)0x60;
+        Action act = () => protocol.ReadValue(binaryReader, tag);
+
+        act.Should().Throw<ArgumentException>().WithMessage("Invalid unknown value payload*");
+    }
+
+    [TestMethod]
+    public void ReadValue_UnknownTag_WithNegativeDeclaredLength_ThrowsArgumentException()
+    {
+        var protocol = new IppProtocol();
+        using MemoryStream memoryStream = new(new byte[] { 0xFF, 0xFF });
+        using BinaryReader binaryReader = new(memoryStream);
+
+        var tag = (Tag)0x60;
+        Action act = () => protocol.ReadValue(binaryReader, tag);
+
+        act.Should().Throw<ArgumentException>().WithMessage("Invalid unknown value payload*");
+    }
+
+    [TestMethod]
+    public void ReadWriteValue_UnknownValue_RoundTrips()
+    {
+        var protocol = new IppProtocol();
+        var inputValue = new UnknownValue((Tag)0x60, new byte[] { 0xDE, 0xAD, 0xBE, 0xEF });
+
+        using MemoryStream writeStream = new();
+        using BinaryWriter binaryWriter = new(writeStream);
+        protocol.WriteValue(inputValue, binaryWriter);
+
+        using BinaryReader binaryReader = new(new MemoryStream(writeStream.ToArray()));
+        var result = protocol.ReadValue(binaryReader, inputValue.Tag);
+
+        result.Should().BeEquivalentTo(inputValue);
+    }
+
+    [TestMethod]
+    public void UnknownValue_WithExpression_CopiesAllValues()
+    {
+        var original = new UnknownValue((Tag)0x60, new byte[] { 0xDE, 0xAD, 0xBE, 0xEF });
+
+        var copy = original with { };
+
+        copy.Should().NotBeNull();
+        copy.Should().BeEquivalentTo(original);
+        copy.Tag.Should().Be(original.Tag);
+        copy.Raw.Should().BeSameAs(original.Raw);
+    }
+
+    [TestMethod]
+    public void UnknownValue_Reflection_Setters_Coverage()
+    {
+        var value = new UnknownValue((Tag)0x60, new byte[] { 0x01 });
+
+        var type = typeof(UnknownValue);
+        var tagSetter = type.GetProperty(nameof(UnknownValue.Tag))?.SetMethod;
+        var rawSetter = type.GetProperty(nameof(UnknownValue.Raw))?.SetMethod;
+
+        tagSetter.Should().NotBeNull();
+        rawSetter.Should().NotBeNull();
+
+        tagSetter!.Invoke(value, new object[] { (Tag)0x61 });
+        rawSetter!.Invoke(value, new object[] { new byte[] { 0x99 } });
+
+        value.Tag.Should().Be((Tag)0x61);
+        value.Raw.Should().BeEquivalentTo(new byte[] { 0x99 });
     }
 
     [TestMethod]

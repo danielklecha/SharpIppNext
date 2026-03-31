@@ -30,70 +30,21 @@ public class SmartEnumTests
         }
     }
 
-    public static IEnumerable<object[]> SmartEnumData
+    public static IEnumerable<object[]> SmartEnumData =>
+        typeof(ISmartEnum).Assembly
+            .GetTypes()
+            .Where(type => typeof(ISmartEnum).IsAssignableFrom(type) && type is { IsValueType: true, IsAbstract: false, IsInterface: false })
+            .OrderBy(type => type.FullName)
+            .Select(type => new object[] { type, GetSampleValue(type) });
+
+    private static string GetSampleValue(Type type)
     {
-        get
-        {
-            yield return [typeof(BalingWhen), "after-job"];
-            yield return [typeof(BalingType), "band"];
-            yield return [typeof(BindingType), "adhesive"];
-            yield return [typeof(CoatingSides), "both"];
-            yield return [typeof(CoatingType), "archival"];
-            yield return [typeof(Compression), "gzip"];
-            yield return [typeof(CoverType), "no-cover"];
-            yield return [typeof(CoveringName), "plain"];
-            yield return [typeof(DocumentStateReason), "none"];
-            yield return [typeof(FinishingReferenceEdge), "bottom"];
-            yield return [typeof(FinishingTemplate), "staple"];
-            yield return [typeof(FoldingDirection), "inward"];
-            yield return [typeof(ImpositionTemplate), "none"];
-            yield return [typeof(JobErrorSheetWhen), "always"];
-            yield return [typeof(JobHoldUntil), "no-hold"];
-            yield return [typeof(JobPhoneNumberScheme), "tel"];
-            yield return [typeof(JobSheets), "none"];
-            yield return [typeof(JobSheetsType), "job-sheets"];
-            yield return [typeof(JobSpooling), "automatic"];
-            yield return [typeof(JobErrorAction), "abandon-job"];
-            yield return [typeof(JobReleaseAction), "release-to-printer"];
-            yield return [typeof(JobAccountType), "none"];
-            yield return [typeof(JobPasswordEncryption), "none"];
-            yield return [typeof(IdentifyAction), "display"];
-            yield return [typeof(JobStateReason), "none"];
-            yield return [typeof(LaminatingType), "archival"];
-            yield return [typeof(Media), "iso_a4_210x297mm"];
-            yield return [typeof(MediaKey), "media-key"];
-            yield return [typeof(MediaCoating), "none"];
-            yield return [typeof(MediaColor), "white"];
-            yield return [typeof(MediaGrain), "x-direction"];
-            yield return [typeof(MediaInputTrayCheck), "main"];
-            yield return [typeof(MediaPrePrinted), "blank"];
-            yield return [typeof(MediaRecycled), "none"];
-            yield return [typeof(MediaSource), "main"];
-            yield return [typeof(MediaSourceFeedDirection), "long-edge-first"];
-            yield return [typeof(MediaTooth), "smooth"];
-            yield return [typeof(MediaType), "stationery"];
-            yield return [typeof(MultipleDocumentHandling), "separate-documents-uncollated-copies"];
-            yield return [typeof(OutputBin), "top"];
-            yield return [typeof(PageDelivery), "same-order-face-up"];
-            yield return [typeof(PdlOverride), "attempted"];
-            yield return [typeof(PresentationDirectionNumberUp), "tobottom-toleft"];
-            yield return [typeof(PrintColorMode), "auto"];
-            yield return [typeof(PrintContentOptimize), "auto"];
-            yield return [typeof(PrintRenderingIntent), "relative"];
-            yield return [typeof(PrintScaling), "auto"];
-            yield return [typeof(PrinterStateReason), "none"];
-            yield return [typeof(SeparatorSheetsType), "none"];
-            yield return [typeof(Sides), "one-sided"];
-            yield return [typeof(StitchingMethod), "auto"];
-            yield return [typeof(TrimmingType), "draw-line"];
-            yield return [typeof(TrimmingWhen), "after-job"];
-            yield return [typeof(UriAuthentication), "none"];
-            yield return [typeof(UriScheme), "ipp"];
-            yield return [typeof(UriSecurity), "none"];
-            yield return [typeof(WhichJobs), "completed"];
-            yield return [typeof(XImagePosition), "center"];
-            yield return [typeof(YImagePosition), "center"];
-        }
+        var knownValue = type.GetFields(BindingFlags.Public | BindingFlags.Static)
+            .Where(field => field.FieldType == type)
+            .Select(field => field.GetValue(null)?.ToString())
+            .FirstOrDefault(value => !string.IsNullOrEmpty(value));
+
+        return knownValue ?? "sample-value";
     }
 
     [TestMethod]
@@ -101,7 +52,7 @@ public class SmartEnumTests
     public void ImplicitOperator_ToString_ReturnsValue(Type type, string value)
     {
         // Arrange
-        var instance = Activator.CreateInstance(type, value);
+        var instance = Activator.CreateInstance(type, value, true);
         var implicitOperator = type.GetMethod("op_Implicit", new[] { type });
 
         // Act
@@ -128,6 +79,22 @@ public class SmartEnumTests
 
     [TestMethod]
     [DynamicData(nameof(SmartEnumData))]
+    public void PropertyInitializer_SetsIsValue(Type type, string value)
+    {
+        // Arrange
+        var instance = Activator.CreateInstance(type, value, true);
+        var property = type.GetProperty("IsValue");
+
+        // Act
+        property?.SetValue(instance, false);
+
+        // Assert
+        property.Should().NotBeNull($"{type.Name} should expose IsValue property");
+        property?.GetValue(instance).Should().Be(false);
+    }
+
+    [TestMethod]
+    [DynamicData(nameof(SmartEnumData))]
     public void ExplicitOperator_FromString_ReturnsInstance(Type type, string value)
     {
         // Arrange
@@ -147,7 +114,7 @@ public class SmartEnumTests
     public void ToString_ReturnsValue(Type type, string value)
     {
         // Arrange
-        var instance = Activator.CreateInstance(type, value);
+        var instance = Activator.CreateInstance(type, value, true);
 
         // Act
         var result = instance?.ToString();

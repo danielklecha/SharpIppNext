@@ -14,6 +14,7 @@ internal class PrinterFinisherSupplyProfile : IProfile
     {
         mapper.CreateIppMap<string, PrinterFinisherSupply>((src, _) => Parse(src));
         mapper.CreateIppMap<PrinterFinisherSupply, string>((src, _) => Serialize(src));
+        mapper.CreateIppMap<byte[], PrinterFinisherSupply>((src, map) => map.Map<PrinterFinisherSupply>(Encoding.UTF8.GetString(src)));
     }
 
     private static PrinterFinisherSupply Parse(string value)

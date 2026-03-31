@@ -6,7 +6,7 @@ namespace SharpIpp.Protocol.Models
     /// Additional value from: RFC 2911 Section 4.3.8
     /// Additional value from: PWG 5100.3-2023 Section 6.1
     /// </summary>
-    public readonly record struct JobStateReason(string Value)
+    public readonly record struct JobStateReason(string Value, bool IsValue = true) : ISmartEnum
     {
         public static readonly JobStateReason None = new("none");
         public static readonly JobStateReason JobIncoming = new("job-incoming");
@@ -15,9 +15,9 @@ namespace SharpIpp.Protocol.Models
         public static readonly JobStateReason SubmissionInterrupted = new("submission-interrupted");
         public static readonly JobStateReason JobOutgoing = new("job-outgoing");
         public static readonly JobStateReason JobHoldUntilSpecified = new("job-hold-until-specified");
-        /// <summary>RFC 2911 ง4.3.8 original value, renamed to <see cref="ResourcesAreNotSupported"/> in RFC 8011 ง5.3.8.</summary>
+        /// <summary>RFC 2911 ยบ4.3.8 original value, renamed to <see cref="ResourcesAreNotSupported"/> in RFC 8011 ยบ5.3.8.</summary>
         public static readonly JobStateReason ResourcesAreNotReady = new("resources-are-not-ready");
-        /// <summary>RFC 8011 ง5.3.8 rename of <see cref="ResourcesAreNotReady"/>.</summary>
+        /// <summary>RFC 8011 ยบ5.3.8 rename of <see cref="ResourcesAreNotReady"/>.</summary>
         public static readonly JobStateReason ResourcesAreNotSupported = new("resources-are-not-supported");
         public static readonly JobStateReason PrinterStoppedPartly = new("printer-stopped-partly");
         public static readonly JobStateReason PrinterStopped = new("printer-stopped");

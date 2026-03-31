@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the reason for the current state of a Printer.
 /// See: RFC 8011 Section 5.4.12
 /// </summary>
-public readonly record struct PrinterStateReason(string Value)
+public readonly record struct PrinterStateReason(string Value, bool IsValue = true) : ISmartEnum 
 {
     public static readonly PrinterStateReason None = new("none");
     public static readonly PrinterStateReason Other = new("other");

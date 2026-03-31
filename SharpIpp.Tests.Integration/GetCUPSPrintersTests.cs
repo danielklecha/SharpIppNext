@@ -100,7 +100,7 @@ public class GetCUPSPrintersTests : SharpIppIntegrationTestBase
                     PrintQualityDefault = PrintQuality.Normal,
                     PrintColorModeDefault = PrintColorMode.Color,
                     WhichJobsSupported = [WhichJobs.Completed],
-                    JobCreationAttributesSupported = ["copies", "finishings", "media"],
+                    JobCreationAttributesSupported = [JobCreationAttribute.Copies, JobCreationAttribute.Finishings, JobCreationAttribute.Media],
                 }]
             };
             var responseStream = new MemoryStream();

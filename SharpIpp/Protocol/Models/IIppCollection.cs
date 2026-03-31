@@ -3,10 +3,10 @@ namespace SharpIpp.Protocol.Models;
 /// <summary>
 /// Marker interface for IPP collection types that support NoValue detection.
 /// </summary>
-public interface IIppCollection
+public interface IIppCollection : INoValue
 {
     /// <summary>
-    /// Gets or sets a value indicating whether this instance represents a "no value" sentinel.
+    /// Gets or sets a value indicating whether this instance represents a real value.
     /// </summary>
-    bool IsNoValue { get; set; }
+    new bool IsValue { get; set; }
 }

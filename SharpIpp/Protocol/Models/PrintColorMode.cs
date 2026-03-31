@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace SharpIpp.Protocol.Models;
-public readonly record struct PrintColorMode(string Value)
+public readonly record struct PrintColorMode(string Value, bool IsValue = true) : ISmartEnum 
 {
     public static readonly PrintColorMode Auto = new("auto");
     public static readonly PrintColorMode AutoMonochrome = new("auto-monochrome");

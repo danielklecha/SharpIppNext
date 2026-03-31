@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace SharpIpp.Protocol.Models;
-public readonly record struct MediaSource(string Value)
+public readonly record struct MediaSource(string Value, bool IsValue = true) : ISmartEnum 
 {
     public static readonly MediaSource Alternate = new("alternate");
     public static readonly MediaSource AlternateRoll = new("alternate-roll");

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SharpIpp.Protocol.Models
 {
-    public readonly record struct UriAuthentication(string Value)
+    public readonly record struct UriAuthentication(string Value, bool IsValue = true) : ISmartEnum
     {
         public static readonly UriAuthentication None = new("none");
         public static readonly UriAuthentication RequestingUserName = new("requesting-user-name");

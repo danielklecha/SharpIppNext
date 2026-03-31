@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies which sides of the Media Sheets to coat or laminate.
 /// See: PWG 5100.1-2022 Section 5.2.3.1, 5.2.7.1
 /// </summary>
-public readonly record struct CoatingSides(string Value)
+public readonly record struct CoatingSides(string Value, bool IsValue = true) : ISmartEnum 
 {
     public static readonly CoatingSides Front = new("front");
     public static readonly CoatingSides Back = new("back");

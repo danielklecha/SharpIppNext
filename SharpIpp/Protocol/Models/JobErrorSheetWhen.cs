@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the <c>job-error-sheet-when</c> member values.
 /// See: PWG 5100.3-2023 Section 5.2.9.2
 /// </summary>
-public readonly record struct JobErrorSheetWhen(string Value)
+public readonly record struct JobErrorSheetWhen(string Value, bool IsValue = true) : ISmartEnum 
 {
     public static readonly JobErrorSheetWhen Always = new("always");
     public static readonly JobErrorSheetWhen OnError = new("on-error");

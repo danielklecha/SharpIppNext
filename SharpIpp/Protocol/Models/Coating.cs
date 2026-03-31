@@ -7,7 +7,7 @@ namespace SharpIpp.Protocol.Models;
 public class Coating : IIppCollection
 {
     /// <inheritdoc />
-    bool IIppCollection.IsNoValue { get; set; }
+    public bool IsValue { get; set; } = true;
 
     /// <summary>
     /// type1 keyword

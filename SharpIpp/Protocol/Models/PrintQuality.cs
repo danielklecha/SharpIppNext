@@ -1,20 +1,19 @@
-namespace SharpIpp.Protocol.Models
+namespace SharpIpp.Protocol.Models;
+
+public enum PrintQuality
 {
-    public enum PrintQuality
-    {
-        /// <summary>
-        /// lowest quality available on the printer
-        /// </summary>
-        Draft = 3,
+    /// <summary>
+    /// lowest quality available on the printer
+    /// </summary>
+    Draft = 3,
 
-        /// <summary>
-        /// normal or intermediate quality on the printer
-        /// </summary>
-        Normal = 4,
+    /// <summary>
+    /// normal or intermediate quality on the printer
+    /// </summary>
+    Normal = 4,
 
-        /// <summary>
-        /// highest quality available on the printer
-        /// </summary>
-        High = 5,
-    }
+    /// <summary>
+    /// highest quality available on the printer
+    /// </summary>
+    High = 5,
 }

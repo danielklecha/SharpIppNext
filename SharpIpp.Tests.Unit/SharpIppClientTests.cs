@@ -160,6 +160,13 @@ public class SharpIppClientTests
                 "GetCUPSPrinters"
             ];
             yield return [
+                IppOperation.RestartOnePrinter,
+                new RestartOnePrinterRequest { RequestId = 123, OperationAttributes = new SystemOperationAttributes { SystemUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", PrinterId = 99 } },
+                new Func<SharpIppClient, object, Task>(async (c, r) => await c.RestartOnePrinterAsync((RestartOnePrinterRequest)r)),
+                new[] { new IppAttribute(Tag.Integer, JobAttribute.PrinterId, 99) },
+                "RestartOnePrinter"
+            ];
+            yield return [
                 IppOperation.GetJobs,
                 new GetJobsRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", MyJobs = true } },
                 new Func<SharpIppClient, object, Task>(async (c, r) => await c.GetJobsAsync((GetJobsRequest)r)),
@@ -243,12 +250,34 @@ public class SharpIppClientTests
             RequestId = 123,
             Document = document
         };
+        var uriAttribute = new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "http://127.0.0.1:631/");
+        if (operation == IppOperation.GetSystemAttributes
+            || operation == IppOperation.GetSystemSupportedValues
+            || operation == IppOperation.RegisterOutputDevice
+            || operation == IppOperation.GetResources
+            || operation == IppOperation.GetResourceAttributes
+            || operation == IppOperation.AllocatePrinterResources
+            || operation == IppOperation.CreatePrinter
+            || operation == IppOperation.GetPrinters
+            || operation == IppOperation.GetPrinterResources
+            || operation == IppOperation.ShutdownOnePrinter
+            || operation == IppOperation.StartupOnePrinter
+            || operation == IppOperation.RestartSystem
+            || operation == IppOperation.RestartOnePrinter
+            || operation == IppOperation.ResumeAllPrinters
+            || operation == IppOperation.SetSystemAttributes
+            || operation == IppOperation.ShutdownAllPrinters
+            || operation == IppOperation.StartupAllPrinters)
+        {
+            uriAttribute = new IppAttribute(Tag.Uri, SystemAttribute.SystemUri, "http://127.0.0.1:631/");
+        }
+
         rawRequestMessage.OperationAttributes.AddRange(new[]
         {
             new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"),
             new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"),
             new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "test-user"),
-            new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "http://127.0.0.1:631/"),
+            uriAttribute
         });
         if (additionalAttributes != null)
         {

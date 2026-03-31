@@ -197,4 +197,52 @@ public class GetJobAttributesTests : SharpIppIntegrationTestBase
         clientRequest.Should().BeEquivalentTo(serverRequest);
         clientResponse.Should().BeEquivalentTo(serverResponse);
     }
+
+    [TestMethod()]
+    public async Task GetJobAttributesResponseMapping_IncludesJobResourceIds()
+    {
+        SharpIppServer server = new();
+        GetJobAttributesRequest clientRequest = new()
+        {
+            RequestId = 124,
+            Version = new IppVersion(2, 0),
+            OperationAttributes = new()
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631"),
+                JobId = 1,
+                RequestedAttributes = ["job-id", "job-resource-ids"]
+            }
+        };
+
+        IIppRequest? serverRequest = null;
+        GetJobAttributesResponse? serverResponse = null;
+
+        async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
+        {
+            serverRequest = await server.ReceiveRequestAsync(s, c);
+            serverResponse = new GetJobAttributesResponse
+            {
+                RequestId = serverRequest.RequestId,
+                Version = serverRequest.Version,
+                StatusCode = IppStatusCode.SuccessfulOk,
+                JobAttributes = new JobDescriptionAttributes
+                {
+                    JobId = 1,
+                    JobResourceIds = new[] { 101, 102, 103 }
+                }
+            };
+
+            var responseStream = new MemoryStream();
+            await server.SendResponseAsync(serverResponse, responseStream, c);
+            responseStream.Seek(0, SeekOrigin.Begin);
+            return new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StreamContent(responseStream) };
+        }
+
+        SharpIppClient client = new(new(GetMockOfHttpMessageHandler(func).Object));
+
+        GetJobAttributesResponse? clientResponse = await client.GetJobAttributesAsync(clientRequest);
+
+        clientRequest.Should().BeEquivalentTo(serverRequest);
+        clientResponse!.JobAttributes!.JobResourceIds.Should().BeEquivalentTo(new[] { 101, 102, 103 });
+    }
 }

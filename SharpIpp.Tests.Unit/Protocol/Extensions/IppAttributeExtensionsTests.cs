@@ -507,6 +507,26 @@ public class IppAttributeExtensionsTests
     }
 
     [TestMethod]
+    public void GroupBegCollection_ShouldReturnOutOfBandAttributeAsSingleGroup()
+    {
+        // Arrange
+        var attributes = new List<IppAttribute>
+        {
+            new IppAttribute(Tag.NoValue, "attributes-natural-language", NoValue.Instance)
+        };
+
+        // Act
+        var groups = attributes.GroupBegCollection().ToList();
+
+        // Assert
+        groups.Should().HaveCount(1);
+        var group = groups[0].ToList();
+        group.Should().HaveCount(1);
+        group[0].Tag.Should().Be(Tag.NoValue);
+        group[0].Name.Should().Be("attributes-natural-language");
+    }
+
+    [TestMethod]
     public void FromBegCollection_MemberAttrNameEmptyAtStart_ShouldThrow()
     {
          // Arrange

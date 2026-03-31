@@ -218,7 +218,7 @@ public class PrinterDescriptionAttributes
     /// job-sheets-col-supported
     /// See: PWG 5100.7-2023 Section 6.9.30
     /// </summary>
-    public string[]? JobSheetsColSupported { get; set; }
+    public JobSheetsColMember[]? JobSheetsColSupported { get; set; }
 
     /// <summary>
     /// document-format-default
@@ -291,6 +291,66 @@ public class PrinterDescriptionAttributes
     /// See: RFC 8011 Section 5.4.31
     /// </summary>
     public DateTimeOffset? PrinterConfigChangeDateTime { get; set; }
+
+    /// <summary>
+    /// printer-config-changes
+    /// See: PWG 5100.22-2025 Section 7.5.x
+    /// </summary>
+    public int? PrinterConfigChanges { get; set; }
+
+    /// <summary>
+    /// printer-contact-col
+    /// See: PWG 5100.22-2025 Section 7.5.x
+    /// </summary>
+    public SystemContact[]? PrinterContactCol { get; set; }
+
+    /// <summary>
+    /// printer-geo-location
+    /// See: PWG 5100.22-2025 Section 7.5.x
+    /// </summary>
+    public Uri? PrinterGeoLocation { get; set; }
+
+    /// <summary>
+    /// printer-ids
+    /// See: PWG 5100.22-2025 Section 7.5.x
+    /// </summary>
+    public int[]? PrinterIds { get; set; }
+
+    /// <summary>
+    /// printer-impressions-completed
+    /// See: PWG 5100.22-2025 Section 7.5.x
+    /// </summary>
+    public int? PrinterImpressionsCompleted { get; set; }
+
+    /// <summary>
+    /// printer-impressions-completed-col
+    /// See: PWG 5100.22-2025 Section 7.5.x
+    /// </summary>
+    public int? PrinterImpressionsCompletedCol { get; set; }
+
+    /// <summary>
+    /// printer-media-sheets-completed
+    /// See: PWG 5100.22-2025 Section 7.5.x
+    /// </summary>
+    public int? PrinterMediaSheetsCompleted { get; set; }
+
+    /// <summary>
+    /// printer-media-sheets-completed-col
+    /// See: PWG 5100.22-2025 Section 7.5.x
+    /// </summary>
+    public int? PrinterMediaSheetsCompletedCol { get; set; }
+
+    /// <summary>
+    /// printer-pages-completed
+    /// See: PWG 5100.22-2025 Section 7.5.x
+    /// </summary>
+    public int? PrinterPagesCompleted { get; set; }
+
+    /// <summary>
+    /// printer-pages-completed-col
+    /// See: PWG 5100.22-2025 Section 7.5.x
+    /// </summary>
+    public int? PrinterPagesCompletedCol { get; set; }
 
     /// <summary>
     /// multiple-operation-time-out
@@ -620,7 +680,7 @@ public class PrinterDescriptionAttributes
     /// media-col-supported
     /// See: PWG 5100.7-2023 Section 6.9.39
     /// </summary>
-    public string[]? MediaColSupported { get; set; }
+    public MediaColMember[]? MediaColSupported { get; set; }
 
     /// <summary>
     /// media-size-supported
@@ -632,7 +692,7 @@ public class PrinterDescriptionAttributes
     /// media-key-supported
     /// See: PWG 5100.7-2023 Section 6.9.44
     /// </summary>
-    public string[]? MediaKeySupported { get; set; }
+    public MediaKey[]? MediaKeySupported { get; set; }
 
     /// <summary>
     /// media-source-supported
@@ -764,19 +824,19 @@ public class PrinterDescriptionAttributes
     /// pdf-versions-supported
     /// See: RFC 8011 Section 5.4.38
     /// </summary>
-    public string[]? PdfVersionsSupported { get; set; }
+    public PdfVersion[]? PdfVersionsSupported { get; set; }
 
     /// <summary>
     /// ipp-features-supported
     /// See: RFC 8011 Section 5.4.39
     /// </summary>
-    public string[]? IppFeaturesSupported { get; set; }
+    public IppFeature[]? IppFeaturesSupported { get; set; }
 
     /// <summary>
     /// document-creation-attributes-supported
     /// See: PWG 5100.5-2024 Section 6.5.1
     /// </summary>
-    public string[]? DocumentCreationAttributesSupported { get; set; }
+    public DocumentCreationAttribute[]? DocumentCreationAttributesSupported { get; set; }
 
     /// <summary>
     /// job-account-id-default
@@ -842,13 +902,13 @@ public class PrinterDescriptionAttributes
     /// output-device-supported
     /// See: PWG 5100.7-2023 Section 6.9.57
     /// </summary>
-    public string[]? OutputDeviceSupported { get; set; }
+    public OutputDevice[]? OutputDeviceSupported { get; set; }
 
     /// <summary>
     /// job-creation-attributes-supported
     /// See: PWG 5100.7-2023 Section 6.9.13
     /// </summary>
-    public string[]? JobCreationAttributesSupported { get; set; }
+    public JobCreationAttribute[]? JobCreationAttributesSupported { get; set; }
 
     /// <summary>
     /// printer-requested-client-type
@@ -860,7 +920,7 @@ public class PrinterDescriptionAttributes
     /// printer-service-type
     /// See: PWG 5100.22-2025 Section 7.7.9
     /// </summary>
-    public string[]? PrinterServiceType { get; set; }
+    public PrinterServiceType[]? PrinterServiceType { get; set; }
 
     /// <summary>
     /// finishing-template-supported
@@ -872,7 +932,7 @@ public class PrinterDescriptionAttributes
     /// finishings-col-supported
     /// See: PWG 5100.1-2022 Section 6.12
     /// </summary>
-    public string[]? FinishingsColSupported { get; set; }
+    public FinishingsColMember[]? FinishingsColSupported { get; set; }
 
     /// <summary>
     /// finishings-col-default
@@ -1081,7 +1141,7 @@ public class PrinterDescriptionAttributes
     /// cover-back-supported
     /// See: PWG 5100.3-2023 Section 5.3.2
     /// </summary>
-    public string[]? CoverBackSupported { get; set; }
+    public CoverMember[]? CoverBackSupported { get; set; }
 
     /// <summary>
     /// cover-front-default
@@ -1093,7 +1153,7 @@ public class PrinterDescriptionAttributes
     /// cover-front-supported
     /// See: PWG 5100.3-2023 Section 5.3.4
     /// </summary>
-    public string[]? CoverFrontSupported { get; set; }
+    public CoverMember[]? CoverFrontSupported { get; set; }
 
     /// <summary>
     /// cover-type-supported
@@ -1147,13 +1207,13 @@ public class PrinterDescriptionAttributes
     /// insert-sheet-supported
     /// See: PWG 5100.3-2023 Section 5.3.13
     /// </summary>
-    public string[]? InsertSheetSupported { get; set; }
+    public InsertSheetMember[]? InsertSheetSupported { get; set; }
 
     /// <summary>
     /// job-accounting-output-bin-supported
     /// See: PWG 5100.3-2023 Section 5.3.14
     /// </summary>
-    public string[]? JobAccountingOutputBinSupported { get; set; }
+    public OutputBin[]? JobAccountingOutputBinSupported { get; set; }
 
     /// <summary>
     /// job-accounting-sheets-default
@@ -1165,7 +1225,7 @@ public class PrinterDescriptionAttributes
     /// job-accounting-sheets-supported
     /// See: PWG 5100.3-2023 Section 5.3.16
     /// </summary>
-    public string[]? JobAccountingSheetsSupported { get; set; }
+    public JobAccountingSheetsMember[]? JobAccountingSheetsSupported { get; set; }
 
     /// <summary>
     /// job-accounting-sheets-type-supported
@@ -1195,7 +1255,7 @@ public class PrinterDescriptionAttributes
     /// job-error-sheet-supported
     /// See: PWG 5100.3-2023 Section 5.3.21
     /// </summary>
-    public string[]? JobErrorSheetSupported { get; set; }
+    public JobErrorSheetMember[]? JobErrorSheetSupported { get; set; }
 
     /// <summary>
     /// job-error-sheet-type-supported
@@ -1279,7 +1339,7 @@ public class PrinterDescriptionAttributes
     /// separator-sheets-supported
     /// See: PWG 5100.3-2023 Section 5.3.32
     /// </summary>
-    public string[]? SeparatorSheetsSupported { get; set; }
+    public SeparatorSheetsMember[]? SeparatorSheetsSupported { get; set; }
 
     /// <summary>
     /// separator-sheets-type-supported

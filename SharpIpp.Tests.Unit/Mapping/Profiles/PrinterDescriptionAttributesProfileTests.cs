@@ -78,7 +78,7 @@ public class PrinterDescriptionAttributesProfileTests
     {
         var src = new Dictionary<string, IppAttribute[]>
         {
-            { PrinterAttribute.PdfVersionsSupported, [new IppAttribute(Tag.Keyword, PrinterAttribute.PdfVersionsSupported, "1.7"), new IppAttribute(Tag.Keyword, PrinterAttribute.PdfVersionsSupported, "2.0")] },
+            { PrinterAttribute.PdfVersionsSupported, [new IppAttribute(Tag.Keyword, PrinterAttribute.PdfVersionsSupported, "adobe-1.7"), new IppAttribute(Tag.Keyword, PrinterAttribute.PdfVersionsSupported, "iso-32000-2_2017")] },
             { PrinterAttribute.IppFeaturesSupported, [new IppAttribute(Tag.Keyword, PrinterAttribute.IppFeaturesSupported, "subscription"), new IppAttribute(Tag.Keyword, PrinterAttribute.IppFeaturesSupported, "events")] },
             { PrinterAttribute.PrinterServiceType, [new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterServiceType, "print"), new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterServiceType, "fax") ] },
             { PrinterAttribute.CompressionDefault, [new IppAttribute(Tag.Keyword, PrinterAttribute.CompressionDefault, Compression.Deflate.ToString())] },
@@ -87,9 +87,9 @@ public class PrinterDescriptionAttributesProfileTests
 
         var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(src);
 
-        dst.PdfVersionsSupported.Should().BeEquivalentTo("1.7", "2.0");
-        dst.IppFeaturesSupported.Should().BeEquivalentTo("subscription", "events");
-        dst.PrinterServiceType.Should().BeEquivalentTo("print", "fax");
+        dst.PdfVersionsSupported.Should().BeEquivalentTo([PdfVersion.Adobe17, PdfVersion.Iso3200022017]);
+        dst.IppFeaturesSupported.Should().BeEquivalentTo([(IppFeature)"subscription", (IppFeature)"events"]);
+        dst.PrinterServiceType.Should().BeEquivalentTo([PrinterServiceType.Print, (PrinterServiceType)"fax"]);
         dst.CompressionDefault.Should().Be(Compression.Deflate);
         dst.PrinterResourceIds.Should().BeEquivalentTo(new[] { 10, 20 });
     }
@@ -149,9 +149,9 @@ public class PrinterDescriptionAttributesProfileTests
     {
         var src = new PrinterDescriptionAttributes
         {
-            PdfVersionsSupported = ["1.7", "2.0"],
-            IppFeaturesSupported = ["subscription", "events"],
-            PrinterServiceType = ["print", "fax"],
+            PdfVersionsSupported = [PdfVersion.Adobe17, PdfVersion.Iso3200022017],
+            IppFeaturesSupported = [(IppFeature)"subscription", (IppFeature)"events"],
+            PrinterServiceType = [PrinterServiceType.Print, (PrinterServiceType)"fax"],
             CompressionDefault = Compression.Deflate,
             PrinterResourceIds = [10, 20]
         };
@@ -160,7 +160,7 @@ public class PrinterDescriptionAttributesProfileTests
 
         dst.Should().ContainKey(PrinterAttribute.PdfVersionsSupported);
         dst[PrinterAttribute.PdfVersionsSupported].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Keyword);
-        dst[PrinterAttribute.PdfVersionsSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["1.7", "2.0"]);
+        dst[PrinterAttribute.PdfVersionsSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["adobe-1.7", "iso-32000-2_2017"]);
 
         dst.Should().ContainKey(PrinterAttribute.IppFeaturesSupported);
         dst[PrinterAttribute.IppFeaturesSupported].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Keyword);

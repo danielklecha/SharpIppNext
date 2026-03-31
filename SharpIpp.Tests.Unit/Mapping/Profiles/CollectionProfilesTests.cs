@@ -9,6 +9,7 @@ using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Extensions;
 using SharpIpp.Protocol.Models;
+using SharpIpp.Models.Requests;
 
 namespace SharpIpp.Tests.Unit.Mapping.Profiles;
 
@@ -241,24 +242,174 @@ public class CollectionProfilesTests
     }
 
     [TestMethod]
-    public void Map_JobCounter_To_Attributes_Coverage()
+    public void Map_Dictionary_To_SystemConfiguredPrinter_ShouldMapAllFields()
     {
         // Arrange
-        var counter = new JobCounter
+        var dict = new Dictionary<string, IppAttribute[]>
         {
-            Blank = 1,
-            FullColor = 2,
-            MonochromeTwoSided = 3
+            { "printer-id", [new IppAttribute(Tag.Integer, "printer-id", 42)] },
+            { "printer-info", [new IppAttribute(Tag.TextWithoutLanguage, "printer-info", "Test Printer")] },
+            { "printer-is-accepting-jobs", [new IppAttribute(Tag.Boolean, "printer-is-accepting-jobs", true)] },
+            { "printer-name", [new IppAttribute(Tag.NameWithoutLanguage, "printer-name", "Printer ABC")] },
+            { "printer-service-type", [new IppAttribute(Tag.Keyword, "printer-service-type", "print") ] },
+            { "printer-state", [new IppAttribute(Tag.Enum, "printer-state", (int)PrinterState.Idle)] },
+            { "printer-state-reasons", [new IppAttribute(Tag.Keyword, "printer-state-reasons", "none")] },
+            { "printer-xri-supported", [new IppAttribute(Tag.BegCollection, "printer-xri-supported", NoValue.Instance), new IppAttribute(Tag.MemberAttrName, "", "xri-uri"), new IppAttribute(Tag.Uri, "", "ipp://test"), new IppAttribute(Tag.EndCollection, "", NoValue.Instance)] }
         };
 
         // Act
-        var result = _mapper.Map<IEnumerable<IppAttribute>>(counter).ToList();
+        var result = _mapper.Map<SystemConfiguredPrinter>(dict);
 
         // Assert
-        result.Should().Contain(a => a.Name == "blank");
-        result.Should().Contain(a => a.Name == "full-color");
-        result.Should().Contain(a => a.Name == "monochrome-two-sided");
-        result.Should().NotContain(a => a.Name == "highlight-color");
+        result.PrinterId.Should().Be(42);
+        result.PrinterInfo.Should().Be("Test Printer");
+        result.PrinterIsAcceptingJobs.Should().BeTrue();
+        result.PrinterName.Should().Be("Printer ABC");
+        result.PrinterServiceType.Should().Be(PrinterServiceType.Print);
+        result.PrinterState.Should().Be(PrinterState.Idle);
+        result.PrinterStateReasons.Should().Contain("none");
+        result.PrinterXriSupported.Should().NotBeNull();
+    }
+
+    [TestMethod]
+    public void Map_SystemConfiguredPrinter_To_Attributes_ShouldContainCollectionName()
+    {
+        // Arrange
+        var src = new SystemConfiguredPrinter
+        {
+            PrinterId = 42,
+            PrinterInfo = "Test Printer",
+            PrinterIsAcceptingJobs = true,
+            PrinterName = "Printer ABC",
+            PrinterServiceType = PrinterServiceType.Print,
+            PrinterState = PrinterState.Idle,
+            PrinterStateReasons = new[] { "none" },
+            PrinterXriSupported = new[] { new SystemXri { XriUri = new Uri("ipp://test") } }
+        };
+
+        // Act
+        var result = _mapper.Map<IEnumerable<IppAttribute>>(src).ToList();
+
+        // Assert
+        result.Should().Contain(a => a.Name == "printer-id");
+        result.Should().Contain(a => a.Name == "printer-info");
+        result.Should().Contain(a => a.Name == "printer-is-accepting-jobs");
+        result.Should().Contain(a => a.Name == "printer-name");
+        result.Should().Contain(a => a.Name == "printer-service-type");
+        result.Should().Contain(a => a.Name == "printer-state");
+        result.Should().Contain(a => a.Name == "printer-state-reasons");
+        result.Should().Contain(a => a.Name == "printer-xri-supported");
+    }
+
+    [TestMethod]
+public void Map_Dictionary_To_ResourceStatusAttributes_ShouldMapResourceUuidAndTimes()
+        {
+            // Arrange
+            var dict = new Dictionary<string, IppAttribute[]>
+            {
+                { "resource-id", [new IppAttribute(Tag.Integer, "resource-id", 55)] },
+                { "resource-uuid", [new IppAttribute(Tag.Uri, "resource-uuid", "urn:uuid:123e4567-e89b-12d3-a456-426614174000")] },
+                { "time-at-canceled", [new IppAttribute(Tag.Integer, "time-at-canceled", 8)] },
+                { "time-at-creation", [new IppAttribute(Tag.Integer, "time-at-creation", 16)] },
+                { "time-at-installed", [new IppAttribute(Tag.Integer, "time-at-installed", 24)] }
+            };
+
+            // Act
+            var result = _mapper.Map<ResourceStatusAttributes>(dict);
+
+            // Assert
+            result.ResourceId.Should().Be(55);
+            result.ResourceUuid.Should().Be(new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174000"));
+            result.TimeAtCanceled.Should().Be(8);
+            result.TimeAtCreation.Should().Be(16);
+            result.TimeAtInstalled.Should().Be(24);
+    }
+
+    [TestMethod]
+    public void Map_ResourceStatusAttributes_To_Attributes_ShouldIncludeResourceUuidAndVersion()
+    {
+        // Arrange
+        var src = new ResourceStatusAttributes
+        {
+            ResourceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174000"),
+            ResourceVersion = "1.0.0",
+            ResourceStringVersion = "1.0"
+        };
+
+        // Act
+        var result = _mapper.Map<IDictionary<string, IppAttribute[]>>(src);
+
+        // Assert
+        result.Should().ContainKey("resource-uuid");
+        result.Should().ContainKey("resource-version");
+        result.Should().ContainKey("resource-string-version");
+        result["resource-uuid"].Single().Value.Should().Be("urn:uuid:123e4567-e89b-12d3-a456-426614174000");
+        result["resource-version"].Single().Value.Should().Be("1.0.0");
+        result["resource-string-version"].Single().Value.Should().Be("1.0");
+    }
+
+    [TestMethod]
+    public void Map_Dictionary_To_CreatePrinterOperationAttributes_ShouldMapPrinterXriRequestedAsSystemXri()
+    {
+        // Arrange
+        var dict = new Dictionary<string, IppAttribute[]>
+        {
+            { "system-uri", [new IppAttribute(Tag.Uri, "system-uri", "http://127.0.0.1:631")] },
+            { "printer-xri-requested", [
+                new IppAttribute(Tag.BegCollection, "printer-xri-requested", NoValue.Instance),
+                new IppAttribute(Tag.MemberAttrName, "", "xri-uri"),
+                new IppAttribute(Tag.Uri, "", "ipp://example"),
+                new IppAttribute(Tag.EndCollection, "", NoValue.Instance)
+            ] }
+        };
+
+        // Act
+        var result = _mapper.Map<CreatePrinterOperationAttributes>(dict);
+
+        // Assert
+        result.PrinterXriRequested.Should().NotBeNull();
+        result.PrinterXriRequested.Should().ContainSingle();
+        result.PrinterXriRequested![0].XriUri.Should().Be(new Uri("ipp://example"));
+    }
+
+    [TestMethod]
+    public void Map_CreatePrinterOperationAttributes_To_Attributes_ShouldEmitPrinterXriRequestedCollection()
+    {
+        // Arrange
+        var src = new CreatePrinterOperationAttributes
+        {
+            SystemUri = new Uri("http://127.0.0.1:631"),
+            PrinterXriRequested = new[] { new SystemXri { XriUri = new Uri("ipp://example") } }
+        };
+
+        // Act
+        var attrs = _mapper.Map<List<IppAttribute>>(src);
+
+        // Assert
+        attrs.Should().Contain(a => a.Name == "printer-xri-requested");
+        attrs.Should().Contain(a => a.Tag == Tag.BegCollection && a.Name == "printer-xri-requested");
+    }
+
+    [TestMethod]
+    public void Map_SystemOperationAttributes_WithNotifyFields_To_Attributes_ShouldEmitNotifyAttributes()
+    {
+        // Arrange
+        var src = new SystemOperationAttributes
+        {
+            NotifyPrinterIds = new[] { 1, 2 },
+            NotifyResourceId = 42,
+            RestartGetInterval = 15,
+            WhichPrinters = "all"
+        };
+
+        // Act
+        var attrs = _mapper.Map<List<IppAttribute>>(src);
+
+        // Assert
+        attrs.Should().Contain(a => a.Name == "notify-printer-ids" && a.Tag == Tag.Integer);
+        attrs.Should().Contain(a => a.Name == "notify-resource-id" && a.Tag == Tag.Integer);
+        attrs.Should().Contain(a => a.Name == "restart-get-interval" && a.Tag == Tag.Integer);
+        attrs.Should().Contain(a => a.Name == "which-printers" && a.Tag == Tag.Keyword);
     }
 
     [TestMethod]

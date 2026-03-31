@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using SharpIpp.Mapping.Extensions;
@@ -173,6 +174,435 @@ internal class CollectionProfiles : IProfile
                 attributes.AddRange(src.SeparatorSheetsType.Select(x => new IppAttribute(Tag.Keyword, nameof(SeparatorSheets.SeparatorSheetsType).ConvertCamelCaseToKebabCase(), map.Map<string>(x))));
             return attributes;
         });
+
+        // SystemContact
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, SystemContact>((src, map) =>
+        {
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<SystemContact>();
+
+            return new SystemContact
+            {
+                ContactName = map.MapFromDicNullable<string?>(src, "contact-name"),
+                ContactUri = map.MapFromDicNullable<Uri?>(src, "contact-uri"),
+                ContactVcard = map.MapFromDicSetNullable<string[]?>(src, "contact-vcard")
+            };
+        });
+
+        mapper.CreateMap<SystemContact, IEnumerable<IppAttribute>>((src, map) =>
+        {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, "system-contact-col", NoValue.Instance) };
+
+            var attributes = new List<IppAttribute>();
+            if (src.ContactName != null)
+                attributes.Add(new IppAttribute(Tag.NameWithoutLanguage, "contact-name", src.ContactName));
+            if (src.ContactUri != null)
+                attributes.Add(new IppAttribute(Tag.Uri, "contact-uri", src.ContactUri.ToString()));
+            if (src.ContactVcard != null)
+                attributes.AddRange(src.ContactVcard.Select(x => new IppAttribute(Tag.TextWithoutLanguage, "contact-vcard", x)));
+            return attributes;
+        });
+
+        // SystemXri
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, SystemXri>((src, map) =>
+        {
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<SystemXri>();
+
+            return new SystemXri
+            {
+                XriUri = map.MapFromDicNullable<Uri?>(src, "xri-uri"),
+                XriAuthentication = map.MapFromDicNullable<string?>(src, "xri-authentication"),
+                XriSecurity = map.MapFromDicNullable<string?>(src, "xri-security")
+            };
+        });
+
+        mapper.CreateMap<SystemXri, IEnumerable<IppAttribute>>((src, map) =>
+        {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, SystemAttribute.SystemXriSupported, NoValue.Instance) };
+
+            var attributes = new List<IppAttribute>();
+            if (src.XriUri != null)
+                attributes.Add(new IppAttribute(Tag.Uri, "xri-uri", src.XriUri.ToString()));
+            if (src.XriAuthentication != null)
+                attributes.Add(new IppAttribute(Tag.Keyword, "xri-authentication", src.XriAuthentication));
+            if (src.XriSecurity != null)
+                attributes.Add(new IppAttribute(Tag.Keyword, "xri-security", src.XriSecurity));
+            return attributes;
+        });
+
+        // SystemConfiguredPrinter
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, SystemConfiguredPrinter>((src, map) =>
+        {
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<SystemConfiguredPrinter>();
+
+            var dst = new SystemConfiguredPrinter
+            {
+                PrinterId = map.MapFromDicNullable<int?>(src, JobAttribute.PrinterId),
+                PrinterInfo = map.MapFromDicNullable<string?>(src, PrinterAttribute.PrinterInfo),
+                PrinterIsAcceptingJobs = map.MapFromDicNullable<bool?>(src, PrinterAttribute.PrinterIsAcceptingJobs),
+                PrinterName = map.MapFromDicNullable<string?>(src, PrinterAttribute.PrinterName),
+                PrinterServiceType = map.MapFromDicNullable<PrinterServiceType?>(src, PrinterAttribute.PrinterServiceType),
+                PrinterState = map.MapFromDicNullable<PrinterState?>(src, PrinterAttribute.PrinterState),
+                PrinterStateReasons = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrinterStateReasons)
+            };
+            if (src.ContainsKey(PrinterAttribute.PrinterXriSupported))
+                dst.PrinterXriSupported = src[PrinterAttribute.PrinterXriSupported].GroupBegCollection().Select(x => map.Map<SystemXri>(x.FromBegCollection().ToIppDictionary())).ToArray();
+            return dst;
+        });
+
+        mapper.CreateMap<SystemConfiguredPrinter, IEnumerable<IppAttribute>>((src, map) =>
+        {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, SystemAttribute.SystemConfiguredPrinters, NoValue.Instance) };
+
+            var attributes = new List<IppAttribute>();
+            if (src.PrinterId.HasValue)
+                attributes.Add(new IppAttribute(Tag.Integer, JobAttribute.PrinterId, src.PrinterId.Value));
+            if (src.PrinterInfo != null)
+                attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, PrinterAttribute.PrinterInfo, src.PrinterInfo));
+            if (src.PrinterIsAcceptingJobs.HasValue)
+                attributes.Add(new IppAttribute(Tag.Boolean, PrinterAttribute.PrinterIsAcceptingJobs, src.PrinterIsAcceptingJobs.Value));
+            if (src.PrinterName != null)
+                attributes.Add(new IppAttribute(Tag.NameWithoutLanguage, PrinterAttribute.PrinterName, src.PrinterName));
+            if (src.PrinterServiceType != null)
+                attributes.Add(new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterServiceType, map.Map<string>(src.PrinterServiceType.Value)));
+            if (src.PrinterState.HasValue)
+                attributes.Add(new IppAttribute(Tag.Enum, PrinterAttribute.PrinterState, (int)src.PrinterState.Value));
+            if (src.PrinterStateReasons != null)
+                attributes.AddRange(src.PrinterStateReasons.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterStateReasons, x)));
+            if (src.PrinterXriSupported != null)
+                attributes.AddRange(src.PrinterXriSupported.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(PrinterAttribute.PrinterXriSupported)));
+            return attributes;
+        });
+
+        // SystemConfiguredResource
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, SystemConfiguredResource>((src, map) =>
+        {
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<SystemConfiguredResource>();
+
+            return new SystemConfiguredResource
+            {
+                ResourceFormat = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceFormat),
+                ResourceId = map.MapFromDicNullable<int?>(src, SystemAttribute.ResourceId),
+                ResourceInfo = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceInfo),
+                ResourceName = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceName),
+                ResourceState = map.MapFromDicNullable<ResourceState?>(src, SystemAttribute.ResourceState),
+                ResourceStateReasons = map.MapFromDicSetNullable<ResourceStateReason[]?>(src, SystemAttribute.ResourceStateReasons),
+                ResourceType = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceType)
+            };
+        });
+
+        mapper.CreateMap<SystemConfiguredResource, IEnumerable<IppAttribute>>((src, map) =>
+        {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, SystemAttribute.SystemConfiguredResources, NoValue.Instance) };
+
+            var attributes = new List<IppAttribute>();
+            if (src.ResourceFormat != null)
+                attributes.Add(new IppAttribute(Tag.MimeMediaType, SystemAttribute.ResourceFormat, src.ResourceFormat));
+            if (src.ResourceId.HasValue)
+                attributes.Add(new IppAttribute(Tag.Integer, SystemAttribute.ResourceId, src.ResourceId.Value));
+            if (src.ResourceInfo != null)
+                attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, SystemAttribute.ResourceInfo, src.ResourceInfo));
+            if (src.ResourceName != null)
+                attributes.Add(new IppAttribute(Tag.NameWithoutLanguage, SystemAttribute.ResourceName, src.ResourceName));
+            if (src.ResourceState.HasValue)
+                attributes.Add(new IppAttribute(Tag.Enum, SystemAttribute.ResourceState, (int)src.ResourceState.Value));
+            if (src.ResourceStateReasons != null)
+                attributes.AddRange(src.ResourceStateReasons.Select(x => new IppAttribute(Tag.Keyword, SystemAttribute.ResourceStateReasons, x.ToString())));
+            if (src.ResourceType != null)
+                attributes.Add(new IppAttribute(Tag.Keyword, SystemAttribute.ResourceType, src.ResourceType));
+            return attributes;
+        });
+
+        // PowerLogEntry mapping
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, PowerLogEntry>((src, map) =>
+        {
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<PowerLogEntry>();
+
+            return new PowerLogEntry
+            {
+                LogId = map.MapFromDicNullable<int?>(src, "log-id"),
+                PowerState = map.MapFromDicNullable<PowerState?>(src, "power-state"),
+                DateTimeAt = map.MapFromDicNullable<DateTimeOffset?>(src, "date-time-at"),
+                Message = map.MapFromDicNullable<string?>(src, "power-state-message")
+            };
+        });
+
+        mapper.CreateMap<PowerLogEntry, IEnumerable<IppAttribute>>((src, map) =>
+        {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, SystemAttribute.PowerLogCol, NoValue.Instance) };
+
+            var attributes = new List<IppAttribute>();
+            if (src.LogId.HasValue)
+                attributes.Add(new IppAttribute(Tag.Integer, "log-id", src.LogId.Value));
+            if (src.PowerState.HasValue)
+                attributes.Add(new IppAttribute(Tag.Enum, "power-state", (int)src.PowerState.Value));
+            if (src.DateTimeAt.HasValue)
+                attributes.Add(new IppAttribute(Tag.DateTime, "date-time-at", src.DateTimeAt.Value));
+            if (src.Message != null)
+                attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, "power-state-message", src.Message));
+            return attributes;
+        });
+
+        // PowerStateCapability
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, PowerStateCapability>((src, map) =>
+        {
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<PowerStateCapability>();
+
+            return new PowerStateCapability
+            {
+                CanAcceptJobs = map.MapFromDicNullable<bool?>(src, "can-accept-jobs"),
+                CanProcessJobs = map.MapFromDicNullable<bool?>(src, "can-process-jobs"),
+                PowerActiveWatts = map.MapFromDicNullable<int?>(src, "power-active-watts"),
+                PowerInactiveWatts = map.MapFromDicNullable<int?>(src, "power-inactive-watts"),
+                PowerState = map.MapFromDicNullable<PowerState?>(src, "power-state")
+            };
+        });
+
+        mapper.CreateMap<PowerStateCapability, IEnumerable<IppAttribute>>((src, map) =>
+        {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, SystemAttribute.PowerStateCapabilitiesCol, NoValue.Instance) };
+
+            var attributes = new List<IppAttribute>();
+            if (src.CanAcceptJobs.HasValue)
+                attributes.Add(new IppAttribute(Tag.Boolean, "can-accept-jobs", src.CanAcceptJobs.Value));
+            if (src.CanProcessJobs.HasValue)
+                attributes.Add(new IppAttribute(Tag.Boolean, "can-process-jobs", src.CanProcessJobs.Value));
+            if (src.PowerActiveWatts.HasValue)
+                attributes.Add(new IppAttribute(Tag.Integer, "power-active-watts", src.PowerActiveWatts.Value));
+            if (src.PowerInactiveWatts.HasValue)
+                attributes.Add(new IppAttribute(Tag.Integer, "power-inactive-watts", src.PowerInactiveWatts.Value));
+            if (src.PowerState.HasValue)
+                attributes.Add(new IppAttribute(Tag.Enum, "power-state", (int)src.PowerState.Value));
+            return attributes;
+        });
+
+        // PowerStateCounter
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, PowerStateCounter>((src, map) =>
+        {
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<PowerStateCounter>();
+
+            return new PowerStateCounter
+            {
+                HibernateTransitions = map.MapFromDicNullable<int?>(src, "hibernate-transitions"),
+                OnTransitions = map.MapFromDicNullable<int?>(src, "on-transitions"),
+                StandbyTransitions = map.MapFromDicNullable<int?>(src, "standby-transitions"),
+                SuspendTransitions = map.MapFromDicNullable<int?>(src, "suspend-transitions")
+            };
+        });
+
+        mapper.CreateMap<PowerStateCounter, IEnumerable<IppAttribute>>((src, map) =>
+        {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, SystemAttribute.PowerStateCountersCol, NoValue.Instance) };
+
+            var attributes = new List<IppAttribute>();
+            if (src.HibernateTransitions.HasValue)
+                attributes.Add(new IppAttribute(Tag.Integer, "hibernate-transitions", src.HibernateTransitions.Value));
+            if (src.OnTransitions.HasValue)
+                attributes.Add(new IppAttribute(Tag.Integer, "on-transitions", src.OnTransitions.Value));
+            if (src.StandbyTransitions.HasValue)
+                attributes.Add(new IppAttribute(Tag.Integer, "standby-transitions", src.StandbyTransitions.Value));
+            if (src.SuspendTransitions.HasValue)
+                attributes.Add(new IppAttribute(Tag.Integer, "suspend-transitions", src.SuspendTransitions.Value));
+            return attributes;
+        });
+
+        // PowerStateMonitor
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, PowerStateMonitor>((src, map) =>
+        {
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<PowerStateMonitor>();
+
+            var dst = new PowerStateMonitor
+            {
+                CurrentMonthKwh = map.MapFromDicNullable<int?>(src, "current-month-kwh"),
+                CurrentWatts = map.MapFromDicNullable<int?>(src, "current-watts"),
+                LifetimeKwh = map.MapFromDicNullable<int?>(src, "lifetime-kwh"),
+                MetersAreActual = map.MapFromDicNullable<bool?>(src, "meters-are-actual"),
+                PowerState = map.MapFromDicNullable<PowerState?>(src, "power-state"),
+                PowerStateMessage = map.MapFromDicNullable<string?>(src, "power-state-message"),
+                PowerUsageIsRmsWatts = map.MapFromDicNullable<bool?>(src, "power-usage-is-rms-watts")
+            };
+            if (src.ContainsKey("valid-request-power-state"))
+                dst.ValidRequestPowerStates = src["valid-request-power-state"].Select(x => (IppOperation)Enum.Parse(typeof(IppOperation), x.Value.ToString()!)).ToArray();
+            return dst;
+        });
+
+        mapper.CreateMap<PowerStateMonitor, IEnumerable<IppAttribute>>((src, map) =>
+        {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, SystemAttribute.PowerStateMonitorCol, NoValue.Instance) };
+
+            var attributes = new List<IppAttribute>();
+            if (src.CurrentMonthKwh.HasValue)
+                attributes.Add(new IppAttribute(Tag.Integer, "current-month-kwh", src.CurrentMonthKwh.Value));
+            if (src.CurrentWatts.HasValue)
+                attributes.Add(new IppAttribute(Tag.Integer, "current-watts", src.CurrentWatts.Value));
+            if (src.LifetimeKwh.HasValue)
+                attributes.Add(new IppAttribute(Tag.Integer, "lifetime-kwh", src.LifetimeKwh.Value));
+            if (src.MetersAreActual.HasValue)
+                attributes.Add(new IppAttribute(Tag.Boolean, "meters-are-actual", src.MetersAreActual.Value));
+            if (src.PowerState.HasValue)
+                attributes.Add(new IppAttribute(Tag.Enum, "power-state", (int)src.PowerState.Value));
+            if (src.PowerStateMessage != null)
+                attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, "power-state-message", src.PowerStateMessage));
+            if (src.PowerUsageIsRmsWatts.HasValue)
+                attributes.Add(new IppAttribute(Tag.Boolean, "power-usage-is-rms-watts", src.PowerUsageIsRmsWatts.Value));
+            if (src.ValidRequestPowerStates != null)
+                attributes.AddRange(src.ValidRequestPowerStates.Select(x => new IppAttribute(Tag.Enum, "valid-request-power-state", (int)x)));
+            return attributes;
+        });
+
+        // PowerStateTransition
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, PowerStateTransition>((src, map) =>
+        {
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<PowerStateTransition>();
+
+            return new PowerStateTransition
+            {
+                EndPowerState = map.MapFromDicNullable<PowerState?>(src, "end-power-state"),
+                StartPowerState = map.MapFromDicNullable<PowerState?>(src, "start-power-state"),
+                StateTransitionSeconds = map.MapFromDicNullable<int?>(src, "state-transition-seconds")
+            };
+        });
+
+        mapper.CreateMap<PowerStateTransition, IEnumerable<IppAttribute>>((src, map) =>
+        {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, SystemAttribute.PowerStateTransitionsCol, NoValue.Instance) };
+
+            var attributes = new List<IppAttribute>();
+            if (src.EndPowerState.HasValue)
+                attributes.Add(new IppAttribute(Tag.Enum, "end-power-state", (int)src.EndPowerState.Value));
+            if (src.StartPowerState.HasValue)
+                attributes.Add(new IppAttribute(Tag.Enum, "start-power-state", (int)src.StartPowerState.Value));
+            if (src.StateTransitionSeconds.HasValue)
+                attributes.Add(new IppAttribute(Tag.Integer, "state-transition-seconds", src.StateTransitionSeconds.Value));
+            return attributes;
+        });
+
+        // PowerCalendarPolicy
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, PowerCalendarPolicy>((src, map) =>
+        {
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<PowerCalendarPolicy>();
+
+            return new PowerCalendarPolicy
+            {
+                CalendarId = map.MapFromDicNullable<int?>(src, "calendar-id"),
+                DayOfMonth = map.MapFromDicNullable<int?>(src, "day-of-month"),
+                DayOfWeek = map.MapFromDicNullable<int?>(src, "day-of-week"),
+                Hour = map.MapFromDicNullable<int?>(src, "hour"),
+                Minute = map.MapFromDicNullable<int?>(src, "minute"),
+                Month = map.MapFromDicNullable<int?>(src, "month"),
+                RequestPowerState = map.MapFromDicNullable<PowerState?>(src, "request-power-state"),
+                RunOnce = map.MapFromDicNullable<bool?>(src, "run-once")
+            };
+        });
+
+        mapper.CreateMap<PowerCalendarPolicy, IEnumerable<IppAttribute>>((src, map) =>
+        {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, SystemAttribute.PowerCalendarPolicyCol, NoValue.Instance) };
+
+            var attributes = new List<IppAttribute>();
+            if (src.CalendarId.HasValue)
+                attributes.Add(new IppAttribute(Tag.Integer, "calendar-id", src.CalendarId.Value));
+            if (src.DayOfMonth.HasValue)
+                attributes.Add(new IppAttribute(Tag.Integer, "day-of-month", src.DayOfMonth.Value));
+            if (src.DayOfWeek.HasValue)
+                attributes.Add(new IppAttribute(Tag.Integer, "day-of-week", src.DayOfWeek.Value));
+            if (src.Hour.HasValue)
+                attributes.Add(new IppAttribute(Tag.Integer, "hour", src.Hour.Value));
+            if (src.Minute.HasValue)
+                attributes.Add(new IppAttribute(Tag.Integer, "minute", src.Minute.Value));
+            if (src.Month.HasValue)
+                attributes.Add(new IppAttribute(Tag.Integer, "month", src.Month.Value));
+            if (src.RequestPowerState.HasValue)
+                attributes.Add(new IppAttribute(Tag.Enum, "request-power-state", (int)src.RequestPowerState.Value));
+            if (src.RunOnce.HasValue)
+                attributes.Add(new IppAttribute(Tag.Boolean, "run-once", src.RunOnce.Value));
+            return attributes;
+        });
+
+        // PowerEventPolicy
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, PowerEventPolicy>((src, map) =>
+        {
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<PowerEventPolicy>();
+
+            return new PowerEventPolicy
+            {
+                EventId = map.MapFromDicNullable<int?>(src, "event-id"),
+                EventName = map.MapFromDicNullable<string?>(src, "event-name"),
+                RequestPowerState = map.MapFromDicNullable<PowerState?>(src, "request-power-state")
+            };
+        });
+
+        mapper.CreateMap<PowerEventPolicy, IEnumerable<IppAttribute>>((src, map) =>
+        {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, SystemAttribute.PowerEventPolicyCol, NoValue.Instance) };
+
+            var attributes = new List<IppAttribute>();
+            if (src.EventId.HasValue)
+                attributes.Add(new IppAttribute(Tag.Integer, "event-id", src.EventId.Value));
+            if (src.EventName != null)
+                attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, "event-name", src.EventName));
+            if (src.RequestPowerState.HasValue)
+                attributes.Add(new IppAttribute(Tag.Enum, "request-power-state", (int)src.RequestPowerState.Value));
+            return attributes;
+        });
+
+        // PowerTimeoutPolicy
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, PowerTimeoutPolicy>((src, map) =>
+        {
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<PowerTimeoutPolicy>();
+
+            return new PowerTimeoutPolicy
+            {
+                RequestPowerState = map.MapFromDicNullable<PowerState?>(src, "request-power-state"),
+                StartPowerState = map.MapFromDicNullable<PowerState?>(src, "start-power-state"),
+                TimeoutId = map.MapFromDicNullable<int?>(src, "timeout-id"),
+                TimeoutPredicate = map.MapFromDicNullable<string?>(src, "timeout-predicate"),
+                TimeoutSeconds = map.MapFromDicNullable<int?>(src, "timeout-seconds")
+            };
+        });
+
+        mapper.CreateMap<PowerTimeoutPolicy, IEnumerable<IppAttribute>>((src, map) =>
+        {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, SystemAttribute.PowerTimeoutPolicyCol, NoValue.Instance) };
+
+            var attributes = new List<IppAttribute>();
+            if (src.RequestPowerState.HasValue)
+                attributes.Add(new IppAttribute(Tag.Enum, "request-power-state", (int)src.RequestPowerState.Value));
+            if (src.StartPowerState.HasValue)
+                attributes.Add(new IppAttribute(Tag.Enum, "start-power-state", (int)src.StartPowerState.Value));
+            if (src.TimeoutId.HasValue)
+                attributes.Add(new IppAttribute(Tag.Integer, "timeout-id", src.TimeoutId.Value));
+            if (src.TimeoutPredicate != null)
+                attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, "timeout-predicate", src.TimeoutPredicate));
+            if (src.TimeoutSeconds.HasValue)
+                attributes.Add(new IppAttribute(Tag.Integer, "timeout-seconds", src.TimeoutSeconds.Value));
+            return attributes;
+        });
+
+        // Additional Power* mapping can be added here.
 
         // ClientInfo
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, ClientInfo>((src, map) =>

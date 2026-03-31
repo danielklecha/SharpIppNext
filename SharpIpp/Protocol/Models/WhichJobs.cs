@@ -1,6 +1,6 @@
 namespace SharpIpp.Protocol.Models
 {
-    public readonly record struct WhichJobs(string Value)
+    public readonly record struct WhichJobs(string Value, bool IsValue = true) : ISmartEnum
     {
         /// <summary>
         /// This includes any Job object whose state is

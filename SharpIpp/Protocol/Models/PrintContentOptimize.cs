@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the print-content-optimize.
 /// See: PWG 5100.1-2022 Section 6.20
 /// </summary>
-public readonly record struct PrintContentOptimize(string Value)
+public readonly record struct PrintContentOptimize(string Value, bool IsValue = true) : ISmartEnum 
 {
     public static readonly PrintContentOptimize Auto = new("auto");
     public static readonly PrintContentOptimize Graphic = new("graphic");

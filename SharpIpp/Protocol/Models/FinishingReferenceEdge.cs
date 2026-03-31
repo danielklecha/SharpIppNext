@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Finishing Reference Edge for finishing operations.
 /// See: PWG 5100.1-2022 Section 5.2
 /// </summary>
-public readonly record struct FinishingReferenceEdge(string Value)
+public readonly record struct FinishingReferenceEdge(string Value, bool IsValue = true) : ISmartEnum 
 {
     public static readonly FinishingReferenceEdge Bottom = new("bottom");
     public static readonly FinishingReferenceEdge Left = new("left");

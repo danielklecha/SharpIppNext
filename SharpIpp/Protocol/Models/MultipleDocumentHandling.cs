@@ -3,7 +3,7 @@ namespace SharpIpp.Protocol.Models
     /// <summary>
     /// Specifies the multiple-document-handling attribute.
     /// </summary>
-    public readonly record struct MultipleDocumentHandling(string Value)
+    public readonly record struct MultipleDocumentHandling(string Value, bool IsValue = true) : ISmartEnum
     {
         public static readonly MultipleDocumentHandling SingleDocument = new("single-document");
         public static readonly MultipleDocumentHandling SeparateDocumentsUncollatedCopies = new("separate-documents-uncollated-copies");

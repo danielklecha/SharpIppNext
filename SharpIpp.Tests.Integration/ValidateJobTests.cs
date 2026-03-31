@@ -31,6 +31,7 @@ public class ValidateJobTests : SharpIppIntegrationTestBase
                 JobImpressions = 5,
                 JobMediaSheets = 2,
                 JobKOctets = 100,
+                DocumentCharset = "utf-8",
                 JobPassword = "secret",
                 JobPasswordEncryption = JobPasswordEncryption.Sha2256,
                 JobReleaseAction = JobReleaseAction.JobPassword,

@@ -2,16 +2,11 @@ using System;
 
 namespace SharpIpp.Protocol.Models;
 
-public readonly struct Range : IEquatable<Range>
+public readonly struct Range(int lower, int upper, bool isValue = true) : IEquatable<Range>, INoValue
 {
-    public int Lower { get; }
-    public int Upper { get; }
-
-    public Range(int lower, int upper)
-    {
-        Lower = lower;
-        Upper = upper;
-    }
+    public int Lower { get; } = lower;
+    public int Upper { get; } = upper;
+    public bool IsValue { get; } = isValue;
 
     public override string ToString() => $"{Lower} - {Upper}";
 

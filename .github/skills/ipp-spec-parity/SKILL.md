@@ -5,7 +5,7 @@ description: "Use when: comparing an IPP/PWG/RFC specification to SharpIppNext a
 
 # IPP Spec Parity (SharpIppNext)
 
-This skill is a repeatable workflow for bringing SharpIppNext to parity with an IPP-related specification (PWG, RFC, etc.). It is optimized for specs like the Markdown files under `Specification/`.
+This skill is a repeatable workflow for bringing SharpIppNext to parity with an IPP-related specification (PWG, RFC, etc.). It is optimized for specs like the Markdown files under `docfx/Content/Specification`.
 
 ## Inputs to ask for
 

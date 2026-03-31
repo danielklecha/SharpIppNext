@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace SharpIpp.Protocol.Models;
-public readonly record struct MediaGrain(string Value)
+public readonly record struct MediaGrain(string Value, bool IsValue = true) : ISmartEnum 
 {
     public static readonly MediaGrain XDirection = new("x-direction");
     public static readonly MediaGrain YDirection = new("y-direction");

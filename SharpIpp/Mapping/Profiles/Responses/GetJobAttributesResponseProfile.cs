@@ -48,6 +48,7 @@ internal class GetJobAttributesResponseProfile : IProfile
             JobState = map.MapFromDicNullable<JobState?>(src, JobAttribute.JobState),
             JobStateMessage = map.MapFromDicNullable<string?>(src, JobAttribute.JobStateMessage),
             JobStateReasons = map.MapFromDicSetNullable<JobStateReason[]?>(src, JobAttribute.JobStateReasons),
+            JobResourceIds = map.MapFromDicSetNullable<int[]?>(src, JobAttribute.JobResourceIds),
             TimeAtCompleted = map.MapFromDicNullable<int?>(src, JobAttribute.TimeAtCompleted),
             TimeAtCreation = map.MapFromDicNullable<int?>(src, JobAttribute.TimeAtCreation),
             TimeAtProcessing = map.MapFromDicNullable<int?>(src, JobAttribute.TimeAtProcessing),
@@ -159,6 +160,8 @@ internal class GetJobAttributesResponseProfile : IProfile
                 dic.Add(JobAttribute.JobStateMessage, [new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.JobStateMessage, src.JobStateMessage)]);
             if (src.JobStateReasons != null)
                 dic.Add(JobAttribute.JobStateReasons, src.JobStateReasons.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.JobStateReasons, map.Map<string>(x))).ToArray());
+            if (src.JobResourceIds != null)
+                dic.Add(JobAttribute.JobResourceIds, src.JobResourceIds.Select(x => new IppAttribute(Tag.Integer, JobAttribute.JobResourceIds, x)).ToArray());
             if (src.TimeAtCompleted != null)
                 dic.Add(JobAttribute.TimeAtCompleted, [new IppAttribute(Tag.Integer, JobAttribute.TimeAtCompleted, src.TimeAtCompleted.Value)]);
             if (src.TimeAtCreation != null)
