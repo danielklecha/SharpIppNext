@@ -167,4 +167,96 @@ public class OperationAttributesRequestProfileTests
         dst.AttributesNaturalLanguage.Should().Be("en");
         dst.SystemUri.Should().Be(new Uri("ipp://system"));
     }
+
+    [TestMethod]
+    public void Map_CreateJobOperationAttributes_WithResourceIds_MapsFromIppAttributes()
+    {
+        // Arrange
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { JobAttribute.AttributesCharset, [new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8")] },
+            { JobAttribute.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en")] },
+            {
+                SystemAttribute.ResourceIds,
+                [
+                    new IppAttribute(Tag.Integer, SystemAttribute.ResourceIds, 101),
+                    new IppAttribute(Tag.Integer, SystemAttribute.ResourceIds, 202)
+                ]
+            }
+        };
+
+        // Act
+        var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, CreateJobOperationAttributes>(src);
+
+        // Assert
+        dst.ResourceIds.Should().BeEquivalentTo(new[] { 101, 202 });
+    }
+
+    [TestMethod]
+    public void Map_CreateJobOperationAttributes_WithResourceIds_MapsToIppAttributes()
+    {
+        // Arrange
+        var src = new CreateJobOperationAttributes
+        {
+            AttributesCharset = "utf-8",
+            AttributesNaturalLanguage = "en",
+            ResourceIds = [301, 302]
+        };
+
+        // Act
+        var dst = _mapper.Map<CreateJobOperationAttributes, List<IppAttribute>>(src);
+
+        // Assert
+        dst.Where(x => x.Name == SystemAttribute.ResourceIds)
+            .Select(x => (int)x.Value)
+            .Should()
+            .BeEquivalentTo(new[] { 301, 302 });
+    }
+
+    [TestMethod]
+    public void Map_SendDocumentOperationAttributes_WithResourceIds_MapsFromIppAttributes()
+    {
+        // Arrange
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { JobAttribute.AttributesCharset, [new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8")] },
+            { JobAttribute.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en")] },
+            {
+                SystemAttribute.ResourceIds,
+                [
+                    new IppAttribute(Tag.Integer, SystemAttribute.ResourceIds, 401),
+                    new IppAttribute(Tag.Integer, SystemAttribute.ResourceIds, 402)
+                ]
+            },
+            { JobAttribute.LastDocument, [new IppAttribute(Tag.Boolean, JobAttribute.LastDocument, true)] }
+        };
+
+        // Act
+        var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, SendDocumentOperationAttributes>(src);
+
+        // Assert
+        dst.ResourceIds.Should().BeEquivalentTo(new[] { 401, 402 });
+    }
+
+    [TestMethod]
+    public void Map_SendDocumentOperationAttributes_WithResourceIds_MapsToIppAttributes()
+    {
+        // Arrange
+        var src = new SendDocumentOperationAttributes
+        {
+            AttributesCharset = "utf-8",
+            AttributesNaturalLanguage = "en",
+            LastDocument = true,
+            ResourceIds = [501, 502]
+        };
+
+        // Act
+        var dst = _mapper.Map<SendDocumentOperationAttributes, List<IppAttribute>>(src);
+
+        // Assert
+        dst.Where(x => x.Name == SystemAttribute.ResourceIds)
+            .Select(x => (int)x.Value)
+            .Should()
+            .BeEquivalentTo(new[] { 501, 502 });
+    }
 }

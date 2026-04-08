@@ -82,6 +82,7 @@ internal class OperationAttributesRequestProfile : IProfile
             dst ??= new CreateJobOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(src, dst);
             dst.JobMandatoryAttributes = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.JobMandatoryAttributes);
+            dst.ResourceIds = map.MapFromDicSetNullable<int[]?>(src, SystemAttribute.ResourceIds);
             if (src.TryGetValue(JobAttribute.ClientInfo, out var clientInfo) && clientInfo.GroupBegCollection().Any())
                 dst.ClientInfo = clientInfo.GroupBegCollection().Select(x => map.Map<ClientInfo>(x.FromBegCollection().ToIppDictionary())).ToArray();
             if (src.TryGetValue(JobAttribute.DocumentFormatDetails, out var documentFormatDetails) && documentFormatDetails.GroupBegCollection().Any())
@@ -117,6 +118,8 @@ internal class OperationAttributesRequestProfile : IProfile
             map.Map<OperationAttributes, List<IppAttribute>>(src, dst);
             if (src.JobMandatoryAttributes != null)
                 dst.AddRange(src.JobMandatoryAttributes.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.JobMandatoryAttributes, x)));
+            if (src.ResourceIds != null)
+                dst.AddRange(src.ResourceIds.Select(x => new IppAttribute(Tag.Integer, SystemAttribute.ResourceIds, x)));
             if (src.DocumentFormatDetails != null)
                 dst.AddRange(map.Map<IEnumerable<IppAttribute>>(src.DocumentFormatDetails).ToBegCollection(JobAttribute.DocumentFormatDetails));
             if (src.JobName != null)
@@ -561,6 +564,7 @@ internal class OperationAttributesRequestProfile : IProfile
         {
             dst ??= new SendDocumentOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, JobOperationAttributes>(src, dst);
+            dst.ResourceIds = map.MapFromDicSetNullable<int[]?>(src, SystemAttribute.ResourceIds);
             if (src.TryGetValue(JobAttribute.DocumentFormatDetails, out var documentFormatDetails))
                 dst.DocumentFormatDetails = map.Map<DocumentFormatDetails>(documentFormatDetails.GroupBegCollection().First().FromBegCollection().ToIppDictionary());
             dst.DocumentName = map.MapFromDicNullable<string?>(src, JobAttribute.DocumentName);
@@ -579,6 +583,8 @@ internal class OperationAttributesRequestProfile : IProfile
         {
             dst ??= new List<IppAttribute>();
             map.Map<JobOperationAttributes, List<IppAttribute>>(src, dst);
+            if (src.ResourceIds != null)
+                dst.AddRange(src.ResourceIds.Select(x => new IppAttribute(Tag.Integer, SystemAttribute.ResourceIds, x)));
             if (src.DocumentFormatDetails != null)
                 dst.AddRange(map.Map<IEnumerable<IppAttribute>>(src.DocumentFormatDetails).ToBegCollection(JobAttribute.DocumentFormatDetails));
             if (src.DocumentName != null)
@@ -804,6 +810,130 @@ internal class OperationAttributesRequestProfile : IProfile
                 dst.Add(new IppAttribute(Tag.Integer, SystemAttribute.RestartGetInterval, src.RestartGetInterval.Value));
             if (src.WhichPrinters != null)
                 dst.Add(new IppAttribute(Tag.Keyword, SystemAttribute.WhichPrinters, src.WhichPrinters));
+            return dst;
+        });
+
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, CancelResourceOperationAttributes>((src, dst, map) =>
+        {
+            dst ??= new CancelResourceOperationAttributes();
+            map.Map<IDictionary<string, IppAttribute[]>, SystemOperationAttributes>(src, dst);
+            dst.ResourceId = map.MapFromDicNullable<int?>(src, SystemAttribute.ResourceId);
+            return dst;
+        });
+
+        mapper.CreateMap<CancelResourceOperationAttributes, List<IppAttribute>>((src, dst, map) =>
+        {
+            dst ??= new List<IppAttribute>();
+            map.Map<SystemOperationAttributes, List<IppAttribute>>(src, dst);
+            if (src.ResourceId.HasValue)
+                dst.Add(new IppAttribute(Tag.Integer, SystemAttribute.ResourceId, src.ResourceId.Value));
+            return dst;
+        });
+
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, CreateResourceOperationAttributes>((src, dst, map) =>
+        {
+            dst ??= new CreateResourceOperationAttributes();
+            map.Map<IDictionary<string, IppAttribute[]>, SystemOperationAttributes>(src, dst);
+            dst.ResourceFormat = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceFormat);
+            dst.ResourceNaturalLanguage = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceNaturalLanguage);
+            dst.ResourceType = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceType);
+            dst.ResourceName = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceName);
+            dst.ResourceInfo = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceInfo);
+            return dst;
+        });
+
+        mapper.CreateMap<CreateResourceOperationAttributes, List<IppAttribute>>((src, dst, map) =>
+        {
+            dst ??= new List<IppAttribute>();
+            map.Map<SystemOperationAttributes, List<IppAttribute>>(src, dst);
+            if (src.ResourceFormat != null)
+                dst.Add(new IppAttribute(Tag.MimeMediaType, SystemAttribute.ResourceFormat, src.ResourceFormat));
+            if (src.ResourceNaturalLanguage != null)
+                dst.Add(new IppAttribute(Tag.NaturalLanguage, SystemAttribute.ResourceNaturalLanguage, src.ResourceNaturalLanguage));
+            if (src.ResourceType != null)
+                dst.Add(new IppAttribute(Tag.Keyword, SystemAttribute.ResourceType, src.ResourceType));
+            if (src.ResourceName != null)
+                dst.Add(new IppAttribute(Tag.NameWithoutLanguage, SystemAttribute.ResourceName, src.ResourceName));
+            if (src.ResourceInfo != null)
+                dst.Add(new IppAttribute(Tag.TextWithoutLanguage, SystemAttribute.ResourceInfo, src.ResourceInfo));
+            return dst;
+        });
+
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, InstallResourceOperationAttributes>((src, dst, map) =>
+        {
+            dst ??= new InstallResourceOperationAttributes();
+            map.Map<IDictionary<string, IppAttribute[]>, SystemOperationAttributes>(src, dst);
+            dst.ResourceId = map.MapFromDicNullable<int?>(src, SystemAttribute.ResourceId);
+            return dst;
+        });
+
+        mapper.CreateMap<InstallResourceOperationAttributes, List<IppAttribute>>((src, dst, map) =>
+        {
+            dst ??= new List<IppAttribute>();
+            map.Map<SystemOperationAttributes, List<IppAttribute>>(src, dst);
+            if (src.ResourceId.HasValue)
+                dst.Add(new IppAttribute(Tag.Integer, SystemAttribute.ResourceId, src.ResourceId.Value));
+            return dst;
+        });
+
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, SendResourceDataOperationAttributes>((src, dst, map) =>
+        {
+            dst ??= new SendResourceDataOperationAttributes();
+            map.Map<IDictionary<string, IppAttribute[]>, SystemOperationAttributes>(src, dst);
+            dst.ResourceId = map.MapFromDicNullable<int?>(src, SystemAttribute.ResourceId);
+            dst.ResourceKOctets = map.MapFromDicNullable<int?>(src, SystemAttribute.ResourceKOctets);
+            dst.ResourceSignature = map.MapFromDicSetNullable<byte[][]?>(src, SystemAttribute.ResourceSignature);
+            return dst;
+        });
+
+        mapper.CreateMap<SendResourceDataOperationAttributes, List<IppAttribute>>((src, dst, map) =>
+        {
+            dst ??= new List<IppAttribute>();
+            map.Map<SystemOperationAttributes, List<IppAttribute>>(src, dst);
+            if (src.ResourceId.HasValue)
+                dst.Add(new IppAttribute(Tag.Integer, SystemAttribute.ResourceId, src.ResourceId.Value));
+            if (src.ResourceKOctets.HasValue)
+                dst.Add(new IppAttribute(Tag.Integer, SystemAttribute.ResourceKOctets, src.ResourceKOctets.Value));
+            if (src.ResourceSignature != null)
+                dst.AddRange(src.ResourceSignature.Select(x => new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, SystemAttribute.ResourceSignature, x)));
+            return dst;
+        });
+
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, SetResourceAttributesOperationAttributes>((src, dst, map) =>
+        {
+            dst ??= new SetResourceAttributesOperationAttributes();
+            map.Map<IDictionary<string, IppAttribute[]>, SystemOperationAttributes>(src, dst);
+            dst.ResourceId = map.MapFromDicNullable<int?>(src, SystemAttribute.ResourceId);
+            dst.ResourceName = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceName);
+            dst.ResourceInfo = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceInfo);
+            dst.ResourceNaturalLanguage = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceNaturalLanguage);
+            dst.ResourcePatches = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourcePatches);
+            dst.ResourceStringVersion = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceStringVersion);
+            dst.ResourceType = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceType);
+            dst.ResourceVersion = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceVersion);
+            return dst;
+        });
+
+        mapper.CreateMap<SetResourceAttributesOperationAttributes, List<IppAttribute>>((src, dst, map) =>
+        {
+            dst ??= new List<IppAttribute>();
+            map.Map<SystemOperationAttributes, List<IppAttribute>>(src, dst);
+            if (src.ResourceId.HasValue)
+                dst.Add(new IppAttribute(Tag.Integer, SystemAttribute.ResourceId, src.ResourceId.Value));
+            if (src.ResourceName != null)
+                dst.Add(new IppAttribute(Tag.NameWithoutLanguage, SystemAttribute.ResourceName, src.ResourceName));
+            if (src.ResourceInfo != null)
+                dst.Add(new IppAttribute(Tag.TextWithoutLanguage, SystemAttribute.ResourceInfo, src.ResourceInfo));
+            if (src.ResourceNaturalLanguage != null)
+                dst.Add(new IppAttribute(Tag.NaturalLanguage, SystemAttribute.ResourceNaturalLanguage, src.ResourceNaturalLanguage));
+            if (src.ResourcePatches != null)
+                dst.Add(new IppAttribute(Tag.TextWithoutLanguage, SystemAttribute.ResourcePatches, src.ResourcePatches));
+            if (src.ResourceStringVersion != null)
+                dst.Add(new IppAttribute(Tag.TextWithoutLanguage, SystemAttribute.ResourceStringVersion, src.ResourceStringVersion));
+            if (src.ResourceType != null)
+                dst.Add(new IppAttribute(Tag.Keyword, SystemAttribute.ResourceType, src.ResourceType));
+            if (src.ResourceVersion != null)
+                dst.Add(new IppAttribute(Tag.TextWithoutLanguage, SystemAttribute.ResourceVersion, src.ResourceVersion));
             return dst;
         });
 

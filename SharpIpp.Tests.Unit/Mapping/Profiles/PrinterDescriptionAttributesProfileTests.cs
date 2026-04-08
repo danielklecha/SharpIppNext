@@ -27,7 +27,7 @@ public class PrinterDescriptionAttributesProfileTests
     [TestMethod]
     public void Map_PrinterFinisherSupply_StringToModelAndBack_MapsCorrectly()
     {
-        var raw = "class=supplyThatIsConsumed; type=staples; unit=items; max=500; level=100; color=silver; index=8; deviceIndex=finisher1; test=test;";
+        var raw = "class=supplyThatIsConsumed; type=staples; unit=items; max=500; level=100; color=silver; index=8; deviceIndex=3; test=test;";
 
         var supply = _mapper.Map<string, PrinterFinisherSupply>(raw);
 
@@ -40,13 +40,13 @@ public class PrinterDescriptionAttributesProfileTests
             Level = 100,
             Color = "silver",
             Index = 8,
-            DeviceIndex = "finisher1",
+            DeviceIndex = 3,
             Extensions = new Dictionary<string, string> { { "test", "test" } }
         });
 
         var serialized = _mapper.Map<PrinterFinisherSupply, string>(supply);
 
-        serialized.Should().Be("class=supplyThatIsConsumed; type=staples; unit=items; max=500; level=100; color=silver; index=8; deviceIndex=finisher1; test=test;");
+        serialized.Should().Be("class=supplyThatIsConsumed; type=staples; unit=items; max=500; level=100; color=silver; index=8; deviceIndex=3; test=test;");
     }
 
     [TestMethod]
@@ -230,5 +230,34 @@ public class PrinterDescriptionAttributesProfileTests
         dst.Should().ContainKey(PrinterAttribute.PrinterSupplyDescription);
         dst[PrinterAttribute.PrinterSupplyDescription].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.TextWithoutLanguage);
         dst[PrinterAttribute.PrinterSupplyDescription].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["toner status"]);
+    }
+
+    [TestMethod]
+    public void Map_PrinterDescriptionAttributes_OutputBinExtension_RoundTripsKeywordAndNameValues()
+    {
+        var src = new PrinterDescriptionAttributes
+        {
+            OutputBinDefault = OutputBin.Stacker(3),
+            OutputBinSupported = [OutputBin.Stacker(3), OutputBin.Mailbox(2), OutputBin.Tray(7), (OutputBin)"Accounting Bin"]
+        };
+
+        var serialized = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
+
+        serialized.Should().ContainKey(PrinterAttribute.OutputBinDefault);
+        serialized[PrinterAttribute.OutputBinDefault].Single().Tag.Should().Be(Tag.Keyword);
+        serialized[PrinterAttribute.OutputBinDefault].Single().Value.Should().Be("stacker-3");
+
+        serialized.Should().ContainKey(PrinterAttribute.OutputBinSupported);
+        serialized[PrinterAttribute.OutputBinSupported].Select(x => x.Tag).Should().BeEquivalentTo(
+            [Tag.Keyword, Tag.Keyword, Tag.Keyword, Tag.NameWithoutLanguage],
+            options => options.WithStrictOrdering());
+        serialized[PrinterAttribute.OutputBinSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(
+            ["stacker-3", "mailbox-2", "tray-7", "Accounting Bin"],
+            options => options.WithStrictOrdering());
+
+        var roundTripped = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(serialized);
+
+        roundTripped.OutputBinDefault.Should().Be(OutputBin.Stacker(3));
+        roundTripped.OutputBinSupported.Should().BeEquivalentTo(src.OutputBinSupported);
     }
 }

@@ -21,6 +21,7 @@ public class CreateJobTests : SharpIppIntegrationTestBase
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
+                ResourceIds = [11, 12],
                 JobMandatoryAttributes = new[] { "copies" },
                 ClientInfo =
                 [

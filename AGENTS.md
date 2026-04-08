@@ -13,7 +13,7 @@ for implementing missing IPP/PWG features.
 - Validation tests:
   - unit: `SharpIpp.Tests.Unit`
   - integration: `SharpIpp.Tests.Integration`
-- Specification document corpus: `docfx/Content/Specification` (includes RFCs and PWG specs through 5100.22-2025)
+- Specification document corpus: `docs/Content/Specification` (includes RFCs and PWG specs through 5100.22-2025)
 
 ## Verified specification coverage snapshot
 
@@ -46,7 +46,7 @@ Additional 5100.22 model/mapping support verified:
 
 - `SharpIpp/SharpIppServer.cs` request dispatch currently does not include a branch for
   `IppOperation.RestartOnePrinter` in `ReceiveRequestAsync`.
-- `docfx/Content/Client/Operations.md` currently under-reports implemented coverage
+- `docs/Content/Client/Operations.md` currently under-reports implemented coverage
   (lists RFC 2911 + PWG 5100.5 + CUPS, but not the full 5100.22 surface).
 - Some XML summary references still contain placeholder section text (for example `6.3.??`),
   and should be normalized during doc maintenance.
@@ -66,7 +66,7 @@ When adding or correcting a spec operation/attribute, treat parity as end-to-end
    - unit client request-operation mapping tests
    - integration request/response roundtrip tests
 8. Update docs:
-   - `docfx/Content/Client/Operations.md`
+  - `docs/Content/Client/Operations.md`
    - any relevant specification or API pages
 
 ## Practical guidance for agents

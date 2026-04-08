@@ -330,8 +330,8 @@ internal class CollectionProfiles : IProfile
             {
                 LogId = map.MapFromDicNullable<int?>(src, "log-id"),
                 PowerState = map.MapFromDicNullable<PowerState?>(src, "power-state"),
-                DateTimeAt = map.MapFromDicNullable<DateTimeOffset?>(src, "date-time-at"),
-                Message = map.MapFromDicNullable<string?>(src, "power-state-message")
+                PowerStateDateTime = map.MapFromDicNullable<DateTimeOffset?>(src, "power-state-date-time"),
+                PowerStateMessage = map.MapFromDicNullable<string?>(src, "power-state-message")
             };
         });
 
@@ -344,11 +344,11 @@ internal class CollectionProfiles : IProfile
             if (src.LogId.HasValue)
                 attributes.Add(new IppAttribute(Tag.Integer, "log-id", src.LogId.Value));
             if (src.PowerState.HasValue)
-                attributes.Add(new IppAttribute(Tag.Enum, "power-state", (int)src.PowerState.Value));
-            if (src.DateTimeAt.HasValue)
-                attributes.Add(new IppAttribute(Tag.DateTime, "date-time-at", src.DateTimeAt.Value));
-            if (src.Message != null)
-                attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, "power-state-message", src.Message));
+                attributes.Add(new IppAttribute(Tag.Keyword, "power-state", map.Map<string>(src.PowerState.Value)));
+            if (src.PowerStateDateTime.HasValue)
+                attributes.Add(new IppAttribute(Tag.DateTime, "power-state-date-time", src.PowerStateDateTime.Value));
+            if (src.PowerStateMessage != null)
+                attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, "power-state-message", src.PowerStateMessage));
             return attributes;
         });
 
@@ -383,7 +383,7 @@ internal class CollectionProfiles : IProfile
             if (src.PowerInactiveWatts.HasValue)
                 attributes.Add(new IppAttribute(Tag.Integer, "power-inactive-watts", src.PowerInactiveWatts.Value));
             if (src.PowerState.HasValue)
-                attributes.Add(new IppAttribute(Tag.Enum, "power-state", (int)src.PowerState.Value));
+                attributes.Add(new IppAttribute(Tag.Keyword, "power-state", map.Map<string>(src.PowerState.Value)));
             return attributes;
         });
 
@@ -455,7 +455,7 @@ internal class CollectionProfiles : IProfile
             if (src.MetersAreActual.HasValue)
                 attributes.Add(new IppAttribute(Tag.Boolean, "meters-are-actual", src.MetersAreActual.Value));
             if (src.PowerState.HasValue)
-                attributes.Add(new IppAttribute(Tag.Enum, "power-state", (int)src.PowerState.Value));
+                attributes.Add(new IppAttribute(Tag.Keyword, "power-state", map.Map<string>(src.PowerState.Value)));
             if (src.PowerStateMessage != null)
                 attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, "power-state-message", src.PowerStateMessage));
             if (src.PowerUsageIsRmsWatts.HasValue)
@@ -486,9 +486,9 @@ internal class CollectionProfiles : IProfile
 
             var attributes = new List<IppAttribute>();
             if (src.EndPowerState.HasValue)
-                attributes.Add(new IppAttribute(Tag.Enum, "end-power-state", (int)src.EndPowerState.Value));
+                attributes.Add(new IppAttribute(Tag.Keyword, "end-power-state", map.Map<string>(src.EndPowerState.Value)));
             if (src.StartPowerState.HasValue)
-                attributes.Add(new IppAttribute(Tag.Enum, "start-power-state", (int)src.StartPowerState.Value));
+                attributes.Add(new IppAttribute(Tag.Keyword, "start-power-state", map.Map<string>(src.StartPowerState.Value)));
             if (src.StateTransitionSeconds.HasValue)
                 attributes.Add(new IppAttribute(Tag.Integer, "state-transition-seconds", src.StateTransitionSeconds.Value));
             return attributes;
@@ -532,7 +532,7 @@ internal class CollectionProfiles : IProfile
             if (src.Month.HasValue)
                 attributes.Add(new IppAttribute(Tag.Integer, "month", src.Month.Value));
             if (src.RequestPowerState.HasValue)
-                attributes.Add(new IppAttribute(Tag.Enum, "request-power-state", (int)src.RequestPowerState.Value));
+                attributes.Add(new IppAttribute(Tag.Keyword, "request-power-state", map.Map<string>(src.RequestPowerState.Value)));
             if (src.RunOnce.HasValue)
                 attributes.Add(new IppAttribute(Tag.Boolean, "run-once", src.RunOnce.Value));
             return attributes;
@@ -563,7 +563,7 @@ internal class CollectionProfiles : IProfile
             if (src.EventName != null)
                 attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, "event-name", src.EventName));
             if (src.RequestPowerState.HasValue)
-                attributes.Add(new IppAttribute(Tag.Enum, "request-power-state", (int)src.RequestPowerState.Value));
+                attributes.Add(new IppAttribute(Tag.Keyword, "request-power-state", map.Map<string>(src.RequestPowerState.Value)));
             return attributes;
         });
 
@@ -590,9 +590,9 @@ internal class CollectionProfiles : IProfile
 
             var attributes = new List<IppAttribute>();
             if (src.RequestPowerState.HasValue)
-                attributes.Add(new IppAttribute(Tag.Enum, "request-power-state", (int)src.RequestPowerState.Value));
+                attributes.Add(new IppAttribute(Tag.Keyword, "request-power-state", map.Map<string>(src.RequestPowerState.Value)));
             if (src.StartPowerState.HasValue)
-                attributes.Add(new IppAttribute(Tag.Enum, "start-power-state", (int)src.StartPowerState.Value));
+                attributes.Add(new IppAttribute(Tag.Keyword, "start-power-state", map.Map<string>(src.StartPowerState.Value)));
             if (src.TimeoutId.HasValue)
                 attributes.Add(new IppAttribute(Tag.Integer, "timeout-id", src.TimeoutId.Value));
             if (src.TimeoutPredicate != null)

@@ -73,6 +73,12 @@ public class SendDocumentOperationAttributes : JobOperationAttributes
     public string? DocumentMessage { get; set; }
 
     /// <summary>
+    /// The <c>resource-ids</c> operation attribute.
+    /// See: PWG 5100.22-2025 Section 8.4
+    /// </summary>
+    public int[]? ResourceIds { get; set; }
+
+    /// <summary>
     /// The client MUST supply this attribute. The Printer object MUST support this attribute. It is a boolean flag that is set to 'true' if this is the last document for the Job, 'false' otherwise
     /// See: PWG 5100.5-2024 Section 6.2.5
     /// </summary>

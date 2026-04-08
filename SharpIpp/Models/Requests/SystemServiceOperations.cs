@@ -21,11 +21,11 @@ public class SetSystemAttributesRequest : IppRequest<SystemOperationAttributes>,
 public class ShutdownAllPrintersRequest : IppRequest<SystemOperationAttributes>, IIppSystemRequest { }
 public class StartupAllPrintersRequest : IppRequest<SystemOperationAttributes>, IIppSystemRequest { }
 
-public class CancelResourceRequest : IppRequest<SystemOperationAttributes>, IIppSystemRequest { }
-public class CreateResourceRequest : IppRequest<SystemOperationAttributes>, IIppSystemRequest { }
-public class InstallResourceRequest : IppRequest<SystemOperationAttributes>, IIppSystemRequest { }
-public class SendResourceDataRequest : IppRequest<SystemOperationAttributes>, IIppSystemRequest { }
-public class SetResourceAttributesRequest : IppRequest<SystemOperationAttributes>, IIppSystemRequest { }
+public class CancelResourceRequest : IppRequest<CancelResourceOperationAttributes>, IIppSystemRequest { }
+public class CreateResourceRequest : IppRequest<CreateResourceOperationAttributes>, IIppSystemRequest { }
+public class InstallResourceRequest : IppRequest<InstallResourceOperationAttributes>, IIppSystemRequest { }
+public class SendResourceDataRequest : IppRequest<SendResourceDataOperationAttributes>, IIppSystemRequest { }
+public class SetResourceAttributesRequest : IppRequest<SetResourceAttributesOperationAttributes>, IIppSystemRequest { }
 
 public class CancelSubscriptionRequest : IppRequest<SystemOperationAttributes>, IIppSystemRequest { }
 public class GetNotificationsRequest : IppRequest<SystemOperationAttributes>, IIppSystemRequest { }

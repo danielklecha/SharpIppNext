@@ -22,6 +22,7 @@ public class PrintUriTests : SharpIppIntegrationTestBase
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
+                ResourceIds = [41, 42],
                 DocumentUri = new Uri("https://example.local/document.pdf"),
                 DocumentAccess = new DocumentAccess
                 {
@@ -87,6 +88,7 @@ public class PrintUriTests : SharpIppIntegrationTestBase
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
+                ResourceIds = [43, 44],
                 DocumentUri = new Uri("ftp://document.pdf"),
                 DocumentName = "???????????????????????.pdf",
                 DocumentFormat = "application/pdf"

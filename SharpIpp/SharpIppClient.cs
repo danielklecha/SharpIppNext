@@ -143,9 +143,18 @@ public partial class SharpIppClient : ISharpIppClient
         if (data.OperationAttributes == null)
             throw new Exception("OperationAttributes is not set");
 
-        var targetUri = data.OperationAttributes.PrinterUri;
-        if (targetUri == null && data.OperationAttributes is SystemOperationAttributes systemAttrs)
-            targetUri = systemAttrs.SystemUri;
+        Uri? targetUri;
+        if (data is IIppSystemRequest)
+        {
+            var systemAttrs = data.OperationAttributes as SystemOperationAttributes;
+            targetUri = systemAttrs?.SystemUri;
+            if (targetUri == null)
+                throw new Exception("SystemUri is not set");
+        }
+        else
+        {
+            targetUri = data.OperationAttributes.PrinterUri;
+        }
 
         if (targetUri == null)
             throw new Exception("PrinterUri or SystemUri is not set");

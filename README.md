@@ -2,7 +2,7 @@
 
 [![NuGet](https://img.shields.io/nuget/v/SharpIppNext.svg)](https://www.nuget.org/packages/SharpIppNext)
 [![NuGet downloads](https://img.shields.io/nuget/dt/SharpIppNext.svg)](https://www.nuget.org/packages/SharpIppNext)
-[![Docs](https://img.shields.io/badge/documentation-docfx-blue)](https://danielklecha.github.io/SharpIppNext/)
+[![Docs](https://img.shields.io/badge/documentation-docs-blue)](https://danielklecha.github.io/SharpIppNext/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/danielklecha/SharpIppNext/blob/master/LICENSE.txt)
 [![Coverage Status](https://coveralls.io/repos/github/danielklecha/SharpIppNext/badge.svg?branch=master)](https://coveralls.io/github/danielklecha/SharpIppNext?branch=master)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/danielklecha/SharpIppNext)

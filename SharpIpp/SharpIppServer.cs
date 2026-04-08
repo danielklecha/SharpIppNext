@@ -88,6 +88,7 @@ public partial class SharpIppServer : ISharpIppServer
             IppOperation.GetPrinterResources => Mapper.Map<IIppRequestMessage, GetPrinterResourcesRequest>(request),
             IppOperation.ShutdownOnePrinter => Mapper.Map<IIppRequestMessage, ShutdownOnePrinterRequest>(request),
             IppOperation.StartupOnePrinter => Mapper.Map<IIppRequestMessage, StartupOnePrinterRequest>(request),
+            IppOperation.RestartOnePrinter => Mapper.Map<IIppRequestMessage, RestartOnePrinterRequest>(request),
             IppOperation.CreateResourceSubscriptions => Mapper.Map<IIppRequestMessage, CreateResourceSubscriptionsRequest>(request),
             IppOperation.CreateSystemSubscriptions => Mapper.Map<IIppRequestMessage, CreateSystemSubscriptionsRequest>(request),
             IppOperation.CancelSubscription => Mapper.Map<IIppRequestMessage, CancelSubscriptionRequest>(request),

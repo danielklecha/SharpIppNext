@@ -179,6 +179,52 @@ public class IppRequestMessageExtensionsTests
     }
 
     [TestMethod()]
+    public void Validate_SystemOperationWithoutSystemUri_ShouldThrowException()
+    {
+        IppRequestMessage message = new()
+        {
+            IppOperation = IppOperation.CancelResource,
+            RequestId = 123,
+        };
+        message.OperationAttributes.AddRange(
+        [
+            new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ),
+            new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ),
+            new IppAttribute( Tag.Uri, JobAttribute.PrinterUri, "ipp://127.0.0.1:631/" ),
+            new IppAttribute( Tag.Integer, SystemAttribute.ResourceId, 123 ),
+            new IppAttribute( Tag.TextWithoutLanguage, JobAttribute.RequestingUserName, "test-user" )
+        ]);
+
+        Action act = () => message.Validate();
+
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("No system-uri operation attribute")
+            .Which.RequestMessage.Should().Be(message);
+    }
+
+    [TestMethod()]
+    public void Validate_SystemOperationWithSystemUri_ShouldBeSuccess()
+    {
+        IppRequestMessage message = new()
+        {
+            IppOperation = IppOperation.CancelResource,
+            RequestId = 123,
+        };
+        message.OperationAttributes.AddRange(
+        [
+            new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ),
+            new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ),
+            new IppAttribute( Tag.Uri, SystemAttribute.SystemUri, "ipp://127.0.0.1:8631/system" ),
+            new IppAttribute( Tag.Integer, SystemAttribute.ResourceId, 123 ),
+            new IppAttribute( Tag.TextWithoutLanguage, JobAttribute.RequestingUserName, "test-user" )
+        ]);
+
+        Action act = () => message.Validate();
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod()]
     public void Validate_MessageIsNull_ShouldThrowException()
     {
         // Act

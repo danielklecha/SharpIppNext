@@ -15,11 +15,18 @@ public class CreateResourceOperationDispatchTests : SharpIppIntegrationTestBase
     [TestMethod]
     public async Task ReceiveRequestAsync_CreateResource_ServerReceivesSameRequest()
     {
+        var operationAttributes = GetSystemOperationAttributes<CreateResourceOperationAttributes>();
+        operationAttributes.ResourceFormat = "application/octet-stream";
+        operationAttributes.ResourceNaturalLanguage = "en";
+        operationAttributes.ResourceType = "firmware";
+        operationAttributes.ResourceName = "firmware-v1";
+        operationAttributes.ResourceInfo = "firmware payload";
+
         var clientRequest = new CreateResourceRequest
         {
             RequestId = 1202,
             Version = new IppVersion(2, 0),
-            OperationAttributes = GetSystemOperationAttributes<SystemOperationAttributes>()
+            OperationAttributes = operationAttributes
         };
 
         IIppRequest? serverRequest = null;
@@ -43,9 +50,7 @@ public class CreateResourceOperationDispatchTests : SharpIppIntegrationTestBase
         }
 
         var client = new SharpIppClient(new(GetMockOfHttpMessageHandler(func).Object));
-        var rawRequest = client.CreateRawRequest(clientRequest);
-        var rawResponse = await client.SendAsync(clientRequest.OperationAttributes!.SystemUri!, rawRequest);
-        var clientResponse = client.CreateResponse<CreateResourceResponse>(rawResponse);
+        var clientResponse = await client.CreateResourceAsync(clientRequest);
 
         serverRequest.Should().BeEquivalentTo(clientRequest);
         clientResponse.Should().BeEquivalentTo(serverResponse);

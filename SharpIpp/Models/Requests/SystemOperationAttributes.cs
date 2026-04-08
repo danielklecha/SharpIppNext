@@ -48,13 +48,13 @@ public class SystemOperationAttributes : OperationAttributes
 
     /// <summary>
     /// notify-system-up-time
-    /// See: PWG 5100.22-2025 Section 7.1.??
+    /// See: PWG 5100.22-2025 Section 7.11.2
     /// </summary>
     public int? NotifySystemUpTime { get; set; }
 
     /// <summary>
     /// notify-system-uri
-    /// See: PWG 5100.22-2025 Section 7.1.??
+    /// See: PWG 5100.22-2025 Sections 7.10.2 and 7.11.3
     /// </summary>
     public Uri? NotifySystemUri { get; set; }
 }

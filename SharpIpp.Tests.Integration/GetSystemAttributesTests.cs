@@ -235,8 +235,8 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
                     {
                         LogId = 301,
                         PowerState = PowerState.On,
-                        DateTimeAt = new DateTimeOffset(2026, 3, 29, 9, 0, 0, TimeSpan.Zero),
-                        Message = "power-log-entry"
+                        PowerStateDateTime = new DateTimeOffset(2026, 3, 29, 9, 0, 0, TimeSpan.Zero),
+                        PowerStateMessage = "power-log-entry"
                     }],
                     PowerStateCapabilitiesCol = [new()
                     {
@@ -313,8 +313,8 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
         mapped.SystemAttributes.PowerLogCol.Should().ContainSingle(x =>
             x.LogId == 301 &&
             x.PowerState == PowerState.On &&
-            x.DateTimeAt == new DateTimeOffset(2026, 3, 29, 9, 0, 0, TimeSpan.Zero) &&
-            x.Message == "power-log-entry");
+            x.PowerStateDateTime == new DateTimeOffset(2026, 3, 29, 9, 0, 0, TimeSpan.Zero) &&
+            x.PowerStateMessage == "power-log-entry");
 
         mapped.SystemAttributes.PowerStateCapabilitiesCol.Should().ContainSingle(x =>
             x.CanAcceptJobs == true &&

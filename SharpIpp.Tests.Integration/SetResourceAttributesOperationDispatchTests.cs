@@ -15,11 +15,21 @@ public class SetResourceAttributesOperationDispatchTests : SharpIppIntegrationTe
     [TestMethod]
     public async Task ReceiveRequestAsync_SetResourceAttributes_ServerReceivesSameRequest()
     {
+        var operationAttributes = GetSystemOperationAttributes<SetResourceAttributesOperationAttributes>();
+        operationAttributes.ResourceId = 501;
+        operationAttributes.ResourceName = "firmware-v2";
+        operationAttributes.ResourceInfo = "firmware payload metadata";
+        operationAttributes.ResourceNaturalLanguage = "en";
+        operationAttributes.ResourcePatches = "none";
+        operationAttributes.ResourceStringVersion = "2.0.1";
+        operationAttributes.ResourceType = "firmware";
+        operationAttributes.ResourceVersion = "2.0.1";
+
         var clientRequest = new SetResourceAttributesRequest
         {
             RequestId = 1205,
             Version = new IppVersion(2, 0),
-            OperationAttributes = GetSystemOperationAttributes<SystemOperationAttributes>()
+            OperationAttributes = operationAttributes
         };
 
         IIppRequest? serverRequest = null;
@@ -43,9 +53,7 @@ public class SetResourceAttributesOperationDispatchTests : SharpIppIntegrationTe
         }
 
         var client = new SharpIppClient(new(GetMockOfHttpMessageHandler(func).Object));
-        var rawRequest = client.CreateRawRequest(clientRequest);
-        var rawResponse = await client.SendAsync(clientRequest.OperationAttributes!.SystemUri!, rawRequest);
-        var clientResponse = client.CreateResponse<SetResourceAttributesResponse>(rawResponse);
+        var clientResponse = await client.SetResourceAttributesAsync(clientRequest);
 
         serverRequest.Should().BeEquivalentTo(clientRequest);
         clientResponse.Should().BeEquivalentTo(serverResponse);

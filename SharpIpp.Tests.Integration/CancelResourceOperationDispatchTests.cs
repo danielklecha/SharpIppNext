@@ -15,11 +15,14 @@ public class CancelResourceOperationDispatchTests : SharpIppIntegrationTestBase
     [TestMethod]
     public async Task ReceiveRequestAsync_CancelResource_ServerReceivesSameRequest()
     {
+        var operationAttributes = GetSystemOperationAttributes<CancelResourceOperationAttributes>();
+        operationAttributes.ResourceId = 501;
+
         var clientRequest = new CancelResourceRequest
         {
             RequestId = 1201,
             Version = new IppVersion(2, 0),
-            OperationAttributes = GetSystemOperationAttributes<SystemOperationAttributes>()
+            OperationAttributes = operationAttributes
         };
 
         IIppRequest? serverRequest = null;
@@ -43,9 +46,7 @@ public class CancelResourceOperationDispatchTests : SharpIppIntegrationTestBase
         }
 
         var client = new SharpIppClient(new(GetMockOfHttpMessageHandler(func).Object));
-        var rawRequest = client.CreateRawRequest(clientRequest);
-        var rawResponse = await client.SendAsync(clientRequest.OperationAttributes!.SystemUri!, rawRequest);
-        var clientResponse = client.CreateResponse<CancelResourceResponse>(rawResponse);
+        var clientResponse = await client.CancelResourceAsync(clientRequest);
 
         serverRequest.Should().BeEquivalentTo(clientRequest);
         clientResponse.Should().BeEquivalentTo(serverResponse);

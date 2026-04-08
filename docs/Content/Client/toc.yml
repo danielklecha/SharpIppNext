@@ -1,0 +1,154 @@
+- name: Operations
+  href: Operations.md
+- name: Standard Operations Examples
+  items:
+    - name: Acknowledge-Document
+      href: AcknowledgeDocument.md
+    - name: Acknowledge-Job
+      href: AcknowledgeJob.md
+    - name: Add-Document-Images
+      href: AddDocumentImages.md
+    - name: Allocate-Printer-Resources
+      href: AllocatePrinterResources.md
+    - name: Cancel-Document
+      href: CancelDocument.md
+    - name: Cancel-Job
+      href: CancelJob.md
+    - name: Cancel-Jobs
+      href: CancelJobs.md
+    - name: Cancel-My-Jobs
+      href: CancelMyJobs.md
+    - name: Cancel-Resource
+      href: CancelResource.md
+    - name: Cancel-Subscription
+      href: CancelSubscription.md
+    - name: Close-Job
+      href: CloseJob.md
+    - name: Create-Job
+      href: CreateJob.md
+    - name: Create-Printer
+      href: CreatePrinter.md
+    - name: Create-Resource
+      href: CreateResource.md
+    - name: Create-Resource-Subscriptions
+      href: CreateResourceSubscriptions.md
+    - name: Create-System-Subscriptions
+      href: CreateSystemSubscriptions.md
+    - name: Deallocate-Printer-Resources
+      href: DeallocatePrinterResources.md
+    - name: Delete-Printer
+      href: DeletePrinter.md
+    - name: Disable-All-Printers
+      href: DisableAllPrinters.md
+    - name: Enable-All-Printers
+      href: EnableAllPrinters.md
+    - name: Fetch-Document
+      href: FetchDocument.md
+    - name: Get-Document-Attributes
+      href: GetDocumentAttributes.md
+    - name: Get-Documents
+      href: GetDocuments.md
+    - name: Get-Job-Attributes
+      href: GetJobAttributes.md
+    - name: Get-Jobs
+      href: GetJobs.md
+    - name: Get-Next-Document-Data
+      href: GetNextDocumentData.md
+    - name: Get-Notifications
+      href: GetNotifications.md
+    - name: Get-Output-Device-Attributes
+      href: GetOutputDeviceAttributes.md
+    - name: Hold-Job
+      href: HoldJob.md
+    - name: Identify-Printer
+      href: IdentifyPrinter.md
+    - name: Install-Resource
+      href: InstallResource.md
+    - name: Get-Printer-Resources
+      href: GetPrinterResources.md
+    - name: Get-Printers
+      href: GetPrinters.md
+    - name: Get-Resource-Attributes
+      href: GetResourceAttributes.md
+    - name: Get-Resources
+      href: GetResources.md
+    - name: Get-Subscription-Attributes
+      href: GetSubscriptionAttributes.md
+    - name: Get-Subscriptions
+      href: GetSubscriptions.md
+    - name: Get-System-Attributes
+      href: GetSystemAttributes.md
+    - name: Get-System-Supported-Values
+      href: GetSystemSupportedValues.md
+    - name: Get-User-Printer-Attributes
+      href: GetUserPrinterAttributes.md
+    - name: Pause-All-Printers
+      href: PauseAllPrinters.md
+    - name: Pause-All-Printers-After-Current-Job
+      href: PauseAllPrintersAfterCurrentJob.md
+    - name: Print-Job
+      href: PrintJob.md
+    - name: Print-URI
+      href: PrintUri.md
+    - name: Purge-Jobs
+      href: PurgeJobs.md
+    - name: Register-Output-Device
+      href: RegisterOutputDevice.md
+    - name: Release-Job
+      href: ReleaseJob.md
+    - name: Renew-Subscription
+      href: RenewSubscription.md
+    - name: Restart-Job
+      href: RestartJob.md
+    - name: Restart-One-Printer
+      href: RestartOnePrinter.md
+    - name: Restart-System
+      href: RestartSystem.md
+    - name: Resubmit-Job
+      href: ResubmitJob.md
+    - name: Resume-All-Printers
+      href: ResumeAllPrinters.md
+    - name: Send-Document
+      href: SendDocument.md
+    - name: Send-Resource-Data
+      href: SendResourceData.md
+    - name: Send-URI
+      href: SendUri.md
+    - name: Set-Document-Attributes
+      href: SetDocumentAttributes.md
+    - name: Set-Job-Attributes
+      href: SetJobAttributes.md
+    - name: Set-Resource-Attributes
+      href: SetResourceAttributes.md
+    - name: Set-System-Attributes
+      href: SetSystemAttributes.md
+    - name: Shutdown-All-Printers
+      href: ShutdownAllPrinters.md
+    - name: Shutdown-One-Printer
+      href: ShutdownOnePrinter.md
+    - name: Startup-All-Printers
+      href: StartupAllPrinters.md
+    - name: Startup-One-Printer
+      href: StartupOnePrinter.md
+    - name: Update-Active-Jobs
+      href: UpdateActiveJobs.md
+    - name: Validate-Job
+      href: ValidateJob.md
+    - name: Get-Printer-Attributes
+      href: GetPrinterAttributes.md
+    - name: Pause-Printer
+      href: PausePrinter.md
+    - name: Resume-Printer
+      href: ResumePrinter.md
+    - name: Set-Printer-Attributes
+      href: SetPrinterAttributes.md
+    - name: CUPS-Get-Printers
+      href: CUPSGetPrinters.md
+- name: Advanced Custom Requests
+  href: CustomRequests.md
+- name: PWG 5100.2 Output-Bin
+  href: OutputBinExtension.md
+- name: Advanced Replacing Attributes
+  href: advanced-replace-attributes.md
+- name: Advanced NoValue
+  href: advanced-novalue.md

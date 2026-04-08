@@ -327,5 +327,11 @@ namespace SharpIpp.Protocol.Models
         /// See: https://tools.ietf.org/html/PWG51007)
         /// </summary>
         ServerErrorTooManyDocuments = 0x050C,
+
+        /// <summary>
+        /// server-error-too-many-printers
+        /// See: PWG 5100.22-2025 Section 10.1
+        /// </summary>
+        ServerErrorTooManyPrinters = 0x050D,
     }
 }

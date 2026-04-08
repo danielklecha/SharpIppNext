@@ -83,9 +83,8 @@ public class TypesProfileTest
             yield return [NoValue.Instance, typeof(NoValue), typeof(UriScheme), NoValue.GetNoValue<UriScheme>(), "NoValue -> UriScheme"];
             yield return [2, typeof(int), typeof(PrinterType), (PrinterType)2, "Int -> PrinterType"];
             yield return [NoValue.Instance, typeof(NoValue), typeof(PowerState), NoValue.GetNoValue<PowerState>(), "NoValue -> PowerState"];
-            yield return [5, typeof(int), typeof(PowerState), PowerState.Suspend, "Int -> PowerState"];
-            yield return [PowerState.Suspend, typeof(PowerState), typeof(int), (int)PowerState.Suspend, "PowerState -> Int"];
-            yield return [PowerState.Suspend, typeof(PowerState), typeof(NoValue), NoValue.Instance, "PowerState -> NoValue"];
+            yield return ["suspend", typeof(string), typeof(PowerState), PowerState.Suspend, "String -> PowerState"];
+            yield return [PowerState.Suspend, typeof(PowerState), typeof(string), "suspend", "PowerState -> String"];
             yield return [5, typeof(int), typeof(SharpIpp.Protocol.Models.Range), new SharpIpp.Protocol.Models.Range(5, 5), "Int -> Range"];
             yield return [new[] { "auto", "auto-fit" }, typeof(string[]), typeof(PrintScaling[]), new[] { PrintScaling.Auto, PrintScaling.AutoFit }, "string[] -> PrintScaling[]"];
             yield return [new object[] { "auto", "auto-fit" }, typeof(object[]), typeof(PrintScaling[]), new[] { PrintScaling.Auto, PrintScaling.AutoFit }, "object[] -> PrintScaling[]"];

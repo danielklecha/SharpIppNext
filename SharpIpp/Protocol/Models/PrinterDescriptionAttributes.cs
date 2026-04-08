@@ -294,61 +294,61 @@ public class PrinterDescriptionAttributes
 
     /// <summary>
     /// printer-config-changes
-    /// See: PWG 5100.22-2025 Section 7.5.x
+    /// See: PWG 5100.22-2025 Section 7.7.1
     /// </summary>
     public int? PrinterConfigChanges { get; set; }
 
     /// <summary>
     /// printer-contact-col
-    /// See: PWG 5100.22-2025 Section 7.5.x
+    /// See: PWG 5100.22-2025 Section 7.6.1
     /// </summary>
     public SystemContact[]? PrinterContactCol { get; set; }
 
     /// <summary>
     /// printer-geo-location
-    /// See: PWG 5100.22-2025 Section 7.5.x
+    /// See: PWG 5100.22-2025 Section 7.1.7
     /// </summary>
     public Uri? PrinterGeoLocation { get; set; }
 
     /// <summary>
     /// printer-ids
-    /// See: PWG 5100.22-2025 Section 7.5.x
+    /// See: PWG 5100.22-2025 Section 7.1.6
     /// </summary>
     public int[]? PrinterIds { get; set; }
 
     /// <summary>
     /// printer-impressions-completed
-    /// See: PWG 5100.22-2025 Section 7.5.x
+    /// See: PWG 5100.22-2025 Section 7.7.3
     /// </summary>
     public int? PrinterImpressionsCompleted { get; set; }
 
     /// <summary>
     /// printer-impressions-completed-col
-    /// See: PWG 5100.22-2025 Section 7.5.x
+    /// See: PWG 5100.22-2025 Section 7.7.4
     /// </summary>
     public int? PrinterImpressionsCompletedCol { get; set; }
 
     /// <summary>
     /// printer-media-sheets-completed
-    /// See: PWG 5100.22-2025 Section 7.5.x
+    /// See: PWG 5100.22-2025 Section 7.7.5
     /// </summary>
     public int? PrinterMediaSheetsCompleted { get; set; }
 
     /// <summary>
     /// printer-media-sheets-completed-col
-    /// See: PWG 5100.22-2025 Section 7.5.x
+    /// See: PWG 5100.22-2025 Section 7.7.6
     /// </summary>
     public int? PrinterMediaSheetsCompletedCol { get; set; }
 
     /// <summary>
     /// printer-pages-completed
-    /// See: PWG 5100.22-2025 Section 7.5.x
+    /// See: PWG 5100.22-2025 Section 7.7.7
     /// </summary>
     public int? PrinterPagesCompleted { get; set; }
 
     /// <summary>
     /// printer-pages-completed-col
-    /// See: PWG 5100.22-2025 Section 7.5.x
+    /// See: PWG 5100.22-2025 Section 7.7.8
     /// </summary>
     public int? PrinterPagesCompletedCol { get; set; }
 

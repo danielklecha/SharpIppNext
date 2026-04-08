@@ -19,13 +19,13 @@ namespace SharpIpp.Protocol.Models
 
         /// <summary>
         /// The notified system up time.
-        /// See: PWG 5100.22-2025 Section 7.1.
+        /// See: PWG 5100.22-2025 Section 7.11.2
         /// </summary>
         public const string NotifySystemUpTime = "notify-system-up-time";
 
         /// <summary>
         /// The notified system URI.
-        /// See: PWG 5100.22-2025 Section 7.1.
+        /// See: PWG 5100.22-2025 Sections 7.10.2 and 7.11.3
         /// </summary>
         public const string NotifySystemUri = "notify-system-uri";
 

@@ -422,6 +422,36 @@ public interface ISharpIppClient : IDisposable
     Task<GetResourceAttributesResponse> GetResourceAttributesAsync(GetResourceAttributesRequest request, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Cancel-Resource Operation.
+    /// See: PWG 5100.22-2025 Section 6.2.1
+    /// </summary>
+    Task<CancelResourceResponse> CancelResourceAsync(CancelResourceRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Create-Resource Operation.
+    /// See: PWG 5100.22-2025 Section 6.3.2
+    /// </summary>
+    Task<CreateResourceResponse> CreateResourceAsync(CreateResourceRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Install-Resource Operation.
+    /// See: PWG 5100.22-2025 Section 6.2.4
+    /// </summary>
+    Task<InstallResourceResponse> InstallResourceAsync(InstallResourceRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Send-Resource-Data Operation.
+    /// See: PWG 5100.22-2025 Section 6.2.5
+    /// </summary>
+    Task<SendResourceDataResponse> SendResourceDataAsync(SendResourceDataRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Set-Resource-Attributes Operation.
+    /// See: PWG 5100.22-2025 Section 6.2.6
+    /// </summary>
+    Task<SetResourceAttributesResponse> SetResourceAttributesAsync(SetResourceAttributesRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Deallocate-Printer-Resources Operation.
     /// See: PWG 5100.22-2025 Section 6.1.2
     /// </summary>
@@ -554,7 +584,7 @@ public interface ISharpIppClient : IDisposable
     Task<StartupAllPrintersResponse> StartupAllPrintersAsync(StartupAllPrintersRequest request, CancellationToken cancellationToken = default);
     /// <summary>
     /// Restart-One-Printer Operation.
-    /// See: PWG 5100.22-2025 Section 6.1.6 (and 6.3.??)
+    /// See: PWG 5100.22-2025 Section 6.1.6
     /// </summary>
     Task<RestartOnePrinterResponse> RestartOnePrinterAsync(RestartOnePrinterRequest request, CancellationToken cancellationToken = default);
     #endregion

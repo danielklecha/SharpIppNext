@@ -26,6 +26,7 @@ public class PrintJobTests : SharpIppIntegrationTestBase
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
+                ResourceIds = [31, 32],
                 DocumentName = "???????????????????????.pdf",
                 DocumentFormat = "application/pdf",
                 JobPassword = "hashed-secret",
@@ -104,6 +105,7 @@ public class PrintJobTests : SharpIppIntegrationTestBase
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
+                ResourceIds = [33, 34],
                 DocumentName = "???????????????????????.pdf",
                 DocumentFormat = "application/pdf",
                 AttributesCharset = "utf-8",

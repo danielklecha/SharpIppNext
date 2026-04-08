@@ -15,11 +15,14 @@ public class InstallResourceOperationDispatchTests : SharpIppIntegrationTestBase
     [TestMethod]
     public async Task ReceiveRequestAsync_InstallResource_ServerReceivesSameRequest()
     {
+        var operationAttributes = GetSystemOperationAttributes<InstallResourceOperationAttributes>();
+        operationAttributes.ResourceId = 99;
+
         var clientRequest = new InstallResourceRequest
         {
             RequestId = 1203,
             Version = new IppVersion(2, 0),
-            OperationAttributes = GetSystemOperationAttributes<SystemOperationAttributes>()
+            OperationAttributes = operationAttributes
         };
 
         IIppRequest? serverRequest = null;
@@ -43,9 +46,7 @@ public class InstallResourceOperationDispatchTests : SharpIppIntegrationTestBase
         }
 
         var client = new SharpIppClient(new(GetMockOfHttpMessageHandler(func).Object));
-        var rawRequest = client.CreateRawRequest(clientRequest);
-        var rawResponse = await client.SendAsync(clientRequest.OperationAttributes!.SystemUri!, rawRequest);
-        var clientResponse = client.CreateResponse<InstallResourceResponse>(rawResponse);
+        var clientResponse = await client.InstallResourceAsync(clientRequest);
 
         serverRequest.Should().BeEquivalentTo(clientRequest);
         clientResponse.Should().BeEquivalentTo(serverResponse);

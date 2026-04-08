@@ -72,6 +72,29 @@ public class JobTemplateAttributesProfileTests
     }
 
     [TestMethod]
+    public void Map_ToRequest_WithGeneratedKeywordOutputBins_UsesKeywordTag()
+    {
+        var sources = new[]
+        {
+            OutputBin.Stacker(3),
+            OutputBin.Mailbox(12),
+            OutputBin.Tray(5)
+        };
+
+        foreach (var source in sources)
+        {
+            var request = _mapper.Map<IppRequestMessage>(new JobTemplateAttributes
+            {
+                OutputBin = source
+            });
+
+            var outputBin = request.JobAttributes.Single(a => a.Name == JobAttribute.OutputBin);
+            outputBin.Tag.Should().Be(Tag.Keyword);
+            outputBin.Value.Should().Be(source.Value);
+        }
+    }
+
+    [TestMethod]
     public void Map_ToRequest_WithCustomMediaAndImpositionTemplate_UsesNameWithoutLanguageTag()
     {
         var src = new JobTemplateAttributes

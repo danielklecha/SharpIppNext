@@ -396,7 +396,7 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                         NumberUpSupported = new[] { new Range(1, 4) },
                         PunchingHoleDiameterConfigured = 2,
                         PrinterFinisherDescription = new[] { "finisher-desc" },
-                        PrinterFinisherSupplies = new[] { new PrinterFinisherSupply { Type = "toner", Unit = "percent", Max = 100, Level = 80 } },
+                        PrinterFinisherSupplies = new[] { new PrinterFinisherSupply { Type = "toner", Unit = "percent", Max = 100, Level = 80, DeviceIndex = 3 } },
                         PrinterFinisherSuppliesDescription = new[] { "finisher-supplies-desc" },
                         PrinterConfigChanges = 1,
                         PrinterContactCol = [new() {

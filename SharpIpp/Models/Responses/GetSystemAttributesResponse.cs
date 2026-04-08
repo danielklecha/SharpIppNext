@@ -4,7 +4,7 @@ namespace SharpIpp.Models.Responses;
 
 /// <summary>
 /// Get-System-Attributes response.
-/// See: PWG 5100.22-2025 Section 6.3.9
+/// See: PWG 5100.22-2025 Section 6.3.8
 /// </summary>
 public class GetSystemAttributesResponse : IppResponse<OperationAttributes>
 {
@@ -16,7 +16,7 @@ public class GetSystemAttributesResponse : IppResponse<OperationAttributes>
 
     /// <summary>
     /// System description attributes returned by the System object.
-    /// See: PWG 5100.22-2025 Section 7.3
+    /// See: PWG 5100.22-2025 Section 7.2
     /// </summary>
     public SystemDescriptionAttributes? SystemDescriptionAttributes { get; set; }
 }

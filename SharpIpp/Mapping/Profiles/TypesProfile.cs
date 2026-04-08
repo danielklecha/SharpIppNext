@@ -36,9 +36,6 @@ internal class TypesProfile : IProfile
         mapper.CreateIppMap<int, ClientType>((src, map) => (ClientType)src);
         mapper.CreateIppMap<int, Orientation>((src, map) => (Orientation)src);
         mapper.CreateIppMap<int, PrinterState>((src, map) => (PrinterState)src);
-        mapper.CreateIppMap<int, PowerState>((src, map) => (PowerState)src);
-        mapper.CreateIppMap<PowerState, int>((src, map) => (int)src);
-        mapper.CreateIppMap<PowerState, NoValue>((src, map) => NoValue.Instance);
         mapper.CreateIppMap<int, ResourceState>((src, map) => (ResourceState)src);
         mapper.CreateIppMap<int, PrintQuality>((src, map) => (PrintQuality)src);
         mapper.CreateIppMap<int, ResolutionUnit>((src, map) => (ResolutionUnit)src);
@@ -50,7 +47,6 @@ internal class TypesProfile : IProfile
         mapper.CreateIppMap<NoValue, JobState>((src, map) => NoValue.GetNoValue<JobState>());
         mapper.CreateIppMap<NoValue, DocumentState>((src, map) => NoValue.GetNoValue<DocumentState>());
         mapper.CreateIppMap<NoValue, PrinterState>((src, map) => NoValue.GetNoValue<PrinterState>());
-        mapper.CreateIppMap<NoValue, PowerState>((src, map) => NoValue.GetNoValue<PowerState>());
         mapper.CreateIppMap<NoValue, Finishings>((src, map) => NoValue.GetNoValue<Finishings>());
         mapper.CreateIppMap<NoValue, IppStatusCode>((src, map) => NoValue.GetNoValue<IppStatusCode>());
         mapper.CreateIppMap<NoValue, Orientation>((src, map) => NoValue.GetNoValue<Orientation>());

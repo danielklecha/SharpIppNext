@@ -31,6 +31,7 @@ public class SendDocumentTests : SharpIppIntegrationTestBase
                 RequestingUserUri = new Uri("mailto:test-user@example.com"),
                 JobId = 1,
                 JobUri = new Uri("http://127.0.0.1:631/jobs/1"),
+                ResourceIds = [21, 22],
                 ClientInfo =
                 [
                     new ClientInfo

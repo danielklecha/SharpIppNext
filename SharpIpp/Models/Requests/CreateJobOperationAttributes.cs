@@ -51,6 +51,13 @@ public class CreateJobOperationAttributes : OperationAttributes
     /// <code>job-media-sheets</code>
     /// <example>no value</example>
     public int? JobMediaSheets { get; set; }
+
+    /// <summary>
+    /// The <c>resource-ids</c> operation attribute.
+    /// See: PWG 5100.22-2025 Section 8.2
+    /// </summary>
+    public int[]? ResourceIds { get; set; }
+
     /// <summary>
     /// The client OPTIONALLY supplies this attribute. The Printer object MUST support this attribute. The value of this attribute identifies the total size of the document(s) in K octets, i.e., in units of 1024 octets. The value MUST be rounded up, so that a job between 1 and 1024 octets inclusive MUST be indicated as being 1, 1025 to 2048 inclusive MUST be 2, etc
     /// See: pwg5100.13 - IPP Driver Replacement Extensions v2.0 Section 6.2.2

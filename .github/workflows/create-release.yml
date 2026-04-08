@@ -63,5 +63,5 @@ jobs:
         tag=${{ github.ref_name }}
         gh release create "$tag" --generate-notes
 
-  publish-docfx-to-pages:
-    uses: ./.github/workflows/publish-docfx-to-pages.yml
+  publish-docs-to-pages:
+    uses: ./.github/workflows/publish-docs-to-pages.yml

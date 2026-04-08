@@ -15,11 +15,20 @@ public class SendResourceDataOperationDispatchTests : SharpIppIntegrationTestBas
     [TestMethod]
     public async Task ReceiveRequestAsync_SendResourceData_ServerReceivesSameRequest()
     {
+        var operationAttributes = GetSystemOperationAttributes<SendResourceDataOperationAttributes>();
+        operationAttributes.ResourceId = 101;
+        operationAttributes.ResourceKOctets = 2048;
+        operationAttributes.ResourceSignature =
+        [
+            [0x01, 0x02, 0x03],
+            [0xAA, 0xBB, 0xCC, 0xDD]
+        ];
+
         var clientRequest = new SendResourceDataRequest
         {
             RequestId = 1204,
             Version = new IppVersion(2, 0),
-            OperationAttributes = GetSystemOperationAttributes<SystemOperationAttributes>()
+            OperationAttributes = operationAttributes
         };
 
         IIppRequest? serverRequest = null;
@@ -43,9 +52,7 @@ public class SendResourceDataOperationDispatchTests : SharpIppIntegrationTestBas
         }
 
         var client = new SharpIppClient(new(GetMockOfHttpMessageHandler(func).Object));
-        var rawRequest = client.CreateRawRequest(clientRequest);
-        var rawResponse = await client.SendAsync(clientRequest.OperationAttributes!.SystemUri!, rawRequest);
-        var clientResponse = client.CreateResponse<SendResourceDataResponse>(rawResponse);
+        var clientResponse = await client.SendResourceDataAsync(clientRequest);
 
         serverRequest.Should().BeEquivalentTo(clientRequest);
         clientResponse.Should().BeEquivalentTo(serverResponse);

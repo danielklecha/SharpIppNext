@@ -14,6 +14,6 @@ public class PrinterFinisherSupply
     public int? Level { get; set; }
     public string? Color { get; set; }
     public int? Index { get; set; }
-    public string? DeviceIndex { get; set; }
+    public int? DeviceIndex { get; set; }
     public Dictionary<string, string>? Extensions { get; set; }
 }

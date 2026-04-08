@@ -242,6 +242,36 @@ public partial class SharpIppClient
     }
 
     /// <inheritdoc />
+    public Task<CancelResourceResponse> CancelResourceAsync(CancelResourceRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<CancelResourceRequest, CancelResourceResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<CreateResourceResponse> CreateResourceAsync(CreateResourceRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<CreateResourceRequest, CreateResourceResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<InstallResourceResponse> InstallResourceAsync(InstallResourceRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<InstallResourceRequest, InstallResourceResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<SendResourceDataResponse> SendResourceDataAsync(SendResourceDataRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<SendResourceDataRequest, SendResourceDataResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<SetResourceAttributesResponse> SetResourceAttributesAsync(SetResourceAttributesRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<SetResourceAttributesRequest, SetResourceAttributesResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
     public Task<DeallocatePrinterResourcesResponse> DeallocatePrinterResourcesAsync(DeallocatePrinterResourcesRequest request, CancellationToken cancellationToken = default)
     {
         return SendAsync<DeallocatePrinterResourcesRequest, DeallocatePrinterResourcesResponse>(request, cancellationToken);

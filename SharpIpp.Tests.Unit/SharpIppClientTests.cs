@@ -91,6 +91,79 @@ public class SharpIppClientTests
         await act.Should().ThrowAsync<Exception>();
     }
 
+    [TestMethod()]
+    public async Task CancelResourceAsync_SystemUri_ShouldThrowException()
+    {
+        // Arrange
+        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
+        using SharpIppClient client = new(new(GetMockOfHttpMessageHandler().Object), protocol.Object);
+        // Act
+        Func<Task<CancelResourceResponse>> act = async () => await client.CancelResourceAsync(new CancelResourceRequest
+        {
+            RequestId = 123,
+            OperationAttributes = new CancelResourceOperationAttributes
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631"),
+                RequestingUserName = "test-user"
+            }
+        });
+        // Assert
+        await act.Should().ThrowAsync<Exception>().WithMessage("SystemUri is not set");
+    }
+
+    [TestMethod]
+    public async Task CancelResourceAsync_SystemUri_ShouldBeUsedOverPrinterUri()
+    {
+        // Arrange
+        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
+        Mock<HttpMessageHandler> messageHandler = GetMockOfHttpMessageHandler();
+        using SharpIppClient client = new(new(messageHandler.Object), protocol.Object);
+
+        // Act
+        await client.CancelResourceAsync(new CancelResourceRequest
+        {
+            RequestId = 123,
+            OperationAttributes = new CancelResourceOperationAttributes
+            {
+                PrinterUri = new Uri("http://127.0.0.1:632/printers/should-not-be-used"),
+                SystemUri = new Uri("ipp://127.0.0.1:8631/system"),
+                RequestingUserName = "test-user"
+            }
+        });
+
+        // Assert
+        messageHandler
+            .Protected()
+            .Verify<Task<HttpResponseMessage>>(
+                "SendAsync",
+                Times.Once(),
+                ItExpr.Is<HttpRequestMessage>(x => x.VerifyAssertionScope(_ => x.RequestUri.Should().BeEquivalentTo(new Uri("http://127.0.0.1:8631/system"), ""))),
+                ItExpr.IsAny<CancellationToken>());
+    }
+
+    [TestMethod]
+    public async Task SendAsync_SystemRequestWithNonSystemOperationAttributes_ShouldThrowException()
+    {
+        // Arrange
+        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
+        using TestSharpIppClient client = new(new(GetMockOfHttpMessageHandler().Object), protocol.Object);
+        var malformedRequest = new MalformedSystemRequest
+        {
+            RequestId = 123,
+            OperationAttributes = new CreateJobOperationAttributes
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631"),
+                RequestingUserName = "test-user"
+            }
+        };
+
+        // Act
+        Func<Task<CancelResourceResponse>> act = async () => await client.SendForTestsAsync<CancelResourceResponse>(malformedRequest);
+
+        // Assert
+        await act.Should().ThrowAsync<Exception>().WithMessage("SystemUri is not set");
+    }
+
 
     public static IEnumerable<object[]> ClientMappingData
     {
@@ -165,6 +238,41 @@ public class SharpIppClientTests
                 new Func<SharpIppClient, object, Task>(async (c, r) => await c.RestartOnePrinterAsync((RestartOnePrinterRequest)r)),
                 new[] { new IppAttribute(Tag.Integer, JobAttribute.PrinterId, 99) },
                 "RestartOnePrinter"
+            ];
+            yield return [
+                IppOperation.CancelResource,
+                new CancelResourceRequest { RequestId = 123, OperationAttributes = new CancelResourceOperationAttributes { SystemUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user" } },
+                new Func<SharpIppClient, object, Task>(async (c, r) => await c.CancelResourceAsync((CancelResourceRequest)r)),
+                null!,
+                "CancelResource"
+            ];
+            yield return [
+                IppOperation.CreateResource,
+                new CreateResourceRequest { RequestId = 123, OperationAttributes = new CreateResourceOperationAttributes { SystemUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user" } },
+                new Func<SharpIppClient, object, Task>(async (c, r) => await c.CreateResourceAsync((CreateResourceRequest)r)),
+                null!,
+                "CreateResource"
+            ];
+            yield return [
+                IppOperation.InstallResource,
+                new InstallResourceRequest { RequestId = 123, OperationAttributes = new InstallResourceOperationAttributes { SystemUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user" } },
+                new Func<SharpIppClient, object, Task>(async (c, r) => await c.InstallResourceAsync((InstallResourceRequest)r)),
+                null!,
+                "InstallResource"
+            ];
+            yield return [
+                IppOperation.SendResourceData,
+                new SendResourceDataRequest { RequestId = 123, OperationAttributes = new SendResourceDataOperationAttributes { SystemUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user" } },
+                new Func<SharpIppClient, object, Task>(async (c, r) => await c.SendResourceDataAsync((SendResourceDataRequest)r)),
+                null!,
+                "SendResourceData"
+            ];
+            yield return [
+                IppOperation.SetResourceAttributes,
+                new SetResourceAttributesRequest { RequestId = 123, OperationAttributes = new SetResourceAttributesOperationAttributes { SystemUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user" } },
+                new Func<SharpIppClient, object, Task>(async (c, r) => await c.SetResourceAttributesAsync((SetResourceAttributesRequest)r)),
+                null!,
+                "SetResourceAttributes"
             ];
             yield return [
                 IppOperation.GetJobs,
@@ -256,6 +364,11 @@ public class SharpIppClientTests
             || operation == IppOperation.RegisterOutputDevice
             || operation == IppOperation.GetResources
             || operation == IppOperation.GetResourceAttributes
+            || operation == IppOperation.CancelResource
+            || operation == IppOperation.CreateResource
+            || operation == IppOperation.InstallResource
+            || operation == IppOperation.SendResourceData
+            || operation == IppOperation.SetResourceAttributes
             || operation == IppOperation.AllocatePrinterResources
             || operation == IppOperation.CreatePrinter
             || operation == IppOperation.GetPrinters
@@ -558,5 +671,26 @@ public class SharpIppClientTests
 
         // Assert
         await act.Should().ThrowAsync<IppResponseException>().WithMessage("Ipp attributes mapping exception");
+    }
+
+    private sealed class TestSharpIppClient : SharpIppClient
+    {
+        public TestSharpIppClient(HttpClient httpClient, IIppProtocol ippProtocol)
+            : base(httpClient, ippProtocol)
+        {
+        }
+
+        public Task<TOut> SendForTestsAsync<TOut>(IIppRequest request, CancellationToken cancellationToken = default)
+            where TOut : IIppResponse
+        {
+            return SendAsync<IIppRequest, TOut>(request, cancellationToken);
+        }
+    }
+
+    private sealed class MalformedSystemRequest : IIppSystemRequest
+    {
+        public IppVersion Version { get; set; } = new();
+        public int RequestId { get; set; } = 1;
+        public SharpIpp.Models.Requests.OperationAttributes? OperationAttributes { get; set; }
     }
 }

@@ -28,6 +28,7 @@ public class SendUriTests : SharpIppIntegrationTestBase
                 RequestingUserName = "test-user",
                 JobId = 1,
                 JobUri = new Uri("http://127.0.0.1:631/jobs/1"),
+                ResourceIds = [51, 52],
                 DocumentName = "test-document",
                 Compression = Compression.None,
                 DocumentFormat = "application/pdf",

@@ -52,8 +52,8 @@ internal class PrinterFinisherSupplyProfile : IProfile
                 case "index" when int.TryParse(row.Value, out var index):
                     supply.Index = index;
                     break;
-                case "deviceindex":
-                    supply.DeviceIndex = row.Value;
+                case "deviceindex" when int.TryParse(row.Value, out var deviceIndex):
+                    supply.DeviceIndex = deviceIndex;
                     break;
                 default:
                     extensions[row.Key] = row.Value;
@@ -96,7 +96,7 @@ internal class PrinterFinisherSupplyProfile : IProfile
         appendInt("level", supply.Level);
         append("color", supply.Color);
         appendInt("index", supply.Index);
-        append("deviceIndex", supply.DeviceIndex);
+        appendInt("deviceIndex", supply.DeviceIndex);
 
         if (supply.Extensions != null)
         {
