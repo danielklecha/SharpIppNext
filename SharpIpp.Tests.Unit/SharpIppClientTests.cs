@@ -673,6 +673,55 @@ public class SharpIppClientTests
         await act.Should().ThrowAsync<IppResponseException>().WithMessage("Ipp attributes mapping exception");
     }
 
+    [TestMethod]
+    public async Task SendAsync_InvalidRawPrintJobRequest_ShouldThrowBeforeHttpCall()
+    {
+        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
+        Mock<HttpMessageHandler> messageHandler = GetMockOfHttpMessageHandler();
+        using SharpIppClient client = new(new(messageHandler.Object), protocol.Object);
+
+        IppRequestMessage request = new()
+        {
+            IppOperation = IppOperation.PrintJob,
+            RequestId = 123,
+        };
+        request.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://127.0.0.1:631/")
+        ]);
+
+        Func<Task<IIppResponseMessage>> act = () => client.SendAsync(new Uri("ipp://127.0.0.1:631/"), request);
+
+        await act.Should().ThrowAsync<IppRequestException>().WithMessage("document stream required");
+        protocol.Verify(x => x.WriteIppRequestAsync(It.IsAny<IIppRequestMessage>(), It.IsAny<Stream>(), It.IsAny<CancellationToken>()), Times.Never);
+        messageHandler.Protected().Verify(
+            "SendAsync",
+            Times.Never(),
+            ItExpr.IsAny<HttpRequestMessage>(),
+            ItExpr.IsAny<CancellationToken>());
+    }
+
+    [TestMethod]
+    public async Task GetDocumentAttributesAsync_MissingDocumentNumber_ShouldThrowClientValidationException()
+    {
+        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
+        using SharpIppClient client = new(new(GetMockOfHttpMessageHandler().Object), protocol.Object);
+
+        Func<Task<GetDocumentAttributesResponse>> act = async () => await client.GetDocumentAttributesAsync(new GetDocumentAttributesRequest
+        {
+            RequestId = 123,
+            OperationAttributes = new GetDocumentAttributesOperationAttributes
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631"),
+                JobId = 1
+            }
+        });
+
+        await act.Should().ThrowAsync<IppRequestException>().WithMessage("invalid document-number");
+    }
+
     private sealed class TestSharpIppClient : SharpIppClient
     {
         public TestSharpIppClient(HttpClient httpClient, IIppProtocol ippProtocol)

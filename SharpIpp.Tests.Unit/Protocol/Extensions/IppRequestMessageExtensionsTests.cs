@@ -179,6 +179,27 @@ public class IppRequestMessageExtensionsTests
     }
 
     [TestMethod()]
+    public void Validate_DocumentOperationWithJobUriOnly_ShouldBeSuccess()
+    {
+        IppRequestMessage message = new()
+        {
+            IppOperation = IppOperation.GetDocuments,
+            RequestId = 123,
+        };
+        message.OperationAttributes.AddRange(
+        [
+            new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ),
+            new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ),
+            new IppAttribute( Tag.Uri, JobAttribute.JobUri, "ipp://127.0.0.1:631/jobs/123" ),
+            new IppAttribute( Tag.TextWithoutLanguage, JobAttribute.RequestingUserName, "test-user" )
+        ]);
+
+        Action act = () => message.Validate();
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod()]
     public void Validate_SystemOperationWithoutSystemUri_ShouldThrowException()
     {
         IppRequestMessage message = new()
@@ -255,5 +276,223 @@ public class IppRequestMessageExtensionsTests
         Action act = () => message.Validate();
         // Assert
         act.Should().NotThrow();
+    }
+
+    [TestMethod()]
+    public void ValidateOperationRules_GetDocumentAttributesMissingDocumentNumber_ShouldThrowException()
+    {
+        IppRequestMessage message = new()
+        {
+            IppOperation = IppOperation.GetDocumentAttributes,
+            RequestId = 123,
+        };
+        message.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://127.0.0.1:631/"),
+            new IppAttribute(Tag.Integer, JobAttribute.JobId, 123)
+        ]);
+
+        Action act = () => message.ValidateOperationRules();
+
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("missing document-number")
+            .Which.RequestMessage.Should().Be(message);
+    }
+
+    [TestMethod()]
+    public void ValidateOperationRules_GetDocumentAttributesInvalidDocumentNumber_ShouldThrowException()
+    {
+        IppRequestMessage message = new()
+        {
+            IppOperation = IppOperation.GetDocumentAttributes,
+            RequestId = 123,
+        };
+        message.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://127.0.0.1:631/"),
+            new IppAttribute(Tag.Integer, JobAttribute.JobId, 123),
+            new IppAttribute(Tag.Integer, DocumentAttribute.DocumentNumber, 0)
+        ]);
+
+        Action act = () => message.ValidateOperationRules();
+
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("invalid document-number")
+            .Which.RequestMessage.Should().Be(message);
+    }
+
+    [TestMethod()]
+    public void ValidateOperationRules_PrintJobWithoutDocumentStream_ShouldThrowException()
+    {
+        IppRequestMessage message = new()
+        {
+            IppOperation = IppOperation.PrintJob,
+            RequestId = 123,
+        };
+        message.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://127.0.0.1:631/")
+        ]);
+
+        Action act = () => message.ValidateOperationRules();
+
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("document stream required")
+            .Which.RequestMessage.Should().Be(message);
+    }
+
+    [TestMethod()]
+    public void ValidateOperationRules_SendDocumentInvalidLastDocument_ShouldThrowException()
+    {
+        IppRequestMessage message = new()
+        {
+            IppOperation = IppOperation.SendDocument,
+            RequestId = 123,
+            Document = new MemoryStream([1, 2, 3])
+        };
+        message.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://127.0.0.1:631/"),
+            new IppAttribute(Tag.Integer, JobAttribute.JobId, 123),
+            new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.LastDocument, "false")
+        ]);
+
+        Action act = () => message.ValidateOperationRules();
+
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("invalid last-document")
+            .Which.RequestMessage.Should().Be(message);
+    }
+
+    [TestMethod()]
+    public void ValidateOperationRules_SendDocumentMissingLastDocument_ShouldThrowException()
+    {
+        IppRequestMessage message = new()
+        {
+            IppOperation = IppOperation.SendDocument,
+            RequestId = 123,
+            Document = new MemoryStream([1, 2, 3])
+        };
+        message.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://127.0.0.1:631/"),
+            new IppAttribute(Tag.Integer, JobAttribute.JobId, 123)
+        ]);
+
+        Action act = () => message.ValidateOperationRules();
+
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("missing last-document")
+            .Which.RequestMessage.Should().Be(message);
+    }
+
+    [TestMethod()]
+    public void ValidateOperationRules_SendDocumentWithoutDocumentStream_ShouldThrowException()
+    {
+        IppRequestMessage message = new()
+        {
+            IppOperation = IppOperation.SendDocument,
+            RequestId = 123,
+        };
+        message.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://127.0.0.1:631/"),
+            new IppAttribute(Tag.Integer, JobAttribute.JobId, 123),
+            new IppAttribute(Tag.Boolean, JobAttribute.LastDocument, false)
+        ]);
+
+        Action act = () => message.ValidateOperationRules();
+
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("document stream required when last-document=false")
+            .Which.RequestMessage.Should().Be(message);
+    }
+
+    [TestMethod()]
+    public void ValidateOperationRules_SendUriMissingDocumentUri_ShouldThrowException()
+    {
+        IppRequestMessage message = new()
+        {
+            IppOperation = IppOperation.SendUri,
+            RequestId = 123,
+        };
+        message.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://127.0.0.1:631/"),
+            new IppAttribute(Tag.Integer, JobAttribute.JobId, 123),
+            new IppAttribute(Tag.Boolean, JobAttribute.LastDocument, false)
+        ]);
+
+        Action act = () => message.ValidateOperationRules();
+
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("missing document-uri")
+            .Which.RequestMessage.Should().Be(message);
+    }
+
+    [TestMethod()]
+    public void ValidateOperationRules_PrintUriMissingDocumentUri_ShouldThrowException()
+    {
+        IppRequestMessage message = new()
+        {
+            IppOperation = IppOperation.PrintUri,
+            RequestId = 123,
+        };
+        message.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://127.0.0.1:631/")
+        ]);
+
+        Action act = () => message.ValidateOperationRules();
+
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("missing document-uri")
+            .Which.RequestMessage.Should().Be(message);
+    }
+
+    [TestMethod()]
+    public void ValidateOperationRules_SendUriWithLastDocumentAndNoDocumentUri_ShouldBeSuccess()
+    {
+        IppRequestMessage message = new()
+        {
+            IppOperation = IppOperation.SendUri,
+            RequestId = 123,
+        };
+        message.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://127.0.0.1:631/"),
+            new IppAttribute(Tag.Integer, JobAttribute.JobId, 123),
+            new IppAttribute(Tag.Boolean, JobAttribute.LastDocument, true)
+        ]);
+
+        Action act = () => message.ValidateOperationRules();
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod()]
+    public void ValidateOperationRules_MessageIsNull_ShouldThrowException()
+    {
+        Action act = () => ((IppRequestMessage?)null).ValidateOperationRules();
+
+        act.Should().Throw<ArgumentNullException>();
     }
 }

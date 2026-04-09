@@ -24,11 +24,79 @@ public static class IppRequestMessageExtensions
 
         var hasPrinterUri = request.OperationAttributes.Any(x => x.Name == JobAttribute.PrinterUri);
         var hasSystemUri = request.OperationAttributes.Any(x => x.Name == SystemAttribute.SystemUri);
-        if (!hasPrinterUri && !hasSystemUri)
+        var hasJobUri = request.OperationAttributes.Any(x => x.Name == JobAttribute.JobUri);
+        if (!hasPrinterUri && !hasSystemUri && !(hasJobUri && request.IppOperation.IsPwg51005DocumentTargetOperation()))
             throw new IppRequestException("No printer-uri or system-uri operation attribute", request, IppStatusCode.ClientErrorBadRequest);
 
         if (request.IppOperation.IsSystemServiceOperation() && !hasSystemUri)
             throw new IppRequestException("No system-uri operation attribute", request, IppStatusCode.ClientErrorBadRequest);
+    }
+
+    public static void ValidateOperationRules(this IIppRequestMessage? request)
+    {
+        if (request is null)
+            throw new ArgumentNullException(nameof(request));
+
+        var operationAttributes = request.OperationAttributes;
+        var hasLastDocument = operationAttributes.Any(x => x.Name == JobAttribute.LastDocument);
+        var hasDocumentNumber = operationAttributes.Any(x => x.Name == DocumentAttribute.DocumentNumber);
+        var hasDocumentUri = operationAttributes.Any(x => x.Name == JobAttribute.DocumentUri);
+        int? documentNumber = null;
+        bool? lastDocument = null;
+
+        if (hasDocumentNumber)
+        {
+            var documentNumberValue = operationAttributes.First(x => x.Name == DocumentAttribute.DocumentNumber).Value;
+            if (documentNumberValue is int value)
+                documentNumber = value;
+        }
+
+        if (hasLastDocument)
+        {
+            var lastDocumentValue = operationAttributes.First(x => x.Name == JobAttribute.LastDocument).Value;
+            if (lastDocumentValue is bool value)
+                lastDocument = value;
+        }
+
+        switch (request.IppOperation)
+        {
+            case IppOperation.CancelDocument:
+            case IppOperation.GetDocumentAttributes:
+            case IppOperation.SetDocumentAttributes:
+                if (!hasDocumentNumber)
+                    throw new IppRequestException("missing document-number", request, IppStatusCode.ClientErrorBadRequest);
+                if (documentNumber is null || documentNumber <= 0)
+                    throw new IppRequestException("invalid document-number", request, IppStatusCode.ClientErrorBadRequest);
+                break;
+
+            case IppOperation.PrintJob:
+                if (request.Document == null)
+                    throw new IppRequestException("document stream required", request, IppStatusCode.ClientErrorBadRequest);
+                break;
+
+            case IppOperation.PrintUri:
+                if (!hasDocumentUri)
+                    throw new IppRequestException("missing document-uri", request, IppStatusCode.ClientErrorBadRequest);
+                break;
+
+            case IppOperation.SendDocument:
+                if (!hasLastDocument)
+                    throw new IppRequestException("missing last-document", request, IppStatusCode.ClientErrorBadRequest);
+                if (lastDocument is null)
+                    throw new IppRequestException("invalid last-document", request, IppStatusCode.ClientErrorBadRequest);
+                if (lastDocument == false && request.Document == null)
+                    throw new IppRequestException("document stream required when last-document=false", request, IppStatusCode.ClientErrorBadRequest);
+                break;
+
+            case IppOperation.SendUri:
+                if (!hasLastDocument)
+                    throw new IppRequestException("missing last-document", request, IppStatusCode.ClientErrorBadRequest);
+                if (lastDocument is null)
+                    throw new IppRequestException("invalid last-document", request, IppStatusCode.ClientErrorBadRequest);
+                if (lastDocument == false && !hasDocumentUri)
+                    throw new IppRequestException("missing document-uri", request, IppStatusCode.ClientErrorBadRequest);
+                break;
+        }
     }
 
     private static bool IsSystemServiceOperation(this IppOperation operation)
@@ -69,6 +137,19 @@ public static class IppRequestMessageExtensions
                 or IppOperation.GetSubscriptionAttributes
                 or IppOperation.GetSubscriptions
                 or IppOperation.RenewSubscription
+                => true,
+            _ => false
+        };
+    }
+
+    private static bool IsPwg51005DocumentTargetOperation(this IppOperation operation)
+    {
+        return operation switch
+        {
+            IppOperation.CancelDocument
+                or IppOperation.GetDocumentAttributes
+                or IppOperation.GetDocuments
+                or IppOperation.SetDocumentAttributes
                 => true,
             _ => false
         };

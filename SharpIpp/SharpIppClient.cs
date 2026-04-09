@@ -70,6 +70,9 @@ public partial class SharpIppClient : ISharpIppClient
         IIppRequestMessage ippRequest,
         CancellationToken cancellationToken = default)
     {
+        ippRequest.Validate();
+        ippRequest.ValidateOperationRules();
+
         var httpRequest = GetHttpRequestMessage( printerUri );
 
         HttpResponseMessage? response;
