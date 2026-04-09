@@ -51,6 +51,7 @@ public class GetDocumentAttributesTests : SharpIppIntegrationTestBase
                     DocumentPrinterUri = "http://127.0.0.1:631",
                     AttributesCharset = "utf-8",
                     AttributesNaturalLanguage = "en-us",
+                    CurrentPageOrder = CurrentPageOrder.OneToNOrder,
                     DocumentFormatDetails = new DocumentFormatDetails { DocumentSourceApplicationName = "MyApp", DocumentSourceOsName = "MyOS" },
                     DocumentFormatDetailsDetected = new DocumentFormatDetails { DocumentSourceApplicationName = "DetectedApp", DocumentSourceOsName = "DetectedOS" },
                     ErrorsCount = 0,

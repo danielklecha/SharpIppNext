@@ -33,6 +33,7 @@ public readonly record struct DocumentCreationAttribute(string Value, bool IsVal
     public static readonly DocumentCreationAttribute OrientationRequested = new("orientation-requested");
     public static readonly DocumentCreationAttribute OutputBin = new("output-bin");
     public static readonly DocumentCreationAttribute PageDelivery = new("page-delivery");
+    public static readonly DocumentCreationAttribute PageOrderReceived = new("page-order-received");
     public static readonly DocumentCreationAttribute PageRanges = new("page-ranges");
     public static readonly DocumentCreationAttribute PresentationDirectionNumberUp = new("presentation-direction-number-up");
     public static readonly DocumentCreationAttribute PrintQuality = new("print-quality");

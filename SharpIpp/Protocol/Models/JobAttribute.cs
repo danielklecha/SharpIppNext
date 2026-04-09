@@ -140,6 +140,7 @@ namespace SharpIpp.Protocol.Models
         public const string JobRecipientName = "job-recipient-name";
         public const string MediaInputTrayCheck = "media-input-tray-check";
         public const string PageDelivery = "page-delivery";
+        public const string PageOrderReceived = "page-order-received";
         public const string PresentationDirectionNumberUp = "presentation-direction-number-up";
         public const string SeparatorSheets = "separator-sheets";
         public const string XImagePosition = "x-image-position";

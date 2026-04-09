@@ -11,6 +11,7 @@ namespace SharpIpp.Protocol.Models
         public const string DocumentStateMessage = "document-state-message";
         public const string AttributesCharset = "attributes-charset";
         public const string AttributesNaturalLanguage = "attributes-natural-language";
+        public const string CurrentPageOrder = "current-page-order";
         public const string DateTimeAtCompleted = "date-time-at-completed";
         public const string DateTimeAtCreation = "date-time-at-creation";
         public const string DateTimeAtProcessing = "date-time-at-processing";

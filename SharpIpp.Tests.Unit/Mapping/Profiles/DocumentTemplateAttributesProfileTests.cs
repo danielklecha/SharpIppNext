@@ -2,6 +2,7 @@ using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
+using SharpIpp.Protocol.Extensions;
 using SharpIpp.Protocol.Models;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -103,6 +104,34 @@ public class DocumentTemplateAttributesProfileTests
         finishings.Should().HaveCount(1);
         finishings[0].Tag.Should().Be(Tag.Enum);
         finishings[0].Value.Should().Be((int)Finishings.Staple);
+    }
+
+    [TestMethod]
+    public void Map_ToAttributes_WithPageOrderReceived_WritesKeywordAttribute()
+    {
+        var src = new DocumentTemplateAttributes
+        {
+            PageOrderReceived = PageOrderReceived.NTo1Order
+        };
+
+        var attributes = _mapper.Map<System.Collections.Generic.List<IppAttribute>>(src);
+
+        var pageOrderReceived = attributes.Single(a => a.Name == JobAttribute.PageOrderReceived);
+        pageOrderReceived.Tag.Should().Be(Tag.Keyword);
+        pageOrderReceived.Value.Should().Be("n-to-1-order");
+    }
+
+    [TestMethod]
+    public void Map_FromAttributes_WithPageOrderReceived_ReadsKeywordAttribute()
+    {
+        var attributes = new[]
+        {
+            new IppAttribute(Tag.Keyword, JobAttribute.PageOrderReceived, "1-to-n-order")
+        }.ToIppDictionary();
+
+        var documentTemplate = _mapper.Map<DocumentTemplateAttributes>(attributes);
+
+        documentTemplate.PageOrderReceived.Should().Be(PageOrderReceived.OneToNOrder);
     }
 
     [TestMethod]

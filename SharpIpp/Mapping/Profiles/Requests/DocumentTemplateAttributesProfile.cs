@@ -58,6 +58,7 @@ internal class DocumentTemplateAttributesProfile : IProfile
                 dst.Add(new IppAttribute(outputBin.GetKeywordOrNameTag(OutputBin.KeywordRegex), JobAttribute.OutputBin, outputBin));
             }
             if (src.PageDelivery.HasValue) dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.PageDelivery, map.Map<string>(src.PageDelivery.Value)));
+            if (src.PageOrderReceived.HasValue) dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.PageOrderReceived, map.Map<string>(src.PageOrderReceived.Value)));
             if (src.PageRanges != null) dst.AddRange(src.PageRanges.Select(x => new IppAttribute(Tag.RangeOfInteger, JobAttribute.PageRanges, x)));
             if (src.PresentationDirectionNumberUp.HasValue) dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.PresentationDirectionNumberUp, map.Map<string>(src.PresentationDirectionNumberUp.Value)));
             if (src.PrintQuality.HasValue) dst.Add(new IppAttribute(Tag.Enum, JobAttribute.PrintQuality, (int)src.PrintQuality.Value));
@@ -100,6 +101,7 @@ internal class DocumentTemplateAttributesProfile : IProfile
             dst.OrientationRequested = map.MapFromDicNullable<Orientation?>(src, JobAttribute.OrientationRequested);
             dst.OutputBin = map.MapFromDicNullable<OutputBin?>(src, JobAttribute.OutputBin);
             dst.PageDelivery = map.MapFromDicNullable<PageDelivery?>(src, JobAttribute.PageDelivery);
+            dst.PageOrderReceived = map.MapFromDicNullable<PageOrderReceived?>(src, JobAttribute.PageOrderReceived);
             dst.PageRanges = map.MapFromDicSetNullable<Range[]?>(src, JobAttribute.PageRanges);
             dst.PresentationDirectionNumberUp = map.MapFromDicNullable<PresentationDirectionNumberUp?>(src, JobAttribute.PresentationDirectionNumberUp);
             dst.PrintQuality = map.MapFromDicNullable<PrintQuality?>(src, JobAttribute.PrintQuality);

@@ -30,6 +30,7 @@ public class SetDocumentAttributesTests : SharpIppIntegrationTestBase
                 JobUri = new Uri("ipp://localhost:631/jobs/1"),
                 DocumentNumber = 1,
             },
+            DocumentName = "Updated Document Name",
             DocumentTemplateAttributes = new()
             {
                 Copies = 1,
@@ -86,6 +87,7 @@ public class SetDocumentAttributesTests : SharpIppIntegrationTestBase
                 OrientationRequested = Orientation.Landscape,
                 OutputBin = (OutputBin)"top",
                 PageDelivery = PageDelivery.SameOrderFaceUp,
+                PageOrderReceived = PageOrderReceived.OneToNOrder,
                 PageRanges = [new SharpIpp.Protocol.Models.Range(1, 1)],
                 PresentationDirectionNumberUp = PresentationDirectionNumberUp.TobottomToleft,
                 PrintQuality = PrintQuality.High,

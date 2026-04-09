@@ -1,4 +1,5 @@
 using SharpIpp.Models.Requests;
+using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Extensions;
 using SharpIpp.Protocol.Models;
@@ -20,6 +21,8 @@ internal class SetDocumentAttributesRequestProfile : IProfile
             map.Map<IIppJobRequest, IppRequestMessage>(src, dst);
             if (src.OperationAttributes != null)
                 dst.OperationAttributes.AddRange(map.Map<SetDocumentAttributesOperationAttributes, List<IppAttribute>>(src.OperationAttributes));
+            if (src.DocumentName != null)
+                dst.DocumentAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, DocumentAttribute.DocumentName, src.DocumentName));
             if (src.DocumentTemplateAttributes != null)
                 dst.DocumentAttributes.AddRange(map.Map<DocumentTemplateAttributes, List<IppAttribute>>(src.DocumentTemplateAttributes));
             return dst;
@@ -31,7 +34,11 @@ internal class SetDocumentAttributesRequestProfile : IProfile
             map.Map<IIppRequestMessage, IIppJobRequest>(src, dst);
             dst.OperationAttributes = map.Map<IDictionary<string, IppAttribute[]>, SetDocumentAttributesOperationAttributes>(src.OperationAttributes.ToIppDictionary());
             if (src.DocumentAttributes.Any())
-                dst.DocumentTemplateAttributes = map.Map<DocumentTemplateAttributes>(src.DocumentAttributes.ToIppDictionary());
+            {
+                var documentAttributes = src.DocumentAttributes.ToIppDictionary();
+                dst.DocumentName = map.MapFromDicNullable<string?>(documentAttributes, DocumentAttribute.DocumentName);
+                dst.DocumentTemplateAttributes = map.Map<DocumentTemplateAttributes>(documentAttributes);
+            }
             return dst;
         });
     }

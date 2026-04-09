@@ -94,6 +94,12 @@ public class DocumentTemplateAttributes : IIppCollection
     public PageDelivery? PageDelivery { get; set; }
 
     /// <summary>
+    /// The <c>page-order-received</c> Document Template attribute.
+    /// OBSOLETE in PWG 5100.3-2023 but still part of PWG 5100.5-2024 Section 6.3.
+    /// </summary>
+    public PageOrderReceived? PageOrderReceived { get; set; }
+
+    /// <summary>
     /// The <c>page-ranges</c> Document Template attribute.
     /// See: RFC 8011 Section 5.2.7
     /// </summary>

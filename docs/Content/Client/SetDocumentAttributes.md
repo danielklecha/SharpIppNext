@@ -2,11 +2,14 @@
 
 Here is a basic example of how to initialize a `SetDocumentAttributesRequest` and set the attributes of a specific document using `SharpIppClient`. Optional attributes have been omitted for clarity.
 
+Per PWG 5100.5 Section 5.1.3, you can supply Document Description attributes (for example `document-name`) and/or Document Template attributes.
+
 ```csharp
 using System;
 using System.Threading.Tasks;
 using SharpIpp;
 using SharpIpp.Models.Requests;
+using SharpIpp.Protocol.Models;
 
 var client = new SharpIppClient();
 
@@ -19,9 +22,11 @@ var request = new SetDocumentAttributesRequest
         JobId = 123,
         DocumentNumber = 1
     },
+    DocumentName = "Quarterly Report",
     DocumentTemplateAttributes = new()
     {
-        Copies = 5
+        Copies = 5,
+        PageOrderReceived = PageOrderReceived.OneToNOrder
     }
 };
 

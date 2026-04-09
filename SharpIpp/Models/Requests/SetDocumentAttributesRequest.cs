@@ -7,6 +7,13 @@ namespace SharpIpp.Models.Requests;
 public class SetDocumentAttributesRequest : IppRequest<SetDocumentAttributesOperationAttributes>, IIppJobRequest
 {
     /// <summary>
+    /// The document-name IPP attribute.
+    /// See: PWG 5100.5-2024 Section 6.1.1
+    /// </summary>
+    /// <code>document-name</code>
+    public string? DocumentName { get; set; }
+
+    /// <summary>
     /// The document-template-attributes IPP attribute.
     /// See: IPP
     /// </summary>

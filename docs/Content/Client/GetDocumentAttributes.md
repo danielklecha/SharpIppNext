@@ -17,7 +17,8 @@ var request = new GetDocumentAttributesRequest
     {
         PrinterUri = new Uri("ipp://localhost:631/printers/my-printer"),
         JobId = 123,
-        DocumentNumber = 1
+        DocumentNumber = 1,
+        RequestedAttributes = ["document-number", "document-state", "current-page-order"]
     }
 };
 
@@ -26,4 +27,5 @@ var response = await client.GetDocumentAttributesAsync(request);
 
 Console.WriteLine($"Document Number: {response.DocumentAttributes.DocumentNumber}");
 Console.WriteLine($"Document State: {response.DocumentAttributes.DocumentState}");
+Console.WriteLine($"Current Page Order: {response.DocumentAttributes.CurrentPageOrder}");
 ```

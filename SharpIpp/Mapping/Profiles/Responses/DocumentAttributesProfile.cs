@@ -32,6 +32,7 @@ internal class DocumentAttributesProfile : IProfile
             dst.DocumentStateMessage = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentStateMessage);
             dst.AttributesCharset = map.MapFromDicNullable<string?>(src, DocumentAttribute.AttributesCharset);
             dst.AttributesNaturalLanguage = map.MapFromDicNullable<string?>(src, DocumentAttribute.AttributesNaturalLanguage);
+            dst.CurrentPageOrder = map.MapFromDicNullable<CurrentPageOrder?>(src, DocumentAttribute.CurrentPageOrder);
             dst.DateTimeAtCompleted = map.MapFromDicNullable<DateTimeOffset?>(src, DocumentAttribute.DateTimeAtCompleted);
             dst.DateTimeAtCreation = map.MapFromDicNullable<DateTimeOffset?>(src, DocumentAttribute.DateTimeAtCreation);
             dst.DateTimeAtProcessing = map.MapFromDicNullable<DateTimeOffset?>(src, DocumentAttribute.DateTimeAtProcessing);
@@ -92,6 +93,8 @@ internal class DocumentAttributesProfile : IProfile
                 dst.Add(DocumentAttribute.AttributesCharset, [new IppAttribute(Tag.Charset, DocumentAttribute.AttributesCharset, src.AttributesCharset)]);
             if (src.AttributesNaturalLanguage != null)
                 dst.Add(DocumentAttribute.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, DocumentAttribute.AttributesNaturalLanguage, src.AttributesNaturalLanguage)]);
+            if (src.CurrentPageOrder != null)
+                dst.Add(DocumentAttribute.CurrentPageOrder, [new IppAttribute(Tag.Keyword, DocumentAttribute.CurrentPageOrder, map.Map<string>(src.CurrentPageOrder.Value))]);
             if (src.DateTimeAtCompleted != null)
                 dst.Add(DocumentAttribute.DateTimeAtCompleted, [new IppAttribute(Tag.DateTime, DocumentAttribute.DateTimeAtCompleted, src.DateTimeAtCompleted.Value)]);
             if (src.DateTimeAtCreation != null)

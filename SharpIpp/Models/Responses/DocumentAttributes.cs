@@ -51,6 +51,14 @@ public class DocumentAttributes : IIppCollection
     /// </summary>
     /// <code>attributes-natural-language</code>
     public string? AttributesNaturalLanguage { get; set; }
+
+    /// <summary>
+    /// The current-page-order IPP attribute.
+    /// See: PWG 5100.5-2024 Section 6.2 and PWG 5100.3-2001.
+    /// </summary>
+    /// <code>current-page-order</code>
+    public CurrentPageOrder? CurrentPageOrder { get; set; }
+
     /// <summary>
     /// The date-time-at-completed IPP attribute.
     /// See: pwg5100.15 - IPP FaxOut Service Section 7.4.18

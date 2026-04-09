@@ -125,6 +125,7 @@ public class SendDocumentTests : SharpIppIntegrationTestBase
                 OrientationRequested = Orientation.Portrait,
                 OutputBin = (OutputBin)"face-down",
                 PageDelivery = PageDelivery.SameOrderFaceUp,
+                PageOrderReceived = PageOrderReceived.OneToNOrder,
                 PageRanges = [new SharpIpp.Protocol.Models.Range(1, 2)],
                 PresentationDirectionNumberUp = PresentationDirectionNumberUp.TobottomToleft,
                 PrintQuality = PrintQuality.Normal,

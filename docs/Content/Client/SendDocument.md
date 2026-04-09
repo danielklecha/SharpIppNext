@@ -8,6 +8,7 @@ using System.IO;
 using System.Threading.Tasks;
 using SharpIpp;
 using SharpIpp.Models.Requests;
+using SharpIpp.Protocol.Models;
 
 var client = new SharpIppClient();
 
@@ -26,6 +27,10 @@ var request = new SendDocumentRequest
         ResourceIds = [201, 202],
         LastDocument = true,
         DocumentFormat = "application/octet-stream"
+    },
+    DocumentTemplateAttributes = new()
+    {
+        PageOrderReceived = PageOrderReceived.OneToNOrder
     }
 };
 
