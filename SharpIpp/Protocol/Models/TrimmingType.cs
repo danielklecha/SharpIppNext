@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the type of trimming to perform.
 /// See: PWG 5100.1-2022 Section 6.30
 /// </summary>
-public readonly record struct TrimmingType(string Value, bool IsValue = true) : ISmartEnum 
+public readonly record struct TrimmingType(string Value, bool IsKeyword = true, bool IsValue = true) : IKeywordSmartEnum
 {
     public static readonly TrimmingType DrawLine = new("draw-line");
     public static readonly TrimmingType Full = new("full");

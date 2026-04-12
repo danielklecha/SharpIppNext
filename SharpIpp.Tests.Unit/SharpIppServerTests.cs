@@ -30,6 +30,15 @@ public class SharpIppServerTests
         server.Should().NotBeNull();
     }
 
+    [TestMethod]
+    public void Constructor_WithNullRequestValidator_ShouldThrowArgumentNullException()
+    {
+        Action act = () => _ = new SharpIppServer(Mock.Of<IIppProtocol>(), null!);
+
+        act.Should().Throw<ArgumentNullException>()
+            .WithParameterName("requestValidator");
+    }
+
 
     [TestMethod]
     public async Task ReceiveRequestAsync_UnsupportedOperation_ShouldThrowError()
@@ -48,6 +57,31 @@ public class SharpIppServerTests
     }
 
     [TestMethod]
+    public async Task ReceiveRequestAsync_UnknownOperation_ShouldThrowBadRequestFromSwitchDefault()
+    {
+        // Arrange
+        Mock<IIppRequestValidator> validator = new();
+        var context = new IppRequestValidationContext();
+        validator.SetupGet(x => x.Context).Returns(context);
+
+        var server = new SharpIppServer(Mock.Of<IIppProtocol>(), validator.Object);
+        var request = new IppRequestMessage
+        {
+            IppOperation = (IppOperation)0x7FFF,
+            RequestId = 123,
+        };
+
+        // Act
+        Func<Task<IIppRequest>> act = async () => await server.ReceiveRequestAsync(request);
+
+        // Assert
+        var exception = await act.Should().ThrowAsync<IppRequestException>();
+        exception.Which.Message.Should().Be($"Unable to handle {request.IppOperation} operation");
+        exception.Which.StatusCode.Should().Be(IppStatusCode.ClientErrorBadRequest);
+        exception.Which.RequestMessage.Should().Be(request);
+    }
+
+    [TestMethod]
     public async Task ReceiveRequestAsync_MessageIsNull_ShouldThrowError()
     {
         // Arrange
@@ -58,6 +92,57 @@ public class SharpIppServerTests
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
         // Assert
         await act.Should().ThrowAsync<ArgumentNullException>();
+    }
+
+    [TestMethod]
+    public async Task ReceiveRequestAsync_MessageViolatesOperationRules_ShouldThrowError()
+    {
+        // Arrange
+        SharpIppServer server = new(Mock.Of<IIppProtocol>());
+        IppRequestMessage ippRequestMessage = new()
+        {
+            IppOperation = IppOperation.PrintJob,
+            RequestId = 123,
+        };
+        ippRequestMessage.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://127.0.0.1:631/")
+        ]);
+
+        // Act
+        Func<Task<IIppRequest>> act = async () => await server.ReceiveRequestAsync(ippRequestMessage);
+
+        // Assert
+        await act.Should().ThrowAsync<IppRequestException>().WithMessage("document stream required");
+    }
+
+    [TestMethod]
+    public async Task ReceiveRequestAsync_WithInjectedRequestValidator_ShouldInvokeValidator()
+    {
+        Mock<IIppRequestValidator> validator = new();
+        var context = new IppRequestValidationContext();
+        validator.SetupGet(x => x.Context).Returns(context);
+
+        var server = new SharpIppServer(Mock.Of<IIppProtocol>(), validator.Object);
+        var request = new IppRequestMessage
+        {
+            IppOperation = IppOperation.CreateJob,
+            RequestId = 123,
+        };
+        request.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://127.0.0.1:631/")
+        ]);
+
+        var result = await server.ReceiveRequestAsync(request);
+
+        result.Should().NotBeNull();
+        validator.Verify(x => x.Validate(It.Is<IIppRequestMessage>(m => m == request)), Times.Once);
+        context.Source.Should().Be(nameof(SharpIppServer));
     }
 
     [TestMethod()]

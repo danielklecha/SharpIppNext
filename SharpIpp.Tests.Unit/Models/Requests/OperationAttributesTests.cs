@@ -20,7 +20,7 @@ namespace SharpIpp.Tests.Unit.Models;
 public class OperationAttributesTests
 {
     [TestMethod]
-    public void GetIppAttributes_ShouldThrowArgumentNullException_WhenAttributesCharsetIsNull()
+    public void GetIppAttributes_ShouldDefaultCharset_WhenAttributesCharsetIsNull()
     {
         // Arrange
         var operationAttributes = new OperationAttributes
@@ -34,14 +34,14 @@ public class OperationAttributesTests
         mapper.FillFromAssembly(assembly!);
 
         // Act
-        Action act = () => mapper.Map<OperationAttributes, List<IppAttribute>>(operationAttributes);
+        var attributes = mapper.Map<OperationAttributes, List<IppAttribute>>(operationAttributes);
 
         // Assert
-        act.Should().Throw<ArgumentNullException>().WithParameterName(nameof(OperationAttributes.AttributesCharset));
+        attributes.Should().Contain(x => x.Name == JobAttribute.AttributesCharset && (string)x.Value == "utf-8");
     }
 
     [TestMethod]
-    public void GetIppAttributes_ShouldThrowArgumentNullException_WhenAttributesNaturalLanguageIsNull()
+    public void GetIppAttributes_ShouldDefaultNaturalLanguage_WhenAttributesNaturalLanguageIsNull()
     {
         // Arrange
         var operationAttributes = new OperationAttributes
@@ -55,10 +55,10 @@ public class OperationAttributesTests
         mapper.FillFromAssembly(assembly!);
 
         // Act
-        Action act = () => mapper.Map<OperationAttributes, List<IppAttribute>>(operationAttributes);
+        var attributes = mapper.Map<OperationAttributes, List<IppAttribute>>(operationAttributes);
 
         // Assert
-        act.Should().Throw<ArgumentNullException>().WithParameterName(nameof(OperationAttributes.AttributesNaturalLanguage));
+        attributes.Should().Contain(x => x.Name == JobAttribute.AttributesNaturalLanguage && (string)x.Value == "en");
     }
 
     [TestMethod]

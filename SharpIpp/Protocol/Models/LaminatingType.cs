@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the type of laminating.
 /// See: PWG 5100.1-2022 Section 5.2.6.2
 /// </summary>
-public readonly record struct LaminatingType(string Value, bool IsValue = true) : ISmartEnum 
+public readonly record struct LaminatingType(string Value, bool IsKeyword = true, bool IsValue = true) : IKeywordSmartEnum
 {
     public static readonly LaminatingType Archival = new("archival");
     public static readonly LaminatingType ArchivalGlossy = new("archival-glossy");

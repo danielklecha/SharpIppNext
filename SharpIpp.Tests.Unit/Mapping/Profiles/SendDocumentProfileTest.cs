@@ -3,7 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpIpp.Exceptions;
 using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Mapping.Profiles;
@@ -17,10 +16,10 @@ namespace SharpIpp.Tests.Unit.Mapping.Profiles;
 [ExcludeFromCodeCoverage]
 public class SendDocumentProfileTest
 {
-    [DataRow(true, true, "Document must be set for non-last document")]
-    [DataRow(true, false, "Document must be set for non-last document")]
+    [DataRow(true, true)]
+    [DataRow(true, false)]
     [TestMethod]
-    public void Map_SendDocumentRequestToIppRequestMessage_InvalidRequest_ThrowsArgumentException(bool isDocumentNull, bool isOperationAttributesNull, string expectedMessage)
+    public void Map_SendDocumentRequestToIppRequestMessage_InvalidRequest_DoesNotThrow(bool isDocumentNull, bool isOperationAttributesNull)
     {
         // Arrange
         var mapper = new SimpleMapper();
@@ -40,11 +39,11 @@ public class SendDocumentProfileTest
         Action act = () => mapper.Map<SendDocumentRequest, IppRequestMessage>(request);
 
         // Assert
-        act.Should().Throw<ArgumentException>().WithMessage(expectedMessage);
+        act.Should().NotThrow();
     }
 
     [TestMethod]
-    public void Map_IppRequestMessageToSendDocumentRequest_MissingLastDocumentAttribute_ThrowsIppRequestException()
+    public void Map_IppRequestMessageToSendDocumentRequest_MissingLastDocumentAttribute_DoesNotThrow()
     {
         // Arrange
         var mapper = new SimpleMapper();
@@ -60,6 +59,6 @@ public class SendDocumentProfileTest
         Action act = () => mapper.Map<IIppRequestMessage, SendDocumentRequest>(request);
 
         // Assert
-        act.Should().Throw<IppRequestException>().WithMessage("missing last-document");
+        act.Should().NotThrow();
     }
 }

@@ -57,11 +57,11 @@ public class JobTemplateAttributesProfileTests
     }
 
     [TestMethod]
-    public void Map_ToRequest_WithNameOutputBin_UsesNameWithoutLanguageTag()
+    public void Map_ToRequest_WithNamedOutputBin_UsesNameWithoutLanguageTag()
     {
         var src = new JobTemplateAttributes
         {
-            OutputBin = (OutputBin)"custom-finisher-bin"
+            OutputBin = new OutputBin("custom-finisher-bin", false)
         };
 
         var request = _mapper.Map<IppRequestMessage>(src);
@@ -69,6 +69,32 @@ public class JobTemplateAttributesProfileTests
         var outputBin = request.JobAttributes.Single(a => a.Name == JobAttribute.OutputBin);
         outputBin.Tag.Should().Be(Tag.NameWithoutLanguage);
         outputBin.Value.Should().Be("custom-finisher-bin");
+    }
+
+    [TestMethod]
+    public void Map_ToRequest_WithExtensionKeywordOutputBin_UsesKeywordTag()
+    {
+        var src = new JobTemplateAttributes
+        {
+            OutputBin = new OutputBin("vendor-bin-42", true)
+        };
+
+        var request = _mapper.Map<IppRequestMessage>(src);
+
+        var outputBin = request.JobAttributes.Single(a => a.Name == JobAttribute.OutputBin);
+        outputBin.Tag.Should().Be(Tag.Keyword);
+        outputBin.Value.Should().Be("vendor-bin-42");
+    }
+
+    [TestMethod]
+    public void Map_FromRequest_WithNamedOutputBin_PreservesNameIntent()
+    {
+        var request = new IppRequestMessage();
+        request.JobAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.OutputBin, "custom-finisher-bin"));
+
+        var mapped = _mapper.Map<IIppRequestMessage, JobTemplateAttributes>(request);
+
+        mapped.OutputBin.Should().Be(new OutputBin("custom-finisher-bin", false));
     }
 
     [TestMethod]
@@ -99,8 +125,8 @@ public class JobTemplateAttributesProfileTests
     {
         var src = new JobTemplateAttributes
         {
-            Media = (Media)"Accounting Team",
-            ImpositionTemplate = (ImpositionTemplate)"Layout A"
+            Media = new Media("Accounting Team", false),
+            ImpositionTemplate = new ImpositionTemplate("Layout A", false)
         };
 
         var request = _mapper.Map<IppRequestMessage>(src);
@@ -131,7 +157,7 @@ public class JobTemplateAttributesProfileTests
     }
 
     [TestMethod]
-    public void Map_ToRequest_WithFinishingsAndFinishingsCol_Throws()
+    public void Map_ToRequest_WithFinishingsAndFinishingsCol_MapsAndValidatorRejects()
     {
         var src = new JobTemplateAttributes
         {
@@ -139,9 +165,25 @@ public class JobTemplateAttributesProfileTests
             FinishingsCol = new[] { new FinishingsCol { FinishingTemplate = FinishingTemplate.Staple } }
         };
 
-        var act = () => _mapper.Map<IppRequestMessage>(src);
+        var request = _mapper.Map<IppRequestMessage>(src);
+        request.IppOperation = IppOperation.CreateJob;
+        request.RequestId = 123;
+        request.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://127.0.0.1:631/")
+        ]);
 
-        act.Should().Throw<ArgumentException>();
+        var validator = new IppRequestValidator
+        {
+            ValidateOperationSpecificRules = false
+        };
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().Throw<SharpIpp.Exceptions.IppRequestException>()
+            .WithMessage("'finishings' and 'finishings-col' are conflicting attributes and cannot be supplied together.");
     }
 
     [TestMethod]
@@ -214,5 +256,77 @@ public class JobTemplateAttributesProfileTests
         dst.PrintObjects.Should().NotBeNull();
         dst.PrintObjects![0].DocumentNumber.Should().Be(1);
         dst.PrintSupports.Should().Be("generated-supports");
+    }
+
+    [TestMethod]
+    public void Map_OverrideInstruction_WithRangeSelectorsAndOverrideMembers_RoundTrips()
+    {
+        var src = new JobTemplateAttributes
+        {
+            Overrides =
+            [
+                new OverrideInstruction
+                {
+                    PageRanges =
+                    [
+                        new SharpIpp.Protocol.Models.Range(1, 1),
+                        new SharpIpp.Protocol.Models.Range(3, 4)
+                    ],
+                    DocumentNumberRanges = [new SharpIpp.Protocol.Models.Range(1, 2147483647)],
+                    DocumentCopyRanges = [new SharpIpp.Protocol.Models.Range(2, 2)],
+                    JobTemplateAttributes = new JobTemplateAttributes
+                    {
+                        Media = (Media)"iso_a4_210x297mm",
+                        Sides = Sides.OneSided,
+                        NumberUp = 2
+                    }
+                }
+            ]
+        };
+
+        var request = _mapper.Map<IppRequestMessage>(src);
+        request.JobAttributes.Should().Contain(a => a.Tag == Tag.RangeOfInteger && Equals(a.Value, new SharpIpp.Protocol.Models.Range(1, 1)));
+        request.JobAttributes.Should().Contain(a => a.Tag == Tag.RangeOfInteger && Equals(a.Value, new SharpIpp.Protocol.Models.Range(3, 4)));
+        request.JobAttributes.Should().Contain(a => a.Tag == Tag.RangeOfInteger && Equals(a.Value, new SharpIpp.Protocol.Models.Range(1, 2147483647)));
+        request.JobAttributes.Should().Contain(a => a.Tag == Tag.RangeOfInteger && Equals(a.Value, new SharpIpp.Protocol.Models.Range(2, 2)));
+
+        var roundTripped = _mapper.Map<IIppRequestMessage, JobTemplateAttributes>((IIppRequestMessage)request);
+        roundTripped.Overrides.Should().NotBeNull();
+        roundTripped.Overrides!.Should().HaveCount(1);
+        roundTripped.Overrides[0].PageRanges.Should().BeEquivalentTo(src.Overrides![0].PageRanges);
+        roundTripped.Overrides[0].DocumentNumberRanges.Should().BeEquivalentTo(src.Overrides[0].DocumentNumberRanges);
+        roundTripped.Overrides[0].DocumentCopyRanges.Should().BeEquivalentTo(src.Overrides[0].DocumentCopyRanges);
+        roundTripped.Overrides[0].JobTemplateAttributes.Should().NotBeNull();
+        roundTripped.Overrides[0].JobTemplateAttributes!.Media.Should().Be((Media)"iso_a4_210x297mm");
+        roundTripped.Overrides[0].JobTemplateAttributes!.Sides.Should().Be(Sides.OneSided);
+        roundTripped.Overrides[0].JobTemplateAttributes!.NumberUp.Should().Be(2);
+    }
+
+    [TestMethod]
+    public void Map_OverrideInstruction_FiltersNestedOverridesAndOverridesActualMembers()
+    {
+        var mapper = new SimpleMapper();
+        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
+        mapper.FillFromAssembly(assembly!);
+
+        mapper.CreateMap<JobTemplateAttributes, IppRequestMessage>((_, dst, _) =>
+        {
+            dst ??= new IppRequestMessage();
+            dst.JobAttributes.Add(new IppAttribute(Tag.Integer, JobAttribute.Copies, 3));
+            dst.JobAttributes.Add(new IppAttribute(Tag.Integer, JobAttribute.Overrides, 1));
+            dst.JobAttributes.Add(new IppAttribute(Tag.Integer, JobAttribute.OverridesActual, 2));
+            return dst;
+        });
+
+        var src = new OverrideInstruction
+        {
+            JobTemplateAttributes = new JobTemplateAttributes()
+        };
+
+        var attributes = mapper.Map<OverrideInstruction, IEnumerable<IppAttribute>>(src).ToArray();
+
+        attributes.Should().ContainSingle(a => a.Name == JobAttribute.Copies && a.Tag == Tag.Integer && Equals(a.Value, 3));
+        attributes.Should().NotContain(a => a.Name == JobAttribute.Overrides);
+        attributes.Should().NotContain(a => a.Name == JobAttribute.OverridesActual);
     }
 }

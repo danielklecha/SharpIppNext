@@ -157,6 +157,20 @@ public class GetJobAttributesTests : SharpIppIntegrationTestBase
                     PrintQualityActual = [PrintQuality.Normal],
                     PrinterResolutionActual = [new Resolution(600, 600, ResolutionUnit.DotsPerInch)],
                     SidesActual = [Sides.OneSided],
+                    OverridesActual =
+                    [
+                        new OverrideInstruction
+                        {
+                            PageRanges = [new SharpIpp.Protocol.Models.Range(1, 1)],
+                            DocumentNumberRanges = [new SharpIpp.Protocol.Models.Range(1, 1)],
+                            DocumentCopyRanges = [new SharpIpp.Protocol.Models.Range(1, 1)],
+                            JobTemplateAttributes = new JobTemplateAttributes
+                            {
+                                Media = (Media)"iso_a4_210x297mm",
+                                Sides = Sides.OneSided
+                            }
+                        }
+                    ],
                     FinishingsColActual = [
                         new FinishingsCol
                         {

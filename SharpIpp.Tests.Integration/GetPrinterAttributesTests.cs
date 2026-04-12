@@ -81,6 +81,7 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                         ColorSupported = true,
                         ReferenceUriSchemesSupported = new[] { UriScheme.Ftp },
                         PdlOverrideSupported = PdlOverride.Attempted,
+                        OverridesSupported = [OverrideSupported.Pages, OverrideSupported.DocumentNumbers, OverrideSupported.Sides],
                         PrinterUpTime = 100,
                         PrinterCurrentTime = new DateTimeOffset(2024, 1, 1, 1, 1, 1, TimeSpan.Zero),
                         JpegKOctetsSupported = new Range(1, 8),

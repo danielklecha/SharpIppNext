@@ -269,6 +269,12 @@ public class PrinterDescriptionAttributes
     public PdlOverride? PdlOverrideSupported { get; set; }
 
     /// <summary>
+    /// overrides-supported
+    /// See: PWG 5100.6-2003 Section 4.1.7
+    /// </summary>
+    public OverrideSupported[]? OverridesSupported { get; set; }
+
+    /// <summary>
     /// printer-up-time
     /// See: RFC 8011 Section 5.4.29
     /// </summary>

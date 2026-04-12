@@ -4,6 +4,8 @@ The `ISharpIppClient` interface currently exposes the following operation method
 
 SharpIppNext also supports attribute extensions that are modeled on the request and response types without adding new client methods. For the PWG 5100.2 `output-bin` extension, see [OutputBinExtension.md](OutputBinExtension.md).
 
+For the PWG 5100.6 page-override attributes (`overrides`, `overrides-supported`, `overrides-actual`), see [PageOverridesExtension.md](PageOverridesExtension.md).
+
 | Operation | Method | Example |
 | --- | --- | --- |
 | Acknowledge-Document | `AcknowledgeDocumentAsync` | [AcknowledgeDocument.md](AcknowledgeDocument.md) |

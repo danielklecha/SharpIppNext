@@ -178,4 +178,159 @@ public class MapperApplierExtensionsTests
         var result = mapperMock.Object.MapFromDicNullable<int?>(src, "testKey");
         Assert.IsNull(result);
     }
+
+    [TestMethod]
+    public void MapFromDicNullable_WithFactory_Should_Return_Factory_Result()
+    {
+        var mapperMock = new Mock<IMapperApplier>();
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { "testKey", new[] { new IppAttribute(Tag.NameWithoutLanguage, "testKey", "value") } }
+        };
+
+        mapperMock.Setup(m => m.MapNullable<string>("value")).Returns("value");
+
+        var result = mapperMock.Object.MapFromDicNullable<string, string?>(
+            src,
+            "testKey",
+            (attribute, value) => $"{attribute.Name}-{value}");
+
+        Assert.AreEqual("testKey-value", result);
+    }
+
+    [TestMethod]
+    public void MapFromDicNullable_WithFactory_Should_Return_Null_When_Partial_Is_Null()
+    {
+        var mapperMock = new Mock<IMapperApplier>();
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { "testKey", new[] { new IppAttribute(Tag.Integer, "testKey", 10) } }
+        };
+
+        mapperMock.Setup(m => m.MapNullable<int?>(10)).Returns((int?)null);
+        var factoryCalled = false;
+
+        var result = mapperMock.Object.MapFromDicNullable<int?, string?>(
+            src,
+            "testKey",
+            (_, value) =>
+            {
+                factoryCalled = true;
+                return value?.ToString();
+            });
+
+        Assert.IsNull(result);
+        Assert.IsFalse(factoryCalled);
+    }
+
+    [TestMethod]
+    public void MapFromDicNullable_WithFactory_Should_Return_Null_For_Empty_Array()
+    {
+        var mapperMock = new Mock<IMapperApplier>();
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { "testKey", new IppAttribute[0] }
+        };
+
+        mapperMock.Setup(m => m.MapNullable<string?>(null)).Returns((string?)null);
+        var factoryCalled = false;
+
+        var result = mapperMock.Object.MapFromDicNullable<int?, string?>(
+            src,
+            "testKey",
+            (_, value) =>
+            {
+                factoryCalled = true;
+                return value?.ToString();
+            });
+
+        Assert.IsNull(result);
+        Assert.IsFalse(factoryCalled);
+    }
+
+    [TestMethod]
+    public void MapFromDicSetNullable_WithFactory_Should_Return_Null_When_Any_Partial_Is_Null()
+    {
+        var mapperMock = new Mock<IMapperApplier>();
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { "testKey", new[] { new IppAttribute(Tag.Integer, "testKey", 1), new IppAttribute(Tag.Integer, "testKey", 2) } }
+        };
+
+        mapperMock.Setup(m => m.MapNullable<int?>(1)).Returns(1);
+        mapperMock.Setup(m => m.MapNullable<int?>(2)).Returns((int?)null);
+        mapperMock.Setup(m => m.MapNullable<string[]?>(null)).Returns((string[]?)null);
+
+        var result = mapperMock.Object.MapFromDicSetNullable<int?, string>(
+            src,
+            "testKey",
+            (_, value) => value!.Value.ToString());
+
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void MapFromDicSetNullable_WithFactory_Should_Return_Null_When_Factory_Returns_Null()
+    {
+        var mapperMock = new Mock<IMapperApplier>();
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { "testKey", new[] { new IppAttribute(Tag.Integer, "testKey", 1) } }
+        };
+
+        mapperMock.Setup(m => m.MapNullable<int?>(1)).Returns(1);
+        mapperMock.Setup(m => m.MapNullable<string[]?>(null)).Returns((string[]?)null);
+
+        var result = mapperMock.Object.MapFromDicSetNullable<int?, string?>(
+            src,
+            "testKey",
+            (_, _) => null);
+
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void MapFromDicSetNullable_WithFactory_Should_Return_Null_For_Empty_Array()
+    {
+        var mapperMock = new Mock<IMapperApplier>();
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { "testKey", new IppAttribute[0] }
+        };
+
+        mapperMock.Setup(m => m.MapNullable<string[]?>(null)).Returns((string[]?)null);
+        var factoryCalled = false;
+
+        var result = mapperMock.Object.MapFromDicSetNullable<int?, string?>(
+            src,
+            "testKey",
+            (_, _) =>
+            {
+                factoryCalled = true;
+                return "never";
+            });
+
+        Assert.IsNull(result);
+        Assert.IsFalse(factoryCalled);
+    }
+
+    [TestMethod]
+    public void MapFromDicSetNullable_WithFactory_Should_Return_Result_Array()
+    {
+        var mapperMock = new Mock<IMapperApplier>();
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { "testKey", new[] { new IppAttribute(Tag.Integer, "testKey", 3), new IppAttribute(Tag.Integer, "testKey", 4) } }
+        };
+
+        mapperMock.Setup(m => m.MapNullable<int?>(3)).Returns(3);
+        mapperMock.Setup(m => m.MapNullable<int?>(4)).Returns(4);
+
+        var result = mapperMock.Object.MapFromDicSetNullable<int?, string>(
+            src,
+            "testKey",
+            (_, value) => $"mapped-{value!.Value}");
+
+        CollectionAssert.AreEqual(new[] { "mapped-3", "mapped-4" }, result!);
+    }
 }

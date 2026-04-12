@@ -16,10 +16,10 @@ namespace SharpIpp.Tests.Unit.Mapping.Profiles;
 [ExcludeFromCodeCoverage]
 public class PrintJobProfileTest
 {
-    [DataRow(typeof(PrintJobRequest), typeof(IppRequestMessage), "Document must be set")]
-    [DataRow(typeof(IppRequestMessage), typeof(PrintJobRequest), "Document must be set")]
+    [DataRow(typeof(PrintJobRequest), typeof(IppRequestMessage))]
+    [DataRow(typeof(IppRequestMessage), typeof(PrintJobRequest))]
     [TestMethod]
-    public void Map_InvalidRequest_ThrowsArgumentException(Type sourceType, Type destType, string expectedMessage)
+    public void Map_InvalidRequest_DoesNotThrow(Type sourceType, Type destType)
     {
         // Arrange
         var mapper = new SimpleMapper();
@@ -34,6 +34,6 @@ public class PrintJobProfileTest
         Action act = () => mapper.Map(source, sourceType, destType);
 
         // Assert
-        act.Should().Throw<ArgumentException>().WithMessage(expectedMessage);
+        act.Should().NotThrow();
     }
 }

@@ -50,6 +50,48 @@ public class PrinterDescriptionAttributesProfileTests
     }
 
     [TestMethod]
+    public void Map_PrinterDescriptionAttributes_ToDictionary_MapsNoValueFinishingsColDefaultsWithCorrectAttributeNames()
+    {
+        var src = new PrinterDescriptionAttributes
+        {
+            FinishingsColDefault = [NoValue.GetNoValue<FinishingsCol>()],
+            FinishingsColDatabase = [NoValue.GetNoValue<FinishingsCol>()]
+        };
+
+        var dst = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
+
+        dst.Should().ContainKey(PrinterAttribute.FinishingsColDefault);
+        dst[PrinterAttribute.FinishingsColDefault].Should().ContainSingle();
+        dst[PrinterAttribute.FinishingsColDefault][0].Tag.Should().Be(Tag.NoValue);
+        dst[PrinterAttribute.FinishingsColDefault][0].Name.Should().Be(PrinterAttribute.FinishingsColDefault);
+
+        dst.Should().ContainKey(PrinterAttribute.FinishingsColDatabase);
+        dst[PrinterAttribute.FinishingsColDatabase].Should().ContainSingle();
+        dst[PrinterAttribute.FinishingsColDatabase][0].Tag.Should().Be(Tag.NoValue);
+        dst[PrinterAttribute.FinishingsColDatabase][0].Name.Should().Be(PrinterAttribute.FinishingsColDatabase);
+    }
+
+    [TestMethod]
+    public void Map_PrinterDescriptionAttributes_FromDictionary_MapsNoValueFinishingsColDefaults()
+    {
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { PrinterAttribute.FinishingsColDefault, [new IppAttribute(Tag.NoValue, PrinterAttribute.FinishingsColDefault, NoValue.Instance)] },
+            { PrinterAttribute.FinishingsColDatabase, [new IppAttribute(Tag.NoValue, PrinterAttribute.FinishingsColDatabase, NoValue.Instance)] }
+        };
+
+        var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(src);
+
+        dst.FinishingsColDefault.Should().NotBeNull();
+        dst.FinishingsColDefault!.Should().ContainSingle();
+        NoValue.IsNoValue(dst.FinishingsColDefault[0]).Should().BeTrue();
+
+        dst.FinishingsColDatabase.Should().NotBeNull();
+        dst.FinishingsColDatabase!.Should().ContainSingle();
+        NoValue.IsNoValue(dst.FinishingsColDatabase[0]).Should().BeTrue();
+    }
+
+    [TestMethod]
     public void Map_PrinterDescriptionAttributes_FromDictionary_Maps3DPrinterAttributes()
     {
         var src = new Dictionary<string, IppAttribute[]>
@@ -238,7 +280,7 @@ public class PrinterDescriptionAttributesProfileTests
         var src = new PrinterDescriptionAttributes
         {
             OutputBinDefault = OutputBin.Stacker(3),
-            OutputBinSupported = [OutputBin.Stacker(3), OutputBin.Mailbox(2), OutputBin.Tray(7), (OutputBin)"Accounting Bin"]
+            OutputBinSupported = [OutputBin.Stacker(3), OutputBin.Mailbox(2), new OutputBin("vendor-bin-42", true), new OutputBin("Accounting Bin", false)]
         };
 
         var serialized = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
@@ -252,12 +294,55 @@ public class PrinterDescriptionAttributesProfileTests
             [Tag.Keyword, Tag.Keyword, Tag.Keyword, Tag.NameWithoutLanguage],
             options => options.WithStrictOrdering());
         serialized[PrinterAttribute.OutputBinSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(
-            ["stacker-3", "mailbox-2", "tray-7", "Accounting Bin"],
+            ["stacker-3", "mailbox-2", "vendor-bin-42", "Accounting Bin"],
             options => options.WithStrictOrdering());
 
         var roundTripped = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(serialized);
 
         roundTripped.OutputBinDefault.Should().Be(OutputBin.Stacker(3));
         roundTripped.OutputBinSupported.Should().BeEquivalentTo(src.OutputBinSupported);
+    }
+
+    [TestMethod]
+    public void Map_PrinterDescriptionAttributes_OutputBinExtension_ForcesNameTagWhenRequested()
+    {
+        var src = new PrinterDescriptionAttributes
+        {
+            OutputBinDefault = new OutputBin("custom-finisher-bin", false)
+        };
+
+        var serialized = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
+
+        serialized.Should().ContainKey(PrinterAttribute.OutputBinDefault);
+        serialized[PrinterAttribute.OutputBinDefault].Single().Tag.Should().Be(Tag.NameWithoutLanguage);
+        serialized[PrinterAttribute.OutputBinDefault].Single().Value.Should().Be("custom-finisher-bin");
+
+        var roundTripped = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(serialized);
+        roundTripped.OutputBinDefault.Should().Be(new OutputBin("custom-finisher-bin", false));
+    }
+
+    [TestMethod]
+    public void Map_PrinterDescriptionAttributes_OverridesSupported_RoundTrips()
+    {
+        var src = new PrinterDescriptionAttributes
+        {
+            OverridesSupported =
+            [
+                OverrideSupported.Pages,
+                OverrideSupported.DocumentNumbers,
+                OverrideSupported.DocumentCopies,
+                OverrideSupported.Sides,
+                (OverrideSupported)"vendor-custom-override"
+            ]
+        };
+
+        var serialized = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
+        serialized.Should().ContainKey(PrinterAttribute.OverridesSupported);
+        serialized[PrinterAttribute.OverridesSupported].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Keyword);
+        serialized[PrinterAttribute.OverridesSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(
+            ["pages", "document-numbers", "document-copies", "sides", "vendor-custom-override"]);
+
+        var roundTripped = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(serialized);
+        roundTripped.OverridesSupported.Should().BeEquivalentTo(src.OverridesSupported);
     }
 }

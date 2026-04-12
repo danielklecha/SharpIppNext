@@ -16,7 +16,7 @@ namespace SharpIpp.Tests.Unit.Mapping.Profiles;
 public class SendUriProfileTest
 {
     [TestMethod]
-    public void Map_SendUriRequestToIppRequestMessage_DocumentUriNullAndLastDocumentFalse_ThrowsArgumentException()
+    public void Map_SendUriRequestToIppRequestMessage_DocumentUriNullAndLastDocumentFalse_DoesNotThrow()
     {
         // Arrange
         var mapper = new SimpleMapper();
@@ -36,7 +36,7 @@ public class SendUriProfileTest
         Action act = () => mapper.Map<SendUriRequest, IppRequestMessage>(request);
 
         // Assert
-        act.Should().Throw<ArgumentException>().WithMessage($"{nameof(SendUriOperationAttributes.DocumentUri)} must be set for non-last document");
+        act.Should().NotThrow();
     }
 
     [TestMethod]

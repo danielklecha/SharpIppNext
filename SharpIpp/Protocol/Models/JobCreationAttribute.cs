@@ -32,6 +32,7 @@ public readonly record struct JobCreationAttribute(string Value, bool IsValue = 
     public static readonly JobCreationAttribute Media = new("media");
     public static readonly JobCreationAttribute PrinterResolution = new("printer-resolution");
     public static readonly JobCreationAttribute PrintQuality = new("print-quality");
+    public static readonly JobCreationAttribute Overrides = new("overrides");
 
     // Common PWG extension attributes accepted during Job Creation.
     public static readonly JobCreationAttribute FinishingsCol = new("finishings-col");

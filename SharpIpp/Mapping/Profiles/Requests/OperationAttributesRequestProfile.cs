@@ -32,13 +32,8 @@ internal class OperationAttributesRequestProfile : IProfile
         mapper.CreateMap<OperationAttributes, List<IppAttribute>>((src, dst, map) =>
         {
             dst ??= new List<IppAttribute>();
-            if (src.AttributesCharset == null)
-                throw new ArgumentNullException(nameof(src.AttributesCharset));
-            dst.Add(new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, src.AttributesCharset));
-
-            if (src.AttributesNaturalLanguage == null)
-                throw new ArgumentNullException(nameof(src.AttributesNaturalLanguage));
-            dst.Add(new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, src.AttributesNaturalLanguage));
+            dst.Add(new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, src.AttributesCharset ?? "utf-8"));
+            dst.Add(new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, src.AttributesNaturalLanguage ?? "en"));
 
             if (src.PrinterUri != null)
                 dst.Add(new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, src.PrinterUri.ToString()));

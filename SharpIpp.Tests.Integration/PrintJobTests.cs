@@ -77,7 +77,20 @@ public class PrintJobTests : SharpIppIntegrationTestBase
                         TransformationMatrix = [1, 0, 0, 0, 1, 0]
                     }
                 ],
-                Overrides = [new OverrideInstruction { Pages = "1-2", DocumentCopies = 1, DocumentNumbers = [1] }]
+                Overrides =
+                [
+                    new OverrideInstruction
+                    {
+                        PageRanges = [new SharpIpp.Protocol.Models.Range(1, 2)],
+                        DocumentNumberRanges = [new SharpIpp.Protocol.Models.Range(1, 1)],
+                        DocumentCopyRanges = [new SharpIpp.Protocol.Models.Range(1, 1)],
+                        JobTemplateAttributes = new JobTemplateAttributes
+                        {
+                            Media = (Media)"iso_a4_210x297mm",
+                            Sides = Sides.OneSided
+                        }
+                    }
+                ]
             }
         };
         var client = new SharpIppClient();

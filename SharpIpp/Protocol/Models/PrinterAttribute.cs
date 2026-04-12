@@ -49,6 +49,7 @@ namespace SharpIpp.Protocol.Models
         public const string ColorSupported = "color-supported";
         public const string ReferenceUriSchemesSupported = "reference-uri-schemes-supported";
         public const string PdlOverrideSupported = "pdl-override-supported";
+        public const string OverridesSupported = "overrides-supported";
         public const string PrinterUpTime = "printer-up-time";
         public const string PrinterCurrentTime = "printer-current-time";
         public const string MultipleOperationTimeOut = "multiple-operation-time-out";

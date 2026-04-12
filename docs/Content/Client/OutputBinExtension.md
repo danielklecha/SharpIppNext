@@ -2,7 +2,7 @@
 
 PWG 5100.2 defines the `output-bin` Job Template attribute plus the related printer description attributes `output-bin-default` and `output-bin-supported`. SharpIppNext exposes those values through `JobTemplateAttributes.OutputBin` and `PrinterDescriptionAttributes.OutputBinDefault` / `OutputBinSupported`.
 
-Use `OutputBin` for the standard keywords defined by the specification, for generated keyword forms such as `stacker-N`, `mailbox-N`, and `tray-N`, and for site-defined administrator names.
+Use `OutputBin` for the standard keywords defined by the specification, for generated keyword forms such as `stacker-N`, `mailbox-N`, and `tray-N`, for vendor extension keywords, and for site-defined administrator names.
 
 ## Submit a job to a specific output bin
 
@@ -75,4 +75,13 @@ using SharpIpp.Protocol.Models;
 var namedBin = (OutputBin)"Accounting Mailbox";
 ```
 
-SharpIppNext will serialize standard and generated keyword forms with the IPP `keyword` tag and local names with the IPP `nameWithoutLanguage` tag.
+If you need to force a keyword-like token to be serialized as a local name, construct `OutputBin` with `isKeyword: false`.
+
+```csharp
+using SharpIpp.Protocol.Models;
+
+var extensionKeyword = new OutputBin("vendor-bin-42", true);
+var forcedName = new OutputBin("custom-finisher-bin", false);
+```
+
+SharpIppNext will serialize standard and extension keyword forms with the IPP `keyword` tag and local names with the IPP `nameWithoutLanguage` tag.

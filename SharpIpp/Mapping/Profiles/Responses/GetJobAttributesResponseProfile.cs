@@ -106,18 +106,21 @@ internal class GetJobAttributesResponseProfile : IProfile
             JobHoldUntilActual = map.MapFromDicSetNullable<JobHoldUntil[]?>(src, JobAttribute.JobHoldUntilActual),
             JobPriorityActual = map.MapFromDicSetNullable<int[]?>(src, JobAttribute.JobPriorityActual),
             JobSheetsActual = map.MapFromDicSetNullable<JobSheets[]?>(src, JobAttribute.JobSheetsActual),
-            MediaActual = map.MapFromDicSetNullable<Media[]?>(src, JobAttribute.MediaActual),
+            MediaActual = map.MapFromDicSetNullable<string, Media>(src, JobAttribute.MediaActual, (attribute, value) => new Media(value, attribute.Tag == Tag.Keyword)),
             MediaColActual = src.TryGetValue(JobAttribute.MediaColActual, out var mediaColActual) && mediaColActual.GroupBegCollection().Any()
                 ? mediaColActual.GroupBegCollection().Select(x => map.Map<MediaCol>(x.FromBegCollection().ToIppDictionary())).ToArray()
                 : null,
             MultipleDocumentHandlingActual = map.MapFromDicSetNullable<MultipleDocumentHandling[]?>(src, JobAttribute.MultipleDocumentHandlingActual),
             NumberUpActual = map.MapFromDicSetNullable<int[]?>(src, JobAttribute.NumberUpActual),
             OrientationRequestedActual = map.MapFromDicSetNullable<Orientation[]?>(src, JobAttribute.OrientationRequestedActual),
-            OutputBinActual = map.MapFromDicSetNullable<OutputBin[]?>(src, JobAttribute.OutputBinActual),
+            OutputBinActual = map.MapFromDicSetNullable<string, OutputBin>(src, JobAttribute.OutputBinActual, (attribute, value) => new OutputBin(value, attribute.Tag == Tag.Keyword)),
             PageRangesActual = map.MapFromDicSetNullable<Protocol.Models.Range[]?>(src, JobAttribute.PageRangesActual),
             PrintQualityActual = map.MapFromDicSetNullable<PrintQuality[]?>(src, JobAttribute.PrintQualityActual),
             PrinterResolutionActual = map.MapFromDicSetNullable<Resolution[]?>(src, JobAttribute.PrinterResolutionActual),
             SidesActual = map.MapFromDicSetNullable<Sides[]?>(src, JobAttribute.SidesActual),
+            OverridesActual = src.TryGetValue(JobAttribute.OverridesActual, out var overridesActual) && overridesActual.GroupBegCollection().Any()
+                ? overridesActual.GroupBegCollection().Select(x => map.Map<OverrideInstruction>(x.FromBegCollection().ToIppDictionary())).ToArray()
+                : null,
             FinishingsColActual = src.TryGetValue(JobAttribute.FinishingsColActual, out var finishingsColActual) && finishingsColActual.GroupBegCollection().Any()
                 ? finishingsColActual.GroupBegCollection().Select(x => map.Map<FinishingsCol>(x.FromBegCollection().ToIppDictionary())).ToArray()
                 : null,
@@ -237,7 +240,11 @@ internal class GetJobAttributesResponseProfile : IProfile
             if (src.JobSheetsActual != null)
                 dic.Add(JobAttribute.JobSheetsActual, src.JobSheetsActual.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.JobSheetsActual, map.Map<string>(x))).ToArray());
             if (src.MediaActual != null)
-                dic.Add(JobAttribute.MediaActual, src.MediaActual.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.MediaActual, x)).ToArray());
+                dic.Add(JobAttribute.MediaActual, src.MediaActual.Select(x =>
+                {
+                    var mediaTag = x.ToIppTag();
+                    return new IppAttribute(mediaTag, JobAttribute.MediaActual, x);
+                }).ToArray());
             if (src.MediaColActual != null)
                 dic.Add(JobAttribute.MediaColActual, src.MediaColActual.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.MediaColActual)).ToArray());
             if (src.MultipleDocumentHandlingActual != null)
@@ -250,7 +257,8 @@ internal class GetJobAttributesResponseProfile : IProfile
                 dic.Add(JobAttribute.OutputBinActual, src.OutputBinActual.Select(x =>
                 {
                     var outputBin = map.Map<string>(x);
-                    return new IppAttribute(outputBin.GetKeywordOrNameTag(OutputBin.KeywordRegex), JobAttribute.OutputBinActual, outputBin);
+                    var outputBinTag = x.ToIppTag();
+                    return new IppAttribute(outputBinTag, JobAttribute.OutputBinActual, outputBin);
                 }).ToArray());
             if (src.PageRangesActual != null)
                 dic.Add(JobAttribute.PageRangesActual, src.PageRangesActual.Select(x => new IppAttribute(Tag.RangeOfInteger, JobAttribute.PageRangesActual, x)).ToArray());
@@ -260,6 +268,8 @@ internal class GetJobAttributesResponseProfile : IProfile
                 dic.Add(JobAttribute.PrinterResolutionActual, src.PrinterResolutionActual.Select(x => new IppAttribute(Tag.Resolution, JobAttribute.PrinterResolutionActual, x)).ToArray());
             if (src.SidesActual != null)
                 dic.Add(JobAttribute.SidesActual, src.SidesActual.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.SidesActual, map.Map<string>(x))).ToArray());
+            if (src.OverridesActual != null)
+                dic.Add(JobAttribute.OverridesActual, src.OverridesActual.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.OverridesActual)).ToArray());
             if (src.FinishingsColActual != null)
                 dic.Add(JobAttribute.FinishingsColActual, src.FinishingsColActual.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.FinishingsColActual)).ToArray());
             if (src.DateTimeAtCompletedEstimated != null)

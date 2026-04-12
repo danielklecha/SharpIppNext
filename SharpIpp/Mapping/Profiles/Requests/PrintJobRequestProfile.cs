@@ -1,6 +1,5 @@
 using SharpIpp.Models.Responses;
 using SharpIpp.Models.Requests;
-using System;
 using System.Collections.Generic;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Extensions;
@@ -15,11 +14,6 @@ internal class PrintJobRequestProfile : IProfile
     {
         mapper.CreateMap<PrintJobRequest, IppRequestMessage>((src, map) =>
         {
-            if (src.Document == null)
-            {
-                throw new ArgumentException($"{nameof(src.Document)} must be set");
-            }
-
             var dst = new IppRequestMessage { IppOperation = IppOperation.PrintJob, Document = src.Document };
             map.Map<IIppPrinterRequest, IppRequestMessage>(src, dst);
 
@@ -35,10 +29,6 @@ internal class PrintJobRequestProfile : IProfile
 
         mapper.CreateMap<IIppRequestMessage, PrintJobRequest>((src, map) =>
         {
-            if (src.Document == null)
-            {
-                throw new ArgumentException($"{nameof(src.Document)} must be set");
-            }
             var dst = new PrintJobRequest { Document = src.Document, JobTemplateAttributes = new JobTemplateAttributes() };
             map.Map<IIppRequestMessage, IIppPrinterRequest>(src, dst);
             map.Map(src, dst.JobTemplateAttributes);

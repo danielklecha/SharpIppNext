@@ -32,6 +32,7 @@ If any are missing, use defaults noted below:
 - request/response models
 - request/response mapping profiles
 - collection mappings (if needed)
+- request validation rules in `IppRequestValidator` (avoid profile/extension validation logic)
 - client contract + implementation
 - server dispatch
 - unit tests
@@ -57,4 +58,5 @@ Always return results in this exact order:
 - Keep mappings symmetric (read/write), especially for enum arrays and collections.
 - If a spec-defined value list allows vendor-specific or extension values, model it as an `ISmartEnum` keyword-style type instead of a closed C# enum, and keep the protocol mapping extensible on both read and write paths.
 - Keep docs and tests in parity with code changes.
+- Keep all request validation logic centralized in `IppRequestValidator`; client/server should only invoke the validator and mapping profiles should remain transformation-focused.
 - Auto-implement clear, unambiguous gaps; only ask for confirmation on ambiguous spec interpretation.

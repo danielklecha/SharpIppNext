@@ -195,6 +195,7 @@ namespace SharpIpp.Protocol.Models
         public const string PrintSupports = "print-supports";
         public const string MaterialsColActual = "materials-col-actual";
         public const string Overrides = "overrides";
+        public const string OverridesActual = "overrides-actual";
         public const string MediaSource = "media-source";
         public const string MediaSourceProperties = "media-source-properties";
         public const string MediaThickness = "media-thickness";

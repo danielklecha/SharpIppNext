@@ -1,6 +1,5 @@
 using SharpIpp.Models.Responses;
 using SharpIpp.Models.Requests;
-using System;
 using System.Collections.Generic;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Extensions;
@@ -15,11 +14,6 @@ internal class SendUriRequestProfile : IProfile
     {
         mapper.CreateMap<SendUriRequest, IppRequestMessage>((src, map) =>
         {
-            if (src.OperationAttributes != null && src.OperationAttributes.DocumentUri == null && !src.OperationAttributes.LastDocument)
-            {
-                throw new ArgumentException($"{nameof(src.OperationAttributes.DocumentUri)} must be set for non-last document");
-            }
-
             var dst = new IppRequestMessage { IppOperation = IppOperation.SendUri };
             map.Map<IIppJobRequest, IppRequestMessage>(src, dst);
             if (src.OperationAttributes != null)

@@ -25,28 +25,34 @@ public partial class SharpIppClient : ISharpIppClient
     private readonly bool _disposeHttpClient;
     private readonly HttpClient _httpClient;
     private readonly IIppProtocol _ippProtocol;
+    private readonly IIppRequestValidator _requestValidator;
 
     static SharpIppClient()
     {
         MapperSingleton = new Lazy<IMapper>(MapperFactory);
     }
 
-    public SharpIppClient() : this(new HttpClient(), new IppProtocol(), true)
+    public SharpIppClient() : this(new HttpClient(), new IppProtocol(), IppRequestValidator.Default, true)
     {
     }
 
-    public SharpIppClient(HttpClient httpClient) : this(httpClient, new IppProtocol(), false )
+    public SharpIppClient(HttpClient httpClient) : this(httpClient, new IppProtocol(), IppRequestValidator.Default, false )
     {
     }
 
-    public SharpIppClient(HttpClient httpClient, IIppProtocol ippProtocol) : this( httpClient, ippProtocol, false )
+    public SharpIppClient(HttpClient httpClient, IIppProtocol ippProtocol) : this(httpClient, ippProtocol, IppRequestValidator.Default, false)
     {
     }
 
-    internal SharpIppClient(HttpClient httpClient, IIppProtocol ippProtocol, bool disposeHttpClient)
+    public SharpIppClient(HttpClient httpClient, IIppProtocol ippProtocol, IIppRequestValidator requestValidator) : this(httpClient, ippProtocol, requestValidator, false)
+    {
+    }
+
+    internal SharpIppClient(HttpClient httpClient, IIppProtocol ippProtocol, IIppRequestValidator requestValidator, bool disposeHttpClient)
     {
         _httpClient = httpClient;
         _ippProtocol = ippProtocol;
+        _requestValidator = requestValidator ?? throw new ArgumentNullException(nameof(requestValidator));
         _disposeHttpClient = disposeHttpClient;
     }
 
@@ -70,8 +76,8 @@ public partial class SharpIppClient : ISharpIppClient
         IIppRequestMessage ippRequest,
         CancellationToken cancellationToken = default)
     {
-        ippRequest.Validate();
-        ippRequest.ValidateOperationRules();
+        _requestValidator.Context.Source = nameof(SharpIppClient);
+        _requestValidator.Validate(ippRequest);
 
         var httpRequest = GetHttpRequestMessage( printerUri );
 

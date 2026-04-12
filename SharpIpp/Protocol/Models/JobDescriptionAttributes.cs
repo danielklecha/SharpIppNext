@@ -554,6 +554,13 @@ namespace SharpIpp.Protocol.Models
         public Sides[]? SidesActual { get; set; }
 
         /// <summary>
+        /// This attribute specifies the actual page overrides
+        /// used by the Printer.
+        /// See: PWG 5100.6-2003 Section 5.1
+        /// </summary>
+        public OverrideInstruction[]? OverridesActual { get; set; }
+
+        /// <summary>
         /// This attribute specifies the actual finishings-col
         /// collection(s) used by the Printer.
         /// See: PWG 5100.1-2022 Section 11.2

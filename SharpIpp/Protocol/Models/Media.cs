@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the media attribute.
 /// See: PWG 5101.1
 /// </summary>
-public readonly record struct Media(string Value, bool IsValue = true) : ISmartEnum 
+public readonly record struct Media(string Value, bool IsKeyword = true, bool IsValue = true) : IKeywordSmartEnum
 {
     public static readonly Media Choice = new("choice");
     public static readonly Media Default = new("default");
