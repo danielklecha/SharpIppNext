@@ -144,19 +144,56 @@ public class GetJobAttributesTests : SharpIppIntegrationTestBase
                     PrintContentOptimizeActual = new[] { PrintContentOptimize.Text },
                     CopiesActual = [1],
                     FinishingsActual = [Finishings.None],
+                    CoverBackActual = [new Cover { CoverType = CoverType.PrintBack }],
+                    CoverFrontActual = [new Cover { CoverType = CoverType.PrintFront }],
                     JobHoldUntilActual = [JobHoldUntil.NoHold],
                     JobPriorityActual = [50],
                     JobSheetsActual = [JobSheets.None],
                     MediaActual = [(Media)"iso_a4_210x297mm"],
+                    ImpositionTemplateActual = [(ImpositionTemplate)"none"],
+                    InsertSheetActual = [new InsertSheet { InsertAfterPageNumber = 1 }],
+                    JobAccountIdActual = ["acct-1"],
+                    JobAccountingSheetsActual = [new JobAccountingSheets { JobAccountingSheetsType = JobSheetsType.None }],
+                    JobAccountingUserIdActual = ["user-1"],
+                    JobErrorSheetActual = [new JobErrorSheet { JobErrorSheetType = JobSheetsType.None }],
+                    JobMessageToOperatorActual = ["operator message actual"],
+                    JobSheetMessageActual = ["sheet message actual"],
                     MediaColActual = [new MediaCol { MediaSizeName = (Media)"iso_a4_210x297mm", MediaType = (MediaType)"stationery" }],
+                    MediaInputTrayCheckActual = [(MediaInputTrayCheck)"tray-1"],
                     MultipleDocumentHandlingActual = [MultipleDocumentHandling.SeparateDocumentsUncollatedCopies],
                     NumberUpActual = [1],
                     OrientationRequestedActual = [Orientation.Portrait],
                     OutputBinActual = [(OutputBin)"face-down"],
+                    PageDeliveryActual = [PageDelivery.ReverseOrderFaceDown],
+                    PageOrderReceivedActual = [PageOrderReceived.OneToNOrder],
                     PageRangesActual = [new SharpIpp.Protocol.Models.Range(1, 2)],
+                    PresentationDirectionNumberUpActual = [PresentationDirectionNumberUp.TorightTobottom],
                     PrintQualityActual = [PrintQuality.Normal],
                     PrinterResolutionActual = [new Resolution(600, 600, ResolutionUnit.DotsPerInch)],
                     SidesActual = [Sides.OneSided],
+                    SeparatorSheetsActual = [new SeparatorSheets { SeparatorSheetsType = [SeparatorSheetsType.None] }],
+                    XImagePositionActual = [XImagePosition.None],
+                    XImageShiftActual = [0],
+                    XSide1ImageShiftActual = [0],
+                    XSide2ImageShiftActual = [0],
+                    YImagePositionActual = [YImagePosition.None],
+                    YImageShiftActual = [0],
+                    YSide1ImageShiftActual = [0],
+                    YSide2ImageShiftActual = [0],
+                    OverridesActual =
+                    [
+                        new OverrideInstruction
+                        {
+                            PageRanges = [new SharpIpp.Protocol.Models.Range(1, 1)],
+                            DocumentNumberRanges = [new SharpIpp.Protocol.Models.Range(1, 1)],
+                            DocumentCopyRanges = [new SharpIpp.Protocol.Models.Range(1, 1)],
+                            JobTemplateAttributes = new JobTemplateAttributes
+                            {
+                                Media = (Media)"iso_a4_210x297mm",
+                                Sides = Sides.OneSided
+                            }
+                        }
+                    ],
                     FinishingsColActual = [
                         new FinishingsCol
                         {

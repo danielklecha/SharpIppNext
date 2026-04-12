@@ -2,6 +2,7 @@ using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
+using SharpIpp.Protocol;
 using SharpIpp.Protocol.Extensions;
 using SharpIpp.Protocol.Models;
 using System;
@@ -56,11 +57,11 @@ public class DocumentTemplateAttributesProfileTests
     }
 
     [TestMethod]
-    public void Map_ToAttributes_WithNameOutputBin_UsesNameWithoutLanguageTag()
+    public void Map_ToAttributes_WithNamedOutputBin_UsesNameWithoutLanguageTag()
     {
         var src = new DocumentTemplateAttributes
         {
-            OutputBin = (OutputBin)"custom-finisher-bin"
+            OutputBin = new OutputBin("custom-finisher-bin", false)
         };
 
         var attributes = _mapper.Map<System.Collections.Generic.List<IppAttribute>>(src);
@@ -71,12 +72,40 @@ public class DocumentTemplateAttributesProfileTests
     }
 
     [TestMethod]
+    public void Map_ToAttributes_WithExtensionKeywordOutputBin_UsesKeywordTag()
+    {
+        var src = new DocumentTemplateAttributes
+        {
+            OutputBin = new OutputBin("vendor-bin-42", true)
+        };
+
+        var attributes = _mapper.Map<System.Collections.Generic.List<IppAttribute>>(src);
+
+        var outputBin = attributes.Single(a => a.Name == JobAttribute.OutputBin);
+        outputBin.Tag.Should().Be(Tag.Keyword);
+        outputBin.Value.Should().Be("vendor-bin-42");
+    }
+
+    [TestMethod]
+    public void Map_FromAttributes_WithNamedOutputBin_PreservesNameIntent()
+    {
+        var attributes = new[]
+        {
+            new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.OutputBin, "custom-finisher-bin")
+        }.ToIppDictionary();
+
+        var mapped = _mapper.Map<DocumentTemplateAttributes>(attributes);
+
+        mapped.OutputBin.Should().Be(new OutputBin("custom-finisher-bin", false));
+    }
+
+    [TestMethod]
     public void Map_ToAttributes_WithCustomMediaAndImpositionTemplate_UsesNameWithoutLanguageTag()
     {
         var src = new DocumentTemplateAttributes
         {
-            Media = (Media)"Accounting Team",
-            ImpositionTemplate = (ImpositionTemplate)"Layout A"
+            Media = new Media("Accounting Team", false),
+            ImpositionTemplate = new ImpositionTemplate("Layout A", false)
         };
 
         var attributes = _mapper.Map<System.Collections.Generic.List<IppAttribute>>(src);
@@ -135,7 +164,7 @@ public class DocumentTemplateAttributesProfileTests
     }
 
     [TestMethod]
-    public void Map_ToAttributes_WithFinishingsAndFinishingsCol_Throws()
+    public void Map_ToAttributes_WithFinishingsAndFinishingsCol_MapsAndValidatorRejects()
     {
         var src = new DocumentTemplateAttributes
         {
@@ -143,8 +172,28 @@ public class DocumentTemplateAttributesProfileTests
             FinishingsCol = new[] { new FinishingsCol { FinishingTemplate = FinishingTemplate.Staple } }
         };
 
-        var act = () => _mapper.Map<System.Collections.Generic.List<IppAttribute>>(src);
+        var request = new IppRequestMessage
+        {
+            IppOperation = IppOperation.SendDocument,
+            RequestId = 123,
+        };
+        request.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://127.0.0.1:631/"),
+            new IppAttribute(Tag.Boolean, JobAttribute.LastDocument, true)
+        ]);
+        request.DocumentAttributes.AddRange(_mapper.Map<System.Collections.Generic.List<IppAttribute>>(src));
 
-        act.Should().Throw<ArgumentException>();
+        var validator = new IppRequestValidator
+        {
+            ValidateJobAttributesGroup = false,
+        };
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().Throw<SharpIpp.Exceptions.IppRequestException>()
+            .WithMessage("'finishings' and 'finishings-col' are conflicting attributes and cannot be supplied together.");
     }
 }

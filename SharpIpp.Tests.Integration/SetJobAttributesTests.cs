@@ -26,7 +26,8 @@ public class SetJobAttributesTests : SharpIppIntegrationTestBase
             JobTemplateAttributes = new()
             {
                 Copies = 2,
-                JobPriority = 50
+                JobPriority = 50,
+                ImpositionTemplate = new ImpositionTemplate("Layout A", false)
             }
         };
         var client = new SharpIppClient();
@@ -53,7 +54,8 @@ public class SetJobAttributesTests : SharpIppIntegrationTestBase
             JobTemplateAttributes = new()
             {
                 Copies = 3,
-                JobPriority = 60
+                JobPriority = 60,
+                ImpositionTemplate = ImpositionTemplate.Signature
             }
         };
         SetJobAttributesResponse? serverResponse = null;

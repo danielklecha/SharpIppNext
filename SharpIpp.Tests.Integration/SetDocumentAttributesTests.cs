@@ -35,7 +35,7 @@ public class SetDocumentAttributesTests : SharpIppIntegrationTestBase
             {
                 Copies = 1,
                 CoverBack = new Cover { CoverType = CoverType.PrintNone, Media = (Media)"iso_a4_210x297mm" },
-                CoverFront = new Cover { CoverType = CoverType.PrintBoth, Media = (Media)"iso_a4_210x297mm", MediaCol = new MediaCol { MediaColor = (MediaColor)"blue" } },
+                CoverFront = new Cover { CoverType = CoverType.PrintBoth, MediaCol = new MediaCol { MediaColor = (MediaColor)"blue" } },
                 // Either Finishings OR FinishingsCol is allowed (they are mutually exclusive in mapping), so use FinishingsCol here to keep a rich case.
                 FinishingsCol = [new FinishingsCol
                 {

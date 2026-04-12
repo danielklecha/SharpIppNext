@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the name of the covering.
 /// See: PWG 5100.1-2022 Section 5.2.4.1
 /// </summary>
-public readonly record struct CoveringName(string Value, bool IsValue = true) : ISmartEnum 
+public readonly record struct CoveringName(string Value, bool IsKeyword = true, bool IsValue = true) : IKeywordSmartEnum
 {
     public static readonly CoveringName Plain = new("plain");
     public static readonly CoveringName PreCut = new("pre-cut");

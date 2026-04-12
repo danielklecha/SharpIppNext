@@ -4,6 +4,8 @@ Here is a basic example of how to initialize a `SetDocumentAttributesRequest` an
 
 Per PWG 5100.5 Section 5.1.3, you can supply Document Description attributes (for example `document-name`) and/or Document Template attributes.
 
+At least one Document attribute must be present in the request.
+
 ```csharp
 using System;
 using System.Threading.Tasks;

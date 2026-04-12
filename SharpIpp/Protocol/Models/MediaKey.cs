@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the media-key member attribute.
 /// See: PWG 5100.13-2023 Section 6.1.13
 /// </summary>
-public readonly record struct MediaKey(string Value, bool IsValue = true) : ISmartEnum 
+public readonly record struct MediaKey(string Value, bool IsKeyword = true, bool IsValue = true) : IKeywordSmartEnum
 {
     public override string ToString() => Value;
     public static implicit operator string(MediaKey bin) => bin.Value;

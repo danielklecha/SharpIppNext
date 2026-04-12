@@ -62,7 +62,7 @@ public static class IppAttributeExtensions
         var attributeList = attributes as IList<IppAttribute> ?? attributes.ToList();
         if (attributeList.Count == 1 && attributeList[0].Tag == Tag.NoValue)
         {
-            yield return attributeList[0];
+            yield return new IppAttribute(Tag.NoValue, collectionName, attributeList[0].Value);
             yield break;
         }
 

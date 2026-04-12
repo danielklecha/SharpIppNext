@@ -87,7 +87,22 @@ internal class TypesProfile : IProfile
 
     private static void ConfigureSmartEnum<T>(IMapperConstructor map) where T : struct
     {
-        map.CreateIppMap<string, T>((src, ctx) => (T)Activator.CreateInstance(typeof(T), src, true)!);
+        var smartEnumType = typeof(T);
+        if (typeof(IKeywordSmartEnum).IsAssignableFrom(smartEnumType))
+        {
+            var threeArgumentConstructor = smartEnumType.GetConstructor([typeof(string), typeof(bool), typeof(bool)])
+                ?? throw new MissingMethodException($"No (string, bool, bool) constructor found for keyword smart enum type '{smartEnumType.FullName}'.");
+
+            map.CreateIppMap<string, T>((src, ctx) => (T)threeArgumentConstructor.Invoke([src, true, true]));
+        }
+        else
+        {
+            var twoArgumentConstructor = smartEnumType.GetConstructor([typeof(string), typeof(bool)])
+                ?? throw new MissingMethodException($"No (string, bool) constructor found for smart enum type '{smartEnumType.FullName}'.");
+
+            map.CreateIppMap<string, T>((src, ctx) => (T)twoArgumentConstructor.Invoke([src, true]));
+        }
+
         map.CreateIppMap<T, string>((src, ctx) => src.ToString()!);
         map.CreateIppMap<NoValue, T>((src, ctx) => NoValue.GetNoValue<T>());
     }

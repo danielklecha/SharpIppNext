@@ -1,6 +1,5 @@
 using SharpIpp.Models.Responses;
 using SharpIpp.Models.Requests;
-using System;
 using System.Collections.Generic;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Extensions;
@@ -15,12 +14,6 @@ internal class PrintUriRequestProfile : IProfile
     {
         mapper.CreateMap<PrintUriRequest, IppRequestMessage>((src, map) =>
         {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            if (src.OperationAttributes?.DocumentUri == null)
-            {
-                throw new ArgumentException($"{nameof(JobAttribute.DocumentUri)} must be set");
-            }
-
             var dst = new IppRequestMessage { IppOperation = IppOperation.PrintUri };
             map.Map<IIppPrinterRequest, IppRequestMessage>(src, dst);
             if (src.OperationAttributes != null)

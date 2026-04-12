@@ -19,6 +19,7 @@ public partial class SharpIppServer : ISharpIppServer
 {
     private static readonly Lazy<IMapper> MapperSingleton;
     private readonly IIppProtocol _ippProtocol;
+    private readonly IIppRequestValidator _requestValidator;
     private IMapper Mapper => MapperSingleton.Value;
 
     static SharpIppServer()
@@ -29,11 +30,19 @@ public partial class SharpIppServer : ISharpIppServer
     public SharpIppServer()
     {
         _ippProtocol = new IppProtocol();
+        _requestValidator = IppRequestValidator.Default;
     }
 
     public SharpIppServer(IIppProtocol ippProtocol)
     {
         _ippProtocol = ippProtocol;
+        _requestValidator = IppRequestValidator.Default;
+    }
+
+    public SharpIppServer(IIppProtocol ippProtocol, IIppRequestValidator requestValidator)
+    {
+        _ippProtocol = ippProtocol;
+        _requestValidator = requestValidator ?? throw new ArgumentNullException(nameof(requestValidator));
     }
 
     public Task<IIppRequestMessage> ReceiveRawRequestAsync(
@@ -50,7 +59,6 @@ public partial class SharpIppServer : ISharpIppServer
         CancellationToken cancellationToken = default)
     {
         var request = await ReceiveRawRequestAsync(stream, cancellationToken);
-        request.Validate();
         return await ReceiveRequestAsync(request);
     }
 
@@ -60,6 +68,10 @@ public partial class SharpIppServer : ISharpIppServer
     {
         if (request is null)
             throw new ArgumentNullException(nameof(request));
+
+        _requestValidator.Context.Source = nameof(SharpIppServer);
+        _requestValidator.Validate(request);
+
         IIppRequest mappedRequest = request.IppOperation switch
         {
             IppOperation.AllocatePrinterResources => Mapper.Map<IIppRequestMessage, AllocatePrinterResourcesRequest>(request),

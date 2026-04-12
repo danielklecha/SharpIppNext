@@ -92,6 +92,7 @@ public class GetCUPSPrintersTests : SharpIppIntegrationTestBase
                     ColorSupported = true,
                     ReferenceUriSchemesSupported = [UriScheme.Ftp],
                     PdlOverrideSupported = PdlOverride.Attempted,
+                    OverridesSupported = [OverrideSupported.Pages, OverrideSupported.DocumentNumbers, OverrideSupported.Sides],
                     PrinterUpTime = 100,
                     PrinterCurrentTime = new DateTimeOffset(2024, 1, 1, 1, 1, 1, TimeSpan.Zero),
                     PagesPerMinute = 10,

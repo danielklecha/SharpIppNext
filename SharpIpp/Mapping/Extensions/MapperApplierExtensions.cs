@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 using SharpIpp.Protocol.Models;
 
@@ -56,5 +57,51 @@ public static class MapperApplierExtensions
         if (values.Length == 0)
             return mapper.MapNullable<TDestination>(null);
         return mapper.MapNullable<TDestination>(values[0].Value);
+    }
+
+    public static TDestination? MapFromDicNullable<TPartial, TDestination>(
+        this IMapperApplier mapper,
+        IDictionary<string, IppAttribute[]> src,
+        string key,
+        Func<IppAttribute, TPartial, TDestination?> factory)
+    {
+        if (!src.TryGetValue(key, out IppAttribute[]? values))
+            return mapper.MapNullable<TDestination>(null);
+        if (values.Length == 0)
+            return mapper.MapNullable<TDestination>(null);
+
+        var partial = mapper.MapNullable<TPartial>(values[0].Value);
+        if (partial is null)
+            return mapper.MapNullable<TDestination>(null);
+
+        return factory(values[0], partial);
+    }
+
+    public static TDestination[]? MapFromDicSetNullable<TPartial, TDestination>(
+        this IMapperApplier mapper,
+        IDictionary<string, IppAttribute[]> src,
+        string key,
+        Func<IppAttribute, TPartial, TDestination?> factory)
+    {
+        if (!src.TryGetValue(key, out IppAttribute[]? values))
+            return mapper.MapNullable<TDestination[]?>(null);
+        if (values.Length == 0)
+            return mapper.MapNullable<TDestination[]?>(null);
+
+        var result = new List<TDestination>(values.Length);
+        foreach (var attribute in values)
+        {
+            var partial = mapper.MapNullable<TPartial>(attribute.Value);
+            if (partial is null)
+                return mapper.MapNullable<TDestination[]?>(null);
+
+            var destination = factory(attribute, partial);
+            if (destination is null)
+                return mapper.MapNullable<TDestination[]?>(null);
+
+            result.Add(destination);
+        }
+
+        return result.ToArray();
     }
 }

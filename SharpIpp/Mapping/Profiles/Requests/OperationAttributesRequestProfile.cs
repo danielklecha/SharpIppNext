@@ -32,13 +32,8 @@ internal class OperationAttributesRequestProfile : IProfile
         mapper.CreateMap<OperationAttributes, List<IppAttribute>>((src, dst, map) =>
         {
             dst ??= new List<IppAttribute>();
-            if (src.AttributesCharset == null)
-                throw new ArgumentNullException(nameof(src.AttributesCharset));
-            dst.Add(new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, src.AttributesCharset));
-
-            if (src.AttributesNaturalLanguage == null)
-                throw new ArgumentNullException(nameof(src.AttributesNaturalLanguage));
-            dst.Add(new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, src.AttributesNaturalLanguage));
+            dst.Add(new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, src.AttributesCharset ?? "utf-8"));
+            dst.Add(new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, src.AttributesNaturalLanguage ?? "en"));
 
             if (src.PrinterUri != null)
                 dst.Add(new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, src.PrinterUri.ToString()));
@@ -1186,16 +1181,12 @@ internal class OperationAttributesRequestProfile : IProfile
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, ValidateJobOperationAttributes>((src, dst, map) =>
         {
             dst ??= new ValidateJobOperationAttributes();
-            map.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(src, dst);
-            dst.JobName = map.MapFromDicNullable<string?>(src, JobAttribute.JobName);
-            dst.JobMediaSheets = map.MapFromDicNullable<int?>(src, JobAttribute.JobMediaSheets);
-            dst.JobKOctets = map.MapFromDicNullable<int?>(src, JobAttribute.JobKOctets);
-            dst.IppAttributeFidelity = map.MapFromDicNullable<bool?>(src, JobAttribute.IppAttributeFidelity);
-            dst.JobImpressions = map.MapFromDicNullable<int?>(src, JobAttribute.JobImpressions);
+            map.Map<IDictionary<string, IppAttribute[]>, CreateJobOperationAttributes>(src, dst);
             dst.DocumentName = map.MapFromDicNullable<string?>(src, JobAttribute.DocumentName);
             dst.Compression = map.MapFromDicNullable<Compression?>(src, JobAttribute.Compression);
             dst.DocumentFormat = map.MapFromDicNullable<string?>(src, JobAttribute.DocumentFormat);
             dst.DocumentNaturalLanguage = map.MapFromDicNullable<string?>(src, JobAttribute.DocumentNaturalLanguage);
+            dst.DocumentCharset = map.MapFromDicNullable<string?>(src, JobAttribute.DocumentCharset);
             dst.JobPassword = map.MapFromDicNullable<string?>(src, JobAttribute.JobPassword);
             dst.JobPasswordEncryption = map.MapFromDicNullable<JobPasswordEncryption?>(src, JobAttribute.JobPasswordEncryption);
             dst.JobReleaseAction = map.MapFromDicNullable<JobReleaseAction?>(src, JobAttribute.JobReleaseAction);
@@ -1209,17 +1200,7 @@ internal class OperationAttributesRequestProfile : IProfile
         mapper.CreateMap<ValidateJobOperationAttributes, List<IppAttribute>>((src, dst, map) =>
         {
             dst ??= new List<IppAttribute>();
-            map.Map<OperationAttributes, List<IppAttribute>>(src, dst);
-            if (src.JobName != null)
-                dst.Add(new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.JobName, src.JobName));
-            if (src.IppAttributeFidelity.HasValue)
-                dst.Add(new IppAttribute(Tag.Boolean, JobAttribute.IppAttributeFidelity, src.IppAttributeFidelity.Value));
-            if (src.JobImpressions.HasValue)
-                dst.Add(new IppAttribute(Tag.Integer, JobAttribute.JobImpressions, src.JobImpressions.Value));
-            if (src.JobMediaSheets.HasValue)
-                dst.Add(new IppAttribute(Tag.Integer, JobAttribute.JobMediaSheets, src.JobMediaSheets.Value));
-            if (src.JobKOctets.HasValue)
-                dst.Add(new IppAttribute(Tag.Integer, JobAttribute.JobKOctets, src.JobKOctets.Value));
+            map.Map<CreateJobOperationAttributes, List<IppAttribute>>(src, dst);
             if (src.DocumentName != null)
                 dst.Add(new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.DocumentName, src.DocumentName));
             if (src.Compression != null)
@@ -1230,20 +1211,6 @@ internal class OperationAttributesRequestProfile : IProfile
                 dst.Add(new IppAttribute(Tag.NaturalLanguage, JobAttribute.DocumentNaturalLanguage, src.DocumentNaturalLanguage));
             if (src.DocumentCharset != null)
                 dst.Add(new IppAttribute(Tag.Charset, JobAttribute.DocumentCharset, src.DocumentCharset));
-            if (src.JobPassword != null)
-                dst.Add(new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, JobAttribute.JobPassword, src.JobPassword));
-            if (src.JobPasswordEncryption != null)
-                dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.JobPasswordEncryption, map.Map<string>(src.JobPasswordEncryption.Value)));
-            if (src.JobReleaseAction != null)
-                dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.JobReleaseAction, map.Map<string>(src.JobReleaseAction.Value)));
-            if (src.JobAuthorizationUri != null)
-                dst.Add(new IppAttribute(Tag.Uri, JobAttribute.JobAuthorizationUri, src.JobAuthorizationUri.ToString()));
-            if (src.JobImpressionsEstimated.HasValue)
-                dst.Add(new IppAttribute(Tag.Integer, JobAttribute.JobImpressionsEstimated, src.JobImpressionsEstimated.Value));
-            if (src.ChargeInfoMessage != null)
-                dst.Add(new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.ChargeInfoMessage, src.ChargeInfoMessage));
-            if (src.ProofCopies.HasValue)
-                dst.Add(new IppAttribute(Tag.Integer, JobAttribute.ProofCopies, src.ProofCopies.Value));
             return dst;
         });
     }

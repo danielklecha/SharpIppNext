@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SharpIpp.Mapping.Extensions;
+using SharpIpp.Protocol;
 using SharpIpp.Protocol.Extensions;
 using SharpIpp.Protocol.Models;
 
@@ -25,7 +26,7 @@ internal class CollectionProfiles : IProfile
             var dst = new Cover
             {
                 CoverType = map.MapFromDicNullable<CoverType?>(src, nameof(Cover.CoverType).ConvertCamelCaseToKebabCase()),
-                Media = map.MapFromDicNullable<Media?>(src, nameof(Cover.Media).ConvertCamelCaseToKebabCase())
+                Media = map.MapFromDicNullable<string, Media?>(src, nameof(Cover.Media).ConvertCamelCaseToKebabCase(), (attribute, value) => new Media(value, attribute.Tag == Tag.Keyword))
             };
             if (src.ContainsKey(nameof(Cover.MediaCol).ConvertCamelCaseToKebabCase()))
                 dst.MediaCol = map.Map<MediaCol>(src[nameof(Cover.MediaCol).ConvertCamelCaseToKebabCase()].FromBegCollection().ToIppDictionary());
@@ -40,7 +41,7 @@ internal class CollectionProfiles : IProfile
             if (src.CoverType.HasValue)
                 attributes.Add(new IppAttribute(Tag.Keyword, nameof(Cover.CoverType).ConvertCamelCaseToKebabCase(), map.Map<string>(src.CoverType.Value)));
             if (src.Media != null)
-                attributes.Add(new IppAttribute(Tag.Keyword, nameof(Cover.Media).ConvertCamelCaseToKebabCase(), map.Map<string>(src.Media)));
+                attributes.Add(new IppAttribute(src.Media.Value.ToIppTag(), nameof(Cover.Media).ConvertCamelCaseToKebabCase(), map.Map<string>(src.Media.Value)));
             if (src.MediaCol != null)
                 attributes.AddRange(map.Map<IEnumerable<IppAttribute>>(src.MediaCol).ToBegCollection(nameof(Cover.MediaCol).ConvertCamelCaseToKebabCase()));
             return attributes;
@@ -56,7 +57,7 @@ internal class CollectionProfiles : IProfile
             {
                 InsertAfterPageNumber = map.MapFromDicNullable<int?>(src, nameof(InsertSheet.InsertAfterPageNumber).ConvertCamelCaseToKebabCase()),
                 InsertCount = map.MapFromDicNullable<int?>(src, nameof(InsertSheet.InsertCount).ConvertCamelCaseToKebabCase()),
-                Media = map.MapFromDicNullable<Media?>(src, nameof(InsertSheet.Media).ConvertCamelCaseToKebabCase())
+                Media = map.MapFromDicNullable<string, Media?>(src, nameof(InsertSheet.Media).ConvertCamelCaseToKebabCase(), (attribute, value) => new Media(value, attribute.Tag == Tag.Keyword))
             };
             if (src.ContainsKey(nameof(InsertSheet.MediaCol).ConvertCamelCaseToKebabCase()))
                 dst.MediaCol = map.Map<MediaCol>(src[nameof(InsertSheet.MediaCol).ConvertCamelCaseToKebabCase()].FromBegCollection().ToIppDictionary());
@@ -73,7 +74,7 @@ internal class CollectionProfiles : IProfile
             if (src.InsertCount.HasValue)
                 attributes.Add(new IppAttribute(Tag.Integer, nameof(InsertSheet.InsertCount).ConvertCamelCaseToKebabCase(), src.InsertCount.Value));
             if (src.Media != null)
-                attributes.Add(new IppAttribute(Tag.Keyword, nameof(InsertSheet.Media).ConvertCamelCaseToKebabCase(), map.Map<string>(src.Media)));
+                attributes.Add(new IppAttribute(src.Media.Value.ToIppTag(), nameof(InsertSheet.Media).ConvertCamelCaseToKebabCase(), map.Map<string>(src.Media.Value)));
             if (src.MediaCol != null)
                 attributes.AddRange(map.Map<IEnumerable<IppAttribute>>(src.MediaCol).ToBegCollection(nameof(InsertSheet.MediaCol).ConvertCamelCaseToKebabCase()));
             return attributes;
@@ -87,9 +88,10 @@ internal class CollectionProfiles : IProfile
 
             var dst = new JobAccountingSheets
             {
-                JobAccountingOutputBin = map.MapFromDicNullable<OutputBin?>(src, nameof(JobAccountingSheets.JobAccountingOutputBin).ConvertCamelCaseToKebabCase()),
+                JobAccountingOutputBin = map.MapFromDicNullable<string, OutputBin?>(src, nameof(JobAccountingSheets.JobAccountingOutputBin).ConvertCamelCaseToKebabCase(), (attribute, value) =>
+                    new OutputBin(value, attribute.Tag == Tag.Keyword)),
                 JobAccountingSheetsType = map.MapFromDicNullable<JobSheetsType?>(src, nameof(JobAccountingSheets.JobAccountingSheetsType).ConvertCamelCaseToKebabCase()),
-                Media = map.MapFromDicNullable<Media?>(src, nameof(JobAccountingSheets.Media).ConvertCamelCaseToKebabCase())
+                Media = map.MapFromDicNullable<string, Media?>(src, nameof(JobAccountingSheets.Media).ConvertCamelCaseToKebabCase(), (attribute, value) => new Media(value, attribute.Tag == Tag.Keyword))
             };
             if (src.ContainsKey(nameof(JobAccountingSheets.MediaCol).ConvertCamelCaseToKebabCase()))
                 dst.MediaCol = map.Map<MediaCol>(src[nameof(JobAccountingSheets.MediaCol).ConvertCamelCaseToKebabCase()].FromBegCollection().ToIppDictionary());
@@ -102,11 +104,11 @@ internal class CollectionProfiles : IProfile
 
             var attributes = new List<IppAttribute>();
             if (src.JobAccountingOutputBin != null)
-                attributes.Add(new IppAttribute(Tag.Keyword, nameof(JobAccountingSheets.JobAccountingOutputBin).ConvertCamelCaseToKebabCase(), map.Map<string>(src.JobAccountingOutputBin)));
+                attributes.Add(new IppAttribute(src.JobAccountingOutputBin.Value.ToIppTag(), nameof(JobAccountingSheets.JobAccountingOutputBin).ConvertCamelCaseToKebabCase(), map.Map<string>(src.JobAccountingOutputBin.Value)));
             if (src.JobAccountingSheetsType.HasValue)
                 attributes.Add(new IppAttribute(Tag.Keyword, nameof(JobAccountingSheets.JobAccountingSheetsType).ConvertCamelCaseToKebabCase(), map.Map<string>(src.JobAccountingSheetsType.Value)));
             if (src.Media != null)
-                attributes.Add(new IppAttribute(Tag.Keyword, nameof(JobAccountingSheets.Media).ConvertCamelCaseToKebabCase(), map.Map<string>(src.Media)));
+                attributes.Add(new IppAttribute(src.Media.Value.ToIppTag(), nameof(JobAccountingSheets.Media).ConvertCamelCaseToKebabCase(), map.Map<string>(src.Media.Value)));
             if (src.MediaCol != null)
                 attributes.AddRange(map.Map<IEnumerable<IppAttribute>>(src.MediaCol).ToBegCollection(nameof(JobAccountingSheets.MediaCol).ConvertCamelCaseToKebabCase()));
             return attributes;
@@ -122,7 +124,7 @@ internal class CollectionProfiles : IProfile
             {
                 JobErrorSheetType = map.MapFromDicNullable<JobSheetsType?>(src, nameof(JobErrorSheet.JobErrorSheetType).ConvertCamelCaseToKebabCase()),
                 JobErrorSheetWhen = map.MapFromDicNullable<JobErrorSheetWhen?>(src, nameof(JobErrorSheet.JobErrorSheetWhen).ConvertCamelCaseToKebabCase()),
-                Media = map.MapFromDicNullable<Media?>(src, nameof(JobErrorSheet.Media).ConvertCamelCaseToKebabCase())
+                Media = map.MapFromDicNullable<string, Media?>(src, nameof(JobErrorSheet.Media).ConvertCamelCaseToKebabCase(), (attribute, value) => new Media(value, attribute.Tag == Tag.Keyword))
             };
             if (src.ContainsKey(nameof(JobErrorSheet.MediaCol).ConvertCamelCaseToKebabCase()))
                 dst.MediaCol = map.Map<MediaCol>(src[nameof(JobErrorSheet.MediaCol).ConvertCamelCaseToKebabCase()].FromBegCollection().ToIppDictionary());
@@ -139,7 +141,7 @@ internal class CollectionProfiles : IProfile
             if (src.JobErrorSheetWhen.HasValue)
                 attributes.Add(new IppAttribute(Tag.Keyword, nameof(JobErrorSheet.JobErrorSheetWhen).ConvertCamelCaseToKebabCase(), map.Map<string>(src.JobErrorSheetWhen.Value)));
             if (src.Media != null)
-                attributes.Add(new IppAttribute(Tag.Keyword, nameof(JobErrorSheet.Media).ConvertCamelCaseToKebabCase(), map.Map<string>(src.Media)));
+                attributes.Add(new IppAttribute(src.Media.Value.ToIppTag(), nameof(JobErrorSheet.Media).ConvertCamelCaseToKebabCase(), map.Map<string>(src.Media.Value)));
             if (src.MediaCol != null)
                 attributes.AddRange(map.Map<IEnumerable<IppAttribute>>(src.MediaCol).ToBegCollection(nameof(JobErrorSheet.MediaCol).ConvertCamelCaseToKebabCase()));
             return attributes;
@@ -153,7 +155,7 @@ internal class CollectionProfiles : IProfile
 
             var dst = new SeparatorSheets
             {
-                Media = map.MapFromDicNullable<Media?>(src, nameof(SeparatorSheets.Media).ConvertCamelCaseToKebabCase()),
+                Media = map.MapFromDicNullable<string, Media?>(src, nameof(SeparatorSheets.Media).ConvertCamelCaseToKebabCase(), (attribute, value) => new Media(value, attribute.Tag == Tag.Keyword)),
                 SeparatorSheetsType = map.MapFromDicSetNullable<SeparatorSheetsType[]?>(src, nameof(SeparatorSheets.SeparatorSheetsType).ConvertCamelCaseToKebabCase())
             };
             if (src.ContainsKey(nameof(SeparatorSheets.MediaCol).ConvertCamelCaseToKebabCase()))
@@ -167,7 +169,7 @@ internal class CollectionProfiles : IProfile
 
             var attributes = new List<IppAttribute>();
             if (src.Media != null)
-                attributes.Add(new IppAttribute(Tag.Keyword, nameof(SeparatorSheets.Media).ConvertCamelCaseToKebabCase(), map.Map<string>(src.Media)));
+                attributes.Add(new IppAttribute(src.Media.Value.ToIppTag(), nameof(SeparatorSheets.Media).ConvertCamelCaseToKebabCase(), map.Map<string>(src.Media.Value)));
             if (src.MediaCol != null)
                 attributes.AddRange(map.Map<IEnumerable<IppAttribute>>(src.MediaCol).ToBegCollection(nameof(SeparatorSheets.MediaCol).ConvertCamelCaseToKebabCase()));
             if (src.SeparatorSheetsType != null)
@@ -727,7 +729,7 @@ internal class CollectionProfiles : IProfile
             var dst = new JobSheetsCol
             {
                 JobSheets = map.MapFromDicNullable<JobSheets?>(src, nameof(JobSheetsCol.JobSheets).ConvertCamelCaseToKebabCase()),
-                Media = map.MapFromDicNullable<Media?>(src, nameof(JobSheetsCol.Media).ConvertCamelCaseToKebabCase()),
+                Media = map.MapFromDicNullable<string, Media?>(src, nameof(JobSheetsCol.Media).ConvertCamelCaseToKebabCase(), (attribute, value) => new Media(value, attribute.Tag == Tag.Keyword)),
             };
 
             if (src.ContainsKey(nameof(JobSheetsCol.MediaCol).ConvertCamelCaseToKebabCase()))
@@ -744,7 +746,7 @@ internal class CollectionProfiles : IProfile
             if (src.JobSheets.HasValue)
                 attributes.Add(new IppAttribute(Tag.Keyword, nameof(JobSheetsCol.JobSheets).ConvertCamelCaseToKebabCase(), map.Map<string>(src.JobSheets.Value)));
             if (src.Media != null)
-                attributes.Add(new IppAttribute(Tag.Keyword, nameof(JobSheetsCol.Media).ConvertCamelCaseToKebabCase(), map.Map<string>(src.Media.Value)));
+                attributes.Add(new IppAttribute(src.Media.Value.ToIppTag(), nameof(JobSheetsCol.Media).ConvertCamelCaseToKebabCase(), map.Map<string>(src.Media.Value)));
             if (src.MediaCol != null)
                 attributes.AddRange(map.Map<IEnumerable<IppAttribute>>(src.MediaCol).ToBegCollection(nameof(JobSheetsCol.MediaCol).ConvertCamelCaseToKebabCase()));
             return attributes;
@@ -758,7 +760,7 @@ internal class CollectionProfiles : IProfile
             var dst = new ProofPrint
             {
                 ProofPrintCopies = map.MapFromDicNullable<int?>(src, nameof(ProofPrint.ProofPrintCopies).ConvertCamelCaseToKebabCase()),
-                Media = map.MapFromDicNullable<Media?>(src, nameof(ProofPrint.Media).ConvertCamelCaseToKebabCase())
+                Media = map.MapFromDicNullable<string, Media?>(src, nameof(ProofPrint.Media).ConvertCamelCaseToKebabCase(), (attribute, value) => new Media(value, attribute.Tag == Tag.Keyword))
             };
             if (src.ContainsKey(nameof(ProofPrint.MediaCol).ConvertCamelCaseToKebabCase()))
                 dst.MediaCol = map.Map<MediaCol>(src[nameof(ProofPrint.MediaCol).ConvertCamelCaseToKebabCase()].FromBegCollection().ToIppDictionary());
@@ -773,7 +775,7 @@ internal class CollectionProfiles : IProfile
             if (src.ProofPrintCopies.HasValue)
                 attributes.Add(new IppAttribute(Tag.Integer, nameof(ProofPrint.ProofPrintCopies).ConvertCamelCaseToKebabCase(), src.ProofPrintCopies.Value));
             if (src.Media != null)
-                attributes.Add(new IppAttribute(Tag.Keyword, nameof(ProofPrint.Media).ConvertCamelCaseToKebabCase(), map.Map<string>(src.Media)));
+                attributes.Add(new IppAttribute(src.Media.Value.ToIppTag(), nameof(ProofPrint.Media).ConvertCamelCaseToKebabCase(), map.Map<string>(src.Media.Value)));
             if (src.MediaCol != null)
                 attributes.AddRange(map.Map<IEnumerable<IppAttribute>>(src.MediaCol).ToBegCollection(nameof(ProofPrint.MediaCol).ConvertCamelCaseToKebabCase()));
             return attributes;
@@ -1018,11 +1020,28 @@ internal class CollectionProfiles : IProfile
             if (IsOutOfBandNoValue(src))
                 return NoValue.GetNoValue<OverrideInstruction>();
 
+            var pageRanges = map.MapFromDicSetNullable<SharpIpp.Protocol.Models.Range[]?>(src, "pages");
+            var documentNumberRanges = map.MapFromDicSetNullable<SharpIpp.Protocol.Models.Range[]?>(src, "document-numbers");
+            var documentCopyRanges = map.MapFromDicSetNullable<SharpIpp.Protocol.Models.Range[]?>(src, "document-copies");
+
+            var overrideTemplateMembers = src
+                .Where(x => x.Key != "pages" && x.Key != "document-numbers" && x.Key != "document-copies")
+                .ToDictionary(x => x.Key, x => x.Value);
+
+            JobTemplateAttributes? overrideTemplateAttributes = null;
+            if (overrideTemplateMembers.Count > 0)
+            {
+                var templateRequest = new IppRequestMessage();
+                templateRequest.JobAttributes.AddRange(overrideTemplateMembers.Values.SelectMany(x => x));
+                overrideTemplateAttributes = map.Map<IIppRequestMessage, JobTemplateAttributes>(templateRequest);
+            }
+
             return new OverrideInstruction
             {
-                Pages = map.MapFromDicNullable<string?>(src, nameof(OverrideInstruction.Pages).ConvertCamelCaseToKebabCase()),
-                DocumentNumbers = map.MapFromDicSetNullable<int[]?>(src, nameof(OverrideInstruction.DocumentNumbers).ConvertCamelCaseToKebabCase()),
-            DocumentCopies = map.MapFromDicNullable<int?>(src, nameof(OverrideInstruction.DocumentCopies).ConvertCamelCaseToKebabCase())
+                PageRanges = pageRanges,
+                DocumentNumberRanges = documentNumberRanges,
+                DocumentCopyRanges = documentCopyRanges,
+                JobTemplateAttributes = overrideTemplateAttributes
             };
         });
         mapper.CreateMap<OverrideInstruction, IEnumerable<IppAttribute>>((src, map) =>
@@ -1030,10 +1049,30 @@ internal class CollectionProfiles : IProfile
             if (NoValue.IsNoValue(src))
                 return new[] { new IppAttribute(Tag.NoValue, JobAttribute.Overrides, NoValue.Instance) };
 
+            var pageRanges = src.PageRanges;
+
+            var documentNumberRanges = src.DocumentNumberRanges;
+
+            var documentCopyRanges = src.DocumentCopyRanges;
+
             var attributes = new List<IppAttribute>();
-            if (src.Pages != null) attributes.Add(new IppAttribute(Tag.Keyword, nameof(OverrideInstruction.Pages).ConvertCamelCaseToKebabCase(), src.Pages));
-            if (src.DocumentNumbers != null) attributes.AddRange(src.DocumentNumbers.Select(x => new IppAttribute(Tag.Integer, nameof(OverrideInstruction.DocumentNumbers).ConvertCamelCaseToKebabCase(), x)));
-            if (src.DocumentCopies.HasValue) attributes.Add(new IppAttribute(Tag.Integer, nameof(OverrideInstruction.DocumentCopies).ConvertCamelCaseToKebabCase(), src.DocumentCopies.Value));
+            if (pageRanges != null)
+                attributes.AddRange(pageRanges.Select(x => new IppAttribute(Tag.RangeOfInteger, "pages", x)));
+            if (documentNumberRanges != null)
+                attributes.AddRange(documentNumberRanges.Select(x => new IppAttribute(Tag.RangeOfInteger, "document-numbers", x)));
+            if (documentCopyRanges != null)
+                attributes.AddRange(documentCopyRanges.Select(x => new IppAttribute(Tag.RangeOfInteger, "document-copies", x)));
+
+            if (src.JobTemplateAttributes != null)
+            {
+                var templateRequest = map.Map<IppRequestMessage>(src.JobTemplateAttributes);
+                var overrideTemplateMembers = templateRequest.JobAttributes
+                    .ToIppDictionary()
+                    .Where(x => x.Key != JobAttribute.Overrides && x.Key != JobAttribute.OverridesActual)
+                    .SelectMany(x => x.Value);
+                attributes.AddRange(overrideTemplateMembers);
+            }
+
             return attributes;
         });
     }

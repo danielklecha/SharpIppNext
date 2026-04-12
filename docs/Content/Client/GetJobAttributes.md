@@ -16,7 +16,8 @@ var request = new GetJobAttributesRequest
     OperationAttributes = new()
     {
         PrinterUri = new Uri("ipp://localhost:631/printers/my-printer"),
-        JobId = 123
+        JobId = 123,
+        RequestedAttributes = ["job-actual", "copies-actual", "media-actual"]
     }
 };
 
@@ -24,4 +25,5 @@ var request = new GetJobAttributesRequest
 var response = await client.GetJobAttributesAsync(request);
 
 Console.WriteLine($"Job State: {response.JobAttributes.JobState}");
+Console.WriteLine($"Actual Copies: {response.JobAttributes.CopiesActual?[0]}");
 ```

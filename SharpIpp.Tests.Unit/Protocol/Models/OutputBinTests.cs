@@ -1,5 +1,4 @@
 using SharpIpp.Protocol.Models;
-using SharpIpp.Protocol.Extensions;
 using System.Diagnostics.CodeAnalysis;
 
 namespace SharpIpp.Tests.Unit.Protocol.Models;
@@ -9,72 +8,33 @@ namespace SharpIpp.Tests.Unit.Protocol.Models;
 public class OutputBinTests
 {
     [TestMethod]
-    [DataRow("top", true)]
-    [DataRow("stacker-1", true)]
-    [DataRow("stacker-0", true)]
-    [DataRow("tray-10", true)]
-    [DataRow("custom-bin", false)]
-    [DataRow("", false)]
-    [DataRow(null, false)]
-    public void GetKeywordOrNameTag_WithDataRows_ReturnsExpectedResult(string? value, bool expected)
+    public void Constructor_StoresKeywordFlag()
     {
-        IsOutputBinKeyword(value).Should().Be(expected);
-    }
+        var keywordBin = new OutputBin("vendor-bin-42", true);
+        var nameBin = new OutputBin("Accounting Team", false);
 
-    [TestMethod]
-    [DataRow("top")]
-    [DataRow("middle")]
-    [DataRow("bottom")]
-    [DataRow("side")]
-    [DataRow("left")]
-    [DataRow("right")]
-    [DataRow("center")]
-    [DataRow("rear")]
-    [DataRow("face-up")]
-    [DataRow("face-down")]
-    [DataRow("large-capacity")]
-    [DataRow("my-mailbox")]
-    [DataRow("auto")]
-    [DataRow("stacker-1")]
-    [DataRow("stacker-0")]
-    [DataRow("mailbox-5")]
-    [DataRow("tray-10")]
-    public void GetKeywordOrNameTag_WithKeywordValues_ReturnsTrue(string value)
-    {
-        IsOutputBinKeyword(value).Should().BeTrue();
-    }
-
-    [TestMethod]
-    [DataRow(null)]
-    [DataRow("")]
-    [DataRow(" ")]
-    [DataRow("mailroom-bin")]
-    [DataRow("mailbox-a")]
-    [DataRow("tray--1")]
-    public void GetKeywordOrNameTag_WithNonKeywordValues_ReturnsFalse(string? value)
-    {
-        IsOutputBinKeyword(value).Should().BeFalse();
-    }
-
-    [TestMethod]
-    public void GetKeywordOrNameTag_WithNamedBin_ReturnsNameWithoutLanguage()
-    {
-        var bin = new OutputBin("Accounting Team").Value;
-
-        bin.GetKeywordOrNameTag(OutputBin.KeywordRegex).Should().Be(Tag.NameWithoutLanguage);
-    }
-
-    private static bool IsOutputBinKeyword(string? value)
-    {
-        return !string.IsNullOrWhiteSpace(value) && value.GetKeywordOrNameTag(OutputBin.KeywordRegex) == Tag.Keyword;
+        keywordBin.IsKeyword.Should().BeTrue();
+        nameBin.IsKeyword.Should().BeFalse();
     }
 
     [TestMethod]
     public void FactoryMethods_CreateExpectedValues()
     {
         OutputBin.Stacker(2).Value.Should().Be("stacker-2");
+        OutputBin.Stacker(2).IsKeyword.Should().BeTrue();
         OutputBin.Mailbox(3).Value.Should().Be("mailbox-3");
+        OutputBin.Mailbox(3).IsKeyword.Should().BeTrue();
         OutputBin.Tray(4).Value.Should().Be("tray-4");
+        OutputBin.Tray(4).IsKeyword.Should().BeTrue();
+    }
+
+    [TestMethod]
+    public void ExplicitCast_CreatesKeywordValue()
+    {
+        var outputBin = (OutputBin)"face-down";
+
+        outputBin.Value.Should().Be("face-down");
+        outputBin.IsKeyword.Should().BeTrue();
     }
 
     [TestMethod]

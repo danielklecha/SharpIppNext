@@ -47,6 +47,47 @@ namespace SharpIpp.Protocol.Models
         public static readonly JobStateReason JobSpooling = new("job-spooling");
         public static readonly JobStateReason JobStreaming = new("job-streaming");
         public static readonly JobStateReason WarningsDetected = new("warnings-detected");
+        public static readonly JobStateReason ConflictingAttributes = new("conflicting-attributes");
+        public static readonly JobStateReason JobCanceledAfterTimeout = new("job-canceled-after-timeout");
+        public static readonly JobStateReason JobHeldForAuthorization = new("job-held-for-authorization");
+        public static readonly JobStateReason JobHeldForButtonPress = new("job-held-for-button-press");
+        public static readonly JobStateReason JobHeldForRelease = new("job-held-for-release");
+        public static readonly JobStateReason JobPasswordWait = new("job-password-wait");
+        public static readonly JobStateReason JobPrintedSuccessfully = new("job-printed-successfully");
+        public static readonly JobStateReason JobPrintedWithErrors = new("job-printed-with-errors");
+        public static readonly JobStateReason JobPrintedWithWarnings = new("job-printed-with-warnings");
+        public static readonly JobStateReason JobResuming = new("job-resuming");
+        public static readonly JobStateReason JobReleaseWait = new("job-release-wait");
+        public static readonly JobStateReason JobStored = new("job-stored");
+        public static readonly JobStateReason JobStoredWithErrors = new("job-stored-with-errors");
+        public static readonly JobStateReason JobStoredWithWarnings = new("job-stored-with-warnings");
+        public static readonly JobStateReason JobStoring = new("job-storing");
+        /// <summary>
+        /// Obsolete legacy compatibility value.
+        /// See: IPP Enterprise Printing Extensions v2.0 (PWG 5100.11-2024) Section 9.2.
+        /// </summary>
+        public static readonly JobStateReason JobSavedSuccessfully = new("job-saved-successfully");
+        /// <summary>
+        /// Obsolete legacy compatibility value.
+        /// See: IPP Enterprise Printing Extensions v2.0 (PWG 5100.11-2024) Section 9.2.
+        /// </summary>
+        public static readonly JobStateReason JobSavedWithErrors = new("job-saved-with-errors");
+        /// <summary>
+        /// Obsolete legacy compatibility value.
+        /// See: IPP Enterprise Printing Extensions v2.0 (PWG 5100.11-2024) Section 9.2.
+        /// </summary>
+        public static readonly JobStateReason JobSavedWithWarnings = new("job-saved-with-warnings");
+        /// <summary>
+        /// Obsolete legacy compatibility value.
+        /// See: IPP Enterprise Printing Extensions v2.0 (PWG 5100.11-2024) Section 9.2.
+        /// </summary>
+        public static readonly JobStateReason JobSaving = new("job-saving");
+        public static readonly JobStateReason JobSuspendedByOperator = new("job-suspended-by-operator");
+        public static readonly JobStateReason JobSuspendedBySystem = new("job-suspended-by-system");
+        public static readonly JobStateReason JobSuspendedByUser = new("job-suspended-by-user");
+        public static readonly JobStateReason JobSuspendedForApproval = new("job-suspended-for-approval");
+        public static readonly JobStateReason JobSuspending = new("job-suspending");
+        public static readonly JobStateReason UnsupportedAttributesOrValues = new("unsupported-attributes-or-values");
 
         public override string ToString() => Value;
         public static implicit operator string(JobStateReason bin) => bin.Value;

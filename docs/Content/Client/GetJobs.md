@@ -15,7 +15,8 @@ var request = new GetJobsRequest
 {
     OperationAttributes = new()
     {
-        PrinterUri = new Uri("ipp://localhost:631/printers/my-printer")
+        PrinterUri = new Uri("ipp://localhost:631/printers/my-printer"),
+        RequestedAttributes = ["job-id", "job-state", "job-actual", "copies-actual"]
     }
 };
 
@@ -25,6 +26,6 @@ var response = await client.GetJobsAsync(request);
 Console.WriteLine($"Total jobs found: {response.Jobs.Length}");
 foreach (var job in response.Jobs)
 {
-    Console.WriteLine($"Job ID: {job.JobId}, State: {job.JobState}");
+    Console.WriteLine($"Job ID: {job.JobId}, State: {job.JobState}, Actual Copies: {job.CopiesActual?[0]}");
 }
 ```

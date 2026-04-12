@@ -164,6 +164,45 @@ public class SharpIppClientTests
         await act.Should().ThrowAsync<Exception>().WithMessage("SystemUri is not set");
     }
 
+    [TestMethod]
+    public async Task SendAsync_WithInjectedRequestValidator_ShouldInvokeValidator()
+    {
+        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
+        protocol.Setup(x => x.WriteIppRequestAsync(It.IsAny<IIppRequestMessage>(), It.IsAny<Stream>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+
+        Mock<IIppRequestValidator> validator = new();
+        var context = new IppRequestValidationContext();
+        validator.SetupGet(x => x.Context).Returns(context);
+
+        using SharpIppClient client = new(new(GetMockOfHttpMessageHandler().Object), protocol.Object, validator.Object);
+
+        var request = new IppRequestMessage
+        {
+            IppOperation = IppOperation.GetPrinterAttributes,
+            RequestId = 123,
+        };
+        request.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://127.0.0.1:631/")
+        ]);
+
+        await client.SendAsync(new Uri("http://127.0.0.1:631/"), request);
+
+        validator.Verify(x => x.Validate(It.Is<IIppRequestMessage>(m => m == request)), Times.Once);
+        context.Source.Should().Be(nameof(SharpIppClient));
+    }
+
+    [TestMethod]
+    public void Constructor_WithNullRequestValidator_ShouldThrowArgumentNullException()
+    {
+        Action act = () => _ = new SharpIppClient(new HttpClient(GetMockOfHttpMessageHandler().Object), Mock.Of<IIppProtocol>(), null!);
+
+        act.Should().Throw<ArgumentNullException>()
+            .WithParameterName("requestValidator");
+    }
+
 
     public static IEnumerable<object[]> ClientMappingData
     {
@@ -720,6 +759,26 @@ public class SharpIppClientTests
         });
 
         await act.Should().ThrowAsync<IppRequestException>().WithMessage("invalid document-number");
+    }
+
+    [TestMethod]
+    public async Task SetDocumentAttributesAsync_MissingDocumentAttributes_ShouldThrowClientValidationException()
+    {
+        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
+        using SharpIppClient client = new(new(GetMockOfHttpMessageHandler().Object), protocol.Object);
+
+        Func<Task<SetDocumentAttributesResponse>> act = async () => await client.SetDocumentAttributesAsync(new SetDocumentAttributesRequest
+        {
+            RequestId = 123,
+            OperationAttributes = new SetDocumentAttributesOperationAttributes
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631"),
+                JobId = 1,
+                DocumentNumber = 1
+            }
+        });
+
+        await act.Should().ThrowAsync<IppRequestException>().WithMessage("missing document attributes");
     }
 
     private sealed class TestSharpIppClient : SharpIppClient

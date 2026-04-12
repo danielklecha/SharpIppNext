@@ -32,6 +32,7 @@ If any are missing, use defaults noted below:
 - request/response models
 - request/response mapping profiles
 - collection mappings (if needed)
+- request validation rules in `IppRequestValidator` (avoid profile/extension validation logic)
 - client contract + implementation
 - server dispatch
 - unit tests
@@ -57,4 +58,18 @@ Always return results in this exact order:
 - Keep mappings symmetric (read/write), especially for enum arrays and collections.
 - If a spec-defined value list allows vendor-specific or extension values, model it as an `ISmartEnum` keyword-style type instead of a closed C# enum, and keep the protocol mapping extensible on both read and write paths.
 - Keep docs and tests in parity with code changes.
+- Keep all request validation logic centralized in `IppRequestValidator`; client/server should only invoke the validator and mapping profiles should remain transformation-focused.
+- For collection class mappings (for example: `SeparatorSheetsActual`, `MediaColActual`, `FinishingsColActual`, `OverridesActual` in `GetJobAttributesResponseProfile`), use imperative assignment style: `if (src.TryGetValue(..., out var value)) dst.Property = ...;`. Do not add an additional `.Any()` condition and do not explicitly assign `null` in an `else` branch.
+- When a spec marks values as obsolete/deprecated but they are still relevant for interoperability, keep/add them as legacy compatibility constants in the corresponding smart-enum model.
+- Mark obsolete/deprecated compatibility constants with XML summary comments (not attributes) so IntelliSense shows the status and citation. Use this pattern:
+
+```csharp
+/// <summary>
+/// Obsolete legacy compatibility value.
+/// See: <Spec Name> Section <Section Number>.
+/// </summary>
+public static readonly SomeSmartEnum SomeLegacyValue = new("...");
+```
+
+- Do not remove or rename existing obsolete compatibility constants unless the user explicitly requests a breaking cleanup.
 - Auto-implement clear, unambiguous gaps; only ask for confirmation on ambiguous spec interpretation.

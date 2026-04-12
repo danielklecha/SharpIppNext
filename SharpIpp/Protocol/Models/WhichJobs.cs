@@ -22,6 +22,16 @@ namespace SharpIpp.Protocol.Models
         public static readonly WhichJobs PendingHeld = new("pending-held");
         public static readonly WhichJobs Processing = new("processing");
         public static readonly WhichJobs ProcessingStopped = new("processing-stopped");
+        public static readonly WhichJobs ProofPrint = new("proof-print");
+        public static readonly WhichJobs ProofAndSuspend = new("proof-and-suspend");
+        public static readonly WhichJobs StoredGroup = new("stored-group");
+        public static readonly WhichJobs StoredOwner = new("stored-owner");
+        public static readonly WhichJobs StoredPublic = new("stored-public");
+        /// <summary>
+        /// Obsolete legacy compatibility value.
+        /// See: IPP Enterprise Printing Extensions v2.0 (PWG 5100.11-2024) Section 9.2.
+        /// </summary>
+        public static readonly WhichJobs Saved = new("saved");
 
         public override string ToString() => Value;
         public static implicit operator string(WhichJobs bin) => bin.Value;

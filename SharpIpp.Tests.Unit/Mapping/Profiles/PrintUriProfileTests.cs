@@ -15,10 +15,10 @@ namespace SharpIpp.Tests.Unit.Mapping.Profiles;
 [ExcludeFromCodeCoverage]
 public class PrintUriProfileTests
 {
-    [DataRow(true, false, "DocumentUri must be set")]
-    [DataRow(false, true, "DocumentUri must be set")]
+    [DataRow(true, false)]
+    [DataRow(false, true)]
     [TestMethod]
-    public void Map_PrintUriRequestToIppRequestMessage_InvalidRequest_ThrowsArgumentException(bool isDocumentUriNull, bool isOperationAttributesNull, string expectedMessage)
+    public void Map_PrintUriRequestToIppRequestMessage_InvalidRequest_DoesNotThrow(bool isDocumentUriNull, bool isOperationAttributesNull)
     {
         // Arrange
         var mapper = new SimpleMapper();
@@ -37,6 +37,6 @@ public class PrintUriProfileTests
         Action act = () => mapper.Map<PrintUriRequest, IppRequestMessage>(request);
 
         // Assert
-        act.Should().Throw<ArgumentException>().WithMessage(expectedMessage);
+        act.Should().NotThrow();
     }
 }

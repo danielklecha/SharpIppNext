@@ -4,6 +4,12 @@ The `ISharpIppClient` interface currently exposes the following operation method
 
 SharpIppNext also supports attribute extensions that are modeled on the request and response types without adding new client methods. For the PWG 5100.2 `output-bin` extension, see [OutputBinExtension.md](OutputBinExtension.md).
 
+For the PWG 5100.6 page-override attributes (`overrides`, `overrides-supported`, `overrides-actual`), see [PageOverridesExtension.md](PageOverridesExtension.md).
+
+For the PWG 5100.8 "-actual" attributes extension (including the `job-actual` requested-attributes group for Get-Job-Attributes and Get-Jobs), use the strongly typed properties on `JobDescriptionAttributes`.
+
+For the PWG 5100.9 printer state extension attributes (`printer-alert`, `printer-alert-description`, and extended `printer-state-reasons` keyword values), use the strongly typed properties on `PrinterDescriptionAttributes` and `PrinterStateReason`.
+
 | Operation | Method | Example |
 | --- | --- | --- |
 | Acknowledge-Document | `AcknowledgeDocumentAsync` | [AcknowledgeDocument.md](AcknowledgeDocument.md) |

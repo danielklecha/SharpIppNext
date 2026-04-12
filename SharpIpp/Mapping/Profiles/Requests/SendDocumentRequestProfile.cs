@@ -1,9 +1,7 @@
 using SharpIpp.Models.Responses;
 using SharpIpp.Models.Requests;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using SharpIpp.Exceptions;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Extensions;
 using SharpIpp.Protocol.Models;
@@ -17,11 +15,6 @@ internal class SendDocumentRequestProfile : IProfile
     {
         mapper.CreateMap<SendDocumentRequest, IppRequestMessage>((src, map) =>
         {
-            if (src.Document == null && !(src.OperationAttributes?.LastDocument ?? false))
-            {
-                throw new ArgumentException($"{nameof(src.Document)} must be set for non-last document");
-            }
-
             var dst = new IppRequestMessage
             {
                 IppOperation = IppOperation.SendDocument,
@@ -45,8 +38,6 @@ internal class SendDocumentRequestProfile : IProfile
             dst.OperationAttributes = map.Map<IDictionary<string, IppAttribute[]>, SendDocumentOperationAttributes>(src.OperationAttributes.ToIppDictionary());
             if (src.DocumentAttributes.Any())
                 dst.DocumentTemplateAttributes = map.Map<DocumentTemplateAttributes>(src.DocumentAttributes.ToIppDictionary());
-            if (!src.OperationAttributes.Any(x => x.Name == JobAttribute.LastDocument))
-                throw new IppRequestException("missing last-document", src, IppStatusCode.ClientErrorBadRequest);
             return dst;
         });
     }

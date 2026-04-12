@@ -269,6 +269,12 @@ public class PrinterDescriptionAttributes
     public PdlOverride? PdlOverrideSupported { get; set; }
 
     /// <summary>
+    /// overrides-supported
+    /// See: PWG 5100.6-2003 Section 4.1.7
+    /// </summary>
+    public OverrideSupported[]? OverridesSupported { get; set; }
+
+    /// <summary>
     /// printer-up-time
     /// See: RFC 8011 Section 5.4.29
     /// </summary>
@@ -1462,10 +1468,10 @@ public class PrinterDescriptionAttributes
     public string[]? PrinterMandatoryJobAttributes { get; set; }
 
     /// <summary>
-    /// printer-alert
-    /// See: PWG 5100.9-2009
+    /// Structured parser model for printer-alert values.
+    /// See: PWG 5100.9-2009 Section 5.2.2
     /// </summary>
-    public string[]? PrinterAlert { get; set; }
+    public PrinterAlert[]? PrinterAlert { get; set; }
 
     /// <summary>
     /// printer-alert-description

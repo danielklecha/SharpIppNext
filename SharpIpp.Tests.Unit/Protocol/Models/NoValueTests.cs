@@ -242,7 +242,7 @@ public class NoValueTests
     [DynamicData(nameof(SmartEnumData))]
     public void IsNoValue_WithPopulatedSmartEnum_ShouldReturnFalse(Type type, string value)
     {
-        var result = NoValue.IsNoValue(Activator.CreateInstance(type, value, true)!);
+        var result = NoValue.IsNoValue(SmartEnumTests.CreatePopulatedSmartEnum(type, value));
         result.Should().BeFalse($"{type.Name} with value should not be NoValue");
     }
 

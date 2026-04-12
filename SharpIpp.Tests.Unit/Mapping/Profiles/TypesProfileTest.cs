@@ -202,4 +202,69 @@ public class TypesProfileTest
         typedResultString.Should().Be(NoValue.NoValueString);
     }
 
+    [TestMethod]
+    public void ConfigureSmartEnum_WhenNonKeywordSmartEnumMissingExpectedConstructor_ThrowsMissingMethodException()
+    {
+        // Arrange
+        var closedMethod = GetConfigureSmartEnumMethod(typeof(NonKeywordSmartEnumWithoutExpectedConstructor));
+
+        // Act
+        Action act = () => closedMethod.Invoke(null, [Mock.Of<IMapperConstructor>()]);
+
+        // Assert
+        var innerException = act.Should().Throw<TargetInvocationException>().Which.InnerException;
+        innerException.Should().BeOfType<MissingMethodException>();
+        innerException!.Message.Should().Contain("No (string, bool) constructor found for smart enum type");
+        innerException.Message.Should().Contain(typeof(NonKeywordSmartEnumWithoutExpectedConstructor).FullName);
+    }
+
+    [TestMethod]
+    public void ConfigureSmartEnum_WhenKeywordSmartEnumMissingExpectedConstructor_ThrowsMissingMethodException()
+    {
+        // Arrange
+        var closedMethod = GetConfigureSmartEnumMethod(typeof(KeywordSmartEnumWithoutExpectedConstructor));
+
+        // Act
+        Action act = () => closedMethod.Invoke(null, [Mock.Of<IMapperConstructor>()]);
+
+        // Assert
+        var innerException = act.Should().Throw<TargetInvocationException>().Which.InnerException;
+        innerException.Should().BeOfType<MissingMethodException>();
+        innerException!.Message.Should().Contain("No (string, bool, bool) constructor found for keyword smart enum type");
+        innerException.Message.Should().Contain(typeof(KeywordSmartEnumWithoutExpectedConstructor).FullName);
+    }
+
+    private static MethodInfo GetConfigureSmartEnumMethod(Type smartEnumType)
+    {
+        var profileType = typeof(SimpleMapper).Assembly.GetType("SharpIpp.Mapping.Profiles.TypesProfile")!;
+        var openGenericMethod = profileType.GetMethod("ConfigureSmartEnum", BindingFlags.NonPublic | BindingFlags.Static)!;
+        return openGenericMethod.MakeGenericMethod(smartEnumType);
+    }
+
+    private readonly struct NonKeywordSmartEnumWithoutExpectedConstructor : ISmartEnum
+    {
+        public NonKeywordSmartEnumWithoutExpectedConstructor(string value)
+        {
+            Value = value;
+            IsValue = true;
+        }
+
+        public string Value { get; }
+        public bool IsValue { get; }
+    }
+
+    private readonly struct KeywordSmartEnumWithoutExpectedConstructor : IKeywordSmartEnum
+    {
+        public KeywordSmartEnumWithoutExpectedConstructor(string value, bool isKeyword)
+        {
+            Value = value;
+            IsKeyword = isKeyword;
+            IsValue = true;
+        }
+
+        public string Value { get; }
+        public bool IsValue { get; }
+        public bool IsKeyword { get; }
+    }
+
 }

@@ -463,6 +463,20 @@ namespace SharpIpp.Protocol.Models
         public Finishings[]? FinishingsActual { get; set; }
 
         /// <summary>
+        /// This attribute specifies the actual cover-back
+        /// collection(s) used by the Printer.
+        /// See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public Cover[]? CoverBackActual { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the actual cover-front
+        /// collection(s) used by the Printer.
+        /// See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public Cover[]? CoverFrontActual { get; set; }
+
+        /// <summary>
         /// This attribute specifies the actual job-hold-until
         /// value(s) used by the Printer.
         /// See: PWG 5100.8-2003 Section 3
@@ -489,6 +503,62 @@ namespace SharpIpp.Protocol.Models
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         public Media[]? MediaActual { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the actual imposition-template
+        /// value(s) used by the Printer.
+        /// See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public ImpositionTemplate[]? ImpositionTemplateActual { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the actual insert-sheet
+        /// collection(s) used by the Printer.
+        /// See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public InsertSheet[]? InsertSheetActual { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the actual job-account-id
+        /// value(s) used by the Printer.
+        /// See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public string[]? JobAccountIdActual { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the actual job-accounting-sheets
+        /// collection(s) used by the Printer.
+        /// See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public JobAccountingSheets[]? JobAccountingSheetsActual { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the actual job-accounting-user-id
+        /// value(s) used by the Printer.
+        /// See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public string[]? JobAccountingUserIdActual { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the actual job-error-sheet
+        /// collection(s) used by the Printer.
+        /// See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public JobErrorSheet[]? JobErrorSheetActual { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the actual job-message-to-operator
+        /// value(s) used by the Printer.
+        /// See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public string[]? JobMessageToOperatorActual { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the actual job-sheet-message
+        /// value(s) used by the Printer.
+        /// See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public string[]? JobSheetMessageActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual media-col
@@ -526,6 +596,27 @@ namespace SharpIpp.Protocol.Models
         public OutputBin[]? OutputBinActual { get; set; }
 
         /// <summary>
+        /// This attribute specifies the actual media-input-tray-check
+        /// value(s) used by the Printer.
+        /// See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public MediaInputTrayCheck[]? MediaInputTrayCheckActual { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the actual page-delivery
+        /// value(s) used by the Printer.
+        /// See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public PageDelivery[]? PageDeliveryActual { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the actual page-order-received
+        /// value(s) used by the Printer.
+        /// See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public PageOrderReceived[]? PageOrderReceivedActual { get; set; }
+
+        /// <summary>
         /// This attribute specifies the actual page-ranges
         /// value(s) used by the Printer.
         /// See: PWG 5100.8-2003 Section 3
@@ -540,6 +631,13 @@ namespace SharpIpp.Protocol.Models
         public PrintQuality[]? PrintQualityActual { get; set; }
 
         /// <summary>
+        /// This attribute specifies the actual presentation-direction-number-up
+        /// value(s) used by the Printer.
+        /// See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public PresentationDirectionNumberUp[]? PresentationDirectionNumberUpActual { get; set; }
+
+        /// <summary>
         /// This attribute specifies the actual printer resolution
         /// value(s) used by the Printer.
         /// See: PWG 5100.8-2003 Section 3
@@ -552,6 +650,76 @@ namespace SharpIpp.Protocol.Models
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         public Sides[]? SidesActual { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the actual separator-sheets
+        /// collection(s) used by the Printer.
+        /// See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public SeparatorSheets[]? SeparatorSheetsActual { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the actual x-image-position
+        /// value(s) used by the Printer.
+        /// See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public XImagePosition[]? XImagePositionActual { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the actual x-image-shift
+        /// value(s) used by the Printer.
+        /// See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public int[]? XImageShiftActual { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the actual x-side1-image-shift
+        /// value(s) used by the Printer.
+        /// See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public int[]? XSide1ImageShiftActual { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the actual x-side2-image-shift
+        /// value(s) used by the Printer.
+        /// See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public int[]? XSide2ImageShiftActual { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the actual y-image-position
+        /// value(s) used by the Printer.
+        /// See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public YImagePosition[]? YImagePositionActual { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the actual y-image-shift
+        /// value(s) used by the Printer.
+        /// See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public int[]? YImageShiftActual { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the actual y-side1-image-shift
+        /// value(s) used by the Printer.
+        /// See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public int[]? YSide1ImageShiftActual { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the actual y-side2-image-shift
+        /// value(s) used by the Printer.
+        /// See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public int[]? YSide2ImageShiftActual { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the actual page overrides
+        /// used by the Printer.
+        /// See: PWG 5100.6-2003 Section 5.1
+        /// </summary>
+        public OverrideInstruction[]? OverridesActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual finishings-col

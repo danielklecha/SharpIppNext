@@ -66,7 +66,6 @@ public class SendDocumentTests : SharpIppIntegrationTestBase
                 CoverFront = new Cover
                 {
                     CoverType = CoverType.PrintBoth,
-                    Media = (Media)"iso_a4_210x297mm",
                     MediaCol = new MediaCol { MediaColor = (MediaColor)"blue" }
                 },
                 FinishingsCol = [

@@ -18,9 +18,6 @@ internal class JobTemplateAttributesProfile : IProfile
             dst ??= new IppRequestMessage();
             var job = dst.JobAttributes;
 
-            if (src.Finishings != null && src.FinishingsCol != null)
-                throw new ArgumentException("'finishings' and 'finishings-col' are conflicting attributes and cannot be supplied together.");
-
             if (src.JobPriority != null)
             {
                 job.Add(new IppAttribute(Tag.Integer, JobAttribute.JobPriority, src.JobPriority.Value));
@@ -87,8 +84,10 @@ internal class JobTemplateAttributesProfile : IProfile
 
             if (src.Media != null)
             {
-                var media = map.Map<string>(src.Media.Value);
-                job.Add(new IppAttribute(media.GetKeywordOrNameTag(), JobAttribute.Media, media));
+                var mediaValue = src.Media.Value;
+                var media = map.Map<string>(mediaValue);
+                var mediaTag = mediaValue.ToIppTag();
+                job.Add(new IppAttribute(mediaTag, JobAttribute.Media, media));
             }
 
             if (src.PrinterResolution != null)
@@ -128,8 +127,10 @@ internal class JobTemplateAttributesProfile : IProfile
 
             if (src.OutputBin != null)
             {
-                var outputBin = map.Map<string>(src.OutputBin.Value);
-                job.Add(new IppAttribute(outputBin.GetKeywordOrNameTag(OutputBin.KeywordRegex), JobAttribute.OutputBin, outputBin));
+                var outputBinValue = src.OutputBin.Value;
+                var outputBin = map.Map<string>(outputBinValue);
+                var outputBinTag = outputBinValue.ToIppTag();
+                job.Add(new IppAttribute(outputBinTag, JobAttribute.OutputBin, outputBin));
             }
 
             if (src.JobAccountId != null)
@@ -188,8 +189,10 @@ internal class JobTemplateAttributesProfile : IProfile
 
             if (src.ImpositionTemplate != null)
             {
-                var impositionTemplate = map.Map<string>(src.ImpositionTemplate.Value);
-                job.Add(new IppAttribute(impositionTemplate.GetKeywordOrNameTag(), JobAttribute.ImpositionTemplate, impositionTemplate));
+                var impositionTemplateValue = src.ImpositionTemplate.Value;
+                var impositionTemplate = map.Map<string>(impositionTemplateValue);
+                var impositionTemplateTag = impositionTemplateValue.ToIppTag();
+                job.Add(new IppAttribute(impositionTemplateTag, JobAttribute.ImpositionTemplate, impositionTemplate));
             }
 
             if (src.InsertSheet != null)
@@ -301,7 +304,7 @@ internal class JobTemplateAttributesProfile : IProfile
             dst.Sides = map.MapFromDicNullable<Sides?>(jobDict, JobAttribute.Sides);
             dst.NumberUp = map.MapFromDicNullable<int?>(jobDict, JobAttribute.NumberUp);
             dst.OrientationRequested = map.MapFromDicNullable<Orientation?>(jobDict, JobAttribute.OrientationRequested);
-            dst.Media = map.MapFromDicNullable<Media?>(jobDict, JobAttribute.Media);
+            dst.Media = map.MapFromDicNullable<string, Media?>(jobDict, JobAttribute.Media, (attribute, value) => new Media(value, attribute.Tag == Tag.Keyword));
             dst.PrinterResolution = map.MapFromDicNullable<Resolution?>(jobDict, JobAttribute.PrinterResolution);
             dst.PrintQuality = map.MapFromDicNullable<PrintQuality?>(jobDict, JobAttribute.PrintQuality);
             dst.PrintScaling = map.MapFromDicNullable<PrintScaling?>(jobDict, JobAttribute.PrintScaling);
@@ -312,7 +315,7 @@ internal class JobTemplateAttributesProfile : IProfile
                 dst.MediaCol = map.Map<MediaCol>(jobDict[JobAttribute.MediaCol].FromBegCollection().ToIppDictionary());
             if (jobDict.ContainsKey(JobAttribute.FinishingsCol))
                 dst.FinishingsCol = jobDict[JobAttribute.FinishingsCol].GroupBegCollection().Select(x => map.Map<FinishingsCol>(x.FromBegCollection().ToIppDictionary())).ToArray();
-            dst.OutputBin = map.MapFromDicNullable<OutputBin?>(jobDict, JobAttribute.OutputBin);
+            dst.OutputBin = map.MapFromDicNullable<string, OutputBin?>(jobDict, JobAttribute.OutputBin, (attribute, value) => new OutputBin(value, attribute.Tag == Tag.Keyword));
             dst.JobAccountId = map.MapFromDicNullable<string?>(jobDict, JobAttribute.JobAccountId);
             dst.JobAccountType = map.MapFromDicNullable<JobAccountType?>(jobDict, JobAttribute.JobAccountType);
             dst.JobAccountingUserId = map.MapFromDicNullable<string?>(jobDict, JobAttribute.JobAccountingUserId);
@@ -333,7 +336,7 @@ internal class JobTemplateAttributesProfile : IProfile
                 dst.CoverFront = map.Map<Cover>(jobDict[JobAttribute.CoverFront].FromBegCollection().ToIppDictionary());
             dst.ForceFrontSide = map.MapFromDicSetNullable<int[]?>(jobDict, JobAttribute.ForceFrontSide);
             dst.ImageOrientation = map.MapFromDicNullable<Orientation?>(jobDict, JobAttribute.ImageOrientation);
-            dst.ImpositionTemplate = map.MapFromDicNullable<ImpositionTemplate?>(jobDict, JobAttribute.ImpositionTemplate);
+            dst.ImpositionTemplate = map.MapFromDicNullable<string, ImpositionTemplate?>(jobDict, JobAttribute.ImpositionTemplate, (attribute, value) => new ImpositionTemplate(value, attribute.Tag == Tag.Keyword));
             if (jobDict.ContainsKey(JobAttribute.InsertSheet))
                 dst.InsertSheet = jobDict[JobAttribute.InsertSheet].GroupBegCollection().Select(x => map.Map<InsertSheet>(x.FromBegCollection().ToIppDictionary())).ToArray();
             if (jobDict.ContainsKey(JobAttribute.JobAccountingSheets))

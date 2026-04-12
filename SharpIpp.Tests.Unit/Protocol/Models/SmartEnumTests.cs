@@ -37,6 +37,13 @@ public class SmartEnumTests
             .OrderBy(type => type.FullName)
             .Select(type => new object[] { type, GetSampleValue(type) });
 
+    public static IEnumerable<object[]> KeywordSmartEnumData =>
+        typeof(IKeywordSmartEnum).Assembly
+            .GetTypes()
+            .Where(type => typeof(IKeywordSmartEnum).IsAssignableFrom(type) && type is { IsValueType: true, IsAbstract: false, IsInterface: false })
+            .OrderBy(type => type.FullName)
+            .Select(type => new object[] { type, GetSampleValue(type) });
+
     private static string GetSampleValue(Type type)
     {
         var knownValue = type.GetFields(BindingFlags.Public | BindingFlags.Static)
@@ -52,7 +59,7 @@ public class SmartEnumTests
     public void ImplicitOperator_ToString_ReturnsValue(Type type, string value)
     {
         // Arrange
-        var instance = Activator.CreateInstance(type, value, true);
+        var instance = CreatePopulatedSmartEnum(type, value);
         var implicitOperator = type.GetMethod("op_Implicit", new[] { type });
 
         // Act
@@ -78,11 +85,31 @@ public class SmartEnumTests
     }
 
     [TestMethod]
+    [DynamicData(nameof(KeywordSmartEnumData))]
+    public void PropertyInitializer_SetsIsKeyword(Type type, string value)
+    {
+        // Arrange
+        var instance = Activator.CreateInstance(type);
+        var valueProperty = type.GetProperty("Value");
+        var keywordProperty = type.GetProperty("IsKeyword");
+
+        // Act
+        valueProperty?.SetValue(instance, value);
+        keywordProperty?.SetValue(instance, true);
+
+        // Assert
+        keywordProperty.Should().NotBeNull($"{type.Name} should expose IsKeyword property");
+        keywordProperty?.GetValue(instance).Should().Be(true);
+        instance.Should().BeAssignableTo<IKeywordSmartEnum>();
+        ((IKeywordSmartEnum)instance!).Value.Should().Be(value);
+    }
+
+    [TestMethod]
     [DynamicData(nameof(SmartEnumData))]
     public void PropertyInitializer_SetsIsValue(Type type, string value)
     {
         // Arrange
-        var instance = Activator.CreateInstance(type, value, true);
+        var instance = CreatePopulatedSmartEnum(type, value);
         var property = type.GetProperty("IsValue");
 
         // Act
@@ -114,12 +141,25 @@ public class SmartEnumTests
     public void ToString_ReturnsValue(Type type, string value)
     {
         // Arrange
-        var instance = Activator.CreateInstance(type, value, true);
+        var instance = CreatePopulatedSmartEnum(type, value);
 
         // Act
         var result = instance?.ToString();
 
         // Assert
         result.Should().Be(value);
+    }
+
+    internal static object CreatePopulatedSmartEnum(Type type, string value)
+    {
+        var threeArgumentConstructor = type.GetConstructor([typeof(string), typeof(bool), typeof(bool)]);
+        if (threeArgumentConstructor != null)
+            return threeArgumentConstructor.Invoke([value, true, true]);
+
+        var twoArgumentConstructor = type.GetConstructor([typeof(string), typeof(bool)]);
+        if (twoArgumentConstructor != null)
+            return twoArgumentConstructor.Invoke([value, true]);
+
+        throw new MissingMethodException($"No supported constructor found for smart enum type '{type.FullName}'.");
     }
 }

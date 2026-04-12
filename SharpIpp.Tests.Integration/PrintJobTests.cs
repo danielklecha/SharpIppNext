@@ -1,4 +1,5 @@
 using SharpIpp;
+using SharpIpp.Exceptions;
 using SharpIpp.Models.Requests;
 using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
@@ -14,6 +15,82 @@ namespace SharpIpp.Tests.Integration;
 [ExcludeFromCodeCoverage]
 public class PrintJobTests : SharpIppIntegrationTestBase
 {
+    [TestMethod()]
+    public async Task PrintJobAsync_WhenOverridePageRangeStartsBelowOne_ServerRejectsBadRequest()
+    {
+        using MemoryStream memoryStream = new();
+        var clientRequest = new PrintJobRequest
+        {
+            Document = memoryStream,
+            OperationAttributes = new()
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631")
+            },
+            JobTemplateAttributes = new()
+            {
+                Overrides =
+                [
+                    new OverrideInstruction
+                    {
+                        PageRanges = [new SharpIpp.Protocol.Models.Range(0, 1)],
+                        JobTemplateAttributes = new JobTemplateAttributes
+                        {
+                            Sides = Sides.OneSided
+                        }
+                    }
+                ]
+            }
+        };
+
+        var client = new SharpIppClient();
+        var server = new SharpIppServer();
+        var clientRawRequest = client.CreateRawRequest(clientRequest);
+
+        Func<Task> act = async () => await server.ReceiveRequestAsync(clientRawRequest);
+
+        var exception = await act.Should().ThrowAsync<IppRequestException>();
+        exception.Which.StatusCode.Should().Be(IppStatusCode.ClientErrorBadRequest);
+        exception.Which.Message.Should().Be("invalid overrides: 'pages' ranges must be within 1:MAX");
+    }
+
+    [TestMethod()]
+    public async Task PrintJobAsync_WhenOverrideContainsDocumentScopeMember_ServerRejectsUnsupportedValues()
+    {
+        using MemoryStream memoryStream = new();
+        var clientRequest = new PrintJobRequest
+        {
+            Document = memoryStream,
+            OperationAttributes = new()
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631")
+            },
+            JobTemplateAttributes = new()
+            {
+                Overrides =
+                [
+                    new OverrideInstruction
+                    {
+                        PageRanges = [new SharpIpp.Protocol.Models.Range(1, 1)],
+                        JobTemplateAttributes = new JobTemplateAttributes
+                        {
+                            Copies = 2
+                        }
+                    }
+                ]
+            }
+        };
+
+        var client = new SharpIppClient();
+        var server = new SharpIppServer();
+        var clientRawRequest = client.CreateRawRequest(clientRequest);
+
+        Func<Task> act = async () => await server.ReceiveRequestAsync(clientRawRequest);
+
+        var exception = await act.Should().ThrowAsync<IppRequestException>();
+        exception.Which.StatusCode.Should().Be(IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
+        exception.Which.Message.Should().Be("invalid overrides: member(s) not supported by target printer: copies");
+    }
+
     [TestMethod()]
     public async Task PrintJobAsync_WhenSendingMessage_ServerReceivesSameRequestAndReturnsExpectedResponse()
     {
@@ -77,7 +154,20 @@ public class PrintJobTests : SharpIppIntegrationTestBase
                         TransformationMatrix = [1, 0, 0, 0, 1, 0]
                     }
                 ],
-                Overrides = [new OverrideInstruction { Pages = "1-2", DocumentCopies = 1, DocumentNumbers = [1] }]
+                Overrides =
+                [
+                    new OverrideInstruction
+                    {
+                        PageRanges = [new SharpIpp.Protocol.Models.Range(1, 2)],
+                        DocumentNumberRanges = [new SharpIpp.Protocol.Models.Range(1, 1)],
+                        DocumentCopyRanges = [new SharpIpp.Protocol.Models.Range(1, 1)],
+                        JobTemplateAttributes = new JobTemplateAttributes
+                        {
+                            Media = (Media)"iso_a4_210x297mm",
+                            Sides = Sides.OneSided
+                        }
+                    }
+                ]
             }
         };
         var client = new SharpIppClient();

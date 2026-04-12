@@ -20,7 +20,7 @@ namespace SharpIpp.Tests.Unit.Models;
 public class OperationAttributesTests
 {
     [TestMethod]
-    public void GetIppAttributes_ShouldThrowArgumentNullException_WhenAttributesCharsetIsNull()
+    public void GetIppAttributes_ShouldDefaultCharset_WhenAttributesCharsetIsNull()
     {
         // Arrange
         var operationAttributes = new OperationAttributes
@@ -34,14 +34,14 @@ public class OperationAttributesTests
         mapper.FillFromAssembly(assembly!);
 
         // Act
-        Action act = () => mapper.Map<OperationAttributes, List<IppAttribute>>(operationAttributes);
+        var attributes = mapper.Map<OperationAttributes, List<IppAttribute>>(operationAttributes);
 
         // Assert
-        act.Should().Throw<ArgumentNullException>().WithParameterName(nameof(OperationAttributes.AttributesCharset));
+        attributes.Should().Contain(x => x.Name == JobAttribute.AttributesCharset && (string)x.Value == "utf-8");
     }
 
     [TestMethod]
-    public void GetIppAttributes_ShouldThrowArgumentNullException_WhenAttributesNaturalLanguageIsNull()
+    public void GetIppAttributes_ShouldDefaultNaturalLanguage_WhenAttributesNaturalLanguageIsNull()
     {
         // Arrange
         var operationAttributes = new OperationAttributes
@@ -55,10 +55,10 @@ public class OperationAttributesTests
         mapper.FillFromAssembly(assembly!);
 
         // Act
-        Action act = () => mapper.Map<OperationAttributes, List<IppAttribute>>(operationAttributes);
+        var attributes = mapper.Map<OperationAttributes, List<IppAttribute>>(operationAttributes);
 
         // Assert
-        act.Should().Throw<ArgumentNullException>().WithParameterName(nameof(OperationAttributes.AttributesNaturalLanguage));
+        attributes.Should().Contain(x => x.Name == JobAttribute.AttributesNaturalLanguage && (string)x.Value == "en");
     }
 
     [TestMethod]
@@ -398,10 +398,24 @@ public class OperationAttributesTests
             AttributesCharset = "utf-8",
             AttributesNaturalLanguage = "en-us",
             JobKOctets = 100,
+            JobMandatoryAttributes = new[] { "copies", "media" },
             DocumentName = "test.txt",
             Compression = Compression.Gzip,
             DocumentFormat = "text/plain",
-            DocumentNaturalLanguage = "en-us"
+            DocumentNaturalLanguage = "en-us",
+            ClientInfo =
+            [
+                new ClientInfo
+                {
+                    ClientName = "MyClient",
+                    ClientType = ClientType.Application,
+                },
+            ],
+            DocumentFormatDetails = new DocumentFormatDetails
+            {
+                DocumentSourceApplicationName = "MyApp",
+                DocumentSourceOsName = "MyOS",
+            },
         };
         var mapper = new SimpleMapper();
         var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
@@ -417,6 +431,66 @@ public class OperationAttributesTests
         result.Should().Contain(x => x.Name == JobAttribute.Compression && (string)x.Value == "gzip");
         result.Should().Contain(x => x.Name == JobAttribute.DocumentFormat && (string)x.Value == "text/plain");
         result.Should().Contain(x => x.Name == JobAttribute.DocumentNaturalLanguage && (string)x.Value == "en-us");
+        result.Should().Contain(x => x.Name == JobAttribute.JobMandatoryAttributes && (string)x.Value == "copies");
+        result.Should().Contain(x => x.Name == JobAttribute.JobMandatoryAttributes && (string)x.Value == "media");
+        result.Should().Contain(x => x.Name == JobAttribute.ClientInfo && x.Tag == Tag.BegCollection);
+        result.Should().Contain(x => x.Name == JobAttribute.DocumentFormatDetails && x.Tag == Tag.BegCollection);
+    }
+
+    [TestMethod]
+    public void Map_ToValidateJobOperationAttributes_ShouldMapPwg51007OperationAttributes_WhenPresent()
+    {
+        // Arrange
+        var dict = new Dictionary<string, IppAttribute[]>
+        {
+            {
+                JobAttribute.ClientInfo,
+                new[]
+                {
+                    new IppAttribute(Tag.BegCollection, JobAttribute.ClientInfo, NoValue.Instance),
+                    new IppAttribute(Tag.MemberAttrName, "", "client-name"),
+                    new IppAttribute(Tag.NameWithoutLanguage, "", "MyClient"),
+                    new IppAttribute(Tag.MemberAttrName, "", "client-type"),
+                    new IppAttribute(Tag.Integer, "", 3),
+                    new IppAttribute(Tag.EndCollection, "", NoValue.Instance)
+                }
+            },
+            {
+                JobAttribute.DocumentFormatDetails,
+                new[]
+                {
+                    new IppAttribute(Tag.BegCollection, JobAttribute.DocumentFormatDetails, NoValue.Instance),
+                    new IppAttribute(Tag.MemberAttrName, "", "document-source-application-name"),
+                    new IppAttribute(Tag.NameWithoutLanguage, "", "MyApp"),
+                    new IppAttribute(Tag.MemberAttrName, "", "document-source-os-name"),
+                    new IppAttribute(Tag.NameWithoutLanguage, "", "MyOS"),
+                    new IppAttribute(Tag.EndCollection, "", NoValue.Instance)
+                }
+            },
+            {
+                JobAttribute.JobMandatoryAttributes,
+                new[]
+                {
+                    new IppAttribute(Tag.Keyword, JobAttribute.JobMandatoryAttributes, "copies"),
+                    new IppAttribute(Tag.Keyword, JobAttribute.JobMandatoryAttributes, "media")
+                }
+            }
+        };
+        var mapper = new SimpleMapper();
+        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
+        mapper.FillFromAssembly(assembly!);
+
+        // Act
+        var result = mapper.Map<IDictionary<string, IppAttribute[]>, ValidateJobOperationAttributes>(dict);
+
+        // Assert
+        result.ClientInfo.Should().NotBeNull().And.HaveCount(1);
+        result.ClientInfo![0].ClientName.Should().Be("MyClient");
+        result.ClientInfo![0].ClientType.Should().Be(ClientType.Application);
+        result.DocumentFormatDetails.Should().NotBeNull();
+        result.DocumentFormatDetails!.DocumentSourceApplicationName.Should().Be("MyApp");
+        result.DocumentFormatDetails!.DocumentSourceOsName.Should().Be("MyOS");
+        result.JobMandatoryAttributes.Should().BeEquivalentTo(new[] { "copies", "media" });
     }
     [TestMethod]
     public void Map_ToPrintUriOperationAttributes_ShouldNotSetDocumentUri_WhenDocumentUriIsInvalid()

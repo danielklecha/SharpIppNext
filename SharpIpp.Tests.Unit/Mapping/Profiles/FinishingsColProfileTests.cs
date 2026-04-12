@@ -57,6 +57,7 @@ public class FinishingsColProfileTests
         result[0].Value.Should().Be(NoValue.Instance);
     }
 
+    [TestMethod]
     public void Map_FinishingsCol_FromDictionary_WithComplexMembers_MapsMediaSizeAndFinishingCollections()
     {
         var dict = new Dictionary<string, IppAttribute[]>
