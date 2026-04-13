@@ -255,6 +255,14 @@ public interface ISharpIppClient : IDisposable
     Task<SendUriResponse> SendUriAsync(SendUriRequest request, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Validate-Document Operation.
+    /// This DEPRECATED operation allows a client to validate operation and Document Template attributes
+    /// that would be used in a later Send-Document or Send-URI request.
+    /// See: PWG 5100.13-2023 Section 5.2
+    /// </summary>
+    Task<ValidateDocumentResponse> ValidateDocumentAsync(ValidateDocumentRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Validate-Job Operation
     /// This REQUIRED operation is similar to the Print-Job operation
     /// except that a client supplies no document data and

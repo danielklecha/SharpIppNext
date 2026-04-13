@@ -82,6 +82,7 @@ For the PWG 5100.9 printer state extension attributes (`printer-alert`, `printer
 | Startup-All-Printers | `StartupAllPrintersAsync` | [StartupAllPrinters.md](StartupAllPrinters.md) |
 | Startup-One-Printer | `StartupOnePrinterAsync` | [StartupOnePrinter.md](StartupOnePrinter.md) |
 | Update-Active-Jobs | `UpdateActiveJobsAsync` | [UpdateActiveJobs.md](UpdateActiveJobs.md) |
+| Validate-Document | `ValidateDocumentAsync` | [ValidateDocument.md](ValidateDocument.md) |
 | Validate-Job | `ValidateJobAsync` | [ValidateJob.md](ValidateJob.md) |
 
 If you need to send a custom operation or an operation not currently exposed by a strongly-typed method in `ISharpIppClient`, you can use the generic `SendAsync` overload. See the [Custom Requests](CustomRequests.md) documentation for more details.

@@ -126,6 +126,34 @@ public class IppRequestValidatorTests
     }
 
     [TestMethod]
+    public void Validate_WhenValidateJobContainsDocumentPassword_ShouldThrowBadRequest()
+    {
+        var validator = new IppRequestValidator();
+        var request = CreateBasicRequest(IppOperation.ValidateJob);
+        request.OperationAttributes.Add(new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, JobAttribute.DocumentPassword, "secret"));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("document-password is not allowed for validate operations")
+            .Which.StatusCode.Should().Be(IppStatusCode.ClientErrorBadRequest);
+    }
+
+    [TestMethod]
+    public void Validate_WhenValidateDocumentContainsDocumentPassword_ShouldThrowBadRequest()
+    {
+        var validator = new IppRequestValidator();
+        var request = CreateBasicRequest(IppOperation.ValidateDocument);
+        request.OperationAttributes.Add(new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, JobAttribute.DocumentPassword, "secret"));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("document-password is not allowed for validate operations")
+            .Which.StatusCode.Should().Be(IppStatusCode.ClientErrorBadRequest);
+    }
+
+    [TestMethod]
     public void Validate_WhenOverrideMemberIsUnsupportedByContextCapabilities_ShouldThrowException()
     {
         var validator = new IppRequestValidator();

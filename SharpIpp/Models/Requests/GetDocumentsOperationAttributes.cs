@@ -7,6 +7,13 @@ namespace SharpIpp.Models.Requests;
 public class GetDocumentsOperationAttributes : JobOperationAttributes
 {
     /// <summary>
+    /// The first-index IPP attribute.
+    /// See: PWG 5100.13-2023 Section 6.1.3 and Section 8.5
+    /// </summary>
+    /// <code>first-index</code>
+    public int? FirstIndex { get; set; }
+
+    /// <summary>
     /// The limit IPP attribute.
     /// See: pwg5100.1-2022 Section 2.2
     /// </summary>

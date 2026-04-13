@@ -132,6 +132,8 @@
       href: StartupOnePrinter.md
     - name: Update-Active-Jobs
       href: UpdateActiveJobs.md
+    - name: Validate-Document
+      href: ValidateDocument.md
     - name: Validate-Job
       href: ValidateJob.md
     - name: Get-Printer-Attributes

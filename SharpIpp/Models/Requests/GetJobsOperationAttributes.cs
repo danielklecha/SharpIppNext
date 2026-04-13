@@ -9,6 +9,13 @@ namespace SharpIpp.Models.Requests;
 public class GetJobsOperationAttributes : OperationAttributes
 {
     /// <summary>
+    /// The first-index IPP attribute.
+    /// See: PWG 5100.13-2023 Section 6.1.3 and Section 8.4
+    /// </summary>
+    /// <code>first-index</code>
+    public int? FirstIndex { get; set; }
+
+    /// <summary>
     /// This REQUIRED attribute specifies a list of "job-id" values for the Cancel-Jobs, Cancel-My-Jobs, and Get-Jobs operations.
     /// See: PWG 5100.7-2023 Section 6.1.4
     /// </summary>

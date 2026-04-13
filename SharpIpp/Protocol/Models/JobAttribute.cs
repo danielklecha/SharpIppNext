@@ -10,6 +10,8 @@ namespace SharpIpp.Protocol.Models
         public const string DateTimeAtCreation = "date-time-at-creation";
         public const string DateTimeAtProcessing = "date-time-at-processing";
         public const string DocumentFormat = "document-format";
+        public const string DocumentMetadata = "document-metadata";
+        public const string DocumentPassword = "document-password";
         public const string DocumentName = "document-name";
         public const string Finishings = "finishings";
         public const string FinishingsCol = "finishings-col";
@@ -77,6 +79,7 @@ namespace SharpIpp.Protocol.Models
         public const string AttributesNaturalLanguage = "attributes-natural-language";
         public const string DocumentNaturalLanguage = "document-natural-language";
         public const string FirstPrinterName = "first-printer-name";
+        public const string FirstIndex = "first-index";
         public const string PrinterId = "printer-id";
         public const string PrinterLocation = "printer-location";
         public const string JobResourceIds = "job-resource-ids";

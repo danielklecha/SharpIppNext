@@ -141,6 +141,7 @@ public partial class SharpIppServer : ISharpIppServer
             IppOperation.SendDocument => Mapper.Map<IIppRequestMessage, SendDocumentRequest>(request),
             IppOperation.SendUri => Mapper.Map<IIppRequestMessage, SendUriRequest>(request),
             IppOperation.UpdateActiveJobs => Mapper.Map<IIppRequestMessage, UpdateActiveJobsRequest>(request),
+            IppOperation.ValidateDocument => Mapper.Map<IIppRequestMessage, ValidateDocumentRequest>(request),
             IppOperation.ValidateJob => Mapper.Map<IIppRequestMessage, ValidateJobRequest>(request),
             IppOperation.GetDocumentAttributes => Mapper.Map<IIppRequestMessage, GetDocumentAttributesRequest>(request),
             IppOperation.GetDocuments => Mapper.Map<IIppRequestMessage, GetDocumentsRequest>(request),

@@ -339,6 +339,12 @@ public class IppRequestValidator : IIppRequestValidator
                 if (ValidateOperationAttributesGroup && lastDocument == false && !hasDocumentUri)
                     throw new IppRequestException("missing document-uri", request, IppStatusCode.ClientErrorBadRequest);
                 break;
+
+            case IppOperation.ValidateJob:
+            case IppOperation.ValidateDocument:
+                if (ValidateOperationAttributesGroup && HasNamedAttribute(operationAttributes, JobAttribute.DocumentPassword))
+                    throw new IppRequestException("document-password is not allowed for validate operations", request, IppStatusCode.ClientErrorBadRequest);
+                break;
         }
 
         ValidateJobRequestedAttributesGroupKeywords(request);

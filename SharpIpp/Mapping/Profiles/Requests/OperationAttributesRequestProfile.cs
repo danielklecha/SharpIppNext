@@ -373,6 +373,7 @@ internal class OperationAttributesRequestProfile : IProfile
         {
             dst ??= new GetDocumentsOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, JobOperationAttributes>(src, dst);
+            dst.FirstIndex = map.MapFromDicNullable<int?>(src, JobAttribute.FirstIndex);
             dst.Limit = map.MapFromDicNullable<int?>(src, JobAttribute.Limit);
             dst.RequestedAttributes = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.RequestedAttributes);
             return dst;
@@ -382,6 +383,8 @@ internal class OperationAttributesRequestProfile : IProfile
         {
             dst ??= new List<IppAttribute>();
             map.Map<JobOperationAttributes, List<IppAttribute>>(src, dst);
+            if (src.FirstIndex.HasValue)
+                dst.Add(new IppAttribute(Tag.Integer, JobAttribute.FirstIndex, src.FirstIndex.Value));
             if (src.Limit.HasValue)
                 dst.Add(new IppAttribute(Tag.Integer, JobAttribute.Limit, src.Limit.Value));
             if (src.RequestedAttributes != null)
@@ -412,6 +415,7 @@ internal class OperationAttributesRequestProfile : IProfile
         {
             dst ??= new GetJobsOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(src, dst);
+            dst.FirstIndex = map.MapFromDicNullable<int?>(src, JobAttribute.FirstIndex);
             dst.Limit = map.MapFromDicNullable<int?>(src, JobAttribute.Limit);
             dst.JobIds = map.MapFromDicSetNullable<int[]?>(src, JobAttribute.JobIds);
             var requestedAttributes = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.RequestedAttributes);
@@ -430,6 +434,8 @@ internal class OperationAttributesRequestProfile : IProfile
         {
             dst ??= new List<IppAttribute>();
             map.Map<OperationAttributes, List<IppAttribute>>(src, dst);
+            if (src.FirstIndex != null)
+                dst.Add(new IppAttribute(Tag.Integer, JobAttribute.FirstIndex, src.FirstIndex.Value));
             if (src.Limit != null)
                 dst.Add(new IppAttribute(Tag.Integer, JobAttribute.Limit, src.Limit.Value));
             if (src.JobIds != null)
@@ -447,6 +453,7 @@ internal class OperationAttributesRequestProfile : IProfile
         {
             dst ??= new GetPrinterAttributesOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(src, dst);
+            dst.FirstIndex = map.MapFromDicNullable<int?>(src, JobAttribute.FirstIndex);
             dst.DocumentFormat = map.MapFromDicNullable<string?>(src, JobAttribute.DocumentFormat);
             var requestedAttributes = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.RequestedAttributes);
             if (requestedAttributes?.Any() ?? false)
@@ -458,6 +465,8 @@ internal class OperationAttributesRequestProfile : IProfile
         {
             dst ??= new List<IppAttribute>();
             map.Map<OperationAttributes, List<IppAttribute>>(src, dst);
+            if (src.FirstIndex != null)
+                dst.Add(new IppAttribute(Tag.Integer, JobAttribute.FirstIndex, src.FirstIndex.Value));
             if (src.DocumentFormat != null)
                 dst.Add(new IppAttribute(Tag.MimeMediaType, JobAttribute.DocumentFormat, src.DocumentFormat));
             if (src.RequestedAttributes != null)
@@ -489,6 +498,8 @@ internal class OperationAttributesRequestProfile : IProfile
         {
             dst ??= new PrintJobOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, CreateJobOperationAttributes>(src, dst);
+            dst.DocumentMetadata = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.DocumentMetadata);
+            dst.DocumentPassword = map.MapFromDicNullable<string?>(src, JobAttribute.DocumentPassword);
             dst.DocumentName = map.MapFromDicNullable<string?>(src, JobAttribute.DocumentName);
             dst.Compression = map.MapFromDicNullable<Compression?>(src, JobAttribute.Compression);
             dst.DocumentFormat = map.MapFromDicNullable<string?>(src, JobAttribute.DocumentFormat);
@@ -502,6 +513,10 @@ internal class OperationAttributesRequestProfile : IProfile
         {
             dst ??= new List<IppAttribute>();
             map.Map<CreateJobOperationAttributes, List<IppAttribute>>(src, dst);
+            if (src.DocumentMetadata != null)
+                dst.AddRange(src.DocumentMetadata.Select(x => new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, JobAttribute.DocumentMetadata, x)));
+            if (src.DocumentPassword != null)
+                dst.Add(new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, JobAttribute.DocumentPassword, src.DocumentPassword));
             if (src.DocumentName != null)
                 dst.Add(new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.DocumentName, src.DocumentName));
             if (src.Compression != null)
@@ -559,6 +574,8 @@ internal class OperationAttributesRequestProfile : IProfile
         {
             dst ??= new SendDocumentOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, JobOperationAttributes>(src, dst);
+            dst.DocumentMetadata = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.DocumentMetadata);
+            dst.DocumentPassword = map.MapFromDicNullable<string?>(src, JobAttribute.DocumentPassword);
             dst.ResourceIds = map.MapFromDicSetNullable<int[]?>(src, SystemAttribute.ResourceIds);
             if (src.TryGetValue(JobAttribute.DocumentFormatDetails, out var documentFormatDetails))
                 dst.DocumentFormatDetails = map.Map<DocumentFormatDetails>(documentFormatDetails.GroupBegCollection().First().FromBegCollection().ToIppDictionary());
@@ -578,6 +595,10 @@ internal class OperationAttributesRequestProfile : IProfile
         {
             dst ??= new List<IppAttribute>();
             map.Map<JobOperationAttributes, List<IppAttribute>>(src, dst);
+            if (src.DocumentMetadata != null)
+                dst.AddRange(src.DocumentMetadata.Select(x => new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, JobAttribute.DocumentMetadata, x)));
+            if (src.DocumentPassword != null)
+                dst.Add(new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, JobAttribute.DocumentPassword, src.DocumentPassword));
             if (src.ResourceIds != null)
                 dst.AddRange(src.ResourceIds.Select(x => new IppAttribute(Tag.Integer, SystemAttribute.ResourceIds, x)));
             if (src.DocumentFormatDetails != null)
@@ -1182,6 +1203,8 @@ internal class OperationAttributesRequestProfile : IProfile
         {
             dst ??= new ValidateJobOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, CreateJobOperationAttributes>(src, dst);
+            dst.DocumentMetadata = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.DocumentMetadata);
+            dst.DocumentPassword = map.MapFromDicNullable<string?>(src, JobAttribute.DocumentPassword);
             dst.DocumentName = map.MapFromDicNullable<string?>(src, JobAttribute.DocumentName);
             dst.Compression = map.MapFromDicNullable<Compression?>(src, JobAttribute.Compression);
             dst.DocumentFormat = map.MapFromDicNullable<string?>(src, JobAttribute.DocumentFormat);
@@ -1201,6 +1224,10 @@ internal class OperationAttributesRequestProfile : IProfile
         {
             dst ??= new List<IppAttribute>();
             map.Map<CreateJobOperationAttributes, List<IppAttribute>>(src, dst);
+            if (src.DocumentMetadata != null)
+                dst.AddRange(src.DocumentMetadata.Select(x => new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, JobAttribute.DocumentMetadata, x)));
+            if (src.DocumentPassword != null)
+                dst.Add(new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, JobAttribute.DocumentPassword, src.DocumentPassword));
             if (src.DocumentName != null)
                 dst.Add(new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.DocumentName, src.DocumentName));
             if (src.Compression != null)
@@ -1211,6 +1238,20 @@ internal class OperationAttributesRequestProfile : IProfile
                 dst.Add(new IppAttribute(Tag.NaturalLanguage, JobAttribute.DocumentNaturalLanguage, src.DocumentNaturalLanguage));
             if (src.DocumentCharset != null)
                 dst.Add(new IppAttribute(Tag.Charset, JobAttribute.DocumentCharset, src.DocumentCharset));
+            return dst;
+        });
+
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, ValidateDocumentOperationAttributes>((src, dst, map) =>
+        {
+            dst ??= new ValidateDocumentOperationAttributes();
+            map.Map<IDictionary<string, IppAttribute[]>, PrintJobOperationAttributes>(src, dst);
+            return dst;
+        });
+
+        mapper.CreateMap<ValidateDocumentOperationAttributes, List<IppAttribute>>((src, dst, map) =>
+        {
+            dst ??= new List<IppAttribute>();
+            map.Map<PrintJobOperationAttributes, List<IppAttribute>>(src, dst);
             return dst;
         });
     }

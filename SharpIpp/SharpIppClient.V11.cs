@@ -116,6 +116,12 @@ public partial class SharpIppClient
     }
 
     /// <inheritdoc />
+    public Task<ValidateDocumentResponse> ValidateDocumentAsync(ValidateDocumentRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<ValidateDocumentRequest, ValidateDocumentResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
     public Task<ValidateJobResponse> ValidateJobAsync(ValidateJobRequest request, CancellationToken cancellationToken = default)
     {
         return SendAsync<ValidateJobRequest, ValidateJobResponse>(request, cancellationToken);

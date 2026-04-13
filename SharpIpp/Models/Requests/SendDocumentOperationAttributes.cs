@@ -9,6 +9,18 @@ namespace SharpIpp.Models.Requests;
 public class SendDocumentOperationAttributes : JobOperationAttributes
 {
     /// <summary>
+    /// The <c>document-metadata</c> operation attribute.
+    /// See: PWG 5100.13-2023 Section 6.1.1
+    /// </summary>
+    public string[]? DocumentMetadata { get; set; }
+
+    /// <summary>
+    /// The <c>document-password</c> operation attribute.
+    /// See: PWG 5100.13-2023 Section 6.1.2
+    /// </summary>
+    public string? DocumentPassword { get; set; }
+
+    /// <summary>
     /// This DEPRECATED operation attribute specifies details about the source of the Document data and can be included in any Job or Document Creation request.
     /// See: PWG 5100.7-2023 Section 6.1.2
     /// </summary>

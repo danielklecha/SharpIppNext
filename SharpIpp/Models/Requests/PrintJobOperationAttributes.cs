@@ -10,6 +10,18 @@ namespace SharpIpp.Models.Requests;
 public class PrintJobOperationAttributes : CreateJobOperationAttributes
 {
     /// <summary>
+    /// The <c>document-metadata</c> operation attribute.
+    /// See: PWG 5100.13-2023 Section 6.1.1
+    /// </summary>
+    public string[]? DocumentMetadata { get; set; }
+
+    /// <summary>
+    /// The <c>document-password</c> operation attribute.
+    /// See: PWG 5100.13-2023 Section 6.1.2
+    /// </summary>
+    public string? DocumentPassword { get; set; }
+
+    /// <summary>
     /// The client OPTIONALLY supplies this attribute.  The Printer
     /// object MUST support this attribute.   It contains the client
     /// supplied document name.  The document name MAY be different

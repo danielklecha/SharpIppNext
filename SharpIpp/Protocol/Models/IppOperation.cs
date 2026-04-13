@@ -28,6 +28,7 @@ namespace SharpIpp.Protocol.Models
         SetJobAttributes = 0x0014,
         AddDocumentImages = 0x003E,
         IdentifyPrinter = 0x003C,
+        ValidateDocument = 0x003D,
         CancelDocument = 0x0033,
         GetDocumentAttributes = 0x0034,
         GetDocuments = 0x0035,
