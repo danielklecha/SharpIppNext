@@ -24,6 +24,11 @@ namespace SharpIpp.Protocol.Models
         public static readonly JobStateReason JobInterpreting = new("job-interpreting");
         public static readonly JobStateReason JobQueued = new("job-queued");
         public static readonly JobStateReason JobTransforming = new("job-transforming");
+        public static readonly JobStateReason JobTransferring = new("job-transferring");
+        public static readonly JobStateReason ConnectingToDestination = new("connecting-to-destination");
+        public static readonly JobStateReason ConnectedToDestination = new("connected-to-destination");
+        public static readonly JobStateReason DestinationUriFailed = new("destination-uri-failed");
+        public static readonly JobStateReason WaitingForUserAction = new("waiting-for-user-action");
         public static readonly JobStateReason JobQueuedForMarker = new("job-queued-for-marker");
         public static readonly JobStateReason JobPrinting = new("job-printing");
         public static readonly JobStateReason JobCanceledByUser = new("job-canceled-by-user");
@@ -49,6 +54,11 @@ namespace SharpIpp.Protocol.Models
         public static readonly JobStateReason WarningsDetected = new("warnings-detected");
         public static readonly JobStateReason ConflictingAttributes = new("conflicting-attributes");
         public static readonly JobStateReason JobCanceledAfterTimeout = new("job-canceled-after-timeout");
+        public static readonly JobStateReason JobHeldForReview = new("job-held-for-review");
+        public static readonly JobStateReason AccountAuthorizationFailed = new("account-authorization-failed");
+        public static readonly JobStateReason AccountClosed = new("account-closed");
+        public static readonly JobStateReason AccountInfoNeeded = new("account-info-needed");
+        public static readonly JobStateReason AccountLimitReached = new("account-limit-reached");
         public static readonly JobStateReason JobHeldForAuthorization = new("job-held-for-authorization");
         public static readonly JobStateReason JobHeldForButtonPress = new("job-held-for-button-press");
         public static readonly JobStateReason JobHeldForRelease = new("job-held-for-release");

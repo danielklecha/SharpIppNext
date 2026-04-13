@@ -233,6 +233,21 @@ public class JobTemplateAttributesProfileTests
     }
 
     [TestMethod]
+    public void Map_ToRequest_WithFaxOutRetryFields_WritesIntegerAttributes()
+    {
+        var src = new JobTemplateAttributes
+        {
+            RetryInterval = 15,
+            RetryTimeOut = 300
+        };
+
+        var request = _mapper.Map<IppRequestMessage>(src);
+
+        request.JobAttributes.Should().Contain(x => x.Name == JobAttribute.RetryInterval && x.Tag == Tag.Integer && (int)x.Value! == 15);
+        request.JobAttributes.Should().Contain(x => x.Name == JobAttribute.RetryTimeOut && x.Tag == Tag.Integer && (int)x.Value! == 300);
+    }
+
+    [TestMethod]
     public void Map_FromRequest_With3DJobTemplateAttributes_ReadsJobAttributes()
     {
         var request = new IppRequestMessage();

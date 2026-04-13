@@ -884,7 +884,7 @@ internal class CollectionProfiles : IProfile
                 DestinationUriValue = map.MapFromDicNullable<string?>(src, "destination-uri"),
                 PostDialString = map.MapFromDicNullable<string?>(src, nameof(DestinationUri.PostDialString).ConvertCamelCaseToKebabCase()),
                 PreDialString = map.MapFromDicNullable<string?>(src, nameof(DestinationUri.PreDialString).ConvertCamelCaseToKebabCase()),
-                T33Subaddress = map.MapFromDicNullable<string?>(src, nameof(DestinationUri.T33Subaddress).ConvertCamelCaseToKebabCase())
+                T33Subaddress = map.MapFromDicNullable<int?>(src, nameof(DestinationUri.T33Subaddress).ConvertCamelCaseToKebabCase())
             };
         });
         mapper.CreateMap<DestinationUri, IEnumerable<IppAttribute>>((src, map) =>
@@ -896,7 +896,97 @@ internal class CollectionProfiles : IProfile
             if (src.DestinationUriValue != null) attributes.Add(new IppAttribute(Tag.Uri, "destination-uri", src.DestinationUriValue));
             if (src.PostDialString != null) attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, nameof(DestinationUri.PostDialString).ConvertCamelCaseToKebabCase(), src.PostDialString));
             if (src.PreDialString != null) attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, nameof(DestinationUri.PreDialString).ConvertCamelCaseToKebabCase(), src.PreDialString));
-            if (src.T33Subaddress != null) attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, nameof(DestinationUri.T33Subaddress).ConvertCamelCaseToKebabCase(), src.T33Subaddress));
+            if (src.T33Subaddress.HasValue) attributes.Add(new IppAttribute(Tag.Integer, nameof(DestinationUri.T33Subaddress).ConvertCamelCaseToKebabCase(), src.T33Subaddress.Value));
+            return attributes;
+        });
+
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, DestinationStatus>((src, map) =>
+        {
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<DestinationStatus>();
+
+            return new DestinationStatus
+            {
+                DestinationUri = map.MapFromDicNullable<string?>(src, "destination-uri"),
+                ImagesCompleted = map.MapFromDicNullable<int?>(src, "images-completed"),
+                TransmissionStatus = map.MapFromDicNullable<TransmissionStatus?>(src, "transmission-status")
+            };
+        });
+
+        mapper.CreateMap<DestinationStatus, IEnumerable<IppAttribute>>((src, map) =>
+        {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.DestinationStatuses, NoValue.Instance) };
+
+            var attributes = new List<IppAttribute>();
+            if (src.DestinationUri != null)
+                attributes.Add(new IppAttribute(Tag.Uri, "destination-uri", src.DestinationUri));
+            if (src.ImagesCompleted.HasValue)
+                attributes.Add(new IppAttribute(Tag.Integer, "images-completed", src.ImagesCompleted.Value));
+            if (src.TransmissionStatus.HasValue)
+                attributes.Add(new IppAttribute(Tag.Enum, "transmission-status", (int)src.TransmissionStatus.Value));
+            return attributes;
+        });
+
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, DestinationUriReady>((src, map) =>
+        {
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<DestinationUriReady>();
+
+            IDictionary<string, IppAttribute[]>[]? destinationAttributes = null;
+            if (src.TryGetValue("destination-attributes", out var nestedDestinationAttributes) && nestedDestinationAttributes.GroupBegCollection().Any())
+            {
+                destinationAttributes = nestedDestinationAttributes
+                    .GroupBegCollection()
+                    .Select(x => x.FromBegCollection().ToIppDictionary())
+                    .ToArray();
+            }
+
+            return new DestinationUriReady
+            {
+                DestinationAttributes = destinationAttributes,
+                DestinationAttributesSupported = map.MapFromDicSetNullable<string[]?>(src, "destination-attributes-supported"),
+                DestinationInfo = map.MapFromDicNullable<string?>(src, "destination-info"),
+                DestinationIsDirectory = map.MapFromDicNullable<bool?>(src, "destination-is-directory"),
+                DestinationMandatoryAccessAttributes = map.MapFromDicSetNullable<string[]?>(src, "destination-mandatory-access-attributes"),
+                DestinationName = map.MapFromDicNullable<string?>(src, "destination-name"),
+                DestinationOAuthScope = map.MapFromDicSetNullable<string[]?>(src, "destination-oauth-scope"),
+                DestinationOAuthToken = map.MapFromDicSetNullable<string[]?>(src, "destination-oauth-token"),
+                DestinationOAuthUri = map.MapFromDicNullable<Uri?>(src, "destination-oauth-uri"),
+                DestinationUri = map.MapFromDicNullable<string?>(src, "destination-uri")
+            };
+        });
+
+        mapper.CreateMap<DestinationUriReady, IEnumerable<IppAttribute>>((src, map) =>
+        {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, PrinterAttribute.DestinationUriReady, NoValue.Instance) };
+
+            var attributes = new List<IppAttribute>();
+            if (src.DestinationAttributes != null)
+            {
+                attributes.AddRange(src.DestinationAttributes.SelectMany(x => x.Values.SelectMany(y => y).ToBegCollection("destination-attributes")));
+            }
+
+            if (src.DestinationAttributesSupported != null)
+                attributes.AddRange(src.DestinationAttributesSupported.Select(x => new IppAttribute(Tag.Keyword, "destination-attributes-supported", x)));
+            if (src.DestinationInfo != null)
+                attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, "destination-info", src.DestinationInfo));
+            if (src.DestinationIsDirectory.HasValue)
+                attributes.Add(new IppAttribute(Tag.Boolean, "destination-is-directory", src.DestinationIsDirectory.Value));
+            if (src.DestinationMandatoryAccessAttributes != null)
+                attributes.AddRange(src.DestinationMandatoryAccessAttributes.Select(x => new IppAttribute(Tag.Keyword, "destination-mandatory-access-attributes", x)));
+            if (src.DestinationName != null)
+                attributes.Add(new IppAttribute(Tag.NameWithoutLanguage, "destination-name", src.DestinationName));
+            if (src.DestinationOAuthScope != null)
+                attributes.AddRange(src.DestinationOAuthScope.Select(x => new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, "destination-oauth-scope", x)));
+            if (src.DestinationOAuthToken != null)
+                attributes.AddRange(src.DestinationOAuthToken.Select(x => new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, "destination-oauth-token", x)));
+            if (src.DestinationOAuthUri != null)
+                attributes.Add(new IppAttribute(Tag.Uri, "destination-oauth-uri", src.DestinationOAuthUri.ToString()));
+            if (src.DestinationUri != null)
+                attributes.Add(new IppAttribute(Tag.Uri, "destination-uri", src.DestinationUri));
+
             return attributes;
         });
 
@@ -907,7 +997,7 @@ internal class CollectionProfiles : IProfile
 
             return new OutputAttributes
             {
-                NoiseRemoval = map.MapFromDicNullable<bool?>(src, nameof(OutputAttributes.NoiseRemoval).ConvertCamelCaseToKebabCase()),
+                NoiseRemoval = map.MapFromDicNullable<int?>(src, nameof(OutputAttributes.NoiseRemoval).ConvertCamelCaseToKebabCase()),
                 OutputCompressionQualityFactor = map.MapFromDicNullable<int?>(src, nameof(OutputAttributes.OutputCompressionQualityFactor).ConvertCamelCaseToKebabCase())
             };
         });
@@ -917,7 +1007,7 @@ internal class CollectionProfiles : IProfile
                 return new[] { new IppAttribute(Tag.NoValue, JobAttribute.OutputAttributes, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
-            if (src.NoiseRemoval.HasValue) attributes.Add(new IppAttribute(Tag.Boolean, nameof(OutputAttributes.NoiseRemoval).ConvertCamelCaseToKebabCase(), src.NoiseRemoval.Value));
+            if (src.NoiseRemoval.HasValue) attributes.Add(new IppAttribute(Tag.Integer, nameof(OutputAttributes.NoiseRemoval).ConvertCamelCaseToKebabCase(), src.NoiseRemoval.Value));
             if (src.OutputCompressionQualityFactor.HasValue) attributes.Add(new IppAttribute(Tag.Integer, nameof(OutputAttributes.OutputCompressionQualityFactor).ConvertCamelCaseToKebabCase(), src.OutputCompressionQualityFactor.Value));
             return attributes;
         });

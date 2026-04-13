@@ -133,6 +133,12 @@ public class CreateJobOperationAttributes : OperationAttributes
     public DestinationUri[]? DestinationUris { get; set; }
 
     /// <summary>
+    /// The <c>destination-accesses</c> operation attribute.
+    /// See: PWG 5100.17-2014 Section 8.1.2
+    /// </summary>
+    public DocumentAccess[]? DestinationAccesses { get; set; }
+
+    /// <summary>
     /// The <c>output-attributes</c> operation attribute.
     /// See: PWG 5100.17-2014 Section 6.2.8
     /// </summary>

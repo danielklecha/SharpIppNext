@@ -137,7 +137,25 @@ public class SendDocumentTests : SharpIppIntegrationTestBase
                 YImagePosition = YImagePosition.Center,
                 YImageShift = 8,
                 YSide1ImageShift = 9,
-                YSide2ImageShift = 10
+                YSide2ImageShift = 10,
+                InputAutoExposure = true,
+                InputAutoScaling = false,
+                InputAutoSkewCorrection = true,
+                InputBrightness = 50,
+                InputColorMode = "auto",
+                InputContentType = "image/jpeg",
+                InputContrast = 10,
+                InputFilmScanMode = "negative",
+                InputImagesToTransfer = 5,
+                InputMedia = (Media)"iso_a4_210x297mm",
+                InputOrientationRequested = Orientation.Landscape,
+                InputQuality = PrintQuality.High,
+                InputResolution = new Resolution(300, 300, ResolutionUnit.DotsPerInch),
+                InputScalingHeight = 200,
+                InputScalingWidth = 300,
+                InputSharpness = 25,
+                InputSides = Sides.TwoSidedLongEdge,
+                InputSource = "document-feeder"
             }
         };
         IIppRequest? serverRequest = null;

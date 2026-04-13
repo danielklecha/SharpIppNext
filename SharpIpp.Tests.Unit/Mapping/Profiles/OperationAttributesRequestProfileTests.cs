@@ -214,6 +214,66 @@ public class OperationAttributesRequestProfileTests
     }
 
     [TestMethod]
+    public void Map_CreateJobOperationAttributes_WithDestinationAccesses_MapsFromIppAttributes()
+    {
+        // Arrange
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { JobAttribute.AttributesCharset, [new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8")] },
+            { JobAttribute.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en")] },
+            {
+                JobAttribute.DestinationAccesses,
+                [
+                    new IppAttribute(Tag.BegCollection, JobAttribute.DestinationAccesses, NoValue.Instance),
+                    new IppAttribute(Tag.MemberAttrName, "", "access-user-name"),
+                    new IppAttribute(Tag.NameWithoutLanguage, "", "scan-user"),
+                    new IppAttribute(Tag.MemberAttrName, "", "access-password"),
+                    new IppAttribute(Tag.TextWithoutLanguage, "", "secret"),
+                    new IppAttribute(Tag.EndCollection, "", NoValue.Instance)
+                ]
+            }
+        };
+
+        // Act
+        var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, CreateJobOperationAttributes>(src);
+
+        // Assert
+        dst.DestinationAccesses.Should().NotBeNull();
+        dst.DestinationAccesses!.Should().ContainSingle();
+        dst.DestinationAccesses[0].AccessUserName.Should().Be("scan-user");
+        dst.DestinationAccesses[0].AccessPassword.Should().Be("secret");
+    }
+
+    [TestMethod]
+    public void Map_CreateJobOperationAttributes_WithDestinationAccesses_MapsToIppAttributes()
+    {
+        // Arrange
+        var src = new CreateJobOperationAttributes
+        {
+            AttributesCharset = "utf-8",
+            AttributesNaturalLanguage = "en",
+            DestinationAccesses =
+            [
+                new DocumentAccess
+                {
+                    AccessUserName = "scan-user",
+                    AccessPassword = "secret"
+                }
+            ]
+        };
+
+        // Act
+        var dst = _mapper.Map<CreateJobOperationAttributes, List<IppAttribute>>(src);
+
+        // Assert
+        dst.Should().Contain(x => x.Name == JobAttribute.DestinationAccesses && x.Tag == Tag.BegCollection);
+        dst.Should().Contain(x => x.Tag == Tag.MemberAttrName && (string)x.Value == "access-user-name");
+        dst.Should().Contain(x => x.Tag == Tag.NameWithoutLanguage && (string)x.Value == "scan-user");
+        dst.Should().Contain(x => x.Tag == Tag.MemberAttrName && (string)x.Value == "access-password");
+        dst.Should().Contain(x => x.Tag == Tag.TextWithoutLanguage && (string)x.Value == "secret");
+    }
+
+    [TestMethod]
     public void Map_SendDocumentOperationAttributes_WithResourceIds_MapsFromIppAttributes()
     {
         // Arrange

@@ -272,6 +272,38 @@ public class CollectionProfilesTests
     }
 
     [TestMethod]
+    public void Map_Dictionary_To_DestinationUri_UsesIntegerT33Subaddress()
+    {
+        var dict = new Dictionary<string, IppAttribute[]>
+        {
+            { "destination-uri", [new IppAttribute(Tag.Uri, "destination-uri", "fax:+12025550123")] },
+            { "t33-subaddress", [new IppAttribute(Tag.Integer, "t33-subaddress", 99)] }
+        };
+
+        var result = _mapper.Map<DestinationUri>(dict);
+
+        result.DestinationUriValue.Should().Be("fax:+12025550123");
+        result.T33Subaddress.Should().Be(99);
+    }
+
+    [TestMethod]
+    public void Map_DestinationStatus_To_Attributes_WritesTransmissionStatusEnum()
+    {
+        var status = new DestinationStatus
+        {
+            DestinationUri = "fax:+12025550123",
+            ImagesCompleted = 2,
+            TransmissionStatus = TransmissionStatus.Processing
+        };
+
+        var attrs = _mapper.Map<IEnumerable<IppAttribute>>(status).ToList();
+
+        attrs.Should().Contain(x => x.Name == "destination-uri" && x.Tag == Tag.Uri);
+        attrs.Should().Contain(x => x.Name == "images-completed" && x.Tag == Tag.Integer && (int)x.Value! == 2);
+        attrs.Should().Contain(x => x.Name == "transmission-status" && x.Tag == Tag.Enum && (int)x.Value! == (int)TransmissionStatus.Processing);
+    }
+
+    [TestMethod]
     public void Map_SystemConfiguredPrinter_To_Attributes_ShouldContainCollectionName()
     {
         // Arrange
@@ -621,5 +653,62 @@ public void Map_Dictionary_To_ResourceStatusAttributes_ShouldMapResourceUuidAndT
         result.Should().Contain(a => a.Name == "logo" && a.Tag == Tag.TextWithoutLanguage && a.Value!.Equals("logo"));
         result.Should().Contain(a => a.Name == "message" && a.Tag == Tag.TextWithoutLanguage && a.Value!.Equals("message"));
         result.Should().Contain(a => a.Name == "organization-name" && a.Tag == Tag.TextWithoutLanguage && a.Value!.Equals("org"));
+    }
+
+    [TestMethod]
+    public void Map_OutputAttributes_NoiseRemoval_UsesIntegerSyntax()
+    {
+        // Arrange
+        var outputAttributes = new OutputAttributes
+        {
+            NoiseRemoval = 80,
+            OutputCompressionQualityFactor = 65
+        };
+
+        // Act
+        var serialized = _mapper.Map<IEnumerable<IppAttribute>>(outputAttributes).ToList();
+        var parsed = _mapper.Map<OutputAttributes>(serialized.ToIppDictionary());
+
+        // Assert
+        serialized.Should().Contain(a => a.Name == "noise-removal" && a.Tag == Tag.Integer && a.Value!.Equals(80));
+        parsed.NoiseRemoval.Should().Be(80);
+        parsed.OutputCompressionQualityFactor.Should().Be(65);
+    }
+
+    [TestMethod]
+    public void Map_DestinationUriReady_RoundTripsWithNestedDestinationAttributes()
+    {
+        // Arrange
+        var destinationUriReady = new DestinationUriReady
+        {
+            DestinationUri = "https://example.test/upload",
+            DestinationName = "Inbox",
+            DestinationIsDirectory = true,
+            DestinationAttributesSupported = ["job-name"],
+            DestinationMandatoryAccessAttributes = ["access-user-name"],
+            DestinationAttributes =
+            [
+                new Dictionary<string, IppAttribute[]>
+                {
+                    { "job-name", [new IppAttribute(Tag.NameWithoutLanguage, "job-name", "Scanned document")] }
+                }
+            ]
+        };
+
+        // Act
+        var serialized = _mapper.Map<IEnumerable<IppAttribute>>(destinationUriReady).ToList();
+        var parsed = _mapper.Map<DestinationUriReady>(serialized.ToIppDictionary());
+
+        // Assert
+        serialized.Should().Contain(x => x.Tag == Tag.Uri && x.Name == "destination-uri" && x.Value!.Equals("https://example.test/upload"));
+        serialized.Should().Contain(x => x.Tag == Tag.BegCollection && x.Name == "destination-attributes");
+        parsed.DestinationUri.Should().Be("https://example.test/upload");
+        parsed.DestinationName.Should().Be("Inbox");
+        parsed.DestinationIsDirectory.Should().BeTrue();
+        parsed.DestinationAttributesSupported.Should().BeEquivalentTo("job-name");
+        parsed.DestinationMandatoryAccessAttributes.Should().BeEquivalentTo("access-user-name");
+        parsed.DestinationAttributes.Should().NotBeNull();
+        parsed.DestinationAttributes!.Should().ContainSingle();
+        parsed.DestinationAttributes[0].Should().ContainKey("job-name");
     }
 }

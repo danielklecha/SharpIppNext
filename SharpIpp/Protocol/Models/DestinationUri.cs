@@ -10,5 +10,5 @@ public class DestinationUri : IIppCollection
     public string? DestinationUriValue { get; set; }
     public string? PostDialString { get; set; }
     public string? PreDialString { get; set; }
-    public string? T33Subaddress { get; set; }
+    public int? T33Subaddress { get; set; }
 }

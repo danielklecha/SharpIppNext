@@ -116,8 +116,8 @@ public class PrintJobTests : SharpIppIntegrationTestBase
                 JobStorage = new JobStorage { JobStorageAccess = "owner", JobStorageDisposition = "store-only", JobStorageGroup = "default" },
                 ProofPrint = new ProofPrint { ProofPrintCopies = 1, Media = (Media)"iso_a4_210x297mm" },
                 CoverSheetInfo = new CoverSheetInfo { FromName = "sender", ToName = "receiver", Subject = "subject" },
-                DestinationUris = [new DestinationUri { DestinationUriValue = "tel:+123456789", PostDialString = "#", PreDialString = "9", T33Subaddress = "12345" }],
-                OutputAttributes = new OutputAttributes { NoiseRemoval = true, OutputCompressionQualityFactor = 80 }
+                DestinationUris = [new DestinationUri { DestinationUriValue = "tel:+123456789", PostDialString = "#", PreDialString = "9", T33Subaddress = 12345 }],
+                OutputAttributes = new OutputAttributes { NoiseRemoval = 100, OutputCompressionQualityFactor = 80 }
             },
             JobTemplateAttributes = new()
             {

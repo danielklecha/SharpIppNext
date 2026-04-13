@@ -190,6 +190,7 @@ internal class PrinterDescriptionAttributesProfile : IProfile
                 PrinterChargeInfo = map.MapFromDicNullable<string?>(src, PrinterAttribute.PrinterChargeInfo),
                 PrinterChargeInfoUri = map.MapFromDicNullable<string?>(src, PrinterAttribute.PrinterChargeInfoUri),
                 PrinterMandatoryJobAttributes = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrinterMandatoryJobAttributes),
+                PrinterRequestedJobAttributes = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrinterRequestedJobAttributes),
                 PrinterAlert = map.MapFromDicSetNullable<PrinterAlert[]?>(src, PrinterAttribute.PrinterAlert),
                 PrinterAlertDescription = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrinterAlertDescription),
                 PrinterSupply = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrinterSupply),
@@ -291,6 +292,45 @@ internal class PrinterDescriptionAttributesProfile : IProfile
                 YImageShiftSupported = map.MapFromDicNullable<Protocol.Models.Range?>(src, PrinterAttribute.YImageShiftSupported),
                 YSide1ImageShiftDefault = map.MapFromDicNullable<int?>(src, PrinterAttribute.YSide1ImageShiftDefault),
                 YSide2ImageShiftDefault = map.MapFromDicNullable<int?>(src, PrinterAttribute.YSide2ImageShiftDefault),
+                ConfirmationSheetPrintDefault = map.MapFromDicNullable<bool?>(src, PrinterAttribute.ConfirmationSheetPrintDefault),
+                CoverSheetInfoDefault = src.ContainsKey(PrinterAttribute.CoverSheetInfoDefault) ? map.Map<CoverSheetInfo>(src[PrinterAttribute.CoverSheetInfoDefault].FromBegCollection().ToIppDictionary()) : null,
+                CoverSheetInfoSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.CoverSheetInfoSupported),
+                DestinationAccessesSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.DestinationAccessesSupported),
+                DestinationUriReady = src.ContainsKey(PrinterAttribute.DestinationUriReady) ? src[PrinterAttribute.DestinationUriReady].GroupBegCollection().Select(x => map.Map<DestinationUriReady>(x.FromBegCollection().ToIppDictionary())).ToArray() : null,
+                DestinationUriSchemesSupported = map.MapFromDicSetNullable<UriScheme[]?>(src, PrinterAttribute.DestinationUriSchemesSupported),
+                DestinationUrisSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.DestinationUrisSupported),
+                FromNameSupported = map.MapFromDicNullable<int?>(src, PrinterAttribute.FromNameSupported),
+                InputAttributesDefault = src.ContainsKey(PrinterAttribute.InputAttributesDefault) ? map.Map<DocumentTemplateAttributes>(src[PrinterAttribute.InputAttributesDefault].FromBegCollection().ToIppDictionary()) : null,
+                InputAttributesSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.InputAttributesSupported),
+                InputColorModeSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.InputColorModeSupported),
+                InputContentTypeSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.InputContentTypeSupported),
+                InputFilmScanModeSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.InputFilmScanModeSupported),
+                InputMediaSupported = map.MapFromDicSetNullable<string, Media>(src, PrinterAttribute.InputMediaSupported, (attribute, value) => new Media(value, attribute.Tag == Tag.Keyword)),
+                InputOrientationRequestedSupported = map.MapFromDicSetNullable<Orientation[]?>(src, PrinterAttribute.InputOrientationRequestedSupported),
+                InputQualitySupported = map.MapFromDicSetNullable<PrintQuality[]?>(src, PrinterAttribute.InputQualitySupported),
+                InputResolutionSupported = map.MapFromDicSetNullable<Resolution[]?>(src, PrinterAttribute.InputResolutionSupported),
+                InputSidesSupported = map.MapFromDicSetNullable<Sides[]?>(src, PrinterAttribute.InputSidesSupported),
+                InputSourceSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.InputSourceSupported),
+                LogoUriFormatsSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.LogoUriFormatsSupported),
+                LogoUriSchemesSupported = map.MapFromDicSetNullable<UriScheme[]?>(src, PrinterAttribute.LogoUriSchemesSupported),
+                MessageSupported = map.MapFromDicNullable<int?>(src, PrinterAttribute.MessageSupported),
+                MultipleDestinationUrisSupported = map.MapFromDicNullable<bool?>(src, PrinterAttribute.MultipleDestinationUrisSupported),
+                NumberOfRetriesDefault = map.MapFromDicNullable<int?>(src, PrinterAttribute.NumberOfRetriesDefault),
+                NumberOfRetriesSupported = map.MapFromDicNullable<Protocol.Models.Range?>(src, PrinterAttribute.NumberOfRetriesSupported),
+                OrganizationNameSupported = map.MapFromDicNullable<int?>(src, PrinterAttribute.OrganizationNameSupported),
+                JobDestinationSpoolingSupported = map.MapFromDicNullable<JobSpooling?>(src, PrinterAttribute.JobDestinationSpoolingSupported),
+                OutputAttributesDefault = src.ContainsKey(PrinterAttribute.OutputAttributesDefault) ? map.Map<OutputAttributes>(src[PrinterAttribute.OutputAttributesDefault].FromBegCollection().ToIppDictionary()) : null,
+                OutputAttributesSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.OutputAttributesSupported),
+                PrinterFaxLogUri = map.MapFromDicNullable<Uri?>(src, PrinterAttribute.PrinterFaxLogUri),
+                PrinterFaxModemInfo = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrinterFaxModemInfo),
+                PrinterFaxModemName = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrinterFaxModemName),
+                PrinterFaxModemNumber = map.MapFromDicSetNullable<Uri[]?>(src, PrinterAttribute.PrinterFaxModemNumber),
+                RetryIntervalDefault = map.MapFromDicNullable<int?>(src, PrinterAttribute.RetryIntervalDefault),
+                RetryIntervalSupported = map.MapFromDicNullable<Protocol.Models.Range?>(src, PrinterAttribute.RetryIntervalSupported),
+                RetryTimeOutDefault = map.MapFromDicNullable<int?>(src, PrinterAttribute.RetryTimeOutDefault),
+                RetryTimeOutSupported = map.MapFromDicNullable<Protocol.Models.Range?>(src, PrinterAttribute.RetryTimeOutSupported),
+                SubjectSupported = map.MapFromDicNullable<int?>(src, PrinterAttribute.SubjectSupported),
+                ToNameSupported = map.MapFromDicNullable<int?>(src, PrinterAttribute.ToNameSupported),
             };
         });
 
@@ -625,6 +665,8 @@ internal class PrinterDescriptionAttributesProfile : IProfile
                 dic.Add(PrinterAttribute.PrinterChargeInfoUri, [new IppAttribute(Tag.Uri, PrinterAttribute.PrinterChargeInfoUri, src.PrinterChargeInfoUri)]);
             if (src.PrinterMandatoryJobAttributes != null)
                 dic.Add(PrinterAttribute.PrinterMandatoryJobAttributes, src.PrinterMandatoryJobAttributes.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterMandatoryJobAttributes, x)).ToArray());
+            if (src.PrinterRequestedJobAttributes != null)
+                dic.Add(PrinterAttribute.PrinterRequestedJobAttributes, src.PrinterRequestedJobAttributes.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterRequestedJobAttributes, x)).ToArray());
             if (src.PrinterAlert != null)
                 dic.Add(PrinterAttribute.PrinterAlert, src.PrinterAlert.Select(x => new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, PrinterAttribute.PrinterAlert, map.Map<string>(x))).ToArray());
             if (src.PrinterAlertDescription != null)
@@ -872,6 +914,84 @@ internal class PrinterDescriptionAttributesProfile : IProfile
                 dic.Add(PrinterAttribute.YSide1ImageShiftDefault, [new IppAttribute(Tag.Integer, PrinterAttribute.YSide1ImageShiftDefault, src.YSide1ImageShiftDefault.Value)]);
             if (src.YSide2ImageShiftDefault != null)
                 dic.Add(PrinterAttribute.YSide2ImageShiftDefault, [new IppAttribute(Tag.Integer, PrinterAttribute.YSide2ImageShiftDefault, src.YSide2ImageShiftDefault.Value)]);
+            if (src.ConfirmationSheetPrintDefault.HasValue)
+                dic.Add(PrinterAttribute.ConfirmationSheetPrintDefault, [new IppAttribute(Tag.Boolean, PrinterAttribute.ConfirmationSheetPrintDefault, src.ConfirmationSheetPrintDefault.Value)]);
+            if (src.CoverSheetInfoDefault != null)
+                dic.Add(PrinterAttribute.CoverSheetInfoDefault, map.Map<IEnumerable<IppAttribute>>(src.CoverSheetInfoDefault).ToBegCollection(PrinterAttribute.CoverSheetInfoDefault).ToArray());
+            if (src.CoverSheetInfoSupported != null)
+                dic.Add(PrinterAttribute.CoverSheetInfoSupported, src.CoverSheetInfoSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.CoverSheetInfoSupported, x)).ToArray());
+            if (src.DestinationAccessesSupported != null)
+                dic.Add(PrinterAttribute.DestinationAccessesSupported, src.DestinationAccessesSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.DestinationAccessesSupported, x)).ToArray());
+            if (src.DestinationUriReady != null)
+                dic.Add(PrinterAttribute.DestinationUriReady, src.DestinationUriReady.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(PrinterAttribute.DestinationUriReady)).ToArray());
+            if (src.DestinationUriSchemesSupported != null)
+                dic.Add(PrinterAttribute.DestinationUriSchemesSupported, src.DestinationUriSchemesSupported.Select(x => new IppAttribute(Tag.UriScheme, PrinterAttribute.DestinationUriSchemesSupported, map.Map<string>(x))).ToArray());
+            if (src.DestinationUrisSupported != null)
+                dic.Add(PrinterAttribute.DestinationUrisSupported, src.DestinationUrisSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.DestinationUrisSupported, x)).ToArray());
+            if (src.FromNameSupported.HasValue)
+                dic.Add(PrinterAttribute.FromNameSupported, [new IppAttribute(Tag.Integer, PrinterAttribute.FromNameSupported, src.FromNameSupported.Value)]);
+            if (src.InputAttributesDefault != null)
+                dic.Add(PrinterAttribute.InputAttributesDefault, map.Map<IEnumerable<IppAttribute>>(src.InputAttributesDefault).ToBegCollection(PrinterAttribute.InputAttributesDefault).ToArray());
+            if (src.InputAttributesSupported != null)
+                dic.Add(PrinterAttribute.InputAttributesSupported, src.InputAttributesSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.InputAttributesSupported, x)).ToArray());
+            if (src.InputColorModeSupported != null)
+                dic.Add(PrinterAttribute.InputColorModeSupported, src.InputColorModeSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.InputColorModeSupported, x)).ToArray());
+            if (src.InputContentTypeSupported != null)
+                dic.Add(PrinterAttribute.InputContentTypeSupported, src.InputContentTypeSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.InputContentTypeSupported, x)).ToArray());
+            if (src.InputFilmScanModeSupported != null)
+                dic.Add(PrinterAttribute.InputFilmScanModeSupported, src.InputFilmScanModeSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.InputFilmScanModeSupported, x)).ToArray());
+            if (src.InputMediaSupported != null)
+                dic.Add(PrinterAttribute.InputMediaSupported, src.InputMediaSupported.Select(x => new IppAttribute(x.ToIppTag(), PrinterAttribute.InputMediaSupported, map.Map<string>(x))).ToArray());
+            if (src.InputOrientationRequestedSupported != null)
+                dic.Add(PrinterAttribute.InputOrientationRequestedSupported, src.InputOrientationRequestedSupported.Select(x => new IppAttribute(Tag.Enum, PrinterAttribute.InputOrientationRequestedSupported, (int)x)).ToArray());
+            if (src.InputQualitySupported != null)
+                dic.Add(PrinterAttribute.InputQualitySupported, src.InputQualitySupported.Select(x => new IppAttribute(Tag.Enum, PrinterAttribute.InputQualitySupported, (int)x)).ToArray());
+            if (src.InputResolutionSupported != null)
+                dic.Add(PrinterAttribute.InputResolutionSupported, src.InputResolutionSupported.Select(x => new IppAttribute(Tag.Resolution, PrinterAttribute.InputResolutionSupported, x)).ToArray());
+            if (src.InputSidesSupported != null)
+                dic.Add(PrinterAttribute.InputSidesSupported, src.InputSidesSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.InputSidesSupported, map.Map<string>(x))).ToArray());
+            if (src.InputSourceSupported != null)
+                dic.Add(PrinterAttribute.InputSourceSupported, src.InputSourceSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.InputSourceSupported, x)).ToArray());
+            if (src.LogoUriFormatsSupported != null)
+                dic.Add(PrinterAttribute.LogoUriFormatsSupported, src.LogoUriFormatsSupported.Select(x => new IppAttribute(Tag.MimeMediaType, PrinterAttribute.LogoUriFormatsSupported, x)).ToArray());
+            if (src.LogoUriSchemesSupported != null)
+                dic.Add(PrinterAttribute.LogoUriSchemesSupported, src.LogoUriSchemesSupported.Select(x => new IppAttribute(Tag.UriScheme, PrinterAttribute.LogoUriSchemesSupported, map.Map<string>(x))).ToArray());
+            if (src.MessageSupported.HasValue)
+                dic.Add(PrinterAttribute.MessageSupported, [new IppAttribute(Tag.Integer, PrinterAttribute.MessageSupported, src.MessageSupported.Value)]);
+            if (src.MultipleDestinationUrisSupported.HasValue)
+                dic.Add(PrinterAttribute.MultipleDestinationUrisSupported, [new IppAttribute(Tag.Boolean, PrinterAttribute.MultipleDestinationUrisSupported, src.MultipleDestinationUrisSupported.Value)]);
+            if (src.NumberOfRetriesDefault.HasValue)
+                dic.Add(PrinterAttribute.NumberOfRetriesDefault, [new IppAttribute(Tag.Integer, PrinterAttribute.NumberOfRetriesDefault, src.NumberOfRetriesDefault.Value)]);
+            if (src.NumberOfRetriesSupported != null)
+                dic.Add(PrinterAttribute.NumberOfRetriesSupported, [new IppAttribute(Tag.RangeOfInteger, PrinterAttribute.NumberOfRetriesSupported, src.NumberOfRetriesSupported.Value)]);
+            if (src.OrganizationNameSupported.HasValue)
+                dic.Add(PrinterAttribute.OrganizationNameSupported, [new IppAttribute(Tag.Integer, PrinterAttribute.OrganizationNameSupported, src.OrganizationNameSupported.Value)]);
+            if (src.JobDestinationSpoolingSupported != null)
+                dic.Add(PrinterAttribute.JobDestinationSpoolingSupported, [new IppAttribute(Tag.Keyword, PrinterAttribute.JobDestinationSpoolingSupported, map.Map<string>(src.JobDestinationSpoolingSupported.Value))]);
+            if (src.OutputAttributesDefault != null)
+                dic.Add(PrinterAttribute.OutputAttributesDefault, map.Map<IEnumerable<IppAttribute>>(src.OutputAttributesDefault).ToBegCollection(PrinterAttribute.OutputAttributesDefault).ToArray());
+            if (src.OutputAttributesSupported != null)
+                dic.Add(PrinterAttribute.OutputAttributesSupported, src.OutputAttributesSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.OutputAttributesSupported, x)).ToArray());
+            if (src.PrinterFaxLogUri != null)
+                dic.Add(PrinterAttribute.PrinterFaxLogUri, [new IppAttribute(Tag.Uri, PrinterAttribute.PrinterFaxLogUri, src.PrinterFaxLogUri.ToString())]);
+            if (src.PrinterFaxModemInfo != null)
+                dic.Add(PrinterAttribute.PrinterFaxModemInfo, src.PrinterFaxModemInfo.Select(x => new IppAttribute(Tag.TextWithoutLanguage, PrinterAttribute.PrinterFaxModemInfo, x)).ToArray());
+            if (src.PrinterFaxModemName != null)
+                dic.Add(PrinterAttribute.PrinterFaxModemName, src.PrinterFaxModemName.Select(x => new IppAttribute(Tag.NameWithoutLanguage, PrinterAttribute.PrinterFaxModemName, x)).ToArray());
+            if (src.PrinterFaxModemNumber != null)
+                dic.Add(PrinterAttribute.PrinterFaxModemNumber, src.PrinterFaxModemNumber.Select(x => new IppAttribute(Tag.Uri, PrinterAttribute.PrinterFaxModemNumber, x.ToString())).ToArray());
+            if (src.RetryIntervalDefault.HasValue)
+                dic.Add(PrinterAttribute.RetryIntervalDefault, [new IppAttribute(Tag.Integer, PrinterAttribute.RetryIntervalDefault, src.RetryIntervalDefault.Value)]);
+            if (src.RetryIntervalSupported != null)
+                dic.Add(PrinterAttribute.RetryIntervalSupported, [new IppAttribute(Tag.RangeOfInteger, PrinterAttribute.RetryIntervalSupported, src.RetryIntervalSupported.Value)]);
+            if (src.RetryTimeOutDefault.HasValue)
+                dic.Add(PrinterAttribute.RetryTimeOutDefault, [new IppAttribute(Tag.Integer, PrinterAttribute.RetryTimeOutDefault, src.RetryTimeOutDefault.Value)]);
+            if (src.RetryTimeOutSupported != null)
+                dic.Add(PrinterAttribute.RetryTimeOutSupported, [new IppAttribute(Tag.RangeOfInteger, PrinterAttribute.RetryTimeOutSupported, src.RetryTimeOutSupported.Value)]);
+            if (src.SubjectSupported.HasValue)
+                dic.Add(PrinterAttribute.SubjectSupported, [new IppAttribute(Tag.Integer, PrinterAttribute.SubjectSupported, src.SubjectSupported.Value)]);
+            if (src.ToNameSupported.HasValue)
+                dic.Add(PrinterAttribute.ToNameSupported, [new IppAttribute(Tag.Integer, PrinterAttribute.ToNameSupported, src.ToNameSupported.Value)]);
             return dic;
         });
     }

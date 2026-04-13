@@ -116,12 +116,25 @@ public class PrinterDescriptionAttributesProfileTests
     }
 
     [TestMethod]
+    public void Map_PrinterDescriptionAttributes_FromDictionary_MapsPrinterRequestedJobAttributes()
+    {
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { PrinterAttribute.PrinterRequestedJobAttributes, [new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterRequestedJobAttributes, "job-account-id"), new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterRequestedJobAttributes, "job-account-type")] }
+        };
+
+        var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(src);
+
+        dst.PrinterRequestedJobAttributes.Should().BeEquivalentTo("job-account-id", "job-account-type");
+    }
+
+    [TestMethod]
     public void Map_PrinterDescriptionAttributes_FromDictionary_MapsPdfFeaturesServiceAndResources()
     {
         var src = new Dictionary<string, IppAttribute[]>
         {
             { PrinterAttribute.PdfVersionsSupported, [new IppAttribute(Tag.Keyword, PrinterAttribute.PdfVersionsSupported, "adobe-1.7"), new IppAttribute(Tag.Keyword, PrinterAttribute.PdfVersionsSupported, "iso-32000-2_2017")] },
-            { PrinterAttribute.IppFeaturesSupported, [new IppAttribute(Tag.Keyword, PrinterAttribute.IppFeaturesSupported, "subscription"), new IppAttribute(Tag.Keyword, PrinterAttribute.IppFeaturesSupported, "events")] },
+            { PrinterAttribute.IppFeaturesSupported, [new IppAttribute(Tag.Keyword, PrinterAttribute.IppFeaturesSupported, "subscription"), new IppAttribute(Tag.Keyword, PrinterAttribute.IppFeaturesSupported, "events"), new IppAttribute(Tag.Keyword, PrinterAttribute.IppFeaturesSupported, "faxout")] },
             { PrinterAttribute.PrinterServiceType, [new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterServiceType, "print"), new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterServiceType, "fax") ] },
             { PrinterAttribute.CompressionDefault, [new IppAttribute(Tag.Keyword, PrinterAttribute.CompressionDefault, Compression.Deflate.ToString())] },
             { PrinterAttribute.PrinterResourceIds, [new IppAttribute(Tag.Integer, PrinterAttribute.PrinterResourceIds, 10), new IppAttribute(Tag.Integer, PrinterAttribute.PrinterResourceIds, 20)] }
@@ -130,7 +143,7 @@ public class PrinterDescriptionAttributesProfileTests
         var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(src);
 
         dst.PdfVersionsSupported.Should().BeEquivalentTo([PdfVersion.Adobe17, PdfVersion.Iso3200022017]);
-        dst.IppFeaturesSupported.Should().BeEquivalentTo([(IppFeature)"subscription", (IppFeature)"events"]);
+        dst.IppFeaturesSupported.Should().BeEquivalentTo([(IppFeature)"subscription", (IppFeature)"events", IppFeature.FaxOut]);
         dst.PrinterServiceType.Should().BeEquivalentTo([PrinterServiceType.Print, (PrinterServiceType)"fax"]);
         dst.CompressionDefault.Should().Be(Compression.Deflate);
         dst.PrinterResourceIds.Should().BeEquivalentTo(new[] { 10, 20 });
@@ -190,12 +203,27 @@ public class PrinterDescriptionAttributesProfileTests
     }
 
     [TestMethod]
+    public void Map_PrinterDescriptionAttributes_ToDictionary_MapsPrinterRequestedJobAttributes()
+    {
+        var src = new PrinterDescriptionAttributes
+        {
+            PrinterRequestedJobAttributes = ["job-account-id", "job-account-type"]
+        };
+
+        var dst = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
+
+        dst.Should().ContainKey(PrinterAttribute.PrinterRequestedJobAttributes);
+        dst[PrinterAttribute.PrinterRequestedJobAttributes].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Keyword);
+        dst[PrinterAttribute.PrinterRequestedJobAttributes].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["job-account-id", "job-account-type"]);
+    }
+
+    [TestMethod]
     public void Map_PrinterDescriptionAttributes_ToDictionary_MapsPdfFeaturesServiceAndResources()
     {
         var src = new PrinterDescriptionAttributes
         {
             PdfVersionsSupported = [PdfVersion.Adobe17, PdfVersion.Iso3200022017],
-            IppFeaturesSupported = [(IppFeature)"subscription", (IppFeature)"events"],
+            IppFeaturesSupported = [(IppFeature)"subscription", (IppFeature)"events", IppFeature.FaxOut],
             PrinterServiceType = [PrinterServiceType.Print, (PrinterServiceType)"fax"],
             CompressionDefault = Compression.Deflate,
             PrinterResourceIds = [10, 20]
@@ -209,7 +237,7 @@ public class PrinterDescriptionAttributesProfileTests
 
         dst.Should().ContainKey(PrinterAttribute.IppFeaturesSupported);
         dst[PrinterAttribute.IppFeaturesSupported].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Keyword);
-        dst[PrinterAttribute.IppFeaturesSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["subscription", "events"]);
+        dst[PrinterAttribute.IppFeaturesSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["subscription", "events", "faxout"]);
 
         dst.Should().ContainKey(PrinterAttribute.PrinterServiceType);
         dst[PrinterAttribute.PrinterServiceType].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Keyword);
@@ -275,6 +303,151 @@ public class PrinterDescriptionAttributesProfileTests
         dst.Should().ContainKey(PrinterAttribute.PrinterSupplyDescription);
         dst[PrinterAttribute.PrinterSupplyDescription].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.TextWithoutLanguage);
         dst[PrinterAttribute.PrinterSupplyDescription].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["toner status"]);
+    }
+
+    [TestMethod]
+    public void Map_PrinterDescriptionAttributes_FromDictionary_MapsPwg51017ScanAttributes()
+    {
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            {
+                PrinterAttribute.DestinationAccessesSupported,
+                [
+                    new IppAttribute(Tag.Keyword, PrinterAttribute.DestinationAccessesSupported, "access-user-name"),
+                    new IppAttribute(Tag.Keyword, PrinterAttribute.DestinationAccessesSupported, "access-password")
+                ]
+            },
+            {
+                PrinterAttribute.JobDestinationSpoolingSupported,
+                [new IppAttribute(Tag.Keyword, PrinterAttribute.JobDestinationSpoolingSupported, "automatic")]
+            },
+            {
+                PrinterAttribute.OutputAttributesDefault,
+                [
+                    new IppAttribute(Tag.BegCollection, PrinterAttribute.OutputAttributesDefault, NoValue.Instance),
+                    new IppAttribute(Tag.MemberAttrName, "", "noise-removal"),
+                    new IppAttribute(Tag.Integer, "", 50),
+                    new IppAttribute(Tag.MemberAttrName, "", "output-compression-quality-factor"),
+                    new IppAttribute(Tag.Integer, "", 70),
+                    new IppAttribute(Tag.EndCollection, "", NoValue.Instance)
+                ]
+            },
+            {
+                PrinterAttribute.OutputAttributesSupported,
+                [
+                    new IppAttribute(Tag.Keyword, PrinterAttribute.OutputAttributesSupported, "noise-removal"),
+                    new IppAttribute(Tag.Keyword, PrinterAttribute.OutputAttributesSupported, "output-compression-quality-factor")
+                ]
+            }
+        };
+
+        var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(src);
+
+        dst.DestinationAccessesSupported.Should().BeEquivalentTo("access-user-name", "access-password");
+        dst.JobDestinationSpoolingSupported.Should().Be(JobSpooling.Automatic);
+        dst.OutputAttributesDefault.Should().NotBeNull();
+        dst.OutputAttributesDefault!.NoiseRemoval.Should().Be(50);
+        dst.OutputAttributesDefault.OutputCompressionQualityFactor.Should().Be(70);
+        dst.OutputAttributesSupported.Should().BeEquivalentTo("noise-removal", "output-compression-quality-factor");
+    }
+
+    [TestMethod]
+    public void Map_PrinterDescriptionAttributes_ToDictionary_MapsPwg51017ScanAttributes()
+    {
+        var src = new PrinterDescriptionAttributes
+        {
+            DestinationAccessesSupported = ["access-user-name", "access-password"],
+            JobDestinationSpoolingSupported = JobSpooling.Automatic,
+            OutputAttributesDefault = new OutputAttributes
+            {
+                NoiseRemoval = 50,
+                OutputCompressionQualityFactor = 70
+            },
+            OutputAttributesSupported = ["noise-removal", "output-compression-quality-factor"]
+        };
+
+        var dst = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
+
+        dst.Should().ContainKey(PrinterAttribute.DestinationAccessesSupported);
+        dst[PrinterAttribute.DestinationAccessesSupported].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Keyword);
+        dst[PrinterAttribute.DestinationAccessesSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["access-user-name", "access-password"]);
+
+        dst.Should().ContainKey(PrinterAttribute.JobDestinationSpoolingSupported);
+        dst[PrinterAttribute.JobDestinationSpoolingSupported].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Keyword);
+        dst[PrinterAttribute.JobDestinationSpoolingSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["automatic"]);
+
+        dst.Should().ContainKey(PrinterAttribute.OutputAttributesDefault);
+        dst[PrinterAttribute.OutputAttributesDefault].Should().Contain(x => x.Tag == Tag.MemberAttrName && x.Value!.Equals("noise-removal"));
+        dst[PrinterAttribute.OutputAttributesDefault].Should().Contain(x => x.Tag == Tag.MemberAttrName && x.Value!.Equals("output-compression-quality-factor"));
+        dst[PrinterAttribute.OutputAttributesDefault].Should().Contain(x => x.Tag == Tag.Integer && x.Value!.Equals(50));
+        dst[PrinterAttribute.OutputAttributesDefault].Should().Contain(x => x.Tag == Tag.Integer && x.Value!.Equals(70));
+
+        dst.Should().ContainKey(PrinterAttribute.OutputAttributesSupported);
+        dst[PrinterAttribute.OutputAttributesSupported].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Keyword);
+        dst[PrinterAttribute.OutputAttributesSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["noise-removal", "output-compression-quality-factor"]);
+    }
+
+    [TestMethod]
+    public void Map_PrinterDescriptionAttributes_FromDictionary_MapsDestinationUriReady()
+    {
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            {
+                PrinterAttribute.DestinationUriReady,
+                [
+                    new IppAttribute(Tag.BegCollection, PrinterAttribute.DestinationUriReady, NoValue.Instance),
+                    new IppAttribute(Tag.MemberAttrName, "", "destination-uri"),
+                    new IppAttribute(Tag.Uri, "", "https://example.test/upload"),
+                    new IppAttribute(Tag.MemberAttrName, "", "destination-name"),
+                    new IppAttribute(Tag.NameWithoutLanguage, "", "Inbox"),
+                    new IppAttribute(Tag.MemberAttrName, "", "destination-is-directory"),
+                    new IppAttribute(Tag.Boolean, "", true),
+                    new IppAttribute(Tag.MemberAttrName, "", "destination-mandatory-access-attributes"),
+                    new IppAttribute(Tag.Keyword, "", "access-user-name"),
+                    new IppAttribute(Tag.MemberAttrName, "", "destination-mandatory-access-attributes"),
+                    new IppAttribute(Tag.Keyword, "", "access-password"),
+                    new IppAttribute(Tag.EndCollection, "", NoValue.Instance)
+                ]
+            }
+        };
+
+        var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(src);
+
+        dst.DestinationUriReady.Should().NotBeNull();
+        dst.DestinationUriReady!.Should().ContainSingle();
+        dst.DestinationUriReady[0].DestinationUri.Should().Be("https://example.test/upload");
+        dst.DestinationUriReady[0].DestinationName.Should().Be("Inbox");
+        dst.DestinationUriReady[0].DestinationIsDirectory.Should().BeTrue();
+        dst.DestinationUriReady[0].DestinationMandatoryAccessAttributes.Should().BeEquivalentTo("access-user-name", "access-password");
+    }
+
+    [TestMethod]
+    public void Map_PrinterDescriptionAttributes_ToDictionary_MapsDestinationUriReady()
+    {
+        var src = new PrinterDescriptionAttributes
+        {
+            DestinationUriReady =
+            [
+                new DestinationUriReady
+                {
+                    DestinationUri = "https://example.test/upload",
+                    DestinationName = "Inbox",
+                    DestinationIsDirectory = true,
+                    DestinationMandatoryAccessAttributes = ["access-user-name", "access-password"]
+                }
+            ]
+        };
+
+        var dst = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
+
+        dst.Should().ContainKey(PrinterAttribute.DestinationUriReady);
+        dst[PrinterAttribute.DestinationUriReady].Should().Contain(x => x.Tag == Tag.BegCollection && x.Name == PrinterAttribute.DestinationUriReady);
+        dst[PrinterAttribute.DestinationUriReady].Should().Contain(x => x.Tag == Tag.MemberAttrName && x.Value!.Equals("destination-uri"));
+        dst[PrinterAttribute.DestinationUriReady].Should().Contain(x => x.Tag == Tag.Uri && x.Value!.Equals("https://example.test/upload"));
+        dst[PrinterAttribute.DestinationUriReady].Should().Contain(x => x.Tag == Tag.MemberAttrName && x.Value!.Equals("destination-name"));
+        dst[PrinterAttribute.DestinationUriReady].Should().Contain(x => x.Tag == Tag.NameWithoutLanguage && x.Value!.Equals("Inbox"));
+        dst[PrinterAttribute.DestinationUriReady].Should().Contain(x => x.Tag == Tag.MemberAttrName && x.Value!.Equals("destination-is-directory"));
+        dst[PrinterAttribute.DestinationUriReady].Should().Contain(x => x.Tag == Tag.Boolean && x.Value!.Equals(true));
     }
 
     [TestMethod]

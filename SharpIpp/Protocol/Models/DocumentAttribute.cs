@@ -56,5 +56,6 @@ namespace SharpIpp.Protocol.Models
         public const string DocumentStopped = "document-stopped";
         public const string DocumentDescription = "document-description";
         public const string DocumentTemplate = "document-template";
+        public const string InputAttributesActual = "input-attributes-actual";
     }
 }

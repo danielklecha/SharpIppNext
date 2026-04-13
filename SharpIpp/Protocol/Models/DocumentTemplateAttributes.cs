@@ -176,4 +176,112 @@ public class DocumentTemplateAttributes : IIppCollection
     /// See: PWG 5100.3-2023 Section 5.2.24
     /// </summary>
     public int? YSide2ImageShift { get; set; }
+
+    /// <summary>
+    /// The <c>input-auto-exposure</c> input attribute.
+    /// See: PWG 5100.15-2013 Section 7.1.1.1
+    /// </summary>
+    public bool? InputAutoExposure { get; set; }
+
+    /// <summary>
+    /// The <c>input-auto-scaling</c> input attribute.
+    /// See: PWG 5100.15-2013 Section 7.1.1.2
+    /// </summary>
+    public bool? InputAutoScaling { get; set; }
+
+    /// <summary>
+    /// The <c>input-auto-skew-correction</c> input attribute.
+    /// See: PWG 5100.15-2013 Section 7.1.1.3
+    /// </summary>
+    public bool? InputAutoSkewCorrection { get; set; }
+
+    /// <summary>
+    /// The <c>input-brightness</c> input attribute.
+    /// See: PWG 5100.15-2013 Section 7.1.1.4
+    /// </summary>
+    public int? InputBrightness { get; set; }
+
+    /// <summary>
+    /// The <c>input-color-mode</c> input attribute.
+    /// See: PWG 5100.15-2013 Section 7.1.1.5
+    /// </summary>
+    public string? InputColorMode { get; set; }
+
+    /// <summary>
+    /// The <c>input-content-type</c> input attribute.
+    /// See: PWG 5100.15-2013 Section 7.1.1.6
+    /// </summary>
+    public string? InputContentType { get; set; }
+
+    /// <summary>
+    /// The <c>input-contrast</c> input attribute.
+    /// See: PWG 5100.15-2013 Section 7.1.1.7
+    /// </summary>
+    public int? InputContrast { get; set; }
+
+    /// <summary>
+    /// The <c>input-film-scan-mode</c> input attribute.
+    /// See: PWG 5100.15-2013 Section 7.1.1.8
+    /// </summary>
+    public string? InputFilmScanMode { get; set; }
+
+    /// <summary>
+    /// The <c>input-images-to-transfer</c> input attribute.
+    /// See: PWG 5100.15-2013 Section 7.1.1.9
+    /// </summary>
+    public int? InputImagesToTransfer { get; set; }
+
+    /// <summary>
+    /// The <c>input-media</c> input attribute.
+    /// See: PWG 5100.15-2013 Section 7.1.1.10
+    /// </summary>
+    public Media? InputMedia { get; set; }
+
+    /// <summary>
+    /// The <c>input-orientation-requested</c> input attribute.
+    /// See: PWG 5100.15-2013 Section 7.1.1.11
+    /// </summary>
+    public Orientation? InputOrientationRequested { get; set; }
+
+    /// <summary>
+    /// The <c>input-quality</c> input attribute.
+    /// See: PWG 5100.15-2013 Section 7.1.1.12
+    /// </summary>
+    public PrintQuality? InputQuality { get; set; }
+
+    /// <summary>
+    /// The <c>input-resolution</c> input attribute.
+    /// See: PWG 5100.15-2013 Section 7.1.1.13
+    /// </summary>
+    public Resolution? InputResolution { get; set; }
+
+    /// <summary>
+    /// The <c>input-scaling-height</c> input attribute.
+    /// See: PWG 5100.15-2013 Section 7.1.1.14
+    /// </summary>
+    public int? InputScalingHeight { get; set; }
+
+    /// <summary>
+    /// The <c>input-scaling-width</c> input attribute.
+    /// See: PWG 5100.15-2013 Section 7.1.1.15
+    /// </summary>
+    public int? InputScalingWidth { get; set; }
+
+    /// <summary>
+    /// The <c>input-sharpness</c> input attribute.
+    /// See: PWG 5100.15-2013 Section 7.1.1.17
+    /// </summary>
+    public int? InputSharpness { get; set; }
+
+    /// <summary>
+    /// The <c>input-sides</c> input attribute.
+    /// See: PWG 5100.15-2013 Section 7.1.1.18
+    /// </summary>
+    public Sides? InputSides { get; set; }
+
+    /// <summary>
+    /// The <c>input-source</c> input attribute.
+    /// See: PWG 5100.15-2013 Section 7.1.1.19
+    /// </summary>
+    public string? InputSource { get; set; }
 }

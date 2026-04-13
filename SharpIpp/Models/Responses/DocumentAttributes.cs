@@ -283,4 +283,11 @@ public class DocumentAttributes : IIppCollection
     /// </summary>
     /// <code>pages-completed</code>
     public int? PagesCompleted { get; set; }
+
+    /// <summary>
+    /// The input-attributes-actual IPP attribute.
+    /// See: PWG 5100.15-2013 Section 7.5.1
+    /// </summary>
+    /// <code>input-attributes-actual</code>
+    public DocumentTemplateAttributes? InputAttributesActual { get; set; }
 }

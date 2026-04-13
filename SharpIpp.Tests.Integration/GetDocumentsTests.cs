@@ -27,6 +27,7 @@ public class GetDocumentsTests : SharpIppIntegrationTestBase
                 AttributesNaturalLanguage = "en-us",
                 RequestingUserName = "test-user",
                 JobId = 1,
+                FirstIndex = 1,
                 JobUri = new Uri("http://127.0.0.1:631/jobs/1"),
                 Limit = 10,
                 RequestedAttributes = ["document-name", "document-state"]
@@ -79,6 +80,7 @@ public class GetDocumentsTests : SharpIppIntegrationTestBase
                 AttributesNaturalLanguage = "en-us",
                 RequestingUserName = "test-user",
                 JobId = 1,
+                FirstIndex = 1,
                 RequestedAttributes = ["document-number", "document-state", "document-name"],
                 Limit = 10,
             },

@@ -15,6 +15,7 @@ public readonly record struct IppFeature(string Value, bool IsValue = true) : IS
     public static readonly IppFeature SubscriptionObject = new("subscription-object");
 
     // Enterprise Printing Extensions feature keywords.
+    public static readonly IppFeature FaxOut = new("faxout");
     public static readonly IppFeature JobRelease = new("job-release");
     public static readonly IppFeature JobStorage = new("job-storage");
     public static readonly IppFeature PrintPolicy = new("print-policy");

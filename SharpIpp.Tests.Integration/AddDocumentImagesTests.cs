@@ -23,7 +23,27 @@ public class AddDocumentImagesTests : SharpIppIntegrationTestBase
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
                 JobId = 20,
-                InputAttributes = new DocumentTemplateAttributes { Media = (Media)"iso_a4_210x297mm" }
+                InputAttributes = new DocumentTemplateAttributes
+                {
+                    Media = (Media)"iso_a4_210x297mm",
+                    InputAutoExposure = true,
+                    InputAutoScaling = false,
+                    InputAutoSkewCorrection = true,
+                    InputBrightness = 50,
+                    InputColorMode = "auto",
+                    InputContentType = "image/jpeg",
+                    InputContrast = 10,
+                    InputFilmScanMode = "negative",
+                    InputImagesToTransfer = 5,
+                    InputOrientationRequested = Orientation.Landscape,
+                    InputQuality = PrintQuality.High,
+                    InputResolution = new Resolution(300, 300, ResolutionUnit.DotsPerInch),
+                    InputScalingHeight = 200,
+                    InputScalingWidth = 300,
+                    InputSharpness = 25,
+                    InputSides = Sides.TwoSidedLongEdge,
+                    InputSource = "document-feeder"
+                }
             }
         };
 

@@ -1468,6 +1468,12 @@ public class PrinterDescriptionAttributes
     public string[]? PrinterMandatoryJobAttributes { get; set; }
 
     /// <summary>
+    /// printer-requested-job-attributes
+    /// See: PWG 5100.16-2020
+    /// </summary>
+    public string[]? PrinterRequestedJobAttributes { get; set; }
+
+    /// <summary>
     /// Structured parser model for printer-alert values.
     /// See: PWG 5100.9-2009 Section 5.2.2
     /// </summary>
@@ -1514,4 +1520,70 @@ public class PrinterDescriptionAttributes
     /// See: PWG 5100.22-2025 Section 6.1.2
     /// </summary>
     public int[]? PrinterResourceIds { get; set; }
+
+    public bool? ConfirmationSheetPrintDefault { get; set; }
+    public CoverSheetInfo? CoverSheetInfoDefault { get; set; }
+    public string[]? CoverSheetInfoSupported { get; set; }
+
+    /// <summary>
+    /// destination-accesses-supported
+    /// See: PWG 5100.17-2014 Section 8.3.1
+    /// </summary>
+    public string[]? DestinationAccessesSupported { get; set; }
+
+    /// <summary>
+    /// destination-uri-ready
+    /// See: PWG 5100.17-2014 Section 8.3.3
+    /// </summary>
+    public DestinationUriReady[]? DestinationUriReady { get; set; }
+
+    public UriScheme[]? DestinationUriSchemesSupported { get; set; }
+    public string[]? DestinationUrisSupported { get; set; }
+    public int? FromNameSupported { get; set; }
+    public DocumentTemplateAttributes? InputAttributesDefault { get; set; }
+    public string[]? InputAttributesSupported { get; set; }
+    public string[]? InputColorModeSupported { get; set; }
+    public string[]? InputContentTypeSupported { get; set; }
+    public string[]? InputFilmScanModeSupported { get; set; }
+    public Media[]? InputMediaSupported { get; set; }
+    public Orientation[]? InputOrientationRequestedSupported { get; set; }
+    public PrintQuality[]? InputQualitySupported { get; set; }
+    public Resolution[]? InputResolutionSupported { get; set; }
+    public Sides[]? InputSidesSupported { get; set; }
+    public string[]? InputSourceSupported { get; set; }
+    public string[]? LogoUriFormatsSupported { get; set; }
+    public UriScheme[]? LogoUriSchemesSupported { get; set; }
+    public int? MessageSupported { get; set; }
+    public bool? MultipleDestinationUrisSupported { get; set; }
+    public int? NumberOfRetriesDefault { get; set; }
+    public Protocol.Models.Range? NumberOfRetriesSupported { get; set; }
+    public int? OrganizationNameSupported { get; set; }
+
+    /// <summary>
+    /// job-destination-spooling-supported
+    /// See: PWG 5100.17-2014 Section 8.3.4
+    /// </summary>
+    public JobSpooling? JobDestinationSpoolingSupported { get; set; }
+
+    /// <summary>
+    /// output-attributes-default
+    /// See: PWG 5100.17-2014 Section 8.3.5
+    /// </summary>
+    public OutputAttributes? OutputAttributesDefault { get; set; }
+
+    /// <summary>
+    /// output-attributes-supported
+    /// See: PWG 5100.17-2014 Section 8.3.6
+    /// </summary>
+    public string[]? OutputAttributesSupported { get; set; }
+    public Uri? PrinterFaxLogUri { get; set; }
+    public string[]? PrinterFaxModemInfo { get; set; }
+    public string[]? PrinterFaxModemName { get; set; }
+    public Uri[]? PrinterFaxModemNumber { get; set; }
+    public int? RetryIntervalDefault { get; set; }
+    public Protocol.Models.Range? RetryIntervalSupported { get; set; }
+    public int? RetryTimeOutDefault { get; set; }
+    public Protocol.Models.Range? RetryTimeOutSupported { get; set; }
+    public int? SubjectSupported { get; set; }
+    public int? ToNameSupported { get; set; }
 }

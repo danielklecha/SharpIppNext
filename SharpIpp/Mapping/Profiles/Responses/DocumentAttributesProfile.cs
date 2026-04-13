@@ -72,6 +72,8 @@ internal class DocumentAttributesProfile : IProfile
             dst.Pages = map.MapFromDicNullable<int?>(src, DocumentAttribute.Pages);
             dst.PagesCompleted = map.MapFromDicNullable<int?>(src, DocumentAttribute.PagesCompleted);
             dst.PrintContentOptimize = map.MapFromDicNullable<PrintContentOptimize?>(src, DocumentAttribute.PrintContentOptimize);
+            if (src.ContainsKey(DocumentAttribute.InputAttributesActual))
+                dst.InputAttributesActual = map.Map<DocumentTemplateAttributes>(src[DocumentAttribute.InputAttributesActual].FromBegCollection().ToIppDictionary());
             return dst;
         });
 
@@ -169,6 +171,8 @@ internal class DocumentAttributesProfile : IProfile
                 dst.Add(DocumentAttribute.PagesCompleted, [new IppAttribute(Tag.Integer, DocumentAttribute.PagesCompleted, src.PagesCompleted.Value)]);
             if (src.PrintContentOptimize != null)
                 dst.Add(DocumentAttribute.PrintContentOptimize, [new IppAttribute(Tag.Keyword, DocumentAttribute.PrintContentOptimize, map.Map<string>(src.PrintContentOptimize.Value))]);
+            if (src.InputAttributesActual != null)
+                dst.Add(DocumentAttribute.InputAttributesActual, map.Map<IEnumerable<IppAttribute>>(src.InputAttributesActual).ToBegCollection(DocumentAttribute.InputAttributesActual).ToArray());
             return dst;
         });
 

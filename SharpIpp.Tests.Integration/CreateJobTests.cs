@@ -40,6 +40,19 @@ public class CreateJobTests : SharpIppIntegrationTestBase
                     DocumentSourceApplicationVersion = "2.0.0",
                     DocumentSourceOsName = "MyOS",
                     DocumentSourceOsVersion = "12.1"
+                },
+                DestinationUris =
+                [
+                    new DestinationUri { DestinationUriValue = "https://example.test/upload" }
+                ],
+                DestinationAccesses =
+                [
+                    new DocumentAccess { AccessUserName = "scan-user", AccessPassword = "secret" }
+                ],
+                OutputAttributes = new OutputAttributes
+                {
+                    NoiseRemoval = 60,
+                    OutputCompressionQualityFactor = 85
                 }
             },
             JobTemplateAttributes = new()

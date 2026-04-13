@@ -82,6 +82,28 @@ public class IppRequestValidator : IIppRequestValidator
         "sheet-collate",
     ];
 
+    private static readonly HashSet<string> Pwg51017ForbiddenDestinationUriSchemes =
+    [
+        "tel",
+        "fax",
+        "sip",
+        "sips",
+    ];
+
+    private static readonly HashSet<string> Pwg51017ForbiddenDestinationUriMembers =
+    [
+        "post-dial-string",
+        "pre-dial-string",
+        "t33-subaddress",
+    ];
+
+    private static readonly HashSet<string> Pwg51017ForbiddenDestinationAttributesMembers =
+    [
+        JobAttribute.DocumentPassword,
+        JobAttribute.JobPassword,
+        JobAttribute.JobPasswordEncryption,
+    ];
+
     public static IppRequestValidator Default => new()
     {
         ValidateCoreRules = true,
@@ -138,6 +160,9 @@ public class IppRequestValidator : IIppRequestValidator
         if (ValidateDocumentAttributesGroup)
             ValidateDocumentAttributes(request);
 
+        if (ValidatePrinterAttributesGroup)
+            ValidatePrinterAttributes(request);
+
         if (ValidateOperationSpecificRules)
             ValidateOperationRules(request);
     }
@@ -188,6 +213,55 @@ public class IppRequestValidator : IIppRequestValidator
 
         ValidateOutputBinAttributes(request.DocumentAttributes, request);
         ValidateCollectionMediaSelectionRules(request.DocumentAttributes, request);
+    }
+
+    private void ValidatePrinterAttributes(IIppRequestMessage request)
+    {
+        var destinationUriReadyCollections = EnumerateNamedCollections(request.PrinterAttributes, PrinterAttribute.DestinationUriReady).ToArray();
+        if (!destinationUriReadyCollections.Any())
+            return;
+
+        foreach (var destinationUriReadyCollection in destinationUriReadyCollections)
+        {
+            if (destinationUriReadyCollection.Count == 1 && destinationUriReadyCollection[0].Tag.IsOutOfBand())
+                continue;
+
+            var destinationUriReadyMembers = destinationUriReadyCollection
+                .FromBegCollection()
+                .ToArray();
+
+            var hasDestinationOAuthToken = destinationUriReadyMembers.Any(x => x.Name == "destination-oauth-token" && x.Tag != Tag.EndCollection);
+            if (destinationUriReadyMembers.Any(x => x.Name == "destination-oauth-scope" && x.Tag != Tag.EndCollection) && !hasDestinationOAuthToken)
+                throw new IppRequestException("invalid destination-uri-ready: destination-oauth-scope requires destination-oauth-token", request, IppStatusCode.ClientErrorBadRequest);
+
+            if (destinationUriReadyMembers.Any(x => x.Name == "destination-oauth-uri" && x.Tag != Tag.EndCollection) && !hasDestinationOAuthToken)
+                throw new IppRequestException("invalid destination-uri-ready: destination-oauth-uri requires destination-oauth-token", request, IppStatusCode.ClientErrorBadRequest);
+
+            var unsupportedForbiddenMembers = destinationUriReadyMembers
+                .Where(x => x.Name == "destination-attributes-supported" && x.Tag != Tag.EndCollection)
+                .Select(x => x.Value?.ToString())
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Where(x => x != null && Pwg51017ForbiddenDestinationAttributesMembers.Contains(x))
+                .ToArray();
+
+            if (unsupportedForbiddenMembers.Any())
+                throw new IppRequestException("invalid destination-uri-ready: destination-attributes-supported MUST NOT include password attributes", request, IppStatusCode.ClientErrorBadRequest);
+
+            var destinationAttributesCollections = EnumerateNamedCollections(destinationUriReadyMembers, "destination-attributes").ToArray();
+            foreach (var destinationAttributesCollection in destinationAttributesCollections)
+            {
+                if (destinationAttributesCollection.Count == 1 && destinationAttributesCollection[0].Tag.IsOutOfBand())
+                    continue;
+
+                var destinationAttributesMembers = destinationAttributesCollection
+                    .FromBegCollection()
+                    .Where(x => x.Tag != Tag.EndCollection)
+                    .ToArray();
+
+                if (destinationAttributesMembers.Any(x => !string.IsNullOrWhiteSpace(x.Name) && Pwg51017ForbiddenDestinationAttributesMembers.Contains(x.Name)))
+                    throw new IppRequestException("invalid destination-uri-ready: destination-attributes MUST NOT include password attributes", request, IppStatusCode.ClientErrorBadRequest);
+            }
+        }
     }
 
     private static void ValidateFinishingsMutualExclusivity(IReadOnlyCollection<IppAttribute> attributes, IIppRequestMessage request)
@@ -345,11 +419,69 @@ public class IppRequestValidator : IIppRequestValidator
                 if (ValidateOperationAttributesGroup && HasNamedAttribute(operationAttributes, JobAttribute.DocumentPassword))
                     throw new IppRequestException("document-password is not allowed for validate operations", request, IppStatusCode.ClientErrorBadRequest);
                 break;
+
+            case IppOperation.CreateJob:
+                ValidateCreateJobDestinationRules(operationAttributes, request);
+                break;
         }
 
         ValidateJobRequestedAttributesGroupKeywords(request);
         ValidateDocumentRequestedAttributesGroupKeywords(request);
         ValidateNotifyEventsValues(request);
+    }
+
+    private void ValidateCreateJobDestinationRules(IReadOnlyCollection<IppAttribute> operationAttributes, IIppRequestMessage request)
+    {
+        if (!ValidateOperationAttributesGroup)
+            return;
+
+        var destinationUriCollections = EnumerateNamedCollections(operationAttributes, JobAttribute.DestinationUris).ToArray();
+        if (!destinationUriCollections.Any())
+            return;
+
+        foreach (var destinationUriCollection in destinationUriCollections)
+        {
+            if (destinationUriCollection.Count == 1 && destinationUriCollection[0].Tag.IsOutOfBand())
+                continue;
+
+            var destinationUriMembers = destinationUriCollection
+                .FromBegCollection()
+                .Where(x => x.Tag != Tag.EndCollection)
+                .ToArray();
+
+            if (destinationUriMembers.Any(x => Pwg51017ForbiddenDestinationUriMembers.Contains(x.Name)))
+                throw new IppRequestException("invalid destination-uris: reserved fax member attributes are not allowed for Scan", request, IppStatusCode.ClientErrorBadRequest);
+
+            foreach (var destinationUriMember in destinationUriMembers.Where(x => x.Name == "destination-uri"))
+            {
+                var destinationUri = destinationUriMember.Value?.ToString();
+                if (destinationUri is null || destinationUri.Length == 0)
+                    continue;
+
+                string? scheme = null;
+                Uri? parsedUri;
+                if (Uri.TryCreate(destinationUri, UriKind.Absolute, out parsedUri))
+                {
+                    scheme = parsedUri?.Scheme;
+                }
+                else
+                {
+                    var schemeSeparatorIndex = destinationUri.IndexOf(':');
+                    if (schemeSeparatorIndex > 0)
+                        scheme = destinationUri.Substring(0, schemeSeparatorIndex);
+                }
+
+                string? normalizedScheme = null;
+                if (scheme != null && scheme.Length > 0)
+                    normalizedScheme = scheme.ToLowerInvariant();
+                if (normalizedScheme != null && Pwg51017ForbiddenDestinationUriSchemes.Contains(normalizedScheme))
+                    throw new IppRequestException("invalid destination-uri scheme for Scan", request, IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
+            }
+        }
+
+        var destinationAccessesCollections = EnumerateNamedCollections(operationAttributes, JobAttribute.DestinationAccesses).ToArray();
+        if (destinationAccessesCollections.Length > 0 && destinationAccessesCollections.Length != destinationUriCollections.Length)
+            throw new IppRequestException("destination-accesses cardinality MUST match destination-uris", request, IppStatusCode.ClientErrorBadRequest);
     }
 
     private void ValidateJobRequestedAttributesGroupKeywords(IIppRequestMessage request)

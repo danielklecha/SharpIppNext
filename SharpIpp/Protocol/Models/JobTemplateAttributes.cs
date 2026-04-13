@@ -516,6 +516,18 @@ namespace SharpIpp.Protocol.Models
         public int? NumberOfRetries { get; set; }
 
         /// <summary>
+        /// The <c>retry-interval</c> Job Template attribute.
+        /// See: PWG 5100.15-2013 Section 7.2.5
+        /// </summary>
+        public int? RetryInterval { get; set; }
+
+        /// <summary>
+        /// The <c>retry-time-out</c> Job Template attribute.
+        /// See: PWG 5100.15-2013 Section 7.2.6
+        /// </summary>
+        public int? RetryTimeOut { get; set; }
+
+        /// <summary>
         /// The <c>materials-col</c> Job Template attribute.
         /// See: PWG 5100.21-2019 Section 6.8.11
         /// </summary>

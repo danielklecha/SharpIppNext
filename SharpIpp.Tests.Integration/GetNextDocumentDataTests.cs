@@ -28,7 +28,19 @@ public class GetNextDocumentDataTests : SharpIppIntegrationTestBase
         {
             var server = new SharpIppServer();
             serverRequest = await server.ReceiveRequestAsync(s, c);
-            serverResponse = new GetNextDocumentDataResponse { RequestId = serverRequest.RequestId, Version = serverRequest.Version, StatusCode = IppStatusCode.SuccessfulOk };
+            serverResponse = new GetNextDocumentDataResponse
+            {
+                RequestId = serverRequest.RequestId,
+                Version = serverRequest.Version,
+                StatusCode = IppStatusCode.SuccessfulOk,
+                OperationAttributes = new GetNextDocumentDataResponseOperationAttributes
+                {
+                    Compression = Compression.Gzip,
+                    DocumentDataGetInterval = 2,
+                    LastDocument = true,
+                    DocumentNumber = 4
+                }
+            };
             var ms = new MemoryStream();
             await server.SendResponseAsync(serverResponse, ms, c);
             ms.Seek(0, SeekOrigin.Begin);
@@ -39,5 +51,10 @@ public class GetNextDocumentDataTests : SharpIppIntegrationTestBase
         var clientResponse = await client.GetNextDocumentDataAsync(clientRequest);
         clientRequest.Should().BeEquivalentTo(serverRequest);
         clientResponse.Should().BeEquivalentTo(serverResponse);
+        clientResponse.OperationAttributes.Should().NotBeNull();
+        clientResponse.OperationAttributes!.Compression.Should().Be(Compression.Gzip);
+        clientResponse.OperationAttributes.DocumentDataGetInterval.Should().Be(2);
+        clientResponse.OperationAttributes.LastDocument.Should().BeTrue();
+        clientResponse.OperationAttributes.DocumentNumber.Should().Be(4);
     }
 }

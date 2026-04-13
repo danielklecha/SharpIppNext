@@ -94,15 +94,17 @@ internal class OperationAttributesRequestProfile : IProfile
             dst.JobImpressionsEstimated = map.MapFromDicNullable<int?>(src, JobAttribute.JobImpressionsEstimated);
             dst.ChargeInfoMessage = map.MapFromDicNullable<string?>(src, JobAttribute.ChargeInfoMessage);
             dst.ProofCopies = map.MapFromDicNullable<int?>(src, JobAttribute.ProofCopies);
-            if (src.TryGetValue(JobAttribute.ProofPrint, out var proofPrint) && proofPrint.GroupBegCollection().Any())
+            if (src.TryGetValue(JobAttribute.ProofPrint, out var proofPrint))
                 dst.ProofPrint = map.Map<ProofPrint>(proofPrint.GroupBegCollection().First().FromBegCollection().ToIppDictionary());
-            if (src.TryGetValue(JobAttribute.JobStorage, out var jobStorage) && jobStorage.GroupBegCollection().Any())
+            if (src.TryGetValue(JobAttribute.JobStorage, out var jobStorage))
                 dst.JobStorage = map.Map<JobStorage>(jobStorage.GroupBegCollection().First().FromBegCollection().ToIppDictionary());
-            if (src.TryGetValue(JobAttribute.CoverSheetInfo, out var coverSheetInfo) && coverSheetInfo.GroupBegCollection().Any())
+            if (src.TryGetValue(JobAttribute.CoverSheetInfo, out var coverSheetInfo))
                 dst.CoverSheetInfo = map.Map<CoverSheetInfo>(coverSheetInfo.GroupBegCollection().First().FromBegCollection().ToIppDictionary());
-            if (src.TryGetValue(JobAttribute.DestinationUris, out var destinationUris) && destinationUris.GroupBegCollection().Any())
+            if (src.TryGetValue(JobAttribute.DestinationUris, out var destinationUris))
                 dst.DestinationUris = destinationUris.GroupBegCollection().Select(x => map.Map<DestinationUri>(x.FromBegCollection().ToIppDictionary())).ToArray();
-            if (src.TryGetValue(JobAttribute.OutputAttributes, out var outputAttributes) && outputAttributes.GroupBegCollection().Any())
+            if (src.TryGetValue(JobAttribute.DestinationAccesses, out var destinationAccesses))
+                dst.DestinationAccesses = destinationAccesses.GroupBegCollection().Select(x => map.Map<DocumentAccess>(x.FromBegCollection().ToIppDictionary())).ToArray();
+            if (src.TryGetValue(JobAttribute.OutputAttributes, out var outputAttributes))
                 dst.OutputAttributes = map.Map<OutputAttributes>(outputAttributes.GroupBegCollection().First().FromBegCollection().ToIppDictionary());
             return dst;
         });
@@ -149,6 +151,8 @@ internal class OperationAttributesRequestProfile : IProfile
                 dst.AddRange(map.Map<IEnumerable<IppAttribute>>(src.CoverSheetInfo).ToBegCollection(JobAttribute.CoverSheetInfo));
             if (src.DestinationUris != null)
                 dst.AddRange(src.DestinationUris.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.DestinationUris)));
+            if (src.DestinationAccesses != null)
+                dst.AddRange(src.DestinationAccesses.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.DestinationAccesses)));
             if (src.OutputAttributes != null)
                 dst.AddRange(map.Map<IEnumerable<IppAttribute>>(src.OutputAttributes).ToBegCollection(JobAttribute.OutputAttributes));
             return dst;

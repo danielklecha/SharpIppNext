@@ -193,6 +193,7 @@ namespace SharpIpp.Protocol.Models
         public const string OutputDeviceJobState = "output-device-job-state";
         public const string OutputDeviceX509Certificate = "output-device-x509-certificate";
         public const string OutputDeviceX509Request = "output-device-x509-request";
+        public const string DocumentDataGetInterval = "document-data-get-interval";
         public const string DocumentDataWait = "document-data-wait";
         public const string InputAttributes = "input-attributes";
         public const string JobAccountType = "job-account-type";
@@ -205,12 +206,17 @@ namespace SharpIpp.Protocol.Models
         public const string ChargeInfoMessage = "charge-info-message";
         public const string ConfirmationSheetPrint = "confirmation-sheet-print";
         public const string NumberOfRetries = "number-of-retries";
+        public const string RetryInterval = "retry-interval";
+        public const string RetryTimeOut = "retry-time-out";
         public const string ProofCopies = "proof-copies";
         public const string ProofPrint = "proof-print";
         public const string JobStorage = "job-storage";
         public const string DocumentAccess = "document-access";
         public const string CoverSheetInfo = "cover-sheet-info";
+        public const string DestinationAccesses = "destination-accesses";
         public const string DestinationUris = "destination-uris";
+        public const string DestinationStatuses = "destination-statuses";
+        public const string InputAttributesActual = "input-attributes-actual";
         public const string OutputAttributes = "output-attributes";
         public const string MaterialsCol = "materials-col";
         public const string MultipleObjectHandling = "multiple-object-handling";

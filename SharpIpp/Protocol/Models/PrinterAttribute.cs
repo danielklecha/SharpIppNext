@@ -251,6 +251,7 @@ namespace SharpIpp.Protocol.Models
         public const string PrinterChargeInfo = "printer-charge-info";
         public const string PrinterChargeInfoUri = "printer-charge-info-uri";
         public const string PrinterMandatoryJobAttributes = "printer-mandatory-job-attributes";
+        public const string PrinterRequestedJobAttributes = "printer-requested-job-attributes";
         public const string OutputDeviceUuidSupported = "output-device-uuid-supported";
 
         /// <summary>
@@ -285,5 +286,45 @@ namespace SharpIpp.Protocol.Models
         /// See: PWG 5100.21-2019 Section 8.17
         /// </summary>
         public const string PrinterCameraImageUri = "printer-camera-image-uri";
+
+        public const string ConfirmationSheetPrintDefault = "confirmation-sheet-print-default";
+        public const string CoverSheetInfoDefault = "cover-sheet-info-default";
+        public const string CoverSheetInfoSupported = "cover-sheet-info-supported";
+        public const string DestinationAccessesSupported = "destination-accesses-supported";
+        public const string DestinationUriSchemesSupported = "destination-uri-schemes-supported";
+        public const string DestinationUriReady = "destination-uri-ready";
+        public const string DestinationUrisSupported = "destination-uris-supported";
+        public const string FromNameSupported = "from-name-supported";
+        public const string InputAttributesDefault = "input-attributes-default";
+        public const string InputAttributesSupported = "input-attributes-supported";
+        public const string InputColorModeSupported = "input-color-mode-supported";
+        public const string InputContentTypeSupported = "input-content-type-supported";
+        public const string InputFilmScanModeSupported = "input-film-scan-mode-supported";
+        public const string InputMediaSupported = "input-media-supported";
+        public const string InputOrientationRequestedSupported = "input-orientation-requested-supported";
+        public const string InputQualitySupported = "input-quality-supported";
+        public const string InputResolutionSupported = "input-resolution-supported";
+        public const string InputSidesSupported = "input-sides-supported";
+        public const string InputSourceSupported = "input-source-supported";
+        public const string LogoUriFormatsSupported = "logo-uri-formats-supported";
+        public const string LogoUriSchemesSupported = "logo-uri-schemes-supported";
+        public const string MessageSupported = "message-supported";
+        public const string MultipleDestinationUrisSupported = "multiple-destination-uris-supported";
+        public const string NumberOfRetriesDefault = "number-of-retries-default";
+        public const string NumberOfRetriesSupported = "number-of-retries-supported";
+        public const string OrganizationNameSupported = "organization-name-supported";
+        public const string JobDestinationSpoolingSupported = "job-destination-spooling-supported";
+        public const string OutputAttributesDefault = "output-attributes-default";
+        public const string OutputAttributesSupported = "output-attributes-supported";
+        public const string PrinterFaxLogUri = "printer-fax-log-uri";
+        public const string PrinterFaxModemInfo = "printer-fax-modem-info";
+        public const string PrinterFaxModemName = "printer-fax-modem-name";
+        public const string PrinterFaxModemNumber = "printer-fax-modem-number";
+        public const string RetryIntervalDefault = "retry-interval-default";
+        public const string RetryIntervalSupported = "retry-interval-supported";
+        public const string RetryTimeOutDefault = "retry-time-out-default";
+        public const string RetryTimeOutSupported = "retry-time-out-supported";
+        public const string SubjectSupported = "subject-supported";
+        public const string ToNameSupported = "to-name-supported";
     }
 }
