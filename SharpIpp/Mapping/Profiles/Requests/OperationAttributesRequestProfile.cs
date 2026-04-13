@@ -706,6 +706,23 @@ internal class OperationAttributesRequestProfile : IProfile
             return dst;
         });
 
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, AcknowledgeIdentifyPrinterOperationAttributes>((src, dst, map) =>
+        {
+            dst ??= new AcknowledgeIdentifyPrinterOperationAttributes();
+            map.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(src, dst);
+            dst.OutputDeviceUuid = map.MapFromDicNullable<Uri?>(src, JobAttribute.OutputDeviceUuid);
+            return dst;
+        });
+
+        mapper.CreateMap<AcknowledgeIdentifyPrinterOperationAttributes, List<IppAttribute>>((src, dst, map) =>
+        {
+            dst ??= new List<IppAttribute>();
+            map.Map<OperationAttributes, List<IppAttribute>>(src, dst);
+            if (src.OutputDeviceUuid != null)
+                dst.Add(new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, src.OutputDeviceUuid.ToString()));
+            return dst;
+        });
+
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, AcknowledgeJobOperationAttributes>((src, dst, map) =>
         {
             dst ??= new AcknowledgeJobOperationAttributes();
@@ -726,11 +743,29 @@ internal class OperationAttributesRequestProfile : IProfile
             return dst;
         });
 
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, DeregisterOutputDeviceOperationAttributes>((src, dst, map) =>
+        {
+            dst ??= new DeregisterOutputDeviceOperationAttributes();
+            map.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(src, dst);
+            dst.OutputDeviceUuid = map.MapFromDicNullable<Uri?>(src, JobAttribute.OutputDeviceUuid);
+            return dst;
+        });
+
+        mapper.CreateMap<DeregisterOutputDeviceOperationAttributes, List<IppAttribute>>((src, dst, map) =>
+        {
+            dst ??= new List<IppAttribute>();
+            map.Map<OperationAttributes, List<IppAttribute>>(src, dst);
+            if (src.OutputDeviceUuid != null)
+                dst.Add(new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, src.OutputDeviceUuid.ToString()));
+            return dst;
+        });
+
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, FetchDocumentOperationAttributes>((src, dst, map) =>
         {
             dst ??= new FetchDocumentOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, JobOperationAttributes>(src, dst);
             dst.DocumentNumber = map.MapFromDicNullable<int?>(src, DocumentAttribute.DocumentNumber) ?? 0;
+            dst.OutputDeviceUuid = map.MapFromDicNullable<Uri?>(src, JobAttribute.OutputDeviceUuid);
             dst.CompressionAccepted = map.MapFromDicSetNullable<Compression[]?>(src, JobAttribute.CompressionAccepted);
             dst.DocumentFormatAccepted = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.DocumentFormatAccepted);
             return dst;
@@ -741,10 +776,29 @@ internal class OperationAttributesRequestProfile : IProfile
             dst ??= new List<IppAttribute>();
             map.Map<JobOperationAttributes, List<IppAttribute>>(src, dst);
             dst.Add(new IppAttribute(Tag.Integer, DocumentAttribute.DocumentNumber, src.DocumentNumber));
+            if (src.OutputDeviceUuid != null)
+                dst.Add(new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, src.OutputDeviceUuid.ToString()));
             if (src.CompressionAccepted != null)
                 dst.AddRange(src.CompressionAccepted.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.CompressionAccepted, map.Map<string>(x))));
             if (src.DocumentFormatAccepted != null)
                 dst.AddRange(src.DocumentFormatAccepted.Select(x => new IppAttribute(Tag.MimeMediaType, JobAttribute.DocumentFormatAccepted, x)));
+            return dst;
+        });
+
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, FetchJobOperationAttributes>((src, dst, map) =>
+        {
+            dst ??= new FetchJobOperationAttributes();
+            map.Map<IDictionary<string, IppAttribute[]>, JobOperationAttributes>(src, dst);
+            dst.OutputDeviceUuid = map.MapFromDicNullable<Uri?>(src, JobAttribute.OutputDeviceUuid);
+            return dst;
+        });
+
+        mapper.CreateMap<FetchJobOperationAttributes, List<IppAttribute>>((src, dst, map) =>
+        {
+            dst ??= new List<IppAttribute>();
+            map.Map<JobOperationAttributes, List<IppAttribute>>(src, dst);
+            if (src.OutputDeviceUuid != null)
+                dst.Add(new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, src.OutputDeviceUuid.ToString()));
             return dst;
         });
 
@@ -785,6 +839,59 @@ internal class OperationAttributesRequestProfile : IProfile
                 dst.Add(new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, src.OutputDeviceUuid.ToString()));
             if (src.OutputDeviceJobStates != null)
                 dst.AddRange(src.OutputDeviceJobStates.Select(x => new IppAttribute(Tag.Enum, JobAttribute.OutputDeviceJobStates, (int)x)));
+            return dst;
+        });
+
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, UpdateDocumentStatusOperationAttributes>((src, dst, map) =>
+        {
+            dst ??= new UpdateDocumentStatusOperationAttributes();
+            map.Map<IDictionary<string, IppAttribute[]>, JobOperationAttributes>(src, dst);
+            dst.DocumentNumber = map.MapFromDicNullable<int?>(src, DocumentAttribute.DocumentNumber) ?? 0;
+            dst.OutputDeviceUuid = map.MapFromDicNullable<Uri?>(src, JobAttribute.OutputDeviceUuid);
+            return dst;
+        });
+
+        mapper.CreateMap<UpdateDocumentStatusOperationAttributes, List<IppAttribute>>((src, dst, map) =>
+        {
+            dst ??= new List<IppAttribute>();
+            map.Map<JobOperationAttributes, List<IppAttribute>>(src, dst);
+            dst.Add(new IppAttribute(Tag.Integer, DocumentAttribute.DocumentNumber, src.DocumentNumber));
+            if (src.OutputDeviceUuid != null)
+                dst.Add(new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, src.OutputDeviceUuid.ToString()));
+            return dst;
+        });
+
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, UpdateJobStatusOperationAttributes>((src, dst, map) =>
+        {
+            dst ??= new UpdateJobStatusOperationAttributes();
+            map.Map<IDictionary<string, IppAttribute[]>, JobOperationAttributes>(src, dst);
+            dst.OutputDeviceUuid = map.MapFromDicNullable<Uri?>(src, JobAttribute.OutputDeviceUuid);
+            return dst;
+        });
+
+        mapper.CreateMap<UpdateJobStatusOperationAttributes, List<IppAttribute>>((src, dst, map) =>
+        {
+            dst ??= new List<IppAttribute>();
+            map.Map<JobOperationAttributes, List<IppAttribute>>(src, dst);
+            if (src.OutputDeviceUuid != null)
+                dst.Add(new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, src.OutputDeviceUuid.ToString()));
+            return dst;
+        });
+
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, UpdateOutputDeviceAttributesOperationAttributes>((src, dst, map) =>
+        {
+            dst ??= new UpdateOutputDeviceAttributesOperationAttributes();
+            map.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(src, dst);
+            dst.OutputDeviceUuid = map.MapFromDicNullable<Uri?>(src, JobAttribute.OutputDeviceUuid);
+            return dst;
+        });
+
+        mapper.CreateMap<UpdateOutputDeviceAttributesOperationAttributes, List<IppAttribute>>((src, dst, map) =>
+        {
+            dst ??= new List<IppAttribute>();
+            map.Map<OperationAttributes, List<IppAttribute>>(src, dst);
+            if (src.OutputDeviceUuid != null)
+                dst.Add(new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, src.OutputDeviceUuid.ToString()));
             return dst;
         });
 

@@ -21,6 +21,7 @@ public readonly record struct IppFeature(string Value, bool IsValue = true) : IS
     public static readonly IppFeature PrintPolicy = new("print-policy");
     public static readonly IppFeature ProofAndSuspend = new("proof-and-suspend");
     public static readonly IppFeature ProofPrint = new("proof-print");
+    public static readonly IppFeature SharedInfrastructure = new("shared-infrastructure");
 
     // System service feature keywords.
     public static readonly IppFeature ResourceObject = new("resource-object");

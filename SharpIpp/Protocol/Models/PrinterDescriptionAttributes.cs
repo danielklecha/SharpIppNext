@@ -1504,10 +1504,256 @@ public class PrinterDescriptionAttributes
     public string[]? OutputDeviceUuidSupported { get; set; }
 
     /// <summary>
+    /// document-access-supported
+    /// See: PWG 5100.18-2025 Section 7.4.1
+    /// </summary>
+    public string[]? DocumentAccessSupported { get; set; }
+
+    /// <summary>
+    /// fetch-document-attributes-supported
+    /// See: PWG 5100.18-2025 Section 7.4.2
+    /// </summary>
+    public string[]? FetchDocumentAttributesSupported { get; set; }
+
+    /// <summary>
+    /// printer-mode-configured
+    /// See: PWG 5100.18-2025 Section 7.4.4
+    /// </summary>
+    public string? PrinterModeConfigured { get; set; }
+
+    /// <summary>
+    /// printer-mode-supported
+    /// See: PWG 5100.18-2025 Section 7.4.5
+    /// </summary>
+    public string[]? PrinterModeSupported { get; set; }
+
+    /// <summary>
+    /// printer-static-resource-directory-uri
+    /// See: PWG 5100.18-2025 Section 7.4.6
+    /// </summary>
+    public Uri? PrinterStaticResourceDirectoryUri { get; set; }
+
+    /// <summary>
+    /// printer-static-resource-k-octets-supported
+    /// See: PWG 5100.18-2025 Section 7.4.7
+    /// </summary>
+    public int? PrinterStaticResourceKOctetsSupported { get; set; }
+
+    /// <summary>
+    /// printer-static-resource-k-octets-free
+    /// See: PWG 5100.18-2025 Section 7.5.1
+    /// </summary>
+    public int? PrinterStaticResourceKOctetsFree { get; set; }
+
+    /// <summary>
     /// accuracy-units-supported
     /// See: PWG 5100.21-2019 Section 8.1
     /// </summary>
     public string[]? AccuracyUnitsSupported { get; set; }
+
+    /// <summary>
+    /// chamber-humidity-default
+    /// See: PWG 5100.21-2019 Section 8.3.2
+    /// </summary>
+    public int? ChamberHumidityDefault { get; set; }
+
+    /// <summary>
+    /// chamber-humidity-supported
+    /// See: PWG 5100.21-2019 Section 8.3.3
+    /// </summary>
+    public bool? ChamberHumiditySupported { get; set; }
+
+    /// <summary>
+    /// chamber-temperature-default
+    /// See: PWG 5100.21-2019 Section 8.3.4
+    /// </summary>
+    public int? ChamberTemperatureDefault { get; set; }
+
+    /// <summary>
+    /// chamber-temperature-supported
+    /// See: PWG 5100.21-2019 Section 8.3.5
+    /// </summary>
+    public Range[]? ChamberTemperatureSupported { get; set; }
+
+    /// <summary>
+    /// material-amount-units-supported
+    /// See: PWG 5100.21-2019 Section 8.3.6
+    /// </summary>
+    public string[]? MaterialAmountUnitsSupported { get; set; }
+
+    /// <summary>
+    /// material-diameter-supported
+    /// See: PWG 5100.21-2019 Section 8.3.7
+    /// </summary>
+    public Range[]? MaterialDiameterSupported { get; set; }
+
+    /// <summary>
+    /// material-nozzle-diameter-supported
+    /// See: PWG 5100.21-2019 Section 8.3.8
+    /// </summary>
+    public Range[]? MaterialNozzleDiameterSupported { get; set; }
+
+    /// <summary>
+    /// material-purpose-supported
+    /// See: PWG 5100.21-2019 Section 8.3.9
+    /// </summary>
+    public string[]? MaterialPurposeSupported { get; set; }
+
+    /// <summary>
+    /// material-rate-supported
+    /// See: PWG 5100.21-2019 Section 8.3.10
+    /// </summary>
+    public Range[]? MaterialRateSupported { get; set; }
+
+    /// <summary>
+    /// material-rate-units-supported
+    /// See: PWG 5100.21-2019 Section 8.3.11
+    /// </summary>
+    public string[]? MaterialRateUnitsSupported { get; set; }
+
+    /// <summary>
+    /// material-shell-thickness-supported
+    /// See: PWG 5100.21-2019 Section 8.3.12
+    /// </summary>
+    public Range[]? MaterialShellThicknessSupported { get; set; }
+
+    /// <summary>
+    /// material-temperature-supported
+    /// See: PWG 5100.21-2019 Section 8.3.13
+    /// </summary>
+    public Range[]? MaterialTemperatureSupported { get; set; }
+
+    /// <summary>
+    /// material-type-supported
+    /// See: PWG 5100.21-2019 Section 8.3.14
+    /// </summary>
+    public string[]? MaterialTypeSupported { get; set; }
+
+    /// <summary>
+    /// materials-col-database
+    /// See: PWG 5100.21-2019 Section 8.3.15
+    /// </summary>
+    public Material[]? MaterialsColDatabase { get; set; }
+
+    /// <summary>
+    /// materials-col-default
+    /// See: PWG 5100.21-2019 Section 8.3.16
+    /// </summary>
+    public Material[]? MaterialsColDefault { get; set; }
+
+    /// <summary>
+    /// materials-col-ready
+    /// See: PWG 5100.21-2019 Section 8.3.17
+    /// </summary>
+    public Material[]? MaterialsColReady { get; set; }
+
+    /// <summary>
+    /// materials-col-supported
+    /// See: PWG 5100.21-2019 Section 8.3.18
+    /// </summary>
+    public string[]? MaterialsColSupported { get; set; }
+
+    /// <summary>
+    /// max-materials-col-supported
+    /// See: PWG 5100.21-2019 Section 8.3.19
+    /// </summary>
+    public int? MaxMaterialsColSupported { get; set; }
+
+    /// <summary>
+    /// multiple-object-handling-default
+    /// See: PWG 5100.21-2019 Section 8.3.20
+    /// </summary>
+    public string? MultipleObjectHandlingDefault { get; set; }
+
+    /// <summary>
+    /// multiple-object-handling-supported
+    /// See: PWG 5100.21-2019 Section 8.3.21
+    /// </summary>
+    public string[]? MultipleObjectHandlingSupported { get; set; }
+
+    /// <summary>
+    /// pdf-features-supported
+    /// See: PWG 5100.21-2019 Section 8.3.22
+    /// </summary>
+    public string[]? PdfFeaturesSupported { get; set; }
+
+    /// <summary>
+    /// platform-shape
+    /// See: PWG 5100.21-2019 Section 8.3.23
+    /// </summary>
+    public string? PlatformShape { get; set; }
+
+    /// <summary>
+    /// platform-temperature-default
+    /// See: PWG 5100.21-2019 Section 8.3.24
+    /// </summary>
+    public int? PlatformTemperatureDefault { get; set; }
+
+    /// <summary>
+    /// platform-temperature-supported
+    /// See: PWG 5100.21-2019 Section 8.3.25
+    /// </summary>
+    public Range[]? PlatformTemperatureSupported { get; set; }
+
+    /// <summary>
+    /// print-accuracy-default
+    /// See: PWG 5100.21-2019 Section 8.3.26
+    /// </summary>
+    public PrintAccuracy? PrintAccuracyDefault { get; set; }
+
+    /// <summary>
+    /// print-accuracy-supported
+    /// See: PWG 5100.21-2019 Section 8.3.27
+    /// </summary>
+    public PrintAccuracy? PrintAccuracySupported { get; set; }
+
+    /// <summary>
+    /// print-base-default
+    /// See: PWG 5100.21-2019 Section 8.3.28
+    /// </summary>
+    public string? PrintBaseDefault { get; set; }
+
+    /// <summary>
+    /// print-base-supported
+    /// See: PWG 5100.21-2019 Section 8.3.29
+    /// </summary>
+    public string[]? PrintBaseSupported { get; set; }
+
+    /// <summary>
+    /// print-objects-supported
+    /// See: PWG 5100.21-2019 Section 8.3.30
+    /// </summary>
+    public string[]? PrintObjectsSupported { get; set; }
+
+    /// <summary>
+    /// print-supports-default
+    /// See: PWG 5100.21-2019 Section 8.3.31
+    /// </summary>
+    public string? PrintSupportsDefault { get; set; }
+
+    /// <summary>
+    /// print-supports-supported
+    /// See: PWG 5100.21-2019 Section 8.3.32
+    /// </summary>
+    public string[]? PrintSupportsSupported { get; set; }
+
+    /// <summary>
+    /// printer-volume-supported
+    /// See: PWG 5100.21-2019 Section 8.3.33
+    /// </summary>
+    public PrinterVolumeSupported? PrinterVolumeSupported { get; set; }
+
+    /// <summary>
+    /// chamber-humidity-current
+    /// See: PWG 5100.21-2019 Section 8.4.1
+    /// </summary>
+    public int? ChamberHumidityCurrent { get; set; }
+
+    /// <summary>
+    /// chamber-temperature-current
+    /// See: PWG 5100.21-2019 Section 8.4.2
+    /// </summary>
+    public int? ChamberTemperatureCurrent { get; set; }
 
     /// <summary>
     /// printer-camera-image-uri
@@ -1521,8 +1767,22 @@ public class PrinterDescriptionAttributes
     /// </summary>
     public int[]? PrinterResourceIds { get; set; }
 
+    /// <summary>
+    /// confirmation-sheet-print-default
+    /// See: PWG 5100.15-2013 Section 7.4.1
+    /// </summary>
     public bool? ConfirmationSheetPrintDefault { get; set; }
+
+    /// <summary>
+    /// cover-sheet-info-default
+    /// See: PWG 5100.15-2013 Section 7.4.2
+    /// </summary>
     public CoverSheetInfo? CoverSheetInfoDefault { get; set; }
+
+    /// <summary>
+    /// cover-sheet-info-supported
+    /// See: PWG 5100.15-2013 Section 7.4.3
+    /// </summary>
     public string[]? CoverSheetInfoSupported { get; set; }
 
     /// <summary>
@@ -1537,26 +1797,130 @@ public class PrinterDescriptionAttributes
     /// </summary>
     public DestinationUriReady[]? DestinationUriReady { get; set; }
 
+    /// <summary>
+    /// destination-uri-schemes-supported
+    /// See: PWG 5100.15-2013 Section 7.4.4
+    /// </summary>
     public UriScheme[]? DestinationUriSchemesSupported { get; set; }
+
+    /// <summary>
+    /// destination-uris-supported
+    /// See: PWG 5100.15-2013 Section 7.4.5
+    /// </summary>
     public string[]? DestinationUrisSupported { get; set; }
+
+    /// <summary>
+    /// from-name-supported
+    /// See: PWG 5100.15-2013 Section 7.4.6
+    /// </summary>
     public int? FromNameSupported { get; set; }
+
+    /// <summary>
+    /// input-attributes-default
+    /// See: PWG 5100.15-2013 Section 7.4.7
+    /// </summary>
     public DocumentTemplateAttributes? InputAttributesDefault { get; set; }
+
+    /// <summary>
+    /// input-attributes-supported
+    /// See: PWG 5100.15-2013 Section 7.4.8
+    /// </summary>
     public string[]? InputAttributesSupported { get; set; }
+
+    /// <summary>
+    /// input-color-mode-supported
+    /// See: PWG 5100.15-2013 Section 7.4.9
+    /// </summary>
     public string[]? InputColorModeSupported { get; set; }
+
+    /// <summary>
+    /// input-content-type-supported
+    /// See: PWG 5100.15-2013 Section 7.4.10
+    /// </summary>
     public string[]? InputContentTypeSupported { get; set; }
+
+    /// <summary>
+    /// input-film-scan-mode-supported
+    /// See: PWG 5100.15-2013 Section 7.4.11
+    /// </summary>
     public string[]? InputFilmScanModeSupported { get; set; }
+
+    /// <summary>
+    /// input-media-supported
+    /// See: PWG 5100.15-2013 Section 7.4.12
+    /// </summary>
     public Media[]? InputMediaSupported { get; set; }
+
+    /// <summary>
+    /// input-orientation-requested-supported
+    /// See: PWG 5100.15-2013 Section 7.4.13
+    /// </summary>
     public Orientation[]? InputOrientationRequestedSupported { get; set; }
+
+    /// <summary>
+    /// input-quality-supported
+    /// See: PWG 5100.15-2013 Section 7.4.14
+    /// </summary>
     public PrintQuality[]? InputQualitySupported { get; set; }
+
+    /// <summary>
+    /// input-resolution-supported
+    /// See: PWG 5100.15-2013 Section 7.4.15
+    /// </summary>
     public Resolution[]? InputResolutionSupported { get; set; }
+
+    /// <summary>
+    /// input-sides-supported
+    /// See: PWG 5100.15-2013 Section 7.4.17
+    /// </summary>
     public Sides[]? InputSidesSupported { get; set; }
+
+    /// <summary>
+    /// input-source-supported
+    /// See: PWG 5100.15-2013 Section 7.4.18
+    /// </summary>
     public string[]? InputSourceSupported { get; set; }
+
+    /// <summary>
+    /// logo-uri-formats-supported
+    /// See: PWG 5100.15-2013 Section 7.4.19
+    /// </summary>
     public string[]? LogoUriFormatsSupported { get; set; }
+
+    /// <summary>
+    /// logo-uri-schemes-supported
+    /// See: PWG 5100.15-2013 Section 7.4.20
+    /// </summary>
     public UriScheme[]? LogoUriSchemesSupported { get; set; }
+
+    /// <summary>
+    /// message-supported
+    /// See: PWG 5100.15-2013 Section 7.4.21
+    /// </summary>
     public int? MessageSupported { get; set; }
+
+    /// <summary>
+    /// multiple-destination-uris-supported
+    /// See: PWG 5100.15-2013 Section 7.4.22
+    /// </summary>
     public bool? MultipleDestinationUrisSupported { get; set; }
+
+    /// <summary>
+    /// number-of-retries-default
+    /// See: PWG 5100.15-2013 Section 7.4.23
+    /// </summary>
     public int? NumberOfRetriesDefault { get; set; }
+
+    /// <summary>
+    /// number-of-retries-supported
+    /// See: PWG 5100.15-2013 Section 7.4.24
+    /// </summary>
     public Protocol.Models.Range? NumberOfRetriesSupported { get; set; }
+
+    /// <summary>
+    /// organization-name-supported
+    /// See: PWG 5100.15-2013 Section 7.4.25
+    /// </summary>
     public int? OrganizationNameSupported { get; set; }
 
     /// <summary>
@@ -1576,14 +1940,64 @@ public class PrinterDescriptionAttributes
     /// See: PWG 5100.17-2014 Section 8.3.6
     /// </summary>
     public string[]? OutputAttributesSupported { get; set; }
+
+    /// <summary>
+    /// printer-fax-log-uri
+    /// See: PWG 5100.15-2013 Section 7.4.26
+    /// </summary>
     public Uri? PrinterFaxLogUri { get; set; }
+
+    /// <summary>
+    /// printer-fax-modem-info
+    /// See: PWG 5100.15-2013 Section 7.4.27
+    /// </summary>
     public string[]? PrinterFaxModemInfo { get; set; }
+
+    /// <summary>
+    /// printer-fax-modem-name
+    /// See: PWG 5100.15-2013 Section 7.4.28
+    /// </summary>
     public string[]? PrinterFaxModemName { get; set; }
+
+    /// <summary>
+    /// printer-fax-modem-number
+    /// See: PWG 5100.15-2013 Section 7.4.29
+    /// </summary>
     public Uri[]? PrinterFaxModemNumber { get; set; }
+
+    /// <summary>
+    /// retry-interval-default
+    /// See: PWG 5100.15-2013 Section 7.4.30
+    /// </summary>
     public int? RetryIntervalDefault { get; set; }
+
+    /// <summary>
+    /// retry-interval-supported
+    /// See: PWG 5100.15-2013 Section 7.4.31
+    /// </summary>
     public Protocol.Models.Range? RetryIntervalSupported { get; set; }
+
+    /// <summary>
+    /// retry-time-out-default
+    /// See: PWG 5100.15-2013 Section 7.4.32
+    /// </summary>
     public int? RetryTimeOutDefault { get; set; }
+
+    /// <summary>
+    /// retry-time-out-supported
+    /// See: PWG 5100.15-2013 Section 7.4.33
+    /// </summary>
     public Protocol.Models.Range? RetryTimeOutSupported { get; set; }
+
+    /// <summary>
+    /// subject-supported
+    /// See: PWG 5100.15-2013 Section 7.4.34
+    /// </summary>
     public int? SubjectSupported { get; set; }
+
+    /// <summary>
+    /// to-name-supported
+    /// See: PWG 5100.15-2013 Section 7.4.35
+    /// </summary>
     public int? ToNameSupported { get; set; }
 }

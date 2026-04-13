@@ -72,6 +72,7 @@ namespace SharpIpp.Protocol.Models
         public static readonly JobStateReason JobStoredWithErrors = new("job-stored-with-errors");
         public static readonly JobStateReason JobStoredWithWarnings = new("job-stored-with-warnings");
         public static readonly JobStateReason JobStoring = new("job-storing");
+        public static readonly JobStateReason JobFetchable = new("job-fetchable");
         /// <summary>
         /// Obsolete legacy compatibility value.
         /// See: IPP Enterprise Printing Extensions v2.0 (PWG 5100.11-2024) Section 9.2.

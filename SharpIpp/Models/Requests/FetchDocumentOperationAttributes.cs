@@ -1,3 +1,4 @@
+using System;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Requests;
@@ -13,6 +14,12 @@ public class FetchDocumentOperationAttributes : JobOperationAttributes
     /// See: PWG 5100.5-2024 Section 5.1.2
     /// </summary>
     public int DocumentNumber { get; set; }
+
+    /// <summary>
+    /// The <c>output-device-uuid</c> operation attribute.
+    /// See: PWG 5100.18-2025 Section 7.1.8
+    /// </summary>
+    public Uri? OutputDeviceUuid { get; set; }
 
     /// <summary>
     /// The <c>compression-accepted</c> operation attribute.

@@ -109,6 +109,34 @@ public class DocumentAttributes : IIppCollection
     public string? DocumentFormatDetected { get; set; }
 
     /// <summary>
+    /// The document-format-ready IPP attribute.
+    /// See: PWG 5100.18-2025 Section 7.2.1
+    /// </summary>
+    /// <code>document-format-ready</code>
+    public string[]? DocumentFormatReady { get; set; }
+
+    /// <summary>
+    /// The output-device-document-state IPP attribute.
+    /// See: PWG 5100.18-2025 Section 7.2.2
+    /// </summary>
+    /// <code>output-device-document-state</code>
+    public DocumentState? OutputDeviceDocumentState { get; set; }
+
+    /// <summary>
+    /// The output-device-document-state-message IPP attribute.
+    /// See: PWG 5100.18-2025 Section 7.2.3
+    /// </summary>
+    /// <code>output-device-document-state-message</code>
+    public string? OutputDeviceDocumentStateMessage { get; set; }
+
+    /// <summary>
+    /// The output-device-document-state-reasons IPP attribute.
+    /// See: PWG 5100.18-2025 Section 7.2.4
+    /// </summary>
+    /// <code>output-device-document-state-reasons</code>
+    public DocumentStateReason[]? OutputDeviceDocumentStateReasons { get; set; }
+
+    /// <summary>
     /// The document-format-details IPP attribute.
     /// DEPRECATED.
     /// See: PWG 5100.7-2023 Section 6.2.1

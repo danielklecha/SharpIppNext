@@ -182,15 +182,33 @@ public partial class SharpIppClient
     }
 
     /// <inheritdoc />
+    public Task<AcknowledgeIdentifyPrinterResponse> AcknowledgeIdentifyPrinterAsync(AcknowledgeIdentifyPrinterRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<AcknowledgeIdentifyPrinterRequest, AcknowledgeIdentifyPrinterResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
     public Task<AcknowledgeJobResponse> AcknowledgeJobAsync(AcknowledgeJobRequest request, CancellationToken cancellationToken = default)
     {
         return SendAsync<AcknowledgeJobRequest, AcknowledgeJobResponse>(request, cancellationToken);
     }
 
     /// <inheritdoc />
+    public Task<DeregisterOutputDeviceResponse> DeregisterOutputDeviceAsync(DeregisterOutputDeviceRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<DeregisterOutputDeviceRequest, DeregisterOutputDeviceResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
     public Task<FetchDocumentResponse> FetchDocumentAsync(FetchDocumentRequest request, CancellationToken cancellationToken = default)
     {
         return SendAsync<FetchDocumentRequest, FetchDocumentResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<FetchJobResponse> FetchJobAsync(FetchJobRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<FetchJobRequest, FetchJobResponse>(request, cancellationToken);
     }
 
     /// <inheritdoc />
@@ -203,6 +221,24 @@ public partial class SharpIppClient
     public Task<UpdateActiveJobsResponse> UpdateActiveJobsAsync(UpdateActiveJobsRequest request, CancellationToken cancellationToken = default)
     {
         return SendAsync<UpdateActiveJobsRequest, UpdateActiveJobsResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<UpdateDocumentStatusResponse> UpdateDocumentStatusAsync(UpdateDocumentStatusRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<UpdateDocumentStatusRequest, UpdateDocumentStatusResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<UpdateJobStatusResponse> UpdateJobStatusAsync(UpdateJobStatusRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<UpdateJobStatusRequest, UpdateJobStatusResponse>(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<UpdateOutputDeviceAttributesResponse> UpdateOutputDeviceAttributesAsync(UpdateOutputDeviceAttributesRequest request, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<UpdateOutputDeviceAttributesRequest, UpdateOutputDeviceAttributesResponse>(request, cancellationToken);
     }
 
     /// <inheritdoc />

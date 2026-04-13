@@ -41,6 +41,10 @@ internal class DocumentAttributesProfile : IProfile
             dst.DocumentCharset = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentCharset);
             dst.DocumentFormat = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentFormat);
             dst.DocumentFormatDetected = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentFormatDetected);
+            dst.DocumentFormatReady = map.MapFromDicSetNullable<string[]?>(src, DocumentAttribute.DocumentFormatReady);
+            dst.OutputDeviceDocumentState = map.MapFromDicNullable<DocumentState?>(src, DocumentAttribute.OutputDeviceDocumentState);
+            dst.OutputDeviceDocumentStateMessage = map.MapFromDicNullable<string?>(src, DocumentAttribute.OutputDeviceDocumentStateMessage);
+            dst.OutputDeviceDocumentStateReasons = map.MapFromDicSetNullable<DocumentStateReason[]?>(src, DocumentAttribute.OutputDeviceDocumentStateReasons);
             if (src.ContainsKey(DocumentAttribute.DocumentFormatDetails))
                 dst.DocumentFormatDetails = map.Map<DocumentFormatDetails>(src[DocumentAttribute.DocumentFormatDetails].FromBegCollection().ToIppDictionary());
             if (src.ContainsKey(DocumentAttribute.DocumentFormatDetailsDetected))
@@ -113,6 +117,14 @@ internal class DocumentAttributesProfile : IProfile
                 dst.Add(DocumentAttribute.DocumentFormat, [new IppAttribute(Tag.MimeMediaType, DocumentAttribute.DocumentFormat, src.DocumentFormat)]);
             if (src.DocumentFormatDetected != null)
                 dst.Add(DocumentAttribute.DocumentFormatDetected, [new IppAttribute(Tag.MimeMediaType, DocumentAttribute.DocumentFormatDetected, src.DocumentFormatDetected)]);
+            if (src.DocumentFormatReady != null)
+                dst.Add(DocumentAttribute.DocumentFormatReady, src.DocumentFormatReady.Select(x => new IppAttribute(Tag.MimeMediaType, DocumentAttribute.DocumentFormatReady, x)).ToArray());
+            if (src.OutputDeviceDocumentState != null)
+                dst.Add(DocumentAttribute.OutputDeviceDocumentState, [new IppAttribute(Tag.Enum, DocumentAttribute.OutputDeviceDocumentState, (int)src.OutputDeviceDocumentState.Value)]);
+            if (src.OutputDeviceDocumentStateMessage != null)
+                dst.Add(DocumentAttribute.OutputDeviceDocumentStateMessage, [new IppAttribute(Tag.TextWithoutLanguage, DocumentAttribute.OutputDeviceDocumentStateMessage, src.OutputDeviceDocumentStateMessage)]);
+            if (src.OutputDeviceDocumentStateReasons != null)
+                dst.Add(DocumentAttribute.OutputDeviceDocumentStateReasons, src.OutputDeviceDocumentStateReasons.Select(x => new IppAttribute(Tag.Keyword, DocumentAttribute.OutputDeviceDocumentStateReasons, map.Map<string>(x))).ToArray());
             if (src.DocumentFormatDetails != null)
                 dst.Add(DocumentAttribute.DocumentFormatDetails, map.Map<IEnumerable<IppAttribute>>(src.DocumentFormatDetails).ToBegCollection(DocumentAttribute.DocumentFormatDetails).ToArray());
             if (src.DocumentFormatDetailsDetected != null)

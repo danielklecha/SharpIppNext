@@ -191,6 +191,10 @@ namespace SharpIpp.Protocol.Models
         public const string DocumentFormatAccepted = "document-format-accepted";
         public const string OutputDeviceJobStates = "output-device-job-states";
         public const string OutputDeviceJobState = "output-device-job-state";
+        public const string OutputDeviceJobStateMessage = "output-device-job-state-message";
+        public const string OutputDeviceJobStateReasons = "output-device-job-state-reasons";
+        public const string OutputDeviceUuidAssigned = "output-device-uuid-assigned";
+        public const string DocumentFormatReady = "document-format-ready";
         public const string OutputDeviceX509Certificate = "output-device-x509-certificate";
         public const string OutputDeviceX509Request = "output-device-x509-request";
         public const string DocumentDataGetInterval = "document-data-get-interval";
@@ -225,7 +229,15 @@ namespace SharpIpp.Protocol.Models
         public const string PrintBase = "print-base";
         public const string PrintObjects = "print-objects";
         public const string PrintSupports = "print-supports";
+        public const string ChamberHumidityActual = "chamber-humidity-actual";
+        public const string ChamberTemperatureActual = "chamber-temperature-actual";
         public const string MaterialsColActual = "materials-col-actual";
+        public const string MultipleObjectHandlingActual3d = "multiple-object-handling-actual";
+        public const string PlatformTemperatureActual = "platform-temperature-actual";
+        public const string PrintAccuracyActual3d = "print-accuracy-actual";
+        public const string PrintBaseActual3d = "print-base-actual";
+        public const string PrintObjectsActual3d = "print-objects-actual";
+        public const string PrintSupportsActual3d = "print-supports-actual";
         public const string Overrides = "overrides";
         public const string OverridesActual = "overrides-actual";
         public const string MediaSource = "media-source";

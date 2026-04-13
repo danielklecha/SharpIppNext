@@ -213,7 +213,21 @@ public class GetJobAttributesTests : SharpIppIntegrationTestBase
                             }
                         }
                     ],
-                    MaterialsColActual = [new Material { MaterialName = "matte-paper", MaterialColor = "white" }]
+                    MaterialsColActual = [new Material { MaterialName = "matte-paper", MaterialColor = "white" }],
+                    ChamberHumidityActual = [35],
+                    ChamberTemperatureActual = [26],
+                    MultipleObjectHandlingActual3d = "abort-job",
+                    PlatformTemperatureActual = [70],
+                    PrintAccuracyActual3d = new PrintAccuracy
+                    {
+                        AccuracyUnits = "mm",
+                        XAccuracy = 100,
+                        YAccuracy = 100,
+                        ZAccuracy = 50
+                    },
+                    PrintBaseActual3d = ["raft"],
+                    PrintObjectsActual3d = [new PrintObject { DocumentNumber = 1 }],
+                    PrintSupportsActual3d = ["standard"]
                 },
                 OperationAttributes = new()
                 {

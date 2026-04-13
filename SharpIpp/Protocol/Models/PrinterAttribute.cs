@@ -253,6 +253,13 @@ namespace SharpIpp.Protocol.Models
         public const string PrinterMandatoryJobAttributes = "printer-mandatory-job-attributes";
         public const string PrinterRequestedJobAttributes = "printer-requested-job-attributes";
         public const string OutputDeviceUuidSupported = "output-device-uuid-supported";
+        public const string DocumentAccessSupported = "document-access-supported";
+        public const string FetchDocumentAttributesSupported = "fetch-document-attributes-supported";
+        public const string PrinterModeConfigured = "printer-mode-configured";
+        public const string PrinterModeSupported = "printer-mode-supported";
+        public const string PrinterStaticResourceDirectoryUri = "printer-static-resource-directory-uri";
+        public const string PrinterStaticResourceKOctetsSupported = "printer-static-resource-k-octets-supported";
+        public const string PrinterStaticResourceKOctetsFree = "printer-static-resource-k-octets-free";
 
         /// <summary>
         /// The XRI(s) of the Printer object, as requested by the client (operation attribute).
@@ -281,6 +288,42 @@ namespace SharpIpp.Protocol.Models
         /// See: PWG 5100.21-2019 Section 8.1
         /// </summary>
         public const string AccuracyUnitsSupported = "accuracy-units-supported";
+
+        public const string ChamberHumidityDefault = "chamber-humidity-default";
+        public const string ChamberHumiditySupported = "chamber-humidity-supported";
+        public const string ChamberTemperatureDefault = "chamber-temperature-default";
+        public const string ChamberTemperatureSupported = "chamber-temperature-supported";
+        public const string MaterialAmountUnitsSupported = "material-amount-units-supported";
+        public const string MaterialDiameterSupported = "material-diameter-supported";
+        public const string MaterialNozzleDiameterSupported = "material-nozzle-diameter-supported";
+        public const string MaterialPurposeSupported = "material-purpose-supported";
+        public const string MaterialRateSupported = "material-rate-supported";
+        public const string MaterialRateUnitsSupported = "material-rate-units-supported";
+        public const string MaterialShellThicknessSupported = "material-shell-thickness-supported";
+        public const string MaterialTemperatureSupported = "material-temperature-supported";
+        public const string MaterialTypeSupported = "material-type-supported";
+        public const string MaterialsColDatabase = "materials-col-database";
+        public const string MaterialsColDefault = "materials-col-default";
+        public const string MaterialsColReady = "materials-col-ready";
+        public const string MaterialsColSupported = "materials-col-supported";
+        public const string MaxMaterialsColSupported = "max-materials-col-supported";
+        public const string MultipleObjectHandlingDefault = "multiple-object-handling-default";
+        public const string MultipleObjectHandlingSupported = "multiple-object-handling-supported";
+        public const string PdfFeaturesSupported = "pdf-features-supported";
+        public const string PlatformShape = "platform-shape";
+        public const string PlatformTemperatureDefault = "platform-temperature-default";
+        public const string PlatformTemperatureSupported = "platform-temperature-supported";
+        public const string PrintAccuracyDefault = "print-accuracy-default";
+        public const string PrintAccuracySupported = "print-accuracy-supported";
+        public const string PrintBaseDefault = "print-base-default";
+        public const string PrintBaseSupported = "print-base-supported";
+        public const string PrintObjectsSupported = "print-objects-supported";
+        public const string PrintSupportsDefault = "print-supports-default";
+        public const string PrintSupportsSupported = "print-supports-supported";
+        public const string PrinterVolumeSupported = "printer-volume-supported";
+        public const string ChamberHumidityCurrent = "chamber-humidity-current";
+        public const string ChamberTemperatureCurrent = "chamber-temperature-current";
+
         /// <summary>
         /// The URI(s) of camera image(s) for the 3D Printer.
         /// See: PWG 5100.21-2019 Section 8.17

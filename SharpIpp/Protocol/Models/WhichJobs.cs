@@ -18,6 +18,7 @@ namespace SharpIpp.Protocol.Models
         public static readonly WhichJobs Aborted = new("aborted");
         public static readonly WhichJobs All = new("all");
         public static readonly WhichJobs Canceled = new("canceled");
+        public static readonly WhichJobs Fetchable = new("fetchable");
         public static readonly WhichJobs Pending = new("pending");
         public static readonly WhichJobs PendingHeld = new("pending-held");
         public static readonly WhichJobs Processing = new("processing");

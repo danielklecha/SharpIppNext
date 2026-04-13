@@ -4,6 +4,8 @@
   items:
     - name: Acknowledge-Document
       href: AcknowledgeDocument.md
+    - name: Acknowledge-Identify-Printer
+      href: AcknowledgeIdentifyPrinter.md
     - name: Acknowledge-Job
       href: AcknowledgeJob.md
     - name: Add-Document-Images
@@ -40,10 +42,14 @@
       href: DeletePrinter.md
     - name: Disable-All-Printers
       href: DisableAllPrinters.md
+    - name: Deregister-Output-Device
+      href: DeregisterOutputDevice.md
     - name: Enable-All-Printers
       href: EnableAllPrinters.md
     - name: Fetch-Document
       href: FetchDocument.md
+    - name: Fetch-Job
+      href: FetchJob.md
     - name: Get-Document-Attributes
       href: GetDocumentAttributes.md
     - name: Get-Documents
@@ -132,6 +138,12 @@
       href: StartupOnePrinter.md
     - name: Update-Active-Jobs
       href: UpdateActiveJobs.md
+    - name: Update-Document-Status
+      href: UpdateDocumentStatus.md
+    - name: Update-Job-Status
+      href: UpdateJobStatus.md
+    - name: Update-Output-Device-Attributes
+      href: UpdateOutputDeviceAttributes.md
     - name: Validate-Document
       href: ValidateDocument.md
     - name: Validate-Job

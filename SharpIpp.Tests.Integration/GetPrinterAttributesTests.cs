@@ -180,6 +180,17 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                         PrinterRequestedClientType = new[] { ClientType.OperatingSystem },
                         PdfVersionsSupported = new[] { PdfVersion.Adobe17 },
                         PrinterServiceType = new[] { (PrinterServiceType)"office-print" },
+                        PlatformShape = "rectangular",
+                        PrintBaseDefault = "raft",
+                        PrintSupportsSupported = new[] { "none", "standard" },
+                        PrinterVolumeSupported = new PrinterVolumeSupported
+                        {
+                            XDimension = 20000,
+                            YDimension = 20000,
+                            ZDimension = 18000
+                        },
+                        ChamberHumidityCurrent = 35,
+                        ChamberTemperatureCurrent = 26,
                         PrinterCameraImageUri = new[] { "http://camera.example.com/image" },
                         PrinterResourceIds = new[] { 42 },
                         FinishingTemplateSupported = new[] { FinishingTemplate.None },

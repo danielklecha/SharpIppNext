@@ -369,6 +369,48 @@ public class SharpIppClientTests
                 new[] { new IppAttribute(Tag.Uri, JobAttribute.DocumentUri, "http://test.com/document.pdf"), new IppAttribute(Tag.Integer, JobAttribute.JobId, 456), new IppAttribute(Tag.Boolean, JobAttribute.LastDocument, false) },
                 "SendUri"
             ];
+            yield return [
+                IppOperation.AcknowledgeIdentifyPrinter,
+                new AcknowledgeIdentifyPrinterRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174001") } },
+                new Func<SharpIppClient, object, Task>(async (c, r) => await c.AcknowledgeIdentifyPrinterAsync((AcknowledgeIdentifyPrinterRequest)r)),
+                new[] { new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174001") },
+                "AcknowledgeIdentifyPrinter"
+            ];
+            yield return [
+                IppOperation.DeregisterOutputDevice,
+                new DeregisterOutputDeviceRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174002") } },
+                new Func<SharpIppClient, object, Task>(async (c, r) => await c.DeregisterOutputDeviceAsync((DeregisterOutputDeviceRequest)r)),
+                new[] { new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174002") },
+                "DeregisterOutputDevice"
+            ];
+            yield return [
+                IppOperation.FetchJob,
+                new FetchJobRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", JobId = 456, OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174003") } },
+                new Func<SharpIppClient, object, Task>(async (c, r) => await c.FetchJobAsync((FetchJobRequest)r)),
+                new[] { new IppAttribute(Tag.Integer, JobAttribute.JobId, 456), new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174003") },
+                "FetchJob"
+            ];
+            yield return [
+                IppOperation.UpdateDocumentStatus,
+                new UpdateDocumentStatusRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", JobId = 456, DocumentNumber = 1, OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174004") } },
+                new Func<SharpIppClient, object, Task>(async (c, r) => await c.UpdateDocumentStatusAsync((UpdateDocumentStatusRequest)r)),
+                new[] { new IppAttribute(Tag.Integer, JobAttribute.JobId, 456), new IppAttribute(Tag.Integer, DocumentAttribute.DocumentNumber, 1), new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174004") },
+                "UpdateDocumentStatus"
+            ];
+            yield return [
+                IppOperation.UpdateJobStatus,
+                new UpdateJobStatusRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", JobId = 456, OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174005") } },
+                new Func<SharpIppClient, object, Task>(async (c, r) => await c.UpdateJobStatusAsync((UpdateJobStatusRequest)r)),
+                new[] { new IppAttribute(Tag.Integer, JobAttribute.JobId, 456), new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174005") },
+                "UpdateJobStatus"
+            ];
+            yield return [
+                IppOperation.UpdateOutputDeviceAttributes,
+                new UpdateOutputDeviceAttributesRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174006") } },
+                new Func<SharpIppClient, object, Task>(async (c, r) => await c.UpdateOutputDeviceAttributesAsync((UpdateOutputDeviceAttributesRequest)r)),
+                new[] { new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174006") },
+                "UpdateOutputDeviceAttributes"
+            ];
         }
     }
 

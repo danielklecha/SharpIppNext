@@ -106,6 +106,18 @@ public class PrinterDescriptionAttributesProfileTests
             {
                 PrinterAttribute.PrinterCameraImageUri,
                 [new IppAttribute(Tag.Uri, PrinterAttribute.PrinterCameraImageUri, "https://printer.example/camera")]
+            },
+            {
+                PrinterAttribute.PlatformShape,
+                [new IppAttribute(Tag.Keyword, PrinterAttribute.PlatformShape, "rectangular")]
+            },
+            {
+                PrinterAttribute.PrintBaseDefault,
+                [new IppAttribute(Tag.Keyword, PrinterAttribute.PrintBaseDefault, "raft")]
+            },
+            {
+                PrinterAttribute.PrintSupportsSupported,
+                [new IppAttribute(Tag.Keyword, PrinterAttribute.PrintSupportsSupported, "none"), new IppAttribute(Tag.Keyword, PrinterAttribute.PrintSupportsSupported, "standard")]
             }
         };
 
@@ -113,6 +125,9 @@ public class PrinterDescriptionAttributesProfileTests
 
         dst.AccuracyUnitsSupported.Should().BeEquivalentTo("mm", "um");
         dst.PrinterCameraImageUri.Should().BeEquivalentTo("https://printer.example/camera");
+        dst.PlatformShape.Should().Be("rectangular");
+        dst.PrintBaseDefault.Should().Be("raft");
+        dst.PrintSupportsSupported.Should().BeEquivalentTo("none", "standard");
     }
 
     [TestMethod]
@@ -188,6 +203,15 @@ public class PrinterDescriptionAttributesProfileTests
         var src = new PrinterDescriptionAttributes
         {
             AccuracyUnitsSupported = ["mm", "um"],
+            PlatformShape = "rectangular",
+            PrintBaseDefault = "raft",
+            PrintSupportsSupported = ["none", "standard"],
+            PrinterVolumeSupported = new PrinterVolumeSupported
+            {
+                XDimension = 20000,
+                YDimension = 20000,
+                ZDimension = 18000
+            },
             PrinterCameraImageUri = ["https://printer.example/camera"]
         };
 
@@ -200,6 +224,24 @@ public class PrinterDescriptionAttributesProfileTests
         dst.Should().ContainKey(PrinterAttribute.PrinterCameraImageUri);
         dst[PrinterAttribute.PrinterCameraImageUri].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Uri);
         dst[PrinterAttribute.PrinterCameraImageUri].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["https://printer.example/camera"]);
+
+        dst.Should().ContainKey(PrinterAttribute.PlatformShape);
+        dst[PrinterAttribute.PlatformShape].Single().Tag.Should().Be(Tag.Keyword);
+        dst[PrinterAttribute.PlatformShape].Single().Value.Should().Be("rectangular");
+
+        dst.Should().ContainKey(PrinterAttribute.PrintBaseDefault);
+        dst[PrinterAttribute.PrintBaseDefault].Single().Tag.Should().Be(Tag.Keyword);
+        dst[PrinterAttribute.PrintBaseDefault].Single().Value.Should().Be("raft");
+
+        dst.Should().ContainKey(PrinterAttribute.PrintSupportsSupported);
+        dst[PrinterAttribute.PrintSupportsSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["none", "standard"]);
+
+        dst.Should().ContainKey(PrinterAttribute.PrinterVolumeSupported);
+        dst[PrinterAttribute.PrinterVolumeSupported].Any(x => x.Tag == Tag.BegCollection).Should().BeTrue();
+        dst[PrinterAttribute.PrinterVolumeSupported].Any(x => x.Tag == Tag.MemberAttrName && Equals(x.Value, "x-dimension")).Should().BeTrue();
+        dst[PrinterAttribute.PrinterVolumeSupported].Any(x => x.Tag == Tag.MemberAttrName && Equals(x.Value, "y-dimension")).Should().BeTrue();
+        dst[PrinterAttribute.PrinterVolumeSupported].Any(x => x.Tag == Tag.MemberAttrName && Equals(x.Value, "z-dimension")).Should().BeTrue();
+        dst[PrinterAttribute.PrinterVolumeSupported].Count(x => x.Tag == Tag.Integer).Should().Be(3);
     }
 
     [TestMethod]

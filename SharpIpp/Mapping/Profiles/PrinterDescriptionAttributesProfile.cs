@@ -203,7 +203,60 @@ internal class PrinterDescriptionAttributesProfile : IProfile
                 PrintContentOptimizeSupported = map.MapFromDicSetNullable<PrintContentOptimize[]?>(src, PrinterAttribute.PrintContentOptimizeSupported),
                 OutputDeviceSupported = map.MapFromDicSetNullable<OutputDevice[]?>(src, PrinterAttribute.OutputDeviceSupported),
                 OutputDeviceUuidSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.OutputDeviceUuidSupported),
+                DocumentAccessSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.DocumentAccessSupported),
+                FetchDocumentAttributesSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.FetchDocumentAttributesSupported),
+                PrinterModeConfigured = map.MapFromDicNullable<string?>(src, PrinterAttribute.PrinterModeConfigured),
+                PrinterModeSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrinterModeSupported),
+                PrinterStaticResourceDirectoryUri = map.MapFromDicNullable<Uri?>(src, PrinterAttribute.PrinterStaticResourceDirectoryUri),
+                PrinterStaticResourceKOctetsSupported = map.MapFromDicNullable<int?>(src, PrinterAttribute.PrinterStaticResourceKOctetsSupported),
+                PrinterStaticResourceKOctetsFree = map.MapFromDicNullable<int?>(src, PrinterAttribute.PrinterStaticResourceKOctetsFree),
                 AccuracyUnitsSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.AccuracyUnitsSupported),
+                ChamberHumidityDefault = map.MapFromDicNullable<int?>(src, PrinterAttribute.ChamberHumidityDefault),
+                ChamberHumiditySupported = map.MapFromDicNullable<bool?>(src, PrinterAttribute.ChamberHumiditySupported),
+                ChamberTemperatureDefault = map.MapFromDicNullable<int?>(src, PrinterAttribute.ChamberTemperatureDefault),
+                ChamberTemperatureSupported = map.MapFromDicSetNullable<Protocol.Models.Range[]?>(src, PrinterAttribute.ChamberTemperatureSupported),
+                MaterialAmountUnitsSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.MaterialAmountUnitsSupported),
+                MaterialDiameterSupported = map.MapFromDicSetNullable<Protocol.Models.Range[]?>(src, PrinterAttribute.MaterialDiameterSupported),
+                MaterialNozzleDiameterSupported = map.MapFromDicSetNullable<Protocol.Models.Range[]?>(src, PrinterAttribute.MaterialNozzleDiameterSupported),
+                MaterialPurposeSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.MaterialPurposeSupported),
+                MaterialRateSupported = map.MapFromDicSetNullable<Protocol.Models.Range[]?>(src, PrinterAttribute.MaterialRateSupported),
+                MaterialRateUnitsSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.MaterialRateUnitsSupported),
+                MaterialShellThicknessSupported = map.MapFromDicSetNullable<Protocol.Models.Range[]?>(src, PrinterAttribute.MaterialShellThicknessSupported),
+                MaterialTemperatureSupported = map.MapFromDicSetNullable<Protocol.Models.Range[]?>(src, PrinterAttribute.MaterialTemperatureSupported),
+                MaterialTypeSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.MaterialTypeSupported),
+                MaterialsColDatabase = src.ContainsKey(PrinterAttribute.MaterialsColDatabase)
+                    ? src[PrinterAttribute.MaterialsColDatabase].GroupBegCollection().Select(x => map.Map<Material>(x.FromBegCollection().ToIppDictionary())).ToArray()
+                    : null,
+                MaterialsColDefault = src.ContainsKey(PrinterAttribute.MaterialsColDefault)
+                    ? src[PrinterAttribute.MaterialsColDefault].GroupBegCollection().Select(x => map.Map<Material>(x.FromBegCollection().ToIppDictionary())).ToArray()
+                    : null,
+                MaterialsColReady = src.ContainsKey(PrinterAttribute.MaterialsColReady)
+                    ? src[PrinterAttribute.MaterialsColReady].GroupBegCollection().Select(x => map.Map<Material>(x.FromBegCollection().ToIppDictionary())).ToArray()
+                    : null,
+                MaterialsColSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.MaterialsColSupported),
+                MaxMaterialsColSupported = map.MapFromDicNullable<int?>(src, PrinterAttribute.MaxMaterialsColSupported),
+                MultipleObjectHandlingDefault = map.MapFromDicNullable<string?>(src, PrinterAttribute.MultipleObjectHandlingDefault),
+                MultipleObjectHandlingSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.MultipleObjectHandlingSupported),
+                PdfFeaturesSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PdfFeaturesSupported),
+                PlatformShape = map.MapFromDicNullable<string?>(src, PrinterAttribute.PlatformShape),
+                PlatformTemperatureDefault = map.MapFromDicNullable<int?>(src, PrinterAttribute.PlatformTemperatureDefault),
+                PlatformTemperatureSupported = map.MapFromDicSetNullable<Protocol.Models.Range[]?>(src, PrinterAttribute.PlatformTemperatureSupported),
+                PrintAccuracyDefault = src.ContainsKey(PrinterAttribute.PrintAccuracyDefault)
+                    ? map.Map<PrintAccuracy>(src[PrinterAttribute.PrintAccuracyDefault].FromBegCollection().ToIppDictionary())
+                    : null,
+                PrintAccuracySupported = src.ContainsKey(PrinterAttribute.PrintAccuracySupported)
+                    ? map.Map<PrintAccuracy>(src[PrinterAttribute.PrintAccuracySupported].FromBegCollection().ToIppDictionary())
+                    : null,
+                PrintBaseDefault = map.MapFromDicNullable<string?>(src, PrinterAttribute.PrintBaseDefault),
+                PrintBaseSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrintBaseSupported),
+                PrintObjectsSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrintObjectsSupported),
+                PrintSupportsDefault = map.MapFromDicNullable<string?>(src, PrinterAttribute.PrintSupportsDefault),
+                PrintSupportsSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrintSupportsSupported),
+                PrinterVolumeSupported = src.ContainsKey(PrinterAttribute.PrinterVolumeSupported)
+                    ? map.Map<PrinterVolumeSupported>(src[PrinterAttribute.PrinterVolumeSupported].FromBegCollection().ToIppDictionary())
+                    : null,
+                ChamberHumidityCurrent = map.MapFromDicNullable<int?>(src, PrinterAttribute.ChamberHumidityCurrent),
+                ChamberTemperatureCurrent = map.MapFromDicNullable<int?>(src, PrinterAttribute.ChamberTemperatureCurrent),
                 PrinterCameraImageUri = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrinterCameraImageUri),
                 PrinterResourceIds = map.MapFromDicSetNullable<int[]?>(src, PrinterAttribute.PrinterResourceIds),
                 JobCreationAttributesSupported = map.MapFromDicSetNullable<JobCreationAttribute[]?>(src, PrinterAttribute.JobCreationAttributesSupported),
@@ -691,8 +744,90 @@ internal class PrinterDescriptionAttributesProfile : IProfile
                 dic.Add(PrinterAttribute.OutputDeviceSupported, src.OutputDeviceSupported.Select(x => new IppAttribute(Tag.NameWithoutLanguage, PrinterAttribute.OutputDeviceSupported, x)).ToArray());
             if (src.OutputDeviceUuidSupported != null)
                 dic.Add(PrinterAttribute.OutputDeviceUuidSupported, src.OutputDeviceUuidSupported.Select(x => new IppAttribute(Tag.Uri, PrinterAttribute.OutputDeviceUuidSupported, x)).ToArray());
+            if (src.DocumentAccessSupported != null)
+                dic.Add(PrinterAttribute.DocumentAccessSupported, src.DocumentAccessSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.DocumentAccessSupported, x)).ToArray());
+            if (src.FetchDocumentAttributesSupported != null)
+                dic.Add(PrinterAttribute.FetchDocumentAttributesSupported, src.FetchDocumentAttributesSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.FetchDocumentAttributesSupported, x)).ToArray());
+            if (src.PrinterModeConfigured != null)
+                dic.Add(PrinterAttribute.PrinterModeConfigured, [new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterModeConfigured, src.PrinterModeConfigured)]);
+            if (src.PrinterModeSupported != null)
+                dic.Add(PrinterAttribute.PrinterModeSupported, src.PrinterModeSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterModeSupported, x)).ToArray());
+            if (src.PrinterStaticResourceDirectoryUri != null)
+                dic.Add(PrinterAttribute.PrinterStaticResourceDirectoryUri, [new IppAttribute(Tag.Uri, PrinterAttribute.PrinterStaticResourceDirectoryUri, src.PrinterStaticResourceDirectoryUri.ToString())]);
+            if (src.PrinterStaticResourceKOctetsSupported != null)
+                dic.Add(PrinterAttribute.PrinterStaticResourceKOctetsSupported, [new IppAttribute(Tag.Integer, PrinterAttribute.PrinterStaticResourceKOctetsSupported, src.PrinterStaticResourceKOctetsSupported.Value)]);
+            if (src.PrinterStaticResourceKOctetsFree != null)
+                dic.Add(PrinterAttribute.PrinterStaticResourceKOctetsFree, [new IppAttribute(Tag.Integer, PrinterAttribute.PrinterStaticResourceKOctetsFree, src.PrinterStaticResourceKOctetsFree.Value)]);
             if (src.AccuracyUnitsSupported != null)
                 dic.Add(PrinterAttribute.AccuracyUnitsSupported, src.AccuracyUnitsSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.AccuracyUnitsSupported, x)).ToArray());
+            if (src.ChamberHumidityDefault != null)
+                dic.Add(PrinterAttribute.ChamberHumidityDefault, [new IppAttribute(Tag.Integer, PrinterAttribute.ChamberHumidityDefault, src.ChamberHumidityDefault.Value)]);
+            if (src.ChamberHumiditySupported != null)
+                dic.Add(PrinterAttribute.ChamberHumiditySupported, [new IppAttribute(Tag.Boolean, PrinterAttribute.ChamberHumiditySupported, src.ChamberHumiditySupported.Value)]);
+            if (src.ChamberTemperatureDefault != null)
+                dic.Add(PrinterAttribute.ChamberTemperatureDefault, [new IppAttribute(Tag.Integer, PrinterAttribute.ChamberTemperatureDefault, src.ChamberTemperatureDefault.Value)]);
+            if (src.ChamberTemperatureSupported != null)
+                dic.Add(PrinterAttribute.ChamberTemperatureSupported, src.ChamberTemperatureSupported.Select(x => new IppAttribute(Tag.RangeOfInteger, PrinterAttribute.ChamberTemperatureSupported, x)).ToArray());
+            if (src.MaterialAmountUnitsSupported != null)
+                dic.Add(PrinterAttribute.MaterialAmountUnitsSupported, src.MaterialAmountUnitsSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.MaterialAmountUnitsSupported, x)).ToArray());
+            if (src.MaterialDiameterSupported != null)
+                dic.Add(PrinterAttribute.MaterialDiameterSupported, src.MaterialDiameterSupported.Select(x => new IppAttribute(Tag.RangeOfInteger, PrinterAttribute.MaterialDiameterSupported, x)).ToArray());
+            if (src.MaterialNozzleDiameterSupported != null)
+                dic.Add(PrinterAttribute.MaterialNozzleDiameterSupported, src.MaterialNozzleDiameterSupported.Select(x => new IppAttribute(Tag.RangeOfInteger, PrinterAttribute.MaterialNozzleDiameterSupported, x)).ToArray());
+            if (src.MaterialPurposeSupported != null)
+                dic.Add(PrinterAttribute.MaterialPurposeSupported, src.MaterialPurposeSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.MaterialPurposeSupported, x)).ToArray());
+            if (src.MaterialRateSupported != null)
+                dic.Add(PrinterAttribute.MaterialRateSupported, src.MaterialRateSupported.Select(x => new IppAttribute(Tag.RangeOfInteger, PrinterAttribute.MaterialRateSupported, x)).ToArray());
+            if (src.MaterialRateUnitsSupported != null)
+                dic.Add(PrinterAttribute.MaterialRateUnitsSupported, src.MaterialRateUnitsSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.MaterialRateUnitsSupported, x)).ToArray());
+            if (src.MaterialShellThicknessSupported != null)
+                dic.Add(PrinterAttribute.MaterialShellThicknessSupported, src.MaterialShellThicknessSupported.Select(x => new IppAttribute(Tag.RangeOfInteger, PrinterAttribute.MaterialShellThicknessSupported, x)).ToArray());
+            if (src.MaterialTemperatureSupported != null)
+                dic.Add(PrinterAttribute.MaterialTemperatureSupported, src.MaterialTemperatureSupported.Select(x => new IppAttribute(Tag.RangeOfInteger, PrinterAttribute.MaterialTemperatureSupported, x)).ToArray());
+            if (src.MaterialTypeSupported != null)
+                dic.Add(PrinterAttribute.MaterialTypeSupported, src.MaterialTypeSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.MaterialTypeSupported, x)).ToArray());
+            if (src.MaterialsColDatabase != null)
+                dic.Add(PrinterAttribute.MaterialsColDatabase, src.MaterialsColDatabase.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(PrinterAttribute.MaterialsColDatabase)).ToArray());
+            if (src.MaterialsColDefault != null)
+                dic.Add(PrinterAttribute.MaterialsColDefault, src.MaterialsColDefault.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(PrinterAttribute.MaterialsColDefault)).ToArray());
+            if (src.MaterialsColReady != null)
+                dic.Add(PrinterAttribute.MaterialsColReady, src.MaterialsColReady.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(PrinterAttribute.MaterialsColReady)).ToArray());
+            if (src.MaterialsColSupported != null)
+                dic.Add(PrinterAttribute.MaterialsColSupported, src.MaterialsColSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.MaterialsColSupported, x)).ToArray());
+            if (src.MaxMaterialsColSupported != null)
+                dic.Add(PrinterAttribute.MaxMaterialsColSupported, [new IppAttribute(Tag.Integer, PrinterAttribute.MaxMaterialsColSupported, src.MaxMaterialsColSupported.Value)]);
+            if (src.MultipleObjectHandlingDefault != null)
+                dic.Add(PrinterAttribute.MultipleObjectHandlingDefault, [new IppAttribute(Tag.Keyword, PrinterAttribute.MultipleObjectHandlingDefault, src.MultipleObjectHandlingDefault)]);
+            if (src.MultipleObjectHandlingSupported != null)
+                dic.Add(PrinterAttribute.MultipleObjectHandlingSupported, src.MultipleObjectHandlingSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.MultipleObjectHandlingSupported, x)).ToArray());
+            if (src.PdfFeaturesSupported != null)
+                dic.Add(PrinterAttribute.PdfFeaturesSupported, src.PdfFeaturesSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PdfFeaturesSupported, x)).ToArray());
+            if (src.PlatformShape != null)
+                dic.Add(PrinterAttribute.PlatformShape, [new IppAttribute(Tag.Keyword, PrinterAttribute.PlatformShape, src.PlatformShape)]);
+            if (src.PlatformTemperatureDefault != null)
+                dic.Add(PrinterAttribute.PlatformTemperatureDefault, [new IppAttribute(Tag.Integer, PrinterAttribute.PlatformTemperatureDefault, src.PlatformTemperatureDefault.Value)]);
+            if (src.PlatformTemperatureSupported != null)
+                dic.Add(PrinterAttribute.PlatformTemperatureSupported, src.PlatformTemperatureSupported.Select(x => new IppAttribute(Tag.RangeOfInteger, PrinterAttribute.PlatformTemperatureSupported, x)).ToArray());
+            if (src.PrintAccuracyDefault != null)
+                dic.Add(PrinterAttribute.PrintAccuracyDefault, map.Map<IEnumerable<IppAttribute>>(src.PrintAccuracyDefault).ToBegCollection(PrinterAttribute.PrintAccuracyDefault).ToArray());
+            if (src.PrintAccuracySupported != null)
+                dic.Add(PrinterAttribute.PrintAccuracySupported, map.Map<IEnumerable<IppAttribute>>(src.PrintAccuracySupported).ToBegCollection(PrinterAttribute.PrintAccuracySupported).ToArray());
+            if (src.PrintBaseDefault != null)
+                dic.Add(PrinterAttribute.PrintBaseDefault, [new IppAttribute(Tag.Keyword, PrinterAttribute.PrintBaseDefault, src.PrintBaseDefault)]);
+            if (src.PrintBaseSupported != null)
+                dic.Add(PrinterAttribute.PrintBaseSupported, src.PrintBaseSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PrintBaseSupported, x)).ToArray());
+            if (src.PrintObjectsSupported != null)
+                dic.Add(PrinterAttribute.PrintObjectsSupported, src.PrintObjectsSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PrintObjectsSupported, x)).ToArray());
+            if (src.PrintSupportsDefault != null)
+                dic.Add(PrinterAttribute.PrintSupportsDefault, [new IppAttribute(Tag.Keyword, PrinterAttribute.PrintSupportsDefault, src.PrintSupportsDefault)]);
+            if (src.PrintSupportsSupported != null)
+                dic.Add(PrinterAttribute.PrintSupportsSupported, src.PrintSupportsSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PrintSupportsSupported, x)).ToArray());
+            if (src.PrinterVolumeSupported != null)
+                dic.Add(PrinterAttribute.PrinterVolumeSupported, map.Map<IEnumerable<IppAttribute>>(src.PrinterVolumeSupported).ToBegCollection(PrinterAttribute.PrinterVolumeSupported).ToArray());
+            if (src.ChamberHumidityCurrent != null)
+                dic.Add(PrinterAttribute.ChamberHumidityCurrent, [new IppAttribute(Tag.Integer, PrinterAttribute.ChamberHumidityCurrent, src.ChamberHumidityCurrent.Value)]);
+            if (src.ChamberTemperatureCurrent != null)
+                dic.Add(PrinterAttribute.ChamberTemperatureCurrent, [new IppAttribute(Tag.Integer, PrinterAttribute.ChamberTemperatureCurrent, src.ChamberTemperatureCurrent.Value)]);
             if (src.PrinterCameraImageUri != null)
                 dic.Add(PrinterAttribute.PrinterCameraImageUri, src.PrinterCameraImageUri.Select(x => new IppAttribute(Tag.Uri, PrinterAttribute.PrinterCameraImageUri, x)).ToArray());
             if (src.PrinterResourceIds != null)

@@ -360,16 +360,34 @@ public interface ISharpIppClient : IDisposable
     Task<AcknowledgeDocumentResponse> AcknowledgeDocumentAsync(AcknowledgeDocumentRequest request, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Acknowledge-Identify-Printer Operation.
+    /// See: PWG 5100.18-2025 Section 5.2
+    /// </summary>
+    Task<AcknowledgeIdentifyPrinterResponse> AcknowledgeIdentifyPrinterAsync(AcknowledgeIdentifyPrinterRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Acknowledge-Job Operation.
     /// See: PWG 5100.18-2025 Section 5.3
     /// </summary>
     Task<AcknowledgeJobResponse> AcknowledgeJobAsync(AcknowledgeJobRequest request, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Deregister-Output-Device Operation.
+    /// See: PWG 5100.18-2025 Section 5.4
+    /// </summary>
+    Task<DeregisterOutputDeviceResponse> DeregisterOutputDeviceAsync(DeregisterOutputDeviceRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Fetch-Document Operation.
     /// See: PWG 5100.18-2025 Section 5.5
     /// </summary>
     Task<FetchDocumentResponse> FetchDocumentAsync(FetchDocumentRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Fetch-Job Operation.
+    /// See: PWG 5100.18-2025 Section 5.6
+    /// </summary>
+    Task<FetchJobResponse> FetchJobAsync(FetchJobRequest request, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Get-Output-Device-Attributes Operation.
@@ -382,6 +400,24 @@ public interface ISharpIppClient : IDisposable
     /// See: PWG 5100.18-2025 Section 5.7
     /// </summary>
     Task<UpdateActiveJobsResponse> UpdateActiveJobsAsync(UpdateActiveJobsRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Update-Document-Status Operation.
+    /// See: PWG 5100.18-2025 Section 5.8
+    /// </summary>
+    Task<UpdateDocumentStatusResponse> UpdateDocumentStatusAsync(UpdateDocumentStatusRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Update-Job-Status Operation.
+    /// See: PWG 5100.18-2025 Section 5.9
+    /// </summary>
+    Task<UpdateJobStatusResponse> UpdateJobStatusAsync(UpdateJobStatusRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Update-Output-Device-Attributes Operation.
+    /// See: PWG 5100.18-2025 Section 5.10
+    /// </summary>
+    Task<UpdateOutputDeviceAttributesResponse> UpdateOutputDeviceAttributesAsync(UpdateOutputDeviceAttributesRequest request, CancellationToken cancellationToken = default);
 
     #endregion
 

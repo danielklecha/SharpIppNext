@@ -1708,6 +1708,34 @@ public class IppRequestMessageExtensionsTests
         validator.UseIppAttributeFidelityForCapabilityValidation.Should().BeFalse();
     }
 
+    [TestMethod]
+    public void ValidateOperationRules_FetchJobMissingOutputDeviceUuid_ShouldThrowException()
+    {
+        var message = CreateMessage(IppOperation.FetchJob);
+        message.OperationAttributes.Add(new IppAttribute(Tag.Integer, JobAttribute.JobId, 123));
+
+        Action act = () => ValidateOperationOnly(message);
+
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("missing output-device-uuid")
+            .Which.RequestMessage.Should().Be(message);
+    }
+
+    [TestMethod]
+    public void ValidateOperationRules_AcknowledgeJobWithSuccessfulFetchStatusCode_ShouldThrowException()
+    {
+        var message = CreateMessage(IppOperation.AcknowledgeJob);
+        message.OperationAttributes.Add(new IppAttribute(Tag.Integer, JobAttribute.JobId, 123));
+        message.OperationAttributes.Add(new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174001"));
+        message.OperationAttributes.Add(new IppAttribute(Tag.Enum, JobAttribute.FetchStatusCode, 0));
+
+        Action act = () => ValidateOperationOnly(message);
+
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("fetch-status-code MUST NOT be successful-ok")
+            .Which.RequestMessage.Should().Be(message);
+    }
+
     private static IppRequestMessage CreateMessage(
         IppOperation operation = IppOperation.CreateJob,
         bool includePrinterUri = true,

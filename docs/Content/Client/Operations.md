@@ -10,9 +10,12 @@ For the PWG 5100.8 "-actual" attributes extension (including the `job-actual` re
 
 For the PWG 5100.9 printer state extension attributes (`printer-alert`, `printer-alert-description`, and extended `printer-state-reasons` keyword values), use the strongly typed properties on `PrinterDescriptionAttributes` and `PrinterStateReason`.
 
+For the PWG 5100.21 IPP 3D attribute extensions (for example `materials-col`, `materials-col-actual`, `print-accuracy`, `print-accuracy-actual`, `printer-volume-supported`, and chamber/platform state attributes), use the strongly typed properties on `JobTemplateAttributes`, `JobDescriptionAttributes`, and `PrinterDescriptionAttributes`.
+
 | Operation | Method | Example |
 | --- | --- | --- |
 | Acknowledge-Document | `AcknowledgeDocumentAsync` | [AcknowledgeDocument.md](AcknowledgeDocument.md) |
+| Acknowledge-Identify-Printer | `AcknowledgeIdentifyPrinterAsync` | [AcknowledgeIdentifyPrinter.md](AcknowledgeIdentifyPrinter.md) |
 | Acknowledge-Job | `AcknowledgeJobAsync` | [AcknowledgeJob.md](AcknowledgeJob.md) |
 | Add-Document-Images | `AddDocumentImagesAsync` | [AddDocumentImages.md](AddDocumentImages.md) |
 | Allocate-Printer-Resources | `AllocatePrinterResourcesAsync` | [AllocatePrinterResources.md](AllocatePrinterResources.md) |
@@ -32,8 +35,10 @@ For the PWG 5100.9 printer state extension attributes (`printer-alert`, `printer
 | Deallocate-Printer-Resources | `DeallocatePrinterResourcesAsync` | [DeallocatePrinterResources.md](DeallocatePrinterResources.md) |
 | Delete-Printer | `DeletePrinterAsync` | [DeletePrinter.md](DeletePrinter.md) |
 | Disable-All-Printers | `DisableAllPrintersAsync` | [DisableAllPrinters.md](DisableAllPrinters.md) |
+| Deregister-Output-Device | `DeregisterOutputDeviceAsync` | [DeregisterOutputDevice.md](DeregisterOutputDevice.md) |
 | Enable-All-Printers | `EnableAllPrintersAsync` | [EnableAllPrinters.md](EnableAllPrinters.md) |
 | Fetch-Document | `FetchDocumentAsync` | [FetchDocument.md](FetchDocument.md) |
+| Fetch-Job | `FetchJobAsync` | [FetchJob.md](FetchJob.md) |
 | Get-Document-Attributes | `GetDocumentAttributesAsync` | [GetDocumentAttributes.md](GetDocumentAttributes.md) |
 | Get-Documents | `GetDocumentsAsync` | [GetDocuments.md](GetDocuments.md) |
 | Get-Job-Attributes | `GetJobAttributesAsync` | [GetJobAttributes.md](GetJobAttributes.md) |
@@ -82,6 +87,9 @@ For the PWG 5100.9 printer state extension attributes (`printer-alert`, `printer
 | Startup-All-Printers | `StartupAllPrintersAsync` | [StartupAllPrinters.md](StartupAllPrinters.md) |
 | Startup-One-Printer | `StartupOnePrinterAsync` | [StartupOnePrinter.md](StartupOnePrinter.md) |
 | Update-Active-Jobs | `UpdateActiveJobsAsync` | [UpdateActiveJobs.md](UpdateActiveJobs.md) |
+| Update-Document-Status | `UpdateDocumentStatusAsync` | [UpdateDocumentStatus.md](UpdateDocumentStatus.md) |
+| Update-Job-Status | `UpdateJobStatusAsync` | [UpdateJobStatus.md](UpdateJobStatus.md) |
+| Update-Output-Device-Attributes | `UpdateOutputDeviceAttributesAsync` | [UpdateOutputDeviceAttributes.md](UpdateOutputDeviceAttributes.md) |
 | Validate-Document | `ValidateDocumentAsync` | [ValidateDocument.md](ValidateDocument.md) |
 | Validate-Job | `ValidateJobAsync` | [ValidateJob.md](ValidateJob.md) |
 

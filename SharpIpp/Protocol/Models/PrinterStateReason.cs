@@ -18,6 +18,7 @@ public readonly record struct PrinterStateReason(string Value, bool IsValue = tr
     public static readonly PrinterStateReason FuserUnderTemp = new("fuser-under-temp");
     public static readonly PrinterStateReason InputTrayMissing = new("input-tray-missing");
     public static readonly PrinterStateReason InterlockOpen = new("interlock-open");
+    public static readonly PrinterStateReason IdentifyPrinterRequested = new("identify-printer-requested");
     public static readonly PrinterStateReason InterpreterResourceUnavailable = new("interpreter-resource-unavailable");
     public static readonly PrinterStateReason MarkerSupplyEmpty = new("marker-supply-empty");
     public static readonly PrinterStateReason MarkerSupplyLow = new("marker-supply-low");

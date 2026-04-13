@@ -366,6 +366,7 @@ public class IppRequestValidator : IIppRequestValidator
         var hasDocumentNumber = ValidateOperationAttributesGroup && HasNamedAttribute(operationAttributes, DocumentAttribute.DocumentNumber);
         var hasLastDocument = ValidateOperationAttributesGroup && HasNamedAttribute(operationAttributes, JobAttribute.LastDocument);
         var hasDocumentUri = ValidateOperationAttributesGroup && HasNamedAttribute(operationAttributes, JobAttribute.DocumentUri);
+        var hasOutputDeviceUuid = ValidateOperationAttributesGroup && HasNamedAttribute(operationAttributes, JobAttribute.OutputDeviceUuid);
 
         var documentNumber = ReadOperationAttributeAs<int>(operationAttributes, DocumentAttribute.DocumentNumber);
         var lastDocument = ReadOperationAttributeAs<bool>(operationAttributes, JobAttribute.LastDocument);
@@ -412,6 +413,33 @@ public class IppRequestValidator : IIppRequestValidator
                 ValidateRequiredLastDocument(hasLastDocument, lastDocument, request);
                 if (ValidateOperationAttributesGroup && lastDocument == false && !hasDocumentUri)
                     throw new IppRequestException("missing document-uri", request, IppStatusCode.ClientErrorBadRequest);
+                break;
+
+            case IppOperation.AcknowledgeDocument:
+                ValidateRequiredDocumentNumber(hasDocumentNumber, documentNumber, request);
+                ValidateRequiredOutputDeviceUuid(hasOutputDeviceUuid, request);
+                ValidateFetchStatusCodeNotSuccessful(operationAttributes, request);
+                break;
+
+            case IppOperation.AcknowledgeIdentifyPrinter:
+            case IppOperation.DeregisterOutputDevice:
+            case IppOperation.FetchJob:
+            case IppOperation.GetOutputDeviceAttributes:
+            case IppOperation.UpdateActiveJobs:
+            case IppOperation.UpdateJobStatus:
+            case IppOperation.UpdateOutputDeviceAttributes:
+                ValidateRequiredOutputDeviceUuid(hasOutputDeviceUuid, request);
+                break;
+
+            case IppOperation.AcknowledgeJob:
+                ValidateRequiredOutputDeviceUuid(hasOutputDeviceUuid, request);
+                ValidateFetchStatusCodeNotSuccessful(operationAttributes, request);
+                break;
+
+            case IppOperation.FetchDocument:
+            case IppOperation.UpdateDocumentStatus:
+                ValidateRequiredDocumentNumber(hasDocumentNumber, documentNumber, request);
+                ValidateRequiredOutputDeviceUuid(hasOutputDeviceUuid, request);
                 break;
 
             case IppOperation.ValidateJob:
@@ -545,6 +573,35 @@ public class IppRequestValidator : IIppRequestValidator
             throw new IppRequestException("missing last-document", request, IppStatusCode.ClientErrorBadRequest);
         if (lastDocument is null)
             throw new IppRequestException("invalid last-document", request, IppStatusCode.ClientErrorBadRequest);
+    }
+
+    private void ValidateRequiredOutputDeviceUuid(bool hasOutputDeviceUuid, IIppRequestMessage request)
+    {
+        if (!ValidateOperationAttributesGroup)
+            return;
+
+        if (!hasOutputDeviceUuid)
+            throw new IppRequestException("missing output-device-uuid", request, IppStatusCode.ClientErrorBadRequest);
+    }
+
+    private static void ValidateFetchStatusCodeNotSuccessful(IEnumerable<IppAttribute> operationAttributes, IIppRequestMessage request)
+    {
+        var fetchStatusAttributes = operationAttributes
+            .Where(x => x.Name == JobAttribute.FetchStatusCode)
+            .ToArray();
+        if (fetchStatusAttributes.Length == 0)
+            return;
+
+        var fetchStatusAttribute = fetchStatusAttributes[0];
+
+        if (fetchStatusAttribute.Value is IppStatusCode fetchStatusCode && fetchStatusCode == IppStatusCode.SuccessfulOk)
+            throw new IppRequestException("fetch-status-code MUST NOT be successful-ok", request, IppStatusCode.ClientErrorBadRequest);
+
+        if (fetchStatusAttribute.Value is int fetchStatusCodeInt && fetchStatusCodeInt == (int)IppStatusCode.SuccessfulOk)
+            throw new IppRequestException("fetch-status-code MUST NOT be successful-ok", request, IppStatusCode.ClientErrorBadRequest);
+
+        if (fetchStatusAttribute.Value is short fetchStatusCodeShort && fetchStatusCodeShort == (short)IppStatusCode.SuccessfulOk)
+            throw new IppRequestException("fetch-status-code MUST NOT be successful-ok", request, IppStatusCode.ClientErrorBadRequest);
     }
 
     private static bool HasNamedAttribute(IEnumerable<IppAttribute> attributes, string name)

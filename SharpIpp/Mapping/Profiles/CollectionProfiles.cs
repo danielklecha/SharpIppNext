@@ -1105,6 +1105,31 @@ internal class CollectionProfiles : IProfile
             return attributes;
         });
 
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, PrinterVolumeSupported>((src, map) =>
+        {
+            if (IsOutOfBandNoValue(src))
+                return NoValue.GetNoValue<PrinterVolumeSupported>();
+
+            return new PrinterVolumeSupported
+            {
+                XDimension = map.MapFromDicNullable<int?>(src, nameof(PrinterVolumeSupported.XDimension).ConvertCamelCaseToKebabCase()),
+                YDimension = map.MapFromDicNullable<int?>(src, nameof(PrinterVolumeSupported.YDimension).ConvertCamelCaseToKebabCase()),
+                ZDimension = map.MapFromDicNullable<int?>(src, nameof(PrinterVolumeSupported.ZDimension).ConvertCamelCaseToKebabCase())
+            };
+        });
+
+        mapper.CreateMap<PrinterVolumeSupported, IEnumerable<IppAttribute>>((src, map) =>
+        {
+            if (NoValue.IsNoValue(src))
+                return new[] { new IppAttribute(Tag.NoValue, PrinterAttribute.PrinterVolumeSupported, NoValue.Instance) };
+
+            var attributes = new List<IppAttribute>();
+            if (src.XDimension.HasValue) attributes.Add(new IppAttribute(Tag.Integer, nameof(PrinterVolumeSupported.XDimension).ConvertCamelCaseToKebabCase(), src.XDimension.Value));
+            if (src.YDimension.HasValue) attributes.Add(new IppAttribute(Tag.Integer, nameof(PrinterVolumeSupported.YDimension).ConvertCamelCaseToKebabCase(), src.YDimension.Value));
+            if (src.ZDimension.HasValue) attributes.Add(new IppAttribute(Tag.Integer, nameof(PrinterVolumeSupported.ZDimension).ConvertCamelCaseToKebabCase(), src.ZDimension.Value));
+            return attributes;
+        });
+
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, OverrideInstruction>((src, map) =>
         {
             if (IsOutOfBandNoValue(src))

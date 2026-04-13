@@ -57,5 +57,9 @@ namespace SharpIpp.Protocol.Models
         public const string DocumentDescription = "document-description";
         public const string DocumentTemplate = "document-template";
         public const string InputAttributesActual = "input-attributes-actual";
+        public const string DocumentFormatReady = "document-format-ready";
+        public const string OutputDeviceDocumentState = "output-device-document-state";
+        public const string OutputDeviceDocumentStateMessage = "output-device-document-state-message";
+        public const string OutputDeviceDocumentStateReasons = "output-device-document-state-reasons";
     }
 }

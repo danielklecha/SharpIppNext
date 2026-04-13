@@ -734,6 +734,13 @@ namespace SharpIpp.Protocol.Models
         public int? TimeAtProcessingEstimated { get; set; }
 
         /// <summary>
+        /// The document-format-ready attribute reports the fetchable document MIME types.
+        /// See: PWG 5100.18-2025 Section 7.3.1
+        /// </summary>
+        /// <code>document-format-ready</code>
+        public string[]? DocumentFormatReady { get; set; }
+
+        /// <summary>
         /// The output-device-job-state attribute reports the job state on the output device.
         /// See: PWG 5100.18-2025
         /// </summary>
@@ -741,10 +748,87 @@ namespace SharpIpp.Protocol.Models
         public JobState? OutputDeviceJobState { get; set; }
 
         /// <summary>
+        /// The output-device-job-state-message attribute reports the job state message on the output device.
+        /// See: PWG 5100.18-2025 Section 7.3.3
+        /// </summary>
+        /// <code>output-device-job-state-message</code>
+        public string? OutputDeviceJobStateMessage { get; set; }
+
+        /// <summary>
+        /// The output-device-job-state-reasons attribute reports job state reasons on the output device.
+        /// See: PWG 5100.18-2025 Section 7.3.4
+        /// </summary>
+        /// <code>output-device-job-state-reasons</code>
+        public JobStateReason[]? OutputDeviceJobStateReasons { get; set; }
+
+        /// <summary>
+        /// The output-device-uuid-assigned attribute reports the assigned output device UUID.
+        /// See: PWG 5100.18-2025 Section 7.3.5
+        /// </summary>
+        /// <code>output-device-uuid-assigned</code>
+        public Uri? OutputDeviceUuidAssigned { get; set; }
+
+        /// <summary>
         /// The actual materials used to process the 3D job.
         /// See: PWG 5100.21-2019 Section 7.1
         /// </summary>
         /// <code>materials-col-actual</code>
         public Material[]? MaterialsColActual { get; set; }
+
+        /// <summary>
+        /// The actual chamber humidity values used to process the 3D job.
+        /// See: PWG 5100.21-2019 Section 8.2.1
+        /// </summary>
+        /// <code>chamber-humidity-actual</code>
+        public int[]? ChamberHumidityActual { get; set; }
+
+        /// <summary>
+        /// The actual chamber temperature values used to process the 3D job.
+        /// See: PWG 5100.21-2019 Section 8.2.2
+        /// </summary>
+        /// <code>chamber-temperature-actual</code>
+        public int[]? ChamberTemperatureActual { get; set; }
+
+        /// <summary>
+        /// The actual multiple object handling value used to process the 3D job.
+        /// See: PWG 5100.21-2019 Section 8.2.4
+        /// </summary>
+        /// <code>multiple-object-handling-actual</code>
+        public string? MultipleObjectHandlingActual3d { get; set; }
+
+        /// <summary>
+        /// The actual print accuracy used to process the 3D job.
+        /// See: PWG 5100.21-2019 Section 8.2.5
+        /// </summary>
+        /// <code>print-accuracy-actual</code>
+        public PrintAccuracy? PrintAccuracyActual3d { get; set; }
+
+        /// <summary>
+        /// The actual platform temperature values used to process the 3D job.
+        /// See: PWG 5100.21-2019 Section 8.2.6
+        /// </summary>
+        /// <code>platform-temperature-actual</code>
+        public int[]? PlatformTemperatureActual { get; set; }
+
+        /// <summary>
+        /// The actual print base values used to process the 3D job.
+        /// See: PWG 5100.21-2019 Section 8.2.8
+        /// </summary>
+        /// <code>print-base-actual</code>
+        public string[]? PrintBaseActual3d { get; set; }
+
+        /// <summary>
+        /// The actual printed object collections used to process the 3D job.
+        /// See: PWG 5100.21-2019 Section 8.2.9
+        /// </summary>
+        /// <code>print-objects-actual</code>
+        public PrintObject[]? PrintObjectsActual3d { get; set; }
+
+        /// <summary>
+        /// The actual print supports values used to process the 3D job.
+        /// See: PWG 5100.21-2019 Section 8.2.10
+        /// </summary>
+        /// <code>print-supports-actual</code>
+        public string[]? PrintSupportsActual3d { get; set; }
     }
 }
