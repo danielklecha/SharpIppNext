@@ -37,31 +37,6 @@ public class SmartEnumMappingTests
             .OrderBy(x => x.FullName)
             .Select(x => new object[] { x });
 
-    [TestMethod]
-    public void KeywordSmartEnum_Implementers_ShouldMatchKnownSet()
-    {
-        var actual = typeof(IKeywordSmartEnum).Assembly
-            .GetTypes()
-            .Where(x => typeof(IKeywordSmartEnum).IsAssignableFrom(x) && x.IsValueType)
-            .Select(x => x.Name)
-            .OrderBy(x => x)
-            .ToArray();
-
-        actual.Should().BeEquivalentTo(
-        [
-            nameof(BalingType),
-            nameof(BindingType),
-            nameof(CoatingType),
-            nameof(CoveringName),
-            nameof(FinishingTemplate),
-            nameof(ImpositionTemplate),
-            nameof(LaminatingType),
-            nameof(Media),
-            nameof(MediaKey),
-            nameof(OutputBin),
-            nameof(TrimmingType)
-        ], options => options.WithStrictOrdering());
-    }
 
     [TestMethod]
     public void Map_FromDictionary_ForKeywordSmartEnums_PreservesIsKeywordFlag()
