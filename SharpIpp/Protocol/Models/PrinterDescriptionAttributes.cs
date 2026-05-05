@@ -8,7 +8,7 @@ public class PrinterDescriptionAttributes
     /// printer-uri-supported
     /// See: RFC 8011 Section 5.4.1
     /// </summary>
-    public string[]? PrinterUriSupported { get; set; }
+    public Uri[]? PrinterUriSupported { get; set; }
 
     /// <summary>
     /// uri-security-supported

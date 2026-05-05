@@ -36,7 +36,7 @@ namespace SharpIpp.Protocol.Models
         /// </summary>
         /// <example>ipp://10.30.254.250:631/ipp/print</example>
         /// <code>job-printer-uri</code>
-        public string? JobPrinterUri { get; set; }
+        public Uri? JobPrinterUri { get; set; }
 
         /// <summary>
         /// List of resource IDs allocated to this job.
@@ -815,7 +815,7 @@ namespace SharpIpp.Protocol.Models
         /// See: PWG 5100.21-2019 Section 8.2.8
         /// </summary>
         /// <code>print-base-actual</code>
-        public string[]? PrintBaseActual3d { get; set; }
+        public PrintBase[]? PrintBaseActual3d { get; set; }
 
         /// <summary>
         /// The actual printed object collections used to process the 3D job.
@@ -829,6 +829,13 @@ namespace SharpIpp.Protocol.Models
         /// See: PWG 5100.21-2019 Section 8.2.10
         /// </summary>
         /// <code>print-supports-actual</code>
-        public string[]? PrintSupportsActual3d { get; set; }
+        public PrintSupports[]? PrintSupportsActual3d { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the status of destinations.
+        /// See: PWG 5100.15-2014
+        /// </summary>
+        /// <code>destination-statuses</code>
+        public DestinationStatus[]? DestinationStatuses { get; set; }
     }
 }

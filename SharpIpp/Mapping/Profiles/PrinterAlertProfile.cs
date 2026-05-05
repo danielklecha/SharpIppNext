@@ -9,13 +9,7 @@ internal class PrinterAlertProfile : IProfile
 {
     public void CreateMaps(IMapperConstructor mapper)
     {
-        mapper.CreateIppMap<string, PrinterAlert>((src, _) =>
-        {
-            if (PrinterAlert.TryParse(src, out var parsed, PrinterAlertParseOptions.Relaxed))
-                return parsed!;
-
-            return new PrinterAlert { RawValue = src };
-        });
+        mapper.CreateIppMap<string, PrinterAlert>((src, _) => PrinterAlert.Parse(src, PrinterAlertParseOptions.Relaxed));
 
         mapper.CreateIppMap<byte[], PrinterAlert>((src, map) => map.Map<PrinterAlert>(Encoding.UTF8.GetString(src)));
         mapper.CreateIppMap<PrinterAlert, string>((src, _) => PrinterAlert.Serialize(src));

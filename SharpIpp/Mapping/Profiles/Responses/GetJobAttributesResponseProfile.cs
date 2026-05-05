@@ -46,7 +46,7 @@ internal class GetJobAttributesResponseProfile : IProfile
             JobMediaSheetsCompleted = map.MapFromDicNullable<int?>(src, JobAttribute.JobMediaSheetsCompleted),
             JobOriginatingUserName = map.MapFromDicNullable<string?>(src, JobAttribute.JobOriginatingUserName),
             JobPrinterUpTime = map.MapFromDicNullable<int?>(src, JobAttribute.JobPrinterUpTime),
-            JobPrinterUri = map.MapFromDicNullable<string?>(src, JobAttribute.JobPrinterUri),
+            JobPrinterUri = map.MapFromDicNullable<Uri?>(src, JobAttribute.JobPrinterUri),
             JobState = map.MapFromDicNullable<JobState?>(src, JobAttribute.JobState),
             JobStateMessage = map.MapFromDicNullable<string?>(src, JobAttribute.JobStateMessage),
             JobStateReasons = map.MapFromDicSetNullable<JobStateReason[]?>(src, JobAttribute.JobStateReasons),
@@ -150,11 +150,12 @@ internal class GetJobAttributesResponseProfile : IProfile
             ChamberTemperatureActual = map.MapFromDicSetNullable<int[]?>(src, JobAttribute.ChamberTemperatureActual),
             MultipleObjectHandlingActual3d = map.MapFromDicNullable<string?>(src, JobAttribute.MultipleObjectHandlingActual3d),
             PlatformTemperatureActual = map.MapFromDicSetNullable<int[]?>(src, JobAttribute.PlatformTemperatureActual),
-            PrintBaseActual3d = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.PrintBaseActual3d),
-            PrintSupportsActual3d = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.PrintSupportsActual3d),
+            PrintBaseActual3d = map.MapFromDicSetNullable<PrintBase[]?>(src, JobAttribute.PrintBaseActual3d),
+            PrintSupportsActual3d = map.MapFromDicSetNullable<PrintSupports[]?>(src, JobAttribute.PrintSupportsActual3d),
             PrintAccuracyActual3d = null,
             PrintObjectsActual3d = null,
             MaterialsColActual = null,
+            DestinationStatuses = null,
             };
 
             if (src.TryGetValue(JobAttribute.ClientInfo, out var clientInfo))
@@ -196,6 +197,9 @@ internal class GetJobAttributesResponseProfile : IProfile
             if (src.TryGetValue(JobAttribute.SeparatorSheetsActual, out var separatorSheetsActual))
                 dst.SeparatorSheetsActual = separatorSheetsActual.GroupBegCollection().Select(x => map.Map<SeparatorSheets>(x.FromBegCollection().ToIppDictionary())).ToArray();
 
+            if (src.TryGetValue(JobAttribute.DestinationStatuses, out var destinationStatuses))
+                dst.DestinationStatuses = destinationStatuses.GroupBegCollection().Select(x => map.Map<DestinationStatus>(x.FromBegCollection().ToIppDictionary())).ToArray();
+
             return dst;
         });
 
@@ -221,7 +225,7 @@ internal class GetJobAttributesResponseProfile : IProfile
             if (src.JobPrinterUpTime != null)
                 dic.Add(JobAttribute.JobPrinterUpTime, [new IppAttribute(Tag.Integer, JobAttribute.JobPrinterUpTime, src.JobPrinterUpTime.Value)]);
             if (src.JobPrinterUri != null)
-                dic.Add(JobAttribute.JobPrinterUri, [new IppAttribute(Tag.Uri, JobAttribute.JobPrinterUri, src.JobPrinterUri)]);
+                dic.Add(JobAttribute.JobPrinterUri, [new IppAttribute(Tag.Uri, JobAttribute.JobPrinterUri, src.JobPrinterUri.ToString())]);
             if (src.JobState != null)
                 dic.Add(JobAttribute.JobState, [new IppAttribute(Tag.Enum, JobAttribute.JobState, (int)src.JobState.Value)]);
             if (src.JobStateMessage != null)
@@ -417,13 +421,15 @@ internal class GetJobAttributesResponseProfile : IProfile
             if (src.PrintAccuracyActual3d != null)
                 dic.Add(JobAttribute.PrintAccuracyActual3d, map.Map<IEnumerable<IppAttribute>>(src.PrintAccuracyActual3d).ToBegCollection(JobAttribute.PrintAccuracyActual3d).ToArray());
             if (src.PrintBaseActual3d != null)
-                dic.Add(JobAttribute.PrintBaseActual3d, src.PrintBaseActual3d.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.PrintBaseActual3d, x)).ToArray());
+                dic.Add(JobAttribute.PrintBaseActual3d, src.PrintBaseActual3d.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.PrintBaseActual3d, map.Map<string>(x))).ToArray());
             if (src.PrintObjectsActual3d != null)
                 dic.Add(JobAttribute.PrintObjectsActual3d, src.PrintObjectsActual3d.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.PrintObjectsActual3d)).ToArray());
             if (src.PrintSupportsActual3d != null)
-                dic.Add(JobAttribute.PrintSupportsActual3d, src.PrintSupportsActual3d.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.PrintSupportsActual3d, x)).ToArray());
+                dic.Add(JobAttribute.PrintSupportsActual3d, src.PrintSupportsActual3d.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.PrintSupportsActual3d, map.Map<string>(x))).ToArray());
             if (src.MaterialsColActual != null)
                 dic.Add(JobAttribute.MaterialsColActual, src.MaterialsColActual.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.MaterialsColActual)).ToArray());
+            if (src.DestinationStatuses != null)
+                dic.Add(JobAttribute.DestinationStatuses, src.DestinationStatuses.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.DestinationStatuses)).ToArray());
             return dic;
         });
     }

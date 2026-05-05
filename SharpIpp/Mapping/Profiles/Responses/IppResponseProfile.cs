@@ -30,12 +30,10 @@ internal class IppResponseProfile : IProfile
                 var documentAccessError = map.MapFromDicNullable<string?>(operationAttributes, JobAttribute.DocumentAccessError);
                 if (statusMessage != null || detailedStatusMessage != null || documentAccessError != null)
                 {
-                    dst.OperationAttributes = new ResponseOperationAttributes
-                    {
-                        StatusMessage = statusMessage,
-                        DetailedStatusMessage = detailedStatusMessage,
-                        DocumentAccessError = documentAccessError
-                    };
+                    dst.OperationAttributes ??= new ResponseOperationAttributes();
+                    dst.OperationAttributes.StatusMessage = statusMessage;
+                    dst.OperationAttributes.DetailedStatusMessage = detailedStatusMessage;
+                    dst.OperationAttributes.DocumentAccessError = documentAccessError;
                 }
             }
             return dst;

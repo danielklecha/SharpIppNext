@@ -56,11 +56,6 @@ public sealed class PrinterAlert
     /// </summary>
     public IDictionary<string, string>? Extensions { get; set; }
 
-    /// <summary>
-    /// Original raw value. Used as a fallback when parsing fails in relaxed workflows.
-    /// </summary>
-    public string? RawValue { get; set; }
-
     public static bool TryParse(string value, out PrinterAlert? alert, PrinterAlertParseOptions? options = null)
     {
         options ??= PrinterAlertParseOptions.Relaxed;
@@ -72,7 +67,7 @@ public sealed class PrinterAlert
         if (options.RequireVisibleUsAscii && value.Any(ch => !IsVisibleUsAscii(ch)))
             return false;
 
-        var dst = new PrinterAlert { RawValue = value };
+        var dst = new PrinterAlert();
         var extensions = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         var segments = value.Split([';'], StringSplitOptions.RemoveEmptyEntries);
@@ -83,7 +78,7 @@ public sealed class PrinterAlert
                 continue;
 
             var eq = trimmedSegment.IndexOf('=');
-            if (eq <= 0 || eq == trimmedSegment.Length - 1)
+            if (eq < 0)
             {
                 if (options.StrictConformance)
                     return false;
@@ -186,8 +181,6 @@ public sealed class PrinterAlert
 
         if (string.IsNullOrWhiteSpace(alert.Code))
         {
-            if (!string.IsNullOrWhiteSpace(alert.RawValue))
-                return alert.RawValue!;
             throw new FormatException("The 'code' element is required for printer-alert serialization.");
         }
 
@@ -223,7 +216,7 @@ public sealed class PrinterAlert
         return true;
     }
 
-    private static bool IsAsciiLetters(string value)
+    public static bool IsAsciiLetters(string value)
         => value.Length > 0 && value.All(ch => ch is >= 'A' and <= 'Z' or >= 'a' and <= 'z');
 
     private static bool IsVisibleUsAscii(char ch)

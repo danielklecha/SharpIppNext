@@ -62,7 +62,7 @@ public class GetCUPSPrintersTests : SharpIppIntegrationTestBase
                 StatusCode = IppStatusCode.SuccessfulOk,
                 OperationAttributes = new() { StatusMessage = "successful-ok", DetailedStatusMessage = ["detail1"], DocumentAccessError = "none" },
                 PrintersAttributes = [new PrinterDescriptionAttributes {
-                    PrinterUriSupported = ["http://127.0.0.1:631"],
+                    PrinterUriSupported = [new Uri("http://127.0.0.1:631")],
                     UriSecuritySupported = [UriSecurity.None],
                     UriAuthenticationSupported = [UriAuthentication.None],
                     PrinterName = "printer-1",

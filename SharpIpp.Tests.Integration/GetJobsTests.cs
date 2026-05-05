@@ -30,6 +30,8 @@ public class GetJobsTests : SharpIppIntegrationTestBase
                 WhichJobs = WhichJobs.Completed,
                 Limit = 10,
                 JobIds = [1, 2],
+                FirstIndex = 1,
+                MyJobs = true,
             },
         };
         IIppRequest? serverRequest = null;
@@ -55,7 +57,7 @@ public class GetJobsTests : SharpIppIntegrationTestBase
                     {
                         JobId = 1,
                         JobUri = "http://127.0.0.1:631/jobs/1",
-                        JobPrinterUri = "http://127.0.0.1:631",
+                        JobPrinterUri = new Uri("http://127.0.0.1:631"),
                         JobName = "Test Job",
                         JobOriginatingUserName = "test-user",
                         JobKOctetsProcessed = 10,

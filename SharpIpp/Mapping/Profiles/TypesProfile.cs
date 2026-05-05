@@ -40,6 +40,7 @@ internal class TypesProfile : IProfile
         mapper.CreateIppMap<int, PrintQuality>((src, map) => (PrintQuality)src);
         mapper.CreateIppMap<int, ResolutionUnit>((src, map) => (ResolutionUnit)src);
         mapper.CreateIppMap<int, PrinterType>((src, map) => (PrinterType)src);
+        mapper.CreateIppMap<int, TransmissionStatus>((src, map) => (TransmissionStatus)src);
         mapper.CreateIppMap<int, Protocol.Models.Range>((src, map) => new Protocol.Models.Range(src, src));
         mapper.CreateIppMap<string, IppVersion>((src, map) => new IppVersion(src));
         mapper.CreateIppMap<NoValue, int>((src, map) => NoValue.GetNoValue<int>());
@@ -53,6 +54,7 @@ internal class TypesProfile : IProfile
         mapper.CreateIppMap<NoValue, PrintQuality>((src, map) => NoValue.GetNoValue<PrintQuality>());
         mapper.CreateIppMap<NoValue, ResolutionUnit>((src, map) => NoValue.GetNoValue<ResolutionUnit>());
         mapper.CreateIppMap<NoValue, PrinterType>((src, map) => NoValue.GetNoValue<PrinterType>());
+        mapper.CreateIppMap<NoValue, TransmissionStatus>((src, map) => NoValue.GetNoValue<TransmissionStatus>());
         mapper.CreateIppMap<NoValue, IppOperation>((src, map) => NoValue.GetNoValue<IppOperation>());
         mapper.CreateIppMap<NoValue, DateTime>((src, map) => NoValue.GetNoValue<DateTime>());
         mapper.CreateIppMap<NoValue, DateTimeOffset>((src, map) => NoValue.GetNoValue<DateTimeOffset>());

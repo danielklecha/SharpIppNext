@@ -46,7 +46,7 @@ public class GetJobAttributesTests : SharpIppIntegrationTestBase
                 {
                     JobId = 1,
                     JobUri = "http://127.0.0.1:631/jobs/1",
-                    JobPrinterUri = "http://127.0.0.1:631",
+                    JobPrinterUri = new Uri("http://127.0.0.1:631"),
                     JobState = JobState.Pending,
                     JobStateReasons = [JobStateReason.None],
                     JobName = "Test Job",
@@ -225,9 +225,13 @@ public class GetJobAttributesTests : SharpIppIntegrationTestBase
                         YAccuracy = 100,
                         ZAccuracy = 50
                     },
-                    PrintBaseActual3d = ["raft"],
+                    PrintBaseActual3d = [PrintBase.Raft],
                     PrintObjectsActual3d = [new PrintObject { DocumentNumber = 1 }],
-                    PrintSupportsActual3d = ["standard"]
+                    PrintSupportsActual3d = [PrintSupports.Standard],
+                    DocumentFormatReady = ["application/pdf"],
+                    OutputDeviceJobStateReasons = [JobStateReason.None],
+                    OutputDeviceUuidAssigned = new Uri("urn:uuid:12345678-1234-1234-1234-123456789012"),
+                    DestinationStatuses = [new DestinationStatus { DestinationUri = "test-uri", ImagesCompleted = 10, TransmissionStatus = TransmissionStatus.Canceled }]
                 },
                 OperationAttributes = new()
                 {

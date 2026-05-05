@@ -176,7 +176,7 @@ public class PrinterDescriptionAttributesProfileTests
             { PrinterAttribute.PrinterStateChangeDateTime, [new IppAttribute(Tag.DateTime, PrinterAttribute.PrinterStateChangeDateTime, stateChange)] },
             { PrinterAttribute.PrinterConfigChangeTime, [new IppAttribute(Tag.Integer, PrinterAttribute.PrinterConfigChangeTime, 84)] },
             { PrinterAttribute.PrinterConfigChangeDateTime, [new IppAttribute(Tag.DateTime, PrinterAttribute.PrinterConfigChangeDateTime, configChange)] },
-            { PrinterAttribute.PrinterAlert, [new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, PrinterAttribute.PrinterAlert, "alert-raw")] },
+            { PrinterAttribute.PrinterAlert, [new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, PrinterAttribute.PrinterAlert, "code=jam;severity=critical")] },
             { PrinterAttribute.PrinterAlertDescription, [new IppAttribute(Tag.TextWithoutLanguage, PrinterAttribute.PrinterAlertDescription, "alert text")] },
             { PrinterAttribute.PrinterSupply, [new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, PrinterAttribute.PrinterSupply, "supply-raw")] },
             { PrinterAttribute.PrinterSupplyDescription, [new IppAttribute(Tag.TextWithoutLanguage, PrinterAttribute.PrinterSupplyDescription, "toner status")] }
@@ -190,8 +190,8 @@ public class PrinterDescriptionAttributesProfileTests
         dst.PrinterConfigChangeDateTime.Should().Be(configChange);
         dst.PrinterAlert.Should().NotBeNull();
         dst.PrinterAlert!.Should().ContainSingle();
-        dst.PrinterAlert[0].RawValue.Should().Be("alert-raw");
-        dst.PrinterAlert[0].Code.Should().BeNull();
+        dst.PrinterAlert[0].Code.Should().Be("jam");
+        dst.PrinterAlert[0].Severity.Should().Be("critical");
         dst.PrinterAlertDescription.Should().BeEquivalentTo("alert text");
         dst.PrinterSupply.Should().BeEquivalentTo("supply-raw");
         dst.PrinterSupplyDescription.Should().BeEquivalentTo("toner status");
@@ -306,7 +306,7 @@ public class PrinterDescriptionAttributesProfileTests
             PrinterStateChangeDateTime = stateChange,
             PrinterConfigChangeTime = 84,
             PrinterConfigChangeDateTime = configChange,
-            PrinterAlert = [new PrinterAlert { RawValue = "alert-raw" }],
+            PrinterAlert = [new PrinterAlert { Code = "jam", Severity = "critical" }],
             PrinterAlertDescription = ["alert text"],
             PrinterSupply = ["supply-raw"],
             PrinterSupplyDescription = ["toner status"]
@@ -332,7 +332,7 @@ public class PrinterDescriptionAttributesProfileTests
 
         dst.Should().ContainKey(PrinterAttribute.PrinterAlert);
         dst[PrinterAttribute.PrinterAlert].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.OctetStringWithAnUnspecifiedFormat);
-        dst[PrinterAttribute.PrinterAlert].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["alert-raw"]);
+        dst[PrinterAttribute.PrinterAlert].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["code=jam;severity=critical"]);
 
         dst.Should().ContainKey(PrinterAttribute.PrinterAlertDescription);
         dst[PrinterAttribute.PrinterAlertDescription].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.TextWithoutLanguage);

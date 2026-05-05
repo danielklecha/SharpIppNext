@@ -101,7 +101,7 @@ internal class PrinterDescriptionAttributesProfile : IProfile
                 PrinterDetailedStatusMessages = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrinterDetailedStatusMessages),
                 PrinterStateReasons = map.MapFromDicSetNullable<PrinterStateReason[]?>(src, PrinterAttribute.PrinterStateReasons),
                 PrinterUpTime = map.MapFromDicNullable<int?>(src, PrinterAttribute.PrinterUpTime),
-                PrinterUriSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrinterUriSupported),
+                PrinterUriSupported = map.MapFromDicSetNullable<Uri[]?>(src, PrinterAttribute.PrinterUriSupported),
                 PrintScalingDefault = map.MapFromDicNullable<PrintScaling?>(src, PrinterAttribute.PrintScalingDefault),
                 PrintScalingSupported = map.MapFromDicSetNullable<PrintScaling[]?>(src, PrinterAttribute.PrintScalingSupported),
                 QueuedJobCount = map.MapFromDicNullable<int?>(src, PrinterAttribute.QueuedJobCount),
@@ -528,7 +528,7 @@ internal class PrinterDescriptionAttributesProfile : IProfile
             if (src.PrinterUpTime != null)
                 dic.Add(PrinterAttribute.PrinterUpTime, [new IppAttribute(Tag.Integer, PrinterAttribute.PrinterUpTime, src.PrinterUpTime.Value)]);
             if (src.PrinterUriSupported != null)
-                dic.Add(PrinterAttribute.PrinterUriSupported, src.PrinterUriSupported.Select(x => new IppAttribute(Tag.Uri, PrinterAttribute.PrinterUriSupported, x)).ToArray());
+                dic.Add(PrinterAttribute.PrinterUriSupported, src.PrinterUriSupported.Select(x => new IppAttribute(Tag.Uri, PrinterAttribute.PrinterUriSupported, x.ToString())).ToArray());
             if (src.PrintScalingDefault != null)
                 dic.Add(PrinterAttribute.PrintScalingDefault, new IppAttribute[] { new IppAttribute(Tag.Keyword, PrinterAttribute.PrintScalingDefault, map.Map<string>(src.PrintScalingDefault)) });
             if (src.PrintScalingSupported != null)

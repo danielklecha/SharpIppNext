@@ -214,7 +214,7 @@ public class DocumentAttributes : IIppCollection
     /// See: PWG 5100.18-2025
     /// </summary>
     /// <code>document-printer-uri</code>
-    public string? DocumentPrinterUri { get; set; }
+    public Uri? DocumentPrinterUri { get; set; }
     /// <summary>
     /// The document-uri IPP attribute.
     /// See: PWG 5100.5-2024 Section 6.1.2

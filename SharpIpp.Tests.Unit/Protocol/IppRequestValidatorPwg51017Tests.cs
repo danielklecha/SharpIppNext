@@ -5,10 +5,12 @@ using SharpIpp.Protocol;
 using SharpIpp.Protocol.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SharpIpp.Tests.Unit.Protocol;
 
 [TestClass]
+[ExcludeFromCodeCoverage]
 public class IppRequestValidatorPwg51017Tests
 {
     private static IppRequestMessage CreateMinimalCreateJobRequest(List<IppAttribute> operationAttributes)

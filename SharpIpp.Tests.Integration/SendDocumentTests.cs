@@ -54,6 +54,8 @@ public class SendDocumentTests : SharpIppIntegrationTestBase
                 DocumentCharset = "utf-8",
                 DocumentMessage = "document-message",
                 LastDocument = true,
+                DocumentMetadata = ["meta1", "meta2"],
+                DocumentPassword = "test-password",
             },
             DocumentTemplateAttributes = new()
             {

@@ -82,13 +82,13 @@ public class IppRequestValidator : IIppRequestValidator
         "sheet-collate",
     ];
 
-    private static readonly HashSet<string> Pwg51017ForbiddenDestinationUriSchemes =
-    [
+    private static readonly HashSet<string> Pwg51017ForbiddenDestinationUriSchemes = new(StringComparer.OrdinalIgnoreCase)
+    {
         "tel",
         "fax",
         "sip",
         "sips",
-    ];
+    };
 
     private static readonly HashSet<string> Pwg51017ForbiddenDestinationUriMembers =
     [
@@ -215,7 +215,7 @@ public class IppRequestValidator : IIppRequestValidator
         ValidateCollectionMediaSelectionRules(request.DocumentAttributes, request);
     }
 
-    private void ValidatePrinterAttributes(IIppRequestMessage request)
+    public void ValidatePrinterAttributes(IIppRequestMessage request)
     {
         var destinationUriReadyCollections = EnumerateNamedCollections(request.PrinterAttributes, PrinterAttribute.DestinationUriReady).ToArray();
         if (!destinationUriReadyCollections.Any())
@@ -239,9 +239,9 @@ public class IppRequestValidator : IIppRequestValidator
 
             var unsupportedForbiddenMembers = destinationUriReadyMembers
                 .Where(x => x.Name == "destination-attributes-supported" && x.Tag != Tag.EndCollection)
-                .Select(x => x.Value?.ToString())
+                .Select(x => x.Value.ToString())
                 .Where(x => !string.IsNullOrWhiteSpace(x))
-                .Where(x => x != null && Pwg51017ForbiddenDestinationAttributesMembers.Contains(x))
+                .Where(x => Pwg51017ForbiddenDestinationAttributesMembers.Contains(x!))
                 .ToArray();
 
             if (unsupportedForbiddenMembers.Any())
@@ -272,14 +272,14 @@ public class IppRequestValidator : IIppRequestValidator
             throw new IppRequestException("'finishings' and 'finishings-col' are conflicting attributes and cannot be supplied together.", request, IppStatusCode.ClientErrorBadRequest);
     }
 
-    private void ValidateCollectionMediaSelectionRules(IReadOnlyCollection<IppAttribute> attributes, IIppRequestMessage request)
+    public void ValidateCollectionMediaSelectionRules(IReadOnlyCollection<IppAttribute> attributes, IIppRequestMessage request)
     {
         foreach (var collectionName in Pwg51003MediaExclusiveCollections)
         {
             var collections = EnumerateNamedCollections(attributes, collectionName).ToArray();
             foreach (var collection in collections)
             {
-                if (collection.Count == 0 || collection[0].Tag.IsOutOfBand())
+                if (collection.Count == 1 && collection[0].Tag.IsOutOfBand())
                     continue;
 
                 try
@@ -333,7 +333,7 @@ public class IppRequestValidator : IIppRequestValidator
         ValidateOutputBinAgainstSupportedValues(outputBins[0], request);
     }
 
-    private void ValidateOutputBinAgainstSupportedValues(IppAttribute outputBin, IIppRequestMessage request)
+    public void ValidateOutputBinAgainstSupportedValues(IppAttribute outputBin, IIppRequestMessage request)
     {
         var outputBinSupported = Context.OutputBinSupported;
         if (outputBinSupported is null || outputBinSupported.Count == 0)
@@ -342,7 +342,7 @@ public class IppRequestValidator : IIppRequestValidator
         if (UseIppAttributeFidelityForCapabilityValidation && !IsIppAttributeFidelityTrue(request))
             return;
 
-        var value = outputBin.Value?.ToString();
+        var value = outputBin.Value.ToString();
         if (string.IsNullOrWhiteSpace(value))
             return;
 
@@ -360,7 +360,7 @@ public class IppRequestValidator : IIppRequestValidator
             IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
     }
 
-    private void ValidateOperationRules(IIppRequestMessage request)
+    public void ValidateOperationRules(IIppRequestMessage request)
     {
         var operationAttributes = request.OperationAttributes;
         var hasDocumentNumber = ValidateOperationAttributesGroup && HasNamedAttribute(operationAttributes, DocumentAttribute.DocumentNumber);
@@ -458,7 +458,7 @@ public class IppRequestValidator : IIppRequestValidator
         ValidateNotifyEventsValues(request);
     }
 
-    private void ValidateCreateJobDestinationRules(IReadOnlyCollection<IppAttribute> operationAttributes, IIppRequestMessage request)
+    public void ValidateCreateJobDestinationRules(IReadOnlyCollection<IppAttribute> operationAttributes, IIppRequestMessage request)
     {
         if (!ValidateOperationAttributesGroup)
             return;
@@ -482,27 +482,17 @@ public class IppRequestValidator : IIppRequestValidator
 
             foreach (var destinationUriMember in destinationUriMembers.Where(x => x.Name == "destination-uri"))
             {
-                var destinationUri = destinationUriMember.Value?.ToString();
-                if (destinationUri is null || destinationUri.Length == 0)
+                var destinationUri = destinationUriMember.Value.ToString();
+                if (string.IsNullOrEmpty(destinationUri))
                     continue;
 
                 string? scheme = null;
-                Uri? parsedUri;
-                if (Uri.TryCreate(destinationUri, UriKind.Absolute, out parsedUri))
-                {
-                    scheme = parsedUri?.Scheme;
-                }
-                else
-                {
-                    var schemeSeparatorIndex = destinationUri.IndexOf(':');
-                    if (schemeSeparatorIndex > 0)
-                        scheme = destinationUri.Substring(0, schemeSeparatorIndex);
-                }
+                if (Uri.TryCreate(destinationUri, UriKind.Absolute, out var parsedUri))
+                    scheme = parsedUri.Scheme;
+                else if (destinationUri.IndexOf(':') is int i and > 0)
+                    scheme = destinationUri.Substring(0, i);
 
-                string? normalizedScheme = null;
-                if (scheme != null && scheme.Length > 0)
-                    normalizedScheme = scheme.ToLowerInvariant();
-                if (normalizedScheme != null && Pwg51017ForbiddenDestinationUriSchemes.Contains(normalizedScheme))
+                if (scheme != null && Pwg51017ForbiddenDestinationUriSchemes.Contains(scheme))
                     throw new IppRequestException("invalid destination-uri scheme for Scan", request, IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
             }
         }
@@ -512,7 +502,7 @@ public class IppRequestValidator : IIppRequestValidator
             throw new IppRequestException("destination-accesses cardinality MUST match destination-uris", request, IppStatusCode.ClientErrorBadRequest);
     }
 
-    private void ValidateJobRequestedAttributesGroupKeywords(IIppRequestMessage request)
+    public void ValidateJobRequestedAttributesGroupKeywords(IIppRequestMessage request)
     {
         if (!ValidateOperationAttributesGroup)
             return;
@@ -526,7 +516,7 @@ public class IppRequestValidator : IIppRequestValidator
 
         var requestedAttributes = request.OperationAttributes
             .Where(x => x.Name == JobAttribute.RequestedAttributes)
-            .Select(x => x.Value?.ToString())
+            .Select(x => x.Value.ToString())
             .Where(x => !string.IsNullOrWhiteSpace(x))
             .Cast<string>()
             .ToArray();
@@ -564,7 +554,7 @@ public class IppRequestValidator : IIppRequestValidator
             throw new IppRequestException("invalid document-number", request, IppStatusCode.ClientErrorBadRequest);
     }
 
-    private void ValidateRequiredLastDocument(bool hasLastDocument, bool? lastDocument, IIppRequestMessage request)
+    public void ValidateRequiredLastDocument(bool hasLastDocument, bool? lastDocument, IIppRequestMessage request)
     {
         if (!ValidateOperationAttributesGroup)
             return;
@@ -575,7 +565,7 @@ public class IppRequestValidator : IIppRequestValidator
             throw new IppRequestException("invalid last-document", request, IppStatusCode.ClientErrorBadRequest);
     }
 
-    private void ValidateRequiredOutputDeviceUuid(bool hasOutputDeviceUuid, IIppRequestMessage request)
+    public void ValidateRequiredOutputDeviceUuid(bool hasOutputDeviceUuid, IIppRequestMessage request)
     {
         if (!ValidateOperationAttributesGroup)
             return;
@@ -584,7 +574,7 @@ public class IppRequestValidator : IIppRequestValidator
             throw new IppRequestException("missing output-device-uuid", request, IppStatusCode.ClientErrorBadRequest);
     }
 
-    private static void ValidateFetchStatusCodeNotSuccessful(IEnumerable<IppAttribute> operationAttributes, IIppRequestMessage request)
+    public static void ValidateFetchStatusCodeNotSuccessful(IEnumerable<IppAttribute> operationAttributes, IIppRequestMessage request)
     {
         var fetchStatusAttributes = operationAttributes
             .Where(x => x.Name == JobAttribute.FetchStatusCode)
@@ -618,7 +608,7 @@ public class IppRequestValidator : IIppRequestValidator
         return null;
     }
 
-    private void ValidateDocumentRequestedAttributesGroupKeywords(IIppRequestMessage request)
+    public void ValidateDocumentRequestedAttributesGroupKeywords(IIppRequestMessage request)
     {
         if (!ValidateOperationAttributesGroup)
             return;
@@ -632,7 +622,7 @@ public class IppRequestValidator : IIppRequestValidator
 
         var requestedAttributes = request.OperationAttributes
             .Where(x => x.Name == JobAttribute.RequestedAttributes)
-            .Select(x => x.Value?.ToString())
+            .Select(x => x.Value.ToString())
             .Where(x => !string.IsNullOrWhiteSpace(x))
             .Cast<string>()
             .ToArray();
@@ -659,7 +649,7 @@ public class IppRequestValidator : IIppRequestValidator
             IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
     }
 
-    private void ValidateNotifyEventsValues(IIppRequestMessage request)
+    public void ValidateNotifyEventsValues(IIppRequestMessage request)
     {
         if (!ValidateSubscriptionAttributesGroup)
             return;
@@ -672,7 +662,7 @@ public class IppRequestValidator : IIppRequestValidator
         var notifyEvents = request.OperationAttributes
             .Concat(request.SubscriptionAttributes)
             .Where(x => x.Name == NotifyEventsAttributeName)
-            .Select(x => x.Value?.ToString())
+            .Select(x => x.Value.ToString())
             .Where(x => !string.IsNullOrWhiteSpace(x))
             .Cast<string>()
             .ToArray();
@@ -697,7 +687,7 @@ public class IppRequestValidator : IIppRequestValidator
             IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
     }
 
-    private void ValidateCancelDocumentStateRules(int documentNumber, IIppRequestMessage request)
+    public void ValidateCancelDocumentStateRules(int documentNumber, IIppRequestMessage request)
     {
         if (Context.DocumentStatesByNumber == null)
             return;
@@ -721,7 +711,7 @@ public class IppRequestValidator : IIppRequestValidator
             throw new IppRequestException("invalid document-state-reasons for Cancel-Document", request, IppStatusCode.ClientErrorNotPossible);
     }
 
-    private void ValidateSetDocumentAttributesStateRules(int documentNumber, IIppRequestMessage request)
+    public void ValidateSetDocumentAttributesStateRules(int documentNumber, IIppRequestMessage request)
     {
         if (Context.DocumentStatesByNumber == null)
             return;
@@ -803,7 +793,7 @@ public class IppRequestValidator : IIppRequestValidator
         }
     }
 
-    private void ValidateOverrideMembersAgainstSupportedValues(IReadOnlyCollection<IppAttribute> members, IIppRequestMessage request)
+    public void ValidateOverrideMembersAgainstSupportedValues(IReadOnlyCollection<IppAttribute> members, IIppRequestMessage request)
     {
         var memberNames = EnumerateTopLevelOverrideMemberNames(members)
             .Distinct(StringComparer.Ordinal)

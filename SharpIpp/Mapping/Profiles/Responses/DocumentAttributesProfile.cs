@@ -58,7 +58,7 @@ internal class DocumentAttributesProfile : IProfile
             dst.DocumentName = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentName);
             dst.DocumentResourceIds = map.MapFromDicSetNullable<int[]?>(src, DocumentAttribute.DocumentResourceIds);
             dst.DocumentNaturalLanguage = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentNaturalLanguage);
-            dst.DocumentPrinterUri = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentPrinterUri);
+            dst.DocumentPrinterUri = map.MapFromDicNullable<Uri?>(src, DocumentAttribute.DocumentPrinterUri);
             dst.DocumentUri = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentUri);
             dst.Impressions = map.MapFromDicNullable<int?>(src, DocumentAttribute.Impressions);
             dst.ImpressionsCompleted = map.MapFromDicNullable<int?>(src, DocumentAttribute.ImpressionsCompleted);
@@ -148,7 +148,7 @@ internal class DocumentAttributesProfile : IProfile
             if (src.DocumentNaturalLanguage != null)
                 dst.Add(DocumentAttribute.DocumentNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, DocumentAttribute.DocumentNaturalLanguage, src.DocumentNaturalLanguage)]);
             if (src.DocumentPrinterUri != null)
-                dst.Add(DocumentAttribute.DocumentPrinterUri, [new IppAttribute(Tag.Uri, DocumentAttribute.DocumentPrinterUri, src.DocumentPrinterUri)]);
+                dst.Add(DocumentAttribute.DocumentPrinterUri, [new IppAttribute(Tag.Uri, DocumentAttribute.DocumentPrinterUri, src.DocumentPrinterUri.ToString())]);
             if (src.DocumentUri != null)
                 dst.Add(DocumentAttribute.DocumentUri, [new IppAttribute(Tag.Uri, DocumentAttribute.DocumentUri, src.DocumentUri)]);
             if (src.Impressions != null)
