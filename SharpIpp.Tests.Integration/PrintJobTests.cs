@@ -113,7 +113,7 @@ public class PrintJobTests : SharpIppIntegrationTestBase
                 JobImpressionsEstimated = 12,
                 ChargeInfoMessage = "charge preview",
                 ProofCopies = 1,
-                JobStorage = new JobStorage { JobStorageAccess = "owner", JobStorageDisposition = "store-only", JobStorageGroup = "default" },
+                JobStorage = new JobStorage { JobStorageAccess = (JobStorageAccess?)"owner", JobStorageDisposition = (JobStorageDisposition?)"store-only", JobStorageGroup = "default" },
                 ProofPrint = new ProofPrint { ProofPrintCopies = 1, Media = (Media)"iso_a4_210x297mm" },
                 CoverSheetInfo = new CoverSheetInfo { FromName = "sender", ToName = "receiver", Subject = "subject" },
                 DestinationUris = [new DestinationUri { DestinationUriValue = "tel:+123456789", PostDialString = "#", PreDialString = "9", T33Subaddress = 12345 }],
@@ -132,17 +132,17 @@ public class PrintJobTests : SharpIppIntegrationTestBase
                     new Material
                     {
                         MaterialAmount = 1,
-                        MaterialColor = "blue",
+                        MaterialColor = (MaterialColor?)"blue",
                         MaterialDiameter = 2,
                         MaterialFillDensity = 3,
-                        MaterialKey = "pla-blue",
+                        MaterialKey = (MaterialKey?)"pla-blue",
                         MaterialName = "PLA Blue",
-                        MaterialPurpose = "model",
+                        MaterialPurpose = [(MaterialPurpose)"model"],
                         MaterialRate = 4,
-                        MaterialRateUnits = "mm-per-second",
+                        MaterialRateUnits = (MaterialRateUnits?)"mm-per-second",
                         MaterialShellThickness = 5,
                         MaterialTemperature = 200,
-                        MaterialType = "pla"
+                        MaterialType = (MaterialType?)"pla"
                     }
                 ],
                 PrintObjects =

@@ -794,7 +794,7 @@ namespace SharpIpp.Protocol.Models
         /// See: PWG 5100.21-2019 Section 8.2.4
         /// </summary>
         /// <code>multiple-object-handling-actual</code>
-        public string? MultipleObjectHandlingActual3d { get; set; }
+        public MultipleObjectHandling? MultipleObjectHandlingActual3d { get; set; }
 
         /// <summary>
         /// The actual print accuracy used to process the 3D job.

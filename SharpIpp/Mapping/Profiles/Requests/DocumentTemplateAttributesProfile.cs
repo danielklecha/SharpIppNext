@@ -9,6 +9,11 @@ namespace SharpIpp.Mapping.Profiles.Requests;
 
 internal class DocumentTemplateAttributesProfile : IProfile
 {
+    private static bool IsOutOfBandNoValue(IDictionary<string, IppAttribute[]> src)
+    {
+        return src.Count == 1 && src.Values.First().Length == 1 && src.Values.First()[0].Tag.IsOutOfBand();
+    }
+
     public void CreateMaps(IMapperConstructor mapper)
     {
         mapper.CreateMap<DocumentTemplateAttributes, List<IppAttribute>>((src, map) =>
@@ -35,7 +40,8 @@ internal class DocumentTemplateAttributesProfile : IProfile
                     dst.AddRange(map.Map<IEnumerable<IppAttribute>>(finishingsCol).ToBegCollection(JobAttribute.FinishingsCol));
                 }
             }
-            if (src.ForceFrontSide != null) dst.AddRange(src.ForceFrontSide.Select(x => new IppAttribute(Tag.Integer, JobAttribute.ForceFrontSide, x)));
+            if (src.ForceFrontSide != null)
+                dst.AddRange(src.ForceFrontSide.Select(x => new IppAttribute(Tag.Integer, JobAttribute.ForceFrontSide, x)));
             if (src.ImpositionTemplate != null)
             {
                 var impositionTemplateValue = src.ImpositionTemplate.Value;
@@ -50,10 +56,14 @@ internal class DocumentTemplateAttributesProfile : IProfile
                 var mediaTag = mediaValue.ToIppTag();
                 dst.Add(new IppAttribute(mediaTag, JobAttribute.Media, media));
             }
-            if (src.MediaCol != null) dst.AddRange(map.Map<IEnumerable<IppAttribute>>(src.MediaCol).ToBegCollection(JobAttribute.MediaCol));
-            if (src.MediaInputTrayCheck != null) dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.MediaInputTrayCheck, map.Map<string>(src.MediaInputTrayCheck)));
-            if (src.NumberUp.HasValue) dst.Add(new IppAttribute(Tag.Integer, JobAttribute.NumberUp, src.NumberUp.Value));
-            if (src.OrientationRequested.HasValue) dst.Add(new IppAttribute(Tag.Enum, JobAttribute.OrientationRequested, (int)src.OrientationRequested.Value));
+            if (src.MediaCol != null)
+                dst.AddRange(map.Map<IEnumerable<IppAttribute>>(src.MediaCol).ToBegCollection(JobAttribute.MediaCol));
+            if (src.MediaInputTrayCheck != null)
+                dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.MediaInputTrayCheck, map.Map<string>(src.MediaInputTrayCheck)));
+            if (src.NumberUp.HasValue)
+                dst.Add(new IppAttribute(Tag.Integer, JobAttribute.NumberUp, src.NumberUp.Value));
+            if (src.OrientationRequested.HasValue)
+                dst.Add(new IppAttribute(Tag.Enum, JobAttribute.OrientationRequested, (int)src.OrientationRequested.Value));
             if (src.OutputBin != null)
             {
                 var outputBinValue = src.OutputBin.Value;
@@ -61,30 +71,54 @@ internal class DocumentTemplateAttributesProfile : IProfile
                 var outputBinTag = outputBinValue.ToIppTag();
                 dst.Add(new IppAttribute(outputBinTag, JobAttribute.OutputBin, outputBin));
             }
-            if (src.PageDelivery.HasValue) dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.PageDelivery, map.Map<string>(src.PageDelivery.Value)));
-            if (src.PageOrderReceived.HasValue) dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.PageOrderReceived, map.Map<string>(src.PageOrderReceived.Value)));
-            if (src.PageRanges != null) dst.AddRange(src.PageRanges.Select(x => new IppAttribute(Tag.RangeOfInteger, JobAttribute.PageRanges, x)));
-            if (src.PresentationDirectionNumberUp.HasValue) dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.PresentationDirectionNumberUp, map.Map<string>(src.PresentationDirectionNumberUp.Value)));
-            if (src.PrintQuality.HasValue) dst.Add(new IppAttribute(Tag.Enum, JobAttribute.PrintQuality, (int)src.PrintQuality.Value));
-            if (src.PrinterResolution != null) dst.Add(new IppAttribute(Tag.Resolution, JobAttribute.PrinterResolution, src.PrinterResolution));
-            if (src.Sides.HasValue) dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.Sides, map.Map<string>(src.Sides.Value)));
-            if (src.XImagePosition.HasValue) dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.XImagePosition, map.Map<string>(src.XImagePosition.Value)));
-            if (src.XImageShift.HasValue) dst.Add(new IppAttribute(Tag.Integer, JobAttribute.XImageShift, src.XImageShift.Value));
-            if (src.XSide1ImageShift.HasValue) dst.Add(new IppAttribute(Tag.Integer, JobAttribute.XSide1ImageShift, src.XSide1ImageShift.Value));
-            if (src.XSide2ImageShift.HasValue) dst.Add(new IppAttribute(Tag.Integer, JobAttribute.XSide2ImageShift, src.XSide2ImageShift.Value));
-            if (src.YImagePosition.HasValue) dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.YImagePosition, map.Map<string>(src.YImagePosition.Value)));
-            if (src.YImageShift.HasValue) dst.Add(new IppAttribute(Tag.Integer, JobAttribute.YImageShift, src.YImageShift.Value));
-            if (src.YSide1ImageShift.HasValue) dst.Add(new IppAttribute(Tag.Integer, JobAttribute.YSide1ImageShift, src.YSide1ImageShift.Value));
-            if (src.YSide2ImageShift.HasValue) dst.Add(new IppAttribute(Tag.Integer, JobAttribute.YSide2ImageShift, src.YSide2ImageShift.Value));
-            if (src.InputAutoExposure.HasValue) dst.Add(new IppAttribute(Tag.Boolean, "input-auto-exposure", src.InputAutoExposure.Value));
-            if (src.InputAutoScaling.HasValue) dst.Add(new IppAttribute(Tag.Boolean, "input-auto-scaling", src.InputAutoScaling.Value));
-            if (src.InputAutoSkewCorrection.HasValue) dst.Add(new IppAttribute(Tag.Boolean, "input-auto-skew-correction", src.InputAutoSkewCorrection.Value));
-            if (src.InputBrightness.HasValue) dst.Add(new IppAttribute(Tag.Integer, "input-brightness", src.InputBrightness.Value));
-            if (src.InputColorMode != null) dst.Add(new IppAttribute(Tag.Keyword, "input-color-mode", src.InputColorMode));
-            if (src.InputContentType != null) dst.Add(new IppAttribute(Tag.Keyword, "input-content-type", src.InputContentType));
-            if (src.InputContrast.HasValue) dst.Add(new IppAttribute(Tag.Integer, "input-contrast", src.InputContrast.Value));
-            if (src.InputFilmScanMode != null) dst.Add(new IppAttribute(Tag.Keyword, "input-film-scan-mode", src.InputFilmScanMode));
-            if (src.InputImagesToTransfer.HasValue) dst.Add(new IppAttribute(Tag.Integer, "input-images-to-transfer", src.InputImagesToTransfer.Value));
+            if (src.PageDelivery.HasValue)
+                dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.PageDelivery, map.Map<string>(src.PageDelivery.Value)));
+            if (src.PageOrderReceived.HasValue)
+                dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.PageOrderReceived, map.Map<string>(src.PageOrderReceived.Value)));
+            if (src.PageRanges != null)
+                dst.AddRange(src.PageRanges.Select(x => new IppAttribute(Tag.RangeOfInteger, JobAttribute.PageRanges, x)));
+            if (src.PresentationDirectionNumberUp.HasValue)
+                dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.PresentationDirectionNumberUp, map.Map<string>(src.PresentationDirectionNumberUp.Value)));
+            if (src.PrintQuality.HasValue)
+                dst.Add(new IppAttribute(Tag.Enum, JobAttribute.PrintQuality, (int)src.PrintQuality.Value));
+            if (src.PrinterResolution != null)
+                dst.Add(new IppAttribute(Tag.Resolution, JobAttribute.PrinterResolution, src.PrinterResolution));
+            if (src.Sides.HasValue)
+                dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.Sides, map.Map<string>(src.Sides.Value)));
+            if (src.XImagePosition.HasValue)
+                dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.XImagePosition, map.Map<string>(src.XImagePosition.Value)));
+            if (src.XImageShift.HasValue)
+                dst.Add(new IppAttribute(Tag.Integer, JobAttribute.XImageShift, src.XImageShift.Value));
+            if (src.XSide1ImageShift.HasValue)
+                dst.Add(new IppAttribute(Tag.Integer, JobAttribute.XSide1ImageShift, src.XSide1ImageShift.Value));
+            if (src.XSide2ImageShift.HasValue)
+                dst.Add(new IppAttribute(Tag.Integer, JobAttribute.XSide2ImageShift, src.XSide2ImageShift.Value));
+            if (src.YImagePosition.HasValue)
+                dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.YImagePosition, map.Map<string>(src.YImagePosition.Value)));
+            if (src.YImageShift.HasValue)
+                dst.Add(new IppAttribute(Tag.Integer, JobAttribute.YImageShift, src.YImageShift.Value));
+            if (src.YSide1ImageShift.HasValue)
+                dst.Add(new IppAttribute(Tag.Integer, JobAttribute.YSide1ImageShift, src.YSide1ImageShift.Value));
+            if (src.YSide2ImageShift.HasValue)
+                dst.Add(new IppAttribute(Tag.Integer, JobAttribute.YSide2ImageShift, src.YSide2ImageShift.Value));
+            if (src.InputAutoExposure.HasValue)
+                dst.Add(new IppAttribute(Tag.Boolean, "input-auto-exposure", src.InputAutoExposure.Value));
+            if (src.InputAutoScaling.HasValue)
+                dst.Add(new IppAttribute(Tag.Boolean, "input-auto-scaling", src.InputAutoScaling.Value));
+            if (src.InputAutoSkewCorrection.HasValue)
+                dst.Add(new IppAttribute(Tag.Boolean, "input-auto-skew-correction", src.InputAutoSkewCorrection.Value));
+            if (src.InputBrightness.HasValue)
+                dst.Add(new IppAttribute(Tag.Integer, "input-brightness", src.InputBrightness.Value));
+            if (src.InputColorMode != null)
+                dst.Add(new IppAttribute(Tag.Keyword, "input-color-mode", map.Map<string>(src.InputColorMode.Value)));
+            if (src.InputContentType != null)
+                dst.Add(new IppAttribute(Tag.Keyword, "input-content-type", map.Map<string>(src.InputContentType.Value)));
+            if (src.InputContrast.HasValue)
+                dst.Add(new IppAttribute(Tag.Integer, "input-contrast", src.InputContrast.Value));
+            if (src.InputFilmScanMode != null)
+                dst.Add(new IppAttribute(Tag.Keyword, "input-film-scan-mode", map.Map<string>(src.InputFilmScanMode.Value)));
+            if (src.InputImagesToTransfer.HasValue)
+                dst.Add(new IppAttribute(Tag.Integer, "input-images-to-transfer", src.InputImagesToTransfer.Value));
             if (src.InputMedia != null)
             {
                 var inputMediaValue = src.InputMedia.Value;
@@ -92,25 +126,33 @@ internal class DocumentTemplateAttributesProfile : IProfile
                 var inputMediaTag = inputMediaValue.ToIppTag();
                 dst.Add(new IppAttribute(inputMediaTag, "input-media", inputMedia));
             }
-            if (src.InputOrientationRequested.HasValue) dst.Add(new IppAttribute(Tag.Enum, "input-orientation-requested", (int)src.InputOrientationRequested.Value));
-            if (src.InputQuality.HasValue) dst.Add(new IppAttribute(Tag.Enum, "input-quality", (int)src.InputQuality.Value));
-            if (src.InputResolution != null) dst.Add(new IppAttribute(Tag.Resolution, "input-resolution", src.InputResolution));
-            if (src.InputScalingHeight.HasValue) dst.Add(new IppAttribute(Tag.Integer, "input-scaling-height", src.InputScalingHeight.Value));
-            if (src.InputScalingWidth.HasValue) dst.Add(new IppAttribute(Tag.Integer, "input-scaling-width", src.InputScalingWidth.Value));
-            if (src.InputSharpness.HasValue) dst.Add(new IppAttribute(Tag.Integer, "input-sharpness", src.InputSharpness.Value));
-            if (src.InputSides.HasValue) dst.Add(new IppAttribute(Tag.Keyword, "input-sides", map.Map<string>(src.InputSides.Value)));
-            if (src.InputSource != null) dst.Add(new IppAttribute(Tag.Keyword, "input-source", src.InputSource));
+            if (src.InputOrientationRequested.HasValue)
+                dst.Add(new IppAttribute(Tag.Enum, "input-orientation-requested", (int)src.InputOrientationRequested.Value));
+            if (src.InputQuality.HasValue)
+                dst.Add(new IppAttribute(Tag.Enum, "input-quality", (int)src.InputQuality.Value));
+            if (src.InputResolution != null)
+                dst.Add(new IppAttribute(Tag.Resolution, "input-resolution", src.InputResolution));
+            if (src.InputScalingHeight.HasValue)
+                dst.Add(new IppAttribute(Tag.Integer, "input-scaling-height", src.InputScalingHeight.Value));
+            if (src.InputScalingWidth.HasValue)
+                dst.Add(new IppAttribute(Tag.Integer, "input-scaling-width", src.InputScalingWidth.Value));
+            if (src.InputSharpness.HasValue)
+                dst.Add(new IppAttribute(Tag.Integer, "input-sharpness", src.InputSharpness.Value));
+            if (src.InputSides.HasValue)
+                dst.Add(new IppAttribute(Tag.Keyword, "input-sides", map.Map<string>(src.InputSides.Value)));
+            if (src.InputSource != null)
+                dst.Add(new IppAttribute(Tag.Keyword, "input-source", map.Map<string>(src.InputSource.Value)));
             return dst;
         });
 
         mapper.CreateMap<DocumentTemplateAttributes, IEnumerable<IppAttribute>>((src, map) => map.Map<DocumentTemplateAttributes, List<IppAttribute>>(src));
 
-        mapper.CreateMap<IDictionary<string, IppAttribute[]>, DocumentTemplateAttributes>((src, dst, map) =>
+        mapper.CreateMap<IDictionary<string, IppAttribute[]>, DocumentTemplateAttributes>((src, map) =>
         {
-            if (src.Count == 1 && src.Values.First().Length == 1 && src.Values.First()[0].Tag.IsOutOfBand())
+            if (IsOutOfBandNoValue(src))
                 return NoValue.GetNoValue<DocumentTemplateAttributes>();
 
-            dst ??= new DocumentTemplateAttributes();
+            var dst = new DocumentTemplateAttributes();
             dst.Copies = map.MapFromDicNullable<int?>(src, JobAttribute.Copies);
             if (src.ContainsKey(JobAttribute.CoverBack))
                 dst.CoverBack = map.Map<Cover>(src[JobAttribute.CoverBack].FromBegCollection().ToIppDictionary());
@@ -147,10 +189,10 @@ internal class DocumentTemplateAttributesProfile : IProfile
             dst.InputAutoScaling = map.MapFromDicNullable<bool?>(src, "input-auto-scaling");
             dst.InputAutoSkewCorrection = map.MapFromDicNullable<bool?>(src, "input-auto-skew-correction");
             dst.InputBrightness = map.MapFromDicNullable<int?>(src, "input-brightness");
-            dst.InputColorMode = map.MapFromDicNullable<string?>(src, "input-color-mode");
-            dst.InputContentType = map.MapFromDicNullable<string?>(src, "input-content-type");
+            dst.InputColorMode = map.MapFromDicNullable<InputColorMode?>(src, "input-color-mode");
+            dst.InputContentType = map.MapFromDicNullable<InputContentType?>(src, "input-content-type");
             dst.InputContrast = map.MapFromDicNullable<int?>(src, "input-contrast");
-            dst.InputFilmScanMode = map.MapFromDicNullable<string?>(src, "input-film-scan-mode");
+            dst.InputFilmScanMode = map.MapFromDicNullable<InputFilmScanMode?>(src, "input-film-scan-mode");
             dst.InputImagesToTransfer = map.MapFromDicNullable<int?>(src, "input-images-to-transfer");
             dst.InputMedia = map.MapFromDicNullable<string, Media?>(src, "input-media", (attribute, value) => new Media(value, attribute.Tag == Tag.Keyword));
             dst.InputOrientationRequested = map.MapFromDicNullable<Orientation?>(src, "input-orientation-requested");
@@ -160,7 +202,7 @@ internal class DocumentTemplateAttributesProfile : IProfile
             dst.InputScalingWidth = map.MapFromDicNullable<int?>(src, "input-scaling-width");
             dst.InputSharpness = map.MapFromDicNullable<int?>(src, "input-sharpness");
             dst.InputSides = map.MapFromDicNullable<Sides?>(src, "input-sides");
-            dst.InputSource = map.MapFromDicNullable<string?>(src, "input-source");
+            dst.InputSource = map.MapFromDicNullable<InputSource?>(src, "input-source");
             return dst;
         });
     }

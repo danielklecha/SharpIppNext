@@ -537,7 +537,7 @@ namespace SharpIpp.Protocol.Models
         /// The <c>multiple-object-handling</c> Job Template attribute.
         /// See: PWG 5100.21-2019 Section 6.8.12
         /// </summary>
-        public string? MultipleObjectHandling { get; set; }
+        public MultipleObjectHandling? MultipleObjectHandling { get; set; }
 
         /// <summary>
         /// The <c>platform-temperature</c> Job Template attribute.
@@ -555,7 +555,7 @@ namespace SharpIpp.Protocol.Models
         /// The <c>print-base</c> Job Template attribute.
         /// See: PWG 5100.21-2019 Section 6.8.15
         /// </summary>
-        public string? PrintBase { get; set; }
+        public PrintBase? PrintBase { get; set; }
 
         /// <summary>
         /// The <c>print-objects</c> Job Template attribute.
@@ -567,7 +567,7 @@ namespace SharpIpp.Protocol.Models
         /// The <c>print-supports</c> Job Template attribute.
         /// See: PWG 5100.21-2019 Section 6.8.17
         /// </summary>
-        public string? PrintSupports { get; set; }
+        public PrintSupports? PrintSupports { get; set; }
 
         /// <summary>
         /// The <c>overrides</c> Job Template attribute.

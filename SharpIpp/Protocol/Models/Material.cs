@@ -1,4 +1,4 @@
-﻿namespace SharpIpp.Protocol.Models;
+namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// The <c>materials-col</c> member collection.
@@ -9,15 +9,15 @@ public class Material : IIppCollection
     bool IIppCollection.IsValue { get; set; } = true;
     bool INoValue.IsValue => ((IIppCollection)this).IsValue;
     public int? MaterialAmount { get; set; }
-    public string? MaterialColor { get; set; }
+    public MaterialColor? MaterialColor { get; set; }
     public int? MaterialDiameter { get; set; }
     public int? MaterialFillDensity { get; set; }
-    public string? MaterialKey { get; set; }
+    public MaterialKey? MaterialKey { get; set; }
     public string? MaterialName { get; set; }
-    public string? MaterialPurpose { get; set; }
+    public MaterialPurpose[]? MaterialPurpose { get; set; }
     public int? MaterialRate { get; set; }
-    public string? MaterialRateUnits { get; set; }
+    public MaterialRateUnits? MaterialRateUnits { get; set; }
     public int? MaterialShellThickness { get; set; }
     public int? MaterialTemperature { get; set; }
-    public string? MaterialType { get; set; }
+    public MaterialType? MaterialType { get; set; }
 }

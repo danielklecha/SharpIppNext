@@ -1,4 +1,4 @@
-﻿namespace SharpIpp.Protocol.Models;
+namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// PWG 5100.5-2024 Section 6.3
@@ -206,13 +206,13 @@ public class DocumentTemplateAttributes : IIppCollection
     /// The <c>input-color-mode</c> input attribute.
     /// See: PWG 5100.15-2013 Section 7.1.1.5
     /// </summary>
-    public string? InputColorMode { get; set; }
+    public InputColorMode? InputColorMode { get; set; }
 
     /// <summary>
     /// The <c>input-content-type</c> input attribute.
     /// See: PWG 5100.15-2013 Section 7.1.1.6
     /// </summary>
-    public string? InputContentType { get; set; }
+    public InputContentType? InputContentType { get; set; }
 
     /// <summary>
     /// The <c>input-contrast</c> input attribute.
@@ -224,7 +224,7 @@ public class DocumentTemplateAttributes : IIppCollection
     /// The <c>input-film-scan-mode</c> input attribute.
     /// See: PWG 5100.15-2013 Section 7.1.1.8
     /// </summary>
-    public string? InputFilmScanMode { get; set; }
+    public InputFilmScanMode? InputFilmScanMode { get; set; }
 
     /// <summary>
     /// The <c>input-images-to-transfer</c> input attribute.
@@ -284,5 +284,5 @@ public class DocumentTemplateAttributes : IIppCollection
     /// The <c>input-source</c> input attribute.
     /// See: PWG 5100.15-2013 Section 7.1.1.19
     /// </summary>
-    public string? InputSource { get; set; }
+    public InputSource? InputSource { get; set; }
 }

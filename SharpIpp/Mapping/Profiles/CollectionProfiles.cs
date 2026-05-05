@@ -788,8 +788,8 @@ internal class CollectionProfiles : IProfile
 
             return new JobStorage
             {
-                JobStorageAccess = map.MapFromDicNullable<string?>(src, nameof(JobStorage.JobStorageAccess).ConvertCamelCaseToKebabCase()),
-                JobStorageDisposition = map.MapFromDicNullable<string?>(src, nameof(JobStorage.JobStorageDisposition).ConvertCamelCaseToKebabCase()),
+                JobStorageAccess = map.MapFromDicNullable<JobStorageAccess?>(src, nameof(JobStorage.JobStorageAccess).ConvertCamelCaseToKebabCase()),
+                JobStorageDisposition = map.MapFromDicNullable<JobStorageDisposition?>(src, nameof(JobStorage.JobStorageDisposition).ConvertCamelCaseToKebabCase()),
                 JobStorageGroup = map.MapFromDicNullable<string?>(src, nameof(JobStorage.JobStorageGroup).ConvertCamelCaseToKebabCase())
             };
         });
@@ -800,9 +800,9 @@ internal class CollectionProfiles : IProfile
 
             var attributes = new List<IppAttribute>();
             if (src.JobStorageAccess != null)
-                attributes.Add(new IppAttribute(Tag.Keyword, nameof(JobStorage.JobStorageAccess).ConvertCamelCaseToKebabCase(), src.JobStorageAccess));
+                attributes.Add(new IppAttribute(Tag.Keyword, nameof(JobStorage.JobStorageAccess).ConvertCamelCaseToKebabCase(), src.JobStorageAccess.Value.Value));
             if (src.JobStorageDisposition != null)
-                attributes.Add(new IppAttribute(Tag.Keyword, nameof(JobStorage.JobStorageDisposition).ConvertCamelCaseToKebabCase(), src.JobStorageDisposition));
+                attributes.Add(new IppAttribute(Tag.Keyword, nameof(JobStorage.JobStorageDisposition).ConvertCamelCaseToKebabCase(), src.JobStorageDisposition.Value.Value));
             if (src.JobStorageGroup != null)
                 attributes.Add(new IppAttribute(Tag.NameWithoutLanguage, nameof(JobStorage.JobStorageGroup).ConvertCamelCaseToKebabCase(), src.JobStorageGroup));
             return attributes;
@@ -1020,17 +1020,17 @@ internal class CollectionProfiles : IProfile
             return new Material
             {
                 MaterialAmount = map.MapFromDicNullable<int?>(src, nameof(Material.MaterialAmount).ConvertCamelCaseToKebabCase()),
-                MaterialColor = map.MapFromDicNullable<string?>(src, nameof(Material.MaterialColor).ConvertCamelCaseToKebabCase()),
+                MaterialColor = map.MapFromDicNullable<MaterialColor?>(src, nameof(Material.MaterialColor).ConvertCamelCaseToKebabCase()),
                 MaterialDiameter = map.MapFromDicNullable<int?>(src, nameof(Material.MaterialDiameter).ConvertCamelCaseToKebabCase()),
             MaterialFillDensity = map.MapFromDicNullable<int?>(src, nameof(Material.MaterialFillDensity).ConvertCamelCaseToKebabCase()),
-            MaterialKey = map.MapFromDicNullable<string?>(src, nameof(Material.MaterialKey).ConvertCamelCaseToKebabCase()),
+            MaterialKey = map.MapFromDicNullable<MaterialKey?>(src, nameof(Material.MaterialKey).ConvertCamelCaseToKebabCase()),
             MaterialName = map.MapFromDicNullable<string?>(src, nameof(Material.MaterialName).ConvertCamelCaseToKebabCase()),
-            MaterialPurpose = map.MapFromDicNullable<string?>(src, nameof(Material.MaterialPurpose).ConvertCamelCaseToKebabCase()),
+            MaterialPurpose = map.MapFromDicSetNullable<MaterialPurpose[]?>(src, nameof(Material.MaterialPurpose).ConvertCamelCaseToKebabCase()),
             MaterialRate = map.MapFromDicNullable<int?>(src, nameof(Material.MaterialRate).ConvertCamelCaseToKebabCase()),
-            MaterialRateUnits = map.MapFromDicNullable<string?>(src, nameof(Material.MaterialRateUnits).ConvertCamelCaseToKebabCase()),
+            MaterialRateUnits = map.MapFromDicNullable<MaterialRateUnits?>(src, nameof(Material.MaterialRateUnits).ConvertCamelCaseToKebabCase()),
             MaterialShellThickness = map.MapFromDicNullable<int?>(src, nameof(Material.MaterialShellThickness).ConvertCamelCaseToKebabCase()),
             MaterialTemperature = map.MapFromDicNullable<int?>(src, nameof(Material.MaterialTemperature).ConvertCamelCaseToKebabCase()),
-            MaterialType = map.MapFromDicNullable<string?>(src, nameof(Material.MaterialType).ConvertCamelCaseToKebabCase())
+            MaterialType = map.MapFromDicNullable<MaterialType?>(src, nameof(Material.MaterialType).ConvertCamelCaseToKebabCase())
             };
         });
         mapper.CreateMap<Material, IEnumerable<IppAttribute>>((src, map) =>
@@ -1040,17 +1040,17 @@ internal class CollectionProfiles : IProfile
 
             var attributes = new List<IppAttribute>();
             if (src.MaterialAmount.HasValue) attributes.Add(new IppAttribute(Tag.Integer, nameof(Material.MaterialAmount).ConvertCamelCaseToKebabCase(), src.MaterialAmount.Value));
-            if (src.MaterialColor != null) attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, nameof(Material.MaterialColor).ConvertCamelCaseToKebabCase(), src.MaterialColor));
+            if (src.MaterialColor != null) attributes.Add(new IppAttribute(Tag.Keyword, nameof(Material.MaterialColor).ConvertCamelCaseToKebabCase(), src.MaterialColor.Value.Value));
             if (src.MaterialDiameter.HasValue) attributes.Add(new IppAttribute(Tag.Integer, nameof(Material.MaterialDiameter).ConvertCamelCaseToKebabCase(), src.MaterialDiameter.Value));
             if (src.MaterialFillDensity.HasValue) attributes.Add(new IppAttribute(Tag.Integer, nameof(Material.MaterialFillDensity).ConvertCamelCaseToKebabCase(), src.MaterialFillDensity.Value));
-            if (src.MaterialKey != null) attributes.Add(new IppAttribute(Tag.Keyword, nameof(Material.MaterialKey).ConvertCamelCaseToKebabCase(), src.MaterialKey));
+            if (src.MaterialKey != null) attributes.Add(new IppAttribute(Tag.Keyword, nameof(Material.MaterialKey).ConvertCamelCaseToKebabCase(), src.MaterialKey.Value.Value));
             if (src.MaterialName != null) attributes.Add(new IppAttribute(Tag.NameWithoutLanguage, nameof(Material.MaterialName).ConvertCamelCaseToKebabCase(), src.MaterialName));
-            if (src.MaterialPurpose != null) attributes.Add(new IppAttribute(Tag.Keyword, nameof(Material.MaterialPurpose).ConvertCamelCaseToKebabCase(), src.MaterialPurpose));
+            if (src.MaterialPurpose != null) attributes.AddRange(src.MaterialPurpose.Select(x => new IppAttribute(Tag.Keyword, nameof(Material.MaterialPurpose).ConvertCamelCaseToKebabCase(), x.Value)));
             if (src.MaterialRate.HasValue) attributes.Add(new IppAttribute(Tag.Integer, nameof(Material.MaterialRate).ConvertCamelCaseToKebabCase(), src.MaterialRate.Value));
-            if (src.MaterialRateUnits != null) attributes.Add(new IppAttribute(Tag.Keyword, nameof(Material.MaterialRateUnits).ConvertCamelCaseToKebabCase(), src.MaterialRateUnits));
+            if (src.MaterialRateUnits != null) attributes.Add(new IppAttribute(Tag.Keyword, nameof(Material.MaterialRateUnits).ConvertCamelCaseToKebabCase(), src.MaterialRateUnits.Value.Value));
             if (src.MaterialShellThickness.HasValue) attributes.Add(new IppAttribute(Tag.Integer, nameof(Material.MaterialShellThickness).ConvertCamelCaseToKebabCase(), src.MaterialShellThickness.Value));
             if (src.MaterialTemperature.HasValue) attributes.Add(new IppAttribute(Tag.Integer, nameof(Material.MaterialTemperature).ConvertCamelCaseToKebabCase(), src.MaterialTemperature.Value));
-            if (src.MaterialType != null) attributes.Add(new IppAttribute(Tag.Keyword, nameof(Material.MaterialType).ConvertCamelCaseToKebabCase(), src.MaterialType));
+            if (src.MaterialType != null) attributes.Add(new IppAttribute(Tag.Keyword, nameof(Material.MaterialType).ConvertCamelCaseToKebabCase(), src.MaterialType.Value.Value));
             return attributes;
         });
 
@@ -1061,7 +1061,7 @@ internal class CollectionProfiles : IProfile
 
             return new PrintAccuracy
             {
-                AccuracyUnits = map.MapFromDicNullable<string?>(src, nameof(PrintAccuracy.AccuracyUnits).ConvertCamelCaseToKebabCase()),
+                AccuracyUnits = map.MapFromDicNullable<AccuracyUnits?>(src, nameof(PrintAccuracy.AccuracyUnits).ConvertCamelCaseToKebabCase()),
                 XAccuracy = map.MapFromDicNullable<int?>(src, nameof(PrintAccuracy.XAccuracy).ConvertCamelCaseToKebabCase()),
             YAccuracy = map.MapFromDicNullable<int?>(src, nameof(PrintAccuracy.YAccuracy).ConvertCamelCaseToKebabCase()),
             ZAccuracy = map.MapFromDicNullable<int?>(src, nameof(PrintAccuracy.ZAccuracy).ConvertCamelCaseToKebabCase())
@@ -1073,7 +1073,7 @@ internal class CollectionProfiles : IProfile
                 return new[] { new IppAttribute(Tag.NoValue, JobAttribute.PrintAccuracy, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
-            if (src.AccuracyUnits != null) attributes.Add(new IppAttribute(Tag.Keyword, nameof(PrintAccuracy.AccuracyUnits).ConvertCamelCaseToKebabCase(), src.AccuracyUnits));
+            if (src.AccuracyUnits != null) attributes.Add(new IppAttribute(Tag.Keyword, nameof(PrintAccuracy.AccuracyUnits).ConvertCamelCaseToKebabCase(), src.AccuracyUnits.Value.Value));
             if (src.XAccuracy.HasValue) attributes.Add(new IppAttribute(Tag.Integer, nameof(PrintAccuracy.XAccuracy).ConvertCamelCaseToKebabCase(), src.XAccuracy.Value));
             if (src.YAccuracy.HasValue) attributes.Add(new IppAttribute(Tag.Integer, nameof(PrintAccuracy.YAccuracy).ConvertCamelCaseToKebabCase(), src.YAccuracy.Value));
             if (src.ZAccuracy.HasValue) attributes.Add(new IppAttribute(Tag.Integer, nameof(PrintAccuracy.ZAccuracy).ConvertCamelCaseToKebabCase(), src.ZAccuracy.Value));

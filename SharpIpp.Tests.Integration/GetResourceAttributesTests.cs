@@ -65,7 +65,7 @@ public class GetResourceAttributesTests : SharpIppIntegrationTestBase
                     ResourceName = "Firmware",
                     ResourceFormat = "application/octet-stream",
                     ResourceFormats = new[] { "application/octet-stream", "application/x-firmware" },
-                    ResourceType = "executable-firmware"
+                    ResourceType = (ResourceType?)"executable-firmware"
                 }
             };
             var ms = new MemoryStream();

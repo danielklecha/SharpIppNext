@@ -1,4 +1,4 @@
-﻿namespace SharpIpp.Protocol.Models;
+namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// The <c>print-accuracy</c> collection.
@@ -8,7 +8,7 @@ public class PrintAccuracy : IIppCollection
 {
     bool IIppCollection.IsValue { get; set; } = true;
     bool INoValue.IsValue => ((IIppCollection)this).IsValue;
-    public string? AccuracyUnits { get; set; }
+    public AccuracyUnits? AccuracyUnits { get; set; }
     public int? XAccuracy { get; set; }
     public int? YAccuracy { get; set; }
     public int? ZAccuracy { get; set; }

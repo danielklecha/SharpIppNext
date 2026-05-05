@@ -62,7 +62,7 @@ internal class GetResourceAttributesResponseProfile : IProfile
                 ResourceName = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceName),
                 ResourceFormat = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceFormat),
                 ResourceFormats = map.MapFromDicSetNullable<string[]?>(src, SystemAttribute.ResourceFormats),
-                ResourceType = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceType),
+                ResourceType = map.MapFromDicNullable<ResourceType?>(src, SystemAttribute.ResourceType),
             });
 
         mapper.CreateMap<ResourceStatusAttributes, IDictionary<string, IppAttribute[]>>((src, map) =>
@@ -114,8 +114,8 @@ internal class GetResourceAttributesResponseProfile : IProfile
                 dic.Add(SystemAttribute.ResourceFormat, new IppAttribute[] { new IppAttribute(Tag.MimeMediaType, SystemAttribute.ResourceFormat, src.ResourceFormat!) });
             if (src.ResourceFormats != null)
                 dic.Add(SystemAttribute.ResourceFormats, src.ResourceFormats.Select(x => new IppAttribute(Tag.MimeMediaType, SystemAttribute.ResourceFormats, x)).ToArray());
-            if (!string.IsNullOrEmpty(src.ResourceType))
-                dic.Add(SystemAttribute.ResourceType, new IppAttribute[] { new IppAttribute(Tag.Keyword, SystemAttribute.ResourceType, src.ResourceType!) });
+            if (src.ResourceType != null)
+                dic.Add(SystemAttribute.ResourceType, new IppAttribute[] { new IppAttribute(Tag.Keyword, SystemAttribute.ResourceType, src.ResourceType.Value.Value) });
             return dic;
         });
     }

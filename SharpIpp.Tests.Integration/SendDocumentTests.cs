@@ -144,10 +144,10 @@ public class SendDocumentTests : SharpIppIntegrationTestBase
                 InputAutoScaling = false,
                 InputAutoSkewCorrection = true,
                 InputBrightness = 50,
-                InputColorMode = "auto",
-                InputContentType = "image/jpeg",
+                InputColorMode = (InputColorMode?)"auto",
+                InputContentType = (InputContentType?)"image/jpeg",
                 InputContrast = 10,
-                InputFilmScanMode = "negative",
+                InputFilmScanMode = (InputFilmScanMode?)"negative",
                 InputImagesToTransfer = 5,
                 InputMedia = (Media)"iso_a4_210x297mm",
                 InputOrientationRequested = Orientation.Landscape,
@@ -157,7 +157,7 @@ public class SendDocumentTests : SharpIppIntegrationTestBase
                 InputScalingWidth = 300,
                 InputSharpness = 25,
                 InputSides = Sides.TwoSidedLongEdge,
-                InputSource = "document-feeder"
+                InputSource = (InputSource?)"document-feeder"
             }
         };
         IIppRequest? serverRequest = null;

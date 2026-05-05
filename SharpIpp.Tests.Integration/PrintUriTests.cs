@@ -42,17 +42,17 @@ public class PrintUriTests : SharpIppIntegrationTestBase
                     new Material
                     {
                         MaterialAmount = 6,
-                        MaterialColor = "red",
+                        MaterialColor = (MaterialColor?)"red",
                         MaterialDiameter = 7,
                         MaterialFillDensity = 8,
-                        MaterialKey = "abs-red",
+                        MaterialKey = (MaterialKey?)"abs-red",
                         MaterialName = "ABS Red",
-                        MaterialPurpose = "support",
+                        MaterialPurpose = [(MaterialPurpose)"support"],
                         MaterialRate = 9,
-                        MaterialRateUnits = "mm-per-second",
+                        MaterialRateUnits = (MaterialRateUnits?)"mm-per-second",
                         MaterialShellThickness = 10,
                         MaterialTemperature = 230,
-                        MaterialType = "abs"
+                        MaterialType = (MaterialType?)"abs"
                     }
                 ],
                 PrintObjects =

@@ -1519,13 +1519,13 @@ public class PrinterDescriptionAttributes
     /// printer-mode-configured
     /// See: PWG 5100.18-2025 Section 7.4.4
     /// </summary>
-    public string? PrinterModeConfigured { get; set; }
+    public PrinterMode? PrinterModeConfigured { get; set; }
 
     /// <summary>
     /// printer-mode-supported
     /// See: PWG 5100.18-2025 Section 7.4.5
     /// </summary>
-    public string[]? PrinterModeSupported { get; set; }
+    public PrinterMode[]? PrinterModeSupported { get; set; }
 
     /// <summary>
     /// printer-static-resource-directory-uri
@@ -1549,7 +1549,7 @@ public class PrinterDescriptionAttributes
     /// accuracy-units-supported
     /// See: PWG 5100.21-2019 Section 8.1
     /// </summary>
-    public string[]? AccuracyUnitsSupported { get; set; }
+    public AccuracyUnits[]? AccuracyUnitsSupported { get; set; }
 
     /// <summary>
     /// chamber-humidity-default
@@ -1579,7 +1579,7 @@ public class PrinterDescriptionAttributes
     /// material-amount-units-supported
     /// See: PWG 5100.21-2019 Section 8.3.6
     /// </summary>
-    public string[]? MaterialAmountUnitsSupported { get; set; }
+    public MaterialAmountUnits[]? MaterialAmountUnitsSupported { get; set; }
 
     /// <summary>
     /// material-diameter-supported
@@ -1597,7 +1597,7 @@ public class PrinterDescriptionAttributes
     /// material-purpose-supported
     /// See: PWG 5100.21-2019 Section 8.3.9
     /// </summary>
-    public string[]? MaterialPurposeSupported { get; set; }
+    public MaterialPurpose[]? MaterialPurposeSupported { get; set; }
 
     /// <summary>
     /// material-rate-supported
@@ -1609,7 +1609,7 @@ public class PrinterDescriptionAttributes
     /// material-rate-units-supported
     /// See: PWG 5100.21-2019 Section 8.3.11
     /// </summary>
-    public string[]? MaterialRateUnitsSupported { get; set; }
+    public MaterialRateUnits[]? MaterialRateUnitsSupported { get; set; }
 
     /// <summary>
     /// material-shell-thickness-supported
@@ -1627,7 +1627,7 @@ public class PrinterDescriptionAttributes
     /// material-type-supported
     /// See: PWG 5100.21-2019 Section 8.3.14
     /// </summary>
-    public string[]? MaterialTypeSupported { get; set; }
+    public MaterialType[]? MaterialTypeSupported { get; set; }
 
     /// <summary>
     /// materials-col-database
@@ -1663,13 +1663,13 @@ public class PrinterDescriptionAttributes
     /// multiple-object-handling-default
     /// See: PWG 5100.21-2019 Section 8.3.20
     /// </summary>
-    public string? MultipleObjectHandlingDefault { get; set; }
+    public MultipleObjectHandling? MultipleObjectHandlingDefault { get; set; }
 
     /// <summary>
     /// multiple-object-handling-supported
     /// See: PWG 5100.21-2019 Section 8.3.21
     /// </summary>
-    public string[]? MultipleObjectHandlingSupported { get; set; }
+    public MultipleObjectHandling[]? MultipleObjectHandlingSupported { get; set; }
 
     /// <summary>
     /// pdf-features-supported
@@ -1681,7 +1681,7 @@ public class PrinterDescriptionAttributes
     /// platform-shape
     /// See: PWG 5100.21-2019 Section 8.3.23
     /// </summary>
-    public string? PlatformShape { get; set; }
+    public PlatformShape? PlatformShape { get; set; }
 
     /// <summary>
     /// platform-temperature-default
@@ -1711,13 +1711,13 @@ public class PrinterDescriptionAttributes
     /// print-base-default
     /// See: PWG 5100.21-2019 Section 8.3.28
     /// </summary>
-    public string? PrintBaseDefault { get; set; }
+    public PrintBase? PrintBaseDefault { get; set; }
 
     /// <summary>
     /// print-base-supported
     /// See: PWG 5100.21-2019 Section 8.3.29
     /// </summary>
-    public string[]? PrintBaseSupported { get; set; }
+    public PrintBase[]? PrintBaseSupported { get; set; }
 
     /// <summary>
     /// print-objects-supported
@@ -1729,13 +1729,13 @@ public class PrinterDescriptionAttributes
     /// print-supports-default
     /// See: PWG 5100.21-2019 Section 8.3.31
     /// </summary>
-    public string? PrintSupportsDefault { get; set; }
+    public PrintSupports? PrintSupportsDefault { get; set; }
 
     /// <summary>
     /// print-supports-supported
     /// See: PWG 5100.21-2019 Section 8.3.32
     /// </summary>
-    public string[]? PrintSupportsSupported { get; set; }
+    public PrintSupports[]? PrintSupportsSupported { get; set; }
 
     /// <summary>
     /// printer-volume-supported
@@ -1831,19 +1831,19 @@ public class PrinterDescriptionAttributes
     /// input-color-mode-supported
     /// See: PWG 5100.15-2013 Section 7.4.9
     /// </summary>
-    public string[]? InputColorModeSupported { get; set; }
+    public InputColorMode[]? InputColorModeSupported { get; set; }
 
     /// <summary>
     /// input-content-type-supported
     /// See: PWG 5100.15-2013 Section 7.4.10
     /// </summary>
-    public string[]? InputContentTypeSupported { get; set; }
+    public InputContentType[]? InputContentTypeSupported { get; set; }
 
     /// <summary>
     /// input-film-scan-mode-supported
     /// See: PWG 5100.15-2013 Section 7.4.11
     /// </summary>
-    public string[]? InputFilmScanModeSupported { get; set; }
+    public InputFilmScanMode[]? InputFilmScanModeSupported { get; set; }
 
     /// <summary>
     /// input-media-supported
@@ -1879,7 +1879,7 @@ public class PrinterDescriptionAttributes
     /// input-source-supported
     /// See: PWG 5100.15-2013 Section 7.4.18
     /// </summary>
-    public string[]? InputSourceSupported { get; set; }
+    public InputSource[]? InputSourceSupported { get; set; }
 
     /// <summary>
     /// logo-uri-formats-supported

@@ -123,11 +123,11 @@ public class PrinterDescriptionAttributesProfileTests
 
         var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(src);
 
-        dst.AccuracyUnitsSupported.Should().BeEquivalentTo("mm", "um");
+        dst.AccuracyUnitsSupported.Should().BeEquivalentTo(new[] { (AccuracyUnits)"mm", (AccuracyUnits)"um" });
         dst.PrinterCameraImageUri.Should().BeEquivalentTo("https://printer.example/camera");
-        dst.PlatformShape.Should().Be("rectangular");
-        dst.PrintBaseDefault.Should().Be("raft");
-        dst.PrintSupportsSupported.Should().BeEquivalentTo("none", "standard");
+        dst.PlatformShape.Should().Be((PlatformShape?)"rectangular");
+        dst.PrintBaseDefault.Should().Be((PrintBase?)"raft");
+        dst.PrintSupportsSupported.Should().BeEquivalentTo(new[] { (PrintSupports)"none", (PrintSupports)"standard" });
     }
 
     [TestMethod]
@@ -202,10 +202,10 @@ public class PrinterDescriptionAttributesProfileTests
     {
         var src = new PrinterDescriptionAttributes
         {
-            AccuracyUnitsSupported = ["mm", "um"],
-            PlatformShape = "rectangular",
-            PrintBaseDefault = "raft",
-            PrintSupportsSupported = ["none", "standard"],
+            AccuracyUnitsSupported = new[] { (AccuracyUnits)"mm", (AccuracyUnits)"um" },
+            PlatformShape = (PlatformShape?)"rectangular",
+            PrintBaseDefault = (PrintBase?)"raft",
+            PrintSupportsSupported = new[] { (PrintSupports)"none", (PrintSupports)"standard" },
             PrinterVolumeSupported = new PrinterVolumeSupported
             {
                 XDimension = 20000,

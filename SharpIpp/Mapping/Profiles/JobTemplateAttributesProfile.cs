@@ -271,7 +271,7 @@ internal class JobTemplateAttributesProfile : IProfile
                 job.AddRange(src.MaterialsCol.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.MaterialsCol)));
 
             if (src.MultipleObjectHandling != null)
-                job.Add(new IppAttribute(Tag.Keyword, JobAttribute.MultipleObjectHandling, src.MultipleObjectHandling));
+                job.Add(new IppAttribute(Tag.Keyword, JobAttribute.MultipleObjectHandling, map.Map<string>(src.MultipleObjectHandling.Value)));
 
             if (src.PlatformTemperature.HasValue)
                 job.Add(new IppAttribute(Tag.Integer, JobAttribute.PlatformTemperature, src.PlatformTemperature.Value));
@@ -280,13 +280,13 @@ internal class JobTemplateAttributesProfile : IProfile
                 job.AddRange(map.Map<IEnumerable<IppAttribute>>(src.PrintAccuracy).ToBegCollection(JobAttribute.PrintAccuracy));
 
             if (src.PrintBase != null)
-                job.Add(new IppAttribute(Tag.Keyword, JobAttribute.PrintBase, src.PrintBase));
+                job.Add(new IppAttribute(Tag.Keyword, JobAttribute.PrintBase, map.Map<string>(src.PrintBase.Value)));
 
             if (src.PrintObjects != null)
                 job.AddRange(src.PrintObjects.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.PrintObjects)));
 
             if (src.PrintSupports != null)
-                job.Add(new IppAttribute(Tag.Keyword, JobAttribute.PrintSupports, src.PrintSupports));
+                job.Add(new IppAttribute(Tag.Keyword, JobAttribute.PrintSupports, map.Map<string>(src.PrintSupports.Value)));
 
             if (src.Overrides != null)
                 job.AddRange(src.Overrides.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.Overrides)));
@@ -373,14 +373,14 @@ internal class JobTemplateAttributesProfile : IProfile
             dst.RetryTimeOut = map.MapFromDicNullable<int?>(jobDict, JobAttribute.RetryTimeOut);
             if (jobDict.ContainsKey(JobAttribute.MaterialsCol))
                 dst.MaterialsCol = jobDict[JobAttribute.MaterialsCol].GroupBegCollection().Select(x => map.Map<Material>(x.FromBegCollection().ToIppDictionary())).ToArray();
-            dst.MultipleObjectHandling = map.MapFromDicNullable<string?>(jobDict, JobAttribute.MultipleObjectHandling);
+            dst.MultipleObjectHandling = map.MapFromDicNullable<MultipleObjectHandling?>(jobDict, JobAttribute.MultipleObjectHandling);
             dst.PlatformTemperature = map.MapFromDicNullable<int?>(jobDict, JobAttribute.PlatformTemperature);
             if (jobDict.ContainsKey(JobAttribute.PrintAccuracy))
                 dst.PrintAccuracy = map.Map<PrintAccuracy>(jobDict[JobAttribute.PrintAccuracy].GroupBegCollection().First().FromBegCollection().ToIppDictionary());
-            dst.PrintBase = map.MapFromDicNullable<string?>(jobDict, JobAttribute.PrintBase);
+            dst.PrintBase = map.MapFromDicNullable<PrintBase?>(jobDict, JobAttribute.PrintBase);
             if (jobDict.ContainsKey(JobAttribute.PrintObjects))
                 dst.PrintObjects = jobDict[JobAttribute.PrintObjects].GroupBegCollection().Select(x => map.Map<PrintObject>(x.FromBegCollection().ToIppDictionary())).ToArray();
-            dst.PrintSupports = map.MapFromDicNullable<string?>(jobDict, JobAttribute.PrintSupports);
+            dst.PrintSupports = map.MapFromDicNullable<PrintSupports?>(jobDict, JobAttribute.PrintSupports);
             if (jobDict.ContainsKey(JobAttribute.Overrides))
                 dst.Overrides = jobDict[JobAttribute.Overrides].GroupBegCollection().Select(x => map.Map<OverrideInstruction>(x.FromBegCollection().ToIppDictionary())).ToArray();
             return dst;

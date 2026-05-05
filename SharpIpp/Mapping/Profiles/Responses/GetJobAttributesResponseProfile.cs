@@ -148,7 +148,7 @@ internal class GetJobAttributesResponseProfile : IProfile
             OutputDeviceUuidAssigned = map.MapFromDicNullable<Uri?>(src, JobAttribute.OutputDeviceUuidAssigned),
             ChamberHumidityActual = map.MapFromDicSetNullable<int[]?>(src, JobAttribute.ChamberHumidityActual),
             ChamberTemperatureActual = map.MapFromDicSetNullable<int[]?>(src, JobAttribute.ChamberTemperatureActual),
-            MultipleObjectHandlingActual3d = map.MapFromDicNullable<string?>(src, JobAttribute.MultipleObjectHandlingActual3d),
+            MultipleObjectHandlingActual3d = map.MapFromDicNullable<MultipleObjectHandling?>(src, JobAttribute.MultipleObjectHandlingActual3d),
             PlatformTemperatureActual = map.MapFromDicSetNullable<int[]?>(src, JobAttribute.PlatformTemperatureActual),
             PrintBaseActual3d = map.MapFromDicSetNullable<PrintBase[]?>(src, JobAttribute.PrintBaseActual3d),
             PrintSupportsActual3d = map.MapFromDicSetNullable<PrintSupports[]?>(src, JobAttribute.PrintSupportsActual3d),
@@ -415,7 +415,7 @@ internal class GetJobAttributesResponseProfile : IProfile
             if (src.ChamberTemperatureActual != null)
                 dic.Add(JobAttribute.ChamberTemperatureActual, src.ChamberTemperatureActual.Select(x => new IppAttribute(Tag.Integer, JobAttribute.ChamberTemperatureActual, x)).ToArray());
             if (src.MultipleObjectHandlingActual3d != null)
-                dic.Add(JobAttribute.MultipleObjectHandlingActual3d, [new IppAttribute(Tag.Keyword, JobAttribute.MultipleObjectHandlingActual3d, src.MultipleObjectHandlingActual3d)]);
+                dic.Add(JobAttribute.MultipleObjectHandlingActual3d, [new IppAttribute(Tag.Keyword, JobAttribute.MultipleObjectHandlingActual3d, src.MultipleObjectHandlingActual3d.Value.Value)]);
             if (src.PlatformTemperatureActual != null)
                 dic.Add(JobAttribute.PlatformTemperatureActual, src.PlatformTemperatureActual.Select(x => new IppAttribute(Tag.Integer, JobAttribute.PlatformTemperatureActual, x)).ToArray());
             if (src.PrintAccuracyActual3d != null)

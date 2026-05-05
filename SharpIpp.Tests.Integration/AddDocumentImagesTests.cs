@@ -30,10 +30,10 @@ public class AddDocumentImagesTests : SharpIppIntegrationTestBase
                     InputAutoScaling = false,
                     InputAutoSkewCorrection = true,
                     InputBrightness = 50,
-                    InputColorMode = "auto",
-                    InputContentType = "image/jpeg",
+                    InputColorMode = (InputColorMode?)"auto",
+                    InputContentType = (InputContentType?)"image/jpeg",
                     InputContrast = 10,
-                    InputFilmScanMode = "negative",
+                    InputFilmScanMode = (InputFilmScanMode?)"negative",
                     InputImagesToTransfer = 5,
                     InputOrientationRequested = Orientation.Landscape,
                     InputQuality = PrintQuality.High,
@@ -42,7 +42,7 @@ public class AddDocumentImagesTests : SharpIppIntegrationTestBase
                     InputScalingWidth = 300,
                     InputSharpness = 25,
                     InputSides = Sides.TwoSidedLongEdge,
-                    InputSource = "document-feeder"
+                    InputSource = (InputSource?)"document-feeder"
                 }
             }
         };

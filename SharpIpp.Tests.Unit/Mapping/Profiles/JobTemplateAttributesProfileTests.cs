@@ -207,18 +207,18 @@ public class JobTemplateAttributesProfileTests
         var src = new JobTemplateAttributes
         {
             MaterialsCol = [new Material { MaterialName = "pla" }],
-            MultipleObjectHandling = "abort-job",
+            MultipleObjectHandling = (MultipleObjectHandling?)"abort-job",
             PlatformTemperature = 75,
             PrintAccuracy = new PrintAccuracy
             {
-                AccuracyUnits = "mm",
+                AccuracyUnits = (AccuracyUnits?)"mm",
                 XAccuracy = 100,
                 YAccuracy = 100,
                 ZAccuracy = 50
             },
-            PrintBase = "raft",
+            PrintBase = (PrintBase?)"raft",
             PrintObjects = [new PrintObject { DocumentNumber = 1, PrintObjectsSource = "ipp://example/doc/1" }],
-            PrintSupports = "generated-supports"
+            PrintSupports = (PrintSupports?)"generated-supports"
         };
 
         var request = _mapper.Map<IppRequestMessage>(src);
@@ -254,7 +254,7 @@ public class JobTemplateAttributesProfileTests
         request.JobAttributes.AddRange(_mapper.Map<Material, IEnumerable<IppAttribute>>(new Material { MaterialName = "pla" }).ToBegCollection(JobAttribute.MaterialsCol));
         request.JobAttributes.Add(new IppAttribute(Tag.Keyword, JobAttribute.MultipleObjectHandling, "abort-job"));
         request.JobAttributes.Add(new IppAttribute(Tag.Integer, JobAttribute.PlatformTemperature, 75));
-        request.JobAttributes.AddRange(_mapper.Map<PrintAccuracy, IEnumerable<IppAttribute>>(new PrintAccuracy { AccuracyUnits = "mm", XAccuracy = 100, YAccuracy = 100, ZAccuracy = 50 }).ToBegCollection(JobAttribute.PrintAccuracy));
+        request.JobAttributes.AddRange(_mapper.Map<PrintAccuracy, IEnumerable<IppAttribute>>(new PrintAccuracy { AccuracyUnits = (AccuracyUnits?)"mm", XAccuracy = 100, YAccuracy = 100, ZAccuracy = 50 }).ToBegCollection(JobAttribute.PrintAccuracy));
         request.JobAttributes.Add(new IppAttribute(Tag.Keyword, JobAttribute.PrintBase, "raft"));
         request.JobAttributes.AddRange(_mapper.Map<PrintObject, IEnumerable<IppAttribute>>(new PrintObject { DocumentNumber = 1, PrintObjectsSource = "ipp://example/doc/1" }).ToBegCollection(JobAttribute.PrintObjects));
         request.JobAttributes.Add(new IppAttribute(Tag.Keyword, JobAttribute.PrintSupports, "generated-supports"));
@@ -263,14 +263,14 @@ public class JobTemplateAttributesProfileTests
 
         dst.MaterialsCol.Should().NotBeNull();
         dst.MaterialsCol![0].MaterialName.Should().Be("pla");
-        dst.MultipleObjectHandling.Should().Be("abort-job");
+        dst.MultipleObjectHandling.Should().Be((MultipleObjectHandling?)"abort-job");
         dst.PlatformTemperature.Should().Be(75);
         dst.PrintAccuracy.Should().NotBeNull();
-        dst.PrintAccuracy!.AccuracyUnits.Should().Be("mm");
-        dst.PrintBase.Should().Be("raft");
+        dst.PrintAccuracy!.AccuracyUnits.Should().Be((AccuracyUnits?)"mm");
+        dst.PrintBase.Should().Be((PrintBase?)"raft");
         dst.PrintObjects.Should().NotBeNull();
         dst.PrintObjects![0].DocumentNumber.Should().Be(1);
-        dst.PrintSupports.Should().Be("generated-supports");
+        dst.PrintSupports.Should().Be((PrintSupports?)"generated-supports");
     }
 
     [TestMethod]

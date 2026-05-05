@@ -223,7 +223,7 @@ public class NoValueTests
     [TestMethod]
     public void IsNoValue_WithCollectionNoValue_ShouldReturnTrue()
     {
-        var mediaCol = new MediaCol { IsValue = false };
+        var mediaCol = NoValue.GetNoValue<MediaCol>();
         var result = NoValue.IsNoValue(mediaCol);
         result.Should().BeTrue();
     }
