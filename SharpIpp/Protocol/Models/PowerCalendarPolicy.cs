@@ -1,4 +1,4 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Member attributes for <c>power-calendar-policy-col</c>.
@@ -6,7 +6,8 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public class PowerCalendarPolicy : IIppCollection
 {
-    public bool IsValue { get; set; } = true;
+    bool IIppCollection.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
 
     public int? CalendarId { get; set; }
     public int? DayOfMonth { get; set; }

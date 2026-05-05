@@ -1,4 +1,4 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the locations of holes to make in the hardcopy output.
@@ -7,7 +7,8 @@ namespace SharpIpp.Protocol.Models;
 public class Punching : IIppCollection
 {
     /// <inheritdoc />
-    public bool IsValue { get; set; } = true;
+    bool IIppCollection.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
 
     /// <summary>
     /// 1setOf integer(0:MAX) in hundredths of millimeters (1/2540th of an inch)

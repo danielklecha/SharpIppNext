@@ -1,4 +1,4 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Member attributes for <c>power-event-policy-col</c>.
@@ -6,7 +6,8 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public class PowerEventPolicy : IIppCollection
 {
-    public bool IsValue { get; set; } = true;
+    bool IIppCollection.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
 
     public int? EventId { get; set; }
     public string? EventName { get; set; }

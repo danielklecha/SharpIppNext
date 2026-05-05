@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace SharpIpp.Protocol.Models;
@@ -9,7 +9,8 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public class DestinationUriReady : IIppCollection
 {
-    public bool IsValue { get; set; } = true;
+    bool IIppCollection.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
 
     /// <summary>
     /// The <c>destination-attributes</c> member attribute (1setOf collection).

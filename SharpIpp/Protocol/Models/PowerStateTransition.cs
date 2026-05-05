@@ -1,4 +1,4 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Member attributes for <c>power-state-transitions-col</c>.
@@ -6,7 +6,8 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public class PowerStateTransition : IIppCollection
 {
-    public bool IsValue { get; set; } = true;
+    bool IIppCollection.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
 
     public PowerState? EndPowerState { get; set; }
     public PowerState? StartPowerState { get; set; }

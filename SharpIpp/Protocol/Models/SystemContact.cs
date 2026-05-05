@@ -1,10 +1,11 @@
-using System;
+﻿using System;
 
 namespace SharpIpp.Protocol.Models;
 
 public class SystemContact : IIppCollection
 {
-    public bool IsValue { get; set; } = true;
+    bool IIppCollection.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
 
     /// <summary>
     /// contact-name (name(MAX))

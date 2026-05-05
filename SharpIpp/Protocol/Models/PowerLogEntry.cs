@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace SharpIpp.Protocol.Models;
 
@@ -8,7 +8,8 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public class PowerLogEntry : IIppCollection
 {
-    public bool IsValue { get; set; } = true;
+    bool IIppCollection.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
 
     public int? LogId { get; set; }
     public PowerState? PowerState { get; set; }

@@ -1,10 +1,11 @@
-using System;
+﻿using System;
 
 namespace SharpIpp.Protocol.Models;
 
 public class SystemXri : IIppCollection
 {
-    public bool IsValue { get; set; } = true;
+    bool IIppCollection.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
 
     /// <summary>
     /// xri-uri (uri)

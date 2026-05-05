@@ -1,4 +1,4 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// PWG 5100.5-2024 Section 6.3
@@ -7,7 +7,8 @@ namespace SharpIpp.Protocol.Models;
 public class DocumentTemplateAttributes : IIppCollection
 {
     /// <inheritdoc />
-    public bool IsValue { get; set; } = true;
+    bool IIppCollection.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
 
     /// <summary>
     /// The <c>copies</c> Document Template attribute.

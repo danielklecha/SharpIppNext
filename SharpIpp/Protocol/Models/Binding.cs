@@ -1,4 +1,4 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the location and type of binding to apply.
@@ -7,7 +7,8 @@ namespace SharpIpp.Protocol.Models;
 public class Binding : IIppCollection
 {
     /// <inheritdoc />
-    public bool IsValue { get; set; } = true;
+    bool IIppCollection.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
 
     /// <summary>
     /// type1 keyword

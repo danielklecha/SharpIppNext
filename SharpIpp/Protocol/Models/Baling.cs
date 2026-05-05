@@ -1,4 +1,4 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the type of baling to apply to a collection of Media Sheets.
@@ -7,7 +7,8 @@ namespace SharpIpp.Protocol.Models;
 public class Baling : IIppCollection
 {
     /// <inheritdoc />
-    public bool IsValue { get; set; } = true;
+    bool IIppCollection.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
 
     /// <summary>
     /// type2 keyword | name(MAX)

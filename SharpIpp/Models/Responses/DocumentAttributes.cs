@@ -8,7 +8,8 @@ namespace SharpIpp.Models.Responses;
 /// </summary>
 public class DocumentAttributes : IIppCollection
 {
-    public bool IsValue { get; set; } = true;
+    bool IIppCollection.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
     /// <summary>
     /// The document-number IPP attribute.
     /// See: PWG 5100.5-2024 Section 6.2.4

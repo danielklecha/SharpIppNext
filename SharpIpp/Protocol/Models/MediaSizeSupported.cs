@@ -1,4 +1,4 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies a single element of the "media-size-supported" Printer Description attribute.
@@ -7,7 +7,8 @@ namespace SharpIpp.Protocol.Models;
 public class MediaSizeSupported : IIppCollection
 {
     /// <inheritdoc />
-    public bool IsValue { get; set; } = true;
+    bool IIppCollection.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
 
     /// <summary>
     /// integer(1:MAX) | rangeOfInteger(1:MAX)

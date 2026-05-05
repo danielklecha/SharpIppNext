@@ -48,12 +48,14 @@ public class TypesProfileTest
             yield return [NoValue.Instance, typeof(NoValue), typeof(PrintQuality), (PrintQuality)int.MinValue, "NoValue -> PrintQuality"];
             yield return [NoValue.Instance, typeof(NoValue), typeof(ResolutionUnit), (ResolutionUnit)int.MinValue, "NoValue -> ResolutionUnit"];
             yield return [NoValue.Instance, typeof(NoValue), typeof(PrinterType), (PrinterType)int.MinValue, "NoValue -> PrinterType"];
+            yield return [NoValue.Instance, typeof(NoValue), typeof(TransmissionStatus), (TransmissionStatus)int.MinValue, "NoValue -> TransmissionStatus"];
             yield return [NoValue.Instance, typeof(NoValue), typeof(IppOperation), (IppOperation)short.MinValue, "NoValue -> IppOperation"];
             yield return [NoValue.Instance, typeof(NoValue), typeof(bool), false, "NoValue -> Bool"];
             yield return [NoValue.Instance, typeof(NoValue), typeof(DateTime), NoValue.GetNoValue<DateTime>(), "NoValue -> DateTime"];
             yield return [NoValue.Instance, typeof(NoValue), typeof(DateTime?), NoValue.GetNoValue<DateTime?>(), "NoValue -> DateTime?"];
             yield return [NoValue.Instance, typeof(NoValue), typeof(DateTimeOffset), NoValue.GetNoValue<DateTimeOffset>(), "NoValue -> DateTimeOffset"];
             yield return [NoValue.Instance, typeof(NoValue), typeof(SharpIpp.Protocol.Models.Range), NoValue.GetNoValue<SharpIpp.Protocol.Models.Range>(), "NoValue -> Range"];
+            yield return [NoValue.Instance, typeof(NoValue), typeof(Resolution), NoValue.GetNoValue<Resolution>(), "NoValue -> Resolution"];
             yield return [NoValue.Instance, typeof(NoValue), typeof(StringWithLanguage), NoValue.GetNoValue<StringWithLanguage>(), "NoValue -> StringWithLanguage"];
             yield return [NoValue.Instance, typeof(NoValue), typeof(string), NoValue.GetNoValue<string>(), "NoValue -> String"];
             yield return [NoValue.Instance, typeof(NoValue), typeof(string), NoValue.GetNoValue<string?>(), "NoValue -> String?"];

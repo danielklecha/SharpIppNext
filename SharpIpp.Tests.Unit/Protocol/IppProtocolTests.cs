@@ -1429,6 +1429,103 @@ public class IppProtocolTests
         act.Should().Throw<ArgumentException>().WithMessage("0 length attribute name found not in a 1setOf");
     }
 
+    /// <summary>
+    /// Guards against a regression where encoding is incorrectly reset to ASCII when entering a new section.
+    /// Per RFC 8011 §4.1.4, attributes-charset applies to the entire message, not just the operation section.
+    /// A non-ASCII text attribute (e.g. job-name "Ä") in the job-attributes section must be decoded
+    /// using the charset negotiated in operation-attributes, not ASCII.
+    /// </summary>
+    [TestMethod]
+    public async Task ReadIppRequestAsync_Utf8JobNameInJobSection_ShouldDecodeCorrectly()
+    {
+        // Arrange
+        // Payload: version 1.1, op PrintJob, request-id 1
+        //   operation-attributes-tag (0x01)
+        //     attributes-charset = "utf-8"   (Tag.Charset = 0x47)
+        //   job-attributes-tag (0x02)
+        //     job-name = "Ä" in UTF-8         (Tag.NameWithoutLanguage = 0x42)
+        //       "Ä" = 0xC3 0x84 in UTF-8
+        //   end-of-attributes-tag (0x03)
+        var bytes = new byte[]
+        {
+            0x01, 0x01, 0x00, 0x02, 0x00, 0x00, 0x00, 0x01, // header
+            0x01,                                             // operation-attributes-tag
+            0x47,                                             // Tag.Charset
+            0x00, 0x12,                                       // name length: 18
+            // "attributes-charset"
+            0x61, 0x74, 0x74, 0x72, 0x69, 0x62, 0x75, 0x74, 0x65, 0x73,
+            0x2D, 0x63, 0x68, 0x61, 0x72, 0x73, 0x65, 0x74,
+            0x00, 0x05,                                       // value length: 5
+            0x75, 0x74, 0x66, 0x2D, 0x38,                   // "utf-8"
+            0x02,                                             // job-attributes-tag
+            0x42,                                             // Tag.NameWithoutLanguage
+            0x00, 0x08,                                       // name length: 8
+            0x6A, 0x6F, 0x62, 0x2D, 0x6E, 0x61, 0x6D, 0x65, // "job-name"
+            0x00, 0x02,                                       // value length: 2
+            0xC3, 0x84,                                       // "Ä" in UTF-8
+            0x03                                              // end-of-attributes-tag
+        };
+        var protocol = new IppProtocol();
+        using var stream = new MemoryStream(bytes);
+
+        // Act
+        var result = await protocol.ReadIppRequestAsync(stream);
+
+        // Assert
+        result.JobAttributes.Should().HaveCount(1);
+        result.JobAttributes[0].Name.Should().Be(JobAttribute.JobName);
+        result.JobAttributes[0].Value.Should().Be("\u00C4"); // "Ä"
+    }
+
+    /// <summary>
+    /// Guards against a regression where encoding is incorrectly reset to ASCII when entering a new section.
+    /// Per RFC 8011 §4.1.4, attributes-charset applies to the entire message, not just the operation section.
+    /// A non-ASCII text attribute (e.g. job-name "Ä") in the job-attributes section must be decoded
+    /// using the charset negotiated in operation-attributes, not ASCII.
+    /// </summary>
+    [TestMethod]
+    public async Task ReadIppResponseAsync_Utf8JobNameInJobSection_ShouldDecodeCorrectly()
+    {
+        // Arrange
+        // Payload: version 1.1, status SuccessfulOk, request-id 1
+        //   operation-attributes-tag (0x01)
+        //     attributes-charset = "utf-8"   (Tag.Charset = 0x47)
+        //   job-attributes-tag (0x02)
+        //     job-name = "Ä" in UTF-8         (Tag.NameWithoutLanguage = 0x42)
+        //       "Ä" = 0xC3 0x84 in UTF-8
+        //   end-of-attributes-tag (0x03)
+        var bytes = new byte[]
+        {
+            0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, // header
+            0x01,                                             // operation-attributes-tag
+            0x47,                                             // Tag.Charset
+            0x00, 0x12,                                       // name length: 18
+            // "attributes-charset"
+            0x61, 0x74, 0x74, 0x72, 0x69, 0x62, 0x75, 0x74, 0x65, 0x73,
+            0x2D, 0x63, 0x68, 0x61, 0x72, 0x73, 0x65, 0x74,
+            0x00, 0x05,                                       // value length: 5
+            0x75, 0x74, 0x66, 0x2D, 0x38,                   // "utf-8"
+            0x02,                                             // job-attributes-tag
+            0x42,                                             // Tag.NameWithoutLanguage
+            0x00, 0x08,                                       // name length: 8
+            0x6A, 0x6F, 0x62, 0x2D, 0x6E, 0x61, 0x6D, 0x65, // "job-name"
+            0x00, 0x02,                                       // value length: 2
+            0xC3, 0x84,                                       // "Ä" in UTF-8
+            0x03                                              // end-of-attributes-tag
+        };
+        var protocol = new IppProtocol();
+        using var stream = new MemoryStream(bytes);
+
+        // Act
+        var result = await protocol.ReadIppResponseAsync(stream);
+
+        // Assert
+        result.JobAttributes.Should().HaveCount(1);
+        result.JobAttributes[0].Should().ContainSingle();
+        result.JobAttributes[0][0].Name.Should().Be(JobAttribute.JobName);
+        result.JobAttributes[0][0].Value.Should().Be("\u00C4"); // "Ä"
+    }
+
     [TestMethod]
     public void GetNormalizedName_PrevMember_NameIsValue()
     {
