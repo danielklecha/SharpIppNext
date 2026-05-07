@@ -8,17 +8,11 @@ namespace SharpIpp.Mapping.Profiles;
 
 // ReSharper disable once UnusedMember.Global
 internal class FinishingsColProfile : IProfile
-{
-    private static bool IsOutOfBandNoValue(IDictionary<string, IppAttribute[]> src)
-    {
-        return src.Count == 1 && src.Values.First().Length == 1 && src.Values.First()[0].Tag.IsOutOfBand();
-    }
-
-    public void CreateMaps(IMapperConstructor mapper)
+{public void CreateMaps(IMapperConstructor mapper)
     {
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, FinishingsCol>((src, map) =>
         {
-            if (IsOutOfBandNoValue(src))
+            if (src.IsOutOfBandNoValue())
                 return NoValue.GetNoValue<FinishingsCol>();
 
             var finishingsCol = new FinishingsCol
@@ -105,7 +99,7 @@ internal class FinishingsColProfile : IProfile
 
         mapper.CreateMap<Dictionary<string, IppAttribute[]>, Baling>((src, map) =>
         {
-            if (IsOutOfBandNoValue(src))
+            if (src.IsOutOfBandNoValue())
                 return NoValue.GetNoValue<Baling>();
 
             return new Baling
@@ -136,7 +130,7 @@ internal class FinishingsColProfile : IProfile
 
         mapper.CreateMap<Dictionary<string, IppAttribute[]>, Binding>((src, map) =>
         {
-            if (IsOutOfBandNoValue(src))
+            if (src.IsOutOfBandNoValue())
                 return NoValue.GetNoValue<Binding>();
 
             return new Binding
@@ -165,7 +159,7 @@ internal class FinishingsColProfile : IProfile
 
         mapper.CreateMap<Dictionary<string, IppAttribute[]>, Coating>((src, map) =>
         {
-            if (IsOutOfBandNoValue(src))
+            if (src.IsOutOfBandNoValue())
                 return NoValue.GetNoValue<Coating>();
 
             return new Coating
@@ -194,7 +188,7 @@ internal class FinishingsColProfile : IProfile
 
         mapper.CreateMap<Dictionary<string, IppAttribute[]>, Covering>((src, map) =>
         {
-            if (IsOutOfBandNoValue(src))
+            if (src.IsOutOfBandNoValue())
                 return NoValue.GetNoValue<Covering>();
 
             return new Covering
@@ -221,7 +215,7 @@ internal class FinishingsColProfile : IProfile
 
         mapper.CreateMap<Dictionary<string, IppAttribute[]>, Folding>((src, map) =>
         {
-            if (IsOutOfBandNoValue(src))
+            if (src.IsOutOfBandNoValue())
                 return NoValue.GetNoValue<Folding>();
 
             return new Folding
@@ -246,7 +240,7 @@ internal class FinishingsColProfile : IProfile
 
         mapper.CreateMap<Dictionary<string, IppAttribute[]>, Laminating>((src, map) =>
         {
-            if (IsOutOfBandNoValue(src))
+            if (src.IsOutOfBandNoValue())
                 return NoValue.GetNoValue<Laminating>();
 
             return new Laminating
@@ -275,7 +269,7 @@ internal class FinishingsColProfile : IProfile
 
         mapper.CreateMap<Dictionary<string, IppAttribute[]>, Punching>((src, map) =>
         {
-            if (IsOutOfBandNoValue(src))
+            if (src.IsOutOfBandNoValue())
                 return NoValue.GetNoValue<Punching>();
 
             return new Punching
@@ -300,7 +294,7 @@ internal class FinishingsColProfile : IProfile
 
         mapper.CreateMap<Dictionary<string, IppAttribute[]>, Stitching>((src, map) =>
         {
-            if (IsOutOfBandNoValue(src))
+            if (src.IsOutOfBandNoValue())
                 return NoValue.GetNoValue<Stitching>();
 
             return new Stitching
@@ -329,7 +323,7 @@ internal class FinishingsColProfile : IProfile
 
         mapper.CreateMap<Dictionary<string, IppAttribute[]>, Trimming>((src, map) =>
         {
-            if (IsOutOfBandNoValue(src))
+            if (src.IsOutOfBandNoValue())
                 return NoValue.GetNoValue<Trimming>();
 
             return new Trimming

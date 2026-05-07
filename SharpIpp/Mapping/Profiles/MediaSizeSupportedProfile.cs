@@ -8,20 +8,14 @@ namespace SharpIpp.Mapping.Profiles;
 
 // ReSharper disable once UnusedMember.Global
 internal class MediaSizeSupportedProfile : IProfile
-{
-    private static bool IsOutOfBandNoValue(IDictionary<string, IppAttribute[]> src)
-    {
-        return src.Count == 1 && src.Values.First().Length == 1 && src.Values.First()[0].Tag.IsOutOfBand();
-    }
-
-    public void CreateMaps(IMapperConstructor mapper)
+{public void CreateMaps(IMapperConstructor mapper)
     {
         const string xDimension = "x-dimension";
         const string yDimension = "y-dimension";
 
         mapper.CreateMap<Dictionary<string, IppAttribute[]>, MediaSizeSupported>((src, map) =>
         {
-            if (IsOutOfBandNoValue(src))
+            if (src.IsOutOfBandNoValue())
                 return NoValue.GetNoValue<MediaSizeSupported>();
 
             return new MediaSizeSupported

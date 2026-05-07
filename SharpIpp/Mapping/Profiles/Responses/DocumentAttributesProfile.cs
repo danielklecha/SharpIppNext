@@ -13,16 +13,13 @@ namespace SharpIpp.Mapping.Profiles.Responses;
 internal class DocumentAttributesProfile : IProfile
 {
     public void CreateMaps(IMapperConstructor mapper)
-    {        static bool IsOutOfBandNoValue(IDictionary<string, IppAttribute[]> src)
-        {
-            return src.Count == 1 && src.Values.First().Length == 1 && src.Values.First()[0].Tag.IsOutOfBand();
-        }
+    {
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, DocumentAttributes>((
             src,
             dst,
             map) =>
         {
-            if (IsOutOfBandNoValue(src))
+            if (src.IsOutOfBandNoValue())
                 return NoValue.GetNoValue<DocumentAttributes>();
 
             dst ??= new DocumentAttributes();

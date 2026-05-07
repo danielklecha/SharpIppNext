@@ -9,11 +9,6 @@ namespace SharpIpp.Mapping.Profiles.Requests;
 
 internal class DocumentTemplateAttributesProfile : IProfile
 {
-    private static bool IsOutOfBandNoValue(IDictionary<string, IppAttribute[]> src)
-    {
-        return src.Count == 1 && src.Values.First().Length == 1 && src.Values.First()[0].Tag.IsOutOfBand();
-    }
-
     public void CreateMaps(IMapperConstructor mapper)
     {
         mapper.CreateMap<DocumentTemplateAttributes, List<IppAttribute>>((src, map) =>
@@ -149,7 +144,7 @@ internal class DocumentTemplateAttributesProfile : IProfile
 
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, DocumentTemplateAttributes>((src, map) =>
         {
-            if (IsOutOfBandNoValue(src))
+            if (src.IsOutOfBandNoValue())
                 return NoValue.GetNoValue<DocumentTemplateAttributes>();
 
             var dst = new DocumentTemplateAttributes();
