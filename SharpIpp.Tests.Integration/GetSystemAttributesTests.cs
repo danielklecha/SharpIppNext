@@ -57,7 +57,7 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
         var clientResponse = await client.GetSystemAttributesAsync(clientRequest);
         clientRequest.Should().BeEquivalentTo(serverRequest);
         clientResponse.Should().NotBeNull();
-        clientResponse.RequestId.Should().Be(serverResponse.RequestId);
+        clientResponse.RequestId.Should().Be(serverResponse!.RequestId);
         clientResponse.Version.Should().Be(serverResponse.Version);
         clientResponse.StatusCode.Should().Be(serverResponse.StatusCode);
         clientResponse.SystemAttributes.Should().NotBeNull();
@@ -171,7 +171,7 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
         mapped.SystemStringsLanguagesSupported.Should().Contain("en-us");
         mapped.IppVersionsSupported.Should().Contain(new IppVersion(2, 0));
         mapped.SystemInfo.Should().Be("test-info");
-        mapped.SystemXriSupported.Should().ContainSingle(x => x.XriUri.ToString() == "ipp://127.0.0.1:631/" && x.XriAuthentication == "none" && x.XriSecurity == "tls");
+        mapped.SystemXriSupported.Should().ContainSingle(x => x.XriUri != null && x.XriUri.ToString() == "ipp://127.0.0.1:631/" && x.XriAuthentication == "none" && x.XriSecurity == "tls");
     }
 
     [TestMethod]
@@ -296,6 +296,7 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
             x.PrinterStateReasons.Contains((PrinterStateReason)"printer-state-idle") &&
             x.PrinterXriSupported != null &&
             x.PrinterXriSupported.Any(y =>
+                y.XriUri != null &&
                 y.XriUri.ToString() == "ipp://127.0.0.1:631/" &&
                 y.XriAuthentication == "none" &&
                 y.XriSecurity == "tls"));
@@ -604,9 +605,9 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
         mapped.SystemDescriptionAttributes.SystemUserApplicationStringVersion.Should().Contain("v1");
         mapped.SystemDescriptionAttributes.SystemUserApplicationVersion.Should().Contain("1.0");
         mapped.SystemDescriptionAttributes.SystemTimeSourceConfigured.Should().Be((SystemTimeSourceConfigured)"ntp");
-        mapped.SystemDescriptionAttributes.SystemContactCol.Should().ContainSingle(x => x.ContactName == "contact-1" && x.ContactUri.ToString() == "mailto:contact-1@example.com");
-        mapped.SystemDescriptionAttributes.SystemServiceContactCol.Should().ContainSingle(x => x.ContactName == "service-1" && x.ContactUri.ToString() == "mailto:service-1@example.com");
-        mapped.SystemDescriptionAttributes.SystemXriSupported.Should().ContainSingle(x => x.XriUri.ToString() == "ipp://127.0.0.1:631/" && x.XriAuthentication == "none" && x.XriSecurity == "tls");
+        mapped.SystemDescriptionAttributes.SystemContactCol.Should().ContainSingle(x => x.ContactName == "contact-1" && x.ContactUri != null && x.ContactUri.ToString() == "mailto:contact-1@example.com");
+        mapped.SystemDescriptionAttributes.SystemServiceContactCol.Should().ContainSingle(x => x.ContactName == "service-1" && x.ContactUri != null && x.ContactUri.ToString() == "mailto:service-1@example.com");
+        mapped.SystemDescriptionAttributes.SystemXriSupported.Should().ContainSingle(x => x.XriUri != null && x.XriUri.ToString() == "ipp://127.0.0.1:631/" && x.XriAuthentication == "none" && x.XriSecurity == "tls");
         mapped.SystemDescriptionAttributes.IppGetEventLife.Should().Be(900);
         mapped.SystemAttributes.SystemStateChangeTime.Should().Be(13);
         mapped.SystemAttributes.SystemStateChangeDateTime.Should().Be(new DateTimeOffset(2026, 3, 29, 12, 0, 0, TimeSpan.Zero));

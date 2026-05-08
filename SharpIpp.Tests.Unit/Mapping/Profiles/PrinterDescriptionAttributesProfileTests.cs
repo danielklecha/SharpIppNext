@@ -140,7 +140,7 @@ public class PrinterDescriptionAttributesProfileTests
 
         var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(src);
 
-        dst.PrinterRequestedJobAttributes.Select(x => x.Value).Should().BeEquivalentTo("job-account-id", "job-account-type");
+        dst.PrinterRequestedJobAttributes!.Select(x => x.Value).Should().BeEquivalentTo("job-account-id", "job-account-type");
     }
 
     [TestMethod]
@@ -385,12 +385,12 @@ public class PrinterDescriptionAttributesProfileTests
 
         var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(src);
 
-        dst.DestinationAccessesSupported.Select(x => x.Value).Should().BeEquivalentTo("access-user-name", "access-password");
+        dst.DestinationAccessesSupported!.Select(x => x.Value).Should().BeEquivalentTo("access-user-name", "access-password");
         dst.JobDestinationSpoolingSupported.Should().Be(JobSpooling.Automatic);
         dst.OutputAttributesDefault.Should().NotBeNull();
         dst.OutputAttributesDefault!.NoiseRemoval.Should().Be(50);
         dst.OutputAttributesDefault.OutputCompressionQualityFactor.Should().Be(70);
-        dst.OutputAttributesSupported.Select(x => x.Value).Should().BeEquivalentTo("noise-removal", "output-compression-quality-factor");
+        dst.OutputAttributesSupported!.Select(x => x.Value).Should().BeEquivalentTo("noise-removal", "output-compression-quality-factor");
     }
 
     [TestMethod]

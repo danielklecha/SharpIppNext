@@ -263,7 +263,7 @@ public class IppRequestMessageExtensionsTests
             .Which.RequestMessage.Should().Be(message);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(JobAttribute.CoverBack)]
     [DataRow(JobAttribute.CoverFront)]
     [DataRow(JobAttribute.InsertSheet)]

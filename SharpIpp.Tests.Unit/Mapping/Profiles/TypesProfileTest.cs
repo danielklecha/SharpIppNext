@@ -17,7 +17,7 @@ namespace SharpIpp.Tests.Unit.Mapping.Profiles;
 public class TypesProfileTest : MapperTestBase
 {
 
-    public static IEnumerable<object[]> SerializationData
+    public static IEnumerable<object?[]> SerializationData
     {
         get
         {
@@ -87,7 +87,7 @@ public class TypesProfileTest : MapperTestBase
 
     [TestMethod]
     [DynamicData(nameof(SerializationData))]
-    public void Map_Values_MapsCorrectly(object source, Type sourceType, Type destType, object expected, string description)
+    public void Map_Values_MapsCorrectly(object? source, Type sourceType, Type destType, object? expected, string description)
     {
         // Act
         var result = _mapper.Map(source, sourceType, destType);

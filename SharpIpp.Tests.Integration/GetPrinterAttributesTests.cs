@@ -652,6 +652,6 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
 
         clientRawRequest.Should().NotBeNull().And.BeEquivalentTo(serverRawRequest, options => options.Excluding(x => x!.Document));
         clientResponse.Should().BeEquivalentTo(serverResponse);
-        clientResponse!.PrinterAttributes.PrinterName.Should().Be(NoValue.GetNoValue<string>());
+        clientResponse!.PrinterAttributes!.PrinterName.Should().Be(NoValue.GetNoValue<string>());
     }
 }

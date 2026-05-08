@@ -45,7 +45,7 @@ public class GetSubscriptionsTests : SharpIppIntegrationTestBase
         var clientResponse = await client.GetSubscriptionsAsync(clientRequest);
 
         clientRequest.Should().BeEquivalentTo(serverRequest);
-        clientResponse.Version.Should().Be(serverResponse.Version);
+        clientResponse.Version.Should().Be(serverResponse!.Version);
         clientResponse.RequestId.Should().Be(serverResponse.RequestId);
         clientResponse.StatusCode.Should().Be(serverResponse.StatusCode);
     }
