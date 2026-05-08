@@ -1,11 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net10.0</TargetFrameworks>
-    <LangVersion>latest</LangVersion>
-    <Nullable>enable</Nullable>
-    <NullableReferenceTypes>true</NullableReferenceTypes>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <PackageIcon>ipp256.png</PackageIcon>
     <PackageIconUrl />
     <PackageProjectUrl>https://github.com/danielklecha/SharpIppNext</PackageProjectUrl>

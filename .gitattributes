@@ -1,0 +1,7 @@
+# Set default behavior to automatically normalize line endings.
+* text=auto
+
+# Binary files
+*.png binary
+*.jpg binary
+*.ico binary
