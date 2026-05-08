@@ -21,8 +21,8 @@ internal class SystemXriProfile : IProfile
             return new SystemXri
             {
                 XriUri = map.MapFromDicNullable<Uri?>(src, "xri-uri"),
-                XriAuthentication = map.MapFromDicNullable<string?>(src, "xri-authentication"),
-                XriSecurity = map.MapFromDicNullable<string?>(src, "xri-security")
+                XriAuthentication = map.MapFromDicNullable<UriAuthentication?>(src, "xri-authentication"),
+                XriSecurity = map.MapFromDicNullable<UriSecurity?>(src, "xri-security")
             };
         });
 
@@ -35,9 +35,9 @@ internal class SystemXriProfile : IProfile
             if (src.XriUri != null)
                 attributes.Add(new IppAttribute(Tag.Uri, "xri-uri", src.XriUri.ToString()));
             if (src.XriAuthentication != null)
-                attributes.Add(new IppAttribute(Tag.Keyword, "xri-authentication", src.XriAuthentication));
+                attributes.Add(new IppAttribute(Tag.Keyword, "xri-authentication", src.XriAuthentication.Value));
             if (src.XriSecurity != null)
-                attributes.Add(new IppAttribute(Tag.Keyword, "xri-security", src.XriSecurity));
+                attributes.Add(new IppAttribute(Tag.Keyword, "xri-security", src.XriSecurity.Value));
             return attributes;
         });
     }

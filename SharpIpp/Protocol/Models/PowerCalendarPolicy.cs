@@ -1,4 +1,4 @@
-﻿namespace SharpIpp.Protocol.Models;
+namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Member attributes for <c>power-calendar-policy-col</c>.

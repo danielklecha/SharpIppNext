@@ -2,29 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Reflection;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpIpp.Mapping;
 using SharpIpp.Models.Responses;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Models;
+using SharpIpp.Tests.Unit.Mapping;
 
 namespace SharpIpp.Tests.Unit.Mapping.Profiles.Responses;
 
 [TestClass]
 [ExcludeFromCodeCoverage]
-public class PrintJobResponseProfileTests
+public class PrintJobResponseProfileTests : MapperTestBase
 {
-    private readonly IMapper _mapper;
-
-    public PrintJobResponseProfileTests()
-    {
-        var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
-        _mapper = mapper;
-    }
 
     [TestMethod]
     public void Map_IppResponseMessageToPrintJobResponse_SetsDocumentAttributesWhenPresent()

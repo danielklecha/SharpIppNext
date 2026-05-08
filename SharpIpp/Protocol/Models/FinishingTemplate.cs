@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the finishing-template attribute.
 /// See: PWG 5100.1
 /// </summary>
-public readonly record struct FinishingTemplate(string Value, bool IsKeyword = true, bool IsValue = true) : IKeywordSmartEnum 
+public readonly record struct FinishingTemplate(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum 
 {
     public static readonly FinishingTemplate None = new("none");
     public static readonly FinishingTemplate Staple = new("staple");

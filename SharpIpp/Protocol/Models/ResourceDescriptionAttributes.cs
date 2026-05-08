@@ -46,7 +46,7 @@ public class ResourceDescriptionAttributes
     /// See: PWG 5100.22-2025 Section 7.9.11
     /// </summary>
     /// <code>resource-type</code>
-    public string? ResourceType { get; set; }
+    public ResourceType? ResourceType { get; set; }
 
     /// <summary>
     /// The set of resource states this resource supports.

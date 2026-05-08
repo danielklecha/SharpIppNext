@@ -8,22 +8,14 @@ using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Mapping.Profiles;
 using SharpIpp.Protocol.Models;
+using SharpIpp.Tests.Unit.Mapping;
 
 namespace SharpIpp.Tests.Unit.Mapping.Profiles;
 
 [TestClass]
 [ExcludeFromCodeCoverage]
-public class TypesProfileTest
+public class TypesProfileTest : MapperTestBase
 {
-    private readonly IMapper _mapper;
-
-    public TypesProfileTest()
-    {
-        var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
-        _mapper = mapper;
-    }
 
     public static IEnumerable<object[]> SerializationData
     {
@@ -232,7 +224,7 @@ public class TypesProfileTest
         // Assert
         var innerException = act.Should().Throw<TargetInvocationException>().Which.InnerException;
         innerException.Should().BeOfType<MissingMethodException>();
-        innerException!.Message.Should().Contain("No (string, bool, bool) constructor found for keyword smart enum type");
+        innerException!.Message.Should().Contain("No (string, bool, bool) constructor found for marked smart enum type");
         innerException.Message.Should().Contain(typeof(KeywordSmartEnumWithoutExpectedConstructor).FullName);
     }
 
@@ -255,18 +247,18 @@ public class TypesProfileTest
         public bool IsValue { get; }
     }
 
-    private readonly struct KeywordSmartEnumWithoutExpectedConstructor : IKeywordSmartEnum
+    private readonly struct KeywordSmartEnumWithoutExpectedConstructor : IMarkedSmartEnum
     {
         public KeywordSmartEnumWithoutExpectedConstructor(string value, bool isKeyword)
         {
             Value = value;
-            IsKeyword = isKeyword;
+            IsMarked = isKeyword;
             IsValue = true;
         }
 
         public string Value { get; }
         public bool IsValue { get; }
-        public bool IsKeyword { get; }
+        public bool IsMarked { get; }
     }
 
 }

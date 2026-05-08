@@ -1,4 +1,4 @@
-﻿namespace SharpIpp.Protocol.Models;
+namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the location and direction of a fold.
@@ -28,4 +28,3 @@ public class Folding : IIppCollection
     /// </summary>
     public FinishingReferenceEdge? FoldingReferenceEdge { get; set; }
 }
-

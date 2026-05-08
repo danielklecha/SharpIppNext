@@ -140,7 +140,7 @@ public class PrinterDescriptionAttributesProfileTests
 
         var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(src);
 
-        dst.PrinterRequestedJobAttributes.Should().BeEquivalentTo("job-account-id", "job-account-type");
+        dst.PrinterRequestedJobAttributes.Select(x => x.Value).Should().BeEquivalentTo("job-account-id", "job-account-type");
     }
 
     [TestMethod]
@@ -249,7 +249,7 @@ public class PrinterDescriptionAttributesProfileTests
     {
         var src = new PrinterDescriptionAttributes
         {
-            PrinterRequestedJobAttributes = ["job-account-id", "job-account-type"]
+            PrinterRequestedJobAttributes = [(PrinterRequestedJobAttribute)"job-account-id", (PrinterRequestedJobAttribute)"job-account-type"]
         };
 
         var dst = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
@@ -385,12 +385,12 @@ public class PrinterDescriptionAttributesProfileTests
 
         var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(src);
 
-        dst.DestinationAccessesSupported.Should().BeEquivalentTo("access-user-name", "access-password");
+        dst.DestinationAccessesSupported.Select(x => x.Value).Should().BeEquivalentTo("access-user-name", "access-password");
         dst.JobDestinationSpoolingSupported.Should().Be(JobSpooling.Automatic);
         dst.OutputAttributesDefault.Should().NotBeNull();
         dst.OutputAttributesDefault!.NoiseRemoval.Should().Be(50);
         dst.OutputAttributesDefault.OutputCompressionQualityFactor.Should().Be(70);
-        dst.OutputAttributesSupported.Should().BeEquivalentTo("noise-removal", "output-compression-quality-factor");
+        dst.OutputAttributesSupported.Select(x => x.Value).Should().BeEquivalentTo("noise-removal", "output-compression-quality-factor");
     }
 
     [TestMethod]
@@ -398,14 +398,14 @@ public class PrinterDescriptionAttributesProfileTests
     {
         var src = new PrinterDescriptionAttributes
         {
-            DestinationAccessesSupported = ["access-user-name", "access-password"],
+            DestinationAccessesSupported = [DestinationAccessMember.AccessUserName, DestinationAccessMember.AccessPassword],
             JobDestinationSpoolingSupported = JobSpooling.Automatic,
             OutputAttributesDefault = new OutputAttributes
             {
                 NoiseRemoval = 50,
                 OutputCompressionQualityFactor = 70
             },
-            OutputAttributesSupported = ["noise-removal", "output-compression-quality-factor"]
+            OutputAttributesSupported = [(OutputAttributesMember)"noise-removal", (OutputAttributesMember)"output-compression-quality-factor"]
         };
 
         var dst = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);

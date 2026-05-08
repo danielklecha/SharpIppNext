@@ -1,4 +1,5 @@
 using System;
+using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Requests;
 
@@ -44,7 +45,7 @@ public class SystemOperationAttributes : OperationAttributes
     /// which-printers
     /// See: PWG 5100.22-2025 Section 7.1.27
     /// </summary>
-    public string? WhichPrinters { get; set; }
+    public WhichPrinters? WhichPrinters { get; set; }
 
     /// <summary>
     /// notify-system-up-time

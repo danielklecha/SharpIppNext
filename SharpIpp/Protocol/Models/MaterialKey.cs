@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the <c>material-key</c> member attribute (vendor-extensible keyword).
 /// See: PWG 5100.21-2019 Section 6.8.11
 /// </summary>
-public readonly record struct MaterialKey(string Value, bool IsKeyword = true, bool IsValue = true) : IKeywordSmartEnum
+public readonly record struct MaterialKey(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
 {
     public override string ToString() => Value;
     public static implicit operator string(MaterialKey value) => value.Value;

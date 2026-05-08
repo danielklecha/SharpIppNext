@@ -1,4 +1,4 @@
-﻿namespace SharpIpp.Protocol.Models;
+namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the location and type of binding to apply.
@@ -22,4 +22,3 @@ public class Binding : IIppCollection
     /// </summary>
     public BindingType? BindingType { get; set; }
 }
-

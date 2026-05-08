@@ -13,19 +13,19 @@ public class OutputBinTests
         var keywordBin = new OutputBin("vendor-bin-42", true);
         var nameBin = new OutputBin("Accounting Team", false);
 
-        keywordBin.IsKeyword.Should().BeTrue();
-        nameBin.IsKeyword.Should().BeFalse();
+        keywordBin.IsMarked.Should().BeTrue();
+        nameBin.IsMarked.Should().BeFalse();
     }
 
     [TestMethod]
     public void FactoryMethods_CreateExpectedValues()
     {
         OutputBin.Stacker(2).Value.Should().Be("stacker-2");
-        OutputBin.Stacker(2).IsKeyword.Should().BeTrue();
+        OutputBin.Stacker(2).IsMarked.Should().BeTrue();
         OutputBin.Mailbox(3).Value.Should().Be("mailbox-3");
-        OutputBin.Mailbox(3).IsKeyword.Should().BeTrue();
+        OutputBin.Mailbox(3).IsMarked.Should().BeTrue();
         OutputBin.Tray(4).Value.Should().Be("tray-4");
-        OutputBin.Tray(4).IsKeyword.Should().BeTrue();
+        OutputBin.Tray(4).IsMarked.Should().BeTrue();
     }
 
     [TestMethod]
@@ -34,7 +34,7 @@ public class OutputBinTests
         var outputBin = (OutputBin)"face-down";
 
         outputBin.Value.Should().Be("face-down");
-        outputBin.IsKeyword.Should().BeTrue();
+        outputBin.IsMarked.Should().BeTrue();
     }
 
     [TestMethod]

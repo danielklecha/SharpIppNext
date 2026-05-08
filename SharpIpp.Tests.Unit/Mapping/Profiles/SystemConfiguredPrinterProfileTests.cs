@@ -2,31 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Reflection;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Extensions;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Models.Requests;
+using SharpIpp.Tests.Unit.Mapping;
 
 namespace SharpIpp.Tests.Unit.Mapping.Profiles;
 
 
 [TestClass]
 [ExcludeFromCodeCoverage]
-public class SystemConfiguredPrinterProfileTests
+public class SystemConfiguredPrinterProfileTests : MapperTestBase
 {
-    private readonly IMapper _mapper;
-
-    public SystemConfiguredPrinterProfileTests()
-    {
-        var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
-        _mapper = mapper;
-    }
 
 [TestMethod]
     public void Map_Dictionary_To_SystemConfiguredPrinter_ShouldMapAllFields()
@@ -54,7 +44,7 @@ public class SystemConfiguredPrinterProfileTests
         result.PrinterName.Should().Be("Printer ABC");
         result.PrinterServiceType.Should().Be(PrinterServiceType.Print);
         result.PrinterState.Should().Be(PrinterState.Idle);
-        result.PrinterStateReasons.Should().Contain("none");
+        result.PrinterStateReasons.Should().Contain(PrinterStateReason.None);
         result.PrinterXriSupported.Should().NotBeNull();
     }
 
@@ -70,7 +60,7 @@ public class SystemConfiguredPrinterProfileTests
             PrinterName = "Printer ABC",
             PrinterServiceType = PrinterServiceType.Print,
             PrinterState = PrinterState.Idle,
-            PrinterStateReasons = new[] { "none" },
+            PrinterStateReasons = new[] { PrinterStateReason.None },
             PrinterXriSupported = new[] { new SystemXri { XriUri = new Uri("ipp://test") } }
         };
 

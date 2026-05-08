@@ -1,4 +1,4 @@
-﻿namespace SharpIpp.Protocol.Models;
+namespace SharpIpp.Protocol.Models;
 public class MediaSourceProperties : IIppCollection
 {
     /// <inheritdoc />

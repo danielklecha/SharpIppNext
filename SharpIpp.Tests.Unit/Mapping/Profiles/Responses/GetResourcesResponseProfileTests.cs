@@ -1,29 +1,19 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Reflection;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Models.Responses;
 using SharpIpp.Protocol.Models;
+using SharpIpp.Tests.Unit.Mapping;
 
 namespace SharpIpp.Tests.Unit.Mapping.Profiles.Responses;
 
 [TestClass]
 [ExcludeFromCodeCoverage]
-public class GetResourcesResponseProfileTests
+public class GetResourcesResponseProfileTests : MapperTestBase
 {
-    private readonly IMapper _mapper;
-
-    public GetResourcesResponseProfileTests()
-    {
-        var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
-        _mapper = mapper;
-    }
 
     [TestMethod]
     public void Map_IppResponseMessageToGetResourcesResponse_LeavesResourcesAttributesNullWhenEmpty()
@@ -105,7 +95,7 @@ public class GetResourcesResponseProfileTests
                 new ResourceDescriptionAttributes
                 {
                     ResourceId = 9,
-                    ResourceType = "printer-resource"
+                    ResourceType = (ResourceType)"printer-resource"
                 }
             ]
         };

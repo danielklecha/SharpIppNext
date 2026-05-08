@@ -28,7 +28,7 @@ public class SystemStatusAttributes
     /// See: PWG 5100.22-2025 Section 7.3.30
     /// </summary>
     /// <code>system-state-reasons</code>
-    public string[]? SystemStateReasons { get; set; }
+    public SystemStateReason[]? SystemStateReasons { get; set; }
 
     /// <summary>
     /// System state change time since boot in seconds.
@@ -55,7 +55,7 @@ public class SystemStatusAttributes
     /// System time source configured.
     /// See: PWG 5100.22-2025 Section 7.3.26
     /// </summary>
-    public string? SystemTimeSourceConfigured { get; set; }
+    public SystemTimeSourceConfigured? SystemTimeSourceConfigured { get; set; }
 
     /// <summary>
     /// Configured printers summary.

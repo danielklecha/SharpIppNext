@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the <c>job-storage-access</c> member attribute.
 /// See: PWG 5100.11-2024 Section 6.1.4.1
 /// </summary>
-public readonly record struct JobStorageAccess(string Value, bool IsKeyword = true, bool IsValue = true) : IKeywordSmartEnum
+public readonly record struct JobStorageAccess(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
 {
     public static readonly JobStorageAccess Group = new("group");
     public static readonly JobStorageAccess None = new("none");

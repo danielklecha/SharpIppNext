@@ -1,27 +1,17 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
 using System.Text;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Models;
+using SharpIpp.Tests.Unit.Mapping;
 
 namespace SharpIpp.Tests.Unit.Mapping.Profiles;
 
 [TestClass]
 [ExcludeFromCodeCoverage]
-public class PrinterAlertProfileTests
+public class PrinterAlertProfileTests : MapperTestBase
 {
-    private readonly IMapper _mapper;
-
-    public PrinterAlertProfileTests()
-    {
-        var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
-        _mapper = mapper;
-    }
 
     [TestMethod]
     public void Map_PrinterAlert_ToByteArray_MapsCorrectly()

@@ -1,4 +1,4 @@
-﻿namespace SharpIpp.Protocol.Models;
+namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Member attributes for configured printer entries in System status.
@@ -15,6 +15,6 @@ public class SystemConfiguredPrinter : IIppCollection
     public string? PrinterName { get; set; }
     public PrinterServiceType? PrinterServiceType { get; set; }
     public PrinterState? PrinterState { get; set; }
-    public string[]? PrinterStateReasons { get; set; }
+    public PrinterStateReason[]? PrinterStateReasons { get; set; }
     public SystemXri[]? PrinterXriSupported { get; set; }
 }

@@ -1,4 +1,4 @@
-﻿namespace SharpIpp.Protocol.Models;
+namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the locations of holes to make in the hardcopy output.
@@ -28,4 +28,3 @@ public class Punching : IIppCollection
     /// </summary>
     public FinishingReferenceEdge? PunchingReferenceEdge { get; set; }
 }
-

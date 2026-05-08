@@ -112,4 +112,3 @@ internal class PrinterFinisherSupplyProfile : IProfile
         return builder.ToString();
     }
 }
-

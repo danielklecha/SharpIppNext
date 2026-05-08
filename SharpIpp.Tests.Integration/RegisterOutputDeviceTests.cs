@@ -27,7 +27,7 @@ public class RegisterOutputDeviceTests : SharpIppIntegrationTestBase
                 OutputDeviceX509Certificate = ["-----BEGIN CERTIFICATE-----"],
                 OutputDeviceX509Request = ["-----BEGIN CERTIFICATE REQUEST-----"],
                 PrinterServiceType = [(PrinterServiceType)"print-ws"],
-                PrinterXriRequested = [new SystemXri { XriSecurity = "xri-security" }]
+                PrinterXriRequested = [new SystemXri { XriSecurity = (UriSecurity)"xri-security" }]
             }
         };
 

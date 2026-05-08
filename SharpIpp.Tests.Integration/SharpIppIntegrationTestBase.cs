@@ -1,6 +1,7 @@
 using Moq;
 using Moq.Protected;
 using SharpIpp.Models.Requests;
+using SharpIpp.Protocol.Models;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 
@@ -23,7 +24,7 @@ public abstract class SharpIppIntegrationTestBase
             NotifyPrinterIds = [77, 78],
             NotifyResourceId = 1001,
             RestartGetInterval = 5,
-            WhichPrinters = "all",
+            WhichPrinters = WhichPrinters.All,
             NotifySystemUpTime = 12345,
             NotifySystemUri = new Uri("ipp://127.0.0.1:8631/system")
         };

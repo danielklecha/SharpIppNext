@@ -355,4 +355,3 @@ internal class FinishingsColProfile : IProfile
         });
     }
 }
-

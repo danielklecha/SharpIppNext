@@ -47,7 +47,7 @@ internal class GetResourcesResponseProfile : IProfile
             ResourceName = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceName),
             ResourceInfo = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceInfo),
             ResourceStates = map.MapFromDicSetNullable<ResourceState[]?>(src, SystemAttribute.ResourceStates),
-            ResourceType = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceType),
+            ResourceType = map.MapFromDicNullable<ResourceType?>(src, SystemAttribute.ResourceType),
             ResourceVersion = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceVersion),
         });
 
@@ -66,8 +66,8 @@ internal class GetResourcesResponseProfile : IProfile
                 dic.Add(SystemAttribute.ResourceInfo, new IppAttribute[] { new IppAttribute(Tag.TextWithoutLanguage, SystemAttribute.ResourceInfo, src.ResourceInfo!) });
             if (src.ResourceStates != null)
                 dic.Add(SystemAttribute.ResourceStates, src.ResourceStates.Select(x => new IppAttribute(Tag.Enum, SystemAttribute.ResourceStates, (int)x)).ToArray());
-            if (!string.IsNullOrEmpty(src.ResourceType))
-                dic.Add(SystemAttribute.ResourceType, new IppAttribute[] { new IppAttribute(Tag.Keyword, SystemAttribute.ResourceType, src.ResourceType!) });
+            if (src.ResourceType != null)
+                dic.Add(SystemAttribute.ResourceType, new IppAttribute[] { new IppAttribute(Tag.Keyword, SystemAttribute.ResourceType, src.ResourceType.Value.Value) });
             if (!string.IsNullOrEmpty(src.ResourceVersion))
                 dic.Add(SystemAttribute.ResourceVersion, new IppAttribute[] { new IppAttribute(Tag.TextWithoutLanguage, SystemAttribute.ResourceVersion, src.ResourceVersion!) });
             return dic;

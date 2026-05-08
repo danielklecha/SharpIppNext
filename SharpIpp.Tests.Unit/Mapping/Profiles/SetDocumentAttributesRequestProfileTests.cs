@@ -1,27 +1,17 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Reflection;
-using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Models.Requests;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Models;
+using SharpIpp.Tests.Unit.Mapping;
 
 namespace SharpIpp.Tests.Unit.Mapping.Profiles;
 
 [TestClass]
 [ExcludeFromCodeCoverage]
-public class SetDocumentAttributesRequestProfileTests
+public class SetDocumentAttributesRequestProfileTests : MapperTestBase
 {
-    private readonly IMapper _mapper;
-
-    public SetDocumentAttributesRequestProfileTests()
-    {
-        var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
-        _mapper = mapper;
-    }
 
     [TestMethod]
     public void Map_SetDocumentAttributesRequest_WithDocumentName_MapsToDocumentAttributes()

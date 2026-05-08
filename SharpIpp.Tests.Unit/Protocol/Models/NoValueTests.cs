@@ -1,20 +1,17 @@
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Models.Responses;
 using SharpIpp.Protocol.Models;
 using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
+using SharpIpp.Tests.Unit.Mapping;
 
 namespace SharpIpp.Tests.Unit.Protocol.Models;
 
 [TestClass]
 [ExcludeFromCodeCoverage]
-public class NoValueTests
+public class NoValueTests : MapperTestBase
 {
-    private IMapper? _mapper;
-
     public static IEnumerable<object[]> IppCollectionTypes =>
         typeof(IIppCollection).Assembly
             .GetTypes()
@@ -36,15 +33,6 @@ public class NoValueTests
         {
             return false;
         }
-    }
-
-    [TestInitialize]
-    public void TestInitialize()
-    {
-        var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
-        _mapper = mapper;
     }
 
     [TestMethod]
@@ -265,4 +253,3 @@ public class NoValueTests
         result.IsValue.Should().BeFalse();
     }
 }
-

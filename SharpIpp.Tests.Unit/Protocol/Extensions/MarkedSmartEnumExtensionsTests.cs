@@ -9,7 +9,7 @@ namespace SharpIpp.Tests.Unit.Protocol.Extensions;
 
 [TestClass]
 [ExcludeFromCodeCoverage]
-public class KeywordSmartEnumExtensionsTests
+public class MarkedSmartEnumExtensionsTests
 {
     public static IEnumerable<object[]> ToIppTagTestData
     {
@@ -24,7 +24,7 @@ public class KeywordSmartEnumExtensionsTests
 
     [TestMethod]
     [DynamicData(nameof(ToIppTagTestData))]
-    public void ToIppTag_ShouldReturnExpectedTag(IKeywordSmartEnum value, Tag expected)
+    public void ToIppTag_ShouldReturnExpectedTag(IMarkedSmartEnum value, Tag expected)
     {
         // Act
         var result = value.ToIppTag();

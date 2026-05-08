@@ -22,7 +22,7 @@ public class SetResourceAttributesOperationDispatchTests : SharpIppIntegrationTe
         operationAttributes.ResourceNaturalLanguage = "en";
         operationAttributes.ResourcePatches = "none";
         operationAttributes.ResourceStringVersion = "2.0.1";
-        operationAttributes.ResourceType = "firmware";
+        operationAttributes.ResourceType = (ResourceType)"firmware";
         operationAttributes.ResourceVersion = "2.0.1";
 
         var clientRequest = new SetResourceAttributesRequest

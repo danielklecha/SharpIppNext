@@ -348,7 +348,7 @@ public class IppRequestValidator : IIppRequestValidator
 
         var isKeyword = outputBin.Tag == Tag.Keyword;
         var isSupported = outputBinSupported.Any(x =>
-            x.IsKeyword == isKeyword &&
+            x.IsMarked == isKeyword &&
             string.Equals(x.Value, value, StringComparison.Ordinal));
 
         if (isSupported)

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace SharpIpp.Protocol.Models;
 
@@ -15,10 +15,10 @@ public class SystemXri : IIppCollection
     /// <summary>
     /// xri-authentication (type2 keyword)
     /// </summary>
-    public string? XriAuthentication { get; set; }
+    public UriAuthentication? XriAuthentication { get; set; }
 
     /// <summary>
     /// xri-security (type2 keyword)
     /// </summary>
-    public string? XriSecurity { get; set; }
+    public UriSecurity? XriSecurity { get; set; }
 }

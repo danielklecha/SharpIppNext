@@ -1,4 +1,4 @@
-﻿namespace SharpIpp.Protocol.Models;
+namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Member attributes for configured resource entries in System status.
@@ -15,5 +15,5 @@ public class SystemConfiguredResource : IIppCollection
     public string? ResourceName { get; set; }
     public ResourceState? ResourceState { get; set; }
     public ResourceStateReason[]? ResourceStateReasons { get; set; }
-    public string? ResourceType { get; set; }
+    public ResourceType? ResourceType { get; set; }
 }

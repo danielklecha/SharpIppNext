@@ -49,7 +49,7 @@ public class GetResourcesTests : SharpIppIntegrationTestBase
                         ResourceFormats = new[] { "application/octet-stream", "application/zip" },
                         ResourceInfo = "Firmware image for device",
                         ResourceStates = new[] { ResourceState.Pending },
-                        ResourceType = "firmware",
+                        ResourceType = (ResourceType)"firmware",
                         ResourceVersion = "1.0.0"
                     }
                 }

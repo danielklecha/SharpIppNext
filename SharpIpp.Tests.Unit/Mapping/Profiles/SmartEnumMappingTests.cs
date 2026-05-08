@@ -2,44 +2,34 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Reflection;
-using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Models;
+using SharpIpp.Tests.Unit.Mapping;
 
 namespace SharpIpp.Tests.Unit.Mapping.Profiles;
 
 [TestClass]
 [ExcludeFromCodeCoverage]
-public class SmartEnumMappingTests
+public class SmartEnumMappingTests : MapperTestBase
 {
-    private readonly IMapper _mapper;
-
-    public SmartEnumMappingTests()
-    {
-        var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
-        _mapper = mapper;
-    }
 
     public static IEnumerable<object[]> KeywordSmartEnumTypeData =>
-        typeof(IKeywordSmartEnum).Assembly
+        typeof(IMarkedSmartEnum).Assembly
             .GetTypes()
-            .Where(x => typeof(IKeywordSmartEnum).IsAssignableFrom(x) && x is { IsValueType: true, IsAbstract: false, IsInterface: false })
+            .Where(x => typeof(IMarkedSmartEnum).IsAssignableFrom(x) && x is { IsValueType: true, IsAbstract: false, IsInterface: false })
             .OrderBy(x => x.FullName)
             .Select(x => new object[] { x });
 
     public static IEnumerable<object[]> NonKeywordSmartEnumTypeData =>
         typeof(ISmartEnum).Assembly
             .GetTypes()
-            .Where(x => typeof(ISmartEnum).IsAssignableFrom(x) && !typeof(IKeywordSmartEnum).IsAssignableFrom(x) && x is { IsValueType: true, IsAbstract: false, IsInterface: false })
+            .Where(x => typeof(ISmartEnum).IsAssignableFrom(x) && !typeof(IMarkedSmartEnum).IsAssignableFrom(x) && x is { IsValueType: true, IsAbstract: false, IsInterface: false })
             .OrderBy(x => x.FullName)
             .Select(x => new object[] { x });
 
 
     [TestMethod]
-    public void Map_FromDictionary_ForKeywordSmartEnums_PreservesIsKeywordFlag()
+    public void Map_FromDictionary_ForKeywordSmartEnums_PreservesIsMarkedFlag()
     {
         AssertMapFromAttributes(Tag.Keyword, true);
         AssertMapFromAttributes(Tag.NameWithoutLanguage, false);
@@ -53,10 +43,10 @@ public class SmartEnumMappingTests
 
         var mapped = _mapper.Map(value, typeof(string), smartEnumType);
 
-        mapped.Should().BeAssignableTo<IKeywordSmartEnum>();
-        var keywordSmartEnum = (IKeywordSmartEnum)mapped;
+        mapped.Should().BeAssignableTo<IMarkedSmartEnum>();
+        var keywordSmartEnum = (IMarkedSmartEnum)mapped;
         keywordSmartEnum.Value.Should().Be(value);
-        keywordSmartEnum.IsKeyword.Should().BeTrue();
+        keywordSmartEnum.IsMarked.Should().BeTrue();
         keywordSmartEnum.IsValue.Should().BeTrue();
     }
 
@@ -69,13 +59,13 @@ public class SmartEnumMappingTests
         var mapped = _mapper.Map(value, typeof(string), smartEnumType);
 
         mapped.Should().BeAssignableTo<ISmartEnum>();
-        mapped.Should().NotBeAssignableTo<IKeywordSmartEnum>();
+        mapped.Should().NotBeAssignableTo<IMarkedSmartEnum>();
         var smartEnum = (ISmartEnum)mapped;
         smartEnum.Value.Should().Be(value);
         smartEnum.IsValue.Should().BeTrue();
     }
 
-    private void AssertMapFromAttributes(Tag tag, bool expectedIsKeyword)
+    private void AssertMapFromAttributes(Tag tag, bool expectedIsMarked)
     {
         const string customValue = "custom-value";
 
@@ -85,71 +75,71 @@ public class SmartEnumMappingTests
             ["imposition-template"] = [new IppAttribute(tag, "imposition-template", customValue)],
             ["media-size-name"] = [new IppAttribute(tag, "media-size-name", customValue)]
         });
-        AssertFlag(finishingsCol.FinishingTemplate, customValue, expectedIsKeyword);
-        AssertFlag(finishingsCol.ImpositionTemplate, customValue, expectedIsKeyword);
-        AssertFlag(finishingsCol.MediaSizeName, customValue, expectedIsKeyword);
+        AssertFlag(finishingsCol.FinishingTemplate, customValue, expectedIsMarked);
+        AssertFlag(finishingsCol.ImpositionTemplate, customValue, expectedIsMarked);
+        AssertFlag(finishingsCol.MediaSizeName, customValue, expectedIsMarked);
 
         var baling = _mapper.Map<Baling>(new Dictionary<string, IppAttribute[]>
         {
             ["baling-type"] = [new IppAttribute(tag, "baling-type", customValue)]
         });
-        AssertFlag(baling.BalingType, customValue, expectedIsKeyword);
+        AssertFlag(baling.BalingType, customValue, expectedIsMarked);
 
         var binding = _mapper.Map<Binding>(new Dictionary<string, IppAttribute[]>
         {
             ["binding-type"] = [new IppAttribute(tag, "binding-type", customValue)]
         });
-        AssertFlag(binding.BindingType, customValue, expectedIsKeyword);
+        AssertFlag(binding.BindingType, customValue, expectedIsMarked);
 
         var coating = _mapper.Map<Coating>(new Dictionary<string, IppAttribute[]>
         {
             ["coating-type"] = [new IppAttribute(tag, "coating-type", customValue)]
         });
-        AssertFlag(coating.CoatingType, customValue, expectedIsKeyword);
+        AssertFlag(coating.CoatingType, customValue, expectedIsMarked);
 
         var covering = _mapper.Map<Covering>(new Dictionary<string, IppAttribute[]>
         {
             ["covering-name"] = [new IppAttribute(tag, "covering-name", customValue)]
         });
-        AssertFlag(covering.CoveringName, customValue, expectedIsKeyword);
+        AssertFlag(covering.CoveringName, customValue, expectedIsMarked);
 
         var laminating = _mapper.Map<Laminating>(new Dictionary<string, IppAttribute[]>
         {
             ["laminating-type"] = [new IppAttribute(tag, "laminating-type", customValue)]
         });
-        AssertFlag(laminating.LaminatingType, customValue, expectedIsKeyword);
+        AssertFlag(laminating.LaminatingType, customValue, expectedIsMarked);
 
         var trimming = _mapper.Map<Trimming>(new Dictionary<string, IppAttribute[]>
         {
             ["trimming-type"] = [new IppAttribute(tag, "trimming-type", customValue)]
         });
-        AssertFlag(trimming.TrimmingType, customValue, expectedIsKeyword);
+        AssertFlag(trimming.TrimmingType, customValue, expectedIsMarked);
 
         var cover = _mapper.Map<Cover>(new Dictionary<string, IppAttribute[]>
         {
             ["media"] = [new IppAttribute(tag, "media", customValue)]
         });
-        AssertFlag(cover.Media, customValue, expectedIsKeyword);
+        AssertFlag(cover.Media, customValue, expectedIsMarked);
 
         var mediaCol = _mapper.Map<MediaCol>(new Dictionary<string, IppAttribute[]>
         {
             ["media-key"] = [new IppAttribute(tag, "media-key", customValue)]
         });
-        AssertFlag(mediaCol.MediaKey, customValue, expectedIsKeyword);
+        AssertFlag(mediaCol.MediaKey, customValue, expectedIsMarked);
 
         var jobAccountingSheets = _mapper.Map<JobAccountingSheets>(new Dictionary<string, IppAttribute[]>
         {
             ["job-accounting-output-bin"] = [new IppAttribute(tag, "job-accounting-output-bin", customValue)]
         });
-        AssertFlag(jobAccountingSheets.JobAccountingOutputBin, customValue, expectedIsKeyword);
+        AssertFlag(jobAccountingSheets.JobAccountingOutputBin, customValue, expectedIsMarked);
     }
 
-    private static void AssertFlag<T>(T? value, string expectedValue, bool expectedIsKeyword)
-        where T : struct, IKeywordSmartEnum
+    private static void AssertFlag<T>(T? value, string expectedValue, bool expectedIsMarked)
+        where T : struct, IMarkedSmartEnum
     {
         value.HasValue.Should().BeTrue();
         var smartEnum = value.GetValueOrDefault();
         smartEnum.Value.Should().Be(expectedValue);
-        smartEnum.IsKeyword.Should().Be(expectedIsKeyword);
+        smartEnum.IsMarked.Should().Be(expectedIsMarked);
     }
 }

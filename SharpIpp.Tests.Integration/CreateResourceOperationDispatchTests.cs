@@ -18,7 +18,7 @@ public class CreateResourceOperationDispatchTests : SharpIppIntegrationTestBase
         var operationAttributes = GetSystemOperationAttributes<CreateResourceOperationAttributes>();
         operationAttributes.ResourceFormat = "application/octet-stream";
         operationAttributes.ResourceNaturalLanguage = "en";
-        operationAttributes.ResourceType = "firmware";
+        operationAttributes.ResourceType = (ResourceType)"firmware";
         operationAttributes.ResourceName = "firmware-v1";
         operationAttributes.ResourceInfo = "firmware payload";
 

@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the <c>input-source</c> member attribute.
 /// See: PWG 5100.15-2013 Section 7.1.1.19
 /// </summary>
-public readonly record struct InputSource(string Value, bool IsKeyword = true, bool IsValue = true) : IKeywordSmartEnum
+public readonly record struct InputSource(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
 {
     public static readonly InputSource Adf = new("adf");
     public static readonly InputSource AdfBack = new("adf-back");

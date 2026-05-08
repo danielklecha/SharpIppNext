@@ -16,7 +16,7 @@ public class SystemDescriptionAttributes
     public string[]? CharsetSupported { get; set; }
     public string[]? DocumentFormatSupported { get; set; }
     public string[]? GeneratedNaturalLanguageSupported { get; set; }
-    public string[]? IppFeaturesSupported { get; set; }
+    public IppFeature[]? IppFeaturesSupported { get; set; }
     public IppVersion[]? IppVersionsSupported { get; set; }
 
     /// <summary>
@@ -28,26 +28,26 @@ public class SystemDescriptionAttributes
     public bool? MultipleDocumentPrintersSupported { get; set; }
 
     public string[]? NotifyAttributesSupported { get; set; }
-    public string[]? NotifyEventsDefault { get; set; }
-    public string[]? NotifyEventsSupported { get; set; }
+    public NotifyEvent[]? NotifyEventsDefault { get; set; }
+    public NotifyEvent[]? NotifyEventsSupported { get; set; }
     public int? NotifyLeaseDurationDefault { get; set; }
     public string[]? NotifyLeaseDurationSupported { get; set; }
     public int? NotifyMaxEventsSupported { get; set; }
-    public string[]? NotifyPullMethodSupported { get; set; }
+    public NotifyPullMethod[]? NotifyPullMethodSupported { get; set; }
     public UriScheme[]? NotifySchemesSupported { get; set; }
     public string? NaturalLanguageConfigured { get; set; }
     public IppOperation[]? OperationsSupported { get; set; }
-    public string[]? OutputDeviceX509TypeSupported { get; set; }
+    public X509Type[]? OutputDeviceX509TypeSupported { get; set; }
 
     public PowerCalendarPolicy[]? PowerCalendarPolicyCol { get; set; }
     public PowerEventPolicy[]? PowerEventPolicyCol { get; set; }
     public PowerTimeoutPolicy[]? PowerTimeoutPolicyCol { get; set; }
 
-    public string[]? PrinterCreationAttributesSupported { get; set; }
+    public PrinterCreationAttribute[]? PrinterCreationAttributesSupported { get; set; }
     public PrinterServiceType[]? PrinterServiceTypeSupported { get; set; }
     public string[]? ResourceFormatSupported { get; set; }
-    public string[]? ResourceTypeSupported { get; set; }
-    public string[]? ResourceSettableAttributesSupported { get; set; }
+    public ResourceType[]? ResourceTypeSupported { get; set; }
+    public ResourceSettableAttribute[]? ResourceSettableAttributesSupported { get; set; }
 
     public string[]? SystemStringsLanguagesSupported { get; set; }
     public string[]? SystemStringsUri { get; set; }
@@ -76,9 +76,9 @@ public class SystemDescriptionAttributes
     public string? SystemName { get; set; }
     public int? SystemDefaultPrinterId { get; set; }
     public string? SystemDnsSdName { get; set; }
-    public string[]? SystemMandatoryPrinterAttributes { get; set; }
-    public string[]? SystemMandatoryRegistrationAttributes { get; set; }
-    public string[]? SystemSettableAttributesSupported { get; set; }
+    public SystemMandatoryPrinterAttribute[]? SystemMandatoryPrinterAttributes { get; set; }
+    public SystemMandatoryRegistrationAttribute[]? SystemMandatoryRegistrationAttributes { get; set; }
+    public SystemSettableAttribute[]? SystemSettableAttributesSupported { get; set; }
 
     public string[]? SystemFirmwareName { get; set; }
     public string[]? SystemFirmwarePatches { get; set; }
@@ -93,5 +93,5 @@ public class SystemDescriptionAttributes
     public string[]? SystemUserApplicationStringVersion { get; set; }
     public string[]? SystemUserApplicationVersion { get; set; }
 
-    public string? SystemTimeSourceConfigured { get; set; }
+    public SystemTimeSourceConfigured? SystemTimeSourceConfigured { get; set; }
 }

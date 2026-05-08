@@ -36,11 +36,11 @@ internal class PrinterDescriptionAttributesProfile : IProfile
                 CompressionSupported = map.MapFromDicSetNullable<Compression[]?>(src, PrinterAttribute.CompressionSupported),
                 DocumentFormatDefault = map.MapFromDicNullable<string?>(src, PrinterAttribute.DocumentFormatDefault),
                 DocumentFormatSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.DocumentFormatSupported),
-                ClientInfoSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.ClientInfoSupported),
+                ClientInfoSupported = map.MapFromDicSetNullable<ClientInfoMember[]?>(src, PrinterAttribute.ClientInfoSupported),
                 MaxClientInfoSupported = map.MapFromDicNullable<int?>(src, PrinterAttribute.MaxClientInfoSupported),
                 DocumentCharsetDefault = map.MapFromDicNullable<string?>(src, PrinterAttribute.DocumentCharsetDefault),
                 DocumentCharsetSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.DocumentCharsetSupported),
-                DocumentFormatDetailsSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.DocumentFormatDetailsSupported),
+                DocumentFormatDetailsSupported = map.MapFromDicSetNullable<DocumentFormatDetail[]?>(src, PrinterAttribute.DocumentFormatDetailsSupported),
                 DocumentNaturalLanguageDefault = map.MapFromDicNullable<string?>(src, PrinterAttribute.DocumentNaturalLanguageDefault),
                 DocumentNaturalLanguageSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.DocumentNaturalLanguageSupported),
                 JobIdsSupported = map.MapFromDicNullable<bool?>(src, PrinterAttribute.JobIdsSupported),
@@ -132,8 +132,8 @@ internal class PrinterDescriptionAttributesProfile : IProfile
                 JobDelayOutputUntilDefault = map.MapFromDicNullable<JobHoldUntil?>(src, PrinterAttribute.JobDelayOutputUntilDefault),
                 JobDelayOutputUntilSupported = map.MapFromDicSetNullable<JobHoldUntil[]?>(src, PrinterAttribute.JobDelayOutputUntilSupported),
                 JobDelayOutputUntilTimeSupported = map.MapFromDicNullable<Protocol.Models.Range?>(src, PrinterAttribute.JobDelayOutputUntilTimeSupported),
-                JobHistoryAttributesConfigured = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.JobHistoryAttributesConfigured),
-                JobHistoryAttributesSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.JobHistoryAttributesSupported),
+                JobHistoryAttributesConfigured = map.MapFromDicSetNullable<JobHistoryAttribute[]?>(src, PrinterAttribute.JobHistoryAttributesConfigured),
+                JobHistoryAttributesSupported = map.MapFromDicSetNullable<JobHistoryAttribute[]?>(src, PrinterAttribute.JobHistoryAttributesSupported),
                 JobHistoryIntervalConfigured = map.MapFromDicNullable<int?>(src, PrinterAttribute.JobHistoryIntervalConfigured),
                 JobHistoryIntervalSupported = map.MapFromDicNullable<Protocol.Models.Range?>(src, PrinterAttribute.JobHistoryIntervalSupported),
                 JobRetainUntilDefault = map.MapFromDicNullable<JobHoldUntil?>(src, PrinterAttribute.JobRetainUntilDefault),
@@ -189,8 +189,8 @@ internal class PrinterDescriptionAttributesProfile : IProfile
                 JobAuthorizationUriSupported = map.MapFromDicNullable<bool?>(src, PrinterAttribute.JobAuthorizationUriSupported),
                 PrinterChargeInfo = map.MapFromDicNullable<string?>(src, PrinterAttribute.PrinterChargeInfo),
                 PrinterChargeInfoUri = map.MapFromDicNullable<string?>(src, PrinterAttribute.PrinterChargeInfoUri),
-                PrinterMandatoryJobAttributes = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrinterMandatoryJobAttributes),
-                PrinterRequestedJobAttributes = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrinterRequestedJobAttributes),
+                PrinterMandatoryJobAttributes = map.MapFromDicSetNullable<PrinterMandatoryJobAttribute[]?>(src, PrinterAttribute.PrinterMandatoryJobAttributes),
+                PrinterRequestedJobAttributes = map.MapFromDicSetNullable<PrinterRequestedJobAttribute[]?>(src, PrinterAttribute.PrinterRequestedJobAttributes),
                 PrinterAlert = map.MapFromDicSetNullable<PrinterAlert[]?>(src, PrinterAttribute.PrinterAlert),
                 PrinterAlertDescription = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrinterAlertDescription),
                 PrinterSupply = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrinterSupply),
@@ -203,8 +203,8 @@ internal class PrinterDescriptionAttributesProfile : IProfile
                 PrintContentOptimizeSupported = map.MapFromDicSetNullable<PrintContentOptimize[]?>(src, PrinterAttribute.PrintContentOptimizeSupported),
                 OutputDeviceSupported = map.MapFromDicSetNullable<OutputDevice[]?>(src, PrinterAttribute.OutputDeviceSupported),
                 OutputDeviceUuidSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.OutputDeviceUuidSupported),
-                DocumentAccessSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.DocumentAccessSupported),
-                FetchDocumentAttributesSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.FetchDocumentAttributesSupported),
+                DocumentAccessSupported = map.MapFromDicSetNullable<DocumentAccessMember[]?>(src, PrinterAttribute.DocumentAccessSupported),
+                FetchDocumentAttributesSupported = map.MapFromDicSetNullable<FetchDocumentAttribute[]?>(src, PrinterAttribute.FetchDocumentAttributesSupported),
                 PrinterModeConfigured = map.MapFromDicNullable<PrinterMode?>(src, PrinterAttribute.PrinterModeConfigured),
                 PrinterModeSupported = map.MapFromDicSetNullable<PrinterMode[]?>(src, PrinterAttribute.PrinterModeSupported),
                 PrinterStaticResourceDirectoryUri = map.MapFromDicNullable<Uri?>(src, PrinterAttribute.PrinterStaticResourceDirectoryUri),
@@ -233,11 +233,11 @@ internal class PrinterDescriptionAttributesProfile : IProfile
                 MaterialsColReady = src.ContainsKey(PrinterAttribute.MaterialsColReady)
                     ? src[PrinterAttribute.MaterialsColReady].GroupBegCollection().Select(x => map.Map<Material>(x.FromBegCollection().ToIppDictionary())).ToArray()
                     : null,
-                MaterialsColSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.MaterialsColSupported),
+                MaterialsColSupported = map.MapFromDicSetNullable<MaterialsColMember[]?>(src, PrinterAttribute.MaterialsColSupported),
                 MaxMaterialsColSupported = map.MapFromDicNullable<int?>(src, PrinterAttribute.MaxMaterialsColSupported),
                 MultipleObjectHandlingDefault = map.MapFromDicNullable<MultipleObjectHandling?>(src, PrinterAttribute.MultipleObjectHandlingDefault),
                 MultipleObjectHandlingSupported = map.MapFromDicSetNullable<MultipleObjectHandling[]?>(src, PrinterAttribute.MultipleObjectHandlingSupported),
-                PdfFeaturesSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PdfFeaturesSupported),
+                PdfFeaturesSupported = map.MapFromDicSetNullable<PdfFeature[]?>(src, PrinterAttribute.PdfFeaturesSupported),
                 PlatformShape = map.MapFromDicNullable<PlatformShape?>(src, PrinterAttribute.PlatformShape),
                 PlatformTemperatureDefault = map.MapFromDicNullable<int?>(src, PrinterAttribute.PlatformTemperatureDefault),
                 PlatformTemperatureSupported = map.MapFromDicSetNullable<Protocol.Models.Range[]?>(src, PrinterAttribute.PlatformTemperatureSupported),
@@ -249,7 +249,7 @@ internal class PrinterDescriptionAttributesProfile : IProfile
                     : null,
                 PrintBaseDefault = map.MapFromDicNullable<PrintBase?>(src, PrinterAttribute.PrintBaseDefault),
                 PrintBaseSupported = map.MapFromDicSetNullable<PrintBase[]?>(src, PrinterAttribute.PrintBaseSupported),
-                PrintObjectsSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrintObjectsSupported),
+                PrintObjectsSupported = map.MapFromDicSetNullable<PrintObjectsMember[]?>(src, PrinterAttribute.PrintObjectsSupported),
                 PrintSupportsDefault = map.MapFromDicNullable<PrintSupports?>(src, PrinterAttribute.PrintSupportsDefault),
                 PrintSupportsSupported = map.MapFromDicSetNullable<PrintSupports[]?>(src, PrinterAttribute.PrintSupportsSupported),
                 PrinterVolumeSupported = src.ContainsKey(PrinterAttribute.PrinterVolumeSupported)
@@ -347,14 +347,14 @@ internal class PrinterDescriptionAttributesProfile : IProfile
                 YSide2ImageShiftDefault = map.MapFromDicNullable<int?>(src, PrinterAttribute.YSide2ImageShiftDefault),
                 ConfirmationSheetPrintDefault = map.MapFromDicNullable<bool?>(src, PrinterAttribute.ConfirmationSheetPrintDefault),
                 CoverSheetInfoDefault = src.ContainsKey(PrinterAttribute.CoverSheetInfoDefault) ? map.Map<CoverSheetInfo>(src[PrinterAttribute.CoverSheetInfoDefault].FromBegCollection().ToIppDictionary()) : null,
-                CoverSheetInfoSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.CoverSheetInfoSupported),
-                DestinationAccessesSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.DestinationAccessesSupported),
+                CoverSheetInfoSupported = map.MapFromDicSetNullable<CoverSheetInfoMember[]?>(src, PrinterAttribute.CoverSheetInfoSupported),
+                DestinationAccessesSupported = map.MapFromDicSetNullable<DestinationAccessMember[]?>(src, PrinterAttribute.DestinationAccessesSupported),
                 DestinationUriReady = src.ContainsKey(PrinterAttribute.DestinationUriReady) ? src[PrinterAttribute.DestinationUriReady].GroupBegCollection().Select(x => map.Map<DestinationUriReady>(x.FromBegCollection().ToIppDictionary())).ToArray() : null,
                 DestinationUriSchemesSupported = map.MapFromDicSetNullable<UriScheme[]?>(src, PrinterAttribute.DestinationUriSchemesSupported),
                 DestinationUrisSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.DestinationUrisSupported),
                 FromNameSupported = map.MapFromDicNullable<int?>(src, PrinterAttribute.FromNameSupported),
                 InputAttributesDefault = src.ContainsKey(PrinterAttribute.InputAttributesDefault) ? map.Map<DocumentTemplateAttributes>(src[PrinterAttribute.InputAttributesDefault].FromBegCollection().ToIppDictionary()) : null,
-                InputAttributesSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.InputAttributesSupported),
+                InputAttributesSupported = map.MapFromDicSetNullable<InputAttributesMember[]?>(src, PrinterAttribute.InputAttributesSupported),
                 InputColorModeSupported = map.MapFromDicSetNullable<InputColorMode[]?>(src, PrinterAttribute.InputColorModeSupported),
                 InputContentTypeSupported = map.MapFromDicSetNullable<InputContentType[]?>(src, PrinterAttribute.InputContentTypeSupported),
                 InputFilmScanModeSupported = map.MapFromDicSetNullable<InputFilmScanMode[]?>(src, PrinterAttribute.InputFilmScanModeSupported),
@@ -373,7 +373,7 @@ internal class PrinterDescriptionAttributesProfile : IProfile
                 OrganizationNameSupported = map.MapFromDicNullable<int?>(src, PrinterAttribute.OrganizationNameSupported),
                 JobDestinationSpoolingSupported = map.MapFromDicNullable<JobSpooling?>(src, PrinterAttribute.JobDestinationSpoolingSupported),
                 OutputAttributesDefault = src.ContainsKey(PrinterAttribute.OutputAttributesDefault) ? map.Map<OutputAttributes>(src[PrinterAttribute.OutputAttributesDefault].FromBegCollection().ToIppDictionary()) : null,
-                OutputAttributesSupported = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.OutputAttributesSupported),
+                OutputAttributesSupported = map.MapFromDicSetNullable<OutputAttributesMember[]?>(src, PrinterAttribute.OutputAttributesSupported),
                 PrinterFaxLogUri = map.MapFromDicNullable<Uri?>(src, PrinterAttribute.PrinterFaxLogUri),
                 PrinterFaxModemInfo = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrinterFaxModemInfo),
                 PrinterFaxModemName = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrinterFaxModemName),
@@ -406,7 +406,7 @@ internal class PrinterDescriptionAttributesProfile : IProfile
             if (src.DocumentFormatSupported != null)
                 dic.Add(PrinterAttribute.DocumentFormatSupported, src.DocumentFormatSupported.Select(x => new IppAttribute(Tag.MimeMediaType, PrinterAttribute.DocumentFormatSupported, x)).ToArray());
             if (src.ClientInfoSupported != null)
-                dic.Add(PrinterAttribute.ClientInfoSupported, src.ClientInfoSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.ClientInfoSupported, x)).ToArray());
+                dic.Add(PrinterAttribute.ClientInfoSupported, src.ClientInfoSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.ClientInfoSupported, map.Map<string>(x))).ToArray());
             if (src.MaxClientInfoSupported != null)
                 dic.Add(PrinterAttribute.MaxClientInfoSupported, [new IppAttribute(Tag.Integer, PrinterAttribute.MaxClientInfoSupported, src.MaxClientInfoSupported.Value)]);
             if (src.DocumentCharsetDefault != null)
@@ -414,7 +414,7 @@ internal class PrinterDescriptionAttributesProfile : IProfile
             if (src.DocumentCharsetSupported != null)
                 dic.Add(PrinterAttribute.DocumentCharsetSupported, src.DocumentCharsetSupported.Select(x => new IppAttribute(Tag.Charset, PrinterAttribute.DocumentCharsetSupported, x)).ToArray());
             if (src.DocumentFormatDetailsSupported != null)
-                dic.Add(PrinterAttribute.DocumentFormatDetailsSupported, src.DocumentFormatDetailsSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.DocumentFormatDetailsSupported, x)).ToArray());
+                dic.Add(PrinterAttribute.DocumentFormatDetailsSupported, src.DocumentFormatDetailsSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.DocumentFormatDetailsSupported, map.Map<string>(x))).ToArray());
             if (src.DocumentNaturalLanguageDefault != null)
                 dic.Add(PrinterAttribute.DocumentNaturalLanguageDefault, [new IppAttribute(Tag.NaturalLanguage, PrinterAttribute.DocumentNaturalLanguageDefault, src.DocumentNaturalLanguageDefault)]);
             if (src.DocumentNaturalLanguageSupported != null)
@@ -601,9 +601,9 @@ internal class PrinterDescriptionAttributesProfile : IProfile
             if (src.JobDelayOutputUntilTimeSupported != null)
                 dic.Add(PrinterAttribute.JobDelayOutputUntilTimeSupported, [new IppAttribute(Tag.RangeOfInteger, PrinterAttribute.JobDelayOutputUntilTimeSupported, src.JobDelayOutputUntilTimeSupported.Value)]);
             if (src.JobHistoryAttributesConfigured != null)
-                dic.Add(PrinterAttribute.JobHistoryAttributesConfigured, src.JobHistoryAttributesConfigured.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.JobHistoryAttributesConfigured, x)).ToArray());
+                dic.Add(PrinterAttribute.JobHistoryAttributesConfigured, src.JobHistoryAttributesConfigured.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.JobHistoryAttributesConfigured, map.Map<string>(x))).ToArray());
             if (src.JobHistoryAttributesSupported != null)
-                dic.Add(PrinterAttribute.JobHistoryAttributesSupported, src.JobHistoryAttributesSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.JobHistoryAttributesSupported, x)).ToArray());
+                dic.Add(PrinterAttribute.JobHistoryAttributesSupported, src.JobHistoryAttributesSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.JobHistoryAttributesSupported, map.Map<string>(x))).ToArray());
             if (src.JobHistoryIntervalConfigured != null)
                 dic.Add(PrinterAttribute.JobHistoryIntervalConfigured, [new IppAttribute(Tag.Integer, PrinterAttribute.JobHistoryIntervalConfigured, src.JobHistoryIntervalConfigured.Value)]);
             if (src.JobHistoryIntervalSupported != null)
@@ -717,9 +717,9 @@ internal class PrinterDescriptionAttributesProfile : IProfile
             if (src.PrinterChargeInfoUri != null)
                 dic.Add(PrinterAttribute.PrinterChargeInfoUri, [new IppAttribute(Tag.Uri, PrinterAttribute.PrinterChargeInfoUri, src.PrinterChargeInfoUri)]);
             if (src.PrinterMandatoryJobAttributes != null)
-                dic.Add(PrinterAttribute.PrinterMandatoryJobAttributes, src.PrinterMandatoryJobAttributes.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterMandatoryJobAttributes, x)).ToArray());
+                dic.Add(PrinterAttribute.PrinterMandatoryJobAttributes, src.PrinterMandatoryJobAttributes.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterMandatoryJobAttributes, map.Map<string>(x))).ToArray());
             if (src.PrinterRequestedJobAttributes != null)
-                dic.Add(PrinterAttribute.PrinterRequestedJobAttributes, src.PrinterRequestedJobAttributes.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterRequestedJobAttributes, x)).ToArray());
+                dic.Add(PrinterAttribute.PrinterRequestedJobAttributes, src.PrinterRequestedJobAttributes.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterRequestedJobAttributes, map.Map<string>(x))).ToArray());
             if (src.PrinterAlert != null)
                 dic.Add(PrinterAttribute.PrinterAlert, src.PrinterAlert.Select(x => new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, PrinterAttribute.PrinterAlert, map.Map<string>(x))).ToArray());
             if (src.PrinterAlertDescription != null)
@@ -745,9 +745,9 @@ internal class PrinterDescriptionAttributesProfile : IProfile
             if (src.OutputDeviceUuidSupported != null)
                 dic.Add(PrinterAttribute.OutputDeviceUuidSupported, src.OutputDeviceUuidSupported.Select(x => new IppAttribute(Tag.Uri, PrinterAttribute.OutputDeviceUuidSupported, x)).ToArray());
             if (src.DocumentAccessSupported != null)
-                dic.Add(PrinterAttribute.DocumentAccessSupported, src.DocumentAccessSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.DocumentAccessSupported, x)).ToArray());
+                dic.Add(PrinterAttribute.DocumentAccessSupported, src.DocumentAccessSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.DocumentAccessSupported, map.Map<string>(x))).ToArray());
             if (src.FetchDocumentAttributesSupported != null)
-                dic.Add(PrinterAttribute.FetchDocumentAttributesSupported, src.FetchDocumentAttributesSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.FetchDocumentAttributesSupported, x)).ToArray());
+                dic.Add(PrinterAttribute.FetchDocumentAttributesSupported, src.FetchDocumentAttributesSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.FetchDocumentAttributesSupported, map.Map<string>(x))).ToArray());
             if (src.PrinterModeConfigured != null)
                 dic.Add(PrinterAttribute.PrinterModeConfigured, [new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterModeConfigured, src.PrinterModeConfigured.Value.Value)]);
             if (src.PrinterModeSupported != null)
@@ -793,7 +793,7 @@ internal class PrinterDescriptionAttributesProfile : IProfile
             if (src.MaterialsColReady != null)
                 dic.Add(PrinterAttribute.MaterialsColReady, src.MaterialsColReady.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(PrinterAttribute.MaterialsColReady)).ToArray());
             if (src.MaterialsColSupported != null)
-                dic.Add(PrinterAttribute.MaterialsColSupported, src.MaterialsColSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.MaterialsColSupported, x)).ToArray());
+                dic.Add(PrinterAttribute.MaterialsColSupported, src.MaterialsColSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.MaterialsColSupported, map.Map<string>(x))).ToArray());
             if (src.MaxMaterialsColSupported != null)
                 dic.Add(PrinterAttribute.MaxMaterialsColSupported, [new IppAttribute(Tag.Integer, PrinterAttribute.MaxMaterialsColSupported, src.MaxMaterialsColSupported.Value)]);
             if (src.MultipleObjectHandlingDefault != null)
@@ -801,7 +801,7 @@ internal class PrinterDescriptionAttributesProfile : IProfile
             if (src.MultipleObjectHandlingSupported != null)
                 dic.Add(PrinterAttribute.MultipleObjectHandlingSupported, src.MultipleObjectHandlingSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.MultipleObjectHandlingSupported, x.Value)).ToArray());
             if (src.PdfFeaturesSupported != null)
-                dic.Add(PrinterAttribute.PdfFeaturesSupported, src.PdfFeaturesSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PdfFeaturesSupported, x)).ToArray());
+                dic.Add(PrinterAttribute.PdfFeaturesSupported, src.PdfFeaturesSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PdfFeaturesSupported, map.Map<string>(x))).ToArray());
             if (src.PlatformShape != null)
                 dic.Add(PrinterAttribute.PlatformShape, [new IppAttribute(Tag.Keyword, PrinterAttribute.PlatformShape, src.PlatformShape.Value.Value)]);
             if (src.PlatformTemperatureDefault != null)
@@ -817,7 +817,7 @@ internal class PrinterDescriptionAttributesProfile : IProfile
             if (src.PrintBaseSupported != null)
                 dic.Add(PrinterAttribute.PrintBaseSupported, src.PrintBaseSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PrintBaseSupported, x.Value)).ToArray());
             if (src.PrintObjectsSupported != null)
-                dic.Add(PrinterAttribute.PrintObjectsSupported, src.PrintObjectsSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PrintObjectsSupported, x)).ToArray());
+                dic.Add(PrinterAttribute.PrintObjectsSupported, src.PrintObjectsSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PrintObjectsSupported, map.Map<string>(x))).ToArray());
             if (src.PrintSupportsDefault != null)
                 dic.Add(PrinterAttribute.PrintSupportsDefault, [new IppAttribute(Tag.Keyword, PrinterAttribute.PrintSupportsDefault, src.PrintSupportsDefault.Value.Value)]);
             if (src.PrintSupportsSupported != null)
@@ -833,7 +833,7 @@ internal class PrinterDescriptionAttributesProfile : IProfile
             if (src.PrinterResourceIds != null)
                 dic.Add(PrinterAttribute.PrinterResourceIds, src.PrinterResourceIds.Select(x => new IppAttribute(Tag.Integer, PrinterAttribute.PrinterResourceIds, x)).ToArray());
             if (src.JobCreationAttributesSupported != null)
-                dic.Add(PrinterAttribute.JobCreationAttributesSupported, src.JobCreationAttributesSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.JobCreationAttributesSupported, x)).ToArray());
+                dic.Add(PrinterAttribute.JobCreationAttributesSupported, src.JobCreationAttributesSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.JobCreationAttributesSupported, map.Map<string>(x))).ToArray());
             if (src.PrinterRequestedClientType != null)
                 dic.Add(PrinterAttribute.PrinterRequestedClientType, src.PrinterRequestedClientType.Select(x => new IppAttribute(Tag.Enum, PrinterAttribute.PrinterRequestedClientType, (int)x)).ToArray());
             if (src.PrinterServiceType != null)
@@ -1054,9 +1054,9 @@ internal class PrinterDescriptionAttributesProfile : IProfile
             if (src.CoverSheetInfoDefault != null)
                 dic.Add(PrinterAttribute.CoverSheetInfoDefault, map.Map<IEnumerable<IppAttribute>>(src.CoverSheetInfoDefault).ToBegCollection(PrinterAttribute.CoverSheetInfoDefault).ToArray());
             if (src.CoverSheetInfoSupported != null)
-                dic.Add(PrinterAttribute.CoverSheetInfoSupported, src.CoverSheetInfoSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.CoverSheetInfoSupported, x)).ToArray());
+                dic.Add(PrinterAttribute.CoverSheetInfoSupported, src.CoverSheetInfoSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.CoverSheetInfoSupported, map.Map<string>(x))).ToArray());
             if (src.DestinationAccessesSupported != null)
-                dic.Add(PrinterAttribute.DestinationAccessesSupported, src.DestinationAccessesSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.DestinationAccessesSupported, x)).ToArray());
+                dic.Add(PrinterAttribute.DestinationAccessesSupported, src.DestinationAccessesSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.DestinationAccessesSupported, map.Map<string>(x))).ToArray());
             if (src.DestinationUriReady != null)
                 dic.Add(PrinterAttribute.DestinationUriReady, src.DestinationUriReady.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(PrinterAttribute.DestinationUriReady)).ToArray());
             if (src.DestinationUriSchemesSupported != null)
@@ -1068,7 +1068,7 @@ internal class PrinterDescriptionAttributesProfile : IProfile
             if (src.InputAttributesDefault != null)
                 dic.Add(PrinterAttribute.InputAttributesDefault, map.Map<IEnumerable<IppAttribute>>(src.InputAttributesDefault).ToBegCollection(PrinterAttribute.InputAttributesDefault).ToArray());
             if (src.InputAttributesSupported != null)
-                dic.Add(PrinterAttribute.InputAttributesSupported, src.InputAttributesSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.InputAttributesSupported, x)).ToArray());
+                dic.Add(PrinterAttribute.InputAttributesSupported, src.InputAttributesSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.InputAttributesSupported, map.Map<string>(x))).ToArray());
             if (src.InputColorModeSupported != null)
                 dic.Add(PrinterAttribute.InputColorModeSupported, src.InputColorModeSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.InputColorModeSupported, x.Value)).ToArray());
             if (src.InputContentTypeSupported != null)
@@ -1106,7 +1106,7 @@ internal class PrinterDescriptionAttributesProfile : IProfile
             if (src.OutputAttributesDefault != null)
                 dic.Add(PrinterAttribute.OutputAttributesDefault, map.Map<IEnumerable<IppAttribute>>(src.OutputAttributesDefault).ToBegCollection(PrinterAttribute.OutputAttributesDefault).ToArray());
             if (src.OutputAttributesSupported != null)
-                dic.Add(PrinterAttribute.OutputAttributesSupported, src.OutputAttributesSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.OutputAttributesSupported, x)).ToArray());
+                dic.Add(PrinterAttribute.OutputAttributesSupported, src.OutputAttributesSupported.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.OutputAttributesSupported, map.Map<string>(x))).ToArray());
             if (src.PrinterFaxLogUri != null)
                 dic.Add(PrinterAttribute.PrinterFaxLogUri, [new IppAttribute(Tag.Uri, PrinterAttribute.PrinterFaxLogUri, src.PrinterFaxLogUri.ToString())]);
             if (src.PrinterFaxModemInfo != null)

@@ -26,7 +26,7 @@ internal class SystemConfiguredPrinterProfile : IProfile
                 PrinterName = map.MapFromDicNullable<string?>(src, PrinterAttribute.PrinterName),
                 PrinterServiceType = map.MapFromDicNullable<PrinterServiceType?>(src, PrinterAttribute.PrinterServiceType),
                 PrinterState = map.MapFromDicNullable<PrinterState?>(src, PrinterAttribute.PrinterState),
-                PrinterStateReasons = map.MapFromDicSetNullable<string[]?>(src, PrinterAttribute.PrinterStateReasons)
+                PrinterStateReasons = map.MapFromDicSetNullable<PrinterStateReason[]?>(src, PrinterAttribute.PrinterStateReasons)
             };
             if (src.ContainsKey(PrinterAttribute.PrinterXriSupported))
                 dst.PrinterXriSupported = src[PrinterAttribute.PrinterXriSupported].GroupBegCollection().Select(x => map.Map<SystemXri>(x.FromBegCollection().ToIppDictionary())).ToArray();
@@ -52,7 +52,7 @@ internal class SystemConfiguredPrinterProfile : IProfile
             if (src.PrinterState.HasValue)
                 attributes.Add(new IppAttribute(Tag.Enum, PrinterAttribute.PrinterState, (int)src.PrinterState.Value));
             if (src.PrinterStateReasons != null)
-                attributes.AddRange(src.PrinterStateReasons.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterStateReasons, x)));
+                attributes.AddRange(src.PrinterStateReasons.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterStateReasons, x.Value)));
             if (src.PrinterXriSupported != null)
                 attributes.AddRange(src.PrinterXriSupported.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(PrinterAttribute.PrinterXriSupported)));
             return attributes;

@@ -735,5 +735,3 @@ public readonly record struct PrinterStateReason(string Value, bool IsValue = tr
     public static implicit operator string(PrinterStateReason bin) => bin.Value;
     public static explicit operator PrinterStateReason(string value) => new(value);
 }
-
-

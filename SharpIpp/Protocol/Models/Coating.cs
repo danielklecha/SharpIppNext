@@ -1,4 +1,4 @@
-﻿namespace SharpIpp.Protocol.Models;
+namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the coating to apply to Media Sheets.
@@ -22,4 +22,3 @@ public class Coating : IIppCollection
     /// </summary>
     public CoatingType? CoatingType { get; set; }
 }
-

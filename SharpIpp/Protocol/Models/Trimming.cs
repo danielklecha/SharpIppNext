@@ -1,4 +1,4 @@
-﻿namespace SharpIpp.Protocol.Models;
+namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies where to cut, perforate, or score the Media Sheets.
@@ -34,4 +34,3 @@ public class Trimming : IIppCollection
     /// </summary>
     public TrimmingWhen? TrimmingWhen { get; set; }
 }
-

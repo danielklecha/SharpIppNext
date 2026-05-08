@@ -1,4 +1,4 @@
-﻿namespace SharpIpp.Protocol.Models;
+namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the locations of stitches, staples, or crimps.
@@ -40,4 +40,3 @@ public class Stitching : IIppCollection
     /// </summary>
     public FinishingReferenceEdge? StitchingReferenceEdge { get; set; }
 }
-

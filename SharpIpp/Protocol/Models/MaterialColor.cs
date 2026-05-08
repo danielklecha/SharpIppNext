@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the <c>material-color</c> member attribute (vendor-extensible keyword).
 /// See: PWG 5100.21-2019 Section 6.8.11
 /// </summary>
-public readonly record struct MaterialColor(string Value, bool IsKeyword = true, bool IsValue = true) : IKeywordSmartEnum
+public readonly record struct MaterialColor(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
 {
     public static readonly MaterialColor Black = new("black");
     public static readonly MaterialColor Blue = new("blue");

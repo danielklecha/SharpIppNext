@@ -5,7 +5,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the output-bin attribute.
 /// See: PWG 5100.2
 /// </summary>
-public readonly record struct OutputBin(string Value, bool IsKeyword = true, bool IsValue = true) : IKeywordSmartEnum 
+public readonly record struct OutputBin(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum 
 {
     public static readonly OutputBin Top = new("top");
     public static readonly OutputBin Bottom = new("bottom");

@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the <c>multiple-object-handling</c> attribute.
 /// See: PWG 5100.21-2019 Section 6.8.12
 /// </summary>
-public readonly record struct MultipleObjectHandling(string Value, bool IsKeyword = true, bool IsValue = true) : IKeywordSmartEnum
+public readonly record struct MultipleObjectHandling(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
 {
     public static readonly MultipleObjectHandling Auto = new("auto");
     public static readonly MultipleObjectHandling FirstOnly = new("first-only");

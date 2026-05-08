@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the <c>printer-mode-configured</c> and <c>printer-mode-supported</c> attributes.
 /// See: PWG 5100.18-2025 Section 7.4.4
 /// </summary>
-public readonly record struct PrinterMode(string Value, bool IsKeyword = true, bool IsValue = true) : IKeywordSmartEnum
+public readonly record struct PrinterMode(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
 {
     public static readonly PrinterMode Fax = new("fax");
     public static readonly PrinterMode Ipp = new("ipp");

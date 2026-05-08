@@ -37,10 +37,10 @@ public class SmartEnumTests
             .OrderBy(type => type.FullName)
             .Select(type => new object[] { type, GetSampleValue(type) });
 
-    public static IEnumerable<object[]> KeywordSmartEnumData =>
-        typeof(IKeywordSmartEnum).Assembly
+    public static IEnumerable<object[]> MarkedSmartEnumData =>
+        typeof(IMarkedSmartEnum).Assembly
             .GetTypes()
-            .Where(type => typeof(IKeywordSmartEnum).IsAssignableFrom(type) && type is { IsValueType: true, IsAbstract: false, IsInterface: false })
+            .Where(type => typeof(IMarkedSmartEnum).IsAssignableFrom(type) && type is { IsValueType: true, IsAbstract: false, IsInterface: false })
             .OrderBy(type => type.FullName)
             .Select(type => new object[] { type, GetSampleValue(type) });
 
@@ -85,23 +85,23 @@ public class SmartEnumTests
     }
 
     [TestMethod]
-    [DynamicData(nameof(KeywordSmartEnumData))]
-    public void PropertyInitializer_SetsIsKeyword(Type type, string value)
+    [DynamicData(nameof(MarkedSmartEnumData))]
+    public void PropertyInitializer_SetsIsMarked(Type type, string value)
     {
         // Arrange
         var instance = Activator.CreateInstance(type);
         var valueProperty = type.GetProperty("Value");
-        var keywordProperty = type.GetProperty("IsKeyword");
+        var keywordProperty = type.GetProperty("IsMarked");
 
         // Act
         valueProperty?.SetValue(instance, value);
         keywordProperty?.SetValue(instance, true);
 
         // Assert
-        keywordProperty.Should().NotBeNull($"{type.Name} should expose IsKeyword property");
+        keywordProperty.Should().NotBeNull($"{type.Name} should expose IsMarked property");
         keywordProperty?.GetValue(instance).Should().Be(true);
-        instance.Should().BeAssignableTo<IKeywordSmartEnum>();
-        ((IKeywordSmartEnum)instance!).Value.Should().Be(value);
+        instance.Should().BeAssignableTo<IMarkedSmartEnum>();
+        ((IMarkedSmartEnum)instance!).Value.Should().Be(value);
     }
 
     [TestMethod]

@@ -27,7 +27,7 @@ public class GetPrintersTests : SharpIppIntegrationTestBase
                 NotifySystemUpTime = 30,
                 NotifySystemUri = new Uri("ipp://example.com/ipp/system/notify"),
                 RestartGetInterval = 120,
-                WhichPrinters = "all",
+                WhichPrinters = WhichPrinters.All,
                 RequestingUserName = "test-user",
                 RequestingUserUri = new Uri("ipp://example.com/user/test"),
                 ClientInfo = new[]
@@ -69,7 +69,7 @@ public class GetPrintersTests : SharpIppIntegrationTestBase
                 NotifySystemUpTime = 30,
                 NotifySystemUri = new Uri("ipp://127.0.0.1:8631/system/notify"),
                 RestartGetInterval = 120,
-                WhichPrinters = "all",
+                WhichPrinters = WhichPrinters.All,
                 RequestingUserName = "test-user",
                 RequestingUserUri = new Uri("http://example.com/user/test"),
                 ClientInfo = new[]

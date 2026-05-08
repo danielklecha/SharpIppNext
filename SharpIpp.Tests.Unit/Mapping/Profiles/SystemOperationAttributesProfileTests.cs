@@ -2,31 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Reflection;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Extensions;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Models.Requests;
+using SharpIpp.Tests.Unit.Mapping;
 
 namespace SharpIpp.Tests.Unit.Mapping.Profiles;
 
 
 [TestClass]
 [ExcludeFromCodeCoverage]
-public class SystemOperationAttributesProfileTests
+public class SystemOperationAttributesProfileTests : MapperTestBase
 {
-    private readonly IMapper _mapper;
-
-    public SystemOperationAttributesProfileTests()
-    {
-        var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
-        _mapper = mapper;
-    }
 
 [TestMethod]
     public void Map_SystemOperationAttributes_WithNotifyFields_To_Attributes_ShouldEmitNotifyAttributes()
@@ -37,7 +27,7 @@ public class SystemOperationAttributesProfileTests
             NotifyPrinterIds = new[] { 1, 2 },
             NotifyResourceId = 42,
             RestartGetInterval = 15,
-            WhichPrinters = "all"
+            WhichPrinters = WhichPrinters.All
         };
 
         // Act

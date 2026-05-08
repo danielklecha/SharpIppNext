@@ -86,4 +86,3 @@ public struct NoValue : IEquatable<NoValue>
         throw new ArgumentException($"Type {type} is not supported for NoValue mapping and has no non-null default value");
     }
 }
-

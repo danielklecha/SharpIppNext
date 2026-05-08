@@ -25,7 +25,7 @@ public class CreatePrinterTests : SharpIppIntegrationTestBase
                 SystemUri = new Uri("ipp://127.0.0.1:8631/system"),
                 ResourceIds = [10],
                 PrinterServiceType = [(PrinterServiceType)"print-ws"],
-                PrinterXriRequested = [new SystemXri { XriSecurity = "xri-security" }]
+                PrinterXriRequested = [new SystemXri { XriSecurity = (UriSecurity)"xri-security" }]
             }
         };
 

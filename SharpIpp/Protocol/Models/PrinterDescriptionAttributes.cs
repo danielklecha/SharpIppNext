@@ -158,7 +158,7 @@ public class PrinterDescriptionAttributes
     /// client-info-supported
     /// See: PWG 5100.7-2023 Section 6.9.5
     /// </summary>
-    public string[]? ClientInfoSupported { get; set; }
+    public ClientInfoMember[]? ClientInfoSupported { get; set; }
 
     /// <summary>
     /// max-client-info-supported
@@ -182,7 +182,7 @@ public class PrinterDescriptionAttributes
     /// document-format-details-supported
     /// See: PWG 5100.7-2023 Section 6.9.20
     /// </summary>
-    public string[]? DocumentFormatDetailsSupported { get; set; }
+    public DocumentFormatDetail[]? DocumentFormatDetailsSupported { get; set; }
 
     /// <summary>
     /// document-natural-language-default
@@ -602,13 +602,13 @@ public class PrinterDescriptionAttributes
     /// job-history-attributes-configured
     /// See: PWG 5100.7-2023 Section 6.9.17
     /// </summary>
-    public string[]? JobHistoryAttributesConfigured { get; set; }
+    public JobHistoryAttribute[]? JobHistoryAttributesConfigured { get; set; }
 
     /// <summary>
     /// job-history-attributes-supported
     /// See: PWG 5100.7-2023 Section 6.9.18
     /// </summary>
-    public string[]? JobHistoryAttributesSupported { get; set; }
+    public JobHistoryAttribute[]? JobHistoryAttributesSupported { get; set; }
 
     /// <summary>
     /// job-history-interval-configured
@@ -1465,13 +1465,13 @@ public class PrinterDescriptionAttributes
     /// printer-mandatory-job-attributes
     /// See: PWG 5100.11-2024
     /// </summary>
-    public string[]? PrinterMandatoryJobAttributes { get; set; }
+    public PrinterMandatoryJobAttribute[]? PrinterMandatoryJobAttributes { get; set; }
 
     /// <summary>
     /// printer-requested-job-attributes
     /// See: PWG 5100.16-2020
     /// </summary>
-    public string[]? PrinterRequestedJobAttributes { get; set; }
+    public PrinterRequestedJobAttribute[]? PrinterRequestedJobAttributes { get; set; }
 
     /// <summary>
     /// Structured parser model for printer-alert values.
@@ -1507,13 +1507,13 @@ public class PrinterDescriptionAttributes
     /// document-access-supported
     /// See: PWG 5100.18-2025 Section 7.4.1
     /// </summary>
-    public string[]? DocumentAccessSupported { get; set; }
+    public DocumentAccessMember[]? DocumentAccessSupported { get; set; }
 
     /// <summary>
     /// fetch-document-attributes-supported
     /// See: PWG 5100.18-2025 Section 7.4.2
     /// </summary>
-    public string[]? FetchDocumentAttributesSupported { get; set; }
+    public FetchDocumentAttribute[]? FetchDocumentAttributesSupported { get; set; }
 
     /// <summary>
     /// printer-mode-configured
@@ -1651,7 +1651,7 @@ public class PrinterDescriptionAttributes
     /// materials-col-supported
     /// See: PWG 5100.21-2019 Section 8.3.18
     /// </summary>
-    public string[]? MaterialsColSupported { get; set; }
+    public MaterialsColMember[]? MaterialsColSupported { get; set; }
 
     /// <summary>
     /// max-materials-col-supported
@@ -1675,7 +1675,7 @@ public class PrinterDescriptionAttributes
     /// pdf-features-supported
     /// See: PWG 5100.21-2019 Section 8.3.22
     /// </summary>
-    public string[]? PdfFeaturesSupported { get; set; }
+    public PdfFeature[]? PdfFeaturesSupported { get; set; }
 
     /// <summary>
     /// platform-shape
@@ -1723,7 +1723,7 @@ public class PrinterDescriptionAttributes
     /// print-objects-supported
     /// See: PWG 5100.21-2019 Section 8.3.30
     /// </summary>
-    public string[]? PrintObjectsSupported { get; set; }
+    public PrintObjectsMember[]? PrintObjectsSupported { get; set; }
 
     /// <summary>
     /// print-supports-default
@@ -1783,13 +1783,13 @@ public class PrinterDescriptionAttributes
     /// cover-sheet-info-supported
     /// See: PWG 5100.15-2013 Section 7.4.3
     /// </summary>
-    public string[]? CoverSheetInfoSupported { get; set; }
+    public CoverSheetInfoMember[]? CoverSheetInfoSupported { get; set; }
 
     /// <summary>
     /// destination-accesses-supported
     /// See: PWG 5100.17-2014 Section 8.3.1
     /// </summary>
-    public string[]? DestinationAccessesSupported { get; set; }
+    public DestinationAccessMember[]? DestinationAccessesSupported { get; set; }
 
     /// <summary>
     /// destination-uri-ready
@@ -1825,7 +1825,7 @@ public class PrinterDescriptionAttributes
     /// input-attributes-supported
     /// See: PWG 5100.15-2013 Section 7.4.8
     /// </summary>
-    public string[]? InputAttributesSupported { get; set; }
+    public InputAttributesMember[]? InputAttributesSupported { get; set; }
 
     /// <summary>
     /// input-color-mode-supported
@@ -1939,7 +1939,7 @@ public class PrinterDescriptionAttributes
     /// output-attributes-supported
     /// See: PWG 5100.17-2014 Section 8.3.6
     /// </summary>
-    public string[]? OutputAttributesSupported { get; set; }
+    public OutputAttributesMember[]? OutputAttributesSupported { get; set; }
 
     /// <summary>
     /// printer-fax-log-uri

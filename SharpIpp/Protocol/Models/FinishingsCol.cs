@@ -1,4 +1,4 @@
-﻿namespace SharpIpp.Protocol.Models;
+namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies detailed finishing instructions that cannot be expressed
@@ -95,4 +95,3 @@ public class FinishingsCol : IIppCollection
     /// </summary>
     public Media? MediaSizeName { get; set; }
 }
-

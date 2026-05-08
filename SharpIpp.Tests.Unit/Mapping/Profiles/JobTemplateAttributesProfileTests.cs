@@ -9,22 +9,14 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using SharpIpp.Tests.Unit.Mapping;
 
 namespace SharpIpp.Tests.Unit.Mapping.Profiles;
 
 [TestClass]
 [ExcludeFromCodeCoverage]
-public class JobTemplateAttributesProfileTests
+public class JobTemplateAttributesProfileTests : MapperTestBase
 {
-    private readonly IMapper _mapper;
-
-    public JobTemplateAttributesProfileTests()
-    {
-        var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
-        _mapper = mapper;
-    }
 
     [TestMethod]
     public void Map_ToRequest_WithNoValueFinishingsCol_WritesOutOfBandNoValue()

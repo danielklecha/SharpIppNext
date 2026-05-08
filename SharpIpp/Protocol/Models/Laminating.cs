@@ -1,4 +1,4 @@
-﻿namespace SharpIpp.Protocol.Models;
+namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies which material to apply to the hardcopy output.
@@ -22,4 +22,3 @@ public class Laminating : IIppCollection
     /// </summary>
     public LaminatingType? LaminatingType { get; set; }
 }
-

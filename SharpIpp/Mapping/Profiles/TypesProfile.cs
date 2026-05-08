@@ -90,10 +90,10 @@ internal class TypesProfile : IProfile
     private static void ConfigureSmartEnum<T>(IMapperConstructor map) where T : struct
     {
         var smartEnumType = typeof(T);
-        if (typeof(IKeywordSmartEnum).IsAssignableFrom(smartEnumType))
+        if (typeof(IMarkedSmartEnum).IsAssignableFrom(smartEnumType))
         {
             var threeArgumentConstructor = smartEnumType.GetConstructor([typeof(string), typeof(bool), typeof(bool)])
-                ?? throw new MissingMethodException($"No (string, bool, bool) constructor found for keyword smart enum type '{smartEnumType.FullName}'.");
+                ?? throw new MissingMethodException($"No (string, bool, bool) constructor found for marked smart enum type '{smartEnumType.FullName}'.");
 
             map.CreateIppMap<string, T>((src, ctx) => (T)threeArgumentConstructor.Invoke([src, true, true]));
         }

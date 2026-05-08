@@ -665,4 +665,3 @@ public class IppAttributeExtensionsTests
         result[1].Tag.Should().Be(Tag.EndCollection);
     }
 }
-

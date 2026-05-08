@@ -148,8 +148,8 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
                         new SystemXri
                         {
                             XriUri = new Uri("ipp://127.0.0.1:631"),
-                            XriAuthentication = "none",
-                            XriSecurity = "tls"
+                            XriAuthentication = UriAuthentication.None,
+                            XriSecurity = UriSecurity.Tls
                         }
                     }
                 }
@@ -210,14 +210,14 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
                         PrinterName = "configured-printer",
                         PrinterServiceType = PrinterServiceType.Print,
                         PrinterState = PrinterState.Idle,
-                        PrinterStateReasons = ["printer-state-idle"],
+                        PrinterStateReasons = [(PrinterStateReason)"printer-state-idle"],
                         PrinterXriSupported = new[]
                         {
                             new SystemXri
                             {
                                 XriUri = new Uri("ipp://127.0.0.1:631"),
-                                XriAuthentication = "none",
-                                XriSecurity = "tls"
+                                XriAuthentication = UriAuthentication.None,
+                                XriSecurity = UriSecurity.Tls
                             }
                         }
                     }],
@@ -229,7 +229,7 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
                         ResourceName = "configured-resource",
                         ResourceState = ResourceState.Available,
                         ResourceStateReasons = new[] { ResourceStateReason.None },
-                        ResourceType = "document"
+                        ResourceType = (ResourceType)"document"
                     }],
                     PowerLogCol = [new()
                     {
@@ -293,7 +293,7 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
             x.PrinterServiceType == PrinterServiceType.Print &&
             x.PrinterState == PrinterState.Idle &&
             x.PrinterStateReasons != null &&
-            x.PrinterStateReasons.Contains("printer-state-idle") &&
+            x.PrinterStateReasons.Contains((PrinterStateReason)"printer-state-idle") &&
             x.PrinterXriSupported != null &&
             x.PrinterXriSupported.Any(y =>
                 y.XriUri.ToString() == "ipp://127.0.0.1:631/" &&
@@ -308,7 +308,7 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
             x.ResourceState == ResourceState.Available &&
             x.ResourceStateReasons != null &&
             x.ResourceStateReasons.Contains(ResourceStateReason.None) &&
-            x.ResourceType == "document");
+            x.ResourceType == (ResourceType)"document");
 
         mapped.SystemAttributes.PowerLogCol.Should().ContainSingle(x =>
             x.LogId == 301 &&
@@ -377,12 +377,12 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
                 {
                     SystemState = PrinterState.Processing,
                     SystemStateMessage = "Active",
-                    SystemStateReasons = ["system-state-changed"],
+                    SystemStateReasons = [(SystemStateReason)"system-state-changed"],
                     SystemStateChangeTime = 13,
                     SystemUuid = new Uri("urn:uuid:1234"),
                     SystemStateChangeDateTime = new DateTimeOffset(2026, 3, 29, 12, 0, 0, TimeSpan.Zero),
                     SystemUpTime = 60,
-                    SystemTimeSourceConfigured = "ntp",
+                    SystemTimeSourceConfigured = (SystemTimeSourceConfigured)"ntp",
                     XriAuthenticationSupported = [UriAuthentication.None],
                     XriSecuritySupported = [UriSecurity.Tls],
                     XriUriSchemeSupported = [UriScheme.Https]
@@ -396,18 +396,18 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
                     CharsetSupported = ["utf-8", "us-ascii"],
                     DocumentFormatSupported = ["application/pdf"],
                     GeneratedNaturalLanguageSupported = ["en-us"],
-                    IppFeaturesSupported = ["ippget"],
+                    IppFeaturesSupported = [(IppFeature)"ippget"],
                     IppVersionsSupported = new[] { new IppVersion(2, 0) },
                     MultipleDocumentPrintersSupported = true,
                     NaturalLanguageConfigured = "en-us",
                     IppGetEventLife = 900,
                     NotifyAttributesSupported = ["system-state"],
-                    NotifyEventsDefault = ["system-state-changed"],
-                    NotifyEventsSupported = ["system-state-changed"],
+                    NotifyEventsDefault = [(NotifyEvent)"system-state-changed"],
+                    NotifyEventsSupported = [(NotifyEvent)"system-state-changed"],
                     NotifyLeaseDurationDefault = 3600,
                     NotifyLeaseDurationSupported = ["60", "3600"],
                     NotifyMaxEventsSupported = 100,
-                    NotifyPullMethodSupported = ["ippget"],
+                    NotifyPullMethodSupported = [(NotifyPullMethod)"ippget"],
                     NotifySchemesSupported = [UriScheme.Http],
                     SystemStringsLanguagesSupported = ["en-us"],
                     SystemStringsUri = ["http://127.0.0.1:631/system-strings"],
@@ -448,8 +448,8 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
                         new SystemXri
                         {
                             XriUri = new Uri("ipp://127.0.0.1:631"),
-                            XriAuthentication = "none",
-                            XriSecurity = "tls"
+                            XriAuthentication = UriAuthentication.None,
+                            XriSecurity = UriSecurity.Tls
                         }
                     },
                     SystemInfo = "info",
@@ -459,9 +459,9 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
                     SystemName = "system-name",
                     SystemDefaultPrinterId = 1,
                     SystemDnsSdName = "printer._ipp._tcp.local",
-                    SystemMandatoryPrinterAttributes = ["printer-name"],
-                    SystemMandatoryRegistrationAttributes = ["system-state"],
-                    SystemSettableAttributesSupported = ["system-state"],
+                    SystemMandatoryPrinterAttributes = [(SystemMandatoryPrinterAttribute)"printer-name"],
+                    SystemMandatoryRegistrationAttributes = [(SystemMandatoryRegistrationAttribute)"system-state"],
+                    SystemSettableAttributesSupported = [(SystemSettableAttribute)"system-state"],
                     SystemFirmwareName = ["firmware1"],
                     SystemFirmwarePatches = ["patch1"],
                     SystemFirmwareStringVersion = ["v1"],
@@ -475,7 +475,7 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
                     SystemUserApplicationStringVersion = ["v1"],
                     SystemUserApplicationVersion = ["1.0"],
                     OperationsSupported = new[] { IppOperation.GetSystemAttributes, IppOperation.RestartOnePrinter },
-                    OutputDeviceX509TypeSupported = ["x509"],
+                    OutputDeviceX509TypeSupported = [(X509Type)"x509"],
                     PowerCalendarPolicyCol = new[]
                     {
                         new PowerCalendarPolicy
@@ -510,12 +510,12 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
                             StartPowerState = PowerState.On
                         }
                     },
-                    PrinterCreationAttributesSupported = ["printer-name"],
+                    PrinterCreationAttributesSupported = [(PrinterCreationAttribute)"printer-name"],
                     PrinterServiceTypeSupported = [PrinterServiceType.Print],
                     ResourceFormatSupported = ["application/pdf"],
-                    ResourceTypeSupported = ["document"],
-                    ResourceSettableAttributesSupported = ["resource-state"],
-                    SystemTimeSourceConfigured = "ntp"
+                    ResourceTypeSupported = [(ResourceType)"document"],
+                    ResourceSettableAttributesSupported = [(ResourceSettableAttribute)"resource-state"],
+                    SystemTimeSourceConfigured = (SystemTimeSourceConfigured)"ntp"
                 }
             };
 
@@ -533,7 +533,7 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
         mapped!.SystemAttributes.Should().NotBeNull();
         mapped.SystemAttributes!.SystemState.Should().Be(PrinterState.Processing);
         mapped.SystemAttributes.SystemStateMessage.Should().Be("Active");
-        mapped.SystemAttributes.SystemStateReasons.Should().Contain("system-state-changed");
+        mapped.SystemAttributes.SystemStateReasons.Should().Contain((SystemStateReason)"system-state-changed");
 
         mapped.SystemDescriptionAttributes.Should().NotBeNull();
         mapped.SystemDescriptionAttributes.SystemConfigChanges.Should().Be(7);
@@ -543,18 +543,18 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
         mapped.SystemDescriptionAttributes.CharsetSupported.Should().Contain("utf-8");
         mapped.SystemDescriptionAttributes.DocumentFormatSupported.Should().Contain("application/pdf");
         mapped.SystemDescriptionAttributes.GeneratedNaturalLanguageSupported.Should().Contain("en-us");
-        mapped.SystemDescriptionAttributes.IppFeaturesSupported.Should().Contain("ippget");
+        mapped.SystemDescriptionAttributes.IppFeaturesSupported.Should().Contain((IppFeature)"ippget");
         mapped.SystemDescriptionAttributes.IppVersionsSupported.Should().Contain(new IppVersion(2,0));
         mapped.SystemDescriptionAttributes.MultipleDocumentPrintersSupported.Should().BeTrue();
         mapped.SystemDescriptionAttributes.NaturalLanguageConfigured.Should().Be("en-us");
         mapped.SystemDescriptionAttributes.IppGetEventLife.Should().Be(900);
         mapped.SystemDescriptionAttributes.NotifyAttributesSupported.Should().Contain("system-state");
-        mapped.SystemDescriptionAttributes.NotifyEventsDefault.Should().Contain("system-state-changed");
-        mapped.SystemDescriptionAttributes.NotifyEventsSupported.Should().Contain("system-state-changed");
+        mapped.SystemDescriptionAttributes.NotifyEventsDefault.Should().Contain((NotifyEvent)"system-state-changed");
+        mapped.SystemDescriptionAttributes.NotifyEventsSupported.Should().Contain((NotifyEvent)"system-state-changed");
         mapped.SystemDescriptionAttributes.NotifyLeaseDurationDefault.Should().Be(3600);
         mapped.SystemDescriptionAttributes.NotifyLeaseDurationSupported.Should().Contain("60");
         mapped.SystemDescriptionAttributes.NotifyMaxEventsSupported.Should().Be(100);
-        mapped.SystemDescriptionAttributes.NotifyPullMethodSupported.Should().Contain("ippget");
+        mapped.SystemDescriptionAttributes.NotifyPullMethodSupported.Should().Contain((NotifyPullMethod)"ippget");
         mapped.SystemDescriptionAttributes.NotifySchemesSupported.Should().Contain(UriScheme.Http);
         mapped.SystemDescriptionAttributes.SystemStringsLanguagesSupported.Should().Contain("en-us");
         mapped.SystemDescriptionAttributes.SystemStringsUri.Should().Contain("http://127.0.0.1:631/system-strings");
@@ -577,17 +577,17 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
         mapped.SystemDescriptionAttributes.SystemName.Should().Be("system-name");
         mapped.SystemDescriptionAttributes.SystemDefaultPrinterId.Should().Be(1);
         mapped.SystemDescriptionAttributes.SystemDnsSdName.Should().Be("printer._ipp._tcp.local");
-        mapped.SystemDescriptionAttributes.SystemMandatoryPrinterAttributes.Should().Contain("printer-name");
-        mapped.SystemDescriptionAttributes.SystemMandatoryRegistrationAttributes.Should().Contain("system-state");
-        mapped.SystemDescriptionAttributes.SystemSettableAttributesSupported.Should().Contain("system-state");
-        mapped.SystemDescriptionAttributes.PrinterCreationAttributesSupported.Should().Contain("printer-name");
+        mapped.SystemDescriptionAttributes.SystemMandatoryPrinterAttributes.Should().Contain((SystemMandatoryPrinterAttribute)"printer-name");
+        mapped.SystemDescriptionAttributes.SystemMandatoryRegistrationAttributes.Should().Contain((SystemMandatoryRegistrationAttribute)"system-state");
+        mapped.SystemDescriptionAttributes.SystemSettableAttributesSupported.Should().Contain((SystemSettableAttribute)"system-state");
+        mapped.SystemDescriptionAttributes.PrinterCreationAttributesSupported.Should().Contain((PrinterCreationAttribute)"printer-name");
         mapped.SystemDescriptionAttributes.PrinterServiceTypeSupported.Should().Contain(PrinterServiceType.Print);
         mapped.SystemDescriptionAttributes.ResourceFormatSupported.Should().Contain("application/pdf");
-        mapped.SystemDescriptionAttributes.ResourceTypeSupported.Should().Contain("document");
-        mapped.SystemDescriptionAttributes.ResourceSettableAttributesSupported.Should().Contain("resource-state");
+        mapped.SystemDescriptionAttributes.ResourceTypeSupported.Should().Contain((ResourceType)"document");
+        mapped.SystemDescriptionAttributes.ResourceSettableAttributesSupported.Should().Contain((ResourceSettableAttribute)"resource-state");
         mapped.SystemDescriptionAttributes.OperationsSupported.Should().Contain(IppOperation.GetSystemAttributes);
         mapped.SystemDescriptionAttributes.OperationsSupported.Should().Contain(IppOperation.RestartOnePrinter);
-        mapped.SystemDescriptionAttributes.OutputDeviceX509TypeSupported.Should().Contain("x509");
+        mapped.SystemDescriptionAttributes.OutputDeviceX509TypeSupported.Should().Contain((X509Type)"x509");
         mapped.SystemDescriptionAttributes.PowerCalendarPolicyCol.Should().ContainSingle(x => x.CalendarId == 1 && x.RequestPowerState == PowerState.On && x.RunOnce == true);
         mapped.SystemDescriptionAttributes.PowerEventPolicyCol.Should().ContainSingle(x => x.EventId == 2 && x.EventName == "power-event" && x.RequestPowerState == PowerState.Standby);
         mapped.SystemDescriptionAttributes.PowerTimeoutPolicyCol.Should().ContainSingle(x => x.TimeoutId == 3 && x.TimeoutPredicate == "idle" && x.TimeoutSeconds == 120 && x.RequestPowerState == PowerState.Suspend && x.StartPowerState == PowerState.On);
@@ -603,7 +603,7 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
         mapped.SystemDescriptionAttributes.SystemUserApplicationPatches.Should().Contain("patch1");
         mapped.SystemDescriptionAttributes.SystemUserApplicationStringVersion.Should().Contain("v1");
         mapped.SystemDescriptionAttributes.SystemUserApplicationVersion.Should().Contain("1.0");
-        mapped.SystemDescriptionAttributes.SystemTimeSourceConfigured.Should().Be("ntp");
+        mapped.SystemDescriptionAttributes.SystemTimeSourceConfigured.Should().Be((SystemTimeSourceConfigured)"ntp");
         mapped.SystemDescriptionAttributes.SystemContactCol.Should().ContainSingle(x => x.ContactName == "contact-1" && x.ContactUri.ToString() == "mailto:contact-1@example.com");
         mapped.SystemDescriptionAttributes.SystemServiceContactCol.Should().ContainSingle(x => x.ContactName == "service-1" && x.ContactUri.ToString() == "mailto:service-1@example.com");
         mapped.SystemDescriptionAttributes.SystemXriSupported.Should().ContainSingle(x => x.XriUri.ToString() == "ipp://127.0.0.1:631/" && x.XriAuthentication == "none" && x.XriSecurity == "tls");
@@ -611,7 +611,7 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
         mapped.SystemAttributes.SystemStateChangeTime.Should().Be(13);
         mapped.SystemAttributes.SystemStateChangeDateTime.Should().Be(new DateTimeOffset(2026, 3, 29, 12, 0, 0, TimeSpan.Zero));
         mapped.SystemAttributes.SystemUpTime.Should().Be(60);
-        mapped.SystemAttributes.SystemTimeSourceConfigured.Should().Be("ntp");
+        mapped.SystemAttributes.SystemTimeSourceConfigured.Should().Be((SystemTimeSourceConfigured)"ntp");
         mapped.SystemAttributes.SystemUuid.Should().Be(new Uri("urn:uuid:1234"));
         mapped.SystemAttributes.XriAuthenticationSupported.Should().Contain(UriAuthentication.None);
         mapped.SystemAttributes.XriSecuritySupported.Should().Contain(UriSecurity.Tls);

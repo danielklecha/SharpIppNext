@@ -1,4 +1,4 @@
-﻿namespace SharpIpp.Protocol.Models;
+namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the type of baling to apply to a collection of Media Sheets.
@@ -22,4 +22,3 @@ public class Baling : IIppCollection
     /// </summary>
     public BalingWhen? BalingWhen { get; set; }
 }
-

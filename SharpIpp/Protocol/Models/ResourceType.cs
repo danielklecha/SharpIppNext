@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the <c>resource-type</c> attribute.
 /// See: PWG 5100.22-2025 Section 7.9.11
 /// </summary>
-public readonly record struct ResourceType(string Value, bool IsKeyword = true, bool IsValue = true) : IKeywordSmartEnum
+public readonly record struct ResourceType(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
 {
     public static readonly ResourceType StaticFont = new("static-font");
     public static readonly ResourceType StaticIccProfile = new("static-icc-profile");

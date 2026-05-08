@@ -1,4 +1,5 @@
 using System;
+using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Requests;
 
@@ -37,7 +38,7 @@ public class CreateResourceOperationAttributes : SystemOperationAttributes
     /// The <c>resource-type</c> operation attribute.
     /// See: PWG 5100.22-2025 Section 7.1.22
     /// </summary>
-    public string? ResourceType { get; set; }
+    public ResourceType? ResourceType { get; set; }
 
     /// <summary>
     /// The <c>resource-name</c> operation attribute.
@@ -136,7 +137,7 @@ public class SetResourceAttributesOperationAttributes : SystemOperationAttribute
     /// The <c>resource-type</c> operation attribute.
     /// See: PWG 5100.22-2025 Section 7.1.22
     /// </summary>
-    public string? ResourceType { get; set; }
+    public ResourceType? ResourceType { get; set; }
 
     /// <summary>
     /// The <c>resource-version</c> operation attribute.

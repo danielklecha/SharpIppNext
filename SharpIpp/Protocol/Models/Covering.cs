@@ -1,4 +1,4 @@
-﻿namespace SharpIpp.Protocol.Models;
+namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies which cover to apply over the hardcopy output.
@@ -16,4 +16,3 @@ public class Covering : IIppCollection
     /// </summary>
     public CoveringName? CoveringName { get; set; }
 }
-

@@ -26,7 +26,7 @@ internal class SystemConfiguredResourceProfile : IProfile
                 ResourceName = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceName),
                 ResourceState = map.MapFromDicNullable<ResourceState?>(src, SystemAttribute.ResourceState),
                 ResourceStateReasons = map.MapFromDicSetNullable<ResourceStateReason[]?>(src, SystemAttribute.ResourceStateReasons),
-                ResourceType = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceType)
+                ResourceType = map.MapFromDicNullable<ResourceType?>(src, SystemAttribute.ResourceType)
             };
         });
 
@@ -49,7 +49,7 @@ internal class SystemConfiguredResourceProfile : IProfile
             if (src.ResourceStateReasons != null)
                 attributes.AddRange(src.ResourceStateReasons.Select(x => new IppAttribute(Tag.Keyword, SystemAttribute.ResourceStateReasons, x.ToString())));
             if (src.ResourceType != null)
-                attributes.Add(new IppAttribute(Tag.Keyword, SystemAttribute.ResourceType, src.ResourceType));
+                attributes.Add(new IppAttribute(Tag.Keyword, SystemAttribute.ResourceType, src.ResourceType.Value.Value));
             return attributes;
         });
     }

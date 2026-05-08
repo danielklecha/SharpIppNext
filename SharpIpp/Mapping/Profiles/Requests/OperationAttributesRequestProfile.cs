@@ -913,7 +913,7 @@ internal class OperationAttributesRequestProfile : IProfile
             dst.NotifySystemUpTime = map.MapFromDicNullable<int?>(src, SystemAttribute.NotifySystemUpTime);
             dst.NotifySystemUri = map.MapFromDicNullable<Uri?>(src, SystemAttribute.NotifySystemUri);
             dst.RestartGetInterval = map.MapFromDicNullable<int?>(src, SystemAttribute.RestartGetInterval);
-            dst.WhichPrinters = map.MapFromDicNullable<string?>(src, SystemAttribute.WhichPrinters);
+            dst.WhichPrinters = map.MapFromDicNullable<WhichPrinters?>(src, SystemAttribute.WhichPrinters);
             return dst;
         });
 
@@ -936,7 +936,7 @@ internal class OperationAttributesRequestProfile : IProfile
             if (src.RestartGetInterval.HasValue)
                 dst.Add(new IppAttribute(Tag.Integer, SystemAttribute.RestartGetInterval, src.RestartGetInterval.Value));
             if (src.WhichPrinters != null)
-                dst.Add(new IppAttribute(Tag.Keyword, SystemAttribute.WhichPrinters, src.WhichPrinters));
+                dst.Add(new IppAttribute(Tag.Keyword, SystemAttribute.WhichPrinters, src.WhichPrinters.Value.Value));
             return dst;
         });
 
@@ -963,7 +963,7 @@ internal class OperationAttributesRequestProfile : IProfile
             map.Map<IDictionary<string, IppAttribute[]>, SystemOperationAttributes>(src, dst);
             dst.ResourceFormat = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceFormat);
             dst.ResourceNaturalLanguage = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceNaturalLanguage);
-            dst.ResourceType = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceType);
+            dst.ResourceType = map.MapFromDicNullable<ResourceType?>(src, SystemAttribute.ResourceType);
             dst.ResourceName = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceName);
             dst.ResourceInfo = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceInfo);
             return dst;
@@ -978,7 +978,7 @@ internal class OperationAttributesRequestProfile : IProfile
             if (src.ResourceNaturalLanguage != null)
                 dst.Add(new IppAttribute(Tag.NaturalLanguage, SystemAttribute.ResourceNaturalLanguage, src.ResourceNaturalLanguage));
             if (src.ResourceType != null)
-                dst.Add(new IppAttribute(Tag.Keyword, SystemAttribute.ResourceType, src.ResourceType));
+                dst.Add(new IppAttribute(Tag.Keyword, SystemAttribute.ResourceType, src.ResourceType.Value.Value));
             if (src.ResourceName != null)
                 dst.Add(new IppAttribute(Tag.NameWithoutLanguage, SystemAttribute.ResourceName, src.ResourceName));
             if (src.ResourceInfo != null)
@@ -1036,7 +1036,7 @@ internal class OperationAttributesRequestProfile : IProfile
             dst.ResourceNaturalLanguage = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceNaturalLanguage);
             dst.ResourcePatches = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourcePatches);
             dst.ResourceStringVersion = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceStringVersion);
-            dst.ResourceType = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceType);
+            dst.ResourceType = map.MapFromDicNullable<ResourceType?>(src, SystemAttribute.ResourceType);
             dst.ResourceVersion = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceVersion);
             return dst;
         });
@@ -1058,7 +1058,7 @@ internal class OperationAttributesRequestProfile : IProfile
             if (src.ResourceStringVersion != null)
                 dst.Add(new IppAttribute(Tag.TextWithoutLanguage, SystemAttribute.ResourceStringVersion, src.ResourceStringVersion));
             if (src.ResourceType != null)
-                dst.Add(new IppAttribute(Tag.Keyword, SystemAttribute.ResourceType, src.ResourceType));
+                dst.Add(new IppAttribute(Tag.Keyword, SystemAttribute.ResourceType, src.ResourceType.Value.Value));
             if (src.ResourceVersion != null)
                 dst.Add(new IppAttribute(Tag.TextWithoutLanguage, SystemAttribute.ResourceVersion, src.ResourceVersion));
             return dst;

@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the <c>material-type</c> member attribute.
 /// See: PWG 5100.21-2019 Section 6.8.11
 /// </summary>
-public readonly record struct MaterialType(string Value, bool IsKeyword = true, bool IsValue = true) : IKeywordSmartEnum
+public readonly record struct MaterialType(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
 {
     public static readonly MaterialType Abs = new("abs");
     public static readonly MaterialType AbsPlus = new("abs-plus");
