@@ -35,6 +35,29 @@ public readonly record struct NotifyEvent(string Value, bool IsMarked = true, bo
     public static readonly NotifyEvent SystemStateChanged = new("system-state-changed");
     public static readonly NotifyEvent SystemStopped = new("system-stopped");
 
+    // Document events (PWG 5100.5-2024 Section 9.1)
+    /// <summary>'document-completed': The Document has reached a terminating state ('aborted', 'canceled', or 'completed').
+    /// This is a sub-event of 'document-state-changed'.
+    /// See: PWG 5100.5-2024 Section 9.1</summary>
+    public static readonly NotifyEvent DocumentCompleted = new("document-completed");
+
+    /// <summary>'document-config-changed': The Document Template or Description attributes have been changed.
+    /// See: PWG 5100.5-2024 Section 9.1</summary>
+    public static readonly NotifyEvent DocumentConfigChanged = new("document-config-changed");
+
+    /// <summary>'document-created': The Document has been created.
+    /// See: PWG 5100.5-2024 Section 9.1</summary>
+    public static readonly NotifyEvent DocumentCreated = new("document-created");
+
+    /// <summary>'document-state-changed': The Document state has changed.
+    /// See: PWG 5100.5-2024 Section 9.1</summary>
+    public static readonly NotifyEvent DocumentStateChanged = new("document-state-changed");
+
+    /// <summary>'document-stopped': The Document has entered the 'processing-stopped' state.
+    /// This is a sub-event of 'document-state-changed'.
+    /// See: PWG 5100.5-2024 Section 9.1</summary>
+    public static readonly NotifyEvent DocumentStopped = new("document-stopped");
+
     public override string ToString() => Value;
     public static implicit operator string(NotifyEvent value) => value.Value;
     public static explicit operator NotifyEvent(string value) => new(value);

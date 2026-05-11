@@ -34,7 +34,7 @@ public class JobErrorSheetProfileTests : MapperTestBase
         var result = _mapper.Map<JobErrorSheet>(dict);
 
         // Assert
-        if (h1) result.JobErrorSheetType.Should().Be(JobSheetsType.Standard); else result.JobErrorSheetType.Should().BeNull();
+        if (h1) result.JobErrorSheetType.Should().Be(JobErrorSheetType.Standard); else result.JobErrorSheetType.Should().BeNull();
         if (h2) result.JobErrorSheetWhen.Should().Be(JobErrorSheetWhen.OnError); else result.JobErrorSheetWhen.Should().BeNull();
         if (h3) result.Media.Should().Be((Media)"iso_a4_210x297mm"); else result.Media.Should().BeNull();
         if (h4) result.MediaCol.Should().NotBeNull(); else result.MediaCol.Should().BeNull();
@@ -48,7 +48,7 @@ public class JobErrorSheetProfileTests : MapperTestBase
         // Arrange
         var sheet = new JobErrorSheet
         {
-            JobErrorSheetType = h1 ? JobSheetsType.Standard : null,
+            JobErrorSheetType = h1 ? JobErrorSheetType.Standard : null,
             JobErrorSheetWhen = h2 ? JobErrorSheetWhen.OnError : null,
             Media = h3 ? (Media)"iso_a4_210x297mm" : null,
             MediaCol = h4 ? new MediaCol { MediaColor = (MediaColor)"blue" } : null

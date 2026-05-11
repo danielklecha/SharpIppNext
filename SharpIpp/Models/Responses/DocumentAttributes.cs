@@ -3,8 +3,8 @@ using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Responses;
 /// <summary>
-/// PWG 5100.5-2024 Section 6.2 / Section 8.3-8.5
-/// Document Status attributes returned in Document Creation responses.
+/// Document Status and Description attributes for a Document object.
+/// Defined in PWG 5100.5-2024 Sections 6.1-6.2 and extended by PWG 5100.18-2025.
 /// </summary>
 public class DocumentAttributes : IIppCollection
 {
@@ -29,7 +29,7 @@ public class DocumentAttributes : IIppCollection
     public DocumentStateReason[]? DocumentStateReasons { get; set; }
     /// <summary>
     /// The document-state-message IPP attribute.
-    /// See: pwg5100.18 - IPP Shared Infrastructure Extensions v1.1
+    /// See: PWG 5100.5-2024 Section 6.2
     /// </summary>
     /// <code>document-state-message</code>
     public string? DocumentStateMessage { get; set; }
@@ -174,13 +174,13 @@ public class DocumentAttributes : IIppCollection
     public PrintContentOptimize[]? PrintContentOptimizeActual { get; set; }
     /// <summary>
     /// The document-job-id IPP attribute.
-    /// See: PWG 5100.18-2025
+    /// See: PWG 5100.5-2024 Section 6.2
     /// </summary>
     /// <code>document-job-id</code>
     public int? DocumentJobId { get; set; }
     /// <summary>
     /// The document-job-uri IPP attribute.
-    /// See: pwg5100.5-2024
+    /// See: PWG 5100.5-2024 Section 6.2
     /// </summary>
     /// <code>document-job-uri</code>
     public string? DocumentJobUri { get; set; }
@@ -205,13 +205,13 @@ public class DocumentAttributes : IIppCollection
     public int[]? DocumentResourceIds { get; set; }
     /// <summary>
     /// The document-natural-language IPP attribute.
-    /// See: pwg5100.5-2024
+    /// See: PWG 5100.5-2024 Section 6.2
     /// </summary>
     /// <code>document-natural-language</code>
     public string? DocumentNaturalLanguage { get; set; }
     /// <summary>
     /// The document-printer-uri IPP attribute.
-    /// See: PWG 5100.18-2025
+    /// See: PWG 5100.5-2024 Section 6.2
     /// </summary>
     /// <code>document-printer-uri</code>
     public Uri? DocumentPrinterUri { get; set; }
@@ -235,7 +235,7 @@ public class DocumentAttributes : IIppCollection
     public int? ImpressionsCompleted { get; set; }
     /// <summary>
     /// The k-octets IPP attribute.
-    /// See: pwg5100.13 - IPP Driver Replacement Extensions v2.0
+    /// See: PWG 5100.5-2024 Section 6.2
     /// </summary>
     /// <code>k-octets</code>
     public int? KOctets { get; set; }
@@ -259,7 +259,7 @@ public class DocumentAttributes : IIppCollection
     public int? MediaSheets { get; set; }
     /// <summary>
     /// The media-sheets-completed IPP attribute.
-    /// See: PWG 5100.5-2024
+    /// See: PWG 5100.5-2024 Section 6.2
     /// </summary>
     /// <code>media-sheets-completed</code>
     public int? MediaSheetsCompleted { get; set; }

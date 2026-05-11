@@ -61,5 +61,11 @@ namespace SharpIpp.Protocol.Models
         public const string OutputDeviceDocumentState = "output-device-document-state";
         public const string OutputDeviceDocumentStateMessage = "output-device-document-state-message";
         public const string OutputDeviceDocumentStateReasons = "output-device-document-state-reasons";
+
+        /// <summary>
+        /// The document-creation-attributes-supported Printer Description attribute name.
+        /// See: PWG 5100.5-2024 Section 6.5.1
+        /// </summary>
+        public const string DocumentCreationAttributesSupported = "document-creation-attributes-supported";
     }
 }

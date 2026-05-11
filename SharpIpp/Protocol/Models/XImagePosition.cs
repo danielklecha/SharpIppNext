@@ -2,7 +2,7 @@ namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the x-image-position.
-/// See: PWG 5100.1-2022 Section 6.27
+/// See: PWG 5100.3-2023 Section 5.2.17
 /// </summary>
 public readonly record struct XImagePosition(string Value, bool IsValue = true) : ISmartEnum 
 {

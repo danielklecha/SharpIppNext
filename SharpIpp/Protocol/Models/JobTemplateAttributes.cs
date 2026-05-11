@@ -397,7 +397,7 @@ namespace SharpIpp.Protocol.Models
         /// The <c>job-complete-before</c> Job Template attribute.
         /// See: PWG 5100.3-2023 Section 5.2.7
         /// </summary>
-        public JobHoldUntil? JobCompleteBefore { get; set; }
+        public JobCompleteBefore? JobCompleteBefore { get; set; }
 
         /// <summary>
         /// The <c>job-complete-before-time</c> Job Template attribute.

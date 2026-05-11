@@ -28,7 +28,7 @@ public class ValidateJobTests : SharpIppIntegrationTestBase
             {
                 JobErrorSheet = new JobErrorSheet
                 {
-                    JobErrorSheetType = JobSheetsType.Standard,
+                    JobErrorSheetType = JobErrorSheetType.Standard,
                     JobErrorSheetWhen = JobErrorSheetWhen.OnError,
                     Media = (Media)"iso_a4_210x297mm",
                     MediaCol = new MediaCol

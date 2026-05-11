@@ -1,6 +1,7 @@
 using SharpIpp.Models.Responses;
 using SharpIpp.Models.Requests;
 using System.Collections.Generic;
+using System.Linq;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Extensions;
 using SharpIpp.Protocol.Models;

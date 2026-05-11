@@ -728,9 +728,24 @@ namespace SharpIpp.Protocol.Models
         /// </summary>
         public FinishingsCol[]? FinishingsColActual { get; set; }
 
+        /// <summary>
+        /// The estimated date and time at which the Job will be completed. See: PWG 5100.3-2023 Section 5.1.1
+        /// </summary>
         public DateTimeOffset? DateTimeAtCompletedEstimated { get; set; }
+
+        /// <summary>
+        /// The estimated date and time at which the Job will enter the 'processing' state. See: PWG 5100.3-2023 Section 5.1.2
+        /// </summary>
         public DateTimeOffset? DateTimeAtProcessingEstimated { get; set; }
+
+        /// <summary>
+        /// The estimated time (in printer up-time seconds) at which the Job will be completed. See: PWG 5100.3-2023 Section 5.1.3
+        /// </summary>
         public int? TimeAtCompletedEstimated { get; set; }
+
+        /// <summary>
+        /// The estimated time (in printer up-time seconds) at which the Job will enter the 'processing' state. See: PWG 5100.3-2023 Section 5.1.4
+        /// </summary>
         public int? TimeAtProcessingEstimated { get; set; }
 
         /// <summary>

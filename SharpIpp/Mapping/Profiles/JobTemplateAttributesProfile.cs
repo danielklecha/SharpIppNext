@@ -347,7 +347,7 @@ internal class JobTemplateAttributesProfile : IProfile
                 dst.InsertSheet = jobDict[JobAttribute.InsertSheet].GroupBegCollection().Select(x => map.Map<InsertSheet>(x.FromBegCollection().ToIppDictionary())).ToArray();
             if (jobDict.ContainsKey(JobAttribute.JobAccountingSheets))
                 dst.JobAccountingSheets = map.Map<JobAccountingSheets>(jobDict[JobAttribute.JobAccountingSheets].FromBegCollection().ToIppDictionary());
-            dst.JobCompleteBefore = map.MapFromDicNullable<JobHoldUntil?>(jobDict, JobAttribute.JobCompleteBefore);
+            dst.JobCompleteBefore = map.MapFromDicNullable<JobCompleteBefore?>(jobDict, JobAttribute.JobCompleteBefore);
             dst.JobCompleteBeforeTime = map.MapFromDicNullable<DateTimeOffset?>(jobDict, JobAttribute.JobCompleteBeforeTime);
             if (jobDict.ContainsKey(JobAttribute.JobErrorSheet))
                 dst.JobErrorSheet = map.Map<JobErrorSheet>(jobDict[JobAttribute.JobErrorSheet].FromBegCollection().ToIppDictionary());

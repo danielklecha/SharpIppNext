@@ -20,7 +20,7 @@ internal class JobErrorSheetProfile : IProfile
 
             var dst = new JobErrorSheet
             {
-                JobErrorSheetType = map.MapFromDicNullable<JobSheetsType?>(src, nameof(JobErrorSheet.JobErrorSheetType).ConvertCamelCaseToKebabCase()),
+                JobErrorSheetType = map.MapFromDicNullable<JobErrorSheetType?>(src, nameof(JobErrorSheet.JobErrorSheetType).ConvertCamelCaseToKebabCase()),
                 JobErrorSheetWhen = map.MapFromDicNullable<JobErrorSheetWhen?>(src, nameof(JobErrorSheet.JobErrorSheetWhen).ConvertCamelCaseToKebabCase()),
                 Media = map.MapFromDicNullable<string, Media?>(src, nameof(JobErrorSheet.Media).ConvertCamelCaseToKebabCase(), (attribute, value) => new Media(value, attribute.Tag == Tag.Keyword))
             };

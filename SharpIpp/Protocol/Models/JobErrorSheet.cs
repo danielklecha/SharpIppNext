@@ -15,7 +15,7 @@ public class JobErrorSheet : IIppCollection
     /// <summary>
     /// type2 keyword | name(MAX)
     /// </summary>
-    public JobSheetsType? JobErrorSheetType { get; set; }
+    public JobErrorSheetType? JobErrorSheetType { get; set; }
 
     /// <summary>
     /// type2 keyword

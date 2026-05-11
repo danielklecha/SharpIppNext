@@ -1237,13 +1237,13 @@ public class PrinterDescriptionAttributes
     /// job-accounting-sheets-type-supported
     /// See: PWG 5100.3-2023 Section 5.3.17
     /// </summary>
-    public JobSheetsType[]? JobAccountingSheetsTypeSupported { get; set; }
+    public JobAccountingSheetsType[]? JobAccountingSheetsTypeSupported { get; set; }
 
     /// <summary>
     /// job-complete-before-supported
     /// See: PWG 5100.3-2023 Section 5.3.18
     /// </summary>
-    public JobHoldUntil[]? JobCompleteBeforeSupported { get; set; }
+    public JobCompleteBefore[]? JobCompleteBeforeSupported { get; set; }
 
     /// <summary>
     /// job-complete-before-time-supported
@@ -1267,7 +1267,7 @@ public class PrinterDescriptionAttributes
     /// job-error-sheet-type-supported
     /// See: PWG 5100.3-2023 Section 5.3.22
     /// </summary>
-    public JobSheetsType[]? JobErrorSheetTypeSupported { get; set; }
+    public JobErrorSheetType[]? JobErrorSheetTypeSupported { get; set; }
 
     /// <summary>
     /// job-error-sheet-when-supported

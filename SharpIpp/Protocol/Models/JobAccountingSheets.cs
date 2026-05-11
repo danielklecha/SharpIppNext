@@ -21,7 +21,7 @@ public class JobAccountingSheets : IIppCollection
     /// <summary>
     /// type2 keyword | name(MAX)
     /// </summary>
-    public JobSheetsType? JobAccountingSheetsType { get; set; }
+    public JobAccountingSheetsType? JobAccountingSheetsType { get; set; }
 
     /// <summary>
     /// keyword | name(MAX)

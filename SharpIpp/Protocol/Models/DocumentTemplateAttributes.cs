@@ -17,14 +17,14 @@ public class DocumentTemplateAttributes : IIppCollection
     public int? Copies { get; set; }
 
     /// <summary>
-    /// The <c>cover-back</c> Document Template attribute.
-    /// See: PWG 5100.5-2024 Section 6.3 and PWG 5100.3-2023 Section 5.2.1
+    /// [DEPRECATED] The <c>cover-back</c> Document Template attribute. Deprecated per PWG 5100.5-2024 Section 14.1 to match changes in PWG 5100.3-2023.
+    /// See: PWG 5100.5-2024 Section 14.1 and PWG 5100.3-2023 Section 5.2.1
     /// </summary>
     public Cover? CoverBack { get; set; }
 
     /// <summary>
-    /// The <c>cover-front</c> Document Template attribute.
-    /// See: PWG 5100.5-2024 Section 6.3 and PWG 5100.3-2023 Section 5.2.1
+    /// [DEPRECATED] The <c>cover-front</c> Document Template attribute. Deprecated per PWG 5100.5-2024 Section 14.1 to match changes in PWG 5100.3-2023.
+    /// See: PWG 5100.5-2024 Section 14.1 and PWG 5100.3-2023 Section 5.2.1
     /// </summary>
     public Cover? CoverFront { get; set; }
 
@@ -65,8 +65,8 @@ public class DocumentTemplateAttributes : IIppCollection
     public MediaCol? MediaCol { get; set; }
 
     /// <summary>
-    /// The <c>media-input-tray-check</c> Document Template attribute.
-    /// See: PWG 5100.3-2023 Section 5.2.13
+    /// [DEPRECATED] The <c>media-input-tray-check</c> Document Template attribute. Deprecated per PWG 5100.5-2024 Section 14.1 to match changes in PWG 5100.3-2023.
+    /// See: PWG 5100.5-2024 Section 14.1 and PWG 5100.3-2023 Section 5.2.13
     /// </summary>
     public MediaInputTrayCheck? MediaInputTrayCheck { get; set; }
 
@@ -107,8 +107,8 @@ public class DocumentTemplateAttributes : IIppCollection
     public Range[]? PageRanges { get; set; }
 
     /// <summary>
-    /// The <c>presentation-direction-number-up</c> Document Template attribute.
-    /// See: PWG 5100.3-2023 Section 5.2.15
+    /// [DEPRECATED] The <c>presentation-direction-number-up</c> Document Template attribute. Deprecated per PWG 5100.5-2024 Section 14.1 to match changes in PWG 5100.3-2023.
+    /// See: PWG 5100.5-2024 Section 14.1 and PWG 5100.3-2023 Section 5.2.15
     /// </summary>
     public PresentationDirectionNumberUp? PresentationDirectionNumberUp { get; set; }
 

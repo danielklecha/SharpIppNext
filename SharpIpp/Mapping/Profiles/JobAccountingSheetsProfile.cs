@@ -22,7 +22,7 @@ internal class JobAccountingSheetsProfile : IProfile
             {
                 JobAccountingOutputBin = map.MapFromDicNullable<string, OutputBin?>(src, nameof(JobAccountingSheets.JobAccountingOutputBin).ConvertCamelCaseToKebabCase(), (attribute, value) =>
                     new OutputBin(value, attribute.Tag == Tag.Keyword)),
-                JobAccountingSheetsType = map.MapFromDicNullable<JobSheetsType?>(src, nameof(JobAccountingSheets.JobAccountingSheetsType).ConvertCamelCaseToKebabCase()),
+                JobAccountingSheetsType = map.MapFromDicNullable<JobAccountingSheetsType?>(src, nameof(JobAccountingSheets.JobAccountingSheetsType).ConvertCamelCaseToKebabCase()),
                 Media = map.MapFromDicNullable<string, Media?>(src, nameof(JobAccountingSheets.Media).ConvertCamelCaseToKebabCase(), (attribute, value) => new Media(value, attribute.Tag == Tag.Keyword))
             };
             if (src.ContainsKey(nameof(JobAccountingSheets.MediaCol).ConvertCamelCaseToKebabCase()))

@@ -278,7 +278,7 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                         JobAccountingSheetsDefault = new JobAccountingSheets
                         {
                             JobAccountingOutputBin = OutputBin.Auto,
-                            JobAccountingSheetsType = JobSheetsType.None,
+                            JobAccountingSheetsType = JobAccountingSheetsType.None,
                             Media = Media.Default,
                             MediaCol = new MediaCol
                             {
@@ -295,12 +295,12 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                             }
                         },
                         JobAccountingSheetsSupported = new[] { JobAccountingSheetsMember.JobAccountingSheetsType },
-                        JobAccountingSheetsTypeSupported = new[] { JobSheetsType.None },
-                        JobCompleteBeforeSupported = new[] { JobHoldUntil.None },
+                        JobAccountingSheetsTypeSupported = new[] { JobAccountingSheetsType.None },
+                        JobCompleteBeforeSupported = new[] { JobCompleteBefore.None },
                         JobCompleteBeforeTimeSupported = true,
                         JobErrorSheetDefault = new JobErrorSheet
                         {
-                            JobErrorSheetType = JobSheetsType.None,
+                            JobErrorSheetType = JobErrorSheetType.None,
                             JobErrorSheetWhen = JobErrorSheetWhen.OnError,
                             Media = Media.Default,
                             MediaCol = new MediaCol
@@ -318,7 +318,7 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                             }
                         },
                         JobErrorSheetSupported = new[] { JobErrorSheetMember.JobErrorSheetType },
-                        JobErrorSheetTypeSupported = new[] { JobSheetsType.None },
+                        JobErrorSheetTypeSupported = new[] { JobErrorSheetType.None },
                         JobErrorSheetWhenSupported = new[] { JobErrorSheetWhen.OnError },
                         JobMessageToOperatorSupported = true,
                         JobPhoneNumberDefault = "12345",

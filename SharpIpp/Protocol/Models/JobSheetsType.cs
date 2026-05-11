@@ -6,9 +6,6 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public readonly record struct JobSheetsType(string Value, bool IsValue = true) : ISmartEnum 
 {
-    /// <summary>
-    /// See: PWG 5100.3-2023 Sections 5.2.6.1 and 5.2.9.1
-    /// </summary>
     public static readonly JobSheetsType None = new("none");
 
     public static readonly JobSheetsType Standard = new("standard");

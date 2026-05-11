@@ -35,7 +35,7 @@ public class JobAccountingSheetsProfileTests : MapperTestBase
 
         // Assert
         if (h1) result.JobAccountingOutputBin.Should().Be((OutputBin)"top"); else result.JobAccountingOutputBin.Should().BeNull();
-        if (h2) result.JobAccountingSheetsType.Should().Be(JobSheetsType.Standard); else result.JobAccountingSheetsType.Should().BeNull();
+        if (h2) result.JobAccountingSheetsType.Should().Be(JobAccountingSheetsType.Standard); else result.JobAccountingSheetsType.Should().BeNull();
         if (h3) result.Media.Should().Be((Media)"iso_a4_210x297mm"); else result.Media.Should().BeNull();
         if (h4) result.MediaCol.Should().NotBeNull(); else result.MediaCol.Should().BeNull();
     }
@@ -49,7 +49,7 @@ public class JobAccountingSheetsProfileTests : MapperTestBase
         var sheets = new JobAccountingSheets
         {
             JobAccountingOutputBin = h1 ? (OutputBin)"top" : null,
-            JobAccountingSheetsType = h2 ? JobSheetsType.Standard : null,
+            JobAccountingSheetsType = h2 ? JobAccountingSheetsType.Standard : null,
             Media = h3 ? (Media)"iso_a4_210x297mm" : null,
             MediaCol = h4 ? new MediaCol { MediaColor = (MediaColor)"blue" } : null
         };

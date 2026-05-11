@@ -2,7 +2,7 @@ namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the y-image-position.
-/// See: PWG 5100.1-2022 Section 6.28
+/// See: PWG 5100.3-2023 Section 5.2.21
 /// </summary>
 public readonly record struct YImagePosition(string Value, bool IsValue = true) : ISmartEnum 
 {
