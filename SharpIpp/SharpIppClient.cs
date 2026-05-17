@@ -25,30 +25,30 @@ public partial class SharpIppClient : ISharpIppClient
     private readonly bool _disposeHttpClient;
     private readonly HttpClient _httpClient;
     private readonly IIppProtocol _ippProtocol;
-    private readonly IIppRequestValidator _requestValidator;
+    private readonly IIppRequestMessageValidator _requestValidator;
 
     static SharpIppClient()
     {
         MapperSingleton = new Lazy<IMapper>(MapperFactory);
     }
 
-    public SharpIppClient() : this(new HttpClient(), new IppProtocol(), IppRequestValidator.Default, true)
+    public SharpIppClient() : this(new HttpClient(), new IppProtocol(), IppRequestMessageValidator.Default, true)
     {
     }
 
-    public SharpIppClient(HttpClient httpClient) : this(httpClient, new IppProtocol(), IppRequestValidator.Default, false )
+    public SharpIppClient(HttpClient httpClient) : this(httpClient, new IppProtocol(), IppRequestMessageValidator.Default, false )
     {
     }
 
-    public SharpIppClient(HttpClient httpClient, IIppProtocol ippProtocol) : this(httpClient, ippProtocol, IppRequestValidator.Default, false)
+    public SharpIppClient(HttpClient httpClient, IIppProtocol ippProtocol) : this(httpClient, ippProtocol, IppRequestMessageValidator.Default, false)
     {
     }
 
-    public SharpIppClient(HttpClient httpClient, IIppProtocol ippProtocol, IIppRequestValidator requestValidator) : this(httpClient, ippProtocol, requestValidator, false)
+    public SharpIppClient(HttpClient httpClient, IIppProtocol ippProtocol, IIppRequestMessageValidator requestValidator) : this(httpClient, ippProtocol, requestValidator, false)
     {
     }
 
-    internal SharpIppClient(HttpClient httpClient, IIppProtocol ippProtocol, IIppRequestValidator requestValidator, bool disposeHttpClient)
+    internal SharpIppClient(HttpClient httpClient, IIppProtocol ippProtocol, IIppRequestMessageValidator requestValidator, bool disposeHttpClient)
     {
         _httpClient = httpClient;
         _ippProtocol = ippProtocol;

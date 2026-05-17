@@ -19,7 +19,7 @@ public partial class SharpIppServer : ISharpIppServer
 {
     private static readonly Lazy<IMapper> MapperSingleton;
     private readonly IIppProtocol _ippProtocol;
-    private readonly IIppRequestValidator _requestValidator;
+    private readonly IIppRequestMessageValidator _requestValidator;
     private IMapper Mapper => MapperSingleton.Value;
 
     static SharpIppServer()
@@ -30,16 +30,16 @@ public partial class SharpIppServer : ISharpIppServer
     public SharpIppServer()
     {
         _ippProtocol = new IppProtocol();
-        _requestValidator = IppRequestValidator.Default;
+        _requestValidator = IppRequestMessageValidator.Default;
     }
 
     public SharpIppServer(IIppProtocol ippProtocol)
     {
         _ippProtocol = ippProtocol;
-        _requestValidator = IppRequestValidator.Default;
+        _requestValidator = IppRequestMessageValidator.Default;
     }
 
-    public SharpIppServer(IIppProtocol ippProtocol, IIppRequestValidator requestValidator)
+    public SharpIppServer(IIppProtocol ippProtocol, IIppRequestMessageValidator requestValidator)
     {
         _ippProtocol = ippProtocol;
         _requestValidator = requestValidator ?? throw new ArgumentNullException(nameof(requestValidator));

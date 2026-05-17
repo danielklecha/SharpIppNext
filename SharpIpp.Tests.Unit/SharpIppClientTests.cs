@@ -171,7 +171,7 @@ public class SharpIppClientTests
         Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
         protocol.Setup(x => x.WriteIppRequestAsync(It.IsAny<IIppRequestMessage>(), It.IsAny<Stream>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
-        Mock<IIppRequestValidator> validator = new();
+        Mock<IIppRequestMessageValidator> validator = new();
         var context = new IppRequestValidationContext();
         validator.SetupGet(x => x.Context).Returns(context);
 

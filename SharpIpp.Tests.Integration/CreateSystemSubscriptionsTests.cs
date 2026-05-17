@@ -16,7 +16,7 @@ public class CreateSystemSubscriptionsTests : SharpIppIntegrationTestBase
     // The typed CreateSystemSubscriptionsRequest has no property for subscription attributes, so
     // ValidateOperationSpecificRules is disabled on both client and server to allow the typed
     // method to be used end-to-end without manually constructing a raw request.
-    private static readonly IppRequestValidator NoOpSpecificRulesValidator =
+    private static readonly IppRequestMessageValidator NoOpSpecificRulesValidator =
         new() { ValidateOperationSpecificRules = false };
 
     [TestMethod]

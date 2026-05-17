@@ -167,7 +167,7 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
             new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://127.0.0.1:631/")
         ]);
 
-        var validator = new IppRequestValidator
+        var validator = new IppRequestMessageValidator
         {
             ValidateOperationSpecificRules = false
         };

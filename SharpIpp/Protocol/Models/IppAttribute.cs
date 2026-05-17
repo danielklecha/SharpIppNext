@@ -31,6 +31,8 @@ public readonly struct IppAttribute : IEquatable<IppAttribute>
         Value = value;
     }
 
+    public static IppAttribute Create(Tag tag, string name, object value) => new(tag, name, value);
+
     public IppAttribute(Tag tag, string name, int value) : this(tag, name, value as object)
     {
     }

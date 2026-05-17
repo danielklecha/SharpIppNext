@@ -77,7 +77,7 @@ internal class DocumentTemplateAttributesProfile : IProfile
             if (src.PrintQuality.HasValue)
                 dst.Add(new IppAttribute(Tag.Enum, JobAttribute.PrintQuality, (int)src.PrintQuality.Value));
             if (src.PrinterResolution != null)
-                dst.Add(new IppAttribute(Tag.Resolution, JobAttribute.PrinterResolution, src.PrinterResolution));
+                dst.Add(new IppAttribute(Tag.Resolution, JobAttribute.PrinterResolution, src.PrinterResolution.Value));
             if (src.Sides.HasValue)
                 dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.Sides, map.Map<string>(src.Sides.Value)));
             if (src.XImagePosition.HasValue)
@@ -126,7 +126,7 @@ internal class DocumentTemplateAttributesProfile : IProfile
             if (src.InputQuality.HasValue)
                 dst.Add(new IppAttribute(Tag.Enum, "input-quality", (int)src.InputQuality.Value));
             if (src.InputResolution != null)
-                dst.Add(new IppAttribute(Tag.Resolution, "input-resolution", src.InputResolution));
+                dst.Add(new IppAttribute(Tag.Resolution, "input-resolution", src.InputResolution.Value));
             if (src.InputScalingHeight.HasValue)
                 dst.Add(new IppAttribute(Tag.Integer, "input-scaling-height", src.InputScalingHeight.Value));
             if (src.InputScalingWidth.HasValue)

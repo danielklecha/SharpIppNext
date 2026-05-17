@@ -7,7 +7,7 @@ using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Protocol;
 
-public class IppRequestValidator : IIppRequestValidator
+public class IppRequestMessageValidator : IIppRequestMessageValidator
 {
     private const string NotifyEventsAttributeName = "notify-events";
     private const string AllRequestedAttributesGroup = "all";
@@ -104,7 +104,7 @@ public class IppRequestValidator : IIppRequestValidator
         JobAttribute.JobPasswordEncryption,
     ];
 
-    public static IppRequestValidator Default => new()
+    public static IppRequestMessageValidator Default => new()
     {
         ValidateCoreRules = true,
         ValidateOperationSpecificRules = true,
@@ -169,11 +169,9 @@ public class IppRequestValidator : IIppRequestValidator
 
     private void ValidateCore(IIppRequestMessage request)
     {
-        // See: RFC 8011 Section 4.1.5
         if (request.RequestId <= 0)
             throw new IppRequestException("Bad request-id value", request, IppStatusCode.ClientErrorBadRequest);
 
-        // See: RFC 8011 Section 4.1.8
         if (request.Version < new IppVersion(1, 0))
             throw new IppRequestException("Unsupported IPP version", request, IppStatusCode.ServerErrorVersionNotSupported);
 
@@ -184,27 +182,25 @@ public class IppRequestValidator : IIppRequestValidator
 
         if (!operationAttributes.Any())
             throw new IppRequestException("No Operation Attributes", request, IppStatusCode.ClientErrorBadRequest);
-        // See: RFC 8011 Section 4.1.4
+
         if (operationAttributes.First().Name != JobAttribute.AttributesCharset)
             throw new IppRequestException("attributes-charset MUST be the first attribute", request, IppStatusCode.ClientErrorBadRequest);
 
         var charsetValue = operationAttributes.First().Value.ToString();
-        // See: RFC 8011 Section 4.1.4.1
+
         if (!string.Equals(charsetValue, "utf-8", StringComparison.OrdinalIgnoreCase))
             throw new IppRequestException("attributes-charset MUST be 'utf-8'", request, IppStatusCode.ClientErrorBadRequest);
 
-        // See: RFC 8011 Section 4.1.4
         if (operationAttributes.ElementAtOrDefault(1).Name != JobAttribute.AttributesNaturalLanguage)
             throw new IppRequestException("attributes-natural-language MUST be the second attribute", request, IppStatusCode.ClientErrorBadRequest);
 
         var hasPrinterUri = HasNamedAttribute(operationAttributes, JobAttribute.PrinterUri);
         var hasSystemUri = HasNamedAttribute(operationAttributes, SystemAttribute.SystemUri);
         var hasJobUri = HasNamedAttribute(operationAttributes, JobAttribute.JobUri);
-        // See: RFC 8011 Section 4.1.5
+
         if (!hasPrinterUri && !hasSystemUri && !(hasJobUri && request.IppOperation.IsPwg51005DocumentTargetOperation()))
             throw new IppRequestException("No printer-uri or system-uri operation attribute", request, IppStatusCode.ClientErrorBadRequest);
 
-        // See: PWG 5100.22-2025 Section 5.1
         if (request.IppOperation.IsSystemServiceOperation() && !hasSystemUri)
             throw new IppRequestException("No system-uri operation attribute", request, IppStatusCode.ClientErrorBadRequest);
     }
@@ -218,18 +214,14 @@ public class IppRequestValidator : IIppRequestValidator
 
         ValidateOverridesRules(request);
 
-        // Task 9.4: job-password / job-password-encryption co-presence
         if (request.IppOperation is IppOperation.PrintJob or IppOperation.CreateJob or IppOperation.ValidateJob)
         {
             var hasJobPassword = HasNamedAttribute(request.JobAttributes, JobAttribute.JobPassword);
             var hasJobPasswordEncryption = HasNamedAttribute(request.JobAttributes, JobAttribute.JobPasswordEncryption);
             if (hasJobPassword != hasJobPasswordEncryption)
-                // See: PWG 5100.11-2024 Section 5.3.7
                 throw new IppRequestException("'job-password' and 'job-password-encryption' must be either both present or both absent", request, IppStatusCode.ClientErrorBadRequest);
         }
 
-        // Task 9.5: media and media-col mutual exclusion at job level (top-level only, not inside sub-collections)
-        // Walk the flat attribute list tracking nesting depth; only check attributes at depth 0.
         {
             var depth = 0;
             var hasTopLevelMedia = false;
@@ -252,35 +244,25 @@ public class IppRequestValidator : IIppRequestValidator
                 }
             }
             if (hasTopLevelMedia && hasTopLevelMediaCol)
-                // See: PWG 5100.7-2023 Section 6.3.1
                 throw new IppRequestException("'media' and 'media-col' are mutually exclusive at the job level", request, IppStatusCode.ClientErrorBadRequest);
         }
 
-        // Task 9.6: page-ranges ascending non-overlapping
         var pageRangeAttributes = request.JobAttributes
             .Where(x => x.Name == JobAttribute.PageRanges && x.Tag == Tag.RangeOfInteger && x.Value is SharpIpp.Protocol.Models.Range)
             .Select(x => (SharpIpp.Protocol.Models.Range)x.Value)
             .ToArray();
         if (pageRangeAttributes.Length > 0)
-            // See: RFC 8011 Section 5.2.7
             ValidateRangesAscendingNonOverlapping(pageRangeAttributes, JobAttribute.PageRanges, request);
 
-        // Task 9.7: copies >= 1
         if (request.JobAttributes.TryGetIppValue<int>(JobAttribute.Copies, out var copiesValue) && copiesValue <= 0)
-            // See: RFC 8011 Section 5.2.5
             throw new IppRequestException("'copies' must be >= 1", request, IppStatusCode.ClientErrorBadRequest);
 
-        // Task 9.8: job-priority in range 1-100
         if (request.JobAttributes.TryGetIppValue<int>(JobAttribute.JobPriority, out var jobPriorityValue) && (jobPriorityValue < 1 || jobPriorityValue > 100))
-            // See: RFC 8011 Section 5.2.1
             throw new IppRequestException("'job-priority' must be in the range 1-100", request, IppStatusCode.ClientErrorBadRequest);
 
-        // Task 9.9: number-up >= 1
         if (request.JobAttributes.TryGetIppValue<int>(JobAttribute.NumberUp, out var numberUpValue) && numberUpValue <= 0)
-            // See: RFC 8011 Section 5.2.9
             throw new IppRequestException("'number-up' must be >= 1", request, IppStatusCode.ClientErrorBadRequest);
 
-        // Task 9.12: fidelity-based attribute value validation
         ValidateFidelityBasedJobAttributes(request);
     }
 
@@ -289,63 +271,51 @@ public class IppRequestValidator : IIppRequestValidator
         if (!UseIppAttributeFidelityForCapabilityValidation && !IsIppAttributeFidelityTrue(request))
             return;
 
-        // media
         var mediaSupported = Context.MediaSupported;
         if (mediaSupported is { Count: > 0 }
             && request.JobAttributes.TryGetIppValue<string>(JobAttribute.Media, out var media)
             && !mediaSupported.Contains((Media)media))
         {
-            // See: RFC 8011 Section 4.1.6.1 (ipp-attribute-fidelity)
             throw new IppRequestException($"'media' value '{media}' is not supported by target printer", request, IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
         }
 
-        // finishings
         var finishingsSupported = Context.FinishingsSupported;
         if (finishingsSupported is { Count: > 0 })
         {
             foreach (var finishingsInt in request.JobAttributes.Where(x => x.Name == JobAttribute.Finishings).Select(x => x.Value).OfType<int>())
             {
                 if (!finishingsSupported.Contains((Finishings)finishingsInt))
-                    // See: RFC 8011 Section 4.1.6.1 (ipp-attribute-fidelity)
                     throw new IppRequestException($"'finishings' value '{finishingsInt}' is not supported by target printer", request, IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
             }
         }
 
-        // sides
         var sidesSupported = Context.SidesSupported;
         if (sidesSupported is { Count: > 0 } && request.JobAttributes.TryGetIppValue<string>(JobAttribute.Sides, out var sidesStr))
         {
             var sides = (Sides)sidesStr;
             if (!sidesSupported.Contains(sides))
-                // See: RFC 8011 Section 4.1.6.1 (ipp-attribute-fidelity)
                 throw new IppRequestException($"'sides' value '{sides}' is not supported by target printer", request, IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
         }
 
-        // print-quality
         var printQualitySupported = Context.PrintQualitySupported;
         if (printQualitySupported is { Count: > 0 })
         {
             if (request.JobAttributes.TryGetIppValue<int>(JobAttribute.PrintQuality, out var pqInt) && !printQualitySupported.Contains((PrintQuality)pqInt))
-                // See: RFC 8011 Section 4.1.6.1 (ipp-attribute-fidelity)
                 throw new IppRequestException($"'print-quality' value '{pqInt}' is not supported by target printer", request, IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
         }
 
-        // orientation-requested
         var orientationSupported = Context.OrientationRequestedSupported;
         if (orientationSupported is { Count: > 0 })
         {
             if (request.JobAttributes.TryGetIppValue<int>(JobAttribute.OrientationRequested, out var orientInt) && !orientationSupported.Contains((Orientation)orientInt))
-                // See: RFC 8011 Section 4.1.6.1 (ipp-attribute-fidelity)
                 throw new IppRequestException($"'orientation-requested' value '{orientInt}' is not supported by target printer", request, IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
         }
 
-        // print-color-mode
         var printColorModeSupported = Context.PrintColorModeSupported;
         if (printColorModeSupported is { Count: > 0 } && request.JobAttributes.TryGetIppValue<string>(JobAttribute.PrintColorMode, out var pcmStr))
         {
             var pcm = (PrintColorMode)pcmStr;
             if (!printColorModeSupported.Contains(pcm))
-                // See: RFC 8011 Section 4.1.6.1 (ipp-attribute-fidelity)
                 throw new IppRequestException($"'print-color-mode' value '{pcm}' is not supported by target printer", request, IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
         }
     }
@@ -374,11 +344,9 @@ public class IppRequestValidator : IIppRequestValidator
                 .ToArray();
 
             var hasDestinationOAuthToken = destinationUriReadyMembers.Any(x => x.Name == "destination-oauth-token" && x.Tag != Tag.EndCollection);
-            // See: PWG 5100.17-2014 Section 6.2
             if (destinationUriReadyMembers.Any(x => x.Name == "destination-oauth-scope" && x.Tag != Tag.EndCollection) && !hasDestinationOAuthToken)
                 throw new IppRequestException("invalid destination-uri-ready: destination-oauth-scope requires destination-oauth-token", request, IppStatusCode.ClientErrorBadRequest);
 
-            // See: PWG 5100.17-2014 Section 6.2
             if (destinationUriReadyMembers.Any(x => x.Name == "destination-oauth-uri" && x.Tag != Tag.EndCollection) && !hasDestinationOAuthToken)
                 throw new IppRequestException("invalid destination-uri-ready: destination-oauth-uri requires destination-oauth-token", request, IppStatusCode.ClientErrorBadRequest);
 
@@ -389,7 +357,6 @@ public class IppRequestValidator : IIppRequestValidator
                 .Where(x => Pwg51017ForbiddenDestinationAttributesMembers.Contains(x!))
                 .ToArray();
 
-            // See: PWG 5100.17-2014 Section 6.2
             if (unsupportedForbiddenMembers.Any())
                 throw new IppRequestException("invalid destination-uri-ready: destination-attributes-supported MUST NOT include password attributes", request, IppStatusCode.ClientErrorBadRequest);
 
@@ -405,7 +372,6 @@ public class IppRequestValidator : IIppRequestValidator
                     .ToArray();
 
                 if (destinationAttributesMembers.Any(x => !string.IsNullOrWhiteSpace(x.Name) && Pwg51017ForbiddenDestinationAttributesMembers.Contains(x.Name)))
-                    // See: PWG 5100.17-2014 Section 6.2
                     throw new IppRequestException("invalid destination-uri-ready: destination-attributes MUST NOT include password attributes", request, IppStatusCode.ClientErrorBadRequest);
             }
         }
@@ -415,7 +381,6 @@ public class IppRequestValidator : IIppRequestValidator
     {
         var hasFinishings = HasNamedAttribute(attributes, JobAttribute.Finishings);
         var hasFinishingsCol = HasNamedAttribute(attributes, JobAttribute.FinishingsCol);
-        // See: PWG 5100.1-2022 Section 6.3
         if (hasFinishings && hasFinishingsCol)
             throw new IppRequestException("'finishings' and 'finishings-col' are conflicting attributes and cannot be supplied together.", request, IppStatusCode.ClientErrorBadRequest);
     }
@@ -441,7 +406,6 @@ public class IppRequestValidator : IIppRequestValidator
                 }
                 catch (ArgumentException)
                 {
-                    // See: PWG 5100.3-2023 Section 4.2
                     throw new IppRequestException(
                         $"invalid {collectionName} collection encoding",
                         request,
@@ -459,7 +423,6 @@ public class IppRequestValidator : IIppRequestValidator
         if (!hasMedia || !hasMediaCol)
             return;
 
-        // See: PWG 5100.3-2023 Section 4.2
         throw new IppRequestException(
             $"invalid {collectionName}: 'media' and 'media-col' member attributes are mutually exclusive",
             request,
@@ -473,12 +436,10 @@ public class IppRequestValidator : IIppRequestValidator
         if (outputBins.Length <= 0)
             return;
 
-        // See: PWG 5100.2-2001 Section 2.1
         if (outputBins.Length > 1)
             throw new IppRequestException("'output-bin' MUST be single-valued.", request, IppStatusCode.ClientErrorBadRequest);
 
         var outputBinTag = outputBins[0].Tag;
-        // See: PWG 5100.2-2001 Section 2.1
         if (outputBinTag != Tag.Keyword && outputBinTag != Tag.NameWithoutLanguage)
             throw new IppRequestException("'output-bin' MUST use 'keyword' or 'nameWithoutLanguage' syntax.", request, IppStatusCode.ClientErrorBadRequest);
 
@@ -506,7 +467,6 @@ public class IppRequestValidator : IIppRequestValidator
         if (isSupported)
             return;
 
-        // See: RFC 8011 Section 4.1.6.1 (ipp-attribute-fidelity)
         throw new IppRequestException(
             $"invalid output-bin: value is not supported by target printer: {value}",
             request,
@@ -528,7 +488,6 @@ public class IppRequestValidator : IIppRequestValidator
         {
             case IppOperation.CancelDocument:
             case IppOperation.GetDocumentAttributes:
-                // See: PWG 5100.5-2024 Section 5.1
                 ValidateRequiredDocumentNumber(hasDocumentNumber, documentNumber, request);
 
                 if (request.IppOperation == IppOperation.CancelDocument && documentNumber is int cancelDocumentNumber)
@@ -537,7 +496,6 @@ public class IppRequestValidator : IIppRequestValidator
                 break;
 
             case IppOperation.SetDocumentAttributes:
-                // See: PWG 5100.5-2024 Section 5.1
                 ValidateRequiredDocumentNumber(hasDocumentNumber, documentNumber, request);
 
                 if (ValidateDocumentAttributesGroup && !request.DocumentAttributes.Any())
@@ -549,37 +507,30 @@ public class IppRequestValidator : IIppRequestValidator
                 break;
 
             case IppOperation.PrintJob:
-                // See: RFC 8011 Section 4.2.1
                 if (request.Document == null)
                     throw new IppRequestException("document stream required", request, IppStatusCode.ClientErrorBadRequest);
                 break;
 
             case IppOperation.PrintUri:
-                // See: RFC 8011 Section 4.2.2
                 if (ValidateOperationAttributesGroup && !hasDocumentUri)
                     throw new IppRequestException("missing document-uri", request, IppStatusCode.ClientErrorBadRequest);
                 break;
 
             case IppOperation.SendDocument:
-                // See: RFC 8011 Section 4.3.1
                 ValidateRequiredLastDocument(hasLastDocument, lastDocument, request);
                 if (ValidateOperationAttributesGroup && lastDocument == false && request.Document == null)
                     throw new IppRequestException("document stream required when last-document=false", request, IppStatusCode.ClientErrorBadRequest);
                 break;
 
             case IppOperation.SendUri:
-                // See: RFC 8011 Section 4.3.1
                 ValidateRequiredLastDocument(hasLastDocument, lastDocument, request);
                 if (ValidateOperationAttributesGroup && lastDocument == false && !hasDocumentUri)
                     throw new IppRequestException("missing document-uri", request, IppStatusCode.ClientErrorBadRequest);
                 break;
 
             case IppOperation.AcknowledgeDocument:
-                // See: PWG 5100.5-2024 Section 5.1
                 ValidateRequiredDocumentNumber(hasDocumentNumber, documentNumber, request);
-                // See: PWG 5100.18-2025 Section 5.1
                 ValidateRequiredOutputDeviceUuid(hasOutputDeviceUuid, request);
-                // See: PWG 5100.18-2025 Section 5.1
                 ValidateFetchStatusCodeNotSuccessful(operationAttributes, request);
                 break;
 
@@ -589,13 +540,9 @@ public class IppRequestValidator : IIppRequestValidator
             case IppOperation.GetOutputDeviceAttributes:
             case IppOperation.UpdateJobStatus:
             case IppOperation.UpdateOutputDeviceAttributes:
-                // See: PWG 5100.18-2025 Section 5.2 (AcknowledgeIdentifyPrinter), 5.4 (DeregisterOutputDevice),
-                //      5.6 (FetchJob), 6.1 (GetOutputDeviceAttributes),
-                //      5.9 (UpdateJobStatus), 5.10 (UpdateOutputDeviceAttributes)
                 ValidateRequiredOutputDeviceUuid(hasOutputDeviceUuid, request);
                 break;
             case IppOperation.UpdateActiveJobs:
-                // See: PWG 5100.18-2025 Section 5.7.1
                 ValidateRequiredOutputDeviceUuid(hasOutputDeviceUuid, request);
                 if (ValidateOperationAttributesGroup)
                 {
@@ -615,40 +562,32 @@ public class IppRequestValidator : IIppRequestValidator
                 break;
 
             case IppOperation.AcknowledgeJob:
-                // See: PWG 5100.18-2025 Section 5.3
                 ValidateRequiredOutputDeviceUuid(hasOutputDeviceUuid, request);
-                // See: PWG 5100.18-2025 Section 5.3
                 ValidateFetchStatusCodeNotSuccessful(operationAttributes, request);
                 break;
 
             case IppOperation.FetchDocument:
             case IppOperation.UpdateDocumentStatus:
-                // See: PWG 5100.5-2024 Section 5.1
                 ValidateRequiredDocumentNumber(hasDocumentNumber, documentNumber, request);
-                // See: PWG 5100.18-2025 Section 5.5 (FetchDocument), 5.8 (UpdateDocumentStatus)
                 ValidateRequiredOutputDeviceUuid(hasOutputDeviceUuid, request);
                 break;
 
             case IppOperation.ValidateJob:
             case IppOperation.ValidateDocument:
-                // See: PWG 5100.13-2023 Section 5.2
                 if (ValidateOperationAttributesGroup && HasNamedAttribute(operationAttributes, JobAttribute.DocumentPassword))
                     throw new IppRequestException("document-password is not allowed for validate operations", request, IppStatusCode.ClientErrorBadRequest);
                 break;
 
             case IppOperation.CreateJob:
-                // See: PWG 5100.17-2014 Section 6.1
                 ValidateCreateJobDestinationRules(operationAttributes, request);
                 break;
 
             case IppOperation.GetNotifications:
-                // Task 9.2: notify-pull-method must be 'ippget'
                 if (ValidateOperationAttributesGroup)
                 {
                     var notifyPullMethodAttr = operationAttributes.FirstOrDefault(x => x.Name == SystemAttribute.NotifyPullMethod);
                     var notifyPullMethodValue = notifyPullMethodAttr.Value?.ToString();
                     if (!string.Equals(notifyPullMethodValue, "ippget", StringComparison.OrdinalIgnoreCase))
-                        // See: RFC 3996 Section 5.1
                         throw new IppRequestException("'notify-pull-method' must be 'ippget'", request, IppStatusCode.ClientErrorBadRequest);
                 }
                 break;
@@ -656,9 +595,7 @@ public class IppRequestValidator : IIppRequestValidator
             case IppOperation.CancelSubscription:
             case IppOperation.GetSubscriptionAttributes:
             case IppOperation.RenewSubscription:
-                // Task 9.3: notify-subscription-id required
                 if (ValidateOperationAttributesGroup && !HasNamedAttribute(operationAttributes, SystemAttribute.NotifySubscriptionId))
-                    // See: RFC 3995 Section 5.1
                     throw new IppRequestException("missing notify-subscription-id", request, IppStatusCode.ClientErrorBadRequest);
                 break;
 
@@ -667,9 +604,7 @@ public class IppRequestValidator : IIppRequestValidator
             case IppOperation.InstallResource:
             case IppOperation.SendResourceData:
             case IppOperation.SetResourceAttributes:
-                // Task 9.10: resource-id required for resource operations
                 if (ValidateOperationAttributesGroup && !HasNamedAttribute(operationAttributes, SystemAttribute.ResourceId))
-                    // See: PWG 5100.22-2025 Section 5.x
                     throw new IppRequestException("missing resource-id", request, IppStatusCode.ClientErrorBadRequest);
                 break;
 
@@ -680,17 +615,13 @@ public class IppRequestValidator : IIppRequestValidator
             case IppOperation.ShutdownOnePrinter:
             case IppOperation.StartupOnePrinter:
             case IppOperation.RestartOnePrinter:
-                // Task 9.11: printer-id required for printer management operations
                 if (ValidateOperationAttributesGroup && !HasNamedAttribute(operationAttributes, JobAttribute.PrinterId))
-                    // See: PWG 5100.22-2025 Section 5.x
                     throw new IppRequestException("missing printer-id", request, IppStatusCode.ClientErrorBadRequest);
                 break;
 
             case IppOperation.CreatePrinterSubscriptions:
             case IppOperation.CreateSystemSubscriptions:
-                // Task 9.13: subscription-attributes-group required for subscription creation
                 if (!request.SubscriptionAttributes.Any())
-                    // See: RFC 3995 Section 5.1
                     throw new IppRequestException("subscription-attributes-group is required and must be non-empty", request, IppStatusCode.ClientErrorBadRequest);
                 break;
         }
@@ -720,7 +651,6 @@ public class IppRequestValidator : IIppRequestValidator
                 .ToArray();
 
             if (destinationUriMembers.Any(x => Pwg51017ForbiddenDestinationUriMembers.Contains(x.Name)))
-                // See: PWG 5100.17-2014 Section 6.1
                 throw new IppRequestException("invalid destination-uris: reserved fax member attributes are not allowed for Scan", request, IppStatusCode.ClientErrorBadRequest);
 
             foreach (var destinationUriMember in destinationUriMembers.Where(x => x.Name == "destination-uri"))
@@ -736,13 +666,11 @@ public class IppRequestValidator : IIppRequestValidator
                     scheme = destinationUri.Substring(0, i);
 
                 if (scheme != null && Pwg51017ForbiddenDestinationUriSchemes.Contains(scheme))
-                    // See: PWG 5100.17-2014 Section 6.1
                     throw new IppRequestException("invalid destination-uri scheme for Scan", request, IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
             }
         }
 
         var destinationAccessesCollections = EnumerateNamedCollections(operationAttributes, JobAttribute.DestinationAccesses).ToArray();
-        // See: PWG 5100.17-2014 Section 6.1
         if (destinationAccessesCollections.Length > 0 && destinationAccessesCollections.Length != destinationUriCollections.Length)
             throw new IppRequestException("destination-accesses cardinality MUST match destination-uris", request, IppStatusCode.ClientErrorBadRequest);
     }
@@ -782,7 +710,6 @@ public class IppRequestValidator : IIppRequestValidator
         if (UseIppAttributeFidelityForCapabilityValidation && !IsIppAttributeFidelityTrue(request))
             return;
 
-        // See: PWG 5100.8-2003 Section 4
         throw new IppRequestException(
             $"requested-attributes group value(s) not supported: {string.Join(", ", unsupportedGroupKeywords)}",
             request,
@@ -889,7 +816,6 @@ public class IppRequestValidator : IIppRequestValidator
         if (UseIppAttributeFidelityForCapabilityValidation && !IsIppAttributeFidelityTrue(request))
             return;
 
-        // See: PWG 5100.5-2024 Section 5.2
         throw new IppRequestException(
             $"requested-attributes group value(s) not supported: {string.Join(", ", unsupportedGroupKeywords)}",
             request,
@@ -928,7 +854,6 @@ public class IppRequestValidator : IIppRequestValidator
         if (UseIppAttributeFidelityForCapabilityValidation && !IsIppAttributeFidelityTrue(request))
             return;
 
-        // See: RFC 3995 Section 5.3.3
         throw new IppRequestException(
             $"notify-events value(s) not supported: {string.Join(", ", unsupportedNotifyEvents)}",
             request,
@@ -944,7 +869,6 @@ public class IppRequestValidator : IIppRequestValidator
             return;
 
         if (documentState is DocumentState.Completed or DocumentState.Canceled or DocumentState.Aborted)
-            // See: PWG 5100.5-2024 Section 5.1
             throw new IppRequestException("invalid document-state for Cancel-Document", request, IppStatusCode.ClientErrorNotPossible);
 
         if (documentState != DocumentState.Processing)
@@ -957,7 +881,6 @@ public class IppRequestValidator : IIppRequestValidator
             return;
 
         if (stateReasons.Contains(DocumentStateReason.ProcessingToStopPoint))
-            // See: PWG 5100.5-2024 Section 5.1
             throw new IppRequestException("invalid document-state-reasons for Cancel-Document", request, IppStatusCode.ClientErrorNotPossible);
     }
 
@@ -970,11 +893,9 @@ public class IppRequestValidator : IIppRequestValidator
             return;
 
         if (documentState is DocumentState.Completed or DocumentState.Canceled or DocumentState.Aborted)
-            // See: PWG 5100.5-2024 Section 5.1.3
             throw new IppRequestException("invalid document-state for Set-Document-Attributes", request, IppStatusCode.ClientErrorNotPossible);
 
         if (documentState == DocumentState.Processing && !Context.AllowSetDocumentAttributesWhenProcessing)
-            // See: PWG 5100.5-2024 Section 5.1.3
             throw new IppRequestException("invalid document-state for Set-Document-Attributes", request, IppStatusCode.ClientErrorNotPossible);
     }
 
@@ -992,13 +913,11 @@ public class IppRequestValidator : IIppRequestValidator
                 if (UseIppAttributeFidelityForCapabilityValidation && !IsIppAttributeFidelityTrue(request))
                     return;
 
-                // See: PWG 5100.6-2003 Section 4.1
                 throw new IppRequestException("invalid overrides: attribute is not supported for this operation by target printer", request, IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
             }
         }
         else if (!Pwg51006OverridesOperations.Contains(request.IppOperation))
         {
-            // See: PWG 5100.6-2003 Section 4.1
             throw new IppRequestException("invalid overrides: attribute is not allowed for this operation", request, IppStatusCode.ClientErrorBadRequest);
         }
 
@@ -1021,36 +940,28 @@ public class IppRequestValidator : IIppRequestValidator
                 var documentNumberRanges = ReadSelectorRanges(members, OverrideDocumentNumbersMemberName, required: false, request);
                 var documentCopyRanges = ReadSelectorRanges(members, OverrideDocumentCopiesMemberName, required: false, request);
 
-                // See: PWG 5100.6-2003 Section 4.1
                 ValidateSelectorOrder(members, hasDocumentNumbers: documentNumberRanges != null, hasDocumentCopies: documentCopyRanges != null, request);
-                // See: PWG 5100.6-2003 Section 4.1
                 ValidateRangesAscendingNonOverlapping(pageRanges!, OverridePagesMemberName, request);
 
                 if (documentNumberRanges != null)
-                    // See: PWG 5100.6-2003 Section 4.1
                     ValidateRangesAscendingNonOverlapping(documentNumberRanges, OverrideDocumentNumbersMemberName, request);
 
                 if (documentCopyRanges != null)
-                    // See: PWG 5100.6-2003 Section 4.1
                     ValidateRangesAscendingNonOverlapping(documentCopyRanges, OverrideDocumentCopiesMemberName, request);
 
                 var hasOverrideAttributes = members.Any(x => !IsSelectorMember(x.Name));
-                // See: PWG 5100.6-2003 Section 4.1
                 if (!hasOverrideAttributes)
                     throw new IppRequestException("invalid overrides: each collection must contain at least one overriding Job Template attribute", request, IppStatusCode.ClientErrorBadRequest);
 
-                // See: PWG 5100.6-2003 Section 4.1.5
                 ValidateOverrideMembersAgainstSupportedValues(members, request);
 
                 effectiveDocumentRangesByCollection.Add(documentNumberRanges ?? [new SharpIpp.Protocol.Models.Range(1, int.MaxValue)]);
             }
 
-            // See: PWG 5100.6-2003 Section 4.1
             ValidateOverrideDocumentNumbersAcrossCollections(effectiveDocumentRangesByCollection, request);
         }
         catch (ArgumentException)
         {
-            // See: PWG 5100.6-2003 Section 4.1
             throw new IppRequestException("invalid overrides collection encoding", request, IppStatusCode.ClientErrorBadRequest);
         }
     }
@@ -1207,12 +1118,10 @@ public class IppRequestValidator : IIppRequestValidator
             .ToArray();
 
         if (selectorOrder.Length == 0 || selectorOrder[0] != OverridePagesMemberName)
-            // See: PWG 5100.6-2003 Section 4.1
             throw new IppRequestException("invalid overrides: 'pages' must be the first member attribute", request, IppStatusCode.ClientErrorBadRequest);
 
         if (hasDocumentNumbers)
         {
-            // See: PWG 5100.6-2003 Section 4.1
             if (Array.IndexOf(selectorOrder, OverrideDocumentNumbersMemberName) != 1)
                 throw new IppRequestException("invalid overrides: 'document-numbers' must be second when present", request, IppStatusCode.ClientErrorBadRequest);
         }
@@ -1220,7 +1129,6 @@ public class IppRequestValidator : IIppRequestValidator
         if (hasDocumentCopies)
         {
             var expectedIndex = hasDocumentNumbers ? 2 : 1;
-            // See: PWG 5100.6-2003 Section 4.1
             if (Array.IndexOf(selectorOrder, OverrideDocumentCopiesMemberName) != expectedIndex)
                 throw new IppRequestException("invalid overrides: 'document-copies' is in an invalid position", request, IppStatusCode.ClientErrorBadRequest);
         }
@@ -1235,7 +1143,6 @@ public class IppRequestValidator : IIppRequestValidator
                 continue;
             }
 
-            // See: PWG 5100.6-2003 Section 4.1
             if (hasSeenOverrideAttribute)
                 throw new IppRequestException("invalid overrides: selector members must precede overriding Job Template attributes", request, IppStatusCode.ClientErrorBadRequest);
         }
@@ -1246,11 +1153,9 @@ public class IppRequestValidator : IIppRequestValidator
         for (var i = 0; i < ranges.Count; i++)
         {
             var current = ranges[i];
-            // See: RFC 8011 Section 5.2.7
             if (current.Lower < 1)
                 throw new IppRequestException($"invalid overrides: '{memberName}' ranges must be within 1:MAX", request, IppStatusCode.ClientErrorBadRequest);
 
-            // See: RFC 8011 Section 5.2.7
             if (current.Lower > current.Upper)
                 throw new IppRequestException($"invalid overrides: '{memberName}' range lower bound cannot exceed upper bound", request, IppStatusCode.ClientErrorBadRequest);
 
@@ -1258,7 +1163,6 @@ public class IppRequestValidator : IIppRequestValidator
                 continue;
 
             var previous = ranges[i - 1];
-            // See: RFC 8011 Section 5.2.7
             if (current.Lower <= previous.Upper)
                 throw new IppRequestException($"invalid overrides: '{memberName}' ranges must be ascending and non-overlapping", request, IppStatusCode.ClientErrorBadRequest);
         }
@@ -1274,7 +1178,6 @@ public class IppRequestValidator : IIppRequestValidator
         {
             foreach (var current in ranges)
             {
-                // See: PWG 5100.6-2003 Section 4.1
                 if (previousRange.HasValue && current.Lower <= previousRange.Value.Upper)
                     throw new IppRequestException("invalid overrides: override collections must have ascending, non-overlapping document-numbers", request, IppStatusCode.ClientErrorBadRequest);
                 previousRange = current;

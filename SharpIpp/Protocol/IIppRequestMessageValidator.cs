@@ -1,6 +1,8 @@
+using SharpIpp.Protocol.Models;
+
 namespace SharpIpp.Protocol;
 
-public interface IIppRequestValidator
+public interface IIppRequestMessageValidator
 {
     IppRequestValidationContext Context { get; }
 

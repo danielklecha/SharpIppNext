@@ -60,7 +60,7 @@ public class SharpIppServerTests
     public async Task ReceiveRequestAsync_UnknownOperation_ShouldThrowBadRequestFromSwitchDefault()
     {
         // Arrange
-        Mock<IIppRequestValidator> validator = new();
+        Mock<IIppRequestMessageValidator> validator = new();
         var context = new IppRequestValidationContext();
         validator.SetupGet(x => x.Context).Returns(context);
 
@@ -121,7 +121,7 @@ public class SharpIppServerTests
     [TestMethod]
     public async Task ReceiveRequestAsync_WithInjectedRequestValidator_ShouldInvokeValidator()
     {
-        Mock<IIppRequestValidator> validator = new();
+        Mock<IIppRequestMessageValidator> validator = new();
         var context = new IppRequestValidationContext();
         validator.SetupGet(x => x.Context).Returns(context);
 

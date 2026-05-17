@@ -176,7 +176,7 @@ public class DocumentTemplateAttributesProfileTests : MapperTestBase
         ]);
         request.DocumentAttributes.AddRange(_mapper.Map<System.Collections.Generic.List<IppAttribute>>(src));
 
-        var validator = new IppRequestValidator
+        var validator = new IppRequestMessageValidator
         {
             ValidateJobAttributesGroup = false,
         };

@@ -1450,7 +1450,7 @@ public class IppRequestMessageExtensionsTests
     [TestMethod]
     public void EnumerateTopLevelOverrideMemberNames_WithNestedCollections_ShouldHandleDepthTransitions()
     {
-        var method = typeof(IppRequestValidator)
+        var method = typeof(IppRequestMessageValidator)
             .GetMethod("EnumerateTopLevelOverrideMemberNames", BindingFlags.NonPublic | BindingFlags.Static);
         method.Should().NotBeNull();
 
@@ -1472,7 +1472,7 @@ public class IppRequestMessageExtensionsTests
     [TestMethod]
     public void ValidateSelectorOrder_WhenNoSelectors_ShouldThrowPagesFirstException()
     {
-        var method = typeof(IppRequestValidator)
+        var method = typeof(IppRequestMessageValidator)
             .GetMethod("ValidateSelectorOrder", BindingFlags.NonPublic | BindingFlags.Static);
         method.Should().NotBeNull();
 
@@ -1494,7 +1494,7 @@ public class IppRequestMessageExtensionsTests
     [TestMethod]
     public void ValidateSelectorOrder_DocumentCopiesInvalidPositionBranch_ShouldThrowException()
     {
-        var method = typeof(IppRequestValidator)
+        var method = typeof(IppRequestMessageValidator)
             .GetMethod("ValidateSelectorOrder", BindingFlags.NonPublic | BindingFlags.Static);
         method.Should().NotBeNull();
 
@@ -1649,7 +1649,7 @@ public class IppRequestMessageExtensionsTests
     [TestMethod]
     public void EnumerateNamedCollections_WithNestedCollections_ShouldReturnExpectedCollections()
     {
-        var method = typeof(IppRequestValidator)
+        var method = typeof(IppRequestMessageValidator)
             .GetMethod("EnumerateNamedCollections", BindingFlags.NonPublic | BindingFlags.Static);
         method.Should().NotBeNull();
 
@@ -1670,7 +1670,7 @@ public class IppRequestMessageExtensionsTests
     [TestMethod]
     public void ValidateRangesAscendingNonOverlapping_WithOverlappingRanges_ShouldThrowException()
     {
-        var method = typeof(IppRequestValidator)
+        var method = typeof(IppRequestMessageValidator)
             .GetMethod("ValidateRangesAscendingNonOverlapping", BindingFlags.NonPublic | BindingFlags.Static);
         method.Should().NotBeNull();
 
@@ -1693,7 +1693,7 @@ public class IppRequestMessageExtensionsTests
     [TestMethod]
     public void Validator_DefaultFlags_ShouldExposeExpectedDefaults()
     {
-        var validator = new IppRequestValidator();
+        var validator = new IppRequestMessageValidator();
 
         validator.ValidatePrinterAttributesGroup.Should().BeTrue();
         validator.ValidateUnsupportedAttributesGroup.Should().BeTrue();
@@ -1801,13 +1801,13 @@ public class IppRequestMessageExtensionsTests
         return CreateMessage(IppOperation.ValidateJob);
     }
 
-    private static void ValidateWith(IIppRequestMessage? request, Action<IppRequestValidator>? configure = null)
+    private static void ValidateWith(IIppRequestMessage? request, Action<IppRequestMessageValidator>? configure = null)
     {
         var validator = CreateValidator(configure);
         validator.Validate(request);
     }
 
-    private static void ValidateCoreOnly(IIppRequestMessage? request, Action<IppRequestValidator>? configure = null)
+    private static void ValidateCoreOnly(IIppRequestMessage? request, Action<IppRequestMessageValidator>? configure = null)
     {
         var validator = CreateValidator(v =>
         {
@@ -1820,7 +1820,7 @@ public class IppRequestMessageExtensionsTests
         validator.Validate(request);
     }
 
-    private static void ValidateOperationOnly(IIppRequestMessage? request, Action<IppRequestValidator>? configure = null)
+    private static void ValidateOperationOnly(IIppRequestMessage? request, Action<IppRequestMessageValidator>? configure = null)
     {
         var validator = CreateValidator(v =>
         {
@@ -1833,7 +1833,7 @@ public class IppRequestMessageExtensionsTests
         validator.Validate(request);
     }
 
-    private static void ValidateJobOnly(IIppRequestMessage? request, Action<IppRequestValidator>? configure = null)
+    private static void ValidateJobOnly(IIppRequestMessage? request, Action<IppRequestMessageValidator>? configure = null)
     {
         var validator = CreateValidator(v =>
         {
@@ -1846,7 +1846,7 @@ public class IppRequestMessageExtensionsTests
         validator.Validate(request);
     }
 
-    private static void ValidateDocumentOnly(IIppRequestMessage? request, Action<IppRequestValidator>? configure = null)
+    private static void ValidateDocumentOnly(IIppRequestMessage? request, Action<IppRequestMessageValidator>? configure = null)
     {
         var validator = CreateValidator(v =>
         {
@@ -1859,9 +1859,9 @@ public class IppRequestMessageExtensionsTests
         validator.Validate(request);
     }
 
-    private static IppRequestValidator CreateValidator(Action<IppRequestValidator>? configure = null)
+    private static IppRequestMessageValidator CreateValidator(Action<IppRequestMessageValidator>? configure = null)
     {
-        var validator = new IppRequestValidator
+        var validator = new IppRequestMessageValidator
         {
             ValidatePrinterAttributesGroup = false,
             ValidateUnsupportedAttributesGroup = false,
