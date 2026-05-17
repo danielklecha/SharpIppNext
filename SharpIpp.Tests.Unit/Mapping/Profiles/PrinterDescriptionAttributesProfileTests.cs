@@ -178,7 +178,7 @@ public class PrinterDescriptionAttributesProfileTests
             { PrinterAttribute.PrinterConfigChangeDateTime, [new IppAttribute(Tag.DateTime, PrinterAttribute.PrinterConfigChangeDateTime, configChange)] },
             { PrinterAttribute.PrinterAlert, [new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, PrinterAttribute.PrinterAlert, "code=jam;severity=critical")] },
             { PrinterAttribute.PrinterAlertDescription, [new IppAttribute(Tag.TextWithoutLanguage, PrinterAttribute.PrinterAlertDescription, "alert text")] },
-            { PrinterAttribute.PrinterSupply, [new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, PrinterAttribute.PrinterSupply, "supply-raw")] },
+            // PrinterSupply read mapping deferred to Task 7 (now PrinterSupply[]? collection type)
             { PrinterAttribute.PrinterSupplyDescription, [new IppAttribute(Tag.TextWithoutLanguage, PrinterAttribute.PrinterSupplyDescription, "toner status")] }
         };
 
@@ -193,7 +193,8 @@ public class PrinterDescriptionAttributesProfileTests
         dst.PrinterAlert[0].Code.Should().Be("jam");
         dst.PrinterAlert[0].Severity.Should().Be("critical");
         dst.PrinterAlertDescription.Should().BeEquivalentTo("alert text");
-        dst.PrinterSupply.Should().BeEquivalentTo("supply-raw");
+        // PrinterSupply read mapping deferred to Task 7
+        dst.PrinterSupply.Should().BeNull();
         dst.PrinterSupplyDescription.Should().BeEquivalentTo("toner status");
     }
 
@@ -308,7 +309,7 @@ public class PrinterDescriptionAttributesProfileTests
             PrinterConfigChangeDateTime = configChange,
             PrinterAlert = [new PrinterAlert { Code = "jam", Severity = "critical" }],
             PrinterAlertDescription = ["alert text"],
-            PrinterSupply = ["supply-raw"],
+            // PrinterSupply is now PrinterSupply[]? — write mapping deferred to Task 7
             PrinterSupplyDescription = ["toner status"]
         };
 
@@ -338,9 +339,8 @@ public class PrinterDescriptionAttributesProfileTests
         dst[PrinterAttribute.PrinterAlertDescription].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.TextWithoutLanguage);
         dst[PrinterAttribute.PrinterAlertDescription].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["alert text"]);
 
-        dst.Should().ContainKey(PrinterAttribute.PrinterSupply);
-        dst[PrinterAttribute.PrinterSupply].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.OctetStringWithAnUnspecifiedFormat);
-        dst[PrinterAttribute.PrinterSupply].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["supply-raw"]);
+        // PrinterSupply write mapping deferred to Task 7 (now PrinterSupply[]? collection type)
+        dst.Should().NotContainKey(PrinterAttribute.PrinterSupply);
 
         dst.Should().ContainKey(PrinterAttribute.PrinterSupplyDescription);
         dst[PrinterAttribute.PrinterSupplyDescription].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.TextWithoutLanguage);

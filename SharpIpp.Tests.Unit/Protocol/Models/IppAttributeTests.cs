@@ -75,6 +75,15 @@ public class IppAttributeTests
     }
 
     [TestMethod]
+    public void Constructor_ByteArray_SetsValue()
+    {
+        var value = new byte[] { 1, 2, 3 };
+        var attr = new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, "test", value);
+        attr.Tag.Should().Be(Tag.OctetStringWithAnUnspecifiedFormat);
+        attr.Value.Should().Be(value);
+    }
+
+    [TestMethod]
     public void Constructor_Parameterless_SetsNoValueAndEmptyName()
     {
         var attr = new IppAttribute();
@@ -93,7 +102,14 @@ public class IppAttributeTests
     [TestMethod]
     public void Constructor_NullValue_ThrowsArgumentNullException()
     {
-        Action action = () => new IppAttribute(Tag.Keyword, "test", null!);
+        Action action = () => new IppAttribute(Tag.Keyword, "test", (string)null!);
+        action.Should().Throw<ArgumentNullException>().WithParameterName("value");
+    }
+
+    [TestMethod]
+    public void Constructor_NullByteArray_ThrowsArgumentNullException()
+    {
+        Action action = () => new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, "test", (byte[])null!);
         action.Should().Throw<ArgumentNullException>().WithParameterName("value");
     }
 

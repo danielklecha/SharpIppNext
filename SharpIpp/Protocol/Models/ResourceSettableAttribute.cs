@@ -6,7 +6,9 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public readonly record struct ResourceSettableAttribute(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
 {
+    /// <summary>The resource-info attribute. See: PWG 5100.22-2025 Section 7.2.40</summary>
     public static readonly ResourceSettableAttribute ResourceInfo = new("resource-info");
+    /// <summary>The resource-name attribute. See: PWG 5100.22-2025 Section 7.2.40</summary>
     public static readonly ResourceSettableAttribute ResourceName = new("resource-name");
 
     public override string ToString() => Value;

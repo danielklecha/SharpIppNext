@@ -60,7 +60,6 @@ public class CreateJobStreamTests : SharpIppIntegrationTestBase
                 Sides = Sides.OneSided,
                 NumberUp = 1,
                 OrientationRequested = Orientation.Portrait,
-                Media = (Media)"iso_a4_210x297mm",
                 PrinterResolution = new Resolution(600, 600, ResolutionUnit.DotsPerInch),
                 PrintQuality = PrintQuality.Normal,
                 PrintScaling = PrintScaling.Auto,

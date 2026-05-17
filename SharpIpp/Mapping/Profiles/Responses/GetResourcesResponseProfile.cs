@@ -49,6 +49,23 @@ internal class GetResourcesResponseProfile : IProfile
             ResourceStates = map.MapFromDicSetNullable<ResourceState[]?>(src, SystemAttribute.ResourceStates),
             ResourceType = map.MapFromDicNullable<ResourceType?>(src, SystemAttribute.ResourceType),
             ResourceVersion = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceVersion),
+            ResourceState = map.MapFromDicNullable<ResourceState?>(src, SystemAttribute.ResourceState),
+            ResourceStateReasons = map.MapFromDicSetNullable<ResourceStateReason[]?>(src, SystemAttribute.ResourceStateReasons),
+            ResourceStateMessage = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceStateMessage),
+            ResourceKOctets = map.MapFromDicNullable<int?>(src, SystemAttribute.ResourceKOctets),
+            ResourceDataUri = map.MapFromDicNullable<System.Uri?>(src, SystemAttribute.ResourceDataUri),
+            ResourceUseCount = map.MapFromDicNullable<int?>(src, SystemAttribute.ResourceUseCount),
+            ResourceUuid = map.MapFromDicNullable<OctetString?>(src, SystemAttribute.ResourceUuid),
+            DateTimeAtCreation = map.MapFromDicNullable<System.DateTimeOffset?>(src, SystemAttribute.ResourceDateTimeAtCreation),
+            DateTimeAtInstalled = map.MapFromDicNullable<System.DateTimeOffset?>(src, SystemAttribute.ResourceDateTimeAtInstalled),
+            DateTimeAtCanceled = map.MapFromDicNullable<System.DateTimeOffset?>(src, SystemAttribute.ResourceDateTimeAtCanceled),
+            TimeAtCreation = map.MapFromDicNullable<int?>(src, SystemAttribute.ResourceTimeAtCreation),
+            TimeAtInstalled = map.MapFromDicNullable<int?>(src, SystemAttribute.ResourceTimeAtInstalled),
+            TimeAtCanceled = map.MapFromDicNullable<int?>(src, SystemAttribute.ResourceTimeAtCanceled),
+            ResourceNaturalLanguage = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceNaturalLanguage),
+            ResourcePatches = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourcePatches),
+            ResourceSignature = map.MapFromDicSetNullable<OctetString[]?>(src, SystemAttribute.ResourceSignature),
+            ResourceStringVersion = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceStringVersion),
         });
 
         mapper.CreateMap<ResourceDescriptionAttributes, IDictionary<string, IppAttribute[]>>((src, map) =>
@@ -70,6 +87,40 @@ internal class GetResourcesResponseProfile : IProfile
                 dic.Add(SystemAttribute.ResourceType, new IppAttribute[] { new IppAttribute(Tag.Keyword, SystemAttribute.ResourceType, src.ResourceType.Value.Value) });
             if (!string.IsNullOrEmpty(src.ResourceVersion))
                 dic.Add(SystemAttribute.ResourceVersion, new IppAttribute[] { new IppAttribute(Tag.TextWithoutLanguage, SystemAttribute.ResourceVersion, src.ResourceVersion!) });
+            if (src.ResourceState.HasValue)
+                dic.Add(SystemAttribute.ResourceState, [new IppAttribute(Tag.Enum, SystemAttribute.ResourceState, (int)src.ResourceState.Value)]);
+            if (src.ResourceStateReasons != null)
+                dic.Add(SystemAttribute.ResourceStateReasons, src.ResourceStateReasons.Select(x => new IppAttribute(Tag.Keyword, SystemAttribute.ResourceStateReasons, x.ToString())).ToArray());
+            if (!string.IsNullOrEmpty(src.ResourceStateMessage))
+                dic.Add(SystemAttribute.ResourceStateMessage, [new IppAttribute(Tag.TextWithoutLanguage, SystemAttribute.ResourceStateMessage, src.ResourceStateMessage!)]);
+            if (src.ResourceKOctets.HasValue)
+                dic.Add(SystemAttribute.ResourceKOctets, [new IppAttribute(Tag.Integer, SystemAttribute.ResourceKOctets, src.ResourceKOctets.Value)]);
+            if (src.ResourceDataUri != null)
+                dic.Add(SystemAttribute.ResourceDataUri, [new IppAttribute(Tag.Uri, SystemAttribute.ResourceDataUri, src.ResourceDataUri.ToString())]);
+            if (src.ResourceUseCount.HasValue)
+                dic.Add(SystemAttribute.ResourceUseCount, [new IppAttribute(Tag.Integer, SystemAttribute.ResourceUseCount, src.ResourceUseCount.Value)]);
+            if (src.ResourceUuid != null)
+                dic.Add(SystemAttribute.ResourceUuid, [new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, SystemAttribute.ResourceUuid, src.ResourceUuid.Value)]);
+            if (src.DateTimeAtCreation.HasValue)
+                dic.Add(SystemAttribute.ResourceDateTimeAtCreation, [new IppAttribute(Tag.DateTime, SystemAttribute.ResourceDateTimeAtCreation, src.DateTimeAtCreation.Value)]);
+            if (src.DateTimeAtInstalled.HasValue)
+                dic.Add(SystemAttribute.ResourceDateTimeAtInstalled, [new IppAttribute(Tag.DateTime, SystemAttribute.ResourceDateTimeAtInstalled, src.DateTimeAtInstalled.Value)]);
+            if (src.DateTimeAtCanceled.HasValue)
+                dic.Add(SystemAttribute.ResourceDateTimeAtCanceled, [new IppAttribute(Tag.DateTime, SystemAttribute.ResourceDateTimeAtCanceled, src.DateTimeAtCanceled.Value)]);
+            if (src.TimeAtCreation.HasValue)
+                dic.Add(SystemAttribute.ResourceTimeAtCreation, [new IppAttribute(Tag.Integer, SystemAttribute.ResourceTimeAtCreation, src.TimeAtCreation.Value)]);
+            if (src.TimeAtInstalled.HasValue)
+                dic.Add(SystemAttribute.ResourceTimeAtInstalled, [new IppAttribute(Tag.Integer, SystemAttribute.ResourceTimeAtInstalled, src.TimeAtInstalled.Value)]);
+            if (src.TimeAtCanceled.HasValue)
+                dic.Add(SystemAttribute.ResourceTimeAtCanceled, [new IppAttribute(Tag.Integer, SystemAttribute.ResourceTimeAtCanceled, src.TimeAtCanceled.Value)]);
+            if (!string.IsNullOrEmpty(src.ResourceNaturalLanguage))
+                dic.Add(SystemAttribute.ResourceNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, SystemAttribute.ResourceNaturalLanguage, src.ResourceNaturalLanguage!)]);
+            if (!string.IsNullOrEmpty(src.ResourcePatches))
+                dic.Add(SystemAttribute.ResourcePatches, [new IppAttribute(Tag.TextWithoutLanguage, SystemAttribute.ResourcePatches, src.ResourcePatches!)]);
+            if (src.ResourceSignature != null)
+                dic.Add(SystemAttribute.ResourceSignature, src.ResourceSignature.Select(x => new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, SystemAttribute.ResourceSignature, x)).ToArray());
+            if (!string.IsNullOrEmpty(src.ResourceStringVersion))
+                dic.Add(SystemAttribute.ResourceStringVersion, [new IppAttribute(Tag.TextWithoutLanguage, SystemAttribute.ResourceStringVersion, src.ResourceStringVersion!)]);
             return dic;
         });
     }

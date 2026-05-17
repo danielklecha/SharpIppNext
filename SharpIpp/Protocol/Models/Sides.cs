@@ -8,6 +8,7 @@ public readonly record struct Sides(string Value, bool IsValue = true) : ISmartE
     /// <summary>
     /// 'one-sided': imposes each consecutive print-stream page upon the
     /// same side of consecutive media sheets.
+    /// See: RFC 8011 Section 5.2.8
     /// </summary>
     public static readonly Sides OneSided = new("one-sided");
 
@@ -17,6 +18,7 @@ public readonly record struct Sides(string Value, bool IsValue = true) : ISmartE
     /// sheets, such that the orientation of each pair of print-stream
     /// pages on the medium would be correct for the reader as if for
     /// binding on the long edge.
+    /// See: RFC 8011 Section 5.2.8
     /// </summary>
     public static readonly Sides TwoSidedLongEdge = new("two-sided-long-edge");
 
@@ -26,6 +28,7 @@ public readonly record struct Sides(string Value, bool IsValue = true) : ISmartE
     /// sheets, such that the orientation of each pair of print-stream
     /// pages on the medium would be correct for the reader as if for
     /// binding on the short edge.
+    /// See: RFC 8011 Section 5.2.8
     /// </summary>
     public static readonly Sides TwoSidedShortEdge = new("two-sided-short-edge");
 

@@ -27,7 +27,10 @@ public class SetJobAttributesTests : SharpIppIntegrationTestBase
             {
                 Copies = 2,
                 JobPriority = 50,
-                ImpositionTemplate = new ImpositionTemplate("Layout A", false)
+                ImpositionTemplate = new ImpositionTemplate("Layout A", false),
+                MediaSource = MediaSource.Main,
+                MediaSourceFeedDirection = MediaSourceFeedDirection.LongEdgeFirst,
+                MediaSourceFeedOrientation = Orientation.Portrait
             }
         };
         var client = new SharpIppClient();

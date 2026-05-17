@@ -3,5 +3,6 @@
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <NoWarn>$(NoWarn);618;612</NoWarn>
   </PropertyGroup>
 </Project>

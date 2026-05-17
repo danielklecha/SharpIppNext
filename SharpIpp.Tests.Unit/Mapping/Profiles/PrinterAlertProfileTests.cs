@@ -43,4 +43,37 @@ public class PrinterAlertProfileTests : MapperTestBase
         result.Code.Should().Be("jam");
         result.Severity.Should().Be("critical");
     }
+
+    [TestMethod]
+    public void Map_PrinterAlert_ToOctetString_MapsCorrectly()
+    {
+        // Arrange
+        var alert = new PrinterAlert { Code = "jam", Severity = "critical" };
+        var expectedString = PrinterAlert.Serialize(alert);
+        var expectedBytes = Encoding.UTF8.GetBytes(expectedString);
+
+        // Act
+        var result = _mapper.Map<PrinterAlert, OctetString>(alert);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Value.Should().BeEquivalentTo(expectedBytes);
+    }
+
+    [TestMethod]
+    public void Map_OctetString_ToPrinterAlert_MapsCorrectly()
+    {
+        // Arrange
+        var alertString = "code=jam;severity=critical";
+        var bytes = Encoding.UTF8.GetBytes(alertString);
+        var octetString = new OctetString(bytes);
+
+        // Act
+        var result = _mapper.Map<OctetString, PrinterAlert>(octetString);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Code.Should().Be("jam");
+        result.Severity.Should().Be("critical");
+    }
 }

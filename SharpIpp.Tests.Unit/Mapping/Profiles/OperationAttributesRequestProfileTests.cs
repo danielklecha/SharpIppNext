@@ -319,4 +319,94 @@ public class OperationAttributesRequestProfileTests
             .Should()
             .BeEquivalentTo(new[] { 501, 502 });
     }
+    [TestMethod]
+    public void Map_GetNextDocumentDataOperationAttributes_ToIppAttributes_ShouldIncludeJobIdAndExcludeJobUri()
+    {
+        // Arrange
+        var src = new GetNextDocumentDataOperationAttributes
+        {
+            AttributesCharset = "utf-8",
+            AttributesNaturalLanguage = "en",
+            PrinterUri = new Uri("ipp://printer"),
+            JobId = 123,
+            DocumentDataWait = true
+        };
+
+        // Act
+        var dst = _mapper.Map<GetNextDocumentDataOperationAttributes, List<IppAttribute>>(src);
+
+        // Assert
+        dst.Should().Contain(x => x.Name == JobAttribute.PrinterUri && Equals(x.Value, "ipp://printer/"));
+        dst.Should().Contain(x => x.Name == JobAttribute.JobId && Equals(x.Value, 123));
+        dst.Should().Contain(x => x.Name == JobAttribute.DocumentDataWait && Equals(x.Value, true));
+        dst.Should().NotContain(x => x.Name == JobAttribute.JobUri);
+    }
+
+    [TestMethod]
+    public void Map_GetNextDocumentDataOperationAttributes_FromIppAttributes_ShouldSetJobId()
+    {
+        // Arrange
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { JobAttribute.AttributesCharset, [new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8")] },
+            { JobAttribute.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en")] },
+            { JobAttribute.PrinterUri, [new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://printer/")] },
+            { JobAttribute.JobId, [new IppAttribute(Tag.Integer, JobAttribute.JobId, 456)] },
+            { JobAttribute.DocumentDataWait, [new IppAttribute(Tag.Boolean, JobAttribute.DocumentDataWait, false)] }
+        };
+
+        // Act
+        var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, GetNextDocumentDataOperationAttributes>(src);
+
+        // Assert
+        dst.PrinterUri.Should().Be(new Uri("ipp://printer/"));
+        dst.JobId.Should().Be(456);
+        dst.DocumentDataWait.Should().Be(false);
+    }
+
+    [TestMethod]
+    public void Map_AddDocumentImagesOperationAttributes_ToIppAttributes_ShouldIncludeJobIdAndExcludeJobUri()
+    {
+        // Arrange
+        var src = new AddDocumentImagesOperationAttributes
+        {
+            AttributesCharset = "utf-8",
+            AttributesNaturalLanguage = "en",
+            PrinterUri = new Uri("ipp://printer/"),
+            JobId = 789,
+            InputAttributes = new DocumentTemplateAttributes { DocumentFormat = "image/pwg-raster" }
+        };
+
+        // Act
+        var dst = _mapper.Map<AddDocumentImagesOperationAttributes, List<IppAttribute>>(src);
+
+        // Assert
+        dst.Should().Contain(x => x.Name == JobAttribute.PrinterUri && Equals(x.Value, "ipp://printer/"));
+        dst.Should().Contain(x => x.Name == JobAttribute.JobId && Equals(x.Value, 789));
+        dst.Should().Contain(x => Equals(x.Value, "image/pwg-raster"));
+        dst.Should().NotContain(x => x.Name == JobAttribute.JobUri);
+    }
+
+    [TestMethod]
+    public void Map_AddDocumentImagesOperationAttributes_FromIppAttributes_ShouldSetJobId()
+    {
+        // Arrange
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { JobAttribute.AttributesCharset, [new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8")] },
+            { JobAttribute.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en")] },
+            { JobAttribute.PrinterUri, [new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://printer")] },
+            { JobAttribute.JobId, [new IppAttribute(Tag.Integer, JobAttribute.JobId, 101)] },
+            { JobAttribute.InputAttributes, [new IppAttribute(Tag.BegCollection, JobAttribute.InputAttributes, NoValue.Instance), new IppAttribute(Tag.MemberAttrName, "", JobAttribute.DocumentFormat), new IppAttribute(Tag.MimeMediaType, "", "image/tiff"), new IppAttribute(Tag.EndCollection, "", NoValue.Instance)] }
+        };
+
+        // Act
+        var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, AddDocumentImagesOperationAttributes>(src);
+
+        // Assert
+        dst.PrinterUri.Should().Be(new Uri("ipp://printer"));
+        dst.JobId.Should().Be(101);
+        dst.InputAttributes.Should().NotBeNull();
+        dst.InputAttributes!.DocumentFormat.Should().Be("image/tiff");
+    }
 }

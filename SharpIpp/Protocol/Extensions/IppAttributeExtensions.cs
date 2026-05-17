@@ -277,4 +277,29 @@ public static class IppAttributeExtensions
             }
         }
     }
+
+
+
+    /// <summary>
+    /// Tries to get the first non-no-value value of an attribute with the specified name, cast to <typeparamref name="T"/>.
+    /// Returns <see langword="false"/> when the attribute is absent, carries a no-value, or its value is not of type <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The expected value type.</typeparam>
+    /// <param name="attributes">The collection of attributes to search.</param>
+    /// <param name="name">The attribute name to look for.</param>
+    /// <param name="value">The typed value if found; otherwise the default for <typeparamref name="T"/>.</param>
+    /// <returns><see langword="true"/> if a matching attribute with a real value of type <typeparamref name="T"/> was found; otherwise <see langword="false"/>.</returns>
+    public static bool TryGetIppValue<T>(this IEnumerable<IppAttribute> attributes, string name, out T value, System.StringComparison stringComparison = System.StringComparison.OrdinalIgnoreCase)
+    {
+        foreach (var attr in attributes)
+        {
+            if (string.Equals(attr.Name, name, stringComparison) && !NoValue.IsNoValue(attr.Value) && attr.Value is T typed)
+            {
+                value = typed;
+                return true;
+            }
+        }
+        value = default!;
+        return false;
+    }
 }

@@ -66,4 +66,46 @@ public sealed class IppRequestValidationContext
     /// PWG 5100.5 allows either successful-ok or client-error-not-possible in this case.
     /// </summary>
     public bool AllowSetDocumentAttributesWhenProcessing { get; set; } = true;
+
+    /// <summary>
+    /// Optional supported media keyword values for fidelity-based validation.
+    /// When non-empty and ipp-attribute-fidelity is true, the validator rejects unsupported media values.
+    /// See: RFC 8011 Section 4.1.6.1 (ipp-attribute-fidelity)
+    /// </summary>
+    public IReadOnlyList<Media>? MediaSupported { get; set; }
+
+    /// <summary>
+    /// Optional supported finishings enum values for fidelity-based validation.
+    /// When non-empty and ipp-attribute-fidelity is true, the validator rejects unsupported finishings values.
+    /// See: RFC 8011 Section 4.1.6.1 (ipp-attribute-fidelity)
+    /// </summary>
+    public IReadOnlyList<Finishings>? FinishingsSupported { get; set; }
+
+    /// <summary>
+    /// Optional supported sides keyword values for fidelity-based validation.
+    /// When non-empty and ipp-attribute-fidelity is true, the validator rejects unsupported sides values.
+    /// See: RFC 8011 Section 4.1.6.1 (ipp-attribute-fidelity)
+    /// </summary>
+    public IReadOnlyList<Sides>? SidesSupported { get; set; }
+
+    /// <summary>
+    /// Optional supported print-quality enum values for fidelity-based validation.
+    /// When non-empty and ipp-attribute-fidelity is true, the validator rejects unsupported print-quality values.
+    /// See: RFC 8011 Section 4.1.6.1 (ipp-attribute-fidelity)
+    /// </summary>
+    public IReadOnlyList<PrintQuality>? PrintQualitySupported { get; set; }
+
+    /// <summary>
+    /// Optional supported orientation-requested enum values for fidelity-based validation.
+    /// When non-empty and ipp-attribute-fidelity is true, the validator rejects unsupported orientation-requested values.
+    /// See: RFC 8011 Section 4.1.6.1 (ipp-attribute-fidelity)
+    /// </summary>
+    public IReadOnlyList<Orientation>? OrientationRequestedSupported { get; set; }
+
+    /// <summary>
+    /// Optional supported print-color-mode keyword values for fidelity-based validation.
+    /// When non-empty and ipp-attribute-fidelity is true, the validator rejects unsupported print-color-mode values.
+    /// See: RFC 8011 Section 4.1.6.1 (ipp-attribute-fidelity)
+    /// </summary>
+    public IReadOnlyList<PrintColorMode>? PrintColorModeSupported { get; set; }
 }

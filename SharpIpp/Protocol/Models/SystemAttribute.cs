@@ -517,6 +517,19 @@ namespace SharpIpp.Protocol.Models
         public const string NotifyPullMethodSupported = "notify-pull-method-supported";
 
         /// <summary>
+        /// notify-pull-method — the pull delivery method for Get-Notifications requests; must be "ippget".
+        /// See: RFC 3996 Section 5.1
+        /// </summary>
+        public const string NotifyPullMethod = "notify-pull-method";
+
+        /// <summary>
+        /// notify-subscription-id — identifies the subscription for subscription-targeted operations
+        /// such as Cancel-Subscription, Get-Subscription-Attributes, and Renew-Subscription.
+        /// See: RFC 3995 Section 5.1
+        /// </summary>
+        public const string NotifySubscriptionId = "notify-subscription-id";
+
+        /// <summary>
         /// notify-schemes-supported
         /// See: PWG 5100.22-2025 Section 7.2.17
         /// </summary>

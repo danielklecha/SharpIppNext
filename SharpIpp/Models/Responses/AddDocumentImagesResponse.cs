@@ -4,7 +4,7 @@ namespace SharpIpp.Models.Responses;
 
 /// <summary>
 /// Add-Document-Images response.
-/// See: PWG 5100.15-2013 Section 6.4.2
+/// See: PWG 5100.15-2013 Section 6.1.2
 /// </summary>
 public class AddDocumentImagesResponse : IppResponse<OperationAttributes>
 {

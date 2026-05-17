@@ -25,7 +25,7 @@ public void Map_Dictionary_To_ResourceStatusAttributes_ShouldMapResourceUuidAndT
             var dict = new Dictionary<string, IppAttribute[]>
             {
                 { "resource-id", [new IppAttribute(Tag.Integer, "resource-id", 55)] },
-                { "resource-uuid", [new IppAttribute(Tag.Uri, "resource-uuid", "urn:uuid:123e4567-e89b-12d3-a456-426614174000")] },
+                { "resource-uuid", [new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, "resource-uuid", new OctetString(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 }))] },
                 { "time-at-canceled", [new IppAttribute(Tag.Integer, "time-at-canceled", 8)] },
                 { "time-at-creation", [new IppAttribute(Tag.Integer, "time-at-creation", 16)] },
                 { "time-at-installed", [new IppAttribute(Tag.Integer, "time-at-installed", 24)] }
@@ -36,19 +36,19 @@ public void Map_Dictionary_To_ResourceStatusAttributes_ShouldMapResourceUuidAndT
 
             // Assert
             result.ResourceId.Should().Be(55);
-            result.ResourceUuid.Should().Be(new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174000"));
+            result.ResourceUuid!.Value.Value.Should().BeEquivalentTo(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 });
             result.TimeAtCanceled.Should().Be(8);
             result.TimeAtCreation.Should().Be(16);
             result.TimeAtInstalled.Should().Be(24);
     }
 
-[TestMethod]
+    [TestMethod]
     public void Map_ResourceStatusAttributes_To_Attributes_ShouldIncludeResourceUuidAndVersion()
     {
         // Arrange
         var src = new ResourceStatusAttributes
         {
-            ResourceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174000"),
+            ResourceUuid = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 },
             ResourceVersion = "1.0.0",
             ResourceStringVersion = "1.0"
         };
@@ -60,7 +60,7 @@ public void Map_Dictionary_To_ResourceStatusAttributes_ShouldMapResourceUuidAndT
         result.Should().ContainKey("resource-uuid");
         result.Should().ContainKey("resource-version");
         result.Should().ContainKey("resource-string-version");
-        result["resource-uuid"].Single().Value.Should().Be("urn:uuid:123e4567-e89b-12d3-a456-426614174000");
+        result["resource-uuid"].Single().Value.Should().Be(new OctetString(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 }));
         result["resource-version"].Single().Value.Should().Be("1.0.0");
         result["resource-string-version"].Single().Value.Should().Be("1.0");
     }

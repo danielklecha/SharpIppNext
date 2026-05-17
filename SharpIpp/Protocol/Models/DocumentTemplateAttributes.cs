@@ -1,8 +1,18 @@
+using System;
+
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
-/// PWG 5100.5-2024 Section 6.3
 /// Document Template attributes that override Job Template attributes for a specific Document.
+/// See: RFC 8011
+/// See: PWG 5100.1-2022
+/// See: PWG 5100.2-2001
+/// See: PWG 5100.3-2023
+/// See: PWG 5100.5-2024
+/// See: PWG 5100.7-2023
+/// See: PWG 5100.8-2003
+/// See: PWG 5100.11-2024
+/// See: PWG 5100.15-2013
 /// </summary>
 public class DocumentTemplateAttributes : IIppCollection
 {
@@ -20,12 +30,14 @@ public class DocumentTemplateAttributes : IIppCollection
     /// [DEPRECATED] The <c>cover-back</c> Document Template attribute. Deprecated per PWG 5100.5-2024 Section 14.1 to match changes in PWG 5100.3-2023.
     /// See: PWG 5100.5-2024 Section 14.1 and PWG 5100.3-2023 Section 5.2.1
     /// </summary>
+    [Obsolete("The 'cover-back' attribute is deprecated. See PWG 5100.3-2023 Section 5.2.1.")]
     public Cover? CoverBack { get; set; }
 
     /// <summary>
     /// [DEPRECATED] The <c>cover-front</c> Document Template attribute. Deprecated per PWG 5100.5-2024 Section 14.1 to match changes in PWG 5100.3-2023.
     /// See: PWG 5100.5-2024 Section 14.1 and PWG 5100.3-2023 Section 5.2.1
     /// </summary>
+    [Obsolete("The 'cover-front' attribute is deprecated. See PWG 5100.3-2023 Section 5.2.1.")]
     public Cover? CoverFront { get; set; }
 
     /// <summary>
@@ -68,6 +80,7 @@ public class DocumentTemplateAttributes : IIppCollection
     /// [DEPRECATED] The <c>media-input-tray-check</c> Document Template attribute. Deprecated per PWG 5100.5-2024 Section 14.1 to match changes in PWG 5100.3-2023.
     /// See: PWG 5100.5-2024 Section 14.1 and PWG 5100.3-2023 Section 5.2.13
     /// </summary>
+    [Obsolete("The 'media-input-tray-check' attribute is deprecated. See PWG 5100.3-2023 Section 5.2.13.")]
     public MediaInputTrayCheck? MediaInputTrayCheck { get; set; }
 
     /// <summary>
@@ -97,7 +110,9 @@ public class DocumentTemplateAttributes : IIppCollection
     /// <summary>
     /// The <c>page-order-received</c> Document Template attribute.
     /// OBSOLETE in PWG 5100.3-2023 but still part of PWG 5100.5-2024 Section 6.3.
+    /// See: PWG 5100.5-2024 Section 6.3
     /// </summary>
+    [Obsolete("The 'page-order-received' attribute is obsolete. See PWG 5100.3-2023 Section 5.2.14.")]
     public PageOrderReceived? PageOrderReceived { get; set; }
 
     /// <summary>
@@ -110,6 +125,7 @@ public class DocumentTemplateAttributes : IIppCollection
     /// [DEPRECATED] The <c>presentation-direction-number-up</c> Document Template attribute. Deprecated per PWG 5100.5-2024 Section 14.1 to match changes in PWG 5100.3-2023.
     /// See: PWG 5100.5-2024 Section 14.1 and PWG 5100.3-2023 Section 5.2.15
     /// </summary>
+    [Obsolete("The 'presentation-direction-number-up' attribute is deprecated. See PWG 5100.3-2023 Section 5.2.15.")]
     public PresentationDirectionNumberUp? PresentationDirectionNumberUp { get; set; }
 
     /// <summary>
@@ -285,4 +301,81 @@ public class DocumentTemplateAttributes : IIppCollection
     /// See: PWG 5100.15-2013 Section 7.1.1.19
     /// </summary>
     public InputSource? InputSource { get; set; }
+
+    /// <summary>
+    /// The <c>document-charset</c> Document Template attribute. Specifies the charset of the document data.
+    /// See: PWG 5100.5-2024 Section 6.5.1
+    /// </summary>
+    public string? DocumentCharset { get; set; }
+
+
+
+    /// <summary>
+    /// The <c>document-format</c> Document Template attribute. Specifies the MIME media type of the document data.
+    /// See: PWG 5100.5-2024 Section 6.5.3
+    /// </summary>
+    public string? DocumentFormat { get; set; }
+
+    /// <summary>
+    /// The <c>document-format-details</c> Document Template attribute. Provides detailed information about the document format.
+    /// See: PWG 5100.5-2024 Section 6.5.4
+    /// </summary>
+    [Obsolete("The 'document-format-details' attribute is deprecated. See PWG 5100.7-2023 Section 6.2.1.")]
+    public DocumentFormatDetails? DocumentFormatDetails { get; set; }
+
+    /// <summary>
+    /// The <c>document-message</c> Document Template attribute. A message from the client to the Document object.
+    /// See: PWG 5100.5-2024 Section 6.5.5
+    /// </summary>
+    public string? DocumentMessage { get; set; }
+
+    /// <summary>
+    /// The <c>document-metadata</c> Document Template attribute. Arbitrary metadata associated with the document.
+    /// See: PWG 5100.5-2024 Section 6.5.6
+    /// </summary>
+    public OctetString[]? DocumentMetadata { get; set; }
+
+    /// <summary>
+    /// The <c>document-name</c> Document Template attribute. The name of the document.
+    /// See: PWG 5100.5-2024 Section 6.5.7
+    /// </summary>
+    public string? DocumentName { get; set; }
+
+    /// <summary>
+    /// The <c>document-natural-language</c> Document Template attribute. The natural language of the document content.
+    /// See: PWG 5100.5-2024 Section 6.5.8
+    /// </summary>
+    public string? DocumentNaturalLanguage { get; set; }
+
+
+
+    /// <summary>
+    /// The <c>document-password</c> Document Template attribute. A password required to access the document.
+    /// See: PWG 5100.5-2024 Section 6.5.10
+    /// </summary>
+    public OctetString? DocumentPassword { get; set; }
+
+    /// <summary>
+    /// The <c>document-uri</c> Document Template attribute. A URI that references the document data.
+    /// See: PWG 5100.5-2024 Section 6.5.11
+    /// </summary>
+    public Uri? DocumentUri { get; set; }
+
+    /// <summary>
+    /// The <c>last-document</c> Document Template attribute. Indicates whether this is the last document in a multi-document job.
+    /// See: PWG 5100.5-2024 Section 6.5.12
+    /// </summary>
+    public bool? LastDocument { get; set; }
+
+    /// <summary>
+    /// The <c>job-password</c> Document Template attribute. A password for the job associated with this document.
+    /// See: PWG 5100.5-2024 Section 6.5.13
+    /// </summary>
+    public OctetString? JobPassword { get; set; }
+
+    /// <summary>
+    /// The <c>job-password-encryption</c> Document Template attribute. Specifies the encryption algorithm used for the job password.
+    /// See: PWG 5100.5-2024 Section 6.5.14
+    /// </summary>
+    public JobPasswordEncryption? JobPasswordEncryption { get; set; }
 }

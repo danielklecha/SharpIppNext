@@ -20,4 +20,10 @@ public class UpdateActiveJobsOperationAttributes : OperationAttributes
     /// See: PWG 5100.18-2025 Section 7.1.11
     /// </summary>
     public JobState[]? OutputDeviceJobStates { get; set; }
+
+    /// <summary>
+    /// The <c>job-ids</c> operation attribute.
+    /// See: PWG 5100.18-2025 Section 5.7.1
+    /// </summary>
+    public int[]? JobIds { get; set; }
 }

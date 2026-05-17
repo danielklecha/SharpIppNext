@@ -155,10 +155,15 @@ public partial class IppProtocol
         stream.Write(value);
     }
 
-    private static byte[] ReadOctetString(BinaryReader stream)
+    private static void Write(OctetString value, BinaryWriter stream)
+    {
+        Write(value.Value, stream);
+    }
+
+    private static OctetString ReadOctetString(BinaryReader stream)
     {
         var length = stream.ReadInt16BigEndian();
-        return stream.ReadBytes(length);
+        return new OctetString(stream.ReadBytes(length));
     }
 
     private static void Write(Resolution value, BinaryWriter stream)

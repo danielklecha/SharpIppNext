@@ -664,4 +664,127 @@ public class IppAttributeExtensionsTests
         result[1].Name.Should().Be("explicit-name");
         result[1].Tag.Should().Be(Tag.EndCollection);
     }
+
+
+    [TestMethod]
+    public void TryGetIppValueGeneric_ShouldReturnValue_WhenAttributeExistsAndHasMatchingType()
+    {
+        // Arrange
+        var attributes = new List<IppAttribute>
+        {
+            new IppAttribute(Tag.Integer, "my-attr", 42)
+        };
+
+        // Act
+        var result = attributes.TryGetIppValue<int>("my-attr", out int value);
+
+        // Assert
+        result.Should().BeTrue();
+        value.Should().Be(42);
+    }
+
+    [TestMethod]
+    public void TryGetIppValueGeneric_ShouldReturnFalse_WhenAttributeIsNoValue()
+    {
+        // Arrange
+        var attributes = new List<IppAttribute>
+        {
+            new IppAttribute(Tag.NoValue, "my-attr", NoValue.Instance)
+        };
+
+        // Act
+        var result = attributes.TryGetIppValue<int>("my-attr", out int value);
+
+        // Assert
+        result.Should().BeFalse();
+        value.Should().Be(default);
+    }
+
+    [TestMethod]
+    public void TryGetIppValueGeneric_ShouldReturnFalse_WhenAttributeHasWrongType()
+    {
+        // Arrange
+        var attributes = new List<IppAttribute>
+        {
+            new IppAttribute(Tag.Keyword, "my-attr", "value")
+        };
+
+        // Act
+        var result = attributes.TryGetIppValue<int>("my-attr", out int value);
+
+        // Assert
+        result.Should().BeFalse();
+        value.Should().Be(default);
+    }
+
+    [TestMethod]
+    public void TryGetIppValueGeneric_ShouldReturnFalse_WhenAttributeDoesNotExist()
+    {
+        // Arrange
+        var attributes = new List<IppAttribute>
+        {
+            new IppAttribute(Tag.Integer, "other-attr", 42)
+        };
+
+        // Act
+        var result = attributes.TryGetIppValue<int>("my-attr", out int value);
+
+        // Assert
+        result.Should().BeFalse();
+        value.Should().Be(default);
+    }
+
+    [TestMethod]
+    public void TryGetIppValueGeneric_ShouldReturnFirstMatchingType_WhenMultipleAttributesExist()
+    {
+        // Arrange
+        var attributes = new List<IppAttribute>
+        {
+            new IppAttribute(Tag.NoValue, "my-attr", NoValue.Instance),
+            new IppAttribute(Tag.Keyword, "my-attr", "value"),
+            new IppAttribute(Tag.Integer, "my-attr", 42),
+            new IppAttribute(Tag.Integer, "my-attr", 43)
+        };
+
+        // Act
+        var result = attributes.TryGetIppValue<int>("my-attr", out int value);
+
+        // Assert
+        result.Should().BeTrue();
+        value.Should().Be(42);
+    }
+
+    [TestMethod]
+    public void TryGetIppValueGeneric_ShouldSupportStringComparison()
+    {
+        // Arrange
+        var attributes = new List<IppAttribute>
+        {
+            new IppAttribute(Tag.Integer, "MY-ATTR", 42)
+        };
+
+        // Act
+        var result = attributes.TryGetIppValue<int>("my-attr", out int value, StringComparison.OrdinalIgnoreCase);
+
+        // Assert
+        result.Should().BeTrue();
+        value.Should().Be(42);
+    }
+
+    [TestMethod]
+    public void TryGetIppValueGeneric_ShouldUseOrdinalIgnoreCaseByDefault()
+    {
+        // Arrange
+        var attributes = new List<IppAttribute>
+        {
+            new IppAttribute(Tag.Integer, "MY-ATTR", 42)
+        };
+
+        // Act
+        var result = attributes.TryGetIppValue<int>("my-attr", out int value);
+
+        // Assert
+        result.Should().BeTrue();
+        value.Should().Be(42);
+    }
 }

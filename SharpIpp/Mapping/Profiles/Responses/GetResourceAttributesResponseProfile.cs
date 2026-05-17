@@ -47,13 +47,13 @@ internal class GetResourceAttributesResponseProfile : IProfile
                 ResourceStateMessage = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceStateMessage),
                 ResourceStateReasons = map.MapFromDicSetNullable<ResourceStateReason[]?>(src, SystemAttribute.ResourceStateReasons),
                 ResourceKOctets = map.MapFromDicNullable<int?>(src, SystemAttribute.ResourceKOctets),
-                ResourceUuid = map.MapFromDicNullable<Uri?>(src, SystemAttribute.ResourceUuid),
+                ResourceUuid = map.MapFromDicNullable<OctetString?>(src, SystemAttribute.ResourceUuid),
                 TimeAtCanceled = map.MapFromDicNullable<int?>(src, SystemAttribute.ResourceTimeAtCanceled),
                 TimeAtCreation = map.MapFromDicNullable<int?>(src, SystemAttribute.ResourceTimeAtCreation),
                 TimeAtInstalled = map.MapFromDicNullable<int?>(src, SystemAttribute.ResourceTimeAtInstalled),
                 ResourceNaturalLanguage = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceNaturalLanguage),
                 ResourcePatches = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourcePatches),
-                ResourceSignature = map.MapFromDicSetNullable<byte[][]?>(src, SystemAttribute.ResourceSignature),
+                ResourceSignature = map.MapFromDicSetNullable<OctetString[]?>(src, SystemAttribute.ResourceSignature),
                 ResourceDataUri = map.MapFromDicNullable<Uri?>(src, SystemAttribute.ResourceDataUri),
                 ResourceUseCount = map.MapFromDicNullable<int?>(src, SystemAttribute.ResourceUseCount),
                 ResourceVersion = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceVersion),
@@ -101,7 +101,7 @@ internal class GetResourceAttributesResponseProfile : IProfile
             if (src.TimeAtInstalled.HasValue)
                 dic.Add(SystemAttribute.ResourceTimeAtInstalled, [new IppAttribute(Tag.Integer, SystemAttribute.ResourceTimeAtInstalled, src.TimeAtInstalled.Value)]);
             if (src.ResourceUuid != null)
-                dic.Add(SystemAttribute.ResourceUuid, new IppAttribute[] { new IppAttribute(Tag.Uri, SystemAttribute.ResourceUuid, src.ResourceUuid.ToString()!) });
+                dic.Add(SystemAttribute.ResourceUuid, [new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, SystemAttribute.ResourceUuid, src.ResourceUuid.Value)]);
             if (!string.IsNullOrEmpty(src.ResourceVersion))
                 dic.Add(SystemAttribute.ResourceVersion, new IppAttribute[] { new IppAttribute(Tag.TextWithoutLanguage, SystemAttribute.ResourceVersion, src.ResourceVersion!) });
             if (!string.IsNullOrEmpty(src.ResourceStringVersion))

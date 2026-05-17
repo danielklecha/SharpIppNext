@@ -242,8 +242,8 @@ internal class JobSheetsColProfile : IProfile
                 DestinationIsDirectory = map.MapFromDicNullable<bool?>(src, "destination-is-directory"),
                 DestinationMandatoryAccessAttributes = map.MapFromDicSetNullable<string[]?>(src, "destination-mandatory-access-attributes"),
                 DestinationName = map.MapFromDicNullable<string?>(src, "destination-name"),
-                DestinationOAuthScope = map.MapFromDicSetNullable<string[]?>(src, "destination-oauth-scope"),
-                DestinationOAuthToken = map.MapFromDicSetNullable<string[]?>(src, "destination-oauth-token"),
+                DestinationOAuthScope = map.MapFromDicSetNullable<OctetString[]?>(src, "destination-oauth-scope"),
+                DestinationOAuthToken = map.MapFromDicSetNullable<OctetString[]?>(src, "destination-oauth-token"),
                 DestinationOAuthUri = map.MapFromDicNullable<Uri?>(src, "destination-oauth-uri"),
                 DestinationUri = map.MapFromDicNullable<string?>(src, "destination-uri")
             };

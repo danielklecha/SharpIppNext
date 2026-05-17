@@ -280,6 +280,9 @@ namespace SharpIpp.Protocol
                 case StringWithLanguage v:
                     Write(v, stream, encoding);
                     break;
+                case OctetString v:
+                    Write(v, stream);
+                    break;
                 case byte[] v:
                     Write(v, stream);
                     break;

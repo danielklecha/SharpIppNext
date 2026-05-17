@@ -137,6 +137,30 @@ internal class DocumentTemplateAttributesProfile : IProfile
                 dst.Add(new IppAttribute(Tag.Keyword, "input-sides", map.Map<string>(src.InputSides.Value)));
             if (src.InputSource != null)
                 dst.Add(new IppAttribute(Tag.Keyword, "input-source", map.Map<string>(src.InputSource.Value)));
+            if (src.DocumentCharset != null)
+                dst.Add(new IppAttribute(Tag.Charset, JobAttribute.DocumentCharset, src.DocumentCharset));
+            if (src.DocumentFormat != null)
+                dst.Add(new IppAttribute(Tag.MimeMediaType, JobAttribute.DocumentFormat, src.DocumentFormat));
+            if (src.DocumentFormatDetails != null)
+                dst.AddRange(map.Map<IEnumerable<IppAttribute>>(src.DocumentFormatDetails).ToBegCollection(JobAttribute.DocumentFormatDetails));
+            if (src.DocumentMessage != null)
+                dst.Add(new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.DocumentMessage, src.DocumentMessage));
+            if (src.DocumentMetadata != null)
+                dst.AddRange(src.DocumentMetadata.Select(x => new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, JobAttribute.DocumentMetadata, x)));
+            if (src.DocumentName != null)
+                dst.Add(new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.DocumentName, src.DocumentName));
+            if (src.DocumentNaturalLanguage != null)
+                dst.Add(new IppAttribute(Tag.NaturalLanguage, JobAttribute.DocumentNaturalLanguage, src.DocumentNaturalLanguage));
+            if (src.DocumentPassword != null)
+                dst.Add(new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, JobAttribute.DocumentPassword, src.DocumentPassword.Value));
+            if (src.DocumentUri != null)
+                dst.Add(new IppAttribute(Tag.Uri, JobAttribute.DocumentUri, src.DocumentUri.ToString()));
+            if (src.LastDocument.HasValue)
+                dst.Add(new IppAttribute(Tag.Boolean, JobAttribute.LastDocument, src.LastDocument.Value));
+            if (src.JobPassword != null)
+                dst.Add(new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, JobAttribute.JobPassword, src.JobPassword.Value));
+            if (src.JobPasswordEncryption != null)
+                dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.JobPasswordEncryption, map.Map<string>(src.JobPasswordEncryption.Value)));
             return dst;
         });
 
@@ -198,6 +222,19 @@ internal class DocumentTemplateAttributesProfile : IProfile
             dst.InputSharpness = map.MapFromDicNullable<int?>(src, "input-sharpness");
             dst.InputSides = map.MapFromDicNullable<Sides?>(src, "input-sides");
             dst.InputSource = map.MapFromDicNullable<InputSource?>(src, "input-source");
+            dst.DocumentCharset = map.MapFromDicNullable<string?>(src, JobAttribute.DocumentCharset);
+            dst.DocumentFormat = map.MapFromDicNullable<string?>(src, JobAttribute.DocumentFormat);
+            if (src.TryGetValue(JobAttribute.DocumentFormatDetails, out var documentFormatDetails) && documentFormatDetails.GroupBegCollection().Any())
+                dst.DocumentFormatDetails = map.Map<DocumentFormatDetails>(documentFormatDetails.GroupBegCollection().First().FromBegCollection().ToIppDictionary());
+            dst.DocumentMessage = map.MapFromDicNullable<string?>(src, JobAttribute.DocumentMessage);
+            dst.DocumentMetadata = map.MapFromDicSetNullable<OctetString[]?>(src, JobAttribute.DocumentMetadata);
+            dst.DocumentName = map.MapFromDicNullable<string?>(src, JobAttribute.DocumentName);
+            dst.DocumentNaturalLanguage = map.MapFromDicNullable<string?>(src, JobAttribute.DocumentNaturalLanguage);
+            dst.DocumentPassword = map.MapFromDicNullable<OctetString?>(src, JobAttribute.DocumentPassword);
+            dst.DocumentUri = map.MapFromDicNullable<string, System.Uri?>(src, JobAttribute.DocumentUri, (_, value) => new System.Uri(value));
+            dst.LastDocument = map.MapFromDicNullable<bool?>(src, JobAttribute.LastDocument);
+            dst.JobPassword = map.MapFromDicNullable<OctetString?>(src, JobAttribute.JobPassword);
+            dst.JobPasswordEncryption = map.MapFromDicNullable<JobPasswordEncryption?>(src, JobAttribute.JobPasswordEncryption);
             return dst;
         });
     }

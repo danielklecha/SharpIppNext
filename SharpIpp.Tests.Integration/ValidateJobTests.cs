@@ -94,6 +94,7 @@ public class ValidateJobTests : SharpIppIntegrationTestBase
                 ProofCopies = 1,
                 DocumentMetadata = ["meta1", "meta2"],
                 DocumentPassword = "test-password",
+                DocumentMessage = "test-message",
             },
             JobTemplateAttributes = new() { Copies = 1 }
         };

@@ -6,8 +6,11 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public readonly record struct SystemTimeSourceConfigured(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
 {
+    /// <summary>No time source is configured. See: PWG 5100.22-2025 Section 7.3.26</summary>
     public static readonly SystemTimeSourceConfigured None = new("none");
+    /// <summary>NTP (Network Time Protocol) is used as the time source. See: PWG 5100.22-2025 Section 7.3.26</summary>
     public static readonly SystemTimeSourceConfigured Ntp = new("ntp");
+    /// <summary>SNTP (Simple Network Time Protocol) is used as the time source. See: PWG 5100.22-2025 Section 7.3.26</summary>
     public static readonly SystemTimeSourceConfigured Sntp = new("sntp");
 
     public override string ToString() => Value;

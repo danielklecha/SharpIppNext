@@ -3,6 +3,19 @@ using System.Collections.Generic;
 
 namespace SharpIpp.Protocol.Models
 {
+    /// <summary>
+    /// Attributes that describe the processing to be applied to a Job or Document.
+    /// See: RFC 8011
+    /// See: PWG 5100.1-2022
+    /// See: PWG 5100.3-2023
+    /// See: PWG 5100.6-2003
+    /// See: PWG 5100.7-2023
+    /// See: PWG 5100.8-2003
+    /// See: PWG 5100.11-2024
+    /// See: PWG 5100.13-2023
+    /// See: PWG 5100.15-2013
+    /// See: PWG 5100.21-2019
+    /// </summary>
     public class JobTemplateAttributes
     {
         /// <summary>
@@ -352,6 +365,7 @@ namespace SharpIpp.Protocol.Models
         /// See: PWG 5100.3-2023 Section 5.2.1
         /// Deprecated in: PWG 5100.3-2023 Section 5.2.1
         /// </summary>
+        [Obsolete("The 'cover-back' attribute is deprecated. See PWG 5100.3-2023 Section 5.2.1.")]
         public Cover? CoverBack { get; set; }
 
         /// <summary>
@@ -359,6 +373,7 @@ namespace SharpIpp.Protocol.Models
         /// See: PWG 5100.3-2023 Section 5.2.1
         /// Deprecated in: PWG 5100.3-2023 Section 5.2.1
         /// </summary>
+        [Obsolete("The 'cover-front' attribute is deprecated. See PWG 5100.3-2023 Section 5.2.1.")]
         public Cover? CoverFront { get; set; }
 
         /// <summary>
@@ -384,6 +399,7 @@ namespace SharpIpp.Protocol.Models
         /// See: PWG 5100.3-2023 Section 5.2.5
         /// Deprecated in: PWG 5100.3-2023 Section 5.2.5
         /// </summary>
+        [Obsolete("The 'insert-sheet' attribute is deprecated. See PWG 5100.3-2023 Section 5.2.5.")]
         public InsertSheet[]? InsertSheet { get; set; }
 
         /// <summary>
@@ -391,6 +407,7 @@ namespace SharpIpp.Protocol.Models
         /// See: PWG 5100.3-2023 Section 5.2.6
         /// Deprecated in: PWG 5100.3-2023 Section 5.2.6
         /// </summary>
+        [Obsolete("The 'job-accounting-sheets' attribute is deprecated. See PWG 5100.3-2023 Section 5.2.6.")]
         public JobAccountingSheets? JobAccountingSheets { get; set; }
 
         /// <summary>
@@ -434,6 +451,7 @@ namespace SharpIpp.Protocol.Models
         /// See: PWG 5100.3-2023 Section 5.2.13
         /// Deprecated in: PWG 5100.3-2023 Section 5.2.13
         /// </summary>
+        [Obsolete("The 'media-input-tray-check' attribute is deprecated. See PWG 5100.3-2023 Section 5.2.13.")]
         public MediaInputTrayCheck? MediaInputTrayCheck { get; set; }
 
         /// <summary>
@@ -447,6 +465,7 @@ namespace SharpIpp.Protocol.Models
         /// See: PWG 5100.3-2023 Section 5.2.15
         /// Deprecated in: PWG 5100.3-2023 Section 5.2.15
         /// </summary>
+        [Obsolete("The 'presentation-direction-number-up' attribute is deprecated. See PWG 5100.3-2023 Section 5.2.15.")]
         public PresentationDirectionNumberUp? PresentationDirectionNumberUp { get; set; }
 
         /// <summary>
@@ -529,51 +548,173 @@ namespace SharpIpp.Protocol.Models
 
         /// <summary>
         /// The <c>materials-col</c> Job Template attribute.
-        /// See: PWG 5100.21-2019 Section 6.8.11
+        /// See: PWG 5100.21-2019 Section 8.1.3
         /// </summary>
         public Material[]? MaterialsCol { get; set; }
 
         /// <summary>
         /// The <c>multiple-object-handling</c> Job Template attribute.
-        /// See: PWG 5100.21-2019 Section 6.8.12
+        /// See: PWG 5100.21-2019 Section 8.1.4
         /// </summary>
         public MultipleObjectHandling? MultipleObjectHandling { get; set; }
 
         /// <summary>
         /// The <c>platform-temperature</c> Job Template attribute.
-        /// See: PWG 5100.21-2019 Section 6.8.13
+        /// See: PWG 5100.21-2019 Section 8.1.5
         /// </summary>
         public int? PlatformTemperature { get; set; }
 
         /// <summary>
         /// The <c>print-accuracy</c> Job Template attribute.
-        /// See: PWG 5100.21-2019 Section 6.8.14
+        /// See: PWG 5100.21-2019 Section 8.1.6
         /// </summary>
         public PrintAccuracy? PrintAccuracy { get; set; }
 
         /// <summary>
         /// The <c>print-base</c> Job Template attribute.
-        /// See: PWG 5100.21-2019 Section 6.8.15
+        /// See: PWG 5100.21-2019 Section 8.1.7
         /// </summary>
         public PrintBase? PrintBase { get; set; }
 
         /// <summary>
         /// The <c>print-objects</c> Job Template attribute.
-        /// See: PWG 5100.21-2019 Section 6.8.16
+        /// See: PWG 5100.21-2019 Section 8.1.8
         /// </summary>
         public PrintObject[]? PrintObjects { get; set; }
 
         /// <summary>
         /// The <c>print-supports</c> Job Template attribute.
-        /// See: PWG 5100.21-2019 Section 6.8.17
+        /// See: PWG 5100.21-2019 Section 8.1.9
         /// </summary>
         public PrintSupports? PrintSupports { get; set; }
 
         /// <summary>
         /// The <c>overrides</c> Job Template attribute.
-        /// See: PWG 5100.6-2003 Section 8.2.4
+        /// See: PWG 5100.6-2003 Section 4.1
         /// </summary>
         public OverrideInstruction[]? Overrides { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the number of copies to be printed for the entire Job,
+        /// overriding the document-level "copies" attribute.
+        /// See: PWG 5100.7-2023 Section 10.4
+        /// </summary>
+        public int? JobCopies { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the finishing operations to apply to the back cover sheet
+        /// of the Job, overriding the document-level "cover-back" attribute.
+        /// See: PWG 5100.7-2023 Section 10.4
+        /// </summary>
+        public Cover? JobCoverBack { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the finishing operations to apply to the front cover sheet
+        /// of the Job, overriding the document-level "cover-front" attribute.
+        /// See: PWG 5100.7-2023 Section 10.4
+        /// </summary>
+        public Cover? JobCoverFront { get; set; }
+
+        /// <summary>
+        /// This attribute identifies the finishing operations that the Printer uses for each
+        /// copy of each printed document in the Job, overriding the document-level "finishings"
+        /// attribute.
+        /// See: PWG 5100.7-2023 Section 10.4
+        /// </summary>
+        public Finishings[]? JobFinishings { get; set; }
+
+        /// <summary>
+        /// This attribute specifies detailed finishing instructions for the Job, overriding
+        /// the document-level "finishings-col" attribute.
+        /// See: PWG 5100.7-2023 Section 10.4
+        /// </summary>
+        public FinishingsCol[]? JobFinishingsCol { get; set; }
+
+        /// <summary>
+        /// This attribute specifies a password string that the Printer uses to authenticate
+        /// the Job. The value is an octetString encoded according to the encryption method
+        /// specified by "job-password-encryption".
+        /// See: PWG 5100.11-2024 Section 5.3.7
+        /// </summary>
+        public OctetString? JobPassword { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the encryption method used to encode the "job-password"
+        /// attribute value.
+        /// See: PWG 5100.11-2024 Section 5.3.7
+        /// </summary>
+        public JobPasswordEncryption? JobPasswordEncryption { get; set; }
+
+        /// <summary>
+        /// This attribute specifies whether the Printer collates output sheets when producing
+        /// multiple copies of a document.
+        /// See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public string? SheetCollate { get; set; } // keyword: 'collated' | 'uncollated'
+
+        /// <summary>
+        /// This attribute specifies overrides to Job Template attributes for specific pages
+        /// within the Job.
+        /// See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public OverrideInstruction[]? PageOverrides { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the number of pages in each subset when the Job is
+        /// divided into subsets for finishing.
+        /// See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public int[]? PagesPerSubset { get; set; }
+
+        /// <summary>
+        /// This attribute specifies overrides to Job Template attributes for specific
+        /// documents within the Job.
+        /// See: PWG 5100.8-2003 Section 3
+        /// </summary>
+        public OverrideInstruction[]? DocumentOverrides { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the input tray from which the Printer selects media
+        /// for the Job.
+        /// See: PWG 5100.7-2023 Section 15.2
+        /// </summary>
+        public MediaSource? MediaSource { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the direction in which media is fed from the media source
+        /// into the Printer.
+        /// See: PWG 5100.7-2023 Section 15.2
+        /// </summary>
+        public MediaSourceFeedDirection? MediaSourceFeedDirection { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the orientation of the media as it is fed from the
+        /// media source into the Printer.
+        /// See: PWG 5100.7-2023 Section 15.3
+        /// </summary>
+        public Orientation? MediaSourceFeedOrientation { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the URI of the requesting user, which the Printer
+        /// uses for authentication and authorization purposes.
+        /// See: PWG 5100.7-2023 Section 5.1.1
+        /// </summary>
+        public Uri? RequestingUserUri { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the names of Job Template attributes that the Printer
+        /// MUST honor when processing the Job. If the Printer cannot honor any of the
+        /// listed attributes, it MUST reject the Job.
+        /// See: PWG 5100.7-2023 Section 6.1
+        /// </summary>
+        public string[]? JobMandatoryAttributes { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the Job IDs of the Jobs that are associated with
+        /// this Job (e.g., for job chaining or dependency tracking).
+        /// See: PWG 5100.7-2023 Section 6.1
+        /// </summary>
+        public int[]? JobIds { get; set; }
 
     }
 }

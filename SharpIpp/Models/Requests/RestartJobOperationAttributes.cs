@@ -6,6 +6,12 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace SharpIpp.Models.Requests;
+/// <summary>
+/// Restart-Job operation attributes.
+/// <br/>
+/// Deprecated/Obsolete Support: The library intentionally implements operations and attributes that the latest standards have deprecated or obsoleted for the sake of backward compatibility, such as the Restart-Job operation (Deprecated in RFC 8011).
+/// See: RFC 2911 Section 3.3.7.1
+/// </summary>
 public class RestartJobOperationAttributes :  CancelJobOperationAttributes
 {
     /// <summary>

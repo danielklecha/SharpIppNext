@@ -2,6 +2,22 @@ using System;
 
 namespace SharpIpp.Protocol.Models;
 
+/// <summary>
+/// Attributes describing the capabilities and configuration of a Printer object.
+/// See: RFC 8011
+/// See: PWG 5100.1-2022
+/// See: PWG 5100.2-2001
+/// See: PWG 5100.3-2023
+/// See: PWG 5100.7-2023
+/// See: PWG 5100.9-2009
+/// See: PWG 5100.11-2024
+/// See: PWG 5100.13-2023
+/// See: PWG 5100.15-2013
+/// See: PWG 5100.17-2014
+/// See: PWG 5100.18-2025
+/// See: PWG 5100.21-2019
+/// See: PWG 5100.22-2025
+/// </summary>
 public class PrinterDescriptionAttributes
 {
     /// <summary>
@@ -1481,15 +1497,63 @@ public class PrinterDescriptionAttributes
 
     /// <summary>
     /// printer-alert-description
-    /// See: RFC 8011 Section 5.4.42
+    /// See: PWG 5100.9-2009 Section 5.3
     /// </summary>
     public string[]? PrinterAlertDescription { get; set; }
 
     /// <summary>
     /// printer-supply
-    /// See: RFC 8011 Section 5.4.43
+    /// See: PWG 5100.13-2023 Section 6.6.11
     /// </summary>
-    public string[]? PrinterSupply { get; set; }
+    public PrinterSupply[]? PrinterSupply { get; set; }
+
+    /// <summary>
+    /// printer-input-tray
+    /// See: PWG 5100.13-2023 Section 6.6.9
+    /// </summary>
+    public PrinterInputTray[]? PrinterInputTray { get; set; }
+
+    /// <summary>
+    /// printer-output-tray
+    /// See: PWG 5100.13-2023 Section 6.6.10
+    /// </summary>
+    public PrinterOutputTray[]? PrinterOutputTray { get; set; }
+
+    /// <summary>
+    /// job-constraints-supported
+    /// See: PWG 5100.13-2023 Section 6.5.5
+    /// </summary>
+    public JobConstraintsSupported[]? JobConstraintsSupported { get; set; }
+
+    /// <summary>
+    /// job-presets-supported
+    /// See: PWG 5100.13-2023 Section 6.5.8
+    /// </summary>
+    public JobPresetsSupported[]? JobPresetsSupported { get; set; }
+
+    /// <summary>
+    /// job-resolvers-supported
+    /// See: PWG 5100.13-2023 Section 6.5.9
+    /// </summary>
+    public JobResolversSupported[]? JobResolversSupported { get; set; }
+
+    /// <summary>
+    /// job-triggers-supported
+    /// See: PWG 5100.13-2023 Section 6.5.10
+    /// </summary>
+    public JobTriggersSupported[]? JobTriggersSupported { get; set; }
+
+    /// <summary>
+    /// print-color-mode-icc-profiles
+    /// See: PWG 5100.13-2023 Section 6.5.24
+    /// </summary>
+    public PrintColorModeIccProfile[]? PrintColorModeIccProfile { get; set; }
+
+    /// <summary>
+    /// printer-icc-profiles
+    /// See: PWG 5100.13-2023 Section 6.5.34
+    /// </summary>
+    public PrinterIccProfile[]? PrinterIccProfile { get; set; }
 
     /// <summary>
     /// printer-supply-description

@@ -9,17 +9,20 @@ public readonly record struct Compression(string Value, bool IsValue = true) : I
 {
     /// <summary>
     /// no compression is used.
+    /// See: RFC 2911 Section 4.4.32
     /// </summary>
     public static readonly Compression None = new("none");
 
     /// <summary>
     /// ZIP public domain inflate/deflate) compression technology
-    /// in RFC 1951
+    /// in RFC 1951.
+    /// See: RFC 2911 Section 4.4.32
     /// </summary>
     public static readonly Compression Deflate = new("deflate");
 
     /// <summary>
-    /// GNU zip compression technology described in RFC 1952
+    /// GNU zip compression technology described in RFC 1952.
+    /// See: RFC 2911 Section 4.4.32
     /// </summary>
     public static readonly Compression Gzip = new("gzip");
 

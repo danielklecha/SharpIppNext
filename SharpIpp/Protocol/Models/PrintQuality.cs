@@ -1,19 +1,26 @@
 namespace SharpIpp.Protocol.Models;
 
+/// <summary>
+/// IPP print-quality attribute values.
+/// See: RFC 8011 Section 5.2.13
+/// </summary>
 public enum PrintQuality
 {
     /// <summary>
-    /// lowest quality available on the printer
+    /// Lowest quality available on the printer.
+    /// See: RFC 8011 Section 5.2.13
     /// </summary>
     Draft = 3,
 
     /// <summary>
-    /// normal or intermediate quality on the printer
+    /// Normal or intermediate quality on the printer.
+    /// See: RFC 8011 Section 5.2.13
     /// </summary>
     Normal = 4,
 
     /// <summary>
-    /// highest quality available on the printer
+    /// Highest quality available on the printer.
+    /// See: RFC 8011 Section 5.2.13
     /// </summary>
     High = 5,
 }

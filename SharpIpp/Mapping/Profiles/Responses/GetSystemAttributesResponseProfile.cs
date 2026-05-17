@@ -122,7 +122,7 @@ internal class GetSystemAttributesResponseProfile : IProfile
                 SystemUpTime = map.MapFromDicNullable<int?>(src, SystemAttribute.SystemUpTime),
                 SystemUuid = map.MapFromDicNullable<Uri?>(src, SystemAttribute.SystemUuid),
                 SystemGeoLocation = map.MapFromDicNullable<Uri?>(src, SystemAttribute.SystemGeoLocation),
-                SystemAssetTag = map.MapFromDicNullable<byte[]?>(src, SystemAttribute.SystemAssetTag),
+                SystemAssetTag = map.MapFromDicNullable<OctetString?>(src, SystemAttribute.SystemAssetTag),
                 SystemCurrentTime = map.MapFromDicNullable<DateTimeOffset?>(src, SystemAttribute.SystemCurrentTime),
                 SystemContactCol = src.ContainsKey(SystemAttribute.SystemContactCol)
                     ? src[SystemAttribute.SystemContactCol].GroupBegCollection().Select(x => map.Map<SystemContact>(x.FromBegCollection().ToIppDictionary())).ToArray()
@@ -146,16 +146,21 @@ internal class GetSystemAttributesResponseProfile : IProfile
                 SystemFirmwareName = map.MapFromDicSetNullable<string[]?>(src, SystemAttribute.SystemFirmwareName),
                 SystemFirmwarePatches = map.MapFromDicSetNullable<string[]?>(src, SystemAttribute.SystemFirmwarePatches),
                 SystemFirmwareStringVersion = map.MapFromDicSetNullable<string[]?>(src, SystemAttribute.SystemFirmwareStringVersion),
-                SystemFirmwareVersion = map.MapFromDicSetNullable<string[]?>(src, SystemAttribute.SystemFirmwareVersion),
+                SystemFirmwareVersion = map.MapFromDicSetNullable<OctetString[]?>(src, SystemAttribute.SystemFirmwareVersion),
                 SystemResidentApplicationName = map.MapFromDicSetNullable<string[]?>(src, SystemAttribute.SystemResidentApplicationName),
                 SystemResidentApplicationPatches = map.MapFromDicSetNullable<string[]?>(src, SystemAttribute.SystemResidentApplicationPatches),
                 SystemResidentApplicationStringVersion = map.MapFromDicSetNullable<string[]?>(src, SystemAttribute.SystemResidentApplicationStringVersion),
-                SystemResidentApplicationVersion = map.MapFromDicSetNullable<string[]?>(src, SystemAttribute.SystemResidentApplicationVersion),
+                SystemResidentApplicationVersion = map.MapFromDicSetNullable<OctetString[]?>(src, SystemAttribute.SystemResidentApplicationVersion),
                 SystemUserApplicationName = map.MapFromDicSetNullable<string[]?>(src, SystemAttribute.SystemUserApplicationName),
                 SystemUserApplicationPatches = map.MapFromDicSetNullable<string[]?>(src, SystemAttribute.SystemUserApplicationPatches),
                 SystemUserApplicationStringVersion = map.MapFromDicSetNullable<string[]?>(src, SystemAttribute.SystemUserApplicationStringVersion),
-                SystemUserApplicationVersion = map.MapFromDicSetNullable<string[]?>(src, SystemAttribute.SystemUserApplicationVersion),
-                SystemTimeSourceConfigured = map.MapFromDicNullable<SystemTimeSourceConfigured?>(src, SystemAttribute.SystemTimeSourceConfigured)
+                SystemUserApplicationVersion = map.MapFromDicSetNullable<OctetString[]?>(src, SystemAttribute.SystemUserApplicationVersion),
+                SystemTimeSourceConfigured = map.MapFromDicNullable<SystemTimeSourceConfigured?>(src, SystemAttribute.SystemTimeSourceConfigured),
+                SystemState = map.MapFromDicNullable<PrinterState?>(src, SystemAttribute.SystemState),
+                SystemStateReasons = map.MapFromDicSetNullable<SystemStateReason[]?>(src, SystemAttribute.SystemStateReasons),
+                SystemStateMessage = map.MapFromDicNullable<string?>(src, SystemAttribute.SystemStateMessage),
+                SystemStateChangeTime = map.MapFromDicNullable<int?>(src, SystemAttribute.SystemStateChangeTime),
+                SystemStateChangeDateTime = map.MapFromDicNullable<DateTimeOffset?>(src, SystemAttribute.SystemStateChangeDateTime),
             };
         });
 
@@ -245,7 +250,7 @@ internal class GetSystemAttributesResponseProfile : IProfile
                 if (src.SystemDescriptionAttributes.SystemGeoLocation != null)
                     attrs.Add(new IppAttribute(Tag.Uri, SystemAttribute.SystemGeoLocation, src.SystemDescriptionAttributes.SystemGeoLocation.ToString()));
                 if (src.SystemDescriptionAttributes.SystemAssetTag != null)
-                    attrs.Add(new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, SystemAttribute.SystemAssetTag, src.SystemDescriptionAttributes.SystemAssetTag));
+                    attrs.Add(new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, SystemAttribute.SystemAssetTag, src.SystemDescriptionAttributes.SystemAssetTag.Value));
                 if (src.SystemDescriptionAttributes.SystemCurrentTime.HasValue)
                     attrs.Add(new IppAttribute(Tag.DateTime, SystemAttribute.SystemCurrentTime, src.SystemDescriptionAttributes.SystemCurrentTime.Value));
                 if (src.SystemDescriptionAttributes.SystemContactCol != null)
@@ -357,6 +362,16 @@ internal class GetSystemAttributesResponseProfile : IProfile
                     attrs.AddRange(src.SystemDescriptionAttributes.SystemUserApplicationVersion.Select(x => new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, SystemAttribute.SystemUserApplicationVersion, x)));
                 if (src.SystemDescriptionAttributes.SystemTimeSourceConfigured != null)
                     attrs.Add(new IppAttribute(Tag.Keyword, SystemAttribute.SystemTimeSourceConfigured, src.SystemDescriptionAttributes.SystemTimeSourceConfigured.Value.Value));
+                if (src.SystemDescriptionAttributes.SystemState.HasValue)
+                    attrs.Add(new IppAttribute(Tag.Enum, SystemAttribute.SystemState, (int)src.SystemDescriptionAttributes.SystemState.Value));
+                if (src.SystemDescriptionAttributes.SystemStateReasons != null)
+                    attrs.AddRange(src.SystemDescriptionAttributes.SystemStateReasons.Select(x => new IppAttribute(Tag.Keyword, SystemAttribute.SystemStateReasons, x.Value)));
+                if (src.SystemDescriptionAttributes.SystemStateMessage != null)
+                    attrs.Add(new IppAttribute(Tag.TextWithoutLanguage, SystemAttribute.SystemStateMessage, src.SystemDescriptionAttributes.SystemStateMessage));
+                if (src.SystemDescriptionAttributes.SystemStateChangeTime.HasValue)
+                    attrs.Add(new IppAttribute(Tag.Integer, SystemAttribute.SystemStateChangeTime, src.SystemDescriptionAttributes.SystemStateChangeTime.Value));
+                if (src.SystemDescriptionAttributes.SystemStateChangeDateTime.HasValue)
+                    attrs.Add(new IppAttribute(Tag.DateTime, SystemAttribute.SystemStateChangeDateTime, src.SystemDescriptionAttributes.SystemStateChangeDateTime.Value));
             }
 
             if (attrs.Count > 0)

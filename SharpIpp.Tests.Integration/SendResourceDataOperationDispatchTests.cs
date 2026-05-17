@@ -20,8 +20,8 @@ public class SendResourceDataOperationDispatchTests : SharpIppIntegrationTestBas
         operationAttributes.ResourceKOctets = 2048;
         operationAttributes.ResourceSignature =
         [
-            [0x01, 0x02, 0x03],
-            [0xAA, 0xBB, 0xCC, 0xDD]
+            new OctetString([0x01, 0x02, 0x03]),
+            new OctetString([0xAA, 0xBB, 0xCC, 0xDD])
         ];
 
         var clientRequest = new SendResourceDataRequest

@@ -1,4 +1,3 @@
-using SharpIpp.Models.Responses;
 using System.Collections.Generic;
 using System.Linq;
 using System;
@@ -75,6 +74,7 @@ internal class DocumentAttributesProfile : IProfile
             dst.PrintContentOptimize = map.MapFromDicNullable<PrintContentOptimize?>(src, DocumentAttribute.PrintContentOptimize);
             if (src.ContainsKey(DocumentAttribute.InputAttributesActual))
                 dst.InputAttributesActual = map.Map<DocumentTemplateAttributes>(src[DocumentAttribute.InputAttributesActual].FromBegCollection().ToIppDictionary());
+            dst.DocumentMetadata = map.MapFromDicSetNullable<OctetString[]?>(src, DocumentAttribute.DocumentMetadata);
             return dst;
         });
 
@@ -182,6 +182,8 @@ internal class DocumentAttributesProfile : IProfile
                 dst.Add(DocumentAttribute.PrintContentOptimize, [new IppAttribute(Tag.Keyword, DocumentAttribute.PrintContentOptimize, map.Map<string>(src.PrintContentOptimize.Value))]);
             if (src.InputAttributesActual != null)
                 dst.Add(DocumentAttribute.InputAttributesActual, map.Map<IEnumerable<IppAttribute>>(src.InputAttributesActual).ToBegCollection(DocumentAttribute.InputAttributesActual).ToArray());
+            if (src.DocumentMetadata != null)
+                dst.Add(DocumentAttribute.DocumentMetadata, src.DocumentMetadata.Select(x => new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, DocumentAttribute.DocumentMetadata, x)).ToArray());
             return dst;
         });
 

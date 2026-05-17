@@ -150,6 +150,20 @@ public class IppProtocolTests
     }
 
     [TestMethod]
+    public void WriteValue_BytesArray_ShouldBeWritten()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        using MemoryStream memoryStream = new();
+        using BinaryWriter binaryWriter = new( memoryStream );
+        var value = new byte[] { 0xDE, 0xAD, 0xBE, 0xEF };
+        // Act
+        protocol.WriteValue( value, binaryWriter );
+        // Assert
+        memoryStream.ToArray().Should().Equal( 0x00, 0x04, 0xDE, 0xAD, 0xBE, 0xEF );
+    }
+
+    [TestMethod]
     public void WriteValue_ExtendedValue_ShouldBeWritten()
     {
         var protocol = new IppProtocol();
@@ -711,7 +725,7 @@ public class IppProtocolTests
     [DataRow( Tag.OctetStringUnassigned3D )]
     [DataRow( Tag.OctetStringUnassigned3E )]
     [DataRow( Tag.OctetStringUnassigned3F )]
-    public void ReadValue_OctetStrings_ReturnsByteArray( Tag tag )
+    public void ReadValue_OctetStrings_ReturnsOctetString( Tag tag )
     {
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new( new byte[] { 0x00, 0x05, 0x4C, 0x6F, 0x72, 0x65, 0x6D } );
@@ -719,8 +733,8 @@ public class IppProtocolTests
 
         var result = protocol.ReadValue(binaryReader, tag);
 
-        result.Should().BeOfType<byte[]>();
-        ((byte[])result).Should().BeEquivalentTo(new byte[] { 0x4C, 0x6F, 0x72, 0x65, 0x6D });
+        result.Should().BeOfType<OctetString>();
+        ((OctetString)result).Value.Should().BeEquivalentTo(new byte[] { 0x4C, 0x6F, 0x72, 0x65, 0x6D });
     }
 
     [TestMethod]

@@ -24,7 +24,7 @@ internal class TypesProfile : IProfile
         mapper.CreateIppMap<Protocol.Models.Range>();
         mapper.CreateIppMap<Resolution>();
         mapper.CreateIppMap<StringWithLanguage>();
-
+        
         var unixStartTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified);
         mapper.CreateIppMap<int, DateTime>((src, map) => unixStartTime.AddSeconds(src));
         mapper.CreateIppMap<DateTime, int>((src, map) => (src - unixStartTime).Seconds);

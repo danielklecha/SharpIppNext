@@ -17,8 +17,22 @@ public class GetSubscriptionsTests : SharpIppIntegrationTestBase
     {
         var clientRequest = new GetSubscriptionsRequest
         {
-            Version = new IppVersion(2,0),
-            OperationAttributes = new SystemOperationAttributes { SystemUri = new Uri("ipp://127.0.0.1:8631/system") }
+            Version = new IppVersion(2, 0),
+            OperationAttributes = new SystemOperationAttributes
+            {
+                SystemUri = new Uri("ipp://127.0.0.1:8631/system"),
+                PrinterUri = new Uri("http://127.0.0.1:631"),
+                RequestingUserName = "test-user",
+                RequestingUserUri = new Uri("mailto:test-user@example.com"),
+                PrinterId = 99,
+                NotifySubscriptionId = 1,
+                NotifyPrinterIds = [99, 100],
+                NotifyResourceId = 42,
+                RestartGetInterval = 30,
+                WhichPrinters = WhichPrinters.All,
+                NotifySystemUpTime = 9999,
+                NotifySystemUri = new Uri("ipp://127.0.0.1:8631/system/notify"),
+            }
         };
 
         IIppRequest? serverRequest = null;

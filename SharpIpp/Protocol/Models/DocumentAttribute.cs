@@ -67,5 +67,12 @@ namespace SharpIpp.Protocol.Models
         /// See: PWG 5100.5-2024 Section 6.5.1
         /// </summary>
         public const string DocumentCreationAttributesSupported = "document-creation-attributes-supported";
+
+
+        /// <summary>
+        /// Arbitrary metadata associated with the document.
+        /// See: PWG 5100.13-2023 Section 6.3.1
+        /// </summary>
+        public const string DocumentMetadata = "document-metadata";
     }
 }

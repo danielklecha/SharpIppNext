@@ -11,7 +11,7 @@ public static class MapperConstructorExtensions
     public static void FillFromAssembly(this IMapperConstructor mapper, Assembly assembly)
     {
         var profiles = assembly.GetTypes()
-            .Where(x => typeof(IProfile).IsAssignableFrom(x) && x.IsClass)
+            .Where(x => typeof(IProfile).IsAssignableFrom(x) && x.IsClass && !x.IsAbstract)
             .Select(x => (IProfile)Activator.CreateInstance(x)!);
 
         foreach (IProfile profile in profiles)

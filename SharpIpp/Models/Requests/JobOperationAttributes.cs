@@ -13,6 +13,7 @@ public class JobOperationAttributes : OperationAttributes
     /// See: RFC 8011 Section 5.3.2
     /// </summary>
     /// <code>job-uri</code>
+    [Obsolete("The 'job-uri' attribute is deprecated in favor of 'job-id'. See RFC 8011 Section 5.3.2.")]
     public Uri? JobUri { get; set; }
     /// <summary>
     /// The client MUST supply either (1) the "job-uri" attribute or (2) the "printer-uri" and "job-id" attributes. It contains the ID of the Job object which is the target of this operation

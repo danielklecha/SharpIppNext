@@ -42,15 +42,6 @@ Additional 5100.22 model/mapping support verified:
 - strong typed collections for system/resource and power-policy/state objects
 - collection mapping in `CollectionProfiles` and related response profiles
 
-## Known consistency gaps to watch
-
-- `SharpIpp/SharpIppServer.cs` request dispatch currently does not include a branch for
-  `IppOperation.RestartOnePrinter` in `ReceiveRequestAsync`.
-- `docs/Content/Client/Operations.md` currently under-reports implemented coverage
-  (lists RFC 2911 + PWG 5100.5 + CUPS, but not the full 5100.22 surface).
-- Some XML summary references still contain placeholder section text (for example `6.3.??`),
-  and should be normalized during doc maintenance.
-
 ## Agent workflow for spec-parity changes
 
 When adding or correcting a spec operation/attribute, treat parity as end-to-end:

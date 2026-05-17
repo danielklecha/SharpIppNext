@@ -30,6 +30,7 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                 RequestedAttributes = ["printer-uri", "printer-state", "printer-name"],
                 DocumentFormat = "application/pdf",
                 FirstIndex = 1,
+                Limit = 10,
             },
         };
         IIppRequest? serverRequest = null;
@@ -172,7 +173,7 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                         PrinterMandatoryJobAttributes = new[] { (PrinterMandatoryJobAttribute)"copies" },
                         PrinterAlert = new[] { new PrinterAlert { Code = "alert1" } },
                         PrinterAlertDescription = new[] { "alert-desc" },
-                        PrinterSupply = new[] { "supply1" },
+                        PrinterSupply = new[] { new PrinterSupply { Type = "toner", Level = 50 } },
                         PrinterSupplyDescription = new[] { "supply-desc" },
                         JobCancelAfterDefault = 0,
                         JobCancelAfterSupported = new Range(0, 3600),

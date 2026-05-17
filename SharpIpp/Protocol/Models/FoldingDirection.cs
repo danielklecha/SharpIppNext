@@ -6,7 +6,16 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public readonly record struct FoldingDirection(string Value, bool IsValue = true) : ISmartEnum 
 {
+    /// <summary>
+    /// Sheets are folded inward (toward the center).
+    /// See: PWG 5100.1-2022 Section 5.2.6.1
+    /// </summary>
     public static readonly FoldingDirection Inward = new("inward");
+
+    /// <summary>
+    /// Sheets are folded outward (away from the center).
+    /// See: PWG 5100.1-2022 Section 5.2.6.1
+    /// </summary>
     public static readonly FoldingDirection Outward = new("outward");
 
     public override string ToString() => Value;

@@ -4,6 +4,7 @@ namespace SharpIpp.Models.Requests;
 
 /// <summary>
 /// Set-Job-Attributes operation request.
+/// See: RFC 3380 Section 4.2
 /// </summary>
 public class SetJobAttributesRequest : IppRequest<SetJobAttributesOperationAttributes>, IIppJobRequest
 {

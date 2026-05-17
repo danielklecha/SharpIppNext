@@ -248,6 +248,14 @@ namespace SharpIpp.Protocol.Models
         public const string PrinterAlertDescription = "printer-alert-description";
         public const string PrinterSupply = "printer-supply";
         public const string PrinterSupplyDescription = "printer-supply-description";
+        public const string PrinterInputTray = "printer-input-tray";
+        public const string PrinterOutputTray = "printer-output-tray";
+        public const string JobConstraintsSupported = "job-constraints-supported";
+        public const string JobPresetsSupported = "job-presets-supported";
+        public const string JobResolversSupported = "job-resolvers-supported";
+        public const string JobTriggersSupported = "job-triggers-supported";
+        public const string PrintColorModeIccProfiles = "print-color-mode-icc-profiles";
+        public const string PrinterIccProfiles = "printer-icc-profiles";
         public const string PrinterChargeInfo = "printer-charge-info";
         public const string PrinterChargeInfoUri = "printer-charge-info-uri";
         public const string PrinterMandatoryJobAttributes = "printer-mandatory-job-attributes";
@@ -285,7 +293,7 @@ namespace SharpIpp.Protocol.Models
         public const string PrinterServiceType = "printer-service-type";
         /// <summary>
         /// The accuracy units supported by the 3D Printer.
-        /// See: PWG 5100.21-2019 Section 8.1
+        /// See: PWG 5100.21-2019 Section 8.3.1
         /// </summary>
         public const string AccuracyUnitsSupported = "accuracy-units-supported";
 
@@ -326,7 +334,7 @@ namespace SharpIpp.Protocol.Models
 
         /// <summary>
         /// The URI(s) of camera image(s) for the 3D Printer.
-        /// See: PWG 5100.21-2019 Section 8.17
+        /// See: PWG 5100.21-2019 Section 8.4.3
         /// </summary>
         public const string PrinterCameraImageUri = "printer-camera-image-uri";
 

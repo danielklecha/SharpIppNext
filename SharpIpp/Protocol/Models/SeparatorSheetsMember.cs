@@ -6,8 +6,11 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public readonly record struct SeparatorSheetsMember(string Value, bool IsValue = true) : ISmartEnum 
 {
+    /// <summary>The media member attribute. See: PWG 5100.3-2023 Section 5.3.32</summary>
     public static readonly SeparatorSheetsMember Media = new("media");
+    /// <summary>The media-col member attribute. See: PWG 5100.3-2023 Section 5.3.32</summary>
     public static readonly SeparatorSheetsMember MediaCol = new("media-col");
+    /// <summary>The separator-sheets-type member attribute. See: PWG 5100.3-2023 Section 5.3.32</summary>
     public static readonly SeparatorSheetsMember SeparatorSheetsType = new("separator-sheets-type");
 
     public override string ToString() => Value;

@@ -200,6 +200,15 @@ internal class GetJobAttributesResponseProfile : IProfile
             if (src.TryGetValue(JobAttribute.DestinationStatuses, out var destinationStatuses))
                 dst.DestinationStatuses = destinationStatuses.GroupBegCollection().Select(x => map.Map<DestinationStatus>(x.FromBegCollection().ToIppDictionary())).ToArray();
 
+            dst.JobCopiesActual = map.MapFromDicSetNullable<int[]?>(src, JobAttribute.JobCopiesActual);
+            dst.JobKOctetsCompleted = map.MapFromDicNullable<int?>(src, JobAttribute.JobKOctetsCompleted);
+            dst.JobPassword = map.MapFromDicNullable<OctetString?>(src, JobAttribute.JobPassword);
+            dst.JobPasswordEncryption = map.MapFromDicNullable<JobPasswordEncryption?>(src, JobAttribute.JobPasswordEncryption);
+            dst.JobMandatoryAttributes = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.JobMandatoryAttributes);
+            dst.JobIds = map.MapFromDicSetNullable<int[]?>(src, JobAttribute.JobIds);
+            dst.RequestingUserUri = map.MapFromDicNullable<Uri?>(src, JobAttribute.RequestingUserUri);
+            dst.JobChargeInfoUri = map.MapFromDicNullable<Uri?>(src, JobAttribute.JobChargeInfoUri);
+
             return dst;
         });
 
@@ -430,6 +439,22 @@ internal class GetJobAttributesResponseProfile : IProfile
                 dic.Add(JobAttribute.MaterialsColActual, src.MaterialsColActual.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.MaterialsColActual)).ToArray());
             if (src.DestinationStatuses != null)
                 dic.Add(JobAttribute.DestinationStatuses, src.DestinationStatuses.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.DestinationStatuses)).ToArray());
+            if (src.JobCopiesActual != null)
+                dic.Add(JobAttribute.JobCopiesActual, src.JobCopiesActual.Select(x => new IppAttribute(Tag.Integer, JobAttribute.JobCopiesActual, x)).ToArray());
+            if (src.JobKOctetsCompleted != null)
+                dic.Add(JobAttribute.JobKOctetsCompleted, [new IppAttribute(Tag.Integer, JobAttribute.JobKOctetsCompleted, src.JobKOctetsCompleted.Value)]);
+            if (src.JobPassword != null)
+                dic.Add(JobAttribute.JobPassword, [new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, JobAttribute.JobPassword, src.JobPassword.Value)]);
+            if (src.JobPasswordEncryption != null)
+                dic.Add(JobAttribute.JobPasswordEncryption, [new IppAttribute(Tag.Keyword, JobAttribute.JobPasswordEncryption, map.Map<string>(src.JobPasswordEncryption.Value))]);
+            if (src.JobMandatoryAttributes != null)
+                dic.Add(JobAttribute.JobMandatoryAttributes, src.JobMandatoryAttributes.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.JobMandatoryAttributes, x)).ToArray());
+            if (src.JobIds != null)
+                dic.Add(JobAttribute.JobIds, src.JobIds.Select(x => new IppAttribute(Tag.Integer, JobAttribute.JobIds, x)).ToArray());
+            if (src.RequestingUserUri != null)
+                dic.Add(JobAttribute.RequestingUserUri, [new IppAttribute(Tag.Uri, JobAttribute.RequestingUserUri, src.RequestingUserUri.ToString())]);
+            if (src.JobChargeInfoUri != null)
+                dic.Add(JobAttribute.JobChargeInfoUri, [new IppAttribute(Tag.Uri, JobAttribute.JobChargeInfoUri, src.JobChargeInfoUri.ToString())]);
             return dic;
         });
     }

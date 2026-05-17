@@ -11,7 +11,7 @@ public class SystemStatusAttributes
     /// <summary>
     /// The current state of the System object. Uses the same values as <c>printer-state</c>
     /// (3 = idle, 4 = processing, 5 = stopped).
-    /// See: PWG 5100.22-2025 Section 7.3.1
+    /// See: PWG 5100.22-2025 Section 7.3.26
     /// </summary>
     /// <code>system-state</code>
     public PrinterState? SystemState { get; set; }
@@ -46,14 +46,14 @@ public class SystemStatusAttributes
 
     /// <summary>
     /// System uptime in seconds.
-    /// See: PWG 5100.22-2025 Section 7.3.31
+    /// See: PWG 5100.22-2025 Section 7.3.32
     /// </summary>
     /// <code>system-up-time</code>
     public int? SystemUpTime { get; set; }
 
     /// <summary>
     /// System time source configured.
-    /// See: PWG 5100.22-2025 Section 7.3.26
+    /// See: PWG 5100.22-2025 Section 7.3.31
     /// </summary>
     public SystemTimeSourceConfigured? SystemTimeSourceConfigured { get; set; }
 
@@ -101,7 +101,7 @@ public class SystemStatusAttributes
 
     /// <summary>
     /// System unique identifier.
-    /// See: PWG 5100.22-2025 Section 7.3.32
+    /// See: PWG 5100.22-2025 Section 7.3.37
     /// </summary>
     /// <code>system-uuid</code>
     public Uri? SystemUuid { get; set; }

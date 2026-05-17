@@ -71,6 +71,7 @@ public struct NoValue : IEquatable<NoValue>
         if (underlyingType == typeof(Range)) return new Range();
         if (underlyingType == typeof(Resolution)) return new Resolution();
         if (underlyingType == typeof(StringWithLanguage)) return new StringWithLanguage();
+        if (underlyingType == typeof(OctetString)) return new OctetString();
 
         if (typeof(IIppCollection).IsAssignableFrom(underlyingType) && Activator.CreateInstance(underlyingType) is IIppCollection collection)
         {

@@ -177,12 +177,15 @@ namespace SharpIpp.Protocol.Models
         public const string YImageShift = "y-image-shift";
         public const string YSide1ImageShift = "y-side1-image-shift";
         public const string YSide2ImageShift = "y-side2-image-shift";
+        public const string PredecessorJobId = "predecessor-job-id";
 
         public const string DateTimeAtCompletedEstimated = "date-time-at-completed-estimated";
         public const string DateTimeAtProcessingEstimated = "date-time-at-processing-estimated";
         public const string TimeAtCompletedEstimated = "time-at-completed-estimated";
         public const string TimeAtProcessingEstimated = "time-at-processing-estimated";
         public const string DocumentCharset = "document-charset";
+
+        public const string DocumentMessage = "document-message";
         public const string IdentifyActions = "identify-actions";
         public const string OutputDeviceUuid = "output-device-uuid";
         public const string FetchStatusCode = "fetch-status-code";
@@ -203,7 +206,10 @@ namespace SharpIpp.Protocol.Models
         public const string JobAccountType = "job-account-type";
         public const string JobAuthorizationUri = "job-authorization-uri";
         public const string JobChargeInfo = "job-charge-info";
+        public const string JobChargeInfoUri = "job-charge-info-uri";
+        public const string JobCopiesActual = "job-copies-actual";
         public const string JobImpressionsEstimated = "job-impressions-estimated";
+        public const string JobKOctetsCompleted = "job-k-octets-completed";
         public const string JobPassword = "job-password";
         public const string JobPasswordEncryption = "job-password-encryption";
         public const string JobReleaseAction = "job-release-action";
@@ -243,5 +249,16 @@ namespace SharpIpp.Protocol.Models
         public const string MediaSource = "media-source";
         public const string MediaSourceProperties = "media-source-properties";
         public const string MediaThickness = "media-thickness";
+        public const string JobCopies = "job-copies";
+        public const string JobCoverBack = "job-cover-back";
+        public const string JobCoverFront = "job-cover-front";
+        public const string JobFinishings = "job-finishings";
+        public const string JobFinishingsCol = "job-finishings-col";
+        public const string SheetCollate = "sheet-collate";
+        public const string PageOverrides = "page-overrides";
+        public const string PagesPerSubset = "pages-per-subset";
+        public const string DocumentOverrides = "document-overrides";
+        public const string MediaSourceFeedDirection = "media-source-feed-direction";
+        public const string MediaSourceFeedOrientation = "media-source-feed-orientation";
     }
 }

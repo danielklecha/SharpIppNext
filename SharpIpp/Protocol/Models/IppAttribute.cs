@@ -63,6 +63,14 @@ public readonly struct IppAttribute : IEquatable<IppAttribute>
     {
     }
 
+    public IppAttribute(Tag tag, string name, OctetString value) : this(tag, name, value as object)
+    {
+    }
+
+    public IppAttribute(Tag tag, string name, byte[] value) : this(tag, name, value as object)
+    {
+    }
+
     public Tag Tag { get; }
 
     public string Name { get; }

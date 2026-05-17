@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Models.Requests;
-using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Extensions;
 using SharpIpp.Protocol.Models;
@@ -20,7 +19,7 @@ internal class UpdateDocumentStatusRequestProfile : IProfile
             if (src.OperationAttributes != null)
                 dst.OperationAttributes.AddRange(map.Map<UpdateDocumentStatusOperationAttributes, List<IppAttribute>>(src.OperationAttributes));
             if (src.DocumentAttributes != null)
-                dst.DocumentAttributes.AddRange(map.Map<IEnumerable<IppAttribute>>(src.DocumentAttributes));
+                dst.DocumentAttributes.AddRange(map.Map<IDictionary<string, IppAttribute[]>>(src.DocumentAttributes).Values.SelectMany(x => x));
             return dst;
         });
 

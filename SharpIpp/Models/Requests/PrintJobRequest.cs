@@ -15,8 +15,7 @@ namespace SharpIpp.Models.Requests
     public class PrintJobRequest : IppRequest<PrintJobOperationAttributes>, IIppPrinterRequest
     {
         /// <summary>
-        /// defines new "finishings" and "finishings-col" Job Template attribute values to specify additional finishing intent, including the placement of finishings with respect to the corners and edges of portrait and landscape documents.
-        /// See: pwg5100.1-2022 Section 2.2
+        /// The document data.
         /// </summary>
         /// <code>document</code>
         public Stream? Document { get; set; }

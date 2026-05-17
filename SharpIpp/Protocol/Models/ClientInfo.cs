@@ -33,5 +33,5 @@ public class ClientInfo : IIppCollection
     /// <summary>
     /// octetString(64) | no-value
     /// </summary>
-    public string? ClientVersion { get; set; }
+    public OctetString? ClientVersion { get; set; }
 }

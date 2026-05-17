@@ -6,6 +6,10 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public readonly record struct NotifyPullMethod(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
 {
+    /// <summary>
+    /// The IPP Get-Notifications pull method.
+    /// See: RFC 3995 Section 10
+    /// </summary>
     public static readonly NotifyPullMethod IppGet = new("ippget");
 
     public override string ToString() => Value;

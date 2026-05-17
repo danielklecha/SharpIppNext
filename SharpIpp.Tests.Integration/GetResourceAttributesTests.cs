@@ -52,13 +52,13 @@ public class GetResourceAttributesTests : SharpIppIntegrationTestBase
                     ResourceKOctets = 512,
                     ResourceNaturalLanguage = "en",
                     ResourcePatches = "patch-1\r\npatch-2",
-                    ResourceSignature = new[] { new byte[] { 0x01, 0x02 }, new byte[] { 0x03, 0x04 } },
+                    ResourceSignature = new OctetString[] { new byte[] { 0x01, 0x02 }, new byte[] { 0x03, 0x04 } },
                     ResourceDataUri = new Uri("ipp://127.0.0.1:8631/resources/100"),
                     ResourceUseCount = 0,
                     TimeAtCanceled = 3600,
                     TimeAtCreation = 7200,
                     TimeAtInstalled = 10800,
-                    ResourceUuid = new Uri("urn:uuid:12345678-1234-1234-1234-123456789abc"),
+                    ResourceUuid = new OctetString(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 }),
                     ResourceVersion = "1.0.0",
                     ResourceStringVersion = "1.0",
                     ResourceInfo = "Firmware image",
@@ -80,7 +80,7 @@ public class GetResourceAttributesTests : SharpIppIntegrationTestBase
         clientResponse.Should().BeEquivalentTo(serverResponse);
 
         // Additional coverage for ResourceStatusAttributes -> IppAttribute mapping branches
-        clientResponse.ResourceAttributes!.ResourceUuid.Should().Be(new Uri("urn:uuid:12345678-1234-1234-1234-123456789abc"));
+        clientResponse.ResourceAttributes!.ResourceUuid!.Value.Value.Should().BeEquivalentTo(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 });
         clientResponse.ResourceAttributes.ResourceVersion.Should().Be("1.0.0");
         clientResponse.ResourceAttributes.ResourceStringVersion.Should().Be("1.0");
     }

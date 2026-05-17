@@ -6,8 +6,19 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace SharpIpp.Models.Requests;
+/// <summary>
+/// The operation attributes for the Get-Printer-Attributes operation.
+/// See: RFC 2911 Section 3.2.5
+/// </summary>
 public class GetPrinterAttributesOperationAttributes : OperationAttributes
 {
+    /// <summary>
+    /// The limit IPP attribute.
+    /// See: PWG 5100.13-2023 Section 6.1.4
+    /// </summary>
+    /// <code>limit</code>
+    public int? Limit { get; set; }
+
     /// <summary>
     /// The first-index IPP attribute.
     /// See: PWG 5100.13-2023 Section 6.1.3 and Section 8.2

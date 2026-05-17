@@ -6,8 +6,22 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public readonly record struct CoverMember(string Value, bool IsValue = true) : ISmartEnum 
 {
+    /// <summary>
+    /// The cover-type member attribute.
+    /// See: PWG 5100.3-2023 Section 5.2.1.3
+    /// </summary>
     public static readonly CoverMember CoverType = new("cover-type");
+
+    /// <summary>
+    /// The media member attribute.
+    /// See: PWG 5100.3-2023 Section 5.3.2
+    /// </summary>
     public static readonly CoverMember Media = new("media");
+
+    /// <summary>
+    /// The media-col member attribute.
+    /// See: PWG 5100.3-2023 Section 5.3.2
+    /// </summary>
     public static readonly CoverMember MediaCol = new("media-col");
 
     public override string ToString() => Value;

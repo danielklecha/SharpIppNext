@@ -2,7 +2,7 @@ namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// The <c>print-objects</c> member collection.
-/// See: PWG 5100.21-2019 Section 6.8.16
+/// See: PWG 5100.21-2019 Section 8.1.8
 /// </summary>
 public class PrintObject : IIppCollection
 {

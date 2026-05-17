@@ -17,7 +17,8 @@ var request = new SetPrinterAttributesRequest
         PrinterUri = new Uri("ipp://localhost:631/printers/my-printer"),
         AttributesCharset = "utf-8",
         AttributesNaturalLanguage = "en",
-        RequestingUserName = "alice"
+        RequestingUserName = "alice",
+        DocumentFormat = "application/octet-stream"
     },
     PrinterAttributes = new PrinterDescriptionAttributes
     {

@@ -157,7 +157,23 @@ public class SendDocumentTests : SharpIppIntegrationTestBase
                 InputScalingWidth = 300,
                 InputSharpness = 25,
                 InputSides = Sides.TwoSidedLongEdge,
-                InputSource = (InputSource?)"document-feeder"
+                InputSource = (InputSource?)"document-feeder",
+                DocumentCharset = "utf-8",
+                DocumentFormat = "application/pdf",
+                DocumentFormatDetails = new DocumentFormatDetails
+                {
+                    DocumentSourceApplicationName = "ScanApp",
+                    DocumentSourceOsName = "Windows"
+                },
+                DocumentMessage = "scan message",
+                DocumentMetadata = ["scan-meta-1"],
+                DocumentName = "scanned-document",
+                DocumentNaturalLanguage = "en-us",
+                DocumentPassword = new byte[] { 0x04, 0x05 },
+                DocumentUri = new Uri("http://example.com/doc.pdf"),
+                LastDocument = false,
+                JobPassword = new byte[] { 0x01, 0x02 },
+                JobPasswordEncryption = JobPasswordEncryption.None
             }
         };
         IIppRequest? serverRequest = null;

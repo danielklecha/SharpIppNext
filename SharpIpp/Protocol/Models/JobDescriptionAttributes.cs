@@ -2,6 +2,21 @@ using System;
 
 namespace SharpIpp.Protocol.Models
 {
+    /// <summary>
+    /// Attributes describing a Job object, including its identity, state, and processing details.
+    /// See: RFC 8011
+    /// See: PWG 5100.1-2022
+    /// See: PWG 5100.3-2023
+    /// See: PWG 5100.5-2024
+    /// See: PWG 5100.7-2023
+    /// See: PWG 5100.8-2003
+    /// See: PWG 5100.11-2024
+    /// See: PWG 5100.13-2023
+    /// See: PWG 5100.15-2013
+    /// See: PWG 5100.18-2025
+    /// See: PWG 5100.21-2019
+    /// See: PWG 5100.22-2025
+    /// </summary>
     public class JobDescriptionAttributes
     {
         /// <summary>
@@ -21,6 +36,7 @@ namespace SharpIpp.Protocol.Models
         /// This REQUIRED attribute contains the URI for the Job object.
         /// See: RFC 8011 Section 5.3.2
         /// </summary>
+        [Obsolete("The 'job-uri' attribute is deprecated in favor of 'job-id'. See RFC 8011 Section 5.3.2.")]
         public string? JobUri { get; set; }
 
         /// <summary>
@@ -175,6 +191,7 @@ namespace SharpIpp.Protocol.Models
         /// See: PWG 5100.7-2023 Section 6.2.1
         /// </summary>
         /// <code>document-format-details</code>
+        [Obsolete("The 'document-format-details' attribute is deprecated. See PWG 5100.7-2023 Section 6.2.1.")]
         public DocumentFormatDetails? DocumentFormatDetails { get; set; }
 
         /// <summary>
@@ -183,6 +200,7 @@ namespace SharpIpp.Protocol.Models
         /// See: PWG 5100.7-2023 Section 6.2.2
         /// </summary>
         /// <code>document-format-details-detected</code>
+        [Obsolete("The 'document-format-details-detected' attribute is deprecated. See PWG 5100.7-2023 Section 6.2.2.")]
         public DocumentFormatDetails? DocumentFormatDetailsDetected { get; set; }
 
         /// <summary>
@@ -785,7 +803,7 @@ namespace SharpIpp.Protocol.Models
 
         /// <summary>
         /// The actual materials used to process the 3D job.
-        /// See: PWG 5100.21-2019 Section 7.1
+        /// See: PWG 5100.21-2019 Section 8.2.3
         /// </summary>
         /// <code>materials-col-actual</code>
         public Material[]? MaterialsColActual { get; set; }
@@ -852,5 +870,71 @@ namespace SharpIpp.Protocol.Models
         /// </summary>
         /// <code>destination-statuses</code>
         public DestinationStatus[]? DestinationStatuses { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the actual number of job copies produced for the Job,
+        /// as reported by the Printer after processing. This is the job-level counterpart
+        /// to the document-level "copies-actual" attribute.
+        /// See: PWG 5100.7-2023 Section 10.3
+        /// </summary>
+        /// <code>job-copies-actual</code>
+        public int[]? JobCopiesActual { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the total number of octets (in K octets, i.e., units
+        /// of 1024 octets) that have been sent to the output device for this job.
+        /// See: PWG 5100.18-2025 Section 5.9.1
+        /// </summary>
+        /// <code>job-k-octets-completed</code>
+        public int? JobKOctetsCompleted { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the password for the job, encoded as an octet string.
+        /// The encoding algorithm is specified by the "job-password-encryption" attribute.
+        /// See: PWG 5100.11-2024 Section 5.3.7
+        /// </summary>
+        /// <code>job-password</code>
+        public OctetString? JobPassword { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the encryption algorithm used to encode the
+        /// "job-password" attribute value.
+        /// See: PWG 5100.11-2024 Section 5.3.7
+        /// </summary>
+        /// <code>job-password-encryption</code>
+        public JobPasswordEncryption? JobPasswordEncryption { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the list of Job Template attributes that the client
+        /// requires the Printer to honor. If the Printer cannot honor all of the listed
+        /// attributes, it MUST reject the job.
+        /// See: PWG 5100.7-2023 Section 6.1
+        /// </summary>
+        /// <code>job-mandatory-attributes</code>
+        public string[]? JobMandatoryAttributes { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the list of job IDs associated with this job
+        /// (e.g., for multi-document jobs or job fan-out scenarios).
+        /// See: PWG 5100.7-2023 Section 6.1
+        /// </summary>
+        /// <code>job-ids</code>
+        public int[]? JobIds { get; set; }
+
+        /// <summary>
+        /// This attribute specifies the URI of the user that submitted the job.
+        /// It is the URI counterpart to the "job-originating-user-name" attribute.
+        /// See: PWG 5100.7-2023 Section 5.1.1
+        /// </summary>
+        /// <code>requesting-user-uri</code>
+        public Uri? RequestingUserUri { get; set; }
+
+        /// <summary>
+        /// This attribute specifies a URI that identifies the charge account or
+        /// billing entity associated with this job.
+        /// See: PWG 5100.7-2023 Section 6.8.13
+        /// </summary>
+        /// <code>job-charge-info-uri</code>
+        public Uri? JobChargeInfoUri { get; set; }
     }
 }

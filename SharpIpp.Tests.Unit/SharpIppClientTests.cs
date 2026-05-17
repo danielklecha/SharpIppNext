@@ -127,7 +127,8 @@ public class SharpIppClientTests
             {
                 PrinterUri = new Uri("http://127.0.0.1:632/printers/should-not-be-used"),
                 SystemUri = new Uri("ipp://127.0.0.1:8631/system"),
-                RequestingUserName = "test-user"
+                RequestingUserName = "test-user",
+                ResourceId = 1
             }
         });
 
@@ -280,9 +281,9 @@ public class SharpIppClientTests
             ];
             yield return [
                 IppOperation.CancelResource,
-                new CancelResourceRequest { RequestId = 123, OperationAttributes = new CancelResourceOperationAttributes { SystemUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user" } },
+                new CancelResourceRequest { RequestId = 123, OperationAttributes = new CancelResourceOperationAttributes { SystemUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", ResourceId = 1 } },
                 new Func<SharpIppClient, object, Task>(async (c, r) => await c.CancelResourceAsync((CancelResourceRequest)r)),
-                null!,
+                new[] { new IppAttribute(Tag.Integer, SystemAttribute.ResourceId, 1) },
                 "CancelResource"
             ];
             yield return [
@@ -294,23 +295,23 @@ public class SharpIppClientTests
             ];
             yield return [
                 IppOperation.InstallResource,
-                new InstallResourceRequest { RequestId = 123, OperationAttributes = new InstallResourceOperationAttributes { SystemUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user" } },
+                new InstallResourceRequest { RequestId = 123, OperationAttributes = new InstallResourceOperationAttributes { SystemUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", ResourceId = 1 } },
                 new Func<SharpIppClient, object, Task>(async (c, r) => await c.InstallResourceAsync((InstallResourceRequest)r)),
-                null!,
+                new[] { new IppAttribute(Tag.Integer, SystemAttribute.ResourceId, 1) },
                 "InstallResource"
             ];
             yield return [
                 IppOperation.SendResourceData,
-                new SendResourceDataRequest { RequestId = 123, OperationAttributes = new SendResourceDataOperationAttributes { SystemUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user" } },
+                new SendResourceDataRequest { RequestId = 123, OperationAttributes = new SendResourceDataOperationAttributes { SystemUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", ResourceId = 1 } },
                 new Func<SharpIppClient, object, Task>(async (c, r) => await c.SendResourceDataAsync((SendResourceDataRequest)r)),
-                null!,
+                new[] { new IppAttribute(Tag.Integer, SystemAttribute.ResourceId, 1) },
                 "SendResourceData"
             ];
             yield return [
                 IppOperation.SetResourceAttributes,
-                new SetResourceAttributesRequest { RequestId = 123, OperationAttributes = new SetResourceAttributesOperationAttributes { SystemUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user" } },
+                new SetResourceAttributesRequest { RequestId = 123, OperationAttributes = new SetResourceAttributesOperationAttributes { SystemUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", ResourceId = 1 } },
                 new Func<SharpIppClient, object, Task>(async (c, r) => await c.SetResourceAttributesAsync((SetResourceAttributesRequest)r)),
-                null!,
+                new[] { new IppAttribute(Tag.Integer, SystemAttribute.ResourceId, 1) },
                 "SetResourceAttributes"
             ];
             yield return [

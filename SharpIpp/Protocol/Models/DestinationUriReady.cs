@@ -23,8 +23,8 @@ public class DestinationUriReady : IIppCollection
     public bool? DestinationIsDirectory { get; set; }
     public string[]? DestinationMandatoryAccessAttributes { get; set; }
     public string? DestinationName { get; set; }
-    public string[]? DestinationOAuthScope { get; set; }
-    public string[]? DestinationOAuthToken { get; set; }
+    public OctetString[]? DestinationOAuthScope { get; set; }
+    public OctetString[]? DestinationOAuthToken { get; set; }
     public Uri? DestinationOAuthUri { get; set; }
     public string? DestinationUri { get; set; }
 }

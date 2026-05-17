@@ -157,8 +157,11 @@ public interface ISharpIppClient : IDisposable
     /// implementation, i.e., on whether the IPP protocol is being used as a
     /// universal management protocol or just to manage IPP jobs,
     /// respectively.
+    /// <br/>
+    /// Deprecated/Obsolete Support: The library intentionally implements operations and attributes that the latest standards have deprecated or obsoleted for the sake of backward compatibility, such as the Purge-Jobs operation (Deprecated in RFC 8011).
     /// See: RFC 2911 Section 3.2.9
     /// </summary>
+    [Obsolete("The 'Purge-Jobs' operation is deprecated. See RFC 8011 Section 4.2.9.")]
     Task<PurgeJobsResponse> PurgeJobsAsync(PurgeJobsRequest request, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -192,8 +195,11 @@ public interface ISharpIppClient : IDisposable
     /// they give an accurate record of the job from its restart point.  The
     /// job object MUST continue to use the same "job-uri" and "job-id"
     /// attribute values.
+    /// <br/>
+    /// Deprecated/Obsolete Support: The library intentionally implements operations and attributes that the latest standards have deprecated or obsoleted for the sake of backward compatibility, such as the Restart-Job operation (Deprecated in RFC 8011).
     /// See: RFC 2911 Section 3.3.7
     /// </summary>
+    [Obsolete("The 'Restart-Job' operation is deprecated. See RFC 8011 Section 4.3.7.")]
     Task<RestartJobResponse> RestartJobAsync(RestartJobRequest request, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -258,8 +264,11 @@ public interface ISharpIppClient : IDisposable
     /// Validate-Document Operation.
     /// This DEPRECATED operation allows a client to validate operation and Document Template attributes
     /// that would be used in a later Send-Document or Send-URI request.
+    /// <br/>
+    /// Deprecated/Obsolete Support: The library intentionally implements operations and attributes that the latest standards have deprecated or obsoleted for the sake of backward compatibility, such as Validate-Document (Deprecated in PWG 5100.13-2023).
     /// See: PWG 5100.13-2023 Section 5.2
     /// </summary>
+    [Obsolete("The 'Validate-Document' operation is deprecated. See PWG 5100.13-2023 Section 5.2.")]
     Task<ValidateDocumentResponse> ValidateDocumentAsync(ValidateDocumentRequest request, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -652,6 +661,142 @@ public interface ISharpIppClient : IDisposable
     /// See: PWG 5100.17-2014 Section 6.1
     /// </summary>
     Task<GetNextDocumentDataResponse> GetNextDocumentDataAsync(GetNextDocumentDataRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Activate-Printer Operation.
+    /// This operation allows a client to activate a previously deactivated Printer.
+    /// See: PWG 5100.15-2013 Section 4.2
+    /// </summary>
+    Task<ActivatePrinterResponse> ActivatePrinterAsync(ActivatePrinterRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Deactivate-Printer Operation.
+    /// This operation allows a client to deactivate a Printer so that it stops accepting new jobs.
+    /// See: PWG 5100.15-2013 Section 4.2
+    /// </summary>
+    Task<DeactivatePrinterResponse> DeactivatePrinterAsync(DeactivatePrinterRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Disable-Printer Operation.
+    /// This operation allows a client to disable a Printer so that it stops accepting new jobs.
+    /// See: PWG 5100.15-2013 Section 4.2
+    /// </summary>
+    Task<DisablePrinterResponse> DisablePrinterAsync(DisablePrinterRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Enable-Printer Operation.
+    /// This operation allows a client to enable a previously disabled Printer so that it resumes accepting new jobs.
+    /// See: PWG 5100.15-2013 Section 4.2
+    /// </summary>
+    Task<EnablePrinterResponse> EnablePrinterAsync(EnablePrinterRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get-Printer-Supported-Values Operation.
+    /// This operation allows a client to query the Printer for the set of values it supports for a given attribute.
+    /// See: PWG 5100.15-2013 Section 4.2
+    /// See: RFC 8011 Section 4.2
+    /// </summary>
+    Task<GetPrinterSupportedValuesResponse> GetPrinterSupportedValuesAsync(GetPrinterSupportedValuesRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Hold-New-Jobs Operation.
+    /// This operation allows a client to hold all new jobs submitted to the Printer in the 'pending-held' state.
+    /// See: PWG 5100.15-2013 Section 4.2
+    /// </summary>
+    Task<HoldNewJobsResponse> HoldNewJobsAsync(HoldNewJobsRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Pause-Printer-After-Current-Job Operation.
+    /// This operation allows a client to pause the Printer after the current job completes.
+    /// See: PWG 5100.15-2013 Section 4.2
+    /// </summary>
+    Task<PausePrinterAfterCurrentJobResponse> PausePrinterAfterCurrentJobAsync(PausePrinterAfterCurrentJobRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Release-Held-New-Jobs Operation.
+    /// This operation allows a client to release all jobs that were held by a previous Hold-New-Jobs operation.
+    /// See: PWG 5100.15-2013 Section 4.2
+    /// </summary>
+    Task<ReleaseHeldNewJobsResponse> ReleaseHeldNewJobsAsync(ReleaseHeldNewJobsRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Restart-Printer Operation.
+    /// This operation allows a client to restart a Printer.
+    /// See: PWG 5100.15-2013 Section 4.2
+    /// </summary>
+    Task<RestartPrinterResponse> RestartPrinterAsync(RestartPrinterRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Shutdown-Printer Operation.
+    /// This operation allows a client to shut down a Printer.
+    /// See: PWG 5100.15-2013 Section 4.2
+    /// </summary>
+    Task<ShutdownPrinterResponse> ShutdownPrinterAsync(ShutdownPrinterRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Startup-Printer Operation.
+    /// This operation allows a client to start up a previously shut-down Printer.
+    /// See: PWG 5100.15-2013 Section 4.2
+    /// </summary>
+    Task<StartupPrinterResponse> StartupPrinterAsync(StartupPrinterRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Cancel-Current-Job Operation.
+    /// This operation allows a client to cancel the job currently being processed by the Printer.
+    /// See: PWG 5100.15-2013 Section 4.2
+    /// </summary>
+    Task<CancelCurrentJobResponse> CancelCurrentJobAsync(CancelCurrentJobRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Promote-Job Operation.
+    /// This operation allows a client to promote a job to the head of the queue.
+    /// See: PWG 5100.15-2013 Section 4.2
+    /// </summary>
+    Task<PromoteJobResponse> PromoteJobAsync(PromoteJobRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Resume-Job Operation.
+    /// This operation allows a client to resume a previously suspended job.
+    /// See: PWG 5100.15-2013 Section 4.2
+    /// </summary>
+    Task<ResumeJobResponse> ResumeJobAsync(ResumeJobRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Schedule-Job-After Operation.
+    /// This operation allows a client to schedule a job to be processed after another specified job.
+    /// See: PWG 5100.15-2013 Section 4.2
+    /// </summary>
+    Task<ScheduleJobAfterResponse> ScheduleJobAfterAsync(ScheduleJobAfterRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Suspend-Current-Job Operation.
+    /// This operation allows a client to suspend the job currently being processed by the Printer.
+    /// See: PWG 5100.15-2013 Section 4.2
+    /// </summary>
+    Task<SuspendCurrentJobResponse> SuspendCurrentJobAsync(SuspendCurrentJobRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Delete-Document Operation.
+    /// This operation allows a client to delete a document from a job.
+    /// See: PWG 5100.15-2013 Section 4.2
+    /// </summary>
+    Task<DeleteDocumentResponse> DeleteDocumentAsync(DeleteDocumentRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Create-Printer-Subscriptions Operation.
+    /// This operation allows a client to create one or more event subscriptions associated with a Printer object.
+    /// See: RFC 3995 Section 5.1
+    /// See: PWG 5100.15-2013 Section 4.2
+    /// </summary>
+    Task<CreatePrinterSubscriptionsResponse> CreatePrinterSubscriptionsAsync(CreatePrinterSubscriptionsRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Create-Job-Subscriptions Operation.
+    /// This operation allows a client to create one or more event subscriptions associated with a Job object.
+    /// See: RFC 3995 Section 5.1
+    /// See: PWG 5100.15-2013 Section 4.2
+    /// </summary>
+    Task<CreateJobSubscriptionsResponse> CreateJobSubscriptionsAsync(CreateJobSubscriptionsRequest request, CancellationToken cancellationToken = default);
 
     #endregion
 

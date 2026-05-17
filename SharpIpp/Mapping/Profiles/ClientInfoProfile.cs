@@ -23,7 +23,7 @@ internal class ClientInfoProfile : IProfile
                 ClientName = map.MapFromDicNullable<string?>(src, nameof(ClientInfo.ClientName).ConvertCamelCaseToKebabCase()),
                 ClientPatches = map.MapFromDicNullable<string?>(src, nameof(ClientInfo.ClientPatches).ConvertCamelCaseToKebabCase()),
                 ClientStringVersion = map.MapFromDicNullable<string?>(src, nameof(ClientInfo.ClientStringVersion).ConvertCamelCaseToKebabCase()),
-                ClientVersion = map.MapFromDicNullable<string?>(src, nameof(ClientInfo.ClientVersion).ConvertCamelCaseToKebabCase()),
+                ClientVersion = map.MapFromDicNullable<OctetString?>(src, nameof(ClientInfo.ClientVersion).ConvertCamelCaseToKebabCase()),
             };
 
             var clientType = map.MapFromDicNullable<int?>(src, nameof(ClientInfo.ClientType).ConvertCamelCaseToKebabCase());
@@ -47,7 +47,7 @@ internal class ClientInfoProfile : IProfile
             if (src.ClientType.HasValue)
                 attributes.Add(new IppAttribute(Tag.Enum, nameof(ClientInfo.ClientType).ConvertCamelCaseToKebabCase(), (int)src.ClientType.Value));
             if (src.ClientVersion != null)
-                attributes.Add(new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, nameof(ClientInfo.ClientVersion).ConvertCamelCaseToKebabCase(), src.ClientVersion));
+                attributes.Add(new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, nameof(ClientInfo.ClientVersion).ConvertCamelCaseToKebabCase(), src.ClientVersion.Value));
             return attributes;
         });
     }

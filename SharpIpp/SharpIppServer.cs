@@ -152,6 +152,28 @@ public partial class SharpIppServer : ISharpIppServer
             IppOperation.GetDocumentAttributes => Mapper.Map<IIppRequestMessage, GetDocumentAttributesRequest>(request),
             IppOperation.GetDocuments => Mapper.Map<IIppRequestMessage, GetDocumentsRequest>(request),
             IppOperation.SetDocumentAttributes => Mapper.Map<IIppRequestMessage, SetDocumentAttributesRequest>(request),
+            // PWG 5100.15-2013 printer-targeted operations
+            IppOperation.ActivatePrinter => Mapper.Map<IIppRequestMessage, ActivatePrinterRequest>(request),
+            IppOperation.DeactivatePrinter => Mapper.Map<IIppRequestMessage, DeactivatePrinterRequest>(request),
+            IppOperation.DisablePrinter => Mapper.Map<IIppRequestMessage, DisablePrinterRequest>(request),
+            IppOperation.EnablePrinter => Mapper.Map<IIppRequestMessage, EnablePrinterRequest>(request),
+            IppOperation.GetPrinterSupportedValues => Mapper.Map<IIppRequestMessage, GetPrinterSupportedValuesRequest>(request),
+            IppOperation.HoldNewJobs => Mapper.Map<IIppRequestMessage, HoldNewJobsRequest>(request),
+            IppOperation.PausePrinterAfterCurrentJob => Mapper.Map<IIppRequestMessage, PausePrinterAfterCurrentJobRequest>(request),
+            IppOperation.ReleaseHeldNewJobs => Mapper.Map<IIppRequestMessage, ReleaseHeldNewJobsRequest>(request),
+            IppOperation.RestartPrinter => Mapper.Map<IIppRequestMessage, RestartPrinterRequest>(request),
+            IppOperation.ShutdownPrinter => Mapper.Map<IIppRequestMessage, ShutdownPrinterRequest>(request),
+            IppOperation.StartupPrinter => Mapper.Map<IIppRequestMessage, StartupPrinterRequest>(request),
+            // PWG 5100.15-2013 job-targeted operations
+            IppOperation.CancelCurrentJob => Mapper.Map<IIppRequestMessage, CancelCurrentJobRequest>(request),
+            IppOperation.PromoteJob => Mapper.Map<IIppRequestMessage, PromoteJobRequest>(request),
+            IppOperation.ResumeJob => Mapper.Map<IIppRequestMessage, ResumeJobRequest>(request),
+            IppOperation.ScheduleJobAfter => Mapper.Map<IIppRequestMessage, ScheduleJobAfterRequest>(request),
+            IppOperation.SuspendCurrentJob => Mapper.Map<IIppRequestMessage, SuspendCurrentJobRequest>(request),
+            IppOperation.DeleteDocument => Mapper.Map<IIppRequestMessage, DeleteDocumentRequest>(request),
+            // RFC 3995 / PWG 5100.15-2013 subscription operations
+            IppOperation.CreatePrinterSubscriptions => Mapper.Map<IIppRequestMessage, CreatePrinterSubscriptionsRequest>(request),
+            IppOperation.CreateJobSubscriptions => Mapper.Map<IIppRequestMessage, CreateJobSubscriptionsRequest>(request),
             _ => throw new IppRequestException($"Unable to handle {request.IppOperation} operation", request, IppStatusCode.ClientErrorBadRequest)
         };
         cancellationToken.ThrowIfCancellationRequested();

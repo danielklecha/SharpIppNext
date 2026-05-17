@@ -1,7 +1,7 @@
 using System;
 using SharpIpp.Protocol.Models;
 
-namespace SharpIpp.Models.Responses;
+namespace SharpIpp.Protocol.Models;
 /// <summary>
 /// Document Status and Description attributes for a Document object.
 /// Defined in PWG 5100.5-2024 Sections 6.1-6.2 and extended by PWG 5100.18-2025.
@@ -142,6 +142,7 @@ public class DocumentAttributes : IIppCollection
     /// See: PWG 5100.7-2023 Section 6.2.1
     /// </summary>
     /// <code>document-format-details</code>
+    [Obsolete("The 'document-format-details' attribute is deprecated. See PWG 5100.7-2023 Section 6.2.1.")]
     public DocumentFormatDetails? DocumentFormatDetails { get; set; }
 
     /// <summary>
@@ -150,6 +151,7 @@ public class DocumentAttributes : IIppCollection
     /// See: PWG 5100.7-2023 Section 6.2.2
     /// </summary>
     /// <code>document-format-details-detected</code>
+    [Obsolete("The 'document-format-details-detected' attribute is deprecated. See PWG 5100.7-2023 Section 6.2.2.")]
     public DocumentFormatDetails? DocumentFormatDetailsDetected { get; set; }
 
     /// <summary>
@@ -318,4 +320,15 @@ public class DocumentAttributes : IIppCollection
     /// </summary>
     /// <code>input-attributes-actual</code>
     public DocumentTemplateAttributes? InputAttributesActual { get; set; }
+
+
+
+    /// <summary>
+    /// Arbitrary metadata associated with the document (1setOf octetString).
+    /// See: PWG 5100.13-2023 Section 6.3.1
+    /// </summary>
+    /// <code>document-metadata</code>
+    public OctetString[]? DocumentMetadata { get; set; }
+
+
 }

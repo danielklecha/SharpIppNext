@@ -6,7 +6,9 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public readonly record struct SystemMandatoryRegistrationAttribute(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
 {
+    /// <summary>The output-device-uuid attribute. See: PWG 5100.22-2025 Section 7.2.37</summary>
     public static readonly SystemMandatoryRegistrationAttribute OutputDeviceUuid = new("output-device-uuid");
+    /// <summary>The printer-service-type attribute. See: PWG 5100.22-2025 Section 7.2.37</summary>
     public static readonly SystemMandatoryRegistrationAttribute PrinterServiceType = new("printer-service-type");
 
     public override string ToString() => Value;

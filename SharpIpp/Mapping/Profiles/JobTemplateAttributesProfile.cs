@@ -291,6 +291,62 @@ internal class JobTemplateAttributesProfile : IProfile
             if (src.Overrides != null)
                 job.AddRange(src.Overrides.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.Overrides)));
 
+            if (src.JobCopies != null)
+                job.Add(new IppAttribute(Tag.Integer, JobAttribute.JobCopies, src.JobCopies.Value));
+
+            if (src.JobCoverBack != null)
+                job.AddRange(map.Map<IEnumerable<IppAttribute>>(src.JobCoverBack).ToBegCollection(JobAttribute.JobCoverBack));
+
+            if (src.JobCoverFront != null)
+                job.AddRange(map.Map<IEnumerable<IppAttribute>>(src.JobCoverFront).ToBegCollection(JobAttribute.JobCoverFront));
+
+            if (src.JobFinishings != null)
+            {
+                var jobFinishings = src.JobFinishings;
+                if (jobFinishings.Length > 1)
+                    jobFinishings = jobFinishings.Where(x => x != Finishings.None).ToArray();
+                job.AddRange(jobFinishings.Select(x => new IppAttribute(Tag.Enum, JobAttribute.JobFinishings, (int)x)));
+            }
+
+            if (src.JobFinishingsCol != null)
+                job.AddRange(src.JobFinishingsCol.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.JobFinishingsCol)));
+
+            if (src.JobPassword != null)
+                job.Add(new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, JobAttribute.JobPassword, src.JobPassword.Value));
+
+            if (src.JobPasswordEncryption != null)
+                job.Add(new IppAttribute(Tag.Keyword, JobAttribute.JobPasswordEncryption, map.Map<string>(src.JobPasswordEncryption.Value)));
+
+            if (src.SheetCollate != null)
+                job.Add(new IppAttribute(Tag.Keyword, JobAttribute.SheetCollate, src.SheetCollate));
+
+            if (src.PageOverrides != null)
+                job.AddRange(src.PageOverrides.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.PageOverrides)));
+
+            if (src.PagesPerSubset != null)
+                job.AddRange(src.PagesPerSubset.Select(x => new IppAttribute(Tag.Integer, JobAttribute.PagesPerSubset, x)));
+
+            if (src.DocumentOverrides != null)
+                job.AddRange(src.DocumentOverrides.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.DocumentOverrides)));
+
+            if (src.MediaSource != null)
+                job.Add(new IppAttribute(Tag.Keyword, JobAttribute.MediaSource, map.Map<string>(src.MediaSource.Value)));
+
+            if (src.MediaSourceFeedDirection != null)
+                job.Add(new IppAttribute(Tag.Keyword, JobAttribute.MediaSourceFeedDirection, map.Map<string>(src.MediaSourceFeedDirection.Value)));
+
+            if (src.MediaSourceFeedOrientation != null)
+                job.Add(new IppAttribute(Tag.Enum, JobAttribute.MediaSourceFeedOrientation, (int)src.MediaSourceFeedOrientation.Value));
+
+            if (src.RequestingUserUri != null)
+                job.Add(new IppAttribute(Tag.Uri, JobAttribute.RequestingUserUri, src.RequestingUserUri.ToString()));
+
+            if (src.JobMandatoryAttributes != null)
+                job.AddRange(src.JobMandatoryAttributes.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.JobMandatoryAttributes, x)));
+
+            if (src.JobIds != null)
+                job.AddRange(src.JobIds.Select(x => new IppAttribute(Tag.Integer, JobAttribute.JobIds, x)));
+
             return dst;
         });
 
@@ -383,6 +439,28 @@ internal class JobTemplateAttributesProfile : IProfile
             dst.PrintSupports = map.MapFromDicNullable<PrintSupports?>(jobDict, JobAttribute.PrintSupports);
             if (jobDict.ContainsKey(JobAttribute.Overrides))
                 dst.Overrides = jobDict[JobAttribute.Overrides].GroupBegCollection().Select(x => map.Map<OverrideInstruction>(x.FromBegCollection().ToIppDictionary())).ToArray();
+            dst.JobCopies = map.MapFromDicNullable<int?>(jobDict, JobAttribute.JobCopies);
+            if (jobDict.ContainsKey(JobAttribute.JobCoverBack))
+                dst.JobCoverBack = map.Map<Cover>(jobDict[JobAttribute.JobCoverBack].FromBegCollection().ToIppDictionary());
+            if (jobDict.ContainsKey(JobAttribute.JobCoverFront))
+                dst.JobCoverFront = map.Map<Cover>(jobDict[JobAttribute.JobCoverFront].FromBegCollection().ToIppDictionary());
+            dst.JobFinishings = map.MapFromDicSetNullable<Finishings[]?>(jobDict, JobAttribute.JobFinishings);
+            if (jobDict.ContainsKey(JobAttribute.JobFinishingsCol))
+                dst.JobFinishingsCol = jobDict[JobAttribute.JobFinishingsCol].GroupBegCollection().Select(x => map.Map<FinishingsCol>(x.FromBegCollection().ToIppDictionary())).ToArray();
+            dst.JobPassword = map.MapFromDicNullable<OctetString?>(jobDict, JobAttribute.JobPassword);
+            dst.JobPasswordEncryption = map.MapFromDicNullable<JobPasswordEncryption?>(jobDict, JobAttribute.JobPasswordEncryption);
+            dst.SheetCollate = map.MapFromDicNullable<string?>(jobDict, JobAttribute.SheetCollate);
+            if (jobDict.ContainsKey(JobAttribute.PageOverrides))
+                dst.PageOverrides = jobDict[JobAttribute.PageOverrides].GroupBegCollection().Select(x => map.Map<OverrideInstruction>(x.FromBegCollection().ToIppDictionary())).ToArray();
+            dst.PagesPerSubset = map.MapFromDicSetNullable<int[]?>(jobDict, JobAttribute.PagesPerSubset);
+            if (jobDict.ContainsKey(JobAttribute.DocumentOverrides))
+                dst.DocumentOverrides = jobDict[JobAttribute.DocumentOverrides].GroupBegCollection().Select(x => map.Map<OverrideInstruction>(x.FromBegCollection().ToIppDictionary())).ToArray();
+            dst.MediaSource = map.MapFromDicNullable<MediaSource?>(jobDict, JobAttribute.MediaSource);
+            dst.MediaSourceFeedDirection = map.MapFromDicNullable<MediaSourceFeedDirection?>(jobDict, JobAttribute.MediaSourceFeedDirection);
+            dst.MediaSourceFeedOrientation = map.MapFromDicNullable<Orientation?>(jobDict, JobAttribute.MediaSourceFeedOrientation);
+            dst.RequestingUserUri = map.MapFromDicNullable<string, Uri?>(jobDict, JobAttribute.RequestingUserUri, (_, value) => new Uri(value));
+            dst.JobMandatoryAttributes = map.MapFromDicSetNullable<string[]?>(jobDict, JobAttribute.JobMandatoryAttributes);
+            dst.JobIds = map.MapFromDicSetNullable<int[]?>(jobDict, JobAttribute.JobIds);
             return dst;
         });
     }

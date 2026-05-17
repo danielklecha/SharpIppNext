@@ -230,8 +230,17 @@ public class GetJobAttributesTests : SharpIppIntegrationTestBase
                     PrintSupportsActual3d = [PrintSupports.Standard],
                     DocumentFormatReady = ["application/pdf"],
                     OutputDeviceJobStateReasons = [JobStateReason.None],
+                    OutputDeviceJobStateMessage = "processing on output device",
                     OutputDeviceUuidAssigned = new Uri("urn:uuid:12345678-1234-1234-1234-123456789012"),
-                    DestinationStatuses = [new DestinationStatus { DestinationUri = "test-uri", ImagesCompleted = 10, TransmissionStatus = TransmissionStatus.Canceled }]
+                    DestinationStatuses = [new DestinationStatus { DestinationUri = "test-uri", ImagesCompleted = 10, TransmissionStatus = TransmissionStatus.Canceled }],
+                    JobCopiesActual = [2],
+                    JobKOctetsCompleted = 15,
+                    JobPassword = new byte[] { 0x01, 0x02, 0x03 },
+                    JobPasswordEncryption = JobPasswordEncryption.None,
+                    JobMandatoryAttributes = ["copies", "sides"],
+                    JobIds = [101, 102],
+                    RequestingUserUri = new Uri("mailto:user@example.com"),
+                    JobChargeInfoUri = new Uri("http://example.com/charge/123")
                 },
                 OperationAttributes = new()
                 {

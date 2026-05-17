@@ -8,6 +8,7 @@ namespace SharpIpp.Protocol.Models
         /// <summary>
         /// The job is a candidate to start processing, but is
         /// not yet processing.
+        /// See: RFC 8011 Section 5.3.7
         /// </summary>
         Pending = 3,
 
@@ -17,6 +18,7 @@ namespace SharpIpp.Protocol.Models
         /// state as soon as the reasons are no longer present.  The
         /// job's "job-state-reason" attribute MUST indicate why the
         /// job is no longer a candidate for processing.
+        /// See: RFC 8011 Section 5.3.7
         /// </summary>
         PendingHeld = 4,
 
@@ -46,6 +48,7 @@ namespace SharpIpp.Protocol.Models
         /// the 'processing-to-stop-point' value to indicate that the
         /// IPP object is in the process of canceling or aborting the
         /// job.  Most implementations won't bother with this nuance.
+        /// See: RFC 8011 Section 5.3.7
         /// </summary>
         Processing = 5,
 
@@ -64,6 +67,7 @@ namespace SharpIpp.Protocol.Models
         /// device status remotely by querying the Printer object's
         /// "printer-state", "printer-state-reasons" and "printer-
         /// state-message" attributes.
+        /// See: RFC 8011 Section 5.3.7
         /// </summary>
         ProcessingStopped = 6,
 
@@ -80,6 +84,7 @@ namespace SharpIpp.Protocol.Models
         /// 'canceled' state, the  'processing-to-stop-point' value,
         /// if present, MUST be removed, but the 'canceled-by-xxx',
         /// if present, MUST remain.
+        /// See: RFC 8011 Section 5.3.7
         /// </summary>
         Canceled = 7,
 
@@ -96,6 +101,7 @@ namespace SharpIpp.Protocol.Models
         /// state, the  'processing-to-stop-point' value, if present,
         /// MUST be removed, but the 'aborted-by-system' value, if
         /// present, MUST remain.
+        /// See: RFC 8011 Section 5.3.7
         /// </summary>
         Aborted = 8,
 
@@ -108,6 +114,7 @@ namespace SharpIpp.Protocol.Models
         /// "job-state-reasons" attribute SHOULD contain one of:
         /// 'completed-successfully', 'completed-with-warnings', or
         /// 'completed-with-errors' values.
+        /// See: RFC 8011 Section 5.3.7
         /// </summary>
         Completed = 9,
     }

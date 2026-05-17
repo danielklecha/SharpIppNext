@@ -23,6 +23,7 @@ public class UpdateActiveJobsTests : SharpIppIntegrationTestBase
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
                 OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174004"),
+                JobIds = [1, 2],
                 OutputDeviceJobStates = [JobState.Pending, JobState.Processing]
             }
         };
@@ -38,7 +39,9 @@ public class UpdateActiveJobsTests : SharpIppIntegrationTestBase
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
                 StatusCode = IppStatusCode.SuccessfulOk,
-                OperationAttributes = new() { StatusMessage = "successful-ok" }
+                OperationAttributes = new() { StatusMessage = "successful-ok" },
+                JobIds = [1],
+                OutputDeviceJobStates = [JobState.Processing]
             };
             var ms = new MemoryStream();
             await server.SendResponseAsync(serverResponse, ms, c);

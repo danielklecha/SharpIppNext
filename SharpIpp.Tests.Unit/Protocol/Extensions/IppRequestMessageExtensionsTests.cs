@@ -1519,8 +1519,6 @@ public class IppRequestMessageExtensionsTests
     [TestMethod]
     public void IppOperationExtensions_IsSystemServiceOperation_ShouldReturnExpectedValues()
     {
-        var method = GetIppOperationExtensionMethod("IsSystemServiceOperation");
-
         IppOperation[] trueOperations =
         [
             IppOperation.AllocatePrinterResources,
@@ -1560,16 +1558,14 @@ public class IppRequestMessageExtensionsTests
         ];
 
         foreach (var operation in trueOperations)
-            InvokeOperationExtension(method, operation).Should().BeTrue();
+            operation.IsSystemServiceOperation().Should().BeTrue();
 
-        InvokeOperationExtension(method, IppOperation.CreateJob).Should().BeFalse();
+        IppOperation.CreateJob.IsSystemServiceOperation().Should().BeFalse();
     }
 
     [TestMethod]
     public void IppOperationExtensions_IsPwg51005DocumentTargetOperation_ShouldReturnExpectedValues()
     {
-        var method = GetIppOperationExtensionMethod("IsPwg51005DocumentTargetOperation");
-
         IppOperation[] trueOperations =
         [
             IppOperation.CancelDocument,
@@ -1579,9 +1575,9 @@ public class IppRequestMessageExtensionsTests
         ];
 
         foreach (var operation in trueOperations)
-            InvokeOperationExtension(method, operation).Should().BeTrue();
+            operation.IsPwg51005DocumentTargetOperation().Should().BeTrue();
 
-        InvokeOperationExtension(method, IppOperation.CreateJob).Should().BeFalse();
+        IppOperation.CreateJob.IsPwg51005DocumentTargetOperation().Should().BeFalse();
     }
 
     [TestMethod]
@@ -1879,21 +1875,6 @@ public class IppRequestMessageExtensionsTests
         return validator;
     }
 
-    private static MethodInfo GetIppOperationExtensionMethod(string methodName)
-    {
-        var extensionsType = typeof(IppRequestValidator).Assembly.GetType("SharpIpp.Protocol.IppOperationExtensions", throwOnError: true);
-        extensionsType.Should().NotBeNull();
-
-        var method = extensionsType!.GetMethod(methodName, BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
-        method.Should().NotBeNull();
-
-        return method!;
-    }
-
-    private static bool InvokeOperationExtension(MethodInfo method, IppOperation operation)
-    {
-        return (bool)method.Invoke(null, [operation])!;
-    }
 
     private sealed class NonEnumeratingOverrideSupportedCollection : IReadOnlyCollection<OverrideSupported>
     {

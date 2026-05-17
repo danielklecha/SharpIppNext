@@ -1,3 +1,4 @@
+using System;
 using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Models;
@@ -15,6 +16,7 @@ public class ResubmitJobOperationAttributes : JobOperationAttributes
     /// See: PWG 5100.7-2023 Section 6.1.2
     /// </summary>
     /// <code>document-format-details</code>
+    [Obsolete("The 'document-format-details' attribute is deprecated. See PWG 5100.7-2023 Section 6.2.1.")]
     public DocumentFormatDetails? DocumentFormatDetails { get; set; }
 
     /// <summary>

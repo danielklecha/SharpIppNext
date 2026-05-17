@@ -8,9 +8,6 @@ namespace SharpIpp.Models.Responses;
 public class GetDocumentAttributesResponse : IppResponse<OperationAttributes>
 {
     /// <summary>
-    /// The document-attributes IPP attribute.
-    /// See: pwg5100.18 - IPP Shared Infrastructure Extensions v1.1
-    /// </summary>
-    /// <code>document-attributes</code>
+    /// See: PWG 5100.5-2024 Section 5.1.2.2
     public DocumentAttributes? DocumentAttributes { get; set; }
 }

@@ -5,13 +5,13 @@ namespace SharpIpp.Models.Requests;
 
 /// <summary>
 /// Identify-Printer operation attributes.
-/// See: PWG 5100.13-2023 Section 6.8.4
+/// See: PWG 5100.13-2023 Section 5.1.1
 /// </summary>
 public class IdentifyPrinterOperationAttributes : OperationAttributes
 {
     /// <summary>
     /// The <c>identify-actions</c> operation attribute.
-    /// See: PWG 5100.13-2023 Section 6.8.4
+    /// See: PWG 5100.13-2023 Section 6.1.4
     /// </summary>
     /// <code>identify-actions</code>
     public IdentifyAction[]? IdentifyActions { get; set; }

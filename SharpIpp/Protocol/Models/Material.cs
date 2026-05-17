@@ -2,7 +2,7 @@ namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// The <c>materials-col</c> member collection.
-/// See: PWG 5100.21-2019 Section 6.8.11
+/// See: PWG 5100.21-2019 Section 8.1.3
 /// </summary>
 public class Material : IIppCollection
 {

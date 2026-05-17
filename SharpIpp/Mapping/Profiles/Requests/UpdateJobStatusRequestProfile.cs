@@ -29,7 +29,7 @@ internal class UpdateJobStatusRequestProfile : IProfile
             map.Map<IIppRequestMessage, IIppJobRequest>(src, dst);
             dst.OperationAttributes = map.Map<IDictionary<string, IppAttribute[]>, UpdateJobStatusOperationAttributes>(src.OperationAttributes.ToIppDictionary());
             if (src.JobAttributes.Any())
-                dst.JobAttributes = map.Map<IDictionary<string, IppAttribute[]>, JobDescriptionAttributes>(src.JobAttributes.ToIppDictionary());
+                dst.JobAttributes = map.Map<IDictionary<string, IppAttribute[]>, JobStatusAttributes>(src.JobAttributes.ToIppDictionary());
             return dst;
         });
     }

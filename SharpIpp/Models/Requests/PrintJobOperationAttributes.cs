@@ -13,13 +13,13 @@ public class PrintJobOperationAttributes : CreateJobOperationAttributes
     /// The <c>document-metadata</c> operation attribute.
     /// See: PWG 5100.13-2023 Section 6.1.1
     /// </summary>
-    public string[]? DocumentMetadata { get; set; }
+    public OctetString[]? DocumentMetadata { get; set; }
 
     /// <summary>
     /// The <c>document-password</c> operation attribute.
     /// See: PWG 5100.13-2023 Section 6.1.2
     /// </summary>
-    public string? DocumentPassword { get; set; }
+    public OctetString? DocumentPassword { get; set; }
 
     /// <summary>
     /// The client OPTIONALLY supplies this attribute.  The Printer
@@ -60,20 +60,20 @@ public class PrintJobOperationAttributes : CreateJobOperationAttributes
     public string? DocumentFormat { get; set; }
     /// <summary>
     /// The client OPTIONALLY supplies this attribute. The Printer object OPTIONALLY supports this attribute. This attribute specifies the natural language of the document for those document-formats that require a specification of the natural language in order to image the document unambiguously. There are no particular values required for the Printer object to support
-    /// See: pwg5100.5-2024
+    /// See: RFC 8011 Section 4.2.1.1
     /// </summary>
     /// <code>document-natural-language</code>
     public string? DocumentNaturalLanguage { get; set; }
     /// <summary>
     /// The document-charset IPP attribute.
-    /// See: pwg5100.5-2024 Section 6.2.1
+    /// See: PWG 5100.5-2024 Section 6.2.1
     /// </summary>
     /// <code>document-charset</code>
     public string? DocumentCharset { get; set; }
 
     /// <summary>
     /// The document-message IPP attribute.
-    /// See: PWG 5100.5-2024 Section 8.3 Table 6
+    /// See: PWG 5100.5-2024 Section 6.2.3
     /// </summary>
     /// <code>document-message</code>
     public string? DocumentMessage { get; set; }

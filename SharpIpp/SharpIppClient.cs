@@ -288,6 +288,7 @@ public partial class SharpIppClient : ISharpIppClient
     }
 
     /// <inheritdoc />
+    [Obsolete("The 'Purge-Jobs' operation is deprecated. See RFC 8011 Section 4.2.9.")]
     public Task<PurgeJobsResponse> PurgeJobsAsync(PurgeJobsRequest request, CancellationToken cancellationToken = default)
     {
         return SendAsync<PurgeJobsRequest, PurgeJobsResponse>(request, cancellationToken);
@@ -300,6 +301,7 @@ public partial class SharpIppClient : ISharpIppClient
     }
 
     /// <inheritdoc />
+    [Obsolete("The 'Restart-Job' operation is deprecated. See RFC 8011 Section 4.3.7.")]
     public Task<RestartJobResponse> RestartJobAsync(RestartJobRequest request, CancellationToken cancellationToken = default)
     {
         return SendAsync<RestartJobRequest, RestartJobResponse>(request, cancellationToken);
@@ -336,6 +338,7 @@ public partial class SharpIppClient : ISharpIppClient
     }
 
     /// <inheritdoc />
+    [Obsolete("The 'Validate-Document' operation is deprecated. See PWG 5100.13-2023 Section 5.2.")]
     public Task<ValidateDocumentResponse> ValidateDocumentAsync(ValidateDocumentRequest request, CancellationToken cancellationToken = default)
     {
         return SendAsync<ValidateDocumentRequest, ValidateDocumentResponse>(request, cancellationToken);
@@ -688,4 +691,80 @@ public partial class SharpIppClient : ISharpIppClient
     {
         return SendAsync<GetNextDocumentDataRequest, GetNextDocumentDataResponse>(request, cancellationToken);
     }
+
+    /// <inheritdoc />
+    public Task<ActivatePrinterResponse> ActivatePrinterAsync(ActivatePrinterRequest request, CancellationToken cancellationToken = default) =>
+        SendAsync<ActivatePrinterRequest, ActivatePrinterResponse>(request, cancellationToken);
+
+    /// <inheritdoc />
+    public Task<DeactivatePrinterResponse> DeactivatePrinterAsync(DeactivatePrinterRequest request, CancellationToken cancellationToken = default) =>
+        SendAsync<DeactivatePrinterRequest, DeactivatePrinterResponse>(request, cancellationToken);
+
+    /// <inheritdoc />
+    public Task<DisablePrinterResponse> DisablePrinterAsync(DisablePrinterRequest request, CancellationToken cancellationToken = default) =>
+        SendAsync<DisablePrinterRequest, DisablePrinterResponse>(request, cancellationToken);
+
+    /// <inheritdoc />
+    public Task<EnablePrinterResponse> EnablePrinterAsync(EnablePrinterRequest request, CancellationToken cancellationToken = default) =>
+        SendAsync<EnablePrinterRequest, EnablePrinterResponse>(request, cancellationToken);
+
+    /// <inheritdoc />
+    public Task<GetPrinterSupportedValuesResponse> GetPrinterSupportedValuesAsync(GetPrinterSupportedValuesRequest request, CancellationToken cancellationToken = default) =>
+        SendAsync<GetPrinterSupportedValuesRequest, GetPrinterSupportedValuesResponse>(request, cancellationToken);
+
+    /// <inheritdoc />
+    public Task<HoldNewJobsResponse> HoldNewJobsAsync(HoldNewJobsRequest request, CancellationToken cancellationToken = default) =>
+        SendAsync<HoldNewJobsRequest, HoldNewJobsResponse>(request, cancellationToken);
+
+    /// <inheritdoc />
+    public Task<PausePrinterAfterCurrentJobResponse> PausePrinterAfterCurrentJobAsync(PausePrinterAfterCurrentJobRequest request, CancellationToken cancellationToken = default) =>
+        SendAsync<PausePrinterAfterCurrentJobRequest, PausePrinterAfterCurrentJobResponse>(request, cancellationToken);
+
+    /// <inheritdoc />
+    public Task<ReleaseHeldNewJobsResponse> ReleaseHeldNewJobsAsync(ReleaseHeldNewJobsRequest request, CancellationToken cancellationToken = default) =>
+        SendAsync<ReleaseHeldNewJobsRequest, ReleaseHeldNewJobsResponse>(request, cancellationToken);
+
+    /// <inheritdoc />
+    public Task<RestartPrinterResponse> RestartPrinterAsync(RestartPrinterRequest request, CancellationToken cancellationToken = default) =>
+        SendAsync<RestartPrinterRequest, RestartPrinterResponse>(request, cancellationToken);
+
+    /// <inheritdoc />
+    public Task<ShutdownPrinterResponse> ShutdownPrinterAsync(ShutdownPrinterRequest request, CancellationToken cancellationToken = default) =>
+        SendAsync<ShutdownPrinterRequest, ShutdownPrinterResponse>(request, cancellationToken);
+
+    /// <inheritdoc />
+    public Task<StartupPrinterResponse> StartupPrinterAsync(StartupPrinterRequest request, CancellationToken cancellationToken = default) =>
+        SendAsync<StartupPrinterRequest, StartupPrinterResponse>(request, cancellationToken);
+
+    /// <inheritdoc />
+    public Task<CancelCurrentJobResponse> CancelCurrentJobAsync(CancelCurrentJobRequest request, CancellationToken cancellationToken = default) =>
+        SendAsync<CancelCurrentJobRequest, CancelCurrentJobResponse>(request, cancellationToken);
+
+    /// <inheritdoc />
+    public Task<PromoteJobResponse> PromoteJobAsync(PromoteJobRequest request, CancellationToken cancellationToken = default) =>
+        SendAsync<PromoteJobRequest, PromoteJobResponse>(request, cancellationToken);
+
+    /// <inheritdoc />
+    public Task<ResumeJobResponse> ResumeJobAsync(ResumeJobRequest request, CancellationToken cancellationToken = default) =>
+        SendAsync<ResumeJobRequest, ResumeJobResponse>(request, cancellationToken);
+
+    /// <inheritdoc />
+    public Task<ScheduleJobAfterResponse> ScheduleJobAfterAsync(ScheduleJobAfterRequest request, CancellationToken cancellationToken = default) =>
+        SendAsync<ScheduleJobAfterRequest, ScheduleJobAfterResponse>(request, cancellationToken);
+
+    /// <inheritdoc />
+    public Task<SuspendCurrentJobResponse> SuspendCurrentJobAsync(SuspendCurrentJobRequest request, CancellationToken cancellationToken = default) =>
+        SendAsync<SuspendCurrentJobRequest, SuspendCurrentJobResponse>(request, cancellationToken);
+
+    /// <inheritdoc />
+    public Task<DeleteDocumentResponse> DeleteDocumentAsync(DeleteDocumentRequest request, CancellationToken cancellationToken = default) =>
+        SendAsync<DeleteDocumentRequest, DeleteDocumentResponse>(request, cancellationToken);
+
+    /// <inheritdoc />
+    public Task<CreatePrinterSubscriptionsResponse> CreatePrinterSubscriptionsAsync(CreatePrinterSubscriptionsRequest request, CancellationToken cancellationToken = default) =>
+        SendAsync<CreatePrinterSubscriptionsRequest, CreatePrinterSubscriptionsResponse>(request, cancellationToken);
+
+    /// <inheritdoc />
+    public Task<CreateJobSubscriptionsResponse> CreateJobSubscriptionsAsync(CreateJobSubscriptionsRequest request, CancellationToken cancellationToken = default) =>
+        SendAsync<CreateJobSubscriptionsRequest, CreateJobSubscriptionsResponse>(request, cancellationToken);
 }

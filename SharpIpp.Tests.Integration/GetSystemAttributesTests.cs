@@ -618,4 +618,62 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
         mapped.SystemAttributes.XriSecuritySupported.Should().Contain(UriSecurity.Tls);
         mapped.SystemAttributes.XriUriSchemeSupported.Should().Contain(UriScheme.Https);
     }
+
+    [TestMethod]
+    public async Task GetSystemAttributesResponseMapping_IncludesSystemStatePropertiesOnSystemDescriptionAttributes()
+    {
+        // Covers GetSystemAttributesResponseProfile lines 368-376:
+        // SystemState, SystemStateReasons, SystemStateMessage, SystemStateChangeTime,
+        // SystemStateChangeDateTime on SystemDescriptionAttributes.
+        var clientRequest = new GetSystemAttributesRequest
+        {
+            RequestId = 811,
+            Version = new IppVersion(2, 0),
+            OperationAttributes = new()
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631"),
+                SystemUri = new Uri("ipp://127.0.0.1:8631/system"),
+                RequestedAttributes = ["system-description"]
+            }
+        };
+
+        IIppRequest? serverRequest = null;
+        GetSystemAttributesResponse? serverResponse = null;
+        async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
+        {
+            var server = new SharpIppServer();
+            serverRequest = await server.ReceiveRequestAsync(s, c);
+            serverResponse = new GetSystemAttributesResponse
+            {
+                RequestId = serverRequest.RequestId,
+                Version = serverRequest.Version,
+                StatusCode = IppStatusCode.SuccessfulOk,
+                SystemDescriptionAttributes = new()
+                {
+                    SystemState = PrinterState.Stopped,
+                    SystemStateReasons = [(SystemStateReason)"shutdown"],
+                    SystemStateMessage = "System is stopped",
+                    SystemStateChangeTime = 42,
+                    SystemStateChangeDateTime = new DateTimeOffset(2026, 6, 1, 8, 0, 0, TimeSpan.Zero)
+                }
+            };
+            var ms = new MemoryStream();
+            await server.SendResponseAsync(serverResponse, ms, c);
+            ms.Seek(0, SeekOrigin.Begin);
+            return new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StreamContent(ms) };
+        }
+
+        var client = new SharpIppClient(new(GetMockOfHttpMessageHandler(func).Object));
+        var rawResponse = await client.SendAsync(clientRequest.OperationAttributes.PrinterUri, client.CreateRawRequest(clientRequest));
+        var mapped = client.CreateResponse(typeof(GetSystemAttributesResponse), rawResponse) as GetSystemAttributesResponse;
+
+        clientRequest.Should().BeEquivalentTo(serverRequest);
+        mapped.Should().NotBeNull();
+        mapped!.SystemDescriptionAttributes.Should().NotBeNull();
+        mapped.SystemDescriptionAttributes!.SystemState.Should().Be(PrinterState.Stopped);
+        mapped.SystemDescriptionAttributes.SystemStateReasons.Should().Contain((SystemStateReason)"shutdown");
+        mapped.SystemDescriptionAttributes.SystemStateMessage.Should().Be("System is stopped");
+        mapped.SystemDescriptionAttributes.SystemStateChangeTime.Should().Be(42);
+        mapped.SystemDescriptionAttributes.SystemStateChangeDateTime.Should().Be(new DateTimeOffset(2026, 6, 1, 8, 0, 0, TimeSpan.Zero));
+    }
 }

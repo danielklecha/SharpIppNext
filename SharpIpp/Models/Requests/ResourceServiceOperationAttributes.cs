@@ -88,7 +88,7 @@ public class SendResourceDataOperationAttributes : SystemOperationAttributes
     /// The <c>resource-signature</c> operation attribute.
     /// See: PWG 5100.22-2025 Section 7.1.19
     /// </summary>
-    public byte[][]? ResourceSignature { get; set; }
+    public OctetString[]? ResourceSignature { get; set; }
 }
 
 /// <summary>

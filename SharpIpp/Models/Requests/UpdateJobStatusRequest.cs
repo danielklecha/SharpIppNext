@@ -12,5 +12,5 @@ public class UpdateJobStatusRequest : IppRequest<UpdateJobStatusOperationAttribu
     /// Job status attributes supplied by the Proxy.
     /// See: PWG 5100.18-2025 Section 5.9.1
     /// </summary>
-    public JobDescriptionAttributes? JobAttributes { get; set; }
+    public JobStatusAttributes? JobAttributes { get; set; }
 }

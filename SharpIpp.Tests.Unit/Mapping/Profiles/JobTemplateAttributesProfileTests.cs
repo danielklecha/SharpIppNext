@@ -336,4 +336,83 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
         attributes.Should().NotContain(a => a.Name == JobAttribute.Overrides);
         attributes.Should().NotContain(a => a.Name == JobAttribute.OverridesActual);
     }
+
+    [TestMethod]
+    public void Map_ToRequest_WithJobCopiesAndJobCoversAndJobFinishings_WritesAttributes()
+    {
+        var src = new JobTemplateAttributes
+        {
+            JobCopies = 3,
+            JobCoverBack = new Cover { CoverType = CoverType.PrintBack, Media = (Media)"iso_a4_210x297mm" },
+            JobCoverFront = new Cover { CoverType = CoverType.PrintFront, Media = (Media)"iso_a4_210x297mm" },
+            JobFinishings = new[] { Finishings.Staple },
+            JobFinishingsCol = new[] { new FinishingsCol { FinishingTemplate = FinishingTemplate.Staple } },
+            SheetCollate = "collated",
+            PageOverrides = new[] { new OverrideInstruction { PageRanges = [new SharpIpp.Protocol.Models.Range(1, 1)], JobTemplateAttributes = new JobTemplateAttributes { Sides = Sides.OneSided } } },
+            PagesPerSubset = new[] { 4, 8 },
+            DocumentOverrides = new[] { new OverrideInstruction { PageRanges = [new SharpIpp.Protocol.Models.Range(1, 2)], JobTemplateAttributes = new JobTemplateAttributes { Copies = 2 } } },
+            MediaSource = MediaSource.Main,
+            MediaSourceFeedDirection = MediaSourceFeedDirection.LongEdgeFirst,
+            MediaSourceFeedOrientation = Orientation.Portrait,
+            RequestingUserUri = new Uri("mailto:user@example.com"),
+            JobMandatoryAttributes = new[] { "copies", "sides" },
+            JobIds = new[] { 101, 102 },
+        };
+
+        var request = _mapper.Map<IppRequestMessage>(src);
+
+        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.JobCopies && a.Tag == Tag.Integer && Equals(a.Value, 3));
+        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.JobCoverBack);
+        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.JobCoverFront);
+        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.JobFinishings && a.Tag == Tag.Enum && Equals(a.Value, (int)Finishings.Staple));
+        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.JobFinishingsCol);
+        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.SheetCollate && a.Tag == Tag.Keyword && Equals(a.Value, "collated"));
+        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.PageOverrides);
+        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.PagesPerSubset && a.Tag == Tag.Integer && Equals(a.Value, 4));
+        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.PagesPerSubset && a.Tag == Tag.Integer && Equals(a.Value, 8));
+        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.DocumentOverrides);
+        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.MediaSource && a.Tag == Tag.Keyword);
+        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.MediaSourceFeedDirection && a.Tag == Tag.Keyword);
+        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.MediaSourceFeedOrientation && a.Tag == Tag.Enum);
+        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.RequestingUserUri && a.Tag == Tag.Uri && Equals(a.Value, "mailto:user@example.com"));
+        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.JobMandatoryAttributes && a.Tag == Tag.Keyword && Equals(a.Value, "copies"));
+        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.JobMandatoryAttributes && a.Tag == Tag.Keyword && Equals(a.Value, "sides"));
+        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.JobIds && a.Tag == Tag.Integer && Equals(a.Value, 101));
+        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.JobIds && a.Tag == Tag.Integer && Equals(a.Value, 102));
+    }
+
+    [TestMethod]
+    public void Map_FromRequest_WithJobCopiesAndJobCoversAndJobFinishings_ReadsAttributes()
+    {
+        var request = new IppRequestMessage();
+        request.JobAttributes.Add(new IppAttribute(Tag.Integer, JobAttribute.JobCopies, 3));
+        request.JobAttributes.AddRange(_mapper.Map<Cover, IEnumerable<IppAttribute>>(new Cover { CoverType = CoverType.PrintBack }).ToBegCollection(JobAttribute.JobCoverBack));
+        request.JobAttributes.AddRange(_mapper.Map<Cover, IEnumerable<IppAttribute>>(new Cover { CoverType = CoverType.PrintFront }).ToBegCollection(JobAttribute.JobCoverFront));
+        request.JobAttributes.Add(new IppAttribute(Tag.Enum, JobAttribute.JobFinishings, (int)Finishings.Staple));
+        request.JobAttributes.AddRange(_mapper.Map<FinishingsCol, IEnumerable<IppAttribute>>(new FinishingsCol { FinishingTemplate = FinishingTemplate.Staple }).ToBegCollection(JobAttribute.JobFinishingsCol));
+        request.JobAttributes.Add(new IppAttribute(Tag.Keyword, JobAttribute.SheetCollate, "collated"));
+        request.JobAttributes.Add(new IppAttribute(Tag.Integer, JobAttribute.PagesPerSubset, 4));
+        request.JobAttributes.Add(new IppAttribute(Tag.Keyword, JobAttribute.MediaSource, "main"));
+        request.JobAttributes.Add(new IppAttribute(Tag.Keyword, JobAttribute.MediaSourceFeedDirection, "long-edge-first"));
+        request.JobAttributes.Add(new IppAttribute(Tag.Enum, JobAttribute.MediaSourceFeedOrientation, (int)Orientation.Portrait));
+        request.JobAttributes.Add(new IppAttribute(Tag.Uri, JobAttribute.RequestingUserUri, "mailto:user@example.com"));
+        request.JobAttributes.Add(new IppAttribute(Tag.Keyword, JobAttribute.JobMandatoryAttributes, "copies"));
+        request.JobAttributes.Add(new IppAttribute(Tag.Integer, JobAttribute.JobIds, 101));
+
+        var dst = _mapper.Map<IIppRequestMessage, JobTemplateAttributes>((IIppRequestMessage)request);
+
+        dst.JobCopies.Should().Be(3);
+        dst.JobCoverBack.Should().NotBeNull();
+        dst.JobCoverFront.Should().NotBeNull();
+        dst.JobFinishings.Should().Contain(Finishings.Staple);
+        dst.JobFinishingsCol.Should().NotBeNull();
+        dst.SheetCollate.Should().Be("collated");
+        dst.PagesPerSubset.Should().Contain(4);
+        dst.MediaSource.Should().Be(MediaSource.Main);
+        dst.MediaSourceFeedDirection.Should().Be(MediaSourceFeedDirection.LongEdgeFirst);
+        dst.MediaSourceFeedOrientation.Should().Be(Orientation.Portrait);
+        dst.RequestingUserUri.Should().Be(new Uri("mailto:user@example.com"));
+        dst.JobMandatoryAttributes.Should().Contain("copies");
+        dst.JobIds.Should().Contain(101);
+    }
 }

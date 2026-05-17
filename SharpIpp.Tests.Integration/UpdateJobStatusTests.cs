@@ -25,10 +25,10 @@ public class UpdateJobStatusTests : SharpIppIntegrationTestBase
                 JobId = 18,
                 OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-42661417400A")
             },
-            JobAttributes = new JobDescriptionAttributes
+            JobAttributes = new JobStatusAttributes
             {
-                OutputDeviceJobState = JobState.Processing,
-                OutputDeviceJobStateMessage = "processing"
+                JobState = JobState.Processing,
+                JobStateMessage = "processing"
             }
         };
 

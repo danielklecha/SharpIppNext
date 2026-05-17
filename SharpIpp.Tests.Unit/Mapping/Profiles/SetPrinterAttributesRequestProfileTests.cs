@@ -34,7 +34,8 @@ public class SetPrinterAttributesRequestProfileTests
                 PrinterUri = new Uri("ipp://printer/example"),
                 AttributesCharset = "utf-8",
                 AttributesNaturalLanguage = "en",
-                RequestingUserName = "alice"
+                RequestingUserName = "alice",
+                DocumentFormat = "application/pdf"
             },
             PrinterAttributes = new PrinterDescriptionAttributes
             {
@@ -46,6 +47,7 @@ public class SetPrinterAttributesRequestProfileTests
 
         message.IppOperation.Should().Be(IppOperation.SetPrinterAttributes);
         message.OperationAttributes.Should().ContainSingle(x => x.Name == JobAttribute.PrinterUri && Equals(x.Value, "ipp://printer/example"));
+        message.OperationAttributes.Should().ContainSingle(x => x.Name == JobAttribute.DocumentFormat && Equals(x.Value, "application/pdf"));
         message.PrinterAttributes.Should().ContainSingle(x => x.Name == PrinterAttribute.PrinterInfo && Equals(x.Value, "Main floor"));
     }
 
@@ -59,6 +61,7 @@ public class SetPrinterAttributesRequestProfileTests
         message.OperationAttributes.Add(new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"));
         message.OperationAttributes.Add(new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"));
         message.OperationAttributes.Add(new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://printer/example"));
+        message.OperationAttributes.Add(new IppAttribute(Tag.MimeMediaType, JobAttribute.DocumentFormat, "application/pdf"));
         message.PrinterAttributes.Add(new IppAttribute(Tag.TextWithoutLanguage, PrinterAttribute.PrinterInfo, "Main floor"));
 
         var request = _mapper.Map<IIppRequestMessage, SetPrinterAttributesRequest>(message);
@@ -67,5 +70,6 @@ public class SetPrinterAttributesRequestProfileTests
         request.PrinterAttributes!.PrinterInfo.Should().Be("Main floor");
         request.OperationAttributes.Should().NotBeNull();
         request.OperationAttributes!.PrinterUri.Should().Be(new Uri("ipp://printer/example"));
+        request.OperationAttributes!.DocumentFormat.Should().Be("application/pdf");
     }
 }

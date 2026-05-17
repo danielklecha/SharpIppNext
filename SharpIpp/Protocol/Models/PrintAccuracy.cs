@@ -2,7 +2,7 @@ namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// The <c>print-accuracy</c> collection.
-/// See: PWG 5100.21-2019 Section 6.8.14
+/// See: PWG 5100.21-2019 Section 8.1.6
 /// </summary>
 public class PrintAccuracy : IIppCollection
 {

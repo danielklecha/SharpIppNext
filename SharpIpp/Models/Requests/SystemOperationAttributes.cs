@@ -58,4 +58,16 @@ public class SystemOperationAttributes : OperationAttributes
     /// See: PWG 5100.22-2025 Sections 7.10.2 and 7.11.3
     /// </summary>
     public Uri? NotifySystemUri { get; set; }
+
+    /// <summary>
+    /// notify-subscription-id — the subscription identifier for subscription-targeted operations.
+    /// See: RFC 3995 Section 5.1
+    /// </summary>
+    public int? NotifySubscriptionId { get; set; }
+
+    /// <summary>
+    /// notify-pull-method — the pull method for Get-Notifications; must be "ippget".
+    /// See: RFC 3996 Section 5.1
+    /// </summary>
+    public string? NotifyPullMethod { get; set; }
 }

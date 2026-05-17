@@ -127,6 +127,12 @@ public class PrintJobTests : SharpIppIntegrationTestBase
                 JobAccountType = JobAccountType.General,
                 ConfirmationSheetPrint = true,
                 NumberOfRetries = 2,
+                JobFinishings = [Finishings.Staple, Finishings.Fold],
+                JobPassword = new byte[] { 0x68, 0x61, 0x73, 0x68 },
+                JobPasswordEncryption = JobPasswordEncryption.Sha2256,
+                MediaSource = MediaSource.Main,
+                MediaSourceFeedDirection = MediaSourceFeedDirection.LongEdgeFirst,
+                MediaSourceFeedOrientation = Orientation.Portrait,
                 MaterialsCol =
                 [
                     new Material
@@ -165,6 +171,29 @@ public class PrintJobTests : SharpIppIntegrationTestBase
                         {
                             Media = (Media)"iso_a4_210x297mm",
                             Sides = Sides.OneSided
+                        }
+                    }
+                ],
+                PageOverrides =
+                [
+                    new OverrideInstruction
+                    {
+                        PageRanges = [new SharpIpp.Protocol.Models.Range(3, 5)],
+                        JobTemplateAttributes = new JobTemplateAttributes
+                        {
+                            Sides = Sides.TwoSidedLongEdge
+                        }
+                    }
+                ],
+                DocumentOverrides =
+                [
+                    new OverrideInstruction
+                    {
+                        PageRanges = [new SharpIpp.Protocol.Models.Range(1, 2)],
+                        DocumentNumberRanges = [new SharpIpp.Protocol.Models.Range(2, 2)],
+                        JobTemplateAttributes = new JobTemplateAttributes
+                        {
+                            Copies = 3
                         }
                     }
                 ]

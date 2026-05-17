@@ -15,6 +15,9 @@ internal class PrinterFinisherProfile : IProfile
         mapper.CreateIppMap<string, PrinterFinisher>((src, _) => Parse(src));
         mapper.CreateIppMap<PrinterFinisher, string>((src, _) => Serialize(src));
         mapper.CreateIppMap<byte[], PrinterFinisher>((src, map) => map.Map<PrinterFinisher>(Encoding.UTF8.GetString(src)));
+        mapper.CreateIppMap<OctetString, PrinterFinisher>((src, map) => map.Map<PrinterFinisher>(src.Value));
+        mapper.CreateIppMap<PrinterFinisher, byte[]>((src, map) => Encoding.UTF8.GetBytes(map.Map<string>(src)));
+        mapper.CreateIppMap<PrinterFinisher, OctetString>((src, map) => new OctetString(map.Map<byte[]>(src)));
     }
 
     private static PrinterFinisher Parse(string value)
