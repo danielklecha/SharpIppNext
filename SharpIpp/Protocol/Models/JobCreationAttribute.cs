@@ -1,3 +1,5 @@
+using System;
+
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
@@ -92,6 +94,7 @@ public readonly record struct JobCreationAttribute(string Value, bool IsMarked =
     /// <summary>The proof-copies attribute. See: PWG 5100.7-2023</summary>
     public static readonly JobCreationAttribute ProofCopies = new("proof-copies");
     /// <summary>The proof-print attribute. See: PWG 5100.7-2023</summary>
+    [Obsolete("The 'proof-print' attribute is deprecated in favor of 'proof-print-default'. See PWG 5100.11-2024 Section 6.2.3.")]
     public static readonly JobCreationAttribute ProofPrint = new("proof-print");
 
     // Job Template Attributes (PWG 5100.3)

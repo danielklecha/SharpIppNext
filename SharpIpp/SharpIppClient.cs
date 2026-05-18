@@ -282,6 +282,7 @@ public partial class SharpIppClient : ISharpIppClient
     }
 
     /// <inheritdoc />
+    [Obsolete("The 'Print-URI' operation is deprecated.")]
     public Task<PrintUriResponse> PrintUriAsync(PrintUriRequest request, CancellationToken cancellationToken = default)
     {
         return SendAsync<PrintUriRequest, PrintUriResponse>(request, cancellationToken);
@@ -332,6 +333,7 @@ public partial class SharpIppClient : ISharpIppClient
     }
 
     /// <inheritdoc />
+    [Obsolete("The 'Send-URI' operation is deprecated.")]
     public Task<SendUriResponse> SendUriAsync(SendUriRequest request, CancellationToken cancellationToken = default)
     {
         return SendAsync<SendUriRequest, SendUriResponse>(request, cancellationToken);
@@ -757,6 +759,7 @@ public partial class SharpIppClient : ISharpIppClient
         SendAsync<SuspendCurrentJobRequest, SuspendCurrentJobResponse>(request, cancellationToken);
 
     /// <inheritdoc />
+    [Obsolete("The 'Delete-Document' operation is obsolete. See PWG 5100.5-2024 and PWG 5100.18-2025.")]
     public Task<DeleteDocumentResponse> DeleteDocumentAsync(DeleteDocumentRequest request, CancellationToken cancellationToken = default) =>
         SendAsync<DeleteDocumentRequest, DeleteDocumentResponse>(request, cancellationToken);
 

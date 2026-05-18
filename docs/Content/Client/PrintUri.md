@@ -1,5 +1,8 @@
 # Print-URI Example
 
+> [!WARNING]
+> **Deprecated operation:** The Print-URI operation is deprecated across modern standards (e.g., PWG 5100.18-2025). Sending raw document data directly via Print-Job is preferred.
+
 Here is a basic example of how to initialize a `PrintUriRequest` and print a document from a URI using `SharpIppClient`. Optional attributes have been omitted for clarity.
 
 ```csharp

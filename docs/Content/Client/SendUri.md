@@ -1,5 +1,8 @@
 # Send-URI Example
 
+> [!WARNING]
+> **Deprecated operation:** The Send-URI operation is deprecated across modern standards (e.g., PWG 5100.18-2025). Sending raw document data directly via Send-Document is preferred.
+
 Here is a basic example of how to initialize a `SendUriRequest` and add a document (via URI reference) to a multi-document job using `SharpIppClient`. Optional attributes have been omitted for clarity.
 
 ```csharp

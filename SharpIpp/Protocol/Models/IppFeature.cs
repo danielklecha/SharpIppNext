@@ -1,3 +1,5 @@
+using System;
+
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
@@ -73,8 +75,10 @@ public readonly record struct IppFeature(string Value, bool IsValue = true) : IS
 
     /// <summary>
     /// The Printer supports proof-print operations.
+    /// DEPRECATED.
     /// See: PWG 5100.11-2024
     /// </summary>
+    [Obsolete("The 'proof-print' feature is deprecated in favor of 'proof-print-default'. See PWG 5100.11-2024 Section 6.2.3.")]
     public static readonly IppFeature ProofPrint = new("proof-print");
 
     /// <summary>

@@ -110,6 +110,9 @@ public class GetDocumentsTests : SharpIppIntegrationTestBase
                         AttributesNaturalLanguage = "en-us",
                         DocumentStateReasons = [DocumentStateReason.None],
                         DocumentStateMessage = "completed",
+                        DocumentDigitalSignature = DocumentDigitalSignature.XmlDsig,
+                        DocumentFormatVersion = "1.2",
+                        DocumentFormatVersionDetected = "1.2.3",
                     },
                     new DocumentAttributes
                     {

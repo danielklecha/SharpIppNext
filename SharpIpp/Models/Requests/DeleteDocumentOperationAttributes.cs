@@ -1,9 +1,13 @@
+using System;
+
 namespace SharpIpp.Models.Requests;
 
 /// <summary>
 /// Delete-Document Operation Attributes.
-/// See: PWG 5100.5-2003 Section 6.2
+/// OBSOLETE.
+/// See: PWG 5100.5-2024 and PWG 5100.18-2025
 /// </summary>
+[Obsolete("The 'Delete-Document' operation is obsolete. See PWG 5100.5-2024 and PWG 5100.18-2025.")]
 public class DeleteDocumentOperationAttributes : JobOperationAttributes
 {
     /// <summary>

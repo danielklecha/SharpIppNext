@@ -1,3 +1,5 @@
+using System;
+
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
@@ -28,8 +30,10 @@ public readonly record struct DocumentFormatDetail(string Value, bool IsMarked =
     public static readonly DocumentFormatDetail DocumentFormatName = new("document-format-name");
     /// <summary>
     /// The document-format-version member.
+    /// DEPRECATED.
     /// See: PWG 5100.7-2023 Section 6.1.2
     /// </summary>
+    [Obsolete("The 'document-format-version' member is deprecated. See PWG 5100.7-2023 Section 6.2.1.")]
     public static readonly DocumentFormatDetail DocumentFormatVersion = new("document-format-version");
     /// <summary>
     /// The document-source-application-name member.

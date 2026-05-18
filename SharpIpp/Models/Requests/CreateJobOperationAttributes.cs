@@ -111,8 +111,10 @@ public class CreateJobOperationAttributes : OperationAttributes
 
     /// <summary>
     /// The <c>proof-print</c> operation attribute.
+    /// DEPRECATED.
     /// See: PWG 5100.11-2024 Section 6.2.3
     /// </summary>
+    [Obsolete("The 'proof-print' attribute is deprecated in favor of 'proof-print-default'. See PWG 5100.11-2024 Section 6.2.3.")]
     public ProofPrint? ProofPrint { get; set; }
 
     /// <summary>
@@ -135,8 +137,10 @@ public class CreateJobOperationAttributes : OperationAttributes
 
     /// <summary>
     /// The <c>destination-accesses</c> operation attribute.
+    /// DEPRECATED.
     /// See: PWG 5100.17-2014 Section 8.1.2
     /// </summary>
+    [Obsolete("The 'destination-accesses' attribute is deprecated. See PWG 5100.17-2014 Section 8.1.2.")]
     public DocumentAccess[]? DestinationAccesses { get; set; }
 
     /// <summary>

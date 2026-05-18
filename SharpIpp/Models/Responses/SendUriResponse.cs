@@ -1,10 +1,13 @@
+using System;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Responses;
 /// <summary>
 /// Send-Uri Response
+/// DEPRECATED.
 /// See: RFC 2911 Section 3.3.2
 /// </summary>
+[Obsolete("The 'Send-URI' operation is deprecated.")]
 public class SendUriResponse : IppResponse<OperationAttributes>, IIppJobResponse
 {
     /// <summary>

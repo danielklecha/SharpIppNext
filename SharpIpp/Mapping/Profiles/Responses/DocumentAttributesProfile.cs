@@ -45,6 +45,9 @@ internal class DocumentAttributesProfile : IProfile
                 dst.DocumentFormatDetails = map.Map<DocumentFormatDetails>(src[DocumentAttribute.DocumentFormatDetails].FromBegCollection().ToIppDictionary());
             if (src.ContainsKey(DocumentAttribute.DocumentFormatDetailsDetected))
                 dst.DocumentFormatDetailsDetected = map.Map<DocumentFormatDetails>(src[DocumentAttribute.DocumentFormatDetailsDetected].FromBegCollection().ToIppDictionary());
+            dst.DocumentDigitalSignature = map.MapFromDicNullable<DocumentDigitalSignature?>(src, DocumentAttribute.DocumentDigitalSignature);
+            dst.DocumentFormatVersion = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentFormatVersion);
+            dst.DocumentFormatVersionDetected = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentFormatVersionDetected);
             dst.ErrorsCount = map.MapFromDicNullable<int?>(src, DocumentAttribute.ErrorsCount);
             dst.WarningsCount = map.MapFromDicNullable<int?>(src, DocumentAttribute.WarningsCount);
             dst.PrintContentOptimizeActual = map.MapFromDicSetNullable<PrintContentOptimize[]?>(src, DocumentAttribute.PrintContentOptimizeActual);
@@ -126,6 +129,12 @@ internal class DocumentAttributesProfile : IProfile
                 dst.Add(DocumentAttribute.DocumentFormatDetails, map.Map<IEnumerable<IppAttribute>>(src.DocumentFormatDetails).ToBegCollection(DocumentAttribute.DocumentFormatDetails).ToArray());
             if (src.DocumentFormatDetailsDetected != null)
                 dst.Add(DocumentAttribute.DocumentFormatDetailsDetected, map.Map<IEnumerable<IppAttribute>>(src.DocumentFormatDetailsDetected).ToBegCollection(DocumentAttribute.DocumentFormatDetailsDetected).ToArray());
+            if (src.DocumentDigitalSignature != null)
+                dst.Add(DocumentAttribute.DocumentDigitalSignature, [new IppAttribute(Tag.Keyword, DocumentAttribute.DocumentDigitalSignature, map.Map<string>(src.DocumentDigitalSignature.Value))]);
+            if (src.DocumentFormatVersion != null)
+                dst.Add(DocumentAttribute.DocumentFormatVersion, [new IppAttribute(Tag.TextWithoutLanguage, DocumentAttribute.DocumentFormatVersion, src.DocumentFormatVersion)]);
+            if (src.DocumentFormatVersionDetected != null)
+                dst.Add(DocumentAttribute.DocumentFormatVersionDetected, [new IppAttribute(Tag.TextWithoutLanguage, DocumentAttribute.DocumentFormatVersionDetected, src.DocumentFormatVersionDetected)]);
             if (src.ErrorsCount != null)
                 dst.Add(DocumentAttribute.ErrorsCount, [new IppAttribute(Tag.Integer, DocumentAttribute.ErrorsCount, src.ErrorsCount.Value)]);
             if (src.WarningsCount != null)

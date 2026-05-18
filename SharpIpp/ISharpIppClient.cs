@@ -127,6 +127,7 @@ public interface ISharpIppClient : IDisposable
 
     /// <summary>
     /// Print-URI Operation
+    /// DEPRECATED.
     /// This OPTIONAL operation is identical to the Print-Job operation
     /// except that a client supplies a URI reference to the
     /// document data using the "document-uri" (uri) operation attribute (in
@@ -140,6 +141,7 @@ public interface ISharpIppClient : IDisposable
     /// scheme-not-supported' status code.
     /// See: RFC 2911 Section 3.2.2
     /// </summary>
+    [Obsolete("The 'Print-URI' operation is deprecated.")]
     Task<PrintUriResponse> PrintUriAsync(PrintUriRequest request, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -245,6 +247,7 @@ public interface ISharpIppClient : IDisposable
 
     /// <summary>
     /// Send-URI Operation
+    /// DEPRECATED.
     /// This OPTIONAL operation is identical to the Send-Document operation
     /// except that a client MUST supply a URI reference
     /// ("document-uri" operation attribute) rather than the document data
@@ -258,6 +261,7 @@ public interface ISharpIppClient : IDisposable
     /// attribute).
     /// See: RFC 2911 Section 3.3.2
     /// </summary>
+    [Obsolete("The 'Send-URI' operation is deprecated.")]
     Task<SendUriResponse> SendUriAsync(SendUriRequest request, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -777,9 +781,12 @@ public interface ISharpIppClient : IDisposable
 
     /// <summary>
     /// Delete-Document Operation.
+    /// OBSOLETE.
     /// This operation allows a client to delete a document from a job.
+    /// See: PWG 5100.5-2024 and PWG 5100.18-2025.
     /// See: PWG 5100.15-2013 Section 4.2
     /// </summary>
+    [Obsolete("The 'Delete-Document' operation is obsolete. See PWG 5100.5-2024 and PWG 5100.18-2025.")]
     Task<DeleteDocumentResponse> DeleteDocumentAsync(DeleteDocumentRequest request, CancellationToken cancellationToken = default);
 
     /// <summary>

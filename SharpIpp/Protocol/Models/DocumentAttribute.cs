@@ -1,3 +1,5 @@
+using System;
+
 namespace SharpIpp.Protocol.Models
 {
     /// <summary>
@@ -74,5 +76,14 @@ namespace SharpIpp.Protocol.Models
         /// See: PWG 5100.13-2023 Section 6.3.1
         /// </summary>
         public const string DocumentMetadata = "document-metadata";
+
+        [Obsolete("The 'document-digital-signature' attribute is deprecated. See PWG 5100.7-2023 Section 6.2.1.")]
+        public const string DocumentDigitalSignature = "document-digital-signature";
+
+        [Obsolete("The 'document-format-version' attribute is deprecated. See PWG 5100.7-2023 Section 6.2.1.")]
+        public const string DocumentFormatVersion = "document-format-version";
+
+        [Obsolete("The 'document-format-version-detected' attribute is deprecated. See PWG 5100.7-2023 Section 6.2.1.")]
+        public const string DocumentFormatVersionDetected = "document-format-version-detected";
     }
 }

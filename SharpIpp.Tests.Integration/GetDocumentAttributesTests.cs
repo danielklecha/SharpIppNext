@@ -89,6 +89,9 @@ public class GetDocumentAttributesTests : SharpIppIntegrationTestBase
                     DateTimeAtProcessing = new DateTimeOffset(2024, 1, 1, 1, 1, 1, TimeSpan.Zero),
                     DateTimeAtCompleted = new DateTimeOffset(2024, 1, 1, 1, 1, 1, TimeSpan.Zero),
                     DocumentMetadata = ["meta-1", "meta-2"],
+                    DocumentDigitalSignature = DocumentDigitalSignature.XmlDsig,
+                    DocumentFormatVersion = "1.2",
+                    DocumentFormatVersionDetected = "1.2.3",
                 },
                 OperationAttributes = new()
                 {

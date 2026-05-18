@@ -4,19 +4,23 @@ public class OperationAttributes
 {
     /// <summary>
     /// The Printer object OPTIONALLY returns this attribute. It contains a brief message describing the status of the operation
-    /// See: pwg5100.11 - IPP Enterprise Printing Extensions v2.0 Section 14.1
+    /// See: RFC 8011 Section 4.1.6.2
+    /// See: PWG 5100.18-2025 Section 5.7.2
     /// </summary>
     /// <code>status-message</code>
     public string? StatusMessage { get; set; }
     /// <summary>
     /// The Printer object OPTIONALLY returns this attribute. It contains additional detailed and technical information about the operation
-    /// See: pwg5100.11 - IPP Enterprise Printing Extensions v2.0 Section 14.1
+    /// See: RFC 8011 Section 4.1.6.3
+    /// See: PWG 5100.18-2025 Section 5.7.2
     /// </summary>
     /// <code>detailed-status-message</code>
     public string[]? DetailedStatusMessage { get; set; }
     /// <summary>
     /// The Printer object OPTIONALLY returns this attribute. It provides additional information about each document access error encountered by the Printer in a Print-URI or Send-URI operation
-    /// See: pwg5100.18 - IPP Shared Infrastructure Extensions v1.1 Section 5.8
+    /// See: RFC 8011 Section 4.1.6.4
+    /// See: PWG 5100.18-2025 Section 4.2.5
+    /// See: PWG 5100.18-2025 Section 5.8
     /// </summary>
     /// <code>document-access-error</code>
     public string? DocumentAccessError { get; set; }

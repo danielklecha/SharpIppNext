@@ -21,6 +21,7 @@ namespace SharpIpp.Protocol.Models
         /// <summary>
         /// See: RFC 2911 Section 3.2.2
         /// </summary>
+        [Obsolete("The 'Print-URI' operation is deprecated.")]
         PrintUri = 0x0003,
         /// <summary>
         /// See: RFC 2911 Section 3.2.3
@@ -37,6 +38,7 @@ namespace SharpIpp.Protocol.Models
         /// <summary>
         /// See: RFC 2911 Section 3.3.2
         /// </summary>
+        [Obsolete("The 'Send-URI' operation is deprecated.")]
         SendUri = 0x0007,
         /// <summary>
         /// See: RFC 2911 Section 3.3.3
@@ -180,6 +182,13 @@ namespace SharpIpp.Protocol.Models
         /// </summary>
         CancelCurrentJob = 0x002C,
         /// <summary>
+        /// Reprocess-Job Operation.
+        /// OBSOLETE.
+        /// See: PWG 5100.7-2023 Section 6
+        /// </summary>
+        [Obsolete("The 'Reprocess-Job' operation is obsolete. See PWG 5100.7-2023 Section 6.")]
+        ReprocessJob = 0x002D,
+        /// <summary>
         /// See: PWG 5100.15-2013 Section 4.2
         /// </summary>
         SuspendCurrentJob = 0x002E,
@@ -208,8 +217,12 @@ namespace SharpIpp.Protocol.Models
         /// </summary>
         GetDocuments = 0x0035,
         /// <summary>
+        /// Delete-Document Operation.
+        /// OBSOLETE.
+        /// See: PWG 5100.5-2024 and PWG 5100.18-2025.
         /// See: PWG 5100.15-2013 Section 4.2
         /// </summary>
+        [Obsolete("The 'Delete-Document' operation is obsolete. See PWG 5100.5-2024 and PWG 5100.18-2025.")]
         DeleteDocument = 0x0036,
         /// <summary>
         /// See: PWG 5100.5-2024 Section 5.1.3

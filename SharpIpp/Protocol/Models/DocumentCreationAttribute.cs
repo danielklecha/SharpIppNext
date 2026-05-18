@@ -1,3 +1,5 @@
+using System;
+
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
@@ -12,6 +14,7 @@ public readonly record struct DocumentCreationAttribute(string Value, bool IsVal
     /// <summary>The document-format attribute. See: PWG 5100.5-2024 Section 6.5.1</summary>
     public static readonly DocumentCreationAttribute DocumentFormat = new("document-format");
     /// <summary>The document-format-details attribute. See: PWG 5100.5-2024 Section 6.5.1</summary>
+    [Obsolete("The 'document-format-details' attribute is deprecated. See PWG 5100.7-2023 Section 6.2.1.")]
     public static readonly DocumentCreationAttribute DocumentFormatDetails = new("document-format-details");
     /// <summary>The document-natural-language attribute. See: PWG 5100.5-2024 Section 6.5.1</summary>
     public static readonly DocumentCreationAttribute DocumentNaturalLanguage = new("document-natural-language");
@@ -26,6 +29,7 @@ public readonly record struct DocumentCreationAttribute(string Value, bool IsVal
     /// <summary>The document-uri attribute. See: PWG 5100.5-2024 Section 6.5.1</summary>
     public static readonly DocumentCreationAttribute DocumentUri = new("document-uri");
     /// <summary>The document-access attribute. See: PWG 5100.5-2024 Section 6.5.1</summary>
+    [Obsolete("The 'document-access' attribute is deprecated in favor of URI authentication. See PWG 5100.18-2025 Section 7.1.5.")]
     public static readonly DocumentCreationAttribute DocumentAccess = new("document-access");
 
     // Document Template attributes accepted in Document Creation requests.

@@ -6,6 +6,7 @@ namespace SharpIpp.Models.Requests
 {
     /// <summary>
     /// Send-URI Operation
+    /// DEPRECATED.
     /// This OPTIONAL operation is identical to the Send-Document operation
     /// except that a client MUST supply a URI reference
     /// ("document-uri" operation attribute) rather than the document data
@@ -19,6 +20,7 @@ namespace SharpIpp.Models.Requests
     /// attribute).
     /// See: RFC 2911 Section 3.3.2
     /// </summary>
+    [Obsolete("The 'Send-URI' operation is deprecated.")]
     public class SendUriRequest : IppRequest<SendUriOperationAttributes>, IIppJobRequest
     {
         /// <summary>

@@ -82,13 +82,13 @@ public class DocumentAttributes : IIppCollection
     public DateTimeOffset? DateTimeAtProcessing { get; set; }
     /// <summary>
     /// The detailed-status-messages IPP attribute.
-    /// See: pwg5100.11 - IPP Enterprise Printing Extensions v2.0 Section 14.1
+    /// See: PWG 5100.5-2024 Section 6.2 Table 4
     /// </summary>
     /// <code>detailed-status-messages</code>
     public string[]? DetailedStatusMessages { get; set; }
     /// <summary>
     /// The document-access-errors IPP attribute.
-    /// See: pwg5100.5-2024
+    /// See: PWG 5100.5-2024 Section 6.2 Table 4
     /// </summary>
     /// <code>document-access-errors</code>
     public string[]? DocumentAccessErrors { get; set; }
@@ -156,6 +156,33 @@ public class DocumentAttributes : IIppCollection
     /// <code>document-format-details-detected</code>
     [Obsolete("The 'document-format-details-detected' attribute is deprecated. See PWG 5100.7-2023 Section 6.2.2.")]
     public DocumentFormatDetails? DocumentFormatDetailsDetected { get; set; }
+
+    /// <summary>
+    /// The document-digital-signature IPP attribute.
+    /// DEPRECATED.
+    /// See: PWG 5100.7-2023 Section 6.2.1
+    /// </summary>
+    /// <code>document-digital-signature</code>
+    [Obsolete("The 'document-digital-signature' attribute is deprecated. See PWG 5100.7-2023 Section 6.2.1.")]
+    public DocumentDigitalSignature? DocumentDigitalSignature { get; set; }
+
+    /// <summary>
+    /// The document-format-version IPP attribute.
+    /// DEPRECATED.
+    /// See: PWG 5100.7-2023 Section 6.2.1
+    /// </summary>
+    /// <code>document-format-version</code>
+    [Obsolete("The 'document-format-version' attribute is deprecated. See PWG 5100.7-2023 Section 6.2.1.")]
+    public string? DocumentFormatVersion { get; set; }
+
+    /// <summary>
+    /// The document-format-version-detected IPP attribute.
+    /// DEPRECATED.
+    /// See: PWG 5100.7-2023 Section 6.2.1
+    /// </summary>
+    /// <code>document-format-version-detected</code>
+    [Obsolete("The 'document-format-version-detected' attribute is deprecated. See PWG 5100.7-2023 Section 6.2.1.")]
+    public string? DocumentFormatVersionDetected { get; set; }
 
     /// <summary>
     /// The errors-count IPP attribute.
