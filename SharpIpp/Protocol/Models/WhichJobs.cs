@@ -1,3 +1,5 @@
+using System;
+
 namespace SharpIpp.Protocol.Models
 {
     /// <summary>
@@ -103,6 +105,7 @@ namespace SharpIpp.Protocol.Models
         /// Obsolete legacy compatibility value.
         /// See: IPP Enterprise Printing Extensions v2.0 (PWG 5100.11-2024) Section 9.2.
         /// </summary>
+        [Obsolete("See IPP Enterprise Printing Extensions v2.0 (PWG 5100.11-2024) Section 9.2.")]
         public static readonly WhichJobs Saved = new("saved");
 
         public override string ToString() => Value;

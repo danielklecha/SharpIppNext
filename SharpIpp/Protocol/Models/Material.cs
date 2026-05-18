@@ -11,6 +11,11 @@ public class Material : IIppCollection
     public int? MaterialAmount { get; set; }
     public MaterialColor? MaterialColor { get; set; }
     public int? MaterialDiameter { get; set; }
+    /// <summary>
+    /// The material-fill-density member attribute.
+    /// Type: integer(0:100)
+    /// See: PWG 5100.21-2019 Section 8.1.3.4
+    /// </summary>
     public int? MaterialFillDensity { get; set; }
     public MaterialKey? MaterialKey { get; set; }
     public string? MaterialName { get; set; }

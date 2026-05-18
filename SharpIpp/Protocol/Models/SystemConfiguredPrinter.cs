@@ -9,6 +9,11 @@ public class SystemConfiguredPrinter : IIppCollection
     bool IIppCollection.IsValue { get; set; } = true;
     bool INoValue.IsValue => ((IIppCollection)this).IsValue;
 
+    /// <summary>
+    /// The printer-id IPP attribute.
+    /// Type: integer(1:65535)
+    /// See: PWG 5100.22-2025 Section 7.1.5
+    /// </summary>
     public int? PrinterId { get; set; }
     public string? PrinterInfo { get; set; }
     public bool? PrinterIsAcceptingJobs { get; set; }

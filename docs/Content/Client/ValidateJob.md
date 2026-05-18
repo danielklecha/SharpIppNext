@@ -24,4 +24,13 @@ var request = new ValidateJobRequest
 var response = await client.ValidateJobAsync(request);
 
 Console.WriteLine("Job validated successfully!");
+
+// Access preferred attributes returned by the printer in case of conflicts (PWG 5100.13)
+if (response.OperationAttributes?.PreferredAttributes != null)
+{
+    var preferred = response.OperationAttributes.PreferredAttributes;
+    Console.WriteLine($"Suggested copies fallback: {preferred.Copies}");
+    Console.WriteLine($"Suggested sides fallback: {preferred.Sides}");
+}
+
 ```

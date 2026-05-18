@@ -1,3 +1,5 @@
+using System;
+
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
@@ -18,8 +20,8 @@ public class PrinterIccProfile : IIppCollection
     public string? ProfileName { get; set; }
 
     /// <summary>
-    /// icc-profile-resource-id — resource-id of the ICC profile (integer).
+    /// profile-uri — reference to the ICC color profile (uri).
     /// See: PWG 5100.13-2023 Section 6.5.34
     /// </summary>
-    public int? IccProfileResourceId { get; set; }
+    public Uri? ProfileUri { get; set; }
 }

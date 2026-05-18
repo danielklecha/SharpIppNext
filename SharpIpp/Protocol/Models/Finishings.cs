@@ -1,3 +1,5 @@
+using System;
+
 namespace SharpIpp.Protocol.Models
 {
     /// <summary>
@@ -186,10 +188,11 @@ namespace SharpIpp.Protocol.Models
         BookletMaker = 13,
 
         /// <summary>
-        /// (DEPRECATED) Shift each Set from the previous one by
+        /// Shift each Set from the previous one by
         /// a small amount which is device dependent.
         /// See: PWG 5100.1-2022 Section 6.1
         /// </summary>
+        [Obsolete("See PWG 5100.1-2022 Section 6.1.")]
         JogOffset = 14,
 
         /// <summary>

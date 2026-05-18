@@ -88,4 +88,4 @@ SharpIppNext will serialize standard and extension keyword forms with the IPP `k
 
 The request validator also enforces the PWG 5100.2 constraint that `output-bin` is single-valued and uses only `keyword` or `nameWithoutLanguage` syntax.
 
-For capability-aware validation, set `IppRequestValidator.Context.OutputBinSupported` to the printer's supported bins. When `UseIppAttributeFidelityForCapabilityValidation` is `true`, unsupported values are rejected only when `ipp-attribute-fidelity=true`; otherwise they are always rejected when support context is provided.
+For capability-aware validation, set `IppRequestMessageValidator.Context.OutputBinSupported` to the printer's supported bins. When `UseIppAttributeFidelityForCapabilityValidation` is `true`, unsupported values are rejected only when `ipp-attribute-fidelity=true`; otherwise they are always rejected when support context is provided.

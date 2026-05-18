@@ -22,6 +22,7 @@ public class DocumentTemplateAttributes : IIppCollection
 
     /// <summary>
     /// The <c>copies</c> Document Template attribute.
+    /// Type: integer(1:MAX)
     /// See: RFC 8011 Section 5.2.5
     /// </summary>
     public int? Copies { get; set; }
@@ -85,6 +86,7 @@ public class DocumentTemplateAttributes : IIppCollection
 
     /// <summary>
     /// The <c>number-up</c> Document Template attribute.
+    /// Type: integer(1:MAX)
     /// See: RFC 8011 Section 5.2.9
     /// </summary>
     public int? NumberUp { get; set; }
@@ -232,6 +234,7 @@ public class DocumentTemplateAttributes : IIppCollection
 
     /// <summary>
     /// The <c>input-contrast</c> input attribute.
+    /// Type: integer(-100:100)
     /// See: PWG 5100.15-2013 Section 7.1.1.7
     /// </summary>
     public int? InputContrast { get; set; }
@@ -274,18 +277,21 @@ public class DocumentTemplateAttributes : IIppCollection
 
     /// <summary>
     /// The <c>input-scaling-height</c> input attribute.
+    /// Type: integer(1:1000)
     /// See: PWG 5100.15-2013 Section 7.1.1.14
     /// </summary>
     public int? InputScalingHeight { get; set; }
 
     /// <summary>
     /// The <c>input-scaling-width</c> input attribute.
+    /// Type: integer(1:1000)
     /// See: PWG 5100.15-2013 Section 7.1.1.15
     /// </summary>
     public int? InputScalingWidth { get; set; }
 
     /// <summary>
     /// The <c>input-sharpness</c> input attribute.
+    /// Type: integer(-100:100)
     /// See: PWG 5100.15-2013 Section 7.1.1.17
     /// </summary>
     public int? InputSharpness { get; set; }

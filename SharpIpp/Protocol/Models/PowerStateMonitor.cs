@@ -16,5 +16,5 @@ public class PowerStateMonitor : IIppCollection
     public PowerState? PowerState { get; set; }
     public string? PowerStateMessage { get; set; }
     public bool? PowerUsageIsRmsWatts { get; set; }
-    public IppOperation[]? ValidRequestPowerStates { get; set; }
+    public PowerState[]? ValidRequestPowerStates { get; set; }
 }

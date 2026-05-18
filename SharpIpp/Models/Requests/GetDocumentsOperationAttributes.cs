@@ -8,6 +8,7 @@ public class GetDocumentsOperationAttributes : JobOperationAttributes
 {
     /// <summary>
     /// The first-index IPP attribute.
+    /// Type: integer(1:MAX)
     /// See: PWG 5100.13-2023 Section 6.1.3 and Section 8.5
     /// </summary>
     /// <code>first-index</code>
@@ -15,6 +16,7 @@ public class GetDocumentsOperationAttributes : JobOperationAttributes
 
     /// <summary>
     /// The limit IPP attribute.
+    /// Type: integer(1:MAX)
     /// See: pwg5100.1-2022 Section 2.2
     /// </summary>
     /// <code>limit</code>

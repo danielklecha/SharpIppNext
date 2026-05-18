@@ -8,9 +8,12 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public class DocumentAttributes : IIppCollection
 {
-    public bool IsValue { get; set; } = true;
+    /// <inheritdoc />
+    bool IIppCollection.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
     /// <summary>
     /// The document-number IPP attribute.
+    /// Type: integer(1:MAX)
     /// See: PWG 5100.5-2024 Section 6.2.4
     /// </summary>
     /// <code>document-number</code>
@@ -291,6 +294,7 @@ public class DocumentAttributes : IIppCollection
     public int? TimeAtCompleted { get; set; }
     /// <summary>
     /// The time-at-creation IPP attribute.
+    /// Type: integer(MIN:MAX)
     /// See: pwg5100.15 - IPP FaxOut Service Section 7.4.18
     /// </summary>
     /// <code>time-at-creation</code>

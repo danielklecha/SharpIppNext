@@ -252,7 +252,7 @@ public class CollectionRoundTripTests : MapperTestBase
             var original = new PrintColorModeIccProfile
             {
                 PrintColorMode = RandomString(rng),
-                IccProfileResourceId = RandomInt(rng),
+                ProfileUri = new Uri($"https://example.com/{RandomString(rng)}.icc"),
             };
 
             var attrs = _mapper.Map<PrintColorModeIccProfile, IEnumerable<IppAttribute>>(original).ToList();
@@ -260,7 +260,7 @@ public class CollectionRoundTripTests : MapperTestBase
             var roundTripped = _mapper.Map<IDictionary<string, IppAttribute[]>, PrintColorModeIccProfile>(dict);
 
             roundTripped.PrintColorMode.Should().Be(original.PrintColorMode, $"iteration {i}: PrintColorMode mismatch");
-            roundTripped.IccProfileResourceId.Should().Be(original.IccProfileResourceId, $"iteration {i}: IccProfileResourceId mismatch");
+            roundTripped.ProfileUri.Should().Be(original.ProfileUri, $"iteration {i}: ProfileUri mismatch");
         }
     }
 
@@ -277,7 +277,7 @@ public class CollectionRoundTripTests : MapperTestBase
             var original = new PrinterIccProfile
             {
                 ProfileName = RandomString(rng),
-                IccProfileResourceId = RandomInt(rng),
+                ProfileUri = new Uri($"https://example.com/{RandomString(rng)}.icc"),
             };
 
             var attrs = _mapper.Map<PrinterIccProfile, IEnumerable<IppAttribute>>(original).ToList();
@@ -285,7 +285,7 @@ public class CollectionRoundTripTests : MapperTestBase
             var roundTripped = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterIccProfile>(dict);
 
             roundTripped.ProfileName.Should().Be(original.ProfileName, $"iteration {i}: ProfileName mismatch");
-            roundTripped.IccProfileResourceId.Should().Be(original.IccProfileResourceId, $"iteration {i}: IccProfileResourceId mismatch");
+            roundTripped.ProfileUri.Should().Be(original.ProfileUri, $"iteration {i}: ProfileUri mismatch");
         }
     }
 

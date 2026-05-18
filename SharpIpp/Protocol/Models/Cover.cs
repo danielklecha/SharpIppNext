@@ -5,8 +5,8 @@ namespace SharpIpp.Protocol.Models;
 /// <summary>
 /// Represents the <c>cover-front</c> / <c>cover-back</c> collection value.
 /// See: PWG 5100.3-2023 Section 5.2.1
-/// Deprecated in: PWG 5100.3-2023 Section 5.2.1
 /// </summary>
+[Obsolete("See PWG 5100.3-2023 Section 5.2.1.")]
 public class Cover : IIppCollection
 {
     /// <inheritdoc />

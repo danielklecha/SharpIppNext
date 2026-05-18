@@ -108,7 +108,7 @@ public class MappingRoundTripTests : MapperTestBase
                     new PrintColorModeIccProfile
                     {
                         PrintColorMode = RandomString(rng),
-                        IccProfileResourceId = RandomInt(rng),
+                        ProfileUri = new Uri($"https://example.com/{RandomString(rng)}.icc"),
                     }
                 },
                 PrinterIccProfile = new[]
@@ -116,7 +116,7 @@ public class MappingRoundTripTests : MapperTestBase
                     new PrinterIccProfile
                     {
                         ProfileName = RandomString(rng),
-                        IccProfileResourceId = RandomInt(rng),
+                        ProfileUri = new Uri($"https://example.com/{RandomString(rng)}.icc"),
                     }
                 },
             };
@@ -186,13 +186,13 @@ public class MappingRoundTripTests : MapperTestBase
             roundTripped.PrintColorModeIccProfile.Should().NotBeNull($"iteration {i}");
             roundTripped.PrintColorModeIccProfile!.Should().HaveCount(1, $"iteration {i}");
             roundTripped.PrintColorModeIccProfile[0].PrintColorMode.Should().Be(original.PrintColorModeIccProfile[0].PrintColorMode, $"iteration {i}: PrintColorModeIccProfile.PrintColorMode");
-            roundTripped.PrintColorModeIccProfile[0].IccProfileResourceId.Should().Be(original.PrintColorModeIccProfile[0].IccProfileResourceId, $"iteration {i}: PrintColorModeIccProfile.IccProfileResourceId");
+            roundTripped.PrintColorModeIccProfile[0].ProfileUri.Should().Be(original.PrintColorModeIccProfile[0].ProfileUri, $"iteration {i}: PrintColorModeIccProfile.ProfileUri");
 
             // Assert PrinterIccProfile
             roundTripped.PrinterIccProfile.Should().NotBeNull($"iteration {i}");
             roundTripped.PrinterIccProfile!.Should().HaveCount(1, $"iteration {i}");
             roundTripped.PrinterIccProfile[0].ProfileName.Should().Be(original.PrinterIccProfile[0].ProfileName, $"iteration {i}: PrinterIccProfile.ProfileName");
-            roundTripped.PrinterIccProfile[0].IccProfileResourceId.Should().Be(original.PrinterIccProfile[0].IccProfileResourceId, $"iteration {i}: PrinterIccProfile.IccProfileResourceId");
+            roundTripped.PrinterIccProfile[0].ProfileUri.Should().Be(original.PrinterIccProfile[0].ProfileUri, $"iteration {i}: PrinterIccProfile.ProfileUri");
         }
     }
 

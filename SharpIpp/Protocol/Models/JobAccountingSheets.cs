@@ -7,6 +7,7 @@ namespace SharpIpp.Protocol.Models;
 /// See: PWG 5100.3-2023 Section 5.2.6
 /// Deprecated in: PWG 5100.3-2023 Section 5.2.6
 /// </summary>
+[Obsolete("See PWG 5100.3-2023 Section 5.2.6.")]
 public class JobAccountingSheets : IIppCollection
 {
     /// <inheritdoc />

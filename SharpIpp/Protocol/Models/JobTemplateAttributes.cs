@@ -36,6 +36,7 @@ namespace SharpIpp.Protocol.Models
         /// value of the Printer object's "job-priority-default" at job
         /// submission time (unlike most Job Template attributes that are used if
         /// necessary at job processing time).
+        /// Type: integer(1:100)
         /// See: RFC 8011 Section 5.2.1
         /// </summary>
         public int? JobPriority { get; set; }
@@ -73,6 +74,7 @@ namespace SharpIpp.Protocol.Models
         /// limited by the number of physical output bins on the device, and may
         /// be different from the number of uncollated copies which can be
         /// supported.
+        /// Type: integer(1:MAX)
         /// See: RFC 8011 Section 5.2.5
         /// </summary>
         public int? Copies { get; set; }
@@ -159,6 +161,7 @@ namespace SharpIpp.Protocol.Models
         /// sort of translation, scaling, or rotation).
         /// This attribute primarily controls the translation, scaling and
         /// rotation of print-stream pages.
+        /// Type: integer(1:MAX)
         /// See: RFC 8011 Section 5.2.9
         /// </summary>
         public int? NumberUp { get; set; }
@@ -536,6 +539,7 @@ namespace SharpIpp.Protocol.Models
 
         /// <summary>
         /// The <c>retry-interval</c> Job Template attribute.
+        /// Type: integer(1:MAX)
         /// See: PWG 5100.15-2013 Section 7.2.5
         /// </summary>
         public int? RetryInterval { get; set; }
@@ -560,6 +564,7 @@ namespace SharpIpp.Protocol.Models
 
         /// <summary>
         /// The <c>platform-temperature</c> Job Template attribute.
+        /// Type: integer(-273:MAX)
         /// See: PWG 5100.21-2019 Section 8.1.5
         /// </summary>
         public int? PlatformTemperature { get; set; }

@@ -46,6 +46,7 @@ public class SystemStatusAttributes
 
     /// <summary>
     /// System uptime in seconds.
+    /// Type: integer(1:MAX)
     /// See: PWG 5100.22-2025 Section 7.3.32
     /// </summary>
     /// <code>system-up-time</code>

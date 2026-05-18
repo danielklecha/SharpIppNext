@@ -1,3 +1,5 @@
+using System;
+
 namespace SharpIpp.Protocol.Models
 {
     /// <summary>
@@ -401,24 +403,28 @@ namespace SharpIpp.Protocol.Models
         /// Obsolete legacy compatibility value.
         /// See: IPP Enterprise Printing Extensions v2.0 (PWG 5100.11-2024) Section 9.2.
         /// </summary>
+        [Obsolete("See IPP Enterprise Printing Extensions v2.0 (PWG 5100.11-2024) Section 9.2.")]
         public static readonly JobStateReason JobSavedSuccessfully = new("job-saved-successfully");
 
         /// <summary>
         /// Obsolete legacy compatibility value.
         /// See: IPP Enterprise Printing Extensions v2.0 (PWG 5100.11-2024) Section 9.2.
         /// </summary>
+        [Obsolete("See IPP Enterprise Printing Extensions v2.0 (PWG 5100.11-2024) Section 9.2.")]
         public static readonly JobStateReason JobSavedWithErrors = new("job-saved-with-errors");
 
         /// <summary>
         /// Obsolete legacy compatibility value.
         /// See: IPP Enterprise Printing Extensions v2.0 (PWG 5100.11-2024) Section 9.2.
         /// </summary>
+        [Obsolete("See IPP Enterprise Printing Extensions v2.0 (PWG 5100.11-2024) Section 9.2.")]
         public static readonly JobStateReason JobSavedWithWarnings = new("job-saved-with-warnings");
 
         /// <summary>
         /// Obsolete legacy compatibility value.
         /// See: IPP Enterprise Printing Extensions v2.0 (PWG 5100.11-2024) Section 9.2.
         /// </summary>
+        [Obsolete("See IPP Enterprise Printing Extensions v2.0 (PWG 5100.11-2024) Section 9.2.")]
         public static readonly JobStateReason JobSaving = new("job-saving");
 
         /// <summary>

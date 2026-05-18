@@ -376,6 +376,7 @@ public class PrinterDescriptionAttributes
 
     /// <summary>
     /// multiple-operation-time-out
+    /// Type: integer(1:MAX) (Rec: 60-240)
     /// See: RFC 8011 Section 5.4.31
     /// </summary>
     public int? MultipleOperationTimeOut { get; set; }
@@ -448,6 +449,7 @@ public class PrinterDescriptionAttributes
 
     /// <summary>
     /// pages-per-minute
+    /// Type: integer(0:MAX)
     /// See: RFC 8011 Section 5.4.36
     /// </summary>
     public int? PagesPerMinute { get; set; }
@@ -1617,6 +1619,7 @@ public class PrinterDescriptionAttributes
 
     /// <summary>
     /// chamber-humidity-default
+    /// Type: integer(0:100)
     /// See: PWG 5100.21-2019 Section 8.3.2
     /// </summary>
     public int? ChamberHumidityDefault { get; set; }
@@ -1629,6 +1632,7 @@ public class PrinterDescriptionAttributes
 
     /// <summary>
     /// chamber-temperature-default
+    /// Type: integer(-273:MAX)
     /// See: PWG 5100.21-2019 Section 8.3.4
     /// </summary>
     public int? ChamberTemperatureDefault { get; set; }
@@ -1749,6 +1753,7 @@ public class PrinterDescriptionAttributes
 
     /// <summary>
     /// platform-temperature-default
+    /// Type: integer(-273:MAX)
     /// See: PWG 5100.21-2019 Section 8.3.24
     /// </summary>
     public int? PlatformTemperatureDefault { get; set; }
@@ -1809,12 +1814,14 @@ public class PrinterDescriptionAttributes
 
     /// <summary>
     /// chamber-humidity-current
+    /// Type: integer(0:100)
     /// See: PWG 5100.21-2019 Section 8.4.1
     /// </summary>
     public int? ChamberHumidityCurrent { get; set; }
 
     /// <summary>
     /// chamber-temperature-current
+    /// Type: integer(-273:MAX)
     /// See: PWG 5100.21-2019 Section 8.4.2
     /// </summary>
     public int? ChamberTemperatureCurrent { get; set; }
@@ -2031,6 +2038,7 @@ public class PrinterDescriptionAttributes
 
     /// <summary>
     /// retry-interval-default
+    /// Type: integer(1:MAX)
     /// See: PWG 5100.15-2013 Section 7.4.30
     /// </summary>
     public int? RetryIntervalDefault { get; set; }
@@ -2064,4 +2072,39 @@ public class PrinterDescriptionAttributes
     /// See: PWG 5100.15-2013 Section 7.4.35
     /// </summary>
     public int? ToNameSupported { get; set; }
+
+    /// <summary>
+    /// jpeg-x-dimension-supported
+    /// Type: rangeOfInteger(0:65535)
+    /// See: RFC 8011 Section 5.4.38
+    /// </summary>
+    public Range? JpegXDimensionSupported { get; set; }
+
+    /// <summary>
+    /// jpeg-y-dimension-supported
+    /// Type: rangeOfInteger(1:65535)
+    /// See: RFC 8011 Section 5.4.39
+    /// </summary>
+    public Range? JpegYDimensionSupported { get; set; }
+
+    /// <summary>
+    /// job-password-supported
+    /// Type: integer(0:255)
+    /// See: PWG 5100.11-2024 Section 7.2.1
+    /// </summary>
+    public int? JobPasswordSupported { get; set; }
+
+    /// <summary>
+    /// job-password-length-supported
+    /// Type: rangeOfInteger(4:1020)
+    /// See: PWG 5100.11-2024 Section 7.2.2
+    /// </summary>
+    public Range? JobPasswordLengthSupported { get; set; }
+
+    /// <summary>
+    /// document-password-supported
+    /// Type: integer(0:1023) (Valid: 0 or 255-1023)
+    /// See: PWG 5100.11-2024 Section 7.2.4
+    /// </summary>
+    public int? DocumentPasswordSupported { get; set; }
 }

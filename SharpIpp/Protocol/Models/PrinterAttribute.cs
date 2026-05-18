@@ -377,5 +377,10 @@ namespace SharpIpp.Protocol.Models
         public const string RetryTimeOutSupported = "retry-time-out-supported";
         public const string SubjectSupported = "subject-supported";
         public const string ToNameSupported = "to-name-supported";
+        public const string JpegXDimensionSupported = "jpeg-x-dimension-supported";
+        public const string JpegYDimensionSupported = "jpeg-y-dimension-supported";
+        public const string JobPasswordSupported = "job-password-supported";
+        public const string JobPasswordLengthSupported = "job-password-length-supported";
+        public const string DocumentPasswordSupported = "document-password-supported";
     }
 }

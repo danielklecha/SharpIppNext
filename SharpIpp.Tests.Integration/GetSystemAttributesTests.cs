@@ -262,7 +262,7 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
                         PowerState = PowerState.On,
                         PowerStateMessage = "monitoring",
                         PowerUsageIsRmsWatts = true,
-                        ValidRequestPowerStates = new[] { IppOperation.PrintJob, IppOperation.PausePrinter }
+                        ValidRequestPowerStates = new[] { PowerState.On, PowerState.Standby }
                     }],
                     PowerStateTransitionsCol = [new()
                     {
@@ -339,8 +339,8 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
             x.PowerStateMessage == "monitoring" &&
             x.PowerUsageIsRmsWatts == true &&
             x.ValidRequestPowerStates != null &&
-            x.ValidRequestPowerStates.Contains(IppOperation.PrintJob) &&
-            x.ValidRequestPowerStates.Contains(IppOperation.PausePrinter));
+            x.ValidRequestPowerStates.Contains(PowerState.On) &&
+            x.ValidRequestPowerStates.Contains(PowerState.Standby));
 
         mapped.SystemAttributes.PowerStateTransitionsCol.Should().ContainSingle(x =>
             x.StartPowerState == PowerState.On &&

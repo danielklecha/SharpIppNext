@@ -25,6 +25,7 @@ public class GetPrinterSupportedValuesOperationAttributes : OperationAttributes
 
     /// <summary>
     /// The first-index IPP attribute.
+    /// Type: integer(1:MAX)
     /// See: PWG 5100.13-2023 Section 6.1.3
     /// </summary>
     /// <code>first-index</code>
@@ -32,6 +33,7 @@ public class GetPrinterSupportedValuesOperationAttributes : OperationAttributes
 
     /// <summary>
     /// The limit IPP attribute.
+    /// Type: integer(1:MAX)
     /// See: PWG 5100.13-2023 Section 6.1.4
     /// </summary>
     /// <code>limit</code>

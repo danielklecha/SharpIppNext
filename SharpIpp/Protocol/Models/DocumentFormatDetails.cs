@@ -1,3 +1,5 @@
+using System;
+
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
@@ -5,6 +7,7 @@ namespace SharpIpp.Protocol.Models;
 /// DEPRECATED.
 /// See: PWG 5100.7-2023 Section 6.1.2
 /// </summary>
+[Obsolete("See PWG 5100.7-2023 Section 6.1.2.")]
 public class DocumentFormatDetails : IIppCollection
 {
     /// <inheritdoc />

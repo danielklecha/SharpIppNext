@@ -64,6 +64,7 @@ public class SystemDescriptionAttributes
 
     /// <summary>
     /// The IPP Get event life in seconds.
+    /// Type: integer(15:MAX)
     /// See: PWG 5100.22-2025 Section 7.1.25
     /// </summary>
     public int? IppGetEventLife { get; set; }
@@ -100,6 +101,7 @@ public class SystemDescriptionAttributes
 
     /// <summary>
     /// <c>notify-lease-duration-supported</c>
+    /// Type: rangeOfInteger(0:67108863)
     /// See: PWG 5100.22-2025 Section 7.3.17
     /// </summary>
     public string[]? NotifyLeaseDurationSupported { get; set; }
@@ -256,6 +258,7 @@ public class SystemDescriptionAttributes
 
     /// <summary>
     /// <c>system-up-time</c>
+    /// Type: integer(1:MAX)
     /// See: PWG 5100.22-2025 Section 7.3.43
     /// </summary>
     public int? SystemUpTime { get; set; }
@@ -334,6 +337,7 @@ public class SystemDescriptionAttributes
 
     /// <summary>
     /// <c>system-default-printer-id</c>
+    /// Type: integer(1:65535)
     /// See: PWG 5100.22-2025 Section 7.3.56
     /// </summary>
     public int? SystemDefaultPrinterId { get; set; }

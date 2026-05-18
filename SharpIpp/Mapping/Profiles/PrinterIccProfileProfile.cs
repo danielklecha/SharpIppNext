@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Extensions;
@@ -17,7 +18,7 @@ internal class PrinterIccProfileProfile : IProfile
             return new PrinterIccProfile
             {
                 ProfileName = map.MapFromDicNullable<string?>(src, "profile-name"),
-                IccProfileResourceId = map.MapFromDicNullable<int?>(src, "icc-profile-resource-id"),
+                ProfileUri = map.MapFromDicNullable<Uri?>(src, "profile-uri"),
             };
         });
         mapper.CreateMap<PrinterIccProfile, IEnumerable<IppAttribute>>((src, _) =>
@@ -27,7 +28,7 @@ internal class PrinterIccProfileProfile : IProfile
 
             var attrs = new List<IppAttribute>();
             if (src.ProfileName != null) attrs.Add(new IppAttribute(Tag.NameWithoutLanguage, "profile-name", src.ProfileName));
-            if (src.IccProfileResourceId.HasValue) attrs.Add(new IppAttribute(Tag.Integer, "icc-profile-resource-id", src.IccProfileResourceId.Value));
+            if (src.ProfileUri != null) attrs.Add(new IppAttribute(Tag.Uri, "profile-uri", src.ProfileUri.ToString()));
             return attrs;
         });
     }

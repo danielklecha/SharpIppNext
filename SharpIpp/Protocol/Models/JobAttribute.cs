@@ -260,5 +260,6 @@ namespace SharpIpp.Protocol.Models
         public const string DocumentOverrides = "document-overrides";
         public const string MediaSourceFeedDirection = "media-source-feed-direction";
         public const string MediaSourceFeedOrientation = "media-source-feed-orientation";
+        public const string PreferredAttributes = "preferred-attributes";
     }
 }

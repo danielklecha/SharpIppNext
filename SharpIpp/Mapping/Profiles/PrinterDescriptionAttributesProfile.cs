@@ -336,6 +336,11 @@ internal class PrinterDescriptionAttributesProfile : IProfile
                 RetryTimeOutSupported = map.MapFromDicNullable<Protocol.Models.Range?>(src, PrinterAttribute.RetryTimeOutSupported),
                 SubjectSupported = map.MapFromDicNullable<int?>(src, PrinterAttribute.SubjectSupported),
                 ToNameSupported = map.MapFromDicNullable<int?>(src, PrinterAttribute.ToNameSupported),
+                JpegXDimensionSupported = map.MapFromDicNullable<Protocol.Models.Range?>(src, PrinterAttribute.JpegXDimensionSupported),
+                JpegYDimensionSupported = map.MapFromDicNullable<Protocol.Models.Range?>(src, PrinterAttribute.JpegYDimensionSupported),
+                JobPasswordSupported = map.MapFromDicNullable<int?>(src, PrinterAttribute.JobPasswordSupported),
+                JobPasswordLengthSupported = map.MapFromDicNullable<Protocol.Models.Range?>(src, PrinterAttribute.JobPasswordLengthSupported),
+                DocumentPasswordSupported = map.MapFromDicNullable<int?>(src, PrinterAttribute.DocumentPasswordSupported),
             };
 
             if (src.TryGetValue(PrinterAttribute.JobSheetsColDefault, out var jobSheetsColDefault))
@@ -1267,6 +1272,16 @@ internal class PrinterDescriptionAttributesProfile : IProfile
                 dic.Add(PrinterAttribute.SubjectSupported, [new IppAttribute(Tag.Integer, PrinterAttribute.SubjectSupported, src.SubjectSupported.Value)]);
             if (src.ToNameSupported.HasValue)
                 dic.Add(PrinterAttribute.ToNameSupported, [new IppAttribute(Tag.Integer, PrinterAttribute.ToNameSupported, src.ToNameSupported.Value)]);
+            if (src.JpegXDimensionSupported != null)
+                dic.Add(PrinterAttribute.JpegXDimensionSupported, [new IppAttribute(Tag.RangeOfInteger, PrinterAttribute.JpegXDimensionSupported, src.JpegXDimensionSupported.Value)]);
+            if (src.JpegYDimensionSupported != null)
+                dic.Add(PrinterAttribute.JpegYDimensionSupported, [new IppAttribute(Tag.RangeOfInteger, PrinterAttribute.JpegYDimensionSupported, src.JpegYDimensionSupported.Value)]);
+            if (src.JobPasswordSupported.HasValue)
+                dic.Add(PrinterAttribute.JobPasswordSupported, [new IppAttribute(Tag.Integer, PrinterAttribute.JobPasswordSupported, src.JobPasswordSupported.Value)]);
+            if (src.JobPasswordLengthSupported != null)
+                dic.Add(PrinterAttribute.JobPasswordLengthSupported, [new IppAttribute(Tag.RangeOfInteger, PrinterAttribute.JobPasswordLengthSupported, src.JobPasswordLengthSupported.Value)]);
+            if (src.DocumentPasswordSupported.HasValue)
+                dic.Add(PrinterAttribute.DocumentPasswordSupported, [new IppAttribute(Tag.Integer, PrinterAttribute.DocumentPasswordSupported, src.DocumentPasswordSupported.Value)]);
             return dic;
         });
     }

@@ -7,6 +7,7 @@ namespace SharpIpp.Protocol.Models;
 /// See: PWG 5100.3-2023 Section 5.2.5
 /// Deprecated in: PWG 5100.3-2023 Section 5.2.5
 /// </summary>
+[Obsolete("See PWG 5100.3-2023 Section 5.2.5.")]
 public class InsertSheet : IIppCollection
 {
     /// <inheritdoc />

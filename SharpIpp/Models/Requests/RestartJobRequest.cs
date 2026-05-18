@@ -19,10 +19,9 @@ namespace SharpIpp.Models.Requests
     /// they give an accurate record of the job from its restart point.  The
     /// job object MUST continue to use the same "job-uri" and "job-id"
     /// attribute values.
-    /// <br/>
-    /// Deprecated/Obsolete Support: The library intentionally implements operations and attributes that the latest standards have deprecated or obsoleted for the sake of backward compatibility, such as the Restart-Job operation (Deprecated in RFC 8011).
     /// See: RFC 2911 Section 3.3.7
     /// </summary>
+    [Obsolete("See RFC 8011 Section 4.3.7.")]
     public class RestartJobRequest : IppRequest<RestartJobOperationAttributes>, IIppJobRequest
     {
 

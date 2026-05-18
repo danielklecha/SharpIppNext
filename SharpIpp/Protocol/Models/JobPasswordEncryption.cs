@@ -1,3 +1,5 @@
+using System;
+
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
@@ -16,24 +18,28 @@ public readonly record struct JobPasswordEncryption(string Value, bool IsValue =
     /// Obsolete legacy compatibility value.
     /// See: IPP Enterprise Printing Extensions v2.0 (PWG 5100.11-2024) Section 9.2.
     /// </summary>
+    [Obsolete("See IPP Enterprise Printing Extensions v2.0 (PWG 5100.11-2024) Section 9.2.")]
     public static readonly JobPasswordEncryption Md2 = new("md2");
 
     /// <summary>
     /// Obsolete legacy compatibility value.
     /// See: IPP Enterprise Printing Extensions v2.0 (PWG 5100.11-2024) Section 9.2.
     /// </summary>
+    [Obsolete("See IPP Enterprise Printing Extensions v2.0 (PWG 5100.11-2024) Section 9.2.")]
     public static readonly JobPasswordEncryption Md4 = new("md4");
 
     /// <summary>
     /// Obsolete legacy compatibility value.
     /// See: IPP Enterprise Printing Extensions v2.0 (PWG 5100.11-2024) Section 9.2.
     /// </summary>
+    [Obsolete("See IPP Enterprise Printing Extensions v2.0 (PWG 5100.11-2024) Section 9.2.")]
     public static readonly JobPasswordEncryption Md5 = new("md5");
 
     /// <summary>
     /// Obsolete legacy compatibility value.
     /// See: IPP Enterprise Printing Extensions v2.0 (PWG 5100.11-2024) Section 9.2.
     /// </summary>
+    [Obsolete("See IPP Enterprise Printing Extensions v2.0 (PWG 5100.11-2024) Section 9.2.")]
     public static readonly JobPasswordEncryption Sha = new("sha");
 
     /// <summary>

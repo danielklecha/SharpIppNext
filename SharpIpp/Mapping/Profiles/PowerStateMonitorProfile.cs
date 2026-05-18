@@ -28,8 +28,8 @@ internal class PowerStateMonitorProfile : IProfile
                 PowerStateMessage = map.MapFromDicNullable<string?>(src, "power-state-message"),
                 PowerUsageIsRmsWatts = map.MapFromDicNullable<bool?>(src, "power-usage-is-rms-watts")
             };
-            if (src.ContainsKey("valid-request-power-state"))
-                dst.ValidRequestPowerStates = src["valid-request-power-state"].Select(x => (IppOperation)Enum.Parse(typeof(IppOperation), x.Value.ToString()!)).ToArray();
+            if (src.ContainsKey("valid-request-power-states"))
+                dst.ValidRequestPowerStates = src["valid-request-power-states"].Select(x => new PowerState(x.Value.ToString()!)).ToArray();
             return dst;
         });
 
@@ -54,7 +54,7 @@ internal class PowerStateMonitorProfile : IProfile
             if (src.PowerUsageIsRmsWatts.HasValue)
                 attributes.Add(new IppAttribute(Tag.Boolean, "power-usage-is-rms-watts", src.PowerUsageIsRmsWatts.Value));
             if (src.ValidRequestPowerStates != null)
-                attributes.AddRange(src.ValidRequestPowerStates.Select(x => new IppAttribute(Tag.Enum, "valid-request-power-state", (int)x)));
+                attributes.AddRange(src.ValidRequestPowerStates.Select(x => new IppAttribute(Tag.Keyword, "valid-request-power-states", x.Value)));
             return attributes;
         });
     }

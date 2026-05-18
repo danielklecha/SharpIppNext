@@ -26,6 +26,7 @@ namespace SharpIpp.Protocol.Models
         /// attribute as part of the response to a create request.  The 0 value
         /// is not included to allow for compatibility with SNMP index values
         /// which also cannot be 0.
+        /// Type: integer(1:MAX)
         /// See: RFC 8011 Section 5.3.1
         /// </summary>
         /// <example>63</example>
@@ -301,6 +302,7 @@ namespace SharpIpp.Protocol.Models
         /// <summary>
         /// This REQUIRED attribute indicates the time at which the Job object
         /// was created.
+        /// Type: integer(MIN:MAX)
         /// See: RFC 8011 Section 5.3.14.1
         /// </summary>
         /// <example>197753</example>
@@ -810,6 +812,7 @@ namespace SharpIpp.Protocol.Models
 
         /// <summary>
         /// The actual chamber humidity values used to process the 3D job.
+        /// Type: integer(0:100)
         /// See: PWG 5100.21-2019 Section 8.2.1
         /// </summary>
         /// <code>chamber-humidity-actual</code>
@@ -817,6 +820,7 @@ namespace SharpIpp.Protocol.Models
 
         /// <summary>
         /// The actual chamber temperature values used to process the 3D job.
+        /// Type: integer(-273:MAX)
         /// See: PWG 5100.21-2019 Section 8.2.2
         /// </summary>
         /// <code>chamber-temperature-actual</code>
@@ -838,6 +842,7 @@ namespace SharpIpp.Protocol.Models
 
         /// <summary>
         /// The actual platform temperature values used to process the 3D job.
+        /// Type: integer(-273:MAX)
         /// See: PWG 5100.21-2019 Section 8.2.6
         /// </summary>
         /// <code>platform-temperature-actual</code>

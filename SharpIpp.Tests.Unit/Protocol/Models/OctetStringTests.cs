@@ -25,6 +25,29 @@ public class OctetStringTests
     }
 
     [TestMethod]
+    public void Constructor_WithIsValueFalse_ShouldHaveIsValueFalse()
+    {
+        // Arrange
+        var bytes = new byte[] { 1, 2, 3 };
+        var octetString = new OctetString(bytes, false);
+
+        // Assert
+        octetString.IsValue.Should().BeFalse();
+        octetString.Value.Should().BeSameAs(bytes);
+    }
+
+    [TestMethod]
+    public void Constructor_WithNullValue_ShouldHaveIsValueFalse()
+    {
+        // Arrange
+        var octetString = new OctetString(null!, true);
+
+        // Assert
+        octetString.IsValue.Should().BeFalse();
+        octetString.Value.Should().BeNull();
+    }
+
+    [TestMethod]
     public void ToString_WhenValueIsNull_ShouldReturnEmptyString()
     {
         // Arrange

@@ -34,6 +34,13 @@ var request = new ValidateDocumentRequest
 };
 
 var response = await client.ValidateDocumentAsync(request);
+
+// Access preferred attributes returned by the printer in case of conflicts (PWG 5100.13)
+if (response.OperationAttributes?.PreferredAttributes != null)
+{
+    var preferred = response.OperationAttributes.PreferredAttributes;
+    System.Console.WriteLine($"Suggested copies fallback: {preferred.Copies}");
+}
 ```
 
 ## Notes
