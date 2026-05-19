@@ -8,13 +8,15 @@ public class GetDocumentAttributesOperationAttributes : JobOperationAttributes
 {
     /// <summary>
     /// The document-number IPP attribute.
+    /// Type: integer(1:MAX)
     /// See: PWG 5100.5-2024 Section 6.2.4
     /// </summary>
     /// <code>document-number</code>
     public int DocumentNumber { get; set; }
     /// <summary>
     /// The requested-attributes IPP attribute.
-    /// See: RFC 8011 Section 5.4.1
+    /// See: PWG 5100.5-2024 Section 5.1.2.1
+    /// See: RFC 8011 Section 4.2.5.1
     /// </summary>
     /// <code>requested-attributes</code>
     public string[]? RequestedAttributes { get; set; }

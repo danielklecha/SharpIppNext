@@ -18,6 +18,7 @@ internal class IdentifyPrinterOperationAttributesProfile : IProfile
             dst.IdentifyActions = map.MapFromDicSetNullable<IdentifyAction[]?>(src, JobAttribute.IdentifyActions);
             dst.OutputDeviceUuid = map.MapFromDicNullable<Uri?>(src, JobAttribute.OutputDeviceUuid);
             dst.JobId = map.MapFromDicNullable<int?>(src, JobAttribute.JobId);
+            dst.Message = map.MapFromDicNullable<string?>(src, JobAttribute.Message);
             return dst;
         });
 
@@ -31,6 +32,8 @@ internal class IdentifyPrinterOperationAttributesProfile : IProfile
                 dst.Add(new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, src.OutputDeviceUuid.ToString()));
             if (src.JobId.HasValue)
                 dst.Add(new IppAttribute(Tag.Integer, JobAttribute.JobId, src.JobId.Value));
+            if (src.Message != null)
+                dst.Add(new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.Message, src.Message));
             return dst;
         });
     }

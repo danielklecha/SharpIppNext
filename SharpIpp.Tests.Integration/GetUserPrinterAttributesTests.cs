@@ -19,7 +19,15 @@ public class GetUserPrinterAttributesTests : SharpIppIntegrationTestBase
         {
             RequestId = 810,
             Version = new IppVersion(2, 0),
-            OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestedAttributes = ["printer-name"] }
+            OperationAttributes = new()
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631"),
+                FirstIndex = 5,
+                Limit = 10,
+                DocumentFormat = "application/octet-stream",
+                RequestedAttributes = ["printer-name"],
+                RequestingUserVcard = ["vcard-entry-1", "vcard-entry-2"]
+            }
         };
 
         IIppRequest? serverRequest = null;

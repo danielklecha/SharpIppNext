@@ -75,6 +75,7 @@ namespace SharpIpp.Protocol.Models
         public const string JobErrorAction = "job-error-action";
         public const string RequestingUserName = "requesting-user-name";
         public const string RequestingUserUri = "requesting-user-uri";
+        public const string RequestingUserVcard = "requesting-user-vcard";
         public const string AttributesCharset = "attributes-charset";
         public const string AttributesNaturalLanguage = "attributes-natural-language";
         public const string DocumentNaturalLanguage = "document-natural-language";
@@ -235,6 +236,8 @@ namespace SharpIpp.Protocol.Models
         public const string PrintBase = "print-base";
         public const string PrintObjects = "print-objects";
         public const string PrintSupports = "print-supports";
+        public const string ChamberHumidity = "chamber-humidity";
+        public const string ChamberTemperature = "chamber-temperature";
         public const string ChamberHumidityActual = "chamber-humidity-actual";
         public const string ChamberTemperatureActual = "chamber-temperature-actual";
         public const string MaterialsColActual = "materials-col-actual";

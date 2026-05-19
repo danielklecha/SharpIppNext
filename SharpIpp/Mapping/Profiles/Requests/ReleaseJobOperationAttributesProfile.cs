@@ -1,3 +1,4 @@
+using System;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Models.Requests;
 using SharpIpp.Protocol.Models;
@@ -12,14 +13,17 @@ internal class ReleaseJobOperationAttributesProfile : IProfile
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, ReleaseJobOperationAttributes>((src, dst, map) =>
         {
             dst ??= new ReleaseJobOperationAttributes();
-            map.Map<IDictionary<string, IppAttribute[]>, JobOperationAttributes>(src, dst);
+            map.Map<IDictionary<string, IppAttribute[]>, CancelJobOperationAttributes>(src, dst);
+            dst.OutputDeviceUuid = map.MapFromDicNullable<Uri?>(src, JobAttribute.OutputDeviceUuid);
             return dst;
         });
 
         mapper.CreateMap<ReleaseJobOperationAttributes, List<IppAttribute>>((src, dst, map) =>
         {
             dst ??= new List<IppAttribute>();
-            map.Map<JobOperationAttributes, List<IppAttribute>>(src, dst);
+            map.Map<CancelJobOperationAttributes, List<IppAttribute>>(src, dst);
+            if (src.OutputDeviceUuid != null)
+                dst.Add(new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, src.OutputDeviceUuid.ToString()));
             return dst;
         });
     }

@@ -1,3 +1,4 @@
+using System;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Models.Requests;
 using SharpIpp.Protocol.Models;
@@ -17,6 +18,7 @@ internal class GetPrinterAttributesOperationAttributesProfile : IProfile
             dst.FirstIndex = map.MapFromDicNullable<int?>(src, JobAttribute.FirstIndex);
             dst.Limit = map.MapFromDicNullable<int?>(src, JobAttribute.Limit);
             dst.DocumentFormat = map.MapFromDicNullable<string?>(src, JobAttribute.DocumentFormat);
+            dst.OutputDeviceUuid = map.MapFromDicNullable<Uri?>(src, JobAttribute.OutputDeviceUuid);
             var requestedAttributes = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.RequestedAttributes);
             if (requestedAttributes?.Any() ?? false)
                 dst.RequestedAttributes = requestedAttributes;
@@ -35,6 +37,8 @@ internal class GetPrinterAttributesOperationAttributesProfile : IProfile
                 dst.Add(new IppAttribute(Tag.MimeMediaType, JobAttribute.DocumentFormat, src.DocumentFormat));
             if (src.RequestedAttributes != null)
                 dst.AddRange(src.RequestedAttributes.Select(requestedAttribute => new IppAttribute(Tag.Keyword, JobAttribute.RequestedAttributes, requestedAttribute)));
+            if (src.OutputDeviceUuid != null)
+                dst.Add(new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, src.OutputDeviceUuid.ToString()));
             return dst;
         });
     }

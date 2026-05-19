@@ -47,7 +47,7 @@ public class CreateJobOperationAttributes : OperationAttributes
     public int? JobImpressions { get; set; }
     /// <summary>
     /// This attribute specifies the total number of media sheets to be produced for this job. Unlike the "job-k-octets" and the "job-impressions" attributes, this value MUST include the multiplicative factors contributed by the number of copies specified by the "copies" attribute and a 'number of copies' instruction embedded in the document data, if any. This difference allows the system administrator to control the lower and upper bounds of both (1) the size of the document(s) with "job-k- octets-supported" and "job-impressions-supported" and (2) the size of the job with "job-media-sheets-supported"
-    /// See: pwg5100.1-2022 Section 6.9.4
+    /// See: RFC 8011 Section 5.3.17.3
     /// </summary>
     /// <code>job-media-sheets</code>
     /// <example>no value</example>

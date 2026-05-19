@@ -54,7 +54,7 @@ public class SendDocumentTests : SharpIppIntegrationTestBase
                 DocumentCharset = "utf-8",
                 DocumentMessage = "document-message",
                 LastDocument = true,
-                DocumentMetadata = ["meta1", "meta2"],
+                DocumentMetadata = ["x-meta1=val1", "x-meta2=val2"],
                 DocumentPassword = "test-password",
             },
             DocumentTemplateAttributes = new()
@@ -166,7 +166,7 @@ public class SendDocumentTests : SharpIppIntegrationTestBase
                     DocumentSourceOsName = "Windows"
                 },
                 DocumentMessage = "scan message",
-                DocumentMetadata = ["scan-meta-1"],
+                DocumentMetadata = ["x-scan-meta-1=val1"],
                 DocumentName = "scanned-document",
                 DocumentNaturalLanguage = "en-us",
                 DocumentPassword = new byte[] { 0x04, 0x05 },

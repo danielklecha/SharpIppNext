@@ -285,7 +285,8 @@ public class DocumentAttributes : IIppCollection
     public bool? LastDocument { get; set; }
     /// <summary>
     /// The media-sheets IPP attribute.
-    /// See: pwg5100.1-2022 Section 2.2
+    /// See: RFC 8011 Section 5.3.17.3
+    /// See: PWG 5100.5-2024 Section 6.2
     /// </summary>
     /// <code>media-sheets</code>
     public int? MediaSheets { get; set; }

@@ -25,6 +25,9 @@ public class GetNextDocumentDataResponseOperationAttributes : OperationAttribute
 
     /// <summary>
     /// The <c>document-number</c> operation attribute.
+    /// Type: integer(1:MAX)
+    /// See: PWG 5100.17-2014 Section 6.1.2
+    /// See: PWG 5100.5-2024 Section 6.2.4
     /// </summary>
     public int? DocumentNumber { get; set; }
 }

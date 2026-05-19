@@ -219,7 +219,8 @@ namespace SharpIpp.Protocol.Models
         /// <summary>
         /// Delete-Document Operation.
         /// OBSOLETE.
-        /// See: PWG 5100.5-2024 and PWG 5100.18-2025.
+        /// See: PWG 5100.5-2024 Section 14
+        /// See: PWG 5100.18-2025 Section 4.5 Note 3
         /// See: PWG 5100.15-2013 Section 4.2
         /// </summary>
         [Obsolete("The 'Delete-Document' operation is obsolete. See PWG 5100.5-2024 and PWG 5100.18-2025.")]
@@ -279,7 +280,10 @@ namespace SharpIpp.Protocol.Models
         /// </summary>
         FetchJob = 0x0043,
         /// <summary>
+        /// Get-Output-Device-Attributes Operation.
         /// See: PWG 5100.18-2025 Section 6.1
+        /// See: PWG 5100.18-2025 Section 14.3
+        /// See: PWG 5100.18-2025 Section 14.4
         /// </summary>
         GetOutputDeviceAttributes = 0x0044,
         /// <summary>

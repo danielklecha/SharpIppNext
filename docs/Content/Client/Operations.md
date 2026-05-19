@@ -10,7 +10,7 @@ For the PWG 5100.8 "-actual" attributes extension (including the `job-actual` re
 
 For the PWG 5100.9 printer state extension attributes (`printer-alert`, `printer-alert-description`, and extended `printer-state-reasons` keyword values), use the strongly typed properties on `PrinterDescriptionAttributes` and `PrinterStateReason`.
 
-For the PWG 5100.21 IPP 3D attribute extensions (for example `materials-col`, `materials-col-actual`, `print-accuracy`, `print-accuracy-actual`, `printer-volume-supported`, and chamber/platform state attributes), use the strongly typed properties on `JobTemplateAttributes`, `JobDescriptionAttributes`, and `PrinterDescriptionAttributes`.
+For the PWG 5100.21 IPP 3D attribute extensions (for example `chamber-humidity`, `chamber-temperature`, `materials-col`, `materials-col-actual`, `print-accuracy`, `print-accuracy-actual`, `printer-volume-supported`, and chamber/platform state attributes), use the strongly typed properties on `JobTemplateAttributes`, `JobDescriptionAttributes`, and `PrinterDescriptionAttributes`.
 
 | Operation | Method | Example |
 | --- | --- | --- |

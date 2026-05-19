@@ -8,7 +8,9 @@ public class GetNextDocumentDataOperationAttributes : OperationAttributes
 {
     /// <summary>
     /// The <c>job-id</c> operation attribute.
+    /// Type: integer(1:MAX)
     /// See: PWG 5100.17-2014 Section 6.1.1
+    /// See: RFC 8011 Section 5.3.1
     /// </summary>
     public int? JobId { get; set; }
 

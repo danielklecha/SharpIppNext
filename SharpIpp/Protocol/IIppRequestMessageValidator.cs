@@ -2,6 +2,12 @@ using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Protocol;
 
+/// <summary>
+/// Defines a validator for IPP request messages.
+/// This is a low-end validator focusing on syntactic, structural, and protocol-level constraint validation
+/// (such as versioning, character sets, attribute uniqueness, range bounds, and basic operation rules)
+/// rather than high-end business logic.
+/// </summary>
 public interface IIppRequestMessageValidator
 {
     IppRequestValidationContext Context { get; }

@@ -9,7 +9,7 @@ public class GetPrinterAttributesResponse : IppResponse<OperationAttributes>
 {
     /// <summary>
     /// The printer-attributes IPP attribute.
-    /// See: pwg5100.1-2022 Section 6.9.4
+    /// See: RFC 8011 Section 4.2.5.2
     /// </summary>
     /// <code>printer-attributes</code>
     public PrinterDescriptionAttributes? PrinterAttributes { get; set; }

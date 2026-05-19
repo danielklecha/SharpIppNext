@@ -13,7 +13,9 @@ public class IppRequest<TOperationAttributes> : IIppRequest where TOperationAttr
     /// <code>version</code>
     public IppVersion Version { get; set; } = new();
     /// <summary>
-    /// The request ID. The client MUST supply this value. The Printer object MUST return this value in the response
+    /// The request ID. The client MUST supply this value. The Printer object MUST return this value in the response.
+    /// Type: integer(1:2**31 - 1)
+    /// See: RFC 8011 Section 4.1.1.1
     /// See: pwg5100.18 - IPP Shared Infrastructure Extensions v1.1 Section 5.10
     /// </summary>
     /// <code>request-id</code>

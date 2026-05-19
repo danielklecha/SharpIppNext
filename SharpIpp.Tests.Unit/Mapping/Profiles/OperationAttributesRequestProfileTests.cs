@@ -4,6 +4,7 @@ using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Models.Requests;
 using SharpIpp.Protocol;
+using SharpIpp.Protocol.Extensions;
 using SharpIpp.Protocol.Models;
 using System;
 using System.Collections.Generic;
@@ -148,6 +149,104 @@ public class OperationAttributesRequestProfileTests
         dst.Should().Contain(x => x.Name == JobAttribute.OutputDeviceUuid && x.Tag == Tag.Uri && x.Value.Equals("urn:uuid:123e4567-e89b-12d3-a456-426614174003"));
         dst.Should().Contain(x => x.Name == JobAttribute.RequestedAttributes && x.Tag == Tag.Keyword && x.Value.Equals("printer-name"));
         dst.Should().Contain(x => x.Name == JobAttribute.RequestedAttributes && x.Tag == Tag.Keyword && x.Value.Equals("printer-state"));
+    }
+
+    [TestMethod]
+    public void Map_GetPrinterAttributesOperationAttributes_WithOutputDeviceUuid_MapsToIppAttributes()
+    {
+        var src = new GetPrinterAttributesOperationAttributes
+        {
+            AttributesCharset = "utf-8",
+            AttributesNaturalLanguage = "en",
+            PrinterUri = new Uri("ipp://printer"),
+            OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174003")
+        };
+
+        var dst = _mapper.Map<GetPrinterAttributesOperationAttributes, List<IppAttribute>>(src);
+
+        dst.Should().Contain(x => x.Name == JobAttribute.OutputDeviceUuid && x.Tag == Tag.Uri && x.Value.Equals("urn:uuid:123e4567-e89b-12d3-a456-426614174003"));
+    }
+
+    [TestMethod]
+    public void Map_GetPrinterAttributesOperationAttributes_WithOutputDeviceUuid_MapsFromIppAttributes()
+    {
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { JobAttribute.AttributesCharset, [new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8")] },
+            { JobAttribute.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en")] },
+            { JobAttribute.PrinterUri, [new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://printer")] },
+            { JobAttribute.OutputDeviceUuid, [new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174003")] }
+        };
+
+        var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, GetPrinterAttributesOperationAttributes>(src);
+
+        dst.OutputDeviceUuid.Should().Be(new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174003"));
+    }
+
+    [TestMethod]
+    public void Map_GetJobsOperationAttributes_WithOutputDeviceUuid_MapsToIppAttributes()
+    {
+        var src = new GetJobsOperationAttributes
+        {
+            AttributesCharset = "utf-8",
+            AttributesNaturalLanguage = "en",
+            PrinterUri = new Uri("ipp://printer"),
+            OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174003")
+        };
+
+        var dst = _mapper.Map<GetJobsOperationAttributes, List<IppAttribute>>(src);
+
+        dst.Should().Contain(x => x.Name == JobAttribute.OutputDeviceUuid && x.Tag == Tag.Uri && x.Value.Equals("urn:uuid:123e4567-e89b-12d3-a456-426614174003"));
+    }
+
+    [TestMethod]
+    public void Map_GetJobsOperationAttributes_WithOutputDeviceUuid_MapsFromIppAttributes()
+    {
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { JobAttribute.AttributesCharset, [new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8")] },
+            { JobAttribute.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en")] },
+            { JobAttribute.PrinterUri, [new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://printer")] },
+            { JobAttribute.OutputDeviceUuid, [new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174003")] }
+        };
+
+        var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, GetJobsOperationAttributes>(src);
+
+        dst.OutputDeviceUuid.Should().Be(new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174003"));
+    }
+
+    [TestMethod]
+    public void Map_ReleaseJobOperationAttributes_WithOutputDeviceUuid_MapsToIppAttributes()
+    {
+        var src = new ReleaseJobOperationAttributes
+        {
+            AttributesCharset = "utf-8",
+            AttributesNaturalLanguage = "en",
+            PrinterUri = new Uri("ipp://printer"),
+            JobId = 123,
+            OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174003")
+        };
+
+        var dst = _mapper.Map<ReleaseJobOperationAttributes, List<IppAttribute>>(src);
+
+        dst.Should().Contain(x => x.Name == JobAttribute.OutputDeviceUuid && x.Tag == Tag.Uri && x.Value.Equals("urn:uuid:123e4567-e89b-12d3-a456-426614174003"));
+    }
+
+    [TestMethod]
+    public void Map_ReleaseJobOperationAttributes_WithOutputDeviceUuid_MapsFromIppAttributes()
+    {
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { JobAttribute.AttributesCharset, [new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8")] },
+            { JobAttribute.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en")] },
+            { JobAttribute.PrinterUri, [new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://printer")] },
+            { JobAttribute.JobId, [new IppAttribute(Tag.Integer, JobAttribute.JobId, 123)] },
+            { JobAttribute.OutputDeviceUuid, [new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174003")] }
+        };
+
+        var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, ReleaseJobOperationAttributes>(src);
+
+        dst.OutputDeviceUuid.Should().Be(new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174003"));
     }
 
     [TestMethod]
@@ -408,5 +507,69 @@ public class OperationAttributesRequestProfileTests
         dst.JobId.Should().Be(101);
         dst.InputAttributes.Should().NotBeNull();
         dst.InputAttributes!.DocumentFormat.Should().Be("image/tiff");
+    }
+
+    [TestMethod]
+    public void Map_IdentifyPrinterOperationAttributes_WithAllProperties_MapsBidirectionally()
+    {
+        // Arrange
+        var src = new IdentifyPrinterOperationAttributes
+        {
+            AttributesCharset = "utf-8",
+            AttributesNaturalLanguage = "en",
+            PrinterUri = new Uri("ipp://printer/"),
+            IdentifyActions = new[] { IdentifyAction.Flash, IdentifyAction.Sound },
+            OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174001"),
+            JobId = 123,
+            Message = "Test identify message"
+        };
+
+        // Act
+        var attributesList = _mapper.Map<IdentifyPrinterOperationAttributes, List<IppAttribute>>(src);
+        var dictionary = attributesList.ToIppDictionary();
+        var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, IdentifyPrinterOperationAttributes>(dictionary);
+
+        // Assert
+        dst.AttributesCharset.Should().Be(src.AttributesCharset);
+        dst.AttributesNaturalLanguage.Should().Be(src.AttributesNaturalLanguage);
+        dst.PrinterUri.Should().Be(src.PrinterUri);
+        dst.IdentifyActions.Should().BeEquivalentTo(src.IdentifyActions);
+        dst.OutputDeviceUuid.Should().Be(src.OutputDeviceUuid);
+        dst.JobId.Should().Be(src.JobId);
+        dst.Message.Should().Be(src.Message);
+    }
+
+    [TestMethod]
+    public void Map_GetUserPrinterAttributesOperationAttributes_WithAllProperties_MapsBidirectionally()
+    {
+        // Arrange
+        var src = new GetUserPrinterAttributesOperationAttributes
+        {
+            AttributesCharset = "utf-8",
+            AttributesNaturalLanguage = "en",
+            PrinterUri = new Uri("ipp://printer/"),
+            FirstIndex = 10,
+            Limit = 5,
+            DocumentFormat = "application/pdf",
+            OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174002"),
+            RequestedAttributes = new[] { "printer-name", "printer-state" },
+            RequestingUserVcard = new[] { "vcard-line-1", "vcard-line-2" }
+        };
+
+        // Act
+        var attributesList = _mapper.Map<GetUserPrinterAttributesOperationAttributes, List<IppAttribute>>(src);
+        var dictionary = attributesList.ToIppDictionary();
+        var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, GetUserPrinterAttributesOperationAttributes>(dictionary);
+
+        // Assert
+        dst.AttributesCharset.Should().Be(src.AttributesCharset);
+        dst.AttributesNaturalLanguage.Should().Be(src.AttributesNaturalLanguage);
+        dst.PrinterUri.Should().Be(src.PrinterUri);
+        dst.FirstIndex.Should().Be(src.FirstIndex);
+        dst.Limit.Should().Be(src.Limit);
+        dst.DocumentFormat.Should().Be(src.DocumentFormat);
+        dst.OutputDeviceUuid.Should().Be(src.OutputDeviceUuid);
+        dst.RequestedAttributes.Should().BeEquivalentTo(src.RequestedAttributes);
+        dst.RequestingUserVcard.Should().BeEquivalentTo(src.RequestingUserVcard);
     }
 }

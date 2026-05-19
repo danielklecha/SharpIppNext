@@ -210,7 +210,9 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
             },
             PrintBase = (PrintBase?)"raft",
             PrintObjects = [new PrintObject { DocumentNumber = 1, PrintObjectsSource = "ipp://example/doc/1" }],
-            PrintSupports = (PrintSupports?)"generated-supports"
+            PrintSupports = (PrintSupports?)"generated-supports",
+            ChamberHumidity = 45,
+            ChamberTemperature = 60
         };
 
         var request = _mapper.Map<IppRequestMessage>(src);
@@ -222,6 +224,8 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
         request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.PrintBase && a.Tag == Tag.Keyword && Equals(a.Value, "raft"));
         request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.PrintObjects);
         request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.PrintSupports && a.Tag == Tag.Keyword && Equals(a.Value, "generated-supports"));
+        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.ChamberHumidity && a.Tag == Tag.Integer && Equals(a.Value, 45));
+        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.ChamberTemperature && a.Tag == Tag.Integer && Equals(a.Value, 60));
     }
 
     [TestMethod]
@@ -250,6 +254,8 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
         request.JobAttributes.Add(new IppAttribute(Tag.Keyword, JobAttribute.PrintBase, "raft"));
         request.JobAttributes.AddRange(_mapper.Map<PrintObject, IEnumerable<IppAttribute>>(new PrintObject { DocumentNumber = 1, PrintObjectsSource = "ipp://example/doc/1" }).ToBegCollection(JobAttribute.PrintObjects));
         request.JobAttributes.Add(new IppAttribute(Tag.Keyword, JobAttribute.PrintSupports, "generated-supports"));
+        request.JobAttributes.Add(new IppAttribute(Tag.Integer, JobAttribute.ChamberHumidity, 45));
+        request.JobAttributes.Add(new IppAttribute(Tag.Integer, JobAttribute.ChamberTemperature, 60));
 
         var dst = _mapper.Map<IIppRequestMessage, JobTemplateAttributes>((IIppRequestMessage)request);
 
@@ -263,6 +269,8 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
         dst.PrintObjects.Should().NotBeNull();
         dst.PrintObjects![0].DocumentNumber.Should().Be(1);
         dst.PrintSupports.Should().Be((PrintSupports?)"generated-supports");
+        dst.ChamberHumidity.Should().Be(45);
+        dst.ChamberTemperature.Should().Be(60);
     }
 
     [TestMethod]

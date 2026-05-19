@@ -25,8 +25,18 @@ public class IdentifyPrinterOperationAttributes : OperationAttributes
 
     /// <summary>
     /// The optional <c>job-id</c> target attribute for Identify-Printer.
+    /// Type: integer(1:MAX)
     /// See: PWG 5100.18-2025 Section 8.5
+    /// See: RFC 8011 Section 5.3.1
     /// </summary>
     /// <code>job-id</code>
     public int? JobId { get; set; }
+
+    /// <summary>
+    /// The <c>message</c> operation attribute.
+    /// Type: text(127)
+    /// See: PWG 5100.13-2023 Section 5.1.1
+    /// </summary>
+    /// <code>message</code>
+    public string? Message { get; set; }
 }

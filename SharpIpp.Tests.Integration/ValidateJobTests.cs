@@ -92,7 +92,7 @@ public class ValidateJobTests : SharpIppIntegrationTestBase
                 JobImpressionsEstimated = 10,
                 ChargeInfoMessage = "charge-info",
                 ProofCopies = 1,
-                DocumentMetadata = ["meta1", "meta2"],
+                DocumentMetadata = ["x-meta1=val1", "x-meta2=val2"],
                 DocumentPassword = "test-password",
                 DocumentMessage = "test-message",
             },

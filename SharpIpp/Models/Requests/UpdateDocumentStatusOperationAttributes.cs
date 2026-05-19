@@ -10,6 +10,8 @@ public class UpdateDocumentStatusOperationAttributes : JobOperationAttributes
 {
     /// <summary>
     /// The <c>document-number</c> operation attribute.
+    /// Type: integer(1:MAX)
+    /// See: PWG 5100.18-2025 Section 5.8.1
     /// See: PWG 5100.5-2024 Section 5.1.2
     /// </summary>
     public int DocumentNumber { get; set; }

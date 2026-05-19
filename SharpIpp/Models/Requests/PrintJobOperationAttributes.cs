@@ -73,6 +73,7 @@ public class PrintJobOperationAttributes : CreateJobOperationAttributes
 
     /// <summary>
     /// The document-message IPP attribute.
+    /// See: PWG 5100.5-2024 Section 8.4.1
     /// See: PWG 5100.5-2024 Section 6.2.3
     /// </summary>
     /// <code>document-message</code>

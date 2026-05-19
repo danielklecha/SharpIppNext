@@ -30,7 +30,9 @@ public class GetPrinterAttributesOperationAttributes : OperationAttributes
 
     /// <summary>
     /// The client OPTIONALLY supplies this attribute. The Printer object MUST support this attribute. It is a set of Printer attribute names and/or attribute groups names in whose values the requester is interested
-    /// See: pwg5100.1-2022 Section 6.9.4
+    /// See: RFC 8011 Section 4.2.5.1
+    /// See: RFC 8011 Section 4.2.6.1
+    /// See: RFC 8011 Section 4.3.4.1
     /// </summary>
     /// <code>requested-attributes</code>
     public string[]? RequestedAttributes { get; set; }
@@ -41,4 +43,12 @@ public class GetPrinterAttributesOperationAttributes : OperationAttributes
     /// <code>document-format</code>
     /// <example>application/octet-stream</example>
     public string? DocumentFormat { get; set; }
+
+    /// <summary>
+    /// The <c>output-device-uuid</c> operation attribute.
+    /// See: PWG 5100.18-2025 Section 7.1.8
+    /// See: PWG 5100.18-2025 Section 8.4
+    /// </summary>
+    /// <code>output-device-uuid</code>
+    public Uri? OutputDeviceUuid { get; set; }
 }

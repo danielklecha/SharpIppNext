@@ -1749,5 +1749,542 @@ public class IppRequestMessageValidatorTests
         validator.ValidateOutputBinAgainstSupportedValues(attr, request);
     }
 
+    [TestMethod]
+    public void ValidateUniqueAttributes_WithDuplicates_ShouldThrow()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+        request.OperationAttributes.AddRange(new[]
+        {
+            new IppAttribute(Tag.Keyword, JobAttribute.RequestedAttributes, "all"),
+            new IppAttribute(Tag.Integer, JobAttribute.Copies, 1),
+            new IppAttribute(Tag.Keyword, JobAttribute.RequestedAttributes, "media")
+        });
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("Duplicate attribute 'requested-attributes' in group 'operation-attributes'");
+    }
+
+    [TestMethod]
+    public void ValidateUniqueAttributes_WithConsecutiveSameName_ShouldPass()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+        request.OperationAttributes.AddRange(new[]
+        {
+            new IppAttribute(Tag.Keyword, JobAttribute.RequestedAttributes, "all"),
+            new IppAttribute(Tag.Keyword, JobAttribute.RequestedAttributes, "media")
+        });
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void ValidateDocumentMetadata_WithInvalidFormat_ShouldThrow()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+        request.OperationAttributes.Add(new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, DocumentAttribute.DocumentMetadata, new OctetString("invalid-format")));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("invalid document-metadata value: must be in keyword=value format");
+    }
+
+    [TestMethod]
+    public void ValidateDocumentMetadata_WithInvalidKeyword_ShouldThrow()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+        request.OperationAttributes.Add(new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, DocumentAttribute.DocumentMetadata, new OctetString("invalidkeyword=val")));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("invalid document-metadata keyword 'invalidkeyword'");
+    }
+
+    [TestMethod]
+    public void ValidateDocumentMetadata_WithValidKeyword_ShouldPass()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+        request.OperationAttributes.Add(new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, DocumentAttribute.DocumentMetadata, new OctetString("title=val")));
+        request.OperationAttributes.Add(new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, DocumentAttribute.DocumentMetadata, new OctetString("x-custom_keyword-1=val")));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_RegisterOutputDevice_WithBothX509CertificateAndRequest_Throws()
+    {
+        var validator = IppRequestMessageValidator.Default;
+        var request = CreateBasicSystemRequest(IppOperation.RegisterOutputDevice);
+        request.OperationAttributes.Add(new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174000"));
+        request.OperationAttributes.Add(new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.OutputDeviceX509Certificate, "cert-data"));
+        request.OperationAttributes.Add(new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.OutputDeviceX509Request, "csr-data"));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().Throw<IppRequestException>()
+            .Which.StatusCode.Should().Be(IppStatusCode.ClientErrorConflictingAttributes);
+    }
+
+    [TestMethod]
+    public void Validate_RegisterOutputDevice_MissingOutputDeviceUuid_Throws()
+    {
+        var validator = IppRequestMessageValidator.Default;
+        var request = CreateBasicSystemRequest(IppOperation.RegisterOutputDevice);
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().Throw<IppRequestException>()
+            .Which.StatusCode.Should().Be(IppStatusCode.ClientErrorBadRequest);
+    }
+
+    [TestMethod]
+    public void Validate_SetPrinterAttributes_DefaultValueNotInSupportedValues_Throws()
+    {
+        var validator = IppRequestMessageValidator.Default;
+        var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
+        {
+            new IppAttribute(Tag.Integer, "copies-default", 15),
+            new IppAttribute(Tag.RangeOfInteger, "copies-supported", new SharpIpp.Protocol.Models.Range(1, 10))
+        });
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().Throw<IppRequestException>()
+            .Which.StatusCode.Should().Be(IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
+    }
+
+    [TestMethod]
+    public void Validate_SetPrinterAttributes_DefaultValueInSupportedValues_Passes()
+    {
+        var validator = IppRequestMessageValidator.Default;
+        var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
+        {
+            new IppAttribute(Tag.Integer, "copies-default", 5),
+            new IppAttribute(Tag.RangeOfInteger, "copies-supported", new SharpIpp.Protocol.Models.Range(1, 10)),
+            new IppAttribute(Tag.Keyword, "media-default", "iso_a4"),
+            new IppAttribute(Tag.Keyword, "media-supported", "iso_a4"),
+            new IppAttribute(Tag.Keyword, "media-supported", "na_letter")
+        });
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void ValidateOverridesRules_MultipleCollections_NoOverlap_ShouldPass()
+    {
+        var validator = new IppRequestMessageValidator();
+        validator.Context.OverridesSupportedOperations = new HashSet<IppOperation> { IppOperation.CreateJob };
+        var request = CreateBasicRequest(IppOperation.CreateJob);
+        request.JobAttributes.AddRange(new[]
+        {
+            new IppAttribute(Tag.BegCollection, JobAttribute.Overrides, NoValue.Instance),
+            new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 1)),
+            new IppAttribute(Tag.RangeOfInteger, "document-numbers", new SharpIpp.Protocol.Models.Range(1, 2)),
+            new IppAttribute(Tag.Keyword, "some-job-attr", "value"),
+            new IppAttribute(Tag.EndCollection, string.Empty, NoValue.Instance),
+
+            new IppAttribute(Tag.BegCollection, JobAttribute.Overrides, NoValue.Instance),
+            new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(2, 2)),
+            new IppAttribute(Tag.RangeOfInteger, "document-numbers", new SharpIpp.Protocol.Models.Range(3, 4)),
+            new IppAttribute(Tag.Keyword, "some-job-attr", "value"),
+            new IppAttribute(Tag.EndCollection, string.Empty, NoValue.Instance)
+        });
+
+        validator.Context.OverrideMemberScopesByName = new Dictionary<string, OverrideMemberScope>
+        {
+            { "some-job-attr", OverrideMemberScope.Page }
+        };
+        validator.ValidateJobAttributesGroup = true;
+
+        Action act = () => validator.Validate(request);
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void ValidateOverridesRules_MultipleCollections_OverlappingDocumentNumbers_Throws()
+    {
+        var validator = new IppRequestMessageValidator();
+        validator.Context.OverridesSupportedOperations = new HashSet<IppOperation> { IppOperation.CreateJob };
+        var request = CreateBasicRequest(IppOperation.CreateJob);
+        request.JobAttributes.AddRange(new[]
+        {
+            new IppAttribute(Tag.BegCollection, JobAttribute.Overrides, NoValue.Instance),
+            new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 1)),
+            new IppAttribute(Tag.RangeOfInteger, "document-numbers", new SharpIpp.Protocol.Models.Range(1, 3)),
+            new IppAttribute(Tag.Keyword, "some-job-attr", "value"),
+            new IppAttribute(Tag.EndCollection, string.Empty, NoValue.Instance),
+
+            new IppAttribute(Tag.BegCollection, JobAttribute.Overrides, NoValue.Instance),
+            new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(2, 2)),
+            new IppAttribute(Tag.RangeOfInteger, "document-numbers", new SharpIpp.Protocol.Models.Range(2, 4)),
+            new IppAttribute(Tag.Keyword, "some-job-attr", "value"),
+            new IppAttribute(Tag.EndCollection, string.Empty, NoValue.Instance)
+        });
+
+        validator.Context.OverrideMemberScopesByName = new Dictionary<string, OverrideMemberScope>
+        {
+            { "some-job-attr", OverrideMemberScope.Page }
+        };
+        validator.ValidateJobAttributesGroup = true;
+
+        Action act = () => validator.Validate(request);
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("invalid overrides: override collections must have ascending, non-overlapping document-numbers");
+    }
+
+    [TestMethod]
+    public void ValidateDocumentMetadata_WithInvalidUtf8Bytes_ShouldThrow()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+        request.OperationAttributes.Add(new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, DocumentAttribute.DocumentMetadata, new byte[] { 0xC3, 0x28 }));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("invalid document-metadata value encoding: must be valid UTF-8 and contain no control characters");
+    }
+
+    [TestMethod]
+    public void ValidateDocumentMetadata_WithControlCharacters_ShouldThrow()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+        request.OperationAttributes.Add(new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, DocumentAttribute.DocumentMetadata, new byte[] { 0x01 }));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("invalid document-metadata value encoding: must be valid UTF-8 and contain no control characters");
+    }
+
+    [TestMethod]
+    public void ValidateDocumentMetadata_WithXPrefixOnly_ShouldThrow()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+        request.OperationAttributes.Add(new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, DocumentAttribute.DocumentMetadata, new OctetString("x-=val")));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("invalid document-metadata keyword 'x-'");
+    }
+
+    [TestMethod]
+    public void ValidateDocumentMetadata_WithInvalidCharactersInXKeyword_ShouldThrow()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+        request.OperationAttributes.Add(new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, DocumentAttribute.DocumentMetadata, new OctetString("x-abc#=val")));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("invalid document-metadata keyword 'x-abc#'");
+    }
+
+    [TestMethod]
+    public void ValidateDocumentMetadata_WithByteArrayValue_ShouldPass()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+        var bytes = System.Text.Encoding.UTF8.GetBytes("title=val");
+        request.OperationAttributes.Add(new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, DocumentAttribute.DocumentMetadata, bytes));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void ValidateDocumentMetadata_WithStringValue_ShouldPass()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+        request.OperationAttributes.Add(new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, DocumentAttribute.DocumentMetadata, "title=val"));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void ValidateDocumentMetadata_WithIntValue_ShouldSkip()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+        request.OperationAttributes.Add(new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, DocumentAttribute.DocumentMetadata, 123));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void ValidateDocumentMetadata_WithOutOfBandTag_ShouldSkip()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+        request.OperationAttributes.Add(new IppAttribute(Tag.NoValue, DocumentAttribute.DocumentMetadata, NoValue.Instance));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void ValidateUniqueAttributes_WithEmptyAttributeNameAtRoot_ShouldSkip()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+        request.JobAttributes.Add(new IppAttribute(Tag.Integer, "", 123));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_SetPrinterAttributes_DefaultWithoutSupported_ShouldPass()
+    {
+        var validator = IppRequestMessageValidator.Default;
+        var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
+        {
+            new IppAttribute(Tag.Integer, "copies-default", 5)
+        });
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void GetAttributeValues_WithNullValue_ShouldYieldBreak()
+    {
+        var method = typeof(IppRequestMessageValidator).GetMethod("GetAttributeValues", BindingFlags.NonPublic | BindingFlags.Static);
+        method.Should().NotBeNull();
+        var attr = default(IppAttribute);
+        var result = (IEnumerable<object>)method!.Invoke(null, new object[] { attr })!;
+        result.Should().BeEmpty();
+    }
+
+    [TestMethod]
+    public void Validate_SetPrinterAttributes_DefaultWithCollectionValueContainingNull_ShouldPass()
+    {
+        var validator = IppRequestMessageValidator.Default;
+        var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
+        {
+            IppAttribute.Create(Tag.Integer, "copies-default", new object[] { 3, null!, 5 }),
+            new IppAttribute(Tag.RangeOfInteger, "copies-supported", new SharpIpp.Protocol.Models.Range(1, 10))
+        });
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_SetPrinterAttributes_DefaultValueLongInSupportedRange_Passes()
+    {
+        var validator = IppRequestMessageValidator.Default;
+        var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
+        {
+            IppAttribute.Create(Tag.Integer, "copies-default", 5L),
+            new IppAttribute(Tag.RangeOfInteger, "copies-supported", new SharpIpp.Protocol.Models.Range(1, 10))
+        });
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_SetPrinterAttributes_DefaultValueStringInSupportedRange_Passes()
+    {
+        var validator = IppRequestMessageValidator.Default;
+        var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
+        {
+            IppAttribute.Create(Tag.Integer, "copies-default", "5"),
+            new IppAttribute(Tag.RangeOfInteger, "copies-supported", new SharpIpp.Protocol.Models.Range(1, 10))
+        });
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_SetPrinterAttributes_DefaultValueIntBelowSupportedRange_Throws()
+    {
+        var validator = IppRequestMessageValidator.Default;
+        var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
+        {
+            new IppAttribute(Tag.Integer, "copies-default", 0),
+            new IppAttribute(Tag.RangeOfInteger, "copies-supported", new SharpIpp.Protocol.Models.Range(1, 10))
+        });
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().Throw<IppRequestException>()
+            .Which.StatusCode.Should().Be(IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
+    }
+
+    [TestMethod]
+    public void Validate_SetPrinterAttributes_DefaultValueLongBelowSupportedRange_Throws()
+    {
+        var validator = IppRequestMessageValidator.Default;
+        var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
+        {
+            IppAttribute.Create(Tag.Integer, "copies-default", 0L),
+            new IppAttribute(Tag.RangeOfInteger, "copies-supported", new SharpIpp.Protocol.Models.Range(1, 10))
+        });
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().Throw<IppRequestException>()
+            .Which.StatusCode.Should().Be(IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
+    }
+
+    [TestMethod]
+    public void Validate_SetPrinterAttributes_DefaultValueLongAboveSupportedRange_Throws()
+    {
+        var validator = IppRequestMessageValidator.Default;
+        var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
+        {
+            IppAttribute.Create(Tag.Integer, "copies-default", 15L),
+            new IppAttribute(Tag.RangeOfInteger, "copies-supported", new SharpIpp.Protocol.Models.Range(1, 10))
+        });
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().Throw<IppRequestException>()
+            .Which.StatusCode.Should().Be(IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
+    }
+
+    [TestMethod]
+    public void Validate_SetPrinterAttributes_DefaultValueStringBelowSupportedRange_Throws()
+    {
+        var validator = IppRequestMessageValidator.Default;
+        var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
+        {
+            IppAttribute.Create(Tag.Integer, "copies-default", "0"),
+            new IppAttribute(Tag.RangeOfInteger, "copies-supported", new SharpIpp.Protocol.Models.Range(1, 10))
+        });
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().Throw<IppRequestException>()
+            .Which.StatusCode.Should().Be(IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
+    }
+
+    [TestMethod]
+    public void Validate_SetPrinterAttributes_DefaultValueStringAboveSupportedRange_Throws()
+    {
+        var validator = IppRequestMessageValidator.Default;
+        var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
+        {
+            IppAttribute.Create(Tag.Integer, "copies-default", "15"),
+            new IppAttribute(Tag.RangeOfInteger, "copies-supported", new SharpIpp.Protocol.Models.Range(1, 10))
+        });
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().Throw<IppRequestException>()
+            .Which.StatusCode.Should().Be(IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
+    }
+
+    [TestMethod]
+    public void Validate_SetPrinterAttributes_DefaultValueNonNumericStringForRangeSupported_Throws()
+    {
+        var validator = IppRequestMessageValidator.Default;
+        var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
+        {
+            IppAttribute.Create(Tag.Integer, "copies-default", "abc"),
+            new IppAttribute(Tag.RangeOfInteger, "copies-supported", new SharpIpp.Protocol.Models.Range(1, 10))
+        });
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().Throw<IppRequestException>()
+            .Which.StatusCode.Should().Be(IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
+    }
+
+    [TestMethod]
+    public void Validate_SetPrinterAttributes_DefaultValueNullToStringForRangeSupported_Throws()
+    {
+        var validator = IppRequestMessageValidator.Default;
+        var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
+        {
+            IppAttribute.Create(Tag.Integer, "copies-default", new NullToStringObject()),
+            new IppAttribute(Tag.RangeOfInteger, "copies-supported", new SharpIpp.Protocol.Models.Range(1, 10))
+        });
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().Throw<IppRequestException>()
+            .Which.StatusCode.Should().Be(IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
+    }
+
+    [TestMethod]
+    public void Validate_SetPrinterAttributes_DefaultValueNullToStringForStringSupported_Throws()
+    {
+        var validator = IppRequestMessageValidator.Default;
+        var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
+        {
+            IppAttribute.Create(Tag.Keyword, "media-default", new NullToStringObject()),
+            new IppAttribute(Tag.Keyword, "media-supported", "iso_a4")
+        });
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().Throw<IppRequestException>()
+            .Which.StatusCode.Should().Be(IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
+    }
+
+    [TestMethod]
+    public void Validate_SetPrinterAttributes_SupportedValueNullToString_Throws()
+    {
+        var validator = IppRequestMessageValidator.Default;
+        var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
+        {
+            new IppAttribute(Tag.Keyword, "media-default", "iso_a4"),
+            IppAttribute.Create(Tag.Keyword, "media-supported", new NullToStringObject())
+        });
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().Throw<IppRequestException>()
+            .Which.StatusCode.Should().Be(IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
+    }
+
     #endregion
 }

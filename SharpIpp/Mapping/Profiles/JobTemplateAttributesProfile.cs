@@ -267,6 +267,12 @@ internal class JobTemplateAttributesProfile : IProfile
             if (src.RetryTimeOut.HasValue)
                 job.Add(new IppAttribute(Tag.Integer, JobAttribute.RetryTimeOut, src.RetryTimeOut.Value));
 
+            if (src.ChamberHumidity.HasValue)
+                job.Add(new IppAttribute(Tag.Integer, JobAttribute.ChamberHumidity, src.ChamberHumidity.Value));
+
+            if (src.ChamberTemperature.HasValue)
+                job.Add(new IppAttribute(Tag.Integer, JobAttribute.ChamberTemperature, src.ChamberTemperature.Value));
+
             if (src.MaterialsCol != null)
                 job.AddRange(src.MaterialsCol.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.MaterialsCol)));
 
@@ -427,6 +433,8 @@ internal class JobTemplateAttributesProfile : IProfile
             dst.NumberOfRetries = map.MapFromDicNullable<int?>(jobDict, JobAttribute.NumberOfRetries);
             dst.RetryInterval = map.MapFromDicNullable<int?>(jobDict, JobAttribute.RetryInterval);
             dst.RetryTimeOut = map.MapFromDicNullable<int?>(jobDict, JobAttribute.RetryTimeOut);
+            dst.ChamberHumidity = map.MapFromDicNullable<int?>(jobDict, JobAttribute.ChamberHumidity);
+            dst.ChamberTemperature = map.MapFromDicNullable<int?>(jobDict, JobAttribute.ChamberTemperature);
             if (jobDict.ContainsKey(JobAttribute.MaterialsCol))
                 dst.MaterialsCol = jobDict[JobAttribute.MaterialsCol].GroupBegCollection().Select(x => map.Map<Material>(x.FromBegCollection().ToIppDictionary())).ToArray();
             dst.MultipleObjectHandling = map.MapFromDicNullable<MultipleObjectHandling?>(jobDict, JobAttribute.MultipleObjectHandling);

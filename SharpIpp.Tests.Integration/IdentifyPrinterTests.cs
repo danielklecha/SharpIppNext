@@ -25,7 +25,8 @@ public class IdentifyPrinterTests : SharpIppIntegrationTestBase
                 PrinterUri = new Uri("http://127.0.0.1:631"),
                 IdentifyActions = [IdentifyAction.Display, IdentifyAction.Sound],
                 OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174000"),
-                JobId = 12
+                JobId = 12,
+                Message = "Attention: Identify Printer Request"
             }
         };
         IdentifyPrinterResponse? serverResponse = null;

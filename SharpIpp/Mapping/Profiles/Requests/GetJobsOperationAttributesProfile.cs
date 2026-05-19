@@ -1,3 +1,4 @@
+using System;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Models.Requests;
 using SharpIpp.Protocol.Models;
@@ -26,6 +27,7 @@ internal class GetJobsOperationAttributesProfile : IProfile
             var myJobs = map.MapFromDicNullable<bool?>(src, JobAttribute.MyJobs);
             if (myJobs != null)
                 dst.MyJobs = myJobs.Value;
+            dst.OutputDeviceUuid = map.MapFromDicNullable<Uri?>(src, JobAttribute.OutputDeviceUuid);
             return dst;
         });
 
@@ -45,6 +47,8 @@ internal class GetJobsOperationAttributesProfile : IProfile
                 dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.WhichJobs, map.Map<string>(src.WhichJobs.Value)));
             if (src.MyJobs != null)
                 dst.Add(new IppAttribute(Tag.Boolean, JobAttribute.MyJobs, src.MyJobs.Value));
+            if (src.OutputDeviceUuid != null)
+                dst.Add(new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, src.OutputDeviceUuid.ToString()));
             return dst;
         });
     }

@@ -551,6 +551,20 @@ namespace SharpIpp.Protocol.Models
         public int? RetryTimeOut { get; set; }
 
         /// <summary>
+        /// The <c>chamber-humidity</c> Job Template attribute.
+        /// Type: integer(0:100)
+        /// See: PWG 5100.21-2019 Section 8.1.1
+        /// </summary>
+        public int? ChamberHumidity { get; set; }
+
+        /// <summary>
+        /// The <c>chamber-temperature</c> Job Template attribute.
+        /// Type: integer(-273:MAX)
+        /// See: PWG 5100.21-2019 Section 8.1.2
+        /// </summary>
+        public int? ChamberTemperature { get; set; }
+
+        /// <summary>
         /// The <c>materials-col</c> Job Template attribute.
         /// See: PWG 5100.21-2019 Section 8.1.3
         /// </summary>

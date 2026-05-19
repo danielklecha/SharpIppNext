@@ -56,7 +56,7 @@ public class ValidateDocumentTests : SharpIppIntegrationTestBase
                 RequestingUserUri = new Uri("mailto:test-user@example.com"),
                 DocumentFormat = "application/pdf",
                 DocumentName = "doc.pdf",
-                DocumentMetadata = ["meta-1", "meta-2"],
+                DocumentMetadata = ["x-meta1=val1", "x-meta2=val2"],
             },
             DocumentTemplateAttributes = new()
             {

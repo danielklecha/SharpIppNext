@@ -17,7 +17,9 @@ public class GetDocumentsOperationAttributes : JobOperationAttributes
     /// <summary>
     /// The limit IPP attribute.
     /// Type: integer(1:MAX)
-    /// See: pwg5100.1-2022 Section 2.2
+    /// See: PWG 5100.5-2024 Section 5.2.1.1
+    /// See: PWG 5100.13-2023 Section 6.1.4
+    /// See: RFC 8011 Section 4.2.6.1
     /// </summary>
     /// <code>limit</code>
     public int? Limit { get; set; }

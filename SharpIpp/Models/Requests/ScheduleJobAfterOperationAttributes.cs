@@ -15,6 +15,7 @@ public class ScheduleJobAfterOperationAttributes : JobOperationAttributes
 
     /// <summary>
     /// The client MUST supply this attribute. It specifies the job-id of the predecessor job.
+    /// Type: integer(1:MAX)
     /// See: RFC 3998 Section 3.2.6.1
     /// </summary>
     /// <code>predecessor-job-id</code>

@@ -62,7 +62,9 @@ public class CreateJobTests : SharpIppIntegrationTestBase
                     JobSheets = JobSheets.Standard,
                     Media = (Media)"iso_a4_210x297mm",
                     MediaCol = new MediaCol { MediaColor = (MediaColor)"blue" }
-                }
+                },
+                ChamberHumidity = 45,
+                ChamberTemperature = 60
             }
         };
 

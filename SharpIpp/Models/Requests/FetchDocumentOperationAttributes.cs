@@ -11,6 +11,7 @@ public class FetchDocumentOperationAttributes : JobOperationAttributes
 {
     /// <summary>
     /// The <c>document-number</c> operation attribute.
+    /// Type: integer(1:MAX)
     /// See: PWG 5100.5-2024 Section 5.1.2
     /// </summary>
     public int DocumentNumber { get; set; }

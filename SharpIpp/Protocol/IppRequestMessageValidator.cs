@@ -7,6 +7,7 @@ using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Protocol;
 
+/// <inheritdoc />
 public class IppRequestMessageValidator : IIppRequestMessageValidator
 {
     private const string NotifyEventsAttributeName = "notify-events";
@@ -146,6 +147,10 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
 
     public bool UseIppAttributeFidelityForCapabilityValidation { get; set; }
 
+    /// <summary>
+    /// Validates the request message by executing enabled core, job, document, printer, and operation-specific rules.
+    /// Spec: RFC 8011, PWG 5100.x.
+    /// </summary>
     public void Validate(IIppRequestMessage? request)
     {
         if (request is null)
@@ -167,6 +172,10 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
             ValidateOperationRules(request);
     }
 
+    /// <summary>
+    /// Validates that the request conforms to basic IPP constraints (valid version, request-id, unique attributes within groups, first/second operation attributes).
+    /// Spec: RFC 8011 Section 4.1 (IPP Message Structure & Encoding), PWG 5100.22.
+    /// </summary>
     private void ValidateCore(IIppRequestMessage request)
     {
         if (request.RequestId <= 0)
@@ -174,6 +183,18 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
 
         if (request.Version < new IppVersion(1, 0))
             throw new IppRequestException("Unsupported IPP version", request, IppStatusCode.ServerErrorVersionNotSupported);
+
+        ValidateUniqueAttributes(request.OperationAttributes, "operation-attributes", request);
+        ValidateUniqueAttributes(request.JobAttributes, "job-attributes", request);
+        ValidateUniqueAttributes(request.PrinterAttributes, "printer-attributes", request);
+        ValidateUniqueAttributes(request.UnsupportedAttributes, "unsupported-attributes", request);
+        ValidateUniqueAttributes(request.SubscriptionAttributes, "subscription-attributes", request);
+        ValidateUniqueAttributes(request.EventNotificationAttributes, "event-notification-attributes", request);
+        ValidateUniqueAttributes(request.ResourceAttributes, "resource-attributes", request);
+        ValidateUniqueAttributes(request.DocumentAttributes, "document-attributes", request);
+        ValidateUniqueAttributes(request.SystemAttributes, "system-attributes", request);
+
+        ValidateDocumentMetadata(request);
 
         if (!ValidateOperationAttributesGroup)
             return;
@@ -205,6 +226,10 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
             throw new IppRequestException("No system-uri operation attribute", request, IppStatusCode.ClientErrorBadRequest);
     }
 
+    /// <summary>
+    /// Validates job-level attributes (mutual exclusivity of finishings and media collection, valid copies/priority/number-up ranges).
+    /// Spec: RFC 8011 Section 4.2 (Job Template Attributes), PWG 5100.3 (Production Printing).
+    /// </summary>
     private void ValidateJobAttributes(IIppRequestMessage request)
     {
         ValidateFinishingsMutualExclusivity(request.JobAttributes, request);
@@ -266,6 +291,10 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         ValidateFidelityBasedJobAttributes(request);
     }
 
+    /// <summary>
+    /// Enforces capability matching for job template attributes (media, finishings, sides, etc.) against printer capabilities when ipp-attribute-fidelity is enabled.
+    /// Spec: RFC 8011 Section 3.2.1.1 (Fidelity validation).
+    /// </summary>
     private void ValidateFidelityBasedJobAttributes(IIppRequestMessage request)
     {
         if (!UseIppAttributeFidelityForCapabilityValidation && !IsIppAttributeFidelityTrue(request))
@@ -320,6 +349,10 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         }
     }
 
+    /// <summary>
+    /// Validates document-level attributes (mutual exclusivity of finishings, output-bin, media collection).
+    /// Spec: PWG 5100.5 (Document Object).
+    /// </summary>
     private void ValidateDocumentAttributes(IIppRequestMessage request)
     {
         ValidateFinishingsMutualExclusivity(request.DocumentAttributes, request);
@@ -328,8 +361,14 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         ValidateCollectionMediaSelectionRules(request.DocumentAttributes, request);
     }
 
+    /// <summary>
+    /// Validates printer-level attributes, ensuring destination-uri-ready OAuth dependency rules and forbidden password properties.
+    /// Spec: PWG 5101.7 / PWG 5100.17 (Scan Service).
+    /// </summary>
     public void ValidatePrinterAttributes(IIppRequestMessage request)
     {
+        ValidateDefaultAgainstSupportedAttributes(request.PrinterAttributes, request);
+
         var destinationUriReadyCollections = EnumerateNamedCollections(request.PrinterAttributes, PrinterAttribute.DestinationUriReady).ToArray();
         if (!destinationUriReadyCollections.Any())
             return;
@@ -377,6 +416,10 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         }
     }
 
+    /// <summary>
+    /// Validates that 'finishings' and 'finishings-col' are not both specified in the same group.
+    /// Spec: PWG 5100.3 Section 6.2 (Finishings and Finishings-Col Mutual Exclusivity).
+    /// </summary>
     private static void ValidateFinishingsMutualExclusivity(IReadOnlyCollection<IppAttribute> attributes, IIppRequestMessage request)
     {
         var hasFinishings = HasNamedAttribute(attributes, JobAttribute.Finishings);
@@ -385,6 +428,10 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
             throw new IppRequestException("'finishings' and 'finishings-col' are conflicting attributes and cannot be supplied together.", request, IppStatusCode.ClientErrorBadRequest);
     }
 
+    /// <summary>
+    /// Validates media collection attributes such as cover-back, insert-sheet, separator-sheets for mutual exclusivity rules.
+    /// Spec: PWG 5100.3 (Production Printing).
+    /// </summary>
     public void ValidateCollectionMediaSelectionRules(IReadOnlyCollection<IppAttribute> attributes, IIppRequestMessage request)
     {
         foreach (var collectionName in Pwg51003MediaExclusiveCollections)
@@ -415,6 +462,10 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         }
     }
 
+    /// <summary>
+    /// Ensures that nested media collection attributes do not specify both 'media' and 'media-col'.
+    /// Spec: PWG 5100.3 Section 3.1 (Media Selection).
+    /// </summary>
     private static void ValidateCollectionMemberConflicts(string collectionName, IReadOnlyCollection<IppAttribute> members, IIppRequestMessage request)
     {
         var hasMedia = members.Any(x => x.Name == JobAttribute.Media);
@@ -429,6 +480,10 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
             IppStatusCode.ClientErrorConflictingAttributes);
     }
 
+    /// <summary>
+    /// Validates that the 'output-bin' attribute is single-valued and is represented using keyword or name syntax.
+    /// Spec: PWG 5100.2 Section 4.1 (output-bin).
+    /// </summary>
     private void ValidateOutputBinAttributes(IReadOnlyCollection<IppAttribute> attributes, IIppRequestMessage request)
     {
         var outputBins = attributes.Where(x => x.Name == JobAttribute.OutputBin).ToArray();
@@ -446,6 +501,10 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         ValidateOutputBinAgainstSupportedValues(outputBins[0], request);
     }
 
+    /// <summary>
+    /// Validates that the value of the 'output-bin' attribute matches one of the printer-supported output bins.
+    /// Spec: PWG 5100.2 Section 4.1 (output-bin-supported).
+    /// </summary>
     public void ValidateOutputBinAgainstSupportedValues(IppAttribute outputBin, IIppRequestMessage request)
     {
         var outputBinSupported = Context.OutputBinSupported;
@@ -473,6 +532,10 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
             IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
     }
 
+    /// <summary>
+    /// Executes operation-specific validation rules for all supported IPP/PWG operations.
+    /// Spec: RFC 8011, PWG 5100.5, PWG 5100.22.
+    /// </summary>
     public void ValidateOperationRules(IIppRequestMessage request)
     {
         var operationAttributes = request.OperationAttributes;
@@ -540,7 +603,15 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
             case IppOperation.GetOutputDeviceAttributes:
             case IppOperation.UpdateJobStatus:
             case IppOperation.UpdateOutputDeviceAttributes:
+            case IppOperation.RegisterOutputDevice:
                 ValidateRequiredOutputDeviceUuid(hasOutputDeviceUuid, request);
+                if (request.IppOperation == IppOperation.RegisterOutputDevice && ValidateOperationAttributesGroup)
+                {
+                    var hasCertificate = HasNamedAttribute(operationAttributes, JobAttribute.OutputDeviceX509Certificate);
+                    var hasRequest = HasNamedAttribute(operationAttributes, JobAttribute.OutputDeviceX509Request);
+                    if (hasCertificate && hasRequest)
+                        throw new IppRequestException("'output-device-x509-certificate' and 'output-device-x509-request' are mutually exclusive", request, IppStatusCode.ClientErrorConflictingAttributes);
+                }
                 break;
             case IppOperation.UpdateActiveJobs:
                 ValidateRequiredOutputDeviceUuid(hasOutputDeviceUuid, request);
@@ -631,6 +702,10 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         ValidateNotifyEventsValues(request);
     }
 
+    /// <summary>
+    /// Validates destination-uri rules for create-job operations, rejecting forbidden fax attributes/schemes for Scan.
+    /// Spec: PWG 5100.17 / PWG 5100.22.
+    /// </summary>
     public void ValidateCreateJobDestinationRules(IReadOnlyCollection<IppAttribute> operationAttributes, IIppRequestMessage request)
     {
         if (!ValidateOperationAttributesGroup)
@@ -675,6 +750,10 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
             throw new IppRequestException("destination-accesses cardinality MUST match destination-uris", request, IppStatusCode.ClientErrorBadRequest);
     }
 
+    /// <summary>
+    /// Validates that requested attribute group keywords for Job query operations are supported by the target.
+    /// Spec: RFC 8011 Section 3.2.5.1 / PWG 5100.8.
+    /// </summary>
     public void ValidateJobRequestedAttributesGroupKeywords(IIppRequestMessage request)
     {
         if (!ValidateOperationAttributesGroup)
@@ -716,6 +795,10 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
             IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
     }
 
+    /// <summary>
+    /// Ensures that a required document-number is present and greater than zero.
+    /// Spec: PWG 5100.5 Section 5 (Document Object).
+    /// </summary>
     private void ValidateRequiredDocumentNumber(bool hasDocumentNumber, int? documentNumber, IIppRequestMessage request)
     {
         if (!ValidateOperationAttributesGroup)
@@ -727,6 +810,10 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
             throw new IppRequestException("invalid document-number", request, IppStatusCode.ClientErrorBadRequest);
     }
 
+    /// <summary>
+    /// Ensures that a last-document parameter is present for multi-document operations.
+    /// Spec: RFC 8011 Section 3.3.1 (Send-Document).
+    /// </summary>
     public void ValidateRequiredLastDocument(bool hasLastDocument, bool? lastDocument, IIppRequestMessage request)
     {
         if (!ValidateOperationAttributesGroup)
@@ -738,6 +825,10 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
             throw new IppRequestException("invalid last-document", request, IppStatusCode.ClientErrorBadRequest);
     }
 
+    /// <summary>
+    /// Ensures that a target output-device-uuid is present in coordination operations.
+    /// Spec: PWG 5100.22 (IPP System Service).
+    /// </summary>
     public void ValidateRequiredOutputDeviceUuid(bool hasOutputDeviceUuid, IIppRequestMessage request)
     {
         if (!ValidateOperationAttributesGroup)
@@ -747,6 +838,10 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
             throw new IppRequestException("missing output-device-uuid", request, IppStatusCode.ClientErrorBadRequest);
     }
 
+    /// <summary>
+    /// Ensures that a proxy fetch-status-code parameter is not successful-ok (must be a warning or error code).
+    /// Spec: PWG 5100.22 (IPP System Service).
+    /// </summary>
     public static void ValidateFetchStatusCodeNotSuccessful(IEnumerable<IppAttribute> operationAttributes, IIppRequestMessage request)
     {
         var fetchStatusAttributes = operationAttributes
@@ -767,11 +862,17 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
             throw new IppRequestException("fetch-status-code MUST NOT be successful-ok", request, IppStatusCode.ClientErrorBadRequest);
     }
 
+    /// <summary>
+    /// Checks whether an attribute with the specified name exists in the collection.
+    /// </summary>
     private static bool HasNamedAttribute(IEnumerable<IppAttribute> attributes, string name)
     {
         return attributes.Any(x => x.Name == name);
     }
 
+    /// <summary>
+    /// Reads and casts an operation attribute's value to the specified type if present.
+    /// </summary>
     private static T? ReadOperationAttributeAs<T>(IEnumerable<IppAttribute> operationAttributes, string name) where T : struct
     {
         var attribute = operationAttributes.FirstOrDefault(x => x.Name == name);
@@ -781,6 +882,10 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         return null;
     }
 
+    /// <summary>
+    /// Validates that requested attribute group keywords for Document query operations are supported by the target.
+    /// Spec: PWG 5100.5 (Document Object).
+    /// </summary>
     public void ValidateDocumentRequestedAttributesGroupKeywords(IIppRequestMessage request)
     {
         if (!ValidateOperationAttributesGroup)
@@ -822,6 +927,10 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
             IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
     }
 
+    /// <summary>
+    /// Validates that notify-events keywords are supported by the target printer/system.
+    /// Spec: RFC 3995 Section 5.3.3 (notify-events).
+    /// </summary>
     public void ValidateNotifyEventsValues(IIppRequestMessage request)
     {
         if (!ValidateSubscriptionAttributesGroup)
@@ -860,6 +969,10 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
             IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
     }
 
+    /// <summary>
+    /// Validates that a Document is in a state that permits cancellation.
+    /// Spec: PWG 5100.5 Section 5 (Cancel-Document state rules).
+    /// </summary>
     public void ValidateCancelDocumentStateRules(int documentNumber, IIppRequestMessage request)
     {
         if (Context.DocumentStatesByNumber == null)
@@ -884,6 +997,10 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
             throw new IppRequestException("invalid document-state-reasons for Cancel-Document", request, IppStatusCode.ClientErrorNotPossible);
     }
 
+    /// <summary>
+    /// Validates that a Document is in a state that permits setting of attributes.
+    /// Spec: PWG 5100.5 Section 5 (Set-Document-Attributes state rules).
+    /// </summary>
     public void ValidateSetDocumentAttributesStateRules(int documentNumber, IIppRequestMessage request)
     {
         if (Context.DocumentStatesByNumber == null)
@@ -899,6 +1016,10 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
             throw new IppRequestException("invalid document-state for Set-Document-Attributes", request, IppStatusCode.ClientErrorNotPossible);
     }
 
+    /// <summary>
+    /// Validates job overrides collections including formatting, page/document selectors, and membership rules.
+    /// Spec: PWG 5100.6 Section 3 (Overrides).
+    /// </summary>
     private void ValidateOverridesRules(IIppRequestMessage request)
     {
         var overrideCollections = EnumerateNamedCollections(request.JobAttributes, JobAttribute.Overrides).ToArray();
@@ -966,6 +1087,10 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         }
     }
 
+    /// <summary>
+    /// Validates that the member attributes inside an overrides collection are supported by the target printer/system.
+    /// Spec: PWG 5100.6 Section 3 (Overrides).
+    /// </summary>
     public void ValidateOverrideMembersAgainstSupportedValues(IReadOnlyCollection<IppAttribute> members, IIppRequestMessage request)
     {
         var memberNames = EnumerateTopLevelOverrideMemberNames(members)
@@ -1012,12 +1137,18 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
             IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
     }
 
+    /// <summary>
+    /// Checks whether the ipp-attribute-fidelity attribute is set to true in the request.
+    /// </summary>
     private static bool IsIppAttributeFidelityTrue(IIppRequestMessage request)
     {
         var fidelityAttribute = request.OperationAttributes.FirstOrDefault(x => x.Name == JobAttribute.IppAttributeFidelity);
         return fidelityAttribute.Value is bool value && value;
     }
 
+    /// <summary>
+    /// Helper method to enumerate only the top-level member names of an overrides collection.
+    /// </summary>
     private static IEnumerable<string> EnumerateTopLevelOverrideMemberNames(IEnumerable<IppAttribute> members)
     {
         var nestedCollectionDepth = 0;
@@ -1039,6 +1170,9 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         }
     }
 
+    /// <summary>
+    /// Helper method to enumerate collections of attributes matching a specific attribute name.
+    /// </summary>
     private static IEnumerable<IReadOnlyList<IppAttribute>> EnumerateNamedCollections(IEnumerable<IppAttribute> attributes, string collectionName)
     {
         List<IppAttribute>? current = null;
@@ -1083,11 +1217,17 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         }
     }
 
+    /// <summary>
+    /// Helper method to check if a member name is one of the overrides selector attributes.
+    /// </summary>
     private static bool IsSelectorMember(string memberName)
     {
         return OverrideSelectorMemberNames.Contains(memberName);
     }
 
+    /// <summary>
+    /// Reads and parses overrides range selector attributes (e.g., pages, document-numbers).
+    /// </summary>
     private static SharpIpp.Protocol.Models.Range[]? ReadSelectorRanges(IReadOnlyCollection<IppAttribute> members, string memberName, bool required, IIppRequestMessage request)
     {
         var selector = members.Where(x => x.Name == memberName).ToArray();
@@ -1109,6 +1249,10 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         return ranges.ToArray();
     }
 
+    /// <summary>
+    /// Validates that the range selectors in an overrides collection are specified in the correct sequence.
+    /// Spec: PWG 5100.6 Section 3 (Overrides).
+    /// </summary>
     private static void ValidateSelectorOrder(IReadOnlyCollection<IppAttribute> members, bool hasDocumentNumbers, bool hasDocumentCopies, IIppRequestMessage request)
     {
         var selectorOrder = members
@@ -1148,6 +1292,10 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         }
     }
 
+    /// <summary>
+    /// Validates that a list of range attributes is sorted in ascending order and does not contain overlapping ranges.
+    /// Spec: PWG 5100.6 Section 3 (Overrides), RFC 8011.
+    /// </summary>
     private static void ValidateRangesAscendingNonOverlapping(IReadOnlyList<SharpIpp.Protocol.Models.Range> ranges, string memberName, IIppRequestMessage request)
     {
         for (var i = 0; i < ranges.Count; i++)
@@ -1168,6 +1316,10 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         }
     }
 
+    /// <summary>
+    /// Validates that document number ranges across multiple override collections are ascending and non-overlapping.
+    /// Spec: PWG 5100.6 Section 3 (Overrides).
+    /// </summary>
     private static void ValidateOverrideDocumentNumbersAcrossCollections(IReadOnlyList<SharpIpp.Protocol.Models.Range[]> effectiveDocumentRangesByCollection, IIppRequestMessage request)
     {
         if (effectiveDocumentRangesByCollection.Count <= 1)
@@ -1183,5 +1335,242 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
                 previousRange = current;
             }
         }
+    }
+
+    private static readonly HashSet<string> DocumentMetadataKeywords = new()
+    {
+        // dc-elements
+        "contributor", "coverage", "creator", "date", "description", "format", "identifier", "language", "publisher", "relation", "rights", "source", "subject", "title", "type",
+        // dc-terms
+        "abstract", "accessRights", "accrualMethod", "accrualPeriodicity", "accrualPolicy", "alternative", "audience", "available", "bibliographicCitation", "conformsTo", "created", "dateAccepted", "dateCopyrighted", "dateSubmitted", "educationLevel", "extent", "hasFormat", "hasPart", "hasVersion", "instructionalMethod", "isFormatOf", "isPartOf", "isReferencedBy", "isReplacedBy", "isRequiredBy", "issued", "isVersionOf", "license", "mediator", "medium", "modified", "provenance", "references", "replaces", "requires", "rightsHolder", "spatial", "tableOfContents", "temporal", "valid"
+    };
+
+    private static readonly System.Text.UTF8Encoding StrictUtf8 = new(false, true);
+
+    /// <summary>
+    /// Verifies that the bytes represent a valid UTF-8 string containing no ASCII control characters.
+    /// Spec: PWG 5100.13 Section 6.1.1 (document-metadata).
+    /// </summary>
+    private static bool IsValidUtf8String(byte[] bytes)
+    {
+        try
+        {
+            var str = StrictUtf8.GetString(bytes);
+            foreach (var c in str)
+            {
+                if (c < 0x20 || c == 0x7F)
+                    return false;
+            }
+            return true;
+        }
+        catch (ArgumentException)
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Checks whether a metadata keyword conforms to Dublin Core or vendor-specific keyword patterns.
+    /// Spec: PWG 5100.13 Section 6.1.1 (document-metadata).
+    /// </summary>
+    private static bool IsValidDocumentMetadataKeyword(string keyword)
+    {
+        if (DocumentMetadataKeywords.Contains(keyword))
+            return true;
+
+        if (keyword.StartsWith("x-", StringComparison.Ordinal))
+        {
+            var suffix = keyword.Substring(2);
+            if (suffix.Length == 0)
+                return false;
+            foreach (var c in suffix)
+            {
+                if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '.' || c == '-' || c == '_'))
+                    return false;
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Extracts the raw byte array from an octet string or string representation.
+    /// </summary>
+    private static byte[]? GetOctetStringBytes(object? value)
+    {
+        if (value is OctetString octetString)
+            return octetString.Value;
+        if (value is byte[] bytes)
+            return bytes;
+        if (value is string s)
+            return System.Text.Encoding.UTF8.GetBytes(s);
+        return null;
+    }
+
+    /// <summary>
+    /// Validates the structure and encoding of the document-metadata attribute values.
+    /// Spec: PWG 5100.13 Section 6.1.1 (document-metadata).
+    /// </summary>
+    private void ValidateDocumentMetadata(IIppRequestMessage request)
+    {
+        var metadataAttributes = request.OperationAttributes
+            .Concat(request.JobAttributes)
+            .Concat(request.DocumentAttributes)
+            .Where(x => x.Name == DocumentAttribute.DocumentMetadata);
+
+        foreach (var attr in metadataAttributes)
+        {
+            if (attr.Tag.IsOutOfBand())
+                continue;
+
+            var bytes = GetOctetStringBytes(attr.Value);
+            if (bytes == null)
+                continue;
+
+            if (!IsValidUtf8String(bytes))
+                throw new IppRequestException("invalid document-metadata value encoding: must be valid UTF-8 and contain no control characters", request, IppStatusCode.ClientErrorBadRequest);
+
+            var decoded = System.Text.Encoding.UTF8.GetString(bytes);
+            var eqIndex = decoded.IndexOf('=');
+            if (eqIndex <= 0)
+                throw new IppRequestException("invalid document-metadata value: must be in keyword=value format", request, IppStatusCode.ClientErrorBadRequest);
+
+            var keyword = decoded.Substring(0, eqIndex);
+            if (!IsValidDocumentMetadataKeyword(keyword))
+                throw new IppRequestException($"invalid document-metadata keyword '{keyword}'", request, IppStatusCode.ClientErrorBadRequest);
+        }
+    }
+
+    /// <summary>
+    /// Validates that attributes are not duplicated (non-consecutive instances of the same name) within an attribute group.
+    /// Spec: RFC 8011 Section 4.1.3 (attribute group uniqueness).
+    /// </summary>
+    private void ValidateUniqueAttributes(List<IppAttribute> attributes, string groupName, IIppRequestMessage request)
+    {
+        var seenNames = new HashSet<string>(StringComparer.Ordinal);
+        string? currentName = null;
+        var level = 0;
+        foreach (var attr in attributes)
+        {
+            if (attr.Tag == Tag.BegCollection)
+            {
+                level++;
+                continue;
+            }
+            if (attr.Tag == Tag.EndCollection)
+            {
+                level--;
+                continue;
+            }
+            if (level > 0)
+                continue;
+
+            if (string.IsNullOrEmpty(attr.Name))
+                continue;
+
+            if (attr.Name != currentName)
+            {
+                if (seenNames.Contains(attr.Name))
+                {
+                    throw new IppRequestException($"Duplicate attribute '{attr.Name}' in group '{groupName}'", request, IppStatusCode.ClientErrorBadRequest);
+                }
+                seenNames.Add(attr.Name);
+                currentName = attr.Name;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Validates that any 'xxx-default' attribute values are within the corresponding 'xxx-supported' values.
+    /// Spec: RFC 3380 Section 4.1.2.
+    /// </summary>
+    private void ValidateDefaultAgainstSupportedAttributes(IReadOnlyCollection<IppAttribute> attributes, IIppRequestMessage request)
+    {
+        var attributesByName = attributes.GroupBy(x => x.Name).ToDictionary(g => g.Key, g => g.ToArray());
+        foreach (var kvp in attributesByName)
+        {
+            var name = kvp.Key;
+            if (!name.EndsWith("-default") || name.Length <= "-default".Length)
+                continue;
+
+            var baseName = name.Substring(0, name.Length - "-default".Length);
+            var supportedName = baseName + "-supported";
+
+            if (!attributesByName.TryGetValue(supportedName, out var supportedAttrs))
+                continue;
+
+            foreach (var defaultAttr in kvp.Value)
+            {
+                var defaultValues = GetAttributeValues(defaultAttr).ToArray();
+                foreach (var defaultValue in defaultValues)
+                {
+                    var isSupported = false;
+                    foreach (var supportedAttr in supportedAttrs)
+                    {
+                        var supportedValues = GetAttributeValues(supportedAttr);
+                        foreach (var supportedValue in supportedValues)
+                        {
+                            if (IsValueSupported(defaultValue, supportedValue))
+                            {
+                                isSupported = true;
+                                break;
+                            }
+                        }
+                        if (isSupported)
+                            break;
+                    }
+
+                    if (!isSupported)
+                    {
+                        throw new IppRequestException(
+                            $"invalid '{name}' value '{defaultValue}': not in '{supportedName}'",
+                            request,
+                            IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
+                    }
+                }
+            }
+        }
+    }
+
+    private static IEnumerable<object> GetAttributeValues(IppAttribute attribute)
+    {
+        if (attribute.Value == null)
+            yield break;
+
+        if (attribute.Value is System.Collections.IEnumerable enumerable && !(attribute.Value is string))
+        {
+            foreach (var item in enumerable)
+            {
+                if (item != null)
+                    yield return item;
+            }
+        }
+        else
+        {
+            yield return attribute.Value;
+        }
+    }
+
+    private static bool IsValueSupported(object defaultValue, object supportedValue)
+    {
+        if (supportedValue is SharpIpp.Protocol.Models.Range range)
+        {
+            if (defaultValue is int intVal)
+            {
+                return intVal >= range.Lower && intVal <= range.Upper;
+            }
+            if (defaultValue is long longVal)
+            {
+                return longVal >= range.Lower && longVal <= range.Upper;
+            }
+            var defStr = defaultValue.ToString();
+            if (defStr != null && int.TryParse(defStr, out var parsedInt))
+            {
+                return parsedInt >= range.Lower && parsedInt <= range.Upper;
+            }
+        }
+
+        return string.Equals(defaultValue.ToString(), supportedValue.ToString(), StringComparison.Ordinal);
     }
 }

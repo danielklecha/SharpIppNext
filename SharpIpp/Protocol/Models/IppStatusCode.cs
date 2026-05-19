@@ -3,6 +3,10 @@ namespace SharpIpp.Protocol.Models
     /// <summary>
     /// IPP status codes returned in operation responses.
     /// See: RFC 8011 Section 4.1.6
+    /// See: RFC 8011 Appendix B
+    /// See: RFC 8010 Section 3.4.3
+    /// See: RFC 2911 Section 3.1.6.1
+    /// See: PWG 5100.18-2025 Section 10
     /// </summary>
     public enum IppStatusCode : short
     {

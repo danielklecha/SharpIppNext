@@ -13,17 +13,17 @@ internal class GetUserPrinterAttributesOperationAttributesProfile : IProfile
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, GetUserPrinterAttributesOperationAttributes>((src, dst, map) =>
         {
             dst ??= new GetUserPrinterAttributesOperationAttributes();
-            map.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(src, dst);
-            dst.RequestedAttributes = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.RequestedAttributes);
+            map.Map<IDictionary<string, IppAttribute[]>, GetPrinterAttributesOperationAttributes>(src, dst);
+            dst.RequestingUserVcard = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.RequestingUserVcard);
             return dst;
         });
 
         mapper.CreateMap<GetUserPrinterAttributesOperationAttributes, List<IppAttribute>>((src, dst, map) =>
         {
             dst ??= new List<IppAttribute>();
-            map.Map<OperationAttributes, List<IppAttribute>>(src, dst);
-            if (src.RequestedAttributes != null)
-                dst.AddRange(src.RequestedAttributes.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.RequestedAttributes, x)));
+            map.Map<GetPrinterAttributesOperationAttributes, List<IppAttribute>>(src, dst);
+            if (src.RequestingUserVcard != null)
+                dst.AddRange(src.RequestingUserVcard.Select(x => new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.RequestingUserVcard, x)));
             return dst;
         });
     }

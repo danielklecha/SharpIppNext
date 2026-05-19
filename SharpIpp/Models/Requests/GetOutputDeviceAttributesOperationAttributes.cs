@@ -10,6 +10,7 @@ public class GetOutputDeviceAttributesOperationAttributes : OperationAttributes
 {
     /// <summary>
     /// The <c>requested-attributes</c> operation attribute.
+    /// See: RFC 8011 Section 4.2.5.1
     /// See: RFC 8011 Section 5.4.1
     /// </summary>
     public string[]? RequestedAttributes { get; set; }

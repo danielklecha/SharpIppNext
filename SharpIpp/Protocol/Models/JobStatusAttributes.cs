@@ -18,6 +18,7 @@ public class JobStatusAttributes
     /// attribute as part of the response to a create request. The 0 value
     /// is not included to allow for compatibility with SNMP index values
     /// which also cannot be 0.
+    /// Type: integer(1:MAX)
     /// See: RFC 8011 Section 5.3.1
     /// </summary>
     /// <code>job-id</code>

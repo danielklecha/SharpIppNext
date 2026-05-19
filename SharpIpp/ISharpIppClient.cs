@@ -404,7 +404,9 @@ public interface ISharpIppClient : IDisposable
 
     /// <summary>
     /// Get-Output-Device-Attributes Operation.
-    /// See: PWG 5100.18-2025
+    /// See: PWG 5100.18-2025 Section 6.1
+    /// See: PWG 5100.18-2025 Section 14.3
+    /// See: PWG 5100.18-2025 Section 14.4
     /// </summary>
     Task<GetOutputDeviceAttributesResponse> GetOutputDeviceAttributesAsync(GetOutputDeviceAttributesRequest request, CancellationToken cancellationToken = default);
 
@@ -783,7 +785,8 @@ public interface ISharpIppClient : IDisposable
     /// Delete-Document Operation.
     /// OBSOLETE.
     /// This operation allows a client to delete a document from a job.
-    /// See: PWG 5100.5-2024 and PWG 5100.18-2025.
+    /// See: PWG 5100.5-2024 Section 14
+    /// See: PWG 5100.18-2025 Section 4.5 Note 3
     /// See: PWG 5100.15-2013 Section 4.2
     /// </summary>
     [Obsolete("The 'Delete-Document' operation is obsolete. See PWG 5100.5-2024 and PWG 5100.18-2025.")]

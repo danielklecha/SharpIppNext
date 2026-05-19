@@ -15,6 +15,7 @@ public class JobAttributes
     public string? JobUri { get; set; }
     /// <summary>
     /// The job-id IPP attribute.
+    /// Type: integer(1:MAX)
     /// See: RFC 8011 Section 5.3.1
     /// </summary>
     /// <code>job-id</code>
