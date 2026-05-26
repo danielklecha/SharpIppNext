@@ -22,7 +22,7 @@ internal class JobResolversSupportedProfile : IProfile
         mapper.CreateMap<JobResolversSupported, IEnumerable<IppAttribute>>((src, _) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, PrinterAttribute.JobResolversSupported, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.JobResolversSupported, NoValue.Instance) };
 
             var attrs = new List<IppAttribute>();
             if (src.ResolverName != null) attrs.Add(new IppAttribute(Tag.NameWithoutLanguage, "resolver-name", src.ResolverName));

@@ -1,4 +1,6 @@
 using System;
+using System.ComponentModel.DataAnnotations;
+using SharpIpp.Validation;
 
 namespace SharpIpp.Protocol.Models;
 
@@ -2092,6 +2094,7 @@ public class PrinterDescriptionAttributes
     /// Type: integer(0:255)
     /// See: PWG 5100.11-2024 Section 7.2.1
     /// </summary>
+    [Range(0, 255)]
     public int? JobPasswordSupported { get; set; }
 
     /// <summary>
@@ -2106,5 +2109,6 @@ public class PrinterDescriptionAttributes
     /// Type: integer(0:1023) (Valid: 0 or 255-1023)
     /// See: PWG 5100.11-2024 Section 7.2.4
     /// </summary>
+    [MultiRange(0, 0, 255, 1023)]
     public int? DocumentPasswordSupported { get; set; }
 }

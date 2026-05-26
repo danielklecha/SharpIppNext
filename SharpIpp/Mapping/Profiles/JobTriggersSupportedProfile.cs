@@ -22,7 +22,7 @@ internal class JobTriggersSupportedProfile : IProfile
         mapper.CreateMap<JobTriggersSupported, IEnumerable<IppAttribute>>((src, _) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, PrinterAttribute.JobTriggersSupported, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.JobTriggersSupported, NoValue.Instance) };
 
             var attrs = new List<IppAttribute>();
             if (src.TriggerName != null) attrs.Add(new IppAttribute(Tag.NameWithoutLanguage, "trigger-name", src.TriggerName));

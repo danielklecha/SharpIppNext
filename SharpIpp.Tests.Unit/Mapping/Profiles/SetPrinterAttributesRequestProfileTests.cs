@@ -46,9 +46,9 @@ public class SetPrinterAttributesRequestProfileTests
         var message = _mapper.Map<SetPrinterAttributesRequest, IppRequestMessage>(request);
 
         message.IppOperation.Should().Be(IppOperation.SetPrinterAttributes);
-        message.OperationAttributes.Should().ContainSingle(x => x.Name == JobAttribute.PrinterUri && Equals(x.Value, "ipp://printer/example"));
-        message.OperationAttributes.Should().ContainSingle(x => x.Name == JobAttribute.DocumentFormat && Equals(x.Value, "application/pdf"));
-        message.PrinterAttributes.Should().ContainSingle(x => x.Name == PrinterAttribute.PrinterInfo && Equals(x.Value, "Main floor"));
+        message.OperationAttributes.Should().ContainSingle(x => x.Name == IppAttributeNames.PrinterUri && Equals(x.Value, "ipp://printer/example"));
+        message.OperationAttributes.Should().ContainSingle(x => x.Name == IppAttributeNames.DocumentFormat && Equals(x.Value, "application/pdf"));
+        message.PrinterAttributes.Should().ContainSingle(x => x.Name == IppAttributeNames.PrinterInfo && Equals(x.Value, "Main floor"));
     }
 
     [TestMethod]
@@ -58,11 +58,11 @@ public class SetPrinterAttributesRequestProfileTests
         {
             IppOperation = IppOperation.SetPrinterAttributes
         };
-        message.OperationAttributes.Add(new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"));
-        message.OperationAttributes.Add(new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"));
-        message.OperationAttributes.Add(new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://printer/example"));
-        message.OperationAttributes.Add(new IppAttribute(Tag.MimeMediaType, JobAttribute.DocumentFormat, "application/pdf"));
-        message.PrinterAttributes.Add(new IppAttribute(Tag.TextWithoutLanguage, PrinterAttribute.PrinterInfo, "Main floor"));
+        message.OperationAttributes.Add(new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"));
+        message.OperationAttributes.Add(new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"));
+        message.OperationAttributes.Add(new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://printer/example"));
+        message.OperationAttributes.Add(new IppAttribute(Tag.MimeMediaType, IppAttributeNames.DocumentFormat, "application/pdf"));
+        message.PrinterAttributes.Add(new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.PrinterInfo, "Main floor"));
 
         var request = _mapper.Map<IIppRequestMessage, SetPrinterAttributesRequest>(message);
 

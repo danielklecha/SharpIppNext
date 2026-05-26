@@ -8,8 +8,8 @@ namespace SharpIpp.Protocol.Models;
 public class PrinterSupply : IIppCollection
 {
     /// <inheritdoc />
-    bool IIppCollection.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
+    bool INoValueWritable.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     /// <summary>
     /// type — keyword describing the supply type (e.g., "toner", "ink", "paper").

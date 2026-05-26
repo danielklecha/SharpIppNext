@@ -26,7 +26,7 @@ public class DocumentTemplateAttributesProfileTests : MapperTestBase
 
         var attributes = _mapper.Map<System.Collections.Generic.List<IppAttribute>>(src);
 
-        var finishingsCol = attributes.Single(a => a.Name == JobAttribute.FinishingsCol);
+        var finishingsCol = attributes.Single(a => a.Name == IppAttributeNames.FinishingsCol);
         finishingsCol.Tag.Should().Be(Tag.NoValue);
         finishingsCol.Value.Should().Be(NoValue.Instance);
     }
@@ -41,7 +41,7 @@ public class DocumentTemplateAttributesProfileTests : MapperTestBase
 
         var attributes = _mapper.Map<System.Collections.Generic.List<IppAttribute>>(src);
 
-        var outputBin = attributes.Single(a => a.Name == JobAttribute.OutputBin);
+        var outputBin = attributes.Single(a => a.Name == IppAttributeNames.OutputBin);
         outputBin.Tag.Should().Be(Tag.Keyword);
         outputBin.Value.Should().Be("top");
     }
@@ -56,7 +56,7 @@ public class DocumentTemplateAttributesProfileTests : MapperTestBase
 
         var attributes = _mapper.Map<System.Collections.Generic.List<IppAttribute>>(src);
 
-        var outputBin = attributes.Single(a => a.Name == JobAttribute.OutputBin);
+        var outputBin = attributes.Single(a => a.Name == IppAttributeNames.OutputBin);
         outputBin.Tag.Should().Be(Tag.NameWithoutLanguage);
         outputBin.Value.Should().Be("custom-finisher-bin");
     }
@@ -71,7 +71,7 @@ public class DocumentTemplateAttributesProfileTests : MapperTestBase
 
         var attributes = _mapper.Map<System.Collections.Generic.List<IppAttribute>>(src);
 
-        var outputBin = attributes.Single(a => a.Name == JobAttribute.OutputBin);
+        var outputBin = attributes.Single(a => a.Name == IppAttributeNames.OutputBin);
         outputBin.Tag.Should().Be(Tag.Keyword);
         outputBin.Value.Should().Be("vendor-bin-42");
     }
@@ -81,7 +81,7 @@ public class DocumentTemplateAttributesProfileTests : MapperTestBase
     {
         var attributes = new[]
         {
-            new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.OutputBin, "custom-finisher-bin")
+            new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.OutputBin, "custom-finisher-bin")
         }.ToIppDictionary();
 
         var mapped = _mapper.Map<DocumentTemplateAttributes>(attributes);
@@ -100,11 +100,11 @@ public class DocumentTemplateAttributesProfileTests : MapperTestBase
 
         var attributes = _mapper.Map<System.Collections.Generic.List<IppAttribute>>(src);
 
-        var media = attributes.Single(a => a.Name == JobAttribute.Media);
+        var media = attributes.Single(a => a.Name == IppAttributeNames.Media);
         media.Tag.Should().Be(Tag.NameWithoutLanguage);
         media.Value.Should().Be("Accounting Team");
 
-        var impositionTemplate = attributes.Single(a => a.Name == JobAttribute.ImpositionTemplate);
+        var impositionTemplate = attributes.Single(a => a.Name == IppAttributeNames.ImpositionTemplate);
         impositionTemplate.Tag.Should().Be(Tag.NameWithoutLanguage);
         impositionTemplate.Value.Should().Be("Layout A");
     }
@@ -119,7 +119,7 @@ public class DocumentTemplateAttributesProfileTests : MapperTestBase
 
         var attributes = _mapper.Map<System.Collections.Generic.List<IppAttribute>>(src);
 
-        var finishings = attributes.Where(a => a.Name == JobAttribute.Finishings).ToArray();
+        var finishings = attributes.Where(a => a.Name == IppAttributeNames.Finishings).ToArray();
         finishings.Should().HaveCount(1);
         finishings[0].Tag.Should().Be(Tag.Enum);
         finishings[0].Value.Should().Be((int)Finishings.Staple);
@@ -135,7 +135,7 @@ public class DocumentTemplateAttributesProfileTests : MapperTestBase
 
         var attributes = _mapper.Map<System.Collections.Generic.List<IppAttribute>>(src);
 
-        var pageOrderReceived = attributes.Single(a => a.Name == JobAttribute.PageOrderReceived);
+        var pageOrderReceived = attributes.Single(a => a.Name == IppAttributeNames.PageOrderReceived);
         pageOrderReceived.Tag.Should().Be(Tag.Keyword);
         pageOrderReceived.Value.Should().Be("n-to-1-order");
     }
@@ -145,7 +145,7 @@ public class DocumentTemplateAttributesProfileTests : MapperTestBase
     {
         var attributes = new[]
         {
-            new IppAttribute(Tag.Keyword, JobAttribute.PageOrderReceived, "1-to-n-order")
+            new IppAttribute(Tag.Keyword, IppAttributeNames.PageOrderReceived, "1-to-n-order")
         }.ToIppDictionary();
 
         var documentTemplate = _mapper.Map<DocumentTemplateAttributes>(attributes);
@@ -169,10 +169,10 @@ public class DocumentTemplateAttributesProfileTests : MapperTestBase
         };
         request.OperationAttributes.AddRange(
         [
-            new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"),
-            new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"),
-            new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://127.0.0.1:631/"),
-            new IppAttribute(Tag.Boolean, JobAttribute.LastDocument, true)
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://127.0.0.1:631/"),
+            new IppAttribute(Tag.Boolean, IppAttributeNames.LastDocument, true)
         ]);
         request.DocumentAttributes.AddRange(_mapper.Map<System.Collections.Generic.List<IppAttribute>>(src));
 

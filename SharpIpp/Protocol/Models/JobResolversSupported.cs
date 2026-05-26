@@ -8,8 +8,8 @@ namespace SharpIpp.Protocol.Models;
 public class JobResolversSupported : IIppCollection
 {
     /// <inheritdoc />
-    bool IIppCollection.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
+    bool INoValueWritable.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     /// <summary>
     /// resolver-name — name of the resolver (name).

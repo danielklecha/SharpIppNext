@@ -61,7 +61,7 @@ public class CloseJobTests : SharpIppIntegrationTestBase
                 OperationAttributes = new()
                 {
                     StatusMessage = "successful-ok",
-                    DetailedStatusMessage = ["close-job detail"],
+                    DetailedStatusMessage = "close-job detail",
                 }
             };
             var memoryStream = new MemoryStream();

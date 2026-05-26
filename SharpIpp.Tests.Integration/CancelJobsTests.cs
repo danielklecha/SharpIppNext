@@ -67,7 +67,7 @@ public class CancelJobsTests : SharpIppIntegrationTestBase
                 OperationAttributes = new()
                 {
                     StatusMessage = "successful-ok",
-                    DetailedStatusMessage = ["cancel detail"],
+                    DetailedStatusMessage = "cancel detail",
                 }
             };
             var memoryStream = new MemoryStream();

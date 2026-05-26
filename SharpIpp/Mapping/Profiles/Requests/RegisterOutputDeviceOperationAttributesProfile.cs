@@ -17,12 +17,12 @@ internal class RegisterOutputDeviceOperationAttributesProfile : IProfile
         {
             dst ??= new RegisterOutputDeviceOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, SystemOperationAttributes>(src, dst);
-            dst.OutputDeviceUuid = map.MapFromDicNullable<Uri?>(src, JobAttribute.OutputDeviceUuid);
-            dst.OutputDeviceX509Certificate = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.OutputDeviceX509Certificate);
-            dst.OutputDeviceX509Request = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.OutputDeviceX509Request);
-            dst.PrinterServiceType = map.MapFromDicSetNullable<PrinterServiceType[]?>(src, PrinterAttribute.PrinterServiceType);
-            if (src.ContainsKey(PrinterAttribute.PrinterXriRequested))
-                dst.PrinterXriRequested = src[PrinterAttribute.PrinterXriRequested].GroupBegCollection().Select(x => map.Map<SystemXri>(x.FromBegCollection().ToIppDictionary())).ToArray();
+            dst.OutputDeviceUuid = map.MapFromDicNullable<Uri?>(src, IppAttributeNames.OutputDeviceUuid);
+            dst.OutputDeviceX509Certificate = map.MapFromDicSetNullable<string[]?>(src, IppAttributeNames.OutputDeviceX509Certificate);
+            dst.OutputDeviceX509Request = map.MapFromDicSetNullable<string[]?>(src, IppAttributeNames.OutputDeviceX509Request);
+            dst.PrinterServiceType = map.MapFromDicSetNullable<PrinterServiceType[]?>(src, IppAttributeNames.PrinterServiceType);
+            if (src.ContainsKey(IppAttributeNames.PrinterXriRequested))
+                dst.PrinterXriRequested = src[IppAttributeNames.PrinterXriRequested].GroupBegCollection().Select(x => map.Map<SystemXri>(x.FromBegCollection().ToIppDictionary())).ToArray();
             return dst;
         });
 
@@ -31,15 +31,15 @@ internal class RegisterOutputDeviceOperationAttributesProfile : IProfile
             dst ??= new List<IppAttribute>();
             map.Map<SystemOperationAttributes, List<IppAttribute>>(src, dst);
             if (src.OutputDeviceUuid != null)
-                dst.Add(new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, src.OutputDeviceUuid.ToString()));
+                dst.Add(new IppAttribute(Tag.Uri, IppAttributeNames.OutputDeviceUuid, src.OutputDeviceUuid.ToString()));
             if (src.OutputDeviceX509Certificate != null)
-                dst.AddRange(src.OutputDeviceX509Certificate.Select(x => new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.OutputDeviceX509Certificate, x)));
+                dst.AddRange(src.OutputDeviceX509Certificate.Select(x => new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.OutputDeviceX509Certificate, x)));
             if (src.OutputDeviceX509Request != null)
-                dst.AddRange(src.OutputDeviceX509Request.Select(x => new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.OutputDeviceX509Request, x)));
+                dst.AddRange(src.OutputDeviceX509Request.Select(x => new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.OutputDeviceX509Request, x)));
             if (src.PrinterServiceType != null)
-                dst.AddRange(src.PrinterServiceType.Select(x => new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterServiceType, map.Map<string>(x))));
+                dst.AddRange(src.PrinterServiceType.Select(x => new IppAttribute(Tag.Keyword, IppAttributeNames.PrinterServiceType, map.Map<string>(x))));
             if (src.PrinterXriRequested != null)
-                dst.AddRange(src.PrinterXriRequested.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(PrinterAttribute.PrinterXriRequested)));
+                dst.AddRange(src.PrinterXriRequested.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(IppAttributeNames.PrinterXriRequested)));
             return dst;
         });
     }

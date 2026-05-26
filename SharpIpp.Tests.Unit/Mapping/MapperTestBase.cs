@@ -1,9 +1,11 @@
-using System.Reflection;
 using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
 namespace SharpIpp.Tests.Unit.Mapping;
 
+[ExcludeFromCodeCoverage]
 public abstract class MapperTestBase
 {
     protected readonly IMapper _mapper;

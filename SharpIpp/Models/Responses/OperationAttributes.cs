@@ -15,7 +15,7 @@ public class OperationAttributes
     /// See: PWG 5100.18-2025 Section 5.7.2
     /// </summary>
     /// <code>detailed-status-message</code>
-    public string[]? DetailedStatusMessage { get; set; }
+    public string? DetailedStatusMessage { get; set; }
     /// <summary>
     /// The Printer object OPTIONALLY returns this attribute. It provides additional information about each document access error encountered by the Printer in a Print-URI or Send-URI operation
     /// See: RFC 8011 Section 4.1.6.4

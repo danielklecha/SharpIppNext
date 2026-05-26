@@ -32,7 +32,8 @@ public class PrintUriTests : SharpIppIntegrationTestBase
                     AccessPin = "1234",
                     AccessUserName = "user",
                     AccessX509Certificate = "certificate"
-                }
+                },
+                DocumentMetadata = GetTestDocumentMetadata(),
             },
             JobTemplateAttributes = new()
             {
@@ -91,7 +92,8 @@ public class PrintUriTests : SharpIppIntegrationTestBase
                 ResourceIds = [43, 44],
                 DocumentUri = new Uri("ftp://document.pdf"),
                 DocumentName = "???????????????????????.pdf",
-                DocumentFormat = "application/pdf"
+                DocumentFormat = "application/pdf",
+                DocumentMetadata = GetTestDocumentMetadata(),
             },
             JobTemplateAttributes = new() { Copies = 1 }
         };
@@ -106,9 +108,13 @@ public class PrintUriTests : SharpIppIntegrationTestBase
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
                 StatusCode = IppStatusCode.SuccessfulOk,
-                OperationAttributes = new() { StatusMessage = "successful-ok", DetailedStatusMessage = ["detail1"], DocumentAccessError = "none" },
+                OperationAttributes = new() { StatusMessage = "successful-ok", DetailedStatusMessage = "detail1", DocumentAccessError = "none" },
                 JobAttributes = new() { JobId = 456 },
-                DocumentAttributes = new() { DocumentNumber = 1 }
+                DocumentAttributes = new()
+                {
+                    DocumentNumber = 1,
+                    DocumentMetadata = GetTestDocumentMetadata()
+                }
             };
             var ms = new MemoryStream();
             await server.SendResponseAsync(serverResponse, ms, c);

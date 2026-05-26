@@ -26,7 +26,10 @@ public class SetDocumentAttributesRequestProfileTests : MapperTestBase
                 JobId = 123,
                 DocumentNumber = 1
             },
-            DocumentName = "Updated Document Name",
+            DocumentDescriptionAttributes = new DocumentDescriptionAttributes
+            {
+                DocumentName = "Updated Document Name"
+            },
             DocumentTemplateAttributes = new DocumentTemplateAttributes
             {
                 Copies = 2
@@ -35,8 +38,8 @@ public class SetDocumentAttributesRequestProfileTests : MapperTestBase
 
         var ippRequest = _mapper.Map<SetDocumentAttributesRequest, IppRequestMessage>(request);
 
-        ippRequest.DocumentAttributes.Should().ContainSingle(x => x.Name == DocumentAttribute.DocumentName);
-        var documentName = ippRequest.DocumentAttributes.Single(x => x.Name == DocumentAttribute.DocumentName);
+        ippRequest.DocumentAttributes.Should().ContainSingle(x => x.Name == IppAttributeNames.DocumentName);
+        var documentName = ippRequest.DocumentAttributes.Single(x => x.Name == IppAttributeNames.DocumentName);
         documentName.Tag.Should().Be(Tag.NameWithoutLanguage);
         documentName.Value.Should().Be("Updated Document Name");
     }
@@ -50,21 +53,22 @@ public class SetDocumentAttributesRequestProfileTests : MapperTestBase
         };
         ippRequest.OperationAttributes.AddRange(
         [
-            new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"),
-            new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"),
-            new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://127.0.0.1:631/printers/p1"),
-            new IppAttribute(Tag.Integer, JobAttribute.JobId, 123),
-            new IppAttribute(Tag.Integer, DocumentAttribute.DocumentNumber, 1)
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://127.0.0.1:631/printers/p1"),
+            new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 123),
+            new IppAttribute(Tag.Integer, IppAttributeNames.DocumentNumber, 1)
         ]);
         ippRequest.DocumentAttributes.AddRange(
         [
-            new IppAttribute(Tag.NameWithoutLanguage, DocumentAttribute.DocumentName, "Updated Document Name"),
-            new IppAttribute(Tag.Integer, JobAttribute.Copies, 2)
+            new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.DocumentName, "Updated Document Name"),
+            new IppAttribute(Tag.Integer, IppAttributeNames.Copies, 2)
         ]);
 
         var request = _mapper.Map<IIppRequestMessage, SetDocumentAttributesRequest>(ippRequest);
 
-        request.DocumentName.Should().Be("Updated Document Name");
+        request.DocumentDescriptionAttributes.Should().NotBeNull();
+        request.DocumentDescriptionAttributes!.DocumentName.Should().Be("Updated Document Name");
         request.DocumentTemplateAttributes.Should().NotBeNull();
         request.DocumentTemplateAttributes!.Copies.Should().Be(2);
     }

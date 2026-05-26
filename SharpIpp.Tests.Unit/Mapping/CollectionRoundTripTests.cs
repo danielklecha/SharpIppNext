@@ -303,7 +303,7 @@ public class CollectionRoundTripTests : MapperTestBase
 
         var dict = new Dictionary<string, IppAttribute[]>
         {
-            [PrinterAttribute.PrinterInputTray] = attrs.ToArray()
+            [IppAttributeNames.PrinterInputTray] = attrs.ToArray()
         };
         var roundTripped = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterInputTray>(dict);
         ((IIppCollection)roundTripped).IsValue.Should().BeFalse();
@@ -321,7 +321,7 @@ public class CollectionRoundTripTests : MapperTestBase
 
         var dict = new Dictionary<string, IppAttribute[]>
         {
-            [PrinterAttribute.PrinterSupply] = attrs.ToArray()
+            [IppAttributeNames.PrinterSupply] = attrs.ToArray()
         };
         var roundTripped = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterSupply>(dict);
         ((IIppCollection)roundTripped).IsValue.Should().BeFalse();
@@ -367,23 +367,23 @@ public class NullArraySerializationTests : MapperTestBase
 
             var dict = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(model);
 
-            dict.Should().NotContainKey(PrinterAttribute.PrinterInputTray,
+            dict.Should().NotContainKey(IppAttributeNames.PrinterInputTray,
                 $"iteration {i}: null PrinterInputTray should not produce an attribute");
-            dict.Should().NotContainKey(PrinterAttribute.PrinterOutputTray,
+            dict.Should().NotContainKey(IppAttributeNames.PrinterOutputTray,
                 $"iteration {i}: null PrinterOutputTray should not produce an attribute");
-            dict.Should().NotContainKey(PrinterAttribute.PrinterSupply,
+            dict.Should().NotContainKey(IppAttributeNames.PrinterSupply,
                 $"iteration {i}: null PrinterSupply should not produce an attribute");
-            dict.Should().NotContainKey(PrinterAttribute.JobConstraintsSupported,
+            dict.Should().NotContainKey(IppAttributeNames.JobConstraintsSupported,
                 $"iteration {i}: null JobConstraintsSupported should not produce an attribute");
-            dict.Should().NotContainKey(PrinterAttribute.JobPresetsSupported,
+            dict.Should().NotContainKey(IppAttributeNames.JobPresetsSupported,
                 $"iteration {i}: null JobPresetsSupported should not produce an attribute");
-            dict.Should().NotContainKey(PrinterAttribute.JobResolversSupported,
+            dict.Should().NotContainKey(IppAttributeNames.JobResolversSupported,
                 $"iteration {i}: null JobResolversSupported should not produce an attribute");
-            dict.Should().NotContainKey(PrinterAttribute.JobTriggersSupported,
+            dict.Should().NotContainKey(IppAttributeNames.JobTriggersSupported,
                 $"iteration {i}: null JobTriggersSupported should not produce an attribute");
-            dict.Should().NotContainKey(PrinterAttribute.PrintColorModeIccProfiles,
+            dict.Should().NotContainKey(IppAttributeNames.PrintColorModeIccProfiles,
                 $"iteration {i}: null PrintColorModeIccProfile should not produce an attribute");
-            dict.Should().NotContainKey(PrinterAttribute.PrinterIccProfiles,
+            dict.Should().NotContainKey(IppAttributeNames.PrinterIccProfiles,
                 $"iteration {i}: null PrinterIccProfile should not produce an attribute");
         }
     }
@@ -407,13 +407,13 @@ public class NullArraySerializationTests : MapperTestBase
             var request = _mapper.Map<JobTemplateAttributes, IppRequestMessage>(model);
             var attrNames = request.JobAttributes.Select(a => a.Name).ToHashSet();
 
-            attrNames.Should().NotContain(JobAttribute.Finishings,
+            attrNames.Should().NotContain(IppAttributeNames.Finishings,
                 $"iteration {i}: null Finishings should not produce an attribute");
-            attrNames.Should().NotContain(JobAttribute.FinishingsCol,
+            attrNames.Should().NotContain(IppAttributeNames.FinishingsCol,
                 $"iteration {i}: null FinishingsCol should not produce an attribute");
-            attrNames.Should().NotContain(JobAttribute.PageRanges,
+            attrNames.Should().NotContain(IppAttributeNames.PageRanges,
                 $"iteration {i}: null PageRanges should not produce an attribute");
-            attrNames.Should().NotContain(JobAttribute.InsertSheet,
+            attrNames.Should().NotContain(IppAttributeNames.InsertSheet,
                 $"iteration {i}: null InsertSheet should not produce an attribute");
         }
     }
@@ -439,19 +439,19 @@ public class NullArraySerializationTests : MapperTestBase
 
             var dict = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(model);
 
-            dict.Should().NotContainKey(PrinterAttribute.PrinterUriSupported,
+            dict.Should().NotContainKey(IppAttributeNames.PrinterUriSupported,
                 $"iteration {i}: null PrinterUriSupported should not produce an attribute");
-            dict.Should().NotContainKey(PrinterAttribute.UriSecuritySupported,
+            dict.Should().NotContainKey(IppAttributeNames.UriSecuritySupported,
                 $"iteration {i}: null UriSecuritySupported should not produce an attribute");
-            dict.Should().NotContainKey(PrinterAttribute.UriAuthenticationSupported,
+            dict.Should().NotContainKey(IppAttributeNames.UriAuthenticationSupported,
                 $"iteration {i}: null UriAuthenticationSupported should not produce an attribute");
-            dict.Should().NotContainKey(PrinterAttribute.DocumentFormatSupported,
+            dict.Should().NotContainKey(IppAttributeNames.DocumentFormatSupported,
                 $"iteration {i}: null DocumentFormatSupported should not produce an attribute");
-            dict.Should().NotContainKey(PrinterAttribute.OperationsSupported,
+            dict.Should().NotContainKey(IppAttributeNames.OperationsSupported,
                 $"iteration {i}: null OperationsSupported should not produce an attribute");
-            dict.Should().NotContainKey(PrinterAttribute.PrinterStateReasons,
+            dict.Should().NotContainKey(IppAttributeNames.PrinterStateReasons,
                 $"iteration {i}: null PrinterStateReasons should not produce an attribute");
-            dict.Should().NotContainKey(PrinterAttribute.PrinterSupplyDescription,
+            dict.Should().NotContainKey(IppAttributeNames.PrinterSupplyDescription,
                 $"iteration {i}: null PrinterSupplyDescription should not produce an attribute");
         }
     }

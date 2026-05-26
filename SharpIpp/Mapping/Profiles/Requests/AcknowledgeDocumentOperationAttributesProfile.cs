@@ -15,10 +15,10 @@ internal class AcknowledgeDocumentOperationAttributesProfile : IProfile
         {
             dst ??= new AcknowledgeDocumentOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, JobOperationAttributes>(src, dst);
-            dst.DocumentNumber = map.MapFromDicNullable<int?>(src, DocumentAttribute.DocumentNumber) ?? 0;
-            dst.OutputDeviceUuid = map.MapFromDicNullable<Uri?>(src, JobAttribute.OutputDeviceUuid);
-            dst.FetchStatusCode = map.MapFromDicNullable<IppStatusCode?>(src, JobAttribute.FetchStatusCode);
-            dst.FetchStatusMessage = map.MapFromDicNullable<string?>(src, JobAttribute.FetchStatusMessage);
+            dst.DocumentNumber = map.MapFromDicNullable<int?>(src, IppAttributeNames.DocumentNumber) ?? 0;
+            dst.OutputDeviceUuid = map.MapFromDicNullable<Uri?>(src, IppAttributeNames.OutputDeviceUuid);
+            dst.FetchStatusCode = map.MapFromDicNullable<IppStatusCode?>(src, IppAttributeNames.FetchStatusCode);
+            dst.FetchStatusMessage = map.MapFromDicNullable<string?>(src, IppAttributeNames.FetchStatusMessage);
             return dst;
         });
 
@@ -26,13 +26,13 @@ internal class AcknowledgeDocumentOperationAttributesProfile : IProfile
         {
             dst ??= new List<IppAttribute>();
             map.Map<JobOperationAttributes, List<IppAttribute>>(src, dst);
-            dst.Add(new IppAttribute(Tag.Integer, DocumentAttribute.DocumentNumber, src.DocumentNumber));
+            dst.Add(new IppAttribute(Tag.Integer, IppAttributeNames.DocumentNumber, src.DocumentNumber));
             if (src.OutputDeviceUuid != null)
-                dst.Add(new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, src.OutputDeviceUuid.ToString()));
+                dst.Add(new IppAttribute(Tag.Uri, IppAttributeNames.OutputDeviceUuid, src.OutputDeviceUuid.ToString()));
             if (src.FetchStatusCode.HasValue)
-                dst.Add(new IppAttribute(Tag.Enum, JobAttribute.FetchStatusCode, (int)src.FetchStatusCode.Value));
+                dst.Add(new IppAttribute(Tag.Enum, IppAttributeNames.FetchStatusCode, (int)src.FetchStatusCode.Value));
             if (src.FetchStatusMessage != null)
-                dst.Add(new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.FetchStatusMessage, src.FetchStatusMessage));
+                dst.Add(new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.FetchStatusMessage, src.FetchStatusMessage));
             return dst;
         });
     }

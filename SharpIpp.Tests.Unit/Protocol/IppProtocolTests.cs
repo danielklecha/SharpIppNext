@@ -255,10 +255,10 @@ public class IppProtocolTests
             IppOperation = IppOperation.PrintJob,
             RequestId = 123
         };
-        message.OperationAttributes.Add( new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ) );
-        message.OperationAttributes.Add( new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ) );
-        message.OperationAttributes.Add( new IppAttribute( Tag.NameWithoutLanguage, JobAttribute.JobName, "Test Job" ) );
-        message.JobAttributes.Add( new IppAttribute(Tag.Integer, JobAttribute.Copies, 1 ) );
+        message.OperationAttributes.Add( new IppAttribute( Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8" ) );
+        message.OperationAttributes.Add( new IppAttribute( Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en" ) );
+        message.OperationAttributes.Add( new IppAttribute( Tag.NameWithoutLanguage, IppAttributeNames.JobName, "Test Job" ) );
+        message.JobAttributes.Add( new IppAttribute(Tag.Integer, IppAttributeNames.Copies, 1 ) );
         // Act
         await protocol.WriteIppRequestAsync( message, memoryStream );
         // Assert
@@ -313,10 +313,10 @@ public class IppProtocolTests
             RequestId = 123,
             Document = documentStream
         };
-        message.OperationAttributes.Add( new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ) );
-        message.OperationAttributes.Add( new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" ) );
-        message.OperationAttributes.Add( new IppAttribute( Tag.NameWithoutLanguage, JobAttribute.JobName, "Test Job" ) );
-        message.JobAttributes.Add( new IppAttribute(Tag.Integer, JobAttribute.Copies, 1 ) );
+        message.OperationAttributes.Add( new IppAttribute( Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8" ) );
+        message.OperationAttributes.Add( new IppAttribute( Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en" ) );
+        message.OperationAttributes.Add( new IppAttribute( Tag.NameWithoutLanguage, IppAttributeNames.JobName, "Test Job" ) );
+        message.JobAttributes.Add( new IppAttribute(Tag.Integer, IppAttributeNames.Copies, 1 ) );
         (await act.Should().NotThrowAsync()).Which.Should().BeEquivalentTo( message, x => x.Excluding( ( IMemberInfo x ) => x.Path == "Document.ReadTimeout" || x.Path == "Document.WriteTimeout" ) );
     }
 
@@ -388,7 +388,7 @@ public class IppProtocolTests
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
         Action act = () => protocol.WriteSection( SectionTag.OperationAttributesTag, new List<IppAttribute>
         {
-            new( Tag.Keyword, PrinterAttribute.IppVersionsSupported, new IppVersion(1,0).ToString() )
+            new( Tag.Keyword, IppAttributeNames.IppVersionsSupported, new IppVersion(1,0).ToString() )
         }, null, Encoding.ASCII );
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
         // Assert
@@ -405,7 +405,7 @@ public class IppProtocolTests
         // Act
         protocol.WriteSection( SectionTag.OperationAttributesTag, new List<IppAttribute>
         {
-            new IppAttribute( Tag.Keyword, PrinterAttribute.IppVersionsSupported, new IppVersion(1,0).ToString() )
+            new IppAttribute( Tag.Keyword, IppAttributeNames.IppVersionsSupported, new IppVersion(1,0).ToString() )
         }, binaryWriter, Encoding.ASCII );
         // Assert
         memoryStream.ToArray().Should().Equal( 0x01, 0x44, 0x00, 0x16, 0x69, 0x70, 0x70, 0x2D, 0x76, 0x65, 0x72, 0x73,
@@ -422,7 +422,7 @@ public class IppProtocolTests
         // Act
         protocol.WriteAttribute(
             binaryWriter,
-            new IppAttribute(Tag.BegCollection, PrinterAttribute.MediaColDefault, NoValue.Instance),
+            new IppAttribute(Tag.BegCollection, IppAttributeNames.MediaColDefault, NoValue.Instance),
             null,
             Encoding.ASCII);
         // Assert
@@ -440,7 +440,7 @@ public class IppProtocolTests
         // Act
         protocol.WriteAttribute(
             binaryWriter,
-            new IppAttribute( Tag.Keyword, PrinterAttribute.IppVersionsSupported, new IppVersion( 1, 1 ).ToString() ),
+            new IppAttribute( Tag.Keyword, IppAttributeNames.IppVersionsSupported, new IppVersion( 1, 1 ).ToString() ),
             null,
             Encoding.ASCII);
         // Assert
@@ -458,8 +458,8 @@ public class IppProtocolTests
         // Act
         protocol.WriteAttribute(
             binaryWriter,
-            new IppAttribute( Tag.Keyword, PrinterAttribute.IppVersionsSupported, new IppVersion( 1, 1 ).ToString() ),
-            new IppAttribute( Tag.Keyword, PrinterAttribute.IppVersionsSupported, new IppVersion( 1, 0 ).ToString() ),
+            new IppAttribute( Tag.Keyword, IppAttributeNames.IppVersionsSupported, new IppVersion( 1, 1 ).ToString() ),
+            new IppAttribute( Tag.Keyword, IppAttributeNames.IppVersionsSupported, new IppVersion( 1, 0 ).ToString() ),
             Encoding.ASCII );
         // Assert
         memoryStream.ToArray().Should().Equal( 0x44, 0x00, 0x00, 0x00, 0x03, 0x31, 0x2E, 0x31 );
@@ -493,13 +493,13 @@ public class IppProtocolTests
         };
         var operationAttrs = new List<IppAttribute>
         {
-            new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ),
-            new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" )
+            new IppAttribute( Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8" ),
+            new IppAttribute( Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en" )
         };
         message.OperationAttributes.Add( operationAttrs );
         var jobAttrs = new List<IppAttribute>
         {
-            new IppAttribute(Tag.Integer, JobAttribute.Copies, 1 )
+            new IppAttribute(Tag.Integer, IppAttributeNames.Copies, 1 )
         };
         message.JobAttributes.Add( jobAttrs );
         // Act
@@ -548,13 +548,13 @@ public class IppProtocolTests
         };
         var operationAttrs = new List<IppAttribute>
         {
-            new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ),
-            new IppAttribute( Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en" )
+            new IppAttribute( Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8" ),
+            new IppAttribute( Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en" )
         };
         message.OperationAttributes.Add( operationAttrs );
         var jobAttrs = new List<IppAttribute>
         {
-            new IppAttribute(Tag.Integer, JobAttribute.Copies, 1 )
+            new IppAttribute(Tag.Integer, IppAttributeNames.Copies, 1 )
         };
         message.JobAttributes.Add( jobAttrs );
         (await act.Should().NotThrowAsync()).Which.Should().BeEquivalentTo( message );
@@ -582,7 +582,7 @@ public class IppProtocolTests
         var result = await protocol.ReadIppRequestAsync(requestStream);
 
         result.OperationAttributes.Should().HaveCount(1);
-        result.OperationAttributes[0].Name.Should().Be(JobAttribute.AttributesCharset);
+        result.OperationAttributes[0].Name.Should().Be(IppAttributeNames.AttributesCharset);
         result.OperationAttributes[0].Value.Should().Be("utf-8");
         result.JobAttributes.Should().BeEmpty();
     }
@@ -609,7 +609,7 @@ public class IppProtocolTests
 
         result.OperationAttributes.Should().HaveCount(1);
         result.OperationAttributes[0].Should().ContainSingle();
-        result.OperationAttributes[0][0].Name.Should().Be(JobAttribute.AttributesCharset);
+        result.OperationAttributes[0][0].Name.Should().Be(IppAttributeNames.AttributesCharset);
         result.OperationAttributes[0][0].Value.Should().Be("utf-8");
         result.JobAttributes.Should().BeEmpty();
     }
@@ -1157,7 +1157,7 @@ public class IppProtocolTests
         // Act
         Func<IppAttribute> act = () => protocol.ReadAttribute( Tag.Keyword, binaryReader, null, null, Encoding.ASCII );
         // Assert
-        act.Should().NotThrow().Which.Should().BeEquivalentTo( new IppAttribute( Tag.Keyword, PrinterAttribute.IppVersionsSupported, new IppVersion( 1, 1 ).ToString() ) );
+        act.Should().NotThrow().Which.Should().BeEquivalentTo( new IppAttribute( Tag.Keyword, IppAttributeNames.IppVersionsSupported, new IppVersion( 1, 1 ).ToString() ) );
     }
 
     [TestMethod]
@@ -1171,7 +1171,7 @@ public class IppProtocolTests
         // Act
         Func<IppAttribute> act = () => protocol.ReadAttribute(Tag.BegCollection, binaryReader, null, null, Encoding.ASCII);
         // Assert
-        act.Should().NotThrow().Which.Should().BeEquivalentTo(new IppAttribute(Tag.BegCollection, PrinterAttribute.MediaColDefault, NoValue.Instance));
+        act.Should().NotThrow().Which.Should().BeEquivalentTo(new IppAttribute(Tag.BegCollection, IppAttributeNames.MediaColDefault, NoValue.Instance));
     }
 
     [TestMethod]
@@ -1181,11 +1181,11 @@ public class IppProtocolTests
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new( new byte[] { 0x00, 0x00, 0x00, 0x03, 0x31, 0x2E, 0x31 } );
         using BinaryReader binaryReader = new( memoryStream );
-        var previousAttribute = new IppAttribute( Tag.Keyword, PrinterAttribute.IppVersionsSupported, new IppVersion( 1, 0 ).ToString() );
+        var previousAttribute = new IppAttribute( Tag.Keyword, IppAttributeNames.IppVersionsSupported, new IppVersion( 1, 0 ).ToString() );
         // Act
         Func<IppAttribute> act = () => protocol.ReadAttribute( Tag.Keyword, binaryReader, previousAttribute, null, Encoding.ASCII);
         // Assert
-        act.Should().NotThrow().Which.Should().BeEquivalentTo( new IppAttribute( Tag.Keyword, PrinterAttribute.IppVersionsSupported, new IppVersion( 1, 1 ).ToString() ) );
+        act.Should().NotThrow().Which.Should().BeEquivalentTo( new IppAttribute( Tag.Keyword, IppAttributeNames.IppVersionsSupported, new IppVersion( 1, 1 ).ToString() ) );
     }
 
     [TestMethod]
@@ -1282,7 +1282,7 @@ public class IppProtocolTests
             IppOperation = IppOperation.PrintJob,
             RequestId = 123
         };
-        message.JobAttributes.Add( new IppAttribute(Tag.Integer, JobAttribute.Copies, 1 ) );
+        message.JobAttributes.Add( new IppAttribute(Tag.Integer, IppAttributeNames.Copies, 1 ) );
         
         // Act
         Func<Task> act = async () => await protocol.WriteIppRequestAsync( message, memoryStream );
@@ -1302,7 +1302,7 @@ public class IppProtocolTests
             IppOperation = IppOperation.PrintJob,
             RequestId = 123
         };
-        message.OperationAttributes.Add( new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, 1 ) );
+        message.OperationAttributes.Add( new IppAttribute( Tag.Charset, IppAttributeNames.AttributesCharset, 1 ) );
         
         // Act
         Func<Task> act = async () => await protocol.WriteIppRequestAsync( message, memoryStream );
@@ -1322,9 +1322,9 @@ public class IppProtocolTests
             IppOperation = IppOperation.PrintJob,
             RequestId = 123
         };
-        message.OperationAttributes.Add( new IppAttribute( Tag.Integer, JobAttribute.Copies, 1 ) );
-        message.OperationAttributes.Add( new IppAttribute( Tag.Charset, JobAttribute.JobName, "utf-8" ) );
-        message.OperationAttributes.Add( new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" ) );
+        message.OperationAttributes.Add( new IppAttribute( Tag.Integer, IppAttributeNames.Copies, 1 ) );
+        message.OperationAttributes.Add( new IppAttribute( Tag.Charset, IppAttributeNames.JobName, "utf-8" ) );
+        message.OperationAttributes.Add( new IppAttribute( Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8" ) );
         
         // Act
         Func<Task> act = async () => await protocol.WriteIppRequestAsync( message, memoryStream );
@@ -1344,7 +1344,7 @@ public class IppProtocolTests
             StatusCode = IppStatusCode.SuccessfulOk,
             RequestId = 123
         };
-        message.JobAttributes.Add( new List<IppAttribute> { new IppAttribute(Tag.Integer, JobAttribute.Copies, 1 ) } );
+        message.JobAttributes.Add( new List<IppAttribute> { new IppAttribute(Tag.Integer, IppAttributeNames.Copies, 1 ) } );
         
         // Act
         Func<Task> act = async () => await protocol.WriteIppResponseAsync( message, memoryStream );
@@ -1364,7 +1364,7 @@ public class IppProtocolTests
             StatusCode = IppStatusCode.SuccessfulOk,
             RequestId = 123
         };
-        message.OperationAttributes.Add( new List<IppAttribute> { new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, 1 ) } );
+        message.OperationAttributes.Add( new List<IppAttribute> { new IppAttribute( Tag.Charset, IppAttributeNames.AttributesCharset, 1 ) } );
         
         // Act
         Func<Task> act = async () => await protocol.WriteIppResponseAsync( message, memoryStream );
@@ -1386,9 +1386,9 @@ public class IppProtocolTests
         };
         message.OperationAttributes.Add( new List<IppAttribute> 
         { 
-            new IppAttribute( Tag.Integer, JobAttribute.Copies, 1 ),
-            new IppAttribute( Tag.Charset, JobAttribute.JobName, "utf-8" ),
-            new IppAttribute( Tag.Charset, JobAttribute.AttributesCharset, "utf-8" )
+            new IppAttribute( Tag.Integer, IppAttributeNames.Copies, 1 ),
+            new IppAttribute( Tag.Charset, IppAttributeNames.JobName, "utf-8" ),
+            new IppAttribute( Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8" )
         } );
         
         // Act
@@ -1487,7 +1487,7 @@ public class IppProtocolTests
 
         // Assert
         result.JobAttributes.Should().HaveCount(1);
-        result.JobAttributes[0].Name.Should().Be(JobAttribute.JobName);
+        result.JobAttributes[0].Name.Should().Be(IppAttributeNames.JobName);
         result.JobAttributes[0].Value.Should().Be("\u00C4"); // "Ä"
     }
 
@@ -1536,7 +1536,7 @@ public class IppProtocolTests
         // Assert
         result.JobAttributes.Should().HaveCount(1);
         result.JobAttributes[0].Should().ContainSingle();
-        result.JobAttributes[0][0].Name.Should().Be(JobAttribute.JobName);
+        result.JobAttributes[0][0].Name.Should().Be(IppAttributeNames.JobName);
         result.JobAttributes[0][0].Value.Should().Be("\u00C4"); // "Ä"
     }
 

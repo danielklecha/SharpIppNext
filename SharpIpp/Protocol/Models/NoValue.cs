@@ -51,6 +51,7 @@ public struct NoValue : IEquatable<NoValue>
         return (T)GetNoValue(typeof(T), tag);
     }
 
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2067:UnsatisfiedPublicParameterlessConstructor", Justification = "ISmartEnum and IIppCollection types always have public parameterless constructors.")]
     public static object GetNoValue(Type type, Tag tag = Tag.Unknown)
     {
         var underlyingType = Nullable.GetUnderlyingType(type) ?? type;
@@ -73,10 +74,10 @@ public struct NoValue : IEquatable<NoValue>
         if (underlyingType == typeof(StringWithLanguage)) return new StringWithLanguage();
         if (underlyingType == typeof(OctetString)) return new OctetString();
 
-        if (typeof(IIppCollection).IsAssignableFrom(underlyingType) && Activator.CreateInstance(underlyingType) is IIppCollection collection)
+        if (typeof(INoValueWritable).IsAssignableFrom(underlyingType) && Activator.CreateInstance(underlyingType) is INoValueWritable writable)
         {
-            collection.IsValue = false;
-            return collection;
+            writable.IsValue = false;
+            return writable;
         }
 
         if (typeof(ISmartEnum).IsAssignableFrom(underlyingType) && Activator.CreateInstance(underlyingType) is ISmartEnum smartEnum)

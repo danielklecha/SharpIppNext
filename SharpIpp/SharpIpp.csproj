@@ -21,6 +21,10 @@
 	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
+    <IsAotCompatible>true</IsAotCompatible>
+    <IsTrimmable>true</IsTrimmable>
+  </PropertyGroup>
   <ItemGroup>
     <None Include="..\ipp256.png">
       <Pack>True</Pack>
@@ -30,5 +34,14 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+    <EmbeddedResource Include="ILLink.Descriptors.xml" LogicalName="ILLink.Descriptors.xml" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="System.ComponentModel.Annotations" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <InternalsVisibleTo Include="SharpIpp.Tests.Unit" />
+    <InternalsVisibleTo Include="SharpIpp.Tests.Integration" />
   </ItemGroup>
 </Project>

@@ -10,24 +10,24 @@ public class CUPSGetPrintersOperationAttributes : OperationAttributes
 {
     /// <summary>
     /// The client OPTIONALLY supplies this attribute to select the first printer that is returned
-    /// See: IPP
+    /// See: CUPS Implementation of IPP
     /// </summary>
     /// <code>first-printer-name</code>
     public string? FirstPrinterName { get; set; }
     /// <summary>
     /// The client OPTIONALLY supplies this attribute. The Printer object MUST support this attribute. It is an integer value that determines the maximum number of jobs that a client will receive from the Printer even if "which-jobs" or "my-jobs" constrain which jobs are returned. The limit is a "stateless limit" in that if the value supplied by the client is 'N', then only the first 'N' jobs are returned in the Get-Jobs Response. There is no mechanism to allow for the next 'M' jobs after the first 'N' jobs. If the client does not supply this attribute, the Printer object responds with all applicable jobs
-    /// Type: integer(1:MAX)
     /// See: PWG 5100.13-2023 Section 6.1.4
     /// See: RFC 8011 Section 4.2.6.1
     /// </summary>
     /// <code>limit</code>
+    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
     public int? Limit { get; set; }
     /// <summary>
     /// The client OPTIONALLY supplies this attribute to select which printer is returned
-    /// Type: integer(1:65535)
     /// See: PWG 5100.22-2025 Section 7.1.5
     /// </summary>
     /// <code>printer-id</code>
+    [System.ComponentModel.DataAnnotations.Range(1, 65535)]
     public int? PrinterId { get; set; }
     /// <summary>
     /// The client OPTIONALLY supplies this attribute to select which printers are returned

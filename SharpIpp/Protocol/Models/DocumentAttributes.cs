@@ -1,5 +1,6 @@
 using System;
 using SharpIpp.Protocol.Models;
+using SharpIpp.Validation;
 
 namespace SharpIpp.Protocol.Models;
 /// <summary>
@@ -9,8 +10,8 @@ namespace SharpIpp.Protocol.Models;
 public class DocumentAttributes : IIppCollection
 {
     /// <inheritdoc />
-    bool IIppCollection.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
+    bool INoValueWritable.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
     /// <summary>
     /// The document-number IPP attribute.
     /// Type: integer(1:MAX)
@@ -360,7 +361,8 @@ public class DocumentAttributes : IIppCollection
     /// See: PWG 5100.13-2023 Section 6.3.1
     /// </summary>
     /// <code>document-metadata</code>
-    public OctetString[]? DocumentMetadata { get; set; }
+    [Metadata]
+    public DocumentMetadata? DocumentMetadata { get; set; }
 
 
 }

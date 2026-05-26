@@ -25,9 +25,9 @@ internal class IppResponseProfile : IProfile
             var operationAttributes = src.OperationAttributes.SelectMany(x => x).ToIppDictionary();
             if (operationAttributes != null)
             {
-                var statusMessage = map.MapFromDicNullable<string?>(operationAttributes, JobAttribute.StatusMessage);
-                var detailedStatusMessage = map.MapFromDicSetNullable<string[]?>(operationAttributes, JobAttribute.DetailedStatusMessage);
-                var documentAccessError = map.MapFromDicNullable<string?>(operationAttributes, JobAttribute.DocumentAccessError);
+                var statusMessage = map.MapFromDicNullable<string?>(operationAttributes, IppAttributeNames.StatusMessage);
+                var detailedStatusMessage = map.MapFromDicNullable<string?>(operationAttributes, IppAttributeNames.DetailedStatusMessage);
+                var documentAccessError = map.MapFromDicNullable<string?>(operationAttributes, IppAttributeNames.DocumentAccessError);
                 if (statusMessage != null || detailedStatusMessage != null || documentAccessError != null)
                 {
                     dst.OperationAttributes ??= new ResponseOperationAttributes();
@@ -45,17 +45,19 @@ internal class IppResponseProfile : IProfile
             dst.Version = src.Version;
             dst.RequestId = src.RequestId;
             dst.StatusCode = src.StatusCode;
+            // RFC 8011 Section 4.1.4: attributes-charset and attributes-natural-language
+            // MUST be the first and second attributes respectively in the operation attributes group.
             var operationAttrs = new List<IppAttribute>
             {
-                new(Tag.Charset, JobAttribute.AttributesCharset, src.OperationAttributes?.AttributesCharset ?? "utf-8"),
-                new(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, src.OperationAttributes?.AttributesNaturalLanguage ?? "en")
+                new(Tag.Charset, IppAttributeNames.AttributesCharset, src.OperationAttributes?.AttributesCharset ?? "utf-8"),
+                new(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, src.OperationAttributes?.AttributesNaturalLanguage ?? "en")
             };
             if (src.OperationAttributes?.StatusMessage != null)
-                operationAttrs.Add(new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.StatusMessage, src.OperationAttributes.StatusMessage));
+                operationAttrs.Add(new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.StatusMessage, src.OperationAttributes.StatusMessage));
             if (src.OperationAttributes?.DetailedStatusMessage != null)
-                operationAttrs.AddRange(src.OperationAttributes.DetailedStatusMessage.Select(x => new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.DetailedStatusMessage, x)));
+                operationAttrs.Add(new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.DetailedStatusMessage, src.OperationAttributes.DetailedStatusMessage));
             if (src.OperationAttributes?.DocumentAccessError != null)
-                operationAttrs.Add(new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.DocumentAccessError, src.OperationAttributes.DocumentAccessError));
+                operationAttrs.Add(new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.DocumentAccessError, src.OperationAttributes.DocumentAccessError));
             dst.OperationAttributes.Add(operationAttrs);
             return dst;
         });

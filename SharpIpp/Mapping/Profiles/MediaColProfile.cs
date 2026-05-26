@@ -57,7 +57,7 @@ internal class MediaColProfile : IProfile
         mapper.CreateMap<MediaCol, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.MediaCol, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.MediaCol, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
             if (src.MediaBackCoating.HasValue)

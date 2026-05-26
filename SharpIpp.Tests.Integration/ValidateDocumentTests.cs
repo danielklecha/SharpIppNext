@@ -56,7 +56,7 @@ public class ValidateDocumentTests : SharpIppIntegrationTestBase
                 RequestingUserUri = new Uri("mailto:test-user@example.com"),
                 DocumentFormat = "application/pdf",
                 DocumentName = "doc.pdf",
-                DocumentMetadata = ["x-meta1=val1", "x-meta2=val2"],
+                DocumentMetadata = GetTestDocumentMetadata(),
             },
             DocumentTemplateAttributes = new()
             {
@@ -81,7 +81,7 @@ public class ValidateDocumentTests : SharpIppIntegrationTestBase
                 OperationAttributes = new()
                 {
                     StatusMessage = "successful-ok",
-                    DetailedStatusMessage = ["validate-document detail"],
+                    DetailedStatusMessage = "validate-document detail",
                 }
             };
 

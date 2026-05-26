@@ -30,7 +30,7 @@ internal class SeparatorSheetsProfile : IProfile
         mapper.CreateMap<SeparatorSheets, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.SeparatorSheets, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.SeparatorSheets, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
             if (src.Media != null)

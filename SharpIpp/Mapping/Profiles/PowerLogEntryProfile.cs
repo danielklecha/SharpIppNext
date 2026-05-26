@@ -29,7 +29,7 @@ internal class PowerLogEntryProfile : IProfile
         mapper.CreateMap<PowerLogEntry, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, SystemAttribute.PowerLogCol, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.PowerLogCol, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
             if (src.LogId.HasValue)

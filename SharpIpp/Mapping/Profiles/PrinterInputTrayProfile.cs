@@ -31,7 +31,7 @@ internal class PrinterInputTrayProfile : IProfile
         mapper.CreateMap<PrinterInputTray, IEnumerable<IppAttribute>>((src, _) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, PrinterAttribute.PrinterInputTray, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.PrinterInputTray, NoValue.Instance) };
 
             var attrs = new List<IppAttribute>();
             if (src.Type != null) attrs.Add(new IppAttribute(Tag.Keyword, "type", src.Type));

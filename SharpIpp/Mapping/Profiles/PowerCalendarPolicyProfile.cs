@@ -34,7 +34,7 @@ internal class PowerCalendarPolicyProfile : IProfile
         mapper.CreateMap<PowerCalendarPolicy, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, SystemAttribute.PowerCalendarPolicyCol, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.PowerCalendarPolicyCol, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
             if (src.CalendarId.HasValue)

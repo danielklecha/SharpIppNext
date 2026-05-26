@@ -250,10 +250,12 @@ namespace SharpIpp.Protocol.Models
         /// </summary>
         IdentifyPrinter = 0x003C,
         /// <summary>
-        /// Deprecated/Obsolete Support: The library intentionally implements operations and attributes that the latest standards have deprecated or obsoleted for the sake of backward compatibility, such as Validate-Document (Deprecated in PWG 5100.13-2023).
+        /// Validate-Document Operation.
+        /// <br/>
+        /// Deprecated/Obsolete Support: Note that this operation is deprecated for Print Services per PWG 5100.13-2023 Section 5.2, but remains required and supported for Scan Services per PWG 5100.17 Section 4.2.
         /// See: PWG 5100.13-2023 Section 5.2
+        /// See: PWG 5100.17-2014 Section 4.2
         /// </summary>
-        [Obsolete("The 'Validate-Document' operation is deprecated. See PWG 5100.13-2023 Section 5.2.")]
         ValidateDocument = 0x003D,
         /// <summary>
         /// See: PWG 5100.15-2013 Section 4.2

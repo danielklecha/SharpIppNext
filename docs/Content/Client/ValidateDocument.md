@@ -2,7 +2,9 @@
 
 The Validate-Document operation validates operation and Document Template attributes that would be used with later Send-Document or Send-URI calls, without creating a Document object.
 
-See: PWG 5100.13-2023 Section 5.2.
+See:
+- PWG 5100.13-2023 Section 5.2 (deprecated for Print Services)
+- PWG 5100.17-2014 Section 4.2 (required/supported for Scan Services)
 
 ## Example
 

@@ -24,7 +24,10 @@ var request = new SetDocumentAttributesRequest
         JobId = 123,
         DocumentNumber = 1
     },
-    DocumentName = "Quarterly Report",
+    DocumentDescriptionAttributes = new()
+    {
+        DocumentName = "Quarterly Report"
+    },
     DocumentTemplateAttributes = new()
     {
         Copies = 5,

@@ -23,9 +23,9 @@ public class DocumentAttributesProfileTests : MapperTestBase
         // Arrange
         var src = new[]
         {
-            new IppAttribute(Tag.Keyword, DocumentAttribute.DocumentDigitalSignature, "xmldsig"),
-            new IppAttribute(Tag.TextWithoutLanguage, DocumentAttribute.DocumentFormatVersion, "1.2"),
-            new IppAttribute(Tag.TextWithoutLanguage, DocumentAttribute.DocumentFormatVersionDetected, "1.2.3")
+            new IppAttribute(Tag.Keyword, IppAttributeNames.DocumentDigitalSignature, "xmldsig"),
+            new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.DocumentFormatVersion, "1.2"),
+            new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.DocumentFormatVersionDetected, "1.2.3")
         }.ToIppDictionary();
 
         // Act
@@ -52,19 +52,19 @@ public class DocumentAttributesProfileTests : MapperTestBase
         var dst = _mapper.Map<IDictionary<string, IppAttribute[]>>(src);
 
         // Assert
-        dst.Should().ContainKey(DocumentAttribute.DocumentDigitalSignature);
-        dst[DocumentAttribute.DocumentDigitalSignature].Should().HaveCount(1);
-        dst[DocumentAttribute.DocumentDigitalSignature][0].Tag.Should().Be(Tag.Keyword);
-        dst[DocumentAttribute.DocumentDigitalSignature][0].Value.Should().Be("xmldsig");
+        dst.Should().ContainKey(IppAttributeNames.DocumentDigitalSignature);
+        dst[IppAttributeNames.DocumentDigitalSignature].Should().HaveCount(1);
+        dst[IppAttributeNames.DocumentDigitalSignature][0].Tag.Should().Be(Tag.Keyword);
+        dst[IppAttributeNames.DocumentDigitalSignature][0].Value.Should().Be("xmldsig");
 
-        dst.Should().ContainKey(DocumentAttribute.DocumentFormatVersion);
-        dst[DocumentAttribute.DocumentFormatVersion].Should().HaveCount(1);
-        dst[DocumentAttribute.DocumentFormatVersion][0].Tag.Should().Be(Tag.TextWithoutLanguage);
-        dst[DocumentAttribute.DocumentFormatVersion][0].Value.Should().Be("1.2");
+        dst.Should().ContainKey(IppAttributeNames.DocumentFormatVersion);
+        dst[IppAttributeNames.DocumentFormatVersion].Should().HaveCount(1);
+        dst[IppAttributeNames.DocumentFormatVersion][0].Tag.Should().Be(Tag.TextWithoutLanguage);
+        dst[IppAttributeNames.DocumentFormatVersion][0].Value.Should().Be("1.2");
 
-        dst.Should().ContainKey(DocumentAttribute.DocumentFormatVersionDetected);
-        dst[DocumentAttribute.DocumentFormatVersionDetected].Should().HaveCount(1);
-        dst[DocumentAttribute.DocumentFormatVersionDetected][0].Tag.Should().Be(Tag.TextWithoutLanguage);
-        dst[DocumentAttribute.DocumentFormatVersionDetected][0].Value.Should().Be("1.2.3");
+        dst.Should().ContainKey(IppAttributeNames.DocumentFormatVersionDetected);
+        dst[IppAttributeNames.DocumentFormatVersionDetected].Should().HaveCount(1);
+        dst[IppAttributeNames.DocumentFormatVersionDetected][0].Tag.Should().Be(Tag.TextWithoutLanguage);
+        dst[IppAttributeNames.DocumentFormatVersionDetected][0].Value.Should().Be("1.2.3");
     }
 }

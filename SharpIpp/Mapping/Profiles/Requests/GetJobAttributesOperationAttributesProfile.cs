@@ -14,7 +14,7 @@ internal class GetJobAttributesOperationAttributesProfile : IProfile
         {
             dst ??= new GetJobAttributesOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, JobOperationAttributes>(src, dst);
-            var requestedAttributes = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.RequestedAttributes);
+            var requestedAttributes = map.MapFromDicSetNullable<string[]?>(src, IppAttributeNames.RequestedAttributes);
             if (requestedAttributes?.Any() ?? false)
                 dst.RequestedAttributes = requestedAttributes;
             return dst;
@@ -25,7 +25,7 @@ internal class GetJobAttributesOperationAttributesProfile : IProfile
             dst ??= new List<IppAttribute>();
             map.Map<JobOperationAttributes, List<IppAttribute>>(src, dst);
             if (src.RequestedAttributes != null)
-                dst.AddRange(src.RequestedAttributes.Select(requestedAttribute => new IppAttribute(Tag.Keyword, JobAttribute.RequestedAttributes, requestedAttribute)));
+                dst.AddRange(src.RequestedAttributes.Select(requestedAttribute => new IppAttribute(Tag.Keyword, IppAttributeNames.RequestedAttributes, requestedAttribute)));
             return dst;
         });
     }

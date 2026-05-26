@@ -252,4 +252,23 @@ public class NoValueTests : MapperTestBase
         result.Should().BeAssignableTo(type);
         result.IsValue.Should().BeFalse();
     }
+
+    public static IEnumerable<object[]> IppStructuredStringTypes =>
+        typeof(IppStructuredString).Assembly
+            .GetTypes()
+            .Where(type => typeof(IppStructuredString).IsAssignableFrom(type)
+                && type.IsClass
+                && !type.IsAbstract
+                && !type.ContainsGenericParameters)
+            .Select(type => new object[] { type });
+
+    [TestMethod]
+    [DynamicData(nameof(IppStructuredStringTypes))]
+    public void GetNoValue_WithIppStructuredStringType_ShouldReturnIsValueFalse(Type type)
+    {
+        var result = (IIppStructuredString)NoValue.GetNoValue(type);
+        result.Should().BeAssignableTo(type);
+        result.IsValue.Should().BeFalse();
+        NoValue.IsNoValue(result).Should().BeTrue();
+    }
 }

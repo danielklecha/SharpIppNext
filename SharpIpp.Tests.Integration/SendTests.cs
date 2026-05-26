@@ -51,7 +51,11 @@ public class SendTests : SharpIppIntegrationTestBase
                 Version = serverRawRequest.Version,
                 StatusCode = IppStatusCode.SuccessfulOk
             };
-            serverRawResponse.OperationAttributes.Add([new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"), new IppAttribute(Tag.NameWithoutLanguage, "response", "test")]);
+            serverRawResponse.OperationAttributes.Add([
+                new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+                new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+                new IppAttribute(Tag.NameWithoutLanguage, "response", "test")
+            ]);
             serverRawResponse.PrinterAttributes.Add([new IppAttribute(Tag.NameWithoutLanguage, "response", "test")]);
             serverRawResponse.ResourceAttributes.Add([new IppAttribute(Tag.NameWithoutLanguage, "response", "test")]);
             serverRawResponse.SubscriptionAttributes.Add([new IppAttribute(Tag.NameWithoutLanguage, "response", "test")]);

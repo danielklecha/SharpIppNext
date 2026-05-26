@@ -50,12 +50,12 @@ public class GetNextDocumentDataResponseProfileTests : MapperTestBase
             {
                 new List<IppAttribute>
                 {
-                    new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-16"),
-                    new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "fr"),
-                    new IppAttribute(Tag.Keyword, JobAttribute.Compression, "gzip"),
-                    new IppAttribute(Tag.Integer, JobAttribute.DocumentDataGetInterval, 10),
-                    new IppAttribute(Tag.Boolean, JobAttribute.LastDocument, true),
-                    new IppAttribute(Tag.Integer, DocumentAttribute.DocumentNumber, 5)
+                    new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-16"),
+                    new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "fr"),
+                    new IppAttribute(Tag.Keyword, IppAttributeNames.Compression, "gzip"),
+                    new IppAttribute(Tag.Integer, IppAttributeNames.DocumentDataGetInterval, 10),
+                    new IppAttribute(Tag.Boolean, IppAttributeNames.LastDocument, true),
+                    new IppAttribute(Tag.Integer, IppAttributeNames.DocumentNumber, 5)
                 }
             }
         };
@@ -99,11 +99,11 @@ public class GetNextDocumentDataResponseProfileTests : MapperTestBase
         // Assert
         dst.OperationAttributes.Should().NotBeEmpty();
         var attrs = dst.OperationAttributes[0];
-        attrs.Any(a => a.Name == JobAttribute.AttributesCharset && (string)a.Value == "utf-16").Should().BeTrue();
-        attrs.Any(a => a.Name == JobAttribute.AttributesNaturalLanguage && (string)a.Value == "fr").Should().BeTrue();
-        attrs.Any(a => a.Name == JobAttribute.Compression && (string)a.Value == "gzip").Should().BeTrue();
-        attrs.Any(a => a.Name == JobAttribute.DocumentDataGetInterval && (int)a.Value == 10).Should().BeTrue();
-        attrs.Any(a => a.Name == JobAttribute.LastDocument && (bool)a.Value == true).Should().BeTrue();
-        attrs.Any(a => a.Name == DocumentAttribute.DocumentNumber && (int)a.Value == 5).Should().BeTrue();
+        attrs.Any(a => a.Name == IppAttributeNames.AttributesCharset && (string)a.Value == "utf-16").Should().BeTrue();
+        attrs.Any(a => a.Name == IppAttributeNames.AttributesNaturalLanguage && (string)a.Value == "fr").Should().BeTrue();
+        attrs.Any(a => a.Name == IppAttributeNames.Compression && (string)a.Value == "gzip").Should().BeTrue();
+        attrs.Any(a => a.Name == IppAttributeNames.DocumentDataGetInterval && (int)a.Value == 10).Should().BeTrue();
+        attrs.Any(a => a.Name == IppAttributeNames.LastDocument && (bool)a.Value == true).Should().BeTrue();
+        attrs.Any(a => a.Name == IppAttributeNames.DocumentNumber && (int)a.Value == 5).Should().BeTrue();
     }
 }

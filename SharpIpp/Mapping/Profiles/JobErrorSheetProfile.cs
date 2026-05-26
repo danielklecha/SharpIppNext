@@ -31,7 +31,7 @@ internal class JobErrorSheetProfile : IProfile
         mapper.CreateMap<JobErrorSheet, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.JobErrorSheet, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.JobErrorSheet, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
             if (src.JobErrorSheetType.HasValue)

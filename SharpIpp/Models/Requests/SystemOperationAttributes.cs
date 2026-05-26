@@ -21,6 +21,7 @@ public class SystemOperationAttributes : OperationAttributes
     /// See: PWG 5100.22-2025 Section 7.1.5
     /// </summary>
     /// <code>printer-id</code>
+    [System.ComponentModel.DataAnnotations.Range(1, 65535)]
     public int? PrinterId { get; set; }
 
     /// <summary>

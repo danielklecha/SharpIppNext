@@ -15,9 +15,9 @@ internal class GetResourcesOperationAttributesProfile : IProfile
         {
             dst ??= new GetResourcesOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(src, dst);
-            dst.SystemUri = map.MapFromDicNullable<Uri?>(src, SystemAttribute.SystemUri);
-            dst.ResourceIds = map.MapFromDicSetNullable<int[]?>(src, SystemAttribute.ResourceIds);
-            dst.RequestedAttributes = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.RequestedAttributes);
+            dst.SystemUri = map.MapFromDicNullable<Uri?>(src, IppAttributeNames.SystemUri);
+            dst.ResourceIds = map.MapFromDicSetNullable<int[]?>(src, IppAttributeNames.ResourceIds);
+            dst.RequestedAttributes = map.MapFromDicSetNullable<string[]?>(src, IppAttributeNames.RequestedAttributes);
             return dst;
         });
 
@@ -26,9 +26,9 @@ internal class GetResourcesOperationAttributesProfile : IProfile
             dst ??= new List<IppAttribute>();
             map.Map<SystemOperationAttributes, List<IppAttribute>>(src, dst);
             if (src.ResourceIds != null)
-                dst.AddRange(src.ResourceIds.Select(x => new IppAttribute(Tag.Integer, SystemAttribute.ResourceIds, x)));
+                dst.AddRange(src.ResourceIds.Select(x => new IppAttribute(Tag.Integer, IppAttributeNames.ResourceIds, x)));
             if (src.RequestedAttributes != null)
-                dst.AddRange(src.RequestedAttributes.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.RequestedAttributes, x)));
+                dst.AddRange(src.RequestedAttributes.Select(x => new IppAttribute(Tag.Keyword, IppAttributeNames.RequestedAttributes, x)));
             return dst;
         });
     }

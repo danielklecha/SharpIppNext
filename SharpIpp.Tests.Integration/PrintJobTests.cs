@@ -117,7 +117,8 @@ public class PrintJobTests : SharpIppIntegrationTestBase
                 ProofPrint = new ProofPrint { ProofPrintCopies = 1, Media = (Media)"iso_a4_210x297mm" },
                 CoverSheetInfo = new CoverSheetInfo { FromName = "sender", ToName = "receiver", Subject = "subject" },
                 DestinationUris = [new DestinationUri { DestinationUriValue = "tel:+123456789", PostDialString = "#", PreDialString = "9", T33Subaddress = 12345 }],
-                OutputAttributes = new OutputAttributes { NoiseRemoval = 100, OutputCompressionQualityFactor = 80 }
+                OutputAttributes = new OutputAttributes { NoiseRemoval = 100, OutputCompressionQualityFactor = 80 },
+                DocumentMetadata = GetTestDocumentMetadata(),
             },
             JobTemplateAttributes = new()
             {
@@ -238,6 +239,7 @@ public class PrintJobTests : SharpIppIntegrationTestBase
                 Compression = Compression.None,
                 DocumentNaturalLanguage = "en",
                 DocumentCharset = "utf-8",
+                DocumentMetadata = GetTestDocumentMetadata(),
             },
             JobTemplateAttributes = new() { Copies = 1, JobPriority = 1 }
         };
@@ -252,9 +254,13 @@ public class PrintJobTests : SharpIppIntegrationTestBase
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
                 StatusCode = IppStatusCode.SuccessfulOk,
-                OperationAttributes = new() { StatusMessage = "successful-ok", DetailedStatusMessage = ["detail1"], DocumentAccessError = "none" },
+                OperationAttributes = new() { StatusMessage = "successful-ok", DetailedStatusMessage = "detail1", DocumentAccessError = "none" },
                 JobAttributes = new() { JobId = 456 },
-                DocumentAttributes = new() { DocumentNumber = 1 }
+                DocumentAttributes = new()
+                {
+                    DocumentNumber = 1,
+                    DocumentMetadata = GetTestDocumentMetadata()
+                }
             };
             var ms = new MemoryStream();
             await server.SendResponseAsync(serverResponse, ms, c);

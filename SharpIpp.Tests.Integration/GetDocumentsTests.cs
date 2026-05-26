@@ -47,10 +47,16 @@ public class GetDocumentsTests : SharpIppIntegrationTestBase
                 OperationAttributes = new()
                 {
                     StatusMessage = "successful-ok",
-                    DetailedStatusMessage = ["detail1"],
+                    DetailedStatusMessage = "detail1",
                     DocumentAccessError = "none"
                 },
-                Documents = [new DocumentAttributes { DocumentNumber = 1, DocumentName = "doc1", DocumentState = DocumentState.Completed }]
+                Documents = [new DocumentAttributes
+                {
+                    DocumentNumber = 1,
+                    DocumentName = "doc1",
+                    DocumentState = DocumentState.Completed,
+                    DocumentMetadata = GetTestDocumentMetadata()
+                }]
             };
             var responseStream = new MemoryStream();
             await server.SendResponseAsync(serverResponse, responseStream, c);
@@ -113,6 +119,7 @@ public class GetDocumentsTests : SharpIppIntegrationTestBase
                         DocumentDigitalSignature = DocumentDigitalSignature.XmlDsig,
                         DocumentFormatVersion = "1.2",
                         DocumentFormatVersionDetected = "1.2.3",
+                        DocumentMetadata = GetTestDocumentMetadata()
                     },
                     new DocumentAttributes
                     {
@@ -131,7 +138,7 @@ public class GetDocumentsTests : SharpIppIntegrationTestBase
                 OperationAttributes = new()
                 {
                     StatusMessage = "successful-ok",
-                    DetailedStatusMessage = ["detail1"],
+                    DetailedStatusMessage = "detail1",
                     DocumentAccessError = "none"
                 }
             };

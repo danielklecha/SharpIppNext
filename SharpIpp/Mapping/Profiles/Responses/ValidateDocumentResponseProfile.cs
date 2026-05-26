@@ -16,7 +16,7 @@ internal class ValidateDocumentResponseProfile : IProfile
             var dst = new ValidateDocumentResponse { OperationAttributes = new ValidateOperationAttributes() };
             map.Map<IppResponseMessage, IIppResponse>(src, dst);
             var operationAttributes = src.OperationAttributes.SelectMany(x => x).ToIppDictionary();
-            if (operationAttributes.TryGetValue(JobAttribute.PreferredAttributes, out var attributes))
+            if (operationAttributes.TryGetValue(IppAttributeNames.PreferredAttributes, out var attributes))
             {
                 var tempMsg = new IppRequestMessage();
                 tempMsg.JobAttributes.AddRange(attributes.FromBegCollection());
@@ -33,7 +33,7 @@ internal class ValidateDocumentResponseProfile : IProfile
             {
                 var tempMsg = new IppRequestMessage();
                 map.Map<JobTemplateAttributes, IppRequestMessage>(src.OperationAttributes.PreferredAttributes, tempMsg);
-                var collection = tempMsg.JobAttributes.ToBegCollection(JobAttribute.PreferredAttributes);
+                var collection = tempMsg.JobAttributes.ToBegCollection(IppAttributeNames.PreferredAttributes);
                 dst.OperationAttributes[0].AddRange(collection);
             }
             return dst;

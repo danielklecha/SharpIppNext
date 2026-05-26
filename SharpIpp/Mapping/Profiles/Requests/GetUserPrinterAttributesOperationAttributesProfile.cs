@@ -14,7 +14,7 @@ internal class GetUserPrinterAttributesOperationAttributesProfile : IProfile
         {
             dst ??= new GetUserPrinterAttributesOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, GetPrinterAttributesOperationAttributes>(src, dst);
-            dst.RequestingUserVcard = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.RequestingUserVcard);
+            dst.RequestingUserVcard = map.MapFromDicSetNullable<string[]?>(src, IppAttributeNames.RequestingUserVcard);
             return dst;
         });
 
@@ -23,7 +23,7 @@ internal class GetUserPrinterAttributesOperationAttributesProfile : IProfile
             dst ??= new List<IppAttribute>();
             map.Map<GetPrinterAttributesOperationAttributes, List<IppAttribute>>(src, dst);
             if (src.RequestingUserVcard != null)
-                dst.AddRange(src.RequestingUserVcard.Select(x => new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.RequestingUserVcard, x)));
+                dst.AddRange(src.RequestingUserVcard.Select(x => new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.RequestingUserVcard, x)));
             return dst;
         });
     }

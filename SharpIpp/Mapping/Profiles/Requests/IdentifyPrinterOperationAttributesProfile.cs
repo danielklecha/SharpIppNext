@@ -15,10 +15,10 @@ internal class IdentifyPrinterOperationAttributesProfile : IProfile
         {
             dst ??= new IdentifyPrinterOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(src, dst);
-            dst.IdentifyActions = map.MapFromDicSetNullable<IdentifyAction[]?>(src, JobAttribute.IdentifyActions);
-            dst.OutputDeviceUuid = map.MapFromDicNullable<Uri?>(src, JobAttribute.OutputDeviceUuid);
-            dst.JobId = map.MapFromDicNullable<int?>(src, JobAttribute.JobId);
-            dst.Message = map.MapFromDicNullable<string?>(src, JobAttribute.Message);
+            dst.IdentifyActions = map.MapFromDicSetNullable<IdentifyAction[]?>(src, IppAttributeNames.IdentifyActions);
+            dst.OutputDeviceUuid = map.MapFromDicNullable<Uri?>(src, IppAttributeNames.OutputDeviceUuid);
+            dst.JobId = map.MapFromDicNullable<int?>(src, IppAttributeNames.JobId);
+            dst.Message = map.MapFromDicNullable<string?>(src, IppAttributeNames.Message);
             return dst;
         });
 
@@ -27,13 +27,13 @@ internal class IdentifyPrinterOperationAttributesProfile : IProfile
             dst ??= new List<IppAttribute>();
             map.Map<OperationAttributes, List<IppAttribute>>(src, dst);
             if (src.IdentifyActions != null)
-                dst.AddRange(src.IdentifyActions.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.IdentifyActions, map.Map<string>(x))));
+                dst.AddRange(src.IdentifyActions.Select(x => new IppAttribute(Tag.Keyword, IppAttributeNames.IdentifyActions, map.Map<string>(x))));
             if (src.OutputDeviceUuid != null)
-                dst.Add(new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, src.OutputDeviceUuid.ToString()));
+                dst.Add(new IppAttribute(Tag.Uri, IppAttributeNames.OutputDeviceUuid, src.OutputDeviceUuid.ToString()));
             if (src.JobId.HasValue)
-                dst.Add(new IppAttribute(Tag.Integer, JobAttribute.JobId, src.JobId.Value));
+                dst.Add(new IppAttribute(Tag.Integer, IppAttributeNames.JobId, src.JobId.Value));
             if (src.Message != null)
-                dst.Add(new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.Message, src.Message));
+                dst.Add(new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.Message, src.Message));
             return dst;
         });
     }

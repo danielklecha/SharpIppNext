@@ -15,9 +15,9 @@ internal class AllocatePrinterResourcesOperationAttributesProfile : IProfile
         {
             dst ??= new AllocatePrinterResourcesOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(src, dst);
-            dst.SystemUri = map.MapFromDicNullable<Uri?>(src, SystemAttribute.SystemUri);
-            dst.PrinterId = map.MapFromDicNullable<int?>(src, JobAttribute.PrinterId);
-            dst.ResourceIds = map.MapFromDicSetNullable<int[]?>(src, SystemAttribute.ResourceIds);
+            dst.SystemUri = map.MapFromDicNullable<Uri?>(src, IppAttributeNames.SystemUri);
+            dst.PrinterId = map.MapFromDicNullable<int?>(src, IppAttributeNames.PrinterId);
+            dst.ResourceIds = map.MapFromDicSetNullable<int[]?>(src, IppAttributeNames.ResourceIds);
             return dst;
         });
 
@@ -26,9 +26,9 @@ internal class AllocatePrinterResourcesOperationAttributesProfile : IProfile
             dst ??= new List<IppAttribute>();
             map.Map<SystemOperationAttributes, List<IppAttribute>>(src, dst);
             if (src.PrinterId.HasValue)
-                dst.Add(new IppAttribute(Tag.Integer, JobAttribute.PrinterId, src.PrinterId.Value));
+                dst.Add(new IppAttribute(Tag.Integer, IppAttributeNames.PrinterId, src.PrinterId.Value));
             if (src.ResourceIds != null)
-                dst.AddRange(src.ResourceIds.Select(x => new IppAttribute(Tag.Integer, SystemAttribute.ResourceIds, x)));
+                dst.AddRange(src.ResourceIds.Select(x => new IppAttribute(Tag.Integer, IppAttributeNames.ResourceIds, x)));
             return dst;
         });
     }

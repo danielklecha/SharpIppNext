@@ -15,19 +15,19 @@ internal class GetJobsOperationAttributesProfile : IProfile
         {
             dst ??= new GetJobsOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(src, dst);
-            dst.FirstIndex = map.MapFromDicNullable<int?>(src, JobAttribute.FirstIndex);
-            dst.Limit = map.MapFromDicNullable<int?>(src, JobAttribute.Limit);
-            dst.JobIds = map.MapFromDicSetNullable<int[]?>(src, JobAttribute.JobIds);
-            var requestedAttributes = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.RequestedAttributes);
+            dst.FirstIndex = map.MapFromDicNullable<int?>(src, IppAttributeNames.FirstIndex);
+            dst.Limit = map.MapFromDicNullable<int?>(src, IppAttributeNames.Limit);
+            dst.JobIds = map.MapFromDicSetNullable<int[]?>(src, IppAttributeNames.JobIds);
+            var requestedAttributes = map.MapFromDicSetNullable<string[]?>(src, IppAttributeNames.RequestedAttributes);
             if (requestedAttributes?.Any() ?? false)
                 dst.RequestedAttributes = requestedAttributes;
-            var whichJobs = map.MapFromDicNullable<string?>(src, JobAttribute.WhichJobs);
+            var whichJobs = map.MapFromDicNullable<string?>(src, IppAttributeNames.WhichJobs);
             if (whichJobs != null)
                 dst.WhichJobs = map.Map<string, WhichJobs>(whichJobs);
-            var myJobs = map.MapFromDicNullable<bool?>(src, JobAttribute.MyJobs);
+            var myJobs = map.MapFromDicNullable<bool?>(src, IppAttributeNames.MyJobs);
             if (myJobs != null)
                 dst.MyJobs = myJobs.Value;
-            dst.OutputDeviceUuid = map.MapFromDicNullable<Uri?>(src, JobAttribute.OutputDeviceUuid);
+            dst.OutputDeviceUuid = map.MapFromDicNullable<Uri?>(src, IppAttributeNames.OutputDeviceUuid);
             return dst;
         });
 
@@ -36,19 +36,19 @@ internal class GetJobsOperationAttributesProfile : IProfile
             dst ??= new List<IppAttribute>();
             map.Map<OperationAttributes, List<IppAttribute>>(src, dst);
             if (src.FirstIndex != null)
-                dst.Add(new IppAttribute(Tag.Integer, JobAttribute.FirstIndex, src.FirstIndex.Value));
+                dst.Add(new IppAttribute(Tag.Integer, IppAttributeNames.FirstIndex, src.FirstIndex.Value));
             if (src.Limit != null)
-                dst.Add(new IppAttribute(Tag.Integer, JobAttribute.Limit, src.Limit.Value));
+                dst.Add(new IppAttribute(Tag.Integer, IppAttributeNames.Limit, src.Limit.Value));
             if (src.JobIds != null)
-                dst.AddRange(src.JobIds.Select(x => new IppAttribute(Tag.Integer, JobAttribute.JobIds, x)));
+                dst.AddRange(src.JobIds.Select(x => new IppAttribute(Tag.Integer, IppAttributeNames.JobIds, x)));
             if (src.RequestedAttributes != null)
-                dst.AddRange(src.RequestedAttributes.Select(requestedAttribute => new IppAttribute(Tag.Keyword, JobAttribute.RequestedAttributes, requestedAttribute)));
+                dst.AddRange(src.RequestedAttributes.Select(requestedAttribute => new IppAttribute(Tag.Keyword, IppAttributeNames.RequestedAttributes, requestedAttribute)));
             if (src.WhichJobs != null)
-                dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.WhichJobs, map.Map<string>(src.WhichJobs.Value)));
+                dst.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.WhichJobs, map.Map<string>(src.WhichJobs.Value)));
             if (src.MyJobs != null)
-                dst.Add(new IppAttribute(Tag.Boolean, JobAttribute.MyJobs, src.MyJobs.Value));
+                dst.Add(new IppAttribute(Tag.Boolean, IppAttributeNames.MyJobs, src.MyJobs.Value));
             if (src.OutputDeviceUuid != null)
-                dst.Add(new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, src.OutputDeviceUuid.ToString()));
+                dst.Add(new IppAttribute(Tag.Uri, IppAttributeNames.OutputDeviceUuid, src.OutputDeviceUuid.ToString()));
             return dst;
         });
     }

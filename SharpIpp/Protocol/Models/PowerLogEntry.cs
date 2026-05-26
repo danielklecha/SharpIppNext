@@ -8,8 +8,8 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public class PowerLogEntry : IIppCollection
 {
-    bool IIppCollection.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
+    bool INoValueWritable.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     public int? LogId { get; set; }
     public PowerState? PowerState { get; set; }

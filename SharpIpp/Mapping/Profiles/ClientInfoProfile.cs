@@ -35,7 +35,7 @@ internal class ClientInfoProfile : IProfile
         mapper.CreateMap<ClientInfo, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.ClientInfo, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.ClientInfo, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
             if (src.ClientName != null)

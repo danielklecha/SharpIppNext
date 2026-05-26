@@ -31,7 +31,7 @@ internal class PowerTimeoutPolicyProfile : IProfile
         mapper.CreateMap<PowerTimeoutPolicy, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, SystemAttribute.PowerTimeoutPolicyCol, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.PowerTimeoutPolicyCol, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
             if (src.RequestPowerState.HasValue)

@@ -7,8 +7,8 @@ namespace SharpIpp.Protocol.Models;
 public class JobCounter : IIppCollection
 {
     /// <inheritdoc />
-    bool IIppCollection.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
+    bool INoValueWritable.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     /// <summary>
     /// integer(0:MAX)

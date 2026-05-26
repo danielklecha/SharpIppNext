@@ -27,7 +27,7 @@ namespace SharpIpp.Protocol.Models
         MediaOverA2 = 0x4000,
         MediaUserDefined = 0x8000,
         ImplicitClass = 0x10000,
-        DefaultPrinter = 20000,
+        DefaultPrinter = 0x20000,
         FacsimileDevice = 0x40000,
         RejectingJobs = 0x80000,
         DeleteQueue = 0x100000,
@@ -37,6 +37,6 @@ namespace SharpIpp.Protocol.Models
         AutomaticallyDescovered = 0x1000000,
         ScannerNoPrint = 0x2000000,
         ScannerPrints = 0x4000000,
-        PrinterIs3D = 80000000,
+        PrinterIs3D = 0x8000000,
     }
 }

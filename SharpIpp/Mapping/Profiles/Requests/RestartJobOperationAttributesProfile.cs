@@ -13,7 +13,7 @@ internal class RestartJobOperationAttributesProfile : IProfile
         {
             dst ??= new RestartJobOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, CancelJobOperationAttributes>(src, dst);
-            dst.JobHoldUntil = map.MapFromDicNullable<JobHoldUntil?>(src, JobAttribute.JobHoldUntil);
+            dst.JobHoldUntil = map.MapFromDicNullable<JobHoldUntil?>(src, IppAttributeNames.JobHoldUntil);
             return dst;
         });
 
@@ -22,7 +22,7 @@ internal class RestartJobOperationAttributesProfile : IProfile
             dst ??= new List<IppAttribute>();
             map.Map<CancelJobOperationAttributes, List<IppAttribute>>(src, dst);
             if (src.JobHoldUntil != null)
-                dst.Add(new IppAttribute(Tag.Keyword, JobAttribute.JobHoldUntil, map.Map<string>(src.JobHoldUntil.Value)));
+                dst.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.JobHoldUntil, map.Map<string>(src.JobHoldUntil.Value)));
             return dst;
         });
     }

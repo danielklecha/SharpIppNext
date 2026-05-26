@@ -13,7 +13,7 @@ internal class InstallResourceOperationAttributesProfile : IProfile
         {
             dst ??= new InstallResourceOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, SystemOperationAttributes>(src, dst);
-            dst.ResourceId = map.MapFromDicNullable<int?>(src, SystemAttribute.ResourceId);
+            dst.ResourceId = map.MapFromDicNullable<int?>(src, IppAttributeNames.ResourceId);
             return dst;
         });
 
@@ -22,7 +22,7 @@ internal class InstallResourceOperationAttributesProfile : IProfile
             dst ??= new List<IppAttribute>();
             map.Map<SystemOperationAttributes, List<IppAttribute>>(src, dst);
             if (src.ResourceId.HasValue)
-                dst.Add(new IppAttribute(Tag.Integer, SystemAttribute.ResourceId, src.ResourceId.Value));
+                dst.Add(new IppAttribute(Tag.Integer, IppAttributeNames.ResourceId, src.ResourceId.Value));
             return dst;
         });
     }

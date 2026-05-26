@@ -52,33 +52,33 @@ public class JobStatusAttributesProfileTests : MapperTestBase
 
         var dic = _mapper.Map<IDictionary<string, IppAttribute[]>>(src);
 
-        dic.Should().ContainKey(JobAttribute.JobId);
-        dic.Should().ContainKey(JobAttribute.JobUri);
-        dic.Should().ContainKey(JobAttribute.JobPrinterUri);
-        dic.Should().ContainKey(JobAttribute.JobName);
-        dic.Should().ContainKey(JobAttribute.JobOriginatingUserName);
-        dic.Should().ContainKey(JobAttribute.JobState);
-        dic.Should().ContainKey(JobAttribute.JobStateReasons);
-        dic.Should().ContainKey(JobAttribute.JobStateMessage);
-        dic.Should().ContainKey(JobAttribute.JobImpressionsCompleted);
-        dic.Should().ContainKey(JobAttribute.JobMediaSheetsCompleted);
-        dic.Should().ContainKey(JobAttribute.JobKOctetsProcessed);
-        dic.Should().ContainKey(JobAttribute.JobPagesCompleted);
-        dic.Should().ContainKey(JobAttribute.JobPagesCompletedCol);
-        dic.Should().ContainKey(JobAttribute.JobImpressionsCompletedCol);
-        dic.Should().ContainKey(JobAttribute.JobMediaSheetsCompletedCol);
-        dic.Should().ContainKey(JobAttribute.JobProcessingTime);
-        dic.Should().ContainKey(JobAttribute.ErrorsCount);
-        dic.Should().ContainKey(JobAttribute.WarningsCount);
-        dic.Should().ContainKey(JobAttribute.NumberOfInterveningJobs);
-        dic.Should().ContainKey(JobAttribute.OutputDeviceAssigned);
-        dic.Should().ContainKey(JobAttribute.JobPrinterUpTime);
-        dic.Should().ContainKey(JobAttribute.TimeAtCreation);
-        dic.Should().ContainKey(JobAttribute.TimeAtProcessing);
-        dic.Should().ContainKey(JobAttribute.TimeAtCompleted);
-        dic.Should().ContainKey(JobAttribute.DateTimeAtCreation);
-        dic.Should().ContainKey(JobAttribute.DateTimeAtProcessing);
-        dic.Should().ContainKey(JobAttribute.DateTimeAtCompleted);
+        dic.Should().ContainKey(IppAttributeNames.JobId);
+        dic.Should().ContainKey(IppAttributeNames.JobUri);
+        dic.Should().ContainKey(IppAttributeNames.JobPrinterUri);
+        dic.Should().ContainKey(IppAttributeNames.JobName);
+        dic.Should().ContainKey(IppAttributeNames.JobOriginatingUserName);
+        dic.Should().ContainKey(IppAttributeNames.JobState);
+        dic.Should().ContainKey(IppAttributeNames.JobStateReasons);
+        dic.Should().ContainKey(IppAttributeNames.JobStateMessage);
+        dic.Should().ContainKey(IppAttributeNames.JobImpressionsCompleted);
+        dic.Should().ContainKey(IppAttributeNames.JobMediaSheetsCompleted);
+        dic.Should().ContainKey(IppAttributeNames.JobKOctetsProcessed);
+        dic.Should().ContainKey(IppAttributeNames.JobPagesCompleted);
+        dic.Should().ContainKey(IppAttributeNames.JobPagesCompletedCol);
+        dic.Should().ContainKey(IppAttributeNames.JobImpressionsCompletedCol);
+        dic.Should().ContainKey(IppAttributeNames.JobMediaSheetsCompletedCol);
+        dic.Should().ContainKey(IppAttributeNames.JobProcessingTime);
+        dic.Should().ContainKey(IppAttributeNames.ErrorsCount);
+        dic.Should().ContainKey(IppAttributeNames.WarningsCount);
+        dic.Should().ContainKey(IppAttributeNames.NumberOfInterveningJobs);
+        dic.Should().ContainKey(IppAttributeNames.OutputDeviceAssigned);
+        dic.Should().ContainKey(IppAttributeNames.JobPrinterUpTime);
+        dic.Should().ContainKey(IppAttributeNames.TimeAtCreation);
+        dic.Should().ContainKey(IppAttributeNames.TimeAtProcessing);
+        dic.Should().ContainKey(IppAttributeNames.TimeAtCompleted);
+        dic.Should().ContainKey(IppAttributeNames.DateTimeAtCreation);
+        dic.Should().ContainKey(IppAttributeNames.DateTimeAtProcessing);
+        dic.Should().ContainKey(IppAttributeNames.DateTimeAtCompleted);
     }
 
     [TestMethod]
@@ -86,35 +86,35 @@ public class JobStatusAttributesProfileTests : MapperTestBase
     {
         var dic = new Dictionary<string, IppAttribute[]>
         {
-            [JobAttribute.JobId] = [new IppAttribute(Tag.Integer, JobAttribute.JobId, 42)],
-            [JobAttribute.JobUri] = [new IppAttribute(Tag.Uri, JobAttribute.JobUri, "ipp://127.0.0.1:631/jobs/42")],
-            [JobAttribute.JobPrinterUri] = [new IppAttribute(Tag.Uri, JobAttribute.JobPrinterUri, "ipp://127.0.0.1:631/")],
-            [JobAttribute.JobName] = [new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.JobName, "Test Job")],
-            [JobAttribute.JobOriginatingUserName] = [new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.JobOriginatingUserName, "test-user")],
-            [JobAttribute.JobState] = [new IppAttribute(Tag.Enum, JobAttribute.JobState, (int)JobState.Processing)],
-            [JobAttribute.JobStateReasons] = [new IppAttribute(Tag.Keyword, JobAttribute.JobStateReasons, "job-printing")],
-            [JobAttribute.JobStateMessage] = [new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.JobStateMessage, "printing")],
-            [JobAttribute.JobImpressionsCompleted] = [new IppAttribute(Tag.Integer, JobAttribute.JobImpressionsCompleted, 5)],
-            [JobAttribute.JobMediaSheetsCompleted] = [new IppAttribute(Tag.Integer, JobAttribute.JobMediaSheetsCompleted, 2)],
-            [JobAttribute.JobKOctetsProcessed] = [new IppAttribute(Tag.Integer, JobAttribute.JobKOctetsProcessed, 100)],
-            [JobAttribute.JobPagesCompleted] = [new IppAttribute(Tag.Integer, JobAttribute.JobPagesCompleted, 10)],
-            [JobAttribute.JobProcessingTime] = [new IppAttribute(Tag.Integer, JobAttribute.JobProcessingTime, 30)],
-            [JobAttribute.ErrorsCount] = [new IppAttribute(Tag.Integer, JobAttribute.ErrorsCount, 0)],
-            [JobAttribute.WarningsCount] = [new IppAttribute(Tag.Integer, JobAttribute.WarningsCount, 1)],
-            [JobAttribute.NumberOfInterveningJobs] = [new IppAttribute(Tag.Integer, JobAttribute.NumberOfInterveningJobs, 3)],
-            [JobAttribute.OutputDeviceAssigned] = [new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.OutputDeviceAssigned, "printer-1")],
-            [JobAttribute.JobPrinterUpTime] = [new IppAttribute(Tag.Integer, JobAttribute.JobPrinterUpTime, 9999)],
-            [JobAttribute.TimeAtCreation] = [new IppAttribute(Tag.Integer, JobAttribute.TimeAtCreation, 100)],
-            [JobAttribute.TimeAtProcessing] = [new IppAttribute(Tag.Integer, JobAttribute.TimeAtProcessing, 110)],
-            [JobAttribute.TimeAtCompleted] = [new IppAttribute(Tag.Integer, JobAttribute.TimeAtCompleted, 120)],
-            [JobAttribute.DateTimeAtCreation] = [new IppAttribute(Tag.DateTime, JobAttribute.DateTimeAtCreation, new DateTimeOffset(2024, 1, 1, 0, 0, 0, TimeSpan.Zero))],
-            [JobAttribute.DateTimeAtProcessing] = [new IppAttribute(Tag.DateTime, JobAttribute.DateTimeAtProcessing, new DateTimeOffset(2024, 1, 1, 0, 1, 0, TimeSpan.Zero))],
-            [JobAttribute.DateTimeAtCompleted] = [new IppAttribute(Tag.DateTime, JobAttribute.DateTimeAtCompleted, new DateTimeOffset(2024, 1, 1, 0, 2, 0, TimeSpan.Zero))],
+            [IppAttributeNames.JobId] = [new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 42)],
+            [IppAttributeNames.JobUri] = [new IppAttribute(Tag.Uri, IppAttributeNames.JobUri, "ipp://127.0.0.1:631/jobs/42")],
+            [IppAttributeNames.JobPrinterUri] = [new IppAttribute(Tag.Uri, IppAttributeNames.JobPrinterUri, "ipp://127.0.0.1:631/")],
+            [IppAttributeNames.JobName] = [new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.JobName, "Test Job")],
+            [IppAttributeNames.JobOriginatingUserName] = [new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.JobOriginatingUserName, "test-user")],
+            [IppAttributeNames.JobState] = [new IppAttribute(Tag.Enum, IppAttributeNames.JobState, (int)JobState.Processing)],
+            [IppAttributeNames.JobStateReasons] = [new IppAttribute(Tag.Keyword, IppAttributeNames.JobStateReasons, "job-printing")],
+            [IppAttributeNames.JobStateMessage] = [new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.JobStateMessage, "printing")],
+            [IppAttributeNames.JobImpressionsCompleted] = [new IppAttribute(Tag.Integer, IppAttributeNames.JobImpressionsCompleted, 5)],
+            [IppAttributeNames.JobMediaSheetsCompleted] = [new IppAttribute(Tag.Integer, IppAttributeNames.JobMediaSheetsCompleted, 2)],
+            [IppAttributeNames.JobKOctetsProcessed] = [new IppAttribute(Tag.Integer, IppAttributeNames.JobKOctetsProcessed, 100)],
+            [IppAttributeNames.JobPagesCompleted] = [new IppAttribute(Tag.Integer, IppAttributeNames.JobPagesCompleted, 10)],
+            [IppAttributeNames.JobProcessingTime] = [new IppAttribute(Tag.Integer, IppAttributeNames.JobProcessingTime, 30)],
+            [IppAttributeNames.ErrorsCount] = [new IppAttribute(Tag.Integer, IppAttributeNames.ErrorsCount, 0)],
+            [IppAttributeNames.WarningsCount] = [new IppAttribute(Tag.Integer, IppAttributeNames.WarningsCount, 1)],
+            [IppAttributeNames.NumberOfInterveningJobs] = [new IppAttribute(Tag.Integer, IppAttributeNames.NumberOfInterveningJobs, 3)],
+            [IppAttributeNames.OutputDeviceAssigned] = [new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.OutputDeviceAssigned, "printer-1")],
+            [IppAttributeNames.JobPrinterUpTime] = [new IppAttribute(Tag.Integer, IppAttributeNames.JobPrinterUpTime, 9999)],
+            [IppAttributeNames.TimeAtCreation] = [new IppAttribute(Tag.Integer, IppAttributeNames.TimeAtCreation, 100)],
+            [IppAttributeNames.TimeAtProcessing] = [new IppAttribute(Tag.Integer, IppAttributeNames.TimeAtProcessing, 110)],
+            [IppAttributeNames.TimeAtCompleted] = [new IppAttribute(Tag.Integer, IppAttributeNames.TimeAtCompleted, 120)],
+            [IppAttributeNames.DateTimeAtCreation] = [new IppAttribute(Tag.DateTime, IppAttributeNames.DateTimeAtCreation, new DateTimeOffset(2024, 1, 1, 0, 0, 0, TimeSpan.Zero))],
+            [IppAttributeNames.DateTimeAtProcessing] = [new IppAttribute(Tag.DateTime, IppAttributeNames.DateTimeAtProcessing, new DateTimeOffset(2024, 1, 1, 0, 1, 0, TimeSpan.Zero))],
+            [IppAttributeNames.DateTimeAtCompleted] = [new IppAttribute(Tag.DateTime, IppAttributeNames.DateTimeAtCompleted, new DateTimeOffset(2024, 1, 1, 0, 2, 0, TimeSpan.Zero))],
         };
         // Add collection attributes
-        dic[JobAttribute.JobPagesCompletedCol] = _mapper.Map<JobCounter, IEnumerable<IppAttribute>>(new JobCounter { Monochrome = 10 }).ToBegCollection(JobAttribute.JobPagesCompletedCol).ToArray();
-        dic[JobAttribute.JobImpressionsCompletedCol] = _mapper.Map<JobCounter, IEnumerable<IppAttribute>>(new JobCounter { FullColor = 5 }).ToBegCollection(JobAttribute.JobImpressionsCompletedCol).ToArray();
-        dic[JobAttribute.JobMediaSheetsCompletedCol] = _mapper.Map<JobCounter, IEnumerable<IppAttribute>>(new JobCounter { Blank = 2 }).ToBegCollection(JobAttribute.JobMediaSheetsCompletedCol).ToArray();
+        dic[IppAttributeNames.JobPagesCompletedCol] = _mapper.Map<JobCounter, IEnumerable<IppAttribute>>(new JobCounter { Monochrome = 10 }).ToBegCollection(IppAttributeNames.JobPagesCompletedCol).ToArray();
+        dic[IppAttributeNames.JobImpressionsCompletedCol] = _mapper.Map<JobCounter, IEnumerable<IppAttribute>>(new JobCounter { FullColor = 5 }).ToBegCollection(IppAttributeNames.JobImpressionsCompletedCol).ToArray();
+        dic[IppAttributeNames.JobMediaSheetsCompletedCol] = _mapper.Map<JobCounter, IEnumerable<IppAttribute>>(new JobCounter { Blank = 2 }).ToBegCollection(IppAttributeNames.JobMediaSheetsCompletedCol).ToArray();
 
         var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, JobStatusAttributes>(dic);
 

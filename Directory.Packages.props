@@ -19,5 +19,6 @@
     <PackageVersion Include="NUnit3TestAdapter" Version="3.17.0" />
     <PackageVersion Include="Quartz.Extensions.Hosting" Version="3.8.1" />
     <PackageVersion Include="Snapper" Version="2.3.0" />
+    <PackageVersion Include="System.ComponentModel.Annotations" Version="5.0.0" />
   </ItemGroup>
 </Project>

@@ -84,7 +84,7 @@ public class ResubmitJobTests : SharpIppIntegrationTestBase
                 OperationAttributes = new()
                 {
                     StatusMessage = "successful-ok",
-                    DetailedStatusMessage = ["resubmit detail"],
+                    DetailedStatusMessage = "resubmit detail",
                 }
             };
             var memoryStream = new MemoryStream();

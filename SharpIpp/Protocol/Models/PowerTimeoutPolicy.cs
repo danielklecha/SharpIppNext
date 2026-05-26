@@ -6,8 +6,8 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public class PowerTimeoutPolicy : IIppCollection
 {
-    bool IIppCollection.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
+    bool INoValueWritable.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     public PowerState? RequestPowerState { get; set; }
     public PowerState? StartPowerState { get; set; }

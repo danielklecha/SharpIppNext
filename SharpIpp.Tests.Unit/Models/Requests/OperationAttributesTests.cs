@@ -37,7 +37,7 @@ public class OperationAttributesTests
         var attributes = mapper.Map<OperationAttributes, List<IppAttribute>>(operationAttributes);
 
         // Assert
-        attributes.Should().Contain(x => x.Name == JobAttribute.AttributesCharset && (string)x.Value == "utf-8");
+        attributes.Should().Contain(x => x.Name == IppAttributeNames.AttributesCharset && (string)x.Value == "utf-8");
     }
 
     [TestMethod]
@@ -58,7 +58,7 @@ public class OperationAttributesTests
         var attributes = mapper.Map<OperationAttributes, List<IppAttribute>>(operationAttributes);
 
         // Assert
-        attributes.Should().Contain(x => x.Name == JobAttribute.AttributesNaturalLanguage && (string)x.Value == "en");
+        attributes.Should().Contain(x => x.Name == IppAttributeNames.AttributesNaturalLanguage && (string)x.Value == "en");
     }
 
     [TestMethod]
@@ -80,10 +80,10 @@ public class OperationAttributesTests
         var attributes = mapper.Map<OperationAttributes, List<IppAttribute>>(operationAttributes);
 
         // Assert
-        attributes.Should().Contain(x => x.Name == JobAttribute.AttributesCharset && (string)x.Value == "utf-8");
-        attributes.Should().Contain(x => x.Name == JobAttribute.AttributesNaturalLanguage && (string)x.Value == "en-us");
-        attributes.Should().Contain(x => x.Name == JobAttribute.PrinterUri && (string)x.Value == "ipp://printer/");
-        attributes.Should().Contain(x => x.Name == JobAttribute.RequestingUserName && (string)x.Value == "user");
+        attributes.Should().Contain(x => x.Name == IppAttributeNames.AttributesCharset && (string)x.Value == "utf-8");
+        attributes.Should().Contain(x => x.Name == IppAttributeNames.AttributesNaturalLanguage && (string)x.Value == "en-us");
+        attributes.Should().Contain(x => x.Name == IppAttributeNames.PrinterUri && (string)x.Value == "ipp://printer/");
+        attributes.Should().Contain(x => x.Name == IppAttributeNames.RequestingUserName && (string)x.Value == "user");
     }
 
     [TestMethod]
@@ -92,10 +92,10 @@ public class OperationAttributesTests
         // Arrange
         var dict = new Dictionary<string, IppAttribute[]>
         {
-            { JobAttribute.AttributesCharset, new[] { new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8") } },
-            { JobAttribute.AttributesNaturalLanguage, new[] { new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en-us") } },
-            { JobAttribute.PrinterUri, new[] { new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://printer") } },
-            { JobAttribute.RequestingUserName, new[] { new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "user") } }
+            { IppAttributeNames.AttributesCharset, new[] { new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8") } },
+            { IppAttributeNames.AttributesNaturalLanguage, new[] { new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en-us") } },
+            { IppAttributeNames.PrinterUri, new[] { new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://printer") } },
+            { IppAttributeNames.RequestingUserName, new[] { new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.RequestingUserName, "user") } }
         };
         var mapper = new SimpleMapper();
         var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
@@ -117,7 +117,7 @@ public class OperationAttributesTests
         // Arrange
         var dict = new Dictionary<string, IppAttribute[]>
         {
-            { JobAttribute.PrinterUri, new[] { new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://printer") } }
+            { IppAttributeNames.PrinterUri, new[] { new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://printer") } }
         };
         var mapper = new SimpleMapper();
         var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
@@ -138,7 +138,7 @@ public class OperationAttributesTests
         // Arrange
         var dict = new Dictionary<string, IppAttribute[]>
         {
-            { JobAttribute.RequestingUserUri, new[] { new IppAttribute(Tag.Uri, JobAttribute.RequestingUserUri, "urn:uuid:00000000-0000-0000-0000-000000000000") } }
+            { IppAttributeNames.RequestingUserUri, new[] { new IppAttribute(Tag.Uri, IppAttributeNames.RequestingUserUri, "urn:uuid:00000000-0000-0000-0000-000000000000") } }
         };
         var mapper = new SimpleMapper();
         var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
@@ -159,7 +159,7 @@ public class OperationAttributesTests
         var invalidUri = "http://invalid uri";
         var dict = new Dictionary<string, IppAttribute[]>
         {
-            { JobAttribute.PrinterUri, new[] { new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, invalidUri) } }
+            { IppAttributeNames.PrinterUri, new[] { new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, invalidUri) } }
         };
         var mapper = new SimpleMapper();
         var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
@@ -194,7 +194,7 @@ public class OperationAttributesTests
         // Arrange
         var dict = new Dictionary<string, IppAttribute[]>
         {
-            { JobAttribute.JobId, new[] { new IppAttribute(Tag.Integer, JobAttribute.JobId, 123) } }
+            { IppAttributeNames.JobId, new[] { new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 123) } }
         };
         var mapper = new SimpleMapper();
         var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
@@ -235,7 +235,7 @@ public class OperationAttributesTests
         
         // Assert
         result1.Should().NotBeNull();
-        result1.Should().Contain(x => x.Name == JobAttribute.JobId && (int)x.Value == 456);
+        result1.Should().Contain(x => x.Name == IppAttributeNames.JobId && (int)x.Value == 456);
 
         // Act - dst is existing
         var existing = new List<IppAttribute>();
@@ -243,7 +243,7 @@ public class OperationAttributesTests
         
         // Assert
         result2.Should().BeSameAs(existing);
-        result2.Should().Contain(x => x.Name == JobAttribute.JobId && (int)x.Value == 456);
+        result2.Should().Contain(x => x.Name == IppAttributeNames.JobId && (int)x.Value == 456);
     }
 
     [TestMethod]
@@ -252,7 +252,7 @@ public class OperationAttributesTests
         // Arrange
         var dict = new Dictionary<string, IppAttribute[]>
         {
-            { JobAttribute.MyJobs, new[] { new IppAttribute(Tag.Boolean, JobAttribute.MyJobs, true) } }
+            { IppAttributeNames.MyJobs, new[] { new IppAttribute(Tag.Boolean, IppAttributeNames.MyJobs, true) } }
         };
         var mapper = new SimpleMapper();
         var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
@@ -271,7 +271,7 @@ public class OperationAttributesTests
         // Arrange
         var dict = new Dictionary<string, IppAttribute[]>
         {
-            { JobAttribute.JobIds, new[] { new IppAttribute(Tag.Integer, JobAttribute.JobIds, 123), new IppAttribute(Tag.Integer, JobAttribute.JobIds, 456) } }
+            { IppAttributeNames.JobIds, new[] { new IppAttribute(Tag.Integer, IppAttributeNames.JobIds, 123), new IppAttribute(Tag.Integer, IppAttributeNames.JobIds, 456) } }
         };
         var mapper = new SimpleMapper();
         var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
@@ -291,10 +291,10 @@ public class OperationAttributesTests
         var dict = new Dictionary<string, IppAttribute[]>
         {
             {
-                JobAttribute.ClientInfo,
+                IppAttributeNames.ClientInfo,
                 new[]
                 {
-                    new IppAttribute(Tag.BegCollection, JobAttribute.ClientInfo, NoValue.Instance),
+                    new IppAttribute(Tag.BegCollection, IppAttributeNames.ClientInfo, NoValue.Instance),
                     new IppAttribute(Tag.MemberAttrName, "", "client-name"),
                     new IppAttribute(Tag.NameWithoutLanguage, "", "MyClient"),
                     new IppAttribute(Tag.MemberAttrName, "", "client-type"),
@@ -303,10 +303,10 @@ public class OperationAttributesTests
                 }
             },
             {
-                JobAttribute.DocumentFormatDetails,
+                IppAttributeNames.DocumentFormatDetails,
                 new[]
                 {
-                    new IppAttribute(Tag.BegCollection, JobAttribute.DocumentFormatDetails, NoValue.Instance),
+                    new IppAttribute(Tag.BegCollection, IppAttributeNames.DocumentFormatDetails, NoValue.Instance),
                     new IppAttribute(Tag.MemberAttrName, "", "document-source-application-name"),
                     new IppAttribute(Tag.NameWithoutLanguage, "", "MyApp"),
                     new IppAttribute(Tag.MemberAttrName, "", "document-source-os-name"),
@@ -315,11 +315,11 @@ public class OperationAttributesTests
                 }
             },
             {
-                JobAttribute.JobMandatoryAttributes,
+                IppAttributeNames.JobMandatoryAttributes,
                 new[]
                 {
-                    new IppAttribute(Tag.Keyword, JobAttribute.JobMandatoryAttributes, "copies"),
-                    new IppAttribute(Tag.Keyword, JobAttribute.JobMandatoryAttributes, "media")
+                    new IppAttribute(Tag.Keyword, IppAttributeNames.JobMandatoryAttributes, "copies"),
+                    new IppAttribute(Tag.Keyword, IppAttributeNames.JobMandatoryAttributes, "media")
                 }
             }
         };
@@ -360,9 +360,9 @@ public class OperationAttributesTests
         var result = mapper.Map<CancelJobsOperationAttributes, List<IppAttribute>>(src);
 
         // Assert
-        result.Should().Contain(x => x.Name == JobAttribute.JobIds && (int)x.Value == 10);
-        result.Should().Contain(x => x.Name == JobAttribute.JobIds && (int)x.Value == 20);
-        result.Should().Contain(x => x.Name == JobAttribute.Message && (string)x.Value == "test");
+        result.Should().Contain(x => x.Name == IppAttributeNames.JobIds && (int)x.Value == 10);
+        result.Should().Contain(x => x.Name == IppAttributeNames.JobIds && (int)x.Value == 20);
+        result.Should().Contain(x => x.Name == IppAttributeNames.Message && (string)x.Value == "test");
     }
 
     [TestMethod]
@@ -386,8 +386,8 @@ public class OperationAttributesTests
         var result = mapper.Map<ResubmitJobOperationAttributes, List<IppAttribute>>(src);
 
         // Assert
-        result.Should().Contain(x => x.Name == JobAttribute.IppAttributeFidelity && (bool)x.Value == true);
-        result.Should().Contain(x => x.Name == JobAttribute.JobMandatoryAttributes && (string)x.Value == "copies");
+        result.Should().Contain(x => x.Name == IppAttributeNames.IppAttributeFidelity && (bool)x.Value == true);
+        result.Should().Contain(x => x.Name == IppAttributeNames.JobMandatoryAttributes && (string)x.Value == "copies");
     }
     [TestMethod]
     public void Map_FromValidateJobOperationAttributes_ShouldMapAdditionalProperties()
@@ -426,15 +426,15 @@ public class OperationAttributesTests
         
         // Assert
         result.Should().NotBeNull();
-        result.Should().Contain(x => x.Name == JobAttribute.JobKOctets && (int)x.Value == 100);
-        result.Should().Contain(x => x.Name == JobAttribute.DocumentName && (string)x.Value == "test.txt");
-        result.Should().Contain(x => x.Name == JobAttribute.Compression && (string)x.Value == "gzip");
-        result.Should().Contain(x => x.Name == JobAttribute.DocumentFormat && (string)x.Value == "text/plain");
-        result.Should().Contain(x => x.Name == JobAttribute.DocumentNaturalLanguage && (string)x.Value == "en-us");
-        result.Should().Contain(x => x.Name == JobAttribute.JobMandatoryAttributes && (string)x.Value == "copies");
-        result.Should().Contain(x => x.Name == JobAttribute.JobMandatoryAttributes && (string)x.Value == "media");
-        result.Should().Contain(x => x.Name == JobAttribute.ClientInfo && x.Tag == Tag.BegCollection);
-        result.Should().Contain(x => x.Name == JobAttribute.DocumentFormatDetails && x.Tag == Tag.BegCollection);
+        result.Should().Contain(x => x.Name == IppAttributeNames.JobKOctets && (int)x.Value == 100);
+        result.Should().Contain(x => x.Name == IppAttributeNames.DocumentName && (string)x.Value == "test.txt");
+        result.Should().Contain(x => x.Name == IppAttributeNames.Compression && (string)x.Value == "gzip");
+        result.Should().Contain(x => x.Name == IppAttributeNames.DocumentFormat && (string)x.Value == "text/plain");
+        result.Should().Contain(x => x.Name == IppAttributeNames.DocumentNaturalLanguage && (string)x.Value == "en-us");
+        result.Should().Contain(x => x.Name == IppAttributeNames.JobMandatoryAttributes && (string)x.Value == "copies");
+        result.Should().Contain(x => x.Name == IppAttributeNames.JobMandatoryAttributes && (string)x.Value == "media");
+        result.Should().Contain(x => x.Name == IppAttributeNames.ClientInfo && x.Tag == Tag.BegCollection);
+        result.Should().Contain(x => x.Name == IppAttributeNames.DocumentFormatDetails && x.Tag == Tag.BegCollection);
     }
 
     [TestMethod]
@@ -444,10 +444,10 @@ public class OperationAttributesTests
         var dict = new Dictionary<string, IppAttribute[]>
         {
             {
-                JobAttribute.ClientInfo,
+                IppAttributeNames.ClientInfo,
                 new[]
                 {
-                    new IppAttribute(Tag.BegCollection, JobAttribute.ClientInfo, NoValue.Instance),
+                    new IppAttribute(Tag.BegCollection, IppAttributeNames.ClientInfo, NoValue.Instance),
                     new IppAttribute(Tag.MemberAttrName, "", "client-name"),
                     new IppAttribute(Tag.NameWithoutLanguage, "", "MyClient"),
                     new IppAttribute(Tag.MemberAttrName, "", "client-type"),
@@ -456,10 +456,10 @@ public class OperationAttributesTests
                 }
             },
             {
-                JobAttribute.DocumentFormatDetails,
+                IppAttributeNames.DocumentFormatDetails,
                 new[]
                 {
-                    new IppAttribute(Tag.BegCollection, JobAttribute.DocumentFormatDetails, NoValue.Instance),
+                    new IppAttribute(Tag.BegCollection, IppAttributeNames.DocumentFormatDetails, NoValue.Instance),
                     new IppAttribute(Tag.MemberAttrName, "", "document-source-application-name"),
                     new IppAttribute(Tag.NameWithoutLanguage, "", "MyApp"),
                     new IppAttribute(Tag.MemberAttrName, "", "document-source-os-name"),
@@ -468,11 +468,11 @@ public class OperationAttributesTests
                 }
             },
             {
-                JobAttribute.JobMandatoryAttributes,
+                IppAttributeNames.JobMandatoryAttributes,
                 new[]
                 {
-                    new IppAttribute(Tag.Keyword, JobAttribute.JobMandatoryAttributes, "copies"),
-                    new IppAttribute(Tag.Keyword, JobAttribute.JobMandatoryAttributes, "media")
+                    new IppAttribute(Tag.Keyword, IppAttributeNames.JobMandatoryAttributes, "copies"),
+                    new IppAttribute(Tag.Keyword, IppAttributeNames.JobMandatoryAttributes, "media")
                 }
             }
         };
@@ -500,7 +500,7 @@ public class OperationAttributesTests
         var invalidUri = "http://invalid uri";
         var dict = new Dictionary<string, IppAttribute[]>
         {
-            { JobAttribute.DocumentUri, new[] { new IppAttribute(Tag.Uri, JobAttribute.DocumentUri, invalidUri) } }
+            { IppAttributeNames.DocumentUri, new[] { new IppAttribute(Tag.Uri, IppAttributeNames.DocumentUri, invalidUri) } }
         };
         var mapper = new SimpleMapper();
         var assembly = Assembly.GetAssembly(typeof(SimpleMapper));

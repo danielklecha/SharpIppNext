@@ -13,11 +13,11 @@ internal class CreateResourceOperationAttributesProfile : IProfile
         {
             dst ??= new CreateResourceOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, SystemOperationAttributes>(src, dst);
-            dst.ResourceFormat = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceFormat);
-            dst.ResourceNaturalLanguage = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceNaturalLanguage);
-            dst.ResourceType = map.MapFromDicNullable<ResourceType?>(src, SystemAttribute.ResourceType);
-            dst.ResourceName = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceName);
-            dst.ResourceInfo = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceInfo);
+            dst.ResourceFormat = map.MapFromDicNullable<string?>(src, IppAttributeNames.ResourceFormat);
+            dst.ResourceNaturalLanguage = map.MapFromDicNullable<string?>(src, IppAttributeNames.ResourceNaturalLanguage);
+            dst.ResourceType = map.MapFromDicNullable<ResourceType?>(src, IppAttributeNames.ResourceType);
+            dst.ResourceName = map.MapFromDicNullable<string?>(src, IppAttributeNames.ResourceName);
+            dst.ResourceInfo = map.MapFromDicNullable<string?>(src, IppAttributeNames.ResourceInfo);
             return dst;
         });
 
@@ -26,15 +26,15 @@ internal class CreateResourceOperationAttributesProfile : IProfile
             dst ??= new List<IppAttribute>();
             map.Map<SystemOperationAttributes, List<IppAttribute>>(src, dst);
             if (src.ResourceFormat != null)
-                dst.Add(new IppAttribute(Tag.MimeMediaType, SystemAttribute.ResourceFormat, src.ResourceFormat));
+                dst.Add(new IppAttribute(Tag.MimeMediaType, IppAttributeNames.ResourceFormat, src.ResourceFormat));
             if (src.ResourceNaturalLanguage != null)
-                dst.Add(new IppAttribute(Tag.NaturalLanguage, SystemAttribute.ResourceNaturalLanguage, src.ResourceNaturalLanguage));
+                dst.Add(new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.ResourceNaturalLanguage, src.ResourceNaturalLanguage));
             if (src.ResourceType != null)
-                dst.Add(new IppAttribute(Tag.Keyword, SystemAttribute.ResourceType, src.ResourceType.Value.Value));
+                dst.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.ResourceType, src.ResourceType.Value.Value));
             if (src.ResourceName != null)
-                dst.Add(new IppAttribute(Tag.NameWithoutLanguage, SystemAttribute.ResourceName, src.ResourceName));
+                dst.Add(new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.ResourceName, src.ResourceName));
             if (src.ResourceInfo != null)
-                dst.Add(new IppAttribute(Tag.TextWithoutLanguage, SystemAttribute.ResourceInfo, src.ResourceInfo));
+                dst.Add(new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.ResourceInfo, src.ResourceInfo));
             return dst;
         });
     }

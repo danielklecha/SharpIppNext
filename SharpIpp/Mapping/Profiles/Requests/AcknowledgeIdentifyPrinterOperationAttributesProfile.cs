@@ -14,7 +14,7 @@ internal class AcknowledgeIdentifyPrinterOperationAttributesProfile : IProfile
         {
             dst ??= new AcknowledgeIdentifyPrinterOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(src, dst);
-            dst.OutputDeviceUuid = map.MapFromDicNullable<Uri?>(src, JobAttribute.OutputDeviceUuid);
+            dst.OutputDeviceUuid = map.MapFromDicNullable<Uri?>(src, IppAttributeNames.OutputDeviceUuid);
             return dst;
         });
 
@@ -23,7 +23,7 @@ internal class AcknowledgeIdentifyPrinterOperationAttributesProfile : IProfile
             dst ??= new List<IppAttribute>();
             map.Map<OperationAttributes, List<IppAttribute>>(src, dst);
             if (src.OutputDeviceUuid != null)
-                dst.Add(new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, src.OutputDeviceUuid.ToString()));
+                dst.Add(new IppAttribute(Tag.Uri, IppAttributeNames.OutputDeviceUuid, src.OutputDeviceUuid.ToString()));
             return dst;
         });
     }

@@ -1,4 +1,5 @@
 using SharpIpp.Exceptions;
+using SharpIpp.Validation;
 using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Mapping.Profiles;
@@ -20,6 +21,8 @@ public partial class SharpIppServer : ISharpIppServer
     private static readonly Lazy<IMapper> MapperSingleton;
     private readonly IIppProtocol _ippProtocol;
     private readonly IIppRequestMessageValidator _requestValidator;
+    private readonly IIppResponseValidator? _ippResponseValidator;
+    private readonly IIppResponseMessageValidator? _responseMessageValidator;
     private IMapper Mapper => MapperSingleton.Value;
 
     static SharpIppServer()
@@ -27,22 +30,28 @@ public partial class SharpIppServer : ISharpIppServer
         MapperSingleton = new Lazy<IMapper>(MapperFactory);
     }
 
-    public SharpIppServer()
+    public SharpIppServer() : this(new IppProtocol(), IppRequestMessageValidator.Default, IppResponseValidator.Default, IppResponseMessageValidator.Default)
     {
-        _ippProtocol = new IppProtocol();
-        _requestValidator = IppRequestMessageValidator.Default;
     }
 
-    public SharpIppServer(IIppProtocol ippProtocol)
+    public SharpIppServer(IIppProtocol ippProtocol) : this(ippProtocol, IppRequestMessageValidator.Default, IppResponseValidator.Default, IppResponseMessageValidator.Default)
     {
-        _ippProtocol = ippProtocol;
-        _requestValidator = IppRequestMessageValidator.Default;
     }
 
-    public SharpIppServer(IIppProtocol ippProtocol, IIppRequestMessageValidator requestValidator)
+    public SharpIppServer(IIppProtocol ippProtocol, IIppRequestMessageValidator requestValidator) : this(ippProtocol, requestValidator, IppResponseValidator.Default, IppResponseMessageValidator.Default)
+    {
+    }
+
+    public SharpIppServer(IIppProtocol ippProtocol, IIppRequestMessageValidator requestValidator, IIppResponseValidator? ippResponseValidator) : this(ippProtocol, requestValidator, ippResponseValidator, IppResponseMessageValidator.Default)
+    {
+    }
+
+    public SharpIppServer(IIppProtocol ippProtocol, IIppRequestMessageValidator requestValidator, IIppResponseValidator? ippResponseValidator, IIppResponseMessageValidator? responseMessageValidator)
     {
         _ippProtocol = ippProtocol;
-        _requestValidator = requestValidator ?? throw new ArgumentNullException(nameof(requestValidator));
+        _requestValidator = requestValidator;
+        _ippResponseValidator = ippResponseValidator;
+        _responseMessageValidator = responseMessageValidator;
     }
 
     public Task<IIppRequestMessage> ReceiveRawRequestAsync(
@@ -69,8 +78,11 @@ public partial class SharpIppServer : ISharpIppServer
         if (request is null)
             throw new ArgumentNullException(nameof(request));
 
-        _requestValidator.Context.Source = nameof(SharpIppServer);
-        _requestValidator.Validate(request);
+        if (_requestValidator != null)
+        {
+            _requestValidator.Context.Source = nameof(SharpIppServer);
+            _requestValidator.Validate(request);
+        }
 
         IIppRequest mappedRequest = request.IppOperation switch
         {
@@ -189,6 +201,7 @@ public partial class SharpIppServer : ISharpIppServer
             throw new ArgumentNullException(nameof(ippResponseMessage));
         if (stream is null)
             throw new ArgumentNullException(nameof(stream));
+        _responseMessageValidator?.Validate(ippResponseMessage);
         return _ippProtocol.WriteIppResponseAsync(ippResponseMessage, stream, cancellationToken);
     }
 
@@ -207,10 +220,13 @@ public partial class SharpIppServer : ISharpIppServer
     {
         if (ippResponsMessage is null)
             throw new ArgumentNullException(nameof(ippResponsMessage));
+        _ippResponseValidator?.Validate(ippResponsMessage);
         var ippResponse = Mapper.Map<IppResponseMessage>(ippResponsMessage);
+        _responseMessageValidator?.Validate(ippResponse);
         return Task.FromResult<IIppResponseMessage>(ippResponse);
     }
 
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "Mapping profiles are preserved via ILLink.Descriptors.xml")]
     private static IMapper MapperFactory()
     {
         var mapper = new SimpleMapper();

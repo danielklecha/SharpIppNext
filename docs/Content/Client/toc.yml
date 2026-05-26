@@ -1,5 +1,7 @@
 - name: Operations
   href: Operations.md
+- name: Request Validation
+  href: Validation.md
 - name: Standard Operations Examples
   items:
     - name: Acknowledge-Document
@@ -38,6 +40,8 @@
       href: CreateSystemSubscriptions.md
     - name: Deallocate-Printer-Resources
       href: DeallocatePrinterResources.md
+    - name: Delete-Document
+      href: DeleteDocument.md
     - name: Delete-Printer
       href: DeletePrinter.md
     - name: Disable-All-Printers

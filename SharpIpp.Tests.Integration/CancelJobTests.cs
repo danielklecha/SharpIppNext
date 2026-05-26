@@ -45,7 +45,7 @@ public class CancelJobTests : SharpIppIntegrationTestBase
                 OperationAttributes = new()
                 {
                     StatusMessage = "successful-ok",
-                    DetailedStatusMessage = ["detail1"],
+                    DetailedStatusMessage = "detail1",
                     DocumentAccessError = "none"
                 },
             };

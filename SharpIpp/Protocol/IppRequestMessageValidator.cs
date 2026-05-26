@@ -19,8 +19,8 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
     private static readonly HashSet<string> Pwg51005DocumentRequestedAttributeGroupKeywords =
     [
         AllRequestedAttributesGroup,
-        DocumentAttribute.DocumentDescription,
-        DocumentAttribute.DocumentTemplate,
+        IppAttributeNames.DocumentDescription,
+        IppAttributeNames.DocumentTemplate,
     ];
 
     private static readonly HashSet<string> Pwg51008JobRequestedAttributeGroupKeywords =
@@ -33,12 +33,12 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
 
     private static readonly string[] Pwg51003MediaExclusiveCollections =
     [
-        JobAttribute.CoverBack,
-        JobAttribute.CoverFront,
-        JobAttribute.InsertSheet,
-        JobAttribute.JobAccountingSheets,
-        JobAttribute.JobErrorSheet,
-        JobAttribute.SeparatorSheets,
+        IppAttributeNames.CoverBack,
+        IppAttributeNames.CoverFront,
+        IppAttributeNames.InsertSheet,
+        IppAttributeNames.JobAccountingSheets,
+        IppAttributeNames.JobErrorSheet,
+        IppAttributeNames.SeparatorSheets,
     ];
 
     private static readonly string[] OverrideSelectorMemberNames =
@@ -61,25 +61,25 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
 
     private static readonly HashSet<string> Pwg51006NonOverrideScopeMembers =
     [
-        JobAttribute.Copies,
-        JobAttribute.CoverBack,
-        JobAttribute.CoverFront,
-        JobAttribute.InsertSheet,
-        JobAttribute.JobAccountId,
-        JobAttribute.JobAccountingSheets,
-        JobAttribute.JobAccountingUserId,
-        JobAttribute.JobErrorSheet,
-        JobAttribute.JobHoldUntil,
-        JobAttribute.JobMessageToOperator,
-        JobAttribute.JobPriority,
-        JobAttribute.JobSheets,
-        JobAttribute.JobSheetsCol,
-        JobAttribute.MediaInputTrayCheck,
-        JobAttribute.MultipleDocumentHandling,
-        JobAttribute.OutputBin,
-        JobAttribute.PageDelivery,
-        JobAttribute.PageRanges,
-        JobAttribute.SeparatorSheets,
+        IppAttributeNames.Copies,
+        IppAttributeNames.CoverBack,
+        IppAttributeNames.CoverFront,
+        IppAttributeNames.InsertSheet,
+        IppAttributeNames.JobAccountId,
+        IppAttributeNames.JobAccountingSheets,
+        IppAttributeNames.JobAccountingUserId,
+        IppAttributeNames.JobErrorSheet,
+        IppAttributeNames.JobHoldUntil,
+        IppAttributeNames.JobMessageToOperator,
+        IppAttributeNames.JobPriority,
+        IppAttributeNames.JobSheets,
+        IppAttributeNames.JobSheetsCol,
+        IppAttributeNames.MediaInputTrayCheck,
+        IppAttributeNames.MultipleDocumentHandling,
+        IppAttributeNames.OutputBin,
+        IppAttributeNames.PageDelivery,
+        IppAttributeNames.PageRanges,
+        IppAttributeNames.SeparatorSheets,
         "sheet-collate",
     ];
 
@@ -100,9 +100,9 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
 
     private static readonly HashSet<string> Pwg51017ForbiddenDestinationAttributesMembers =
     [
-        JobAttribute.DocumentPassword,
-        JobAttribute.JobPassword,
-        JobAttribute.JobPasswordEncryption,
+        IppAttributeNames.DocumentPassword,
+        IppAttributeNames.JobPassword,
+        IppAttributeNames.JobPasswordEncryption,
     ];
 
     public static IppRequestMessageValidator Default => new()
@@ -119,6 +119,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         ValidateDocumentAttributesGroup = true,
         ValidateSystemAttributesGroup = true,
         UseIppAttributeFidelityForCapabilityValidation = false,
+        ValidateStringLengthLimits = true,
     };
 
     public IppRequestValidationContext Context { get; } = new();
@@ -148,6 +149,14 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
     public bool UseIppAttributeFidelityForCapabilityValidation { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether string length limits defined in RFC 8011 are validated.
+    /// When true, verifies that text, name, keyword, URI, URI scheme, charset, natural language, and MIME media type attributes
+    /// do not exceed their RFC 8011 octet limits.
+    /// Note: Too-long strings are NOT automatically truncated; they will cause validation to fail.
+    /// </summary>
+    public bool ValidateStringLengthLimits { get; set; } = true;
+
+    /// <summary>
     /// Validates the request message by executing enabled core, job, document, printer, and operation-specific rules.
     /// Spec: RFC 8011, PWG 5100.x.
     /// </summary>
@@ -170,6 +179,9 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
 
         if (ValidateOperationSpecificRules)
             ValidateOperationRules(request);
+
+        if (ValidateStringLengthLimits)
+            ValidateStringLengthLimitsRule(request);
     }
 
     /// <summary>
@@ -204,7 +216,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         if (!operationAttributes.Any())
             throw new IppRequestException("No Operation Attributes", request, IppStatusCode.ClientErrorBadRequest);
 
-        if (operationAttributes.First().Name != JobAttribute.AttributesCharset)
+        if (operationAttributes.First().Name != IppAttributeNames.AttributesCharset)
             throw new IppRequestException("attributes-charset MUST be the first attribute", request, IppStatusCode.ClientErrorBadRequest);
 
         var charsetValue = operationAttributes.First().Value.ToString();
@@ -212,18 +224,210 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         if (!string.Equals(charsetValue, "utf-8", StringComparison.OrdinalIgnoreCase))
             throw new IppRequestException("attributes-charset MUST be 'utf-8'", request, IppStatusCode.ClientErrorBadRequest);
 
-        if (operationAttributes.ElementAtOrDefault(1).Name != JobAttribute.AttributesNaturalLanguage)
+        if (operationAttributes.ElementAtOrDefault(1).Name != IppAttributeNames.AttributesNaturalLanguage)
             throw new IppRequestException("attributes-natural-language MUST be the second attribute", request, IppStatusCode.ClientErrorBadRequest);
 
-        var hasPrinterUri = HasNamedAttribute(operationAttributes, JobAttribute.PrinterUri);
-        var hasSystemUri = HasNamedAttribute(operationAttributes, SystemAttribute.SystemUri);
-        var hasJobUri = HasNamedAttribute(operationAttributes, JobAttribute.JobUri);
+        var hasPrinterUri = HasNamedAttribute(operationAttributes, IppAttributeNames.PrinterUri);
+        var hasSystemUri = HasNamedAttribute(operationAttributes, IppAttributeNames.SystemUri);
+        var hasJobUri = HasNamedAttribute(operationAttributes, IppAttributeNames.JobUri);
 
         if (!hasPrinterUri && !hasSystemUri && !(hasJobUri && request.IppOperation.IsPwg51005DocumentTargetOperation()))
             throw new IppRequestException("No printer-uri or system-uri operation attribute", request, IppStatusCode.ClientErrorBadRequest);
 
         if (request.IppOperation.IsSystemServiceOperation() && !hasSystemUri)
             throw new IppRequestException("No system-uri operation attribute", request, IppStatusCode.ClientErrorBadRequest);
+    }
+
+    /// <summary>
+    /// Validates that string-based attributes in the request do not exceed the octet (byte) length limits
+    /// specified in RFC 8011.
+    ///
+    /// The limits verified are:
+    /// - textWithoutLanguage (0x41) / textWithLanguage (0x35): max 1023 octets (Section 5.1.2)
+    /// - nameWithoutLanguage (0x42) / nameWithLanguage (0x36): max 255 octets (Section 5.1.3)
+    /// - keyword (0x44): max 255 octets (Section 5.1.4)
+    /// - uri (0x45): max 1023 octets (Section 5.1.5)
+    /// - uriScheme (0x46): max 255 octets (Section 5.1.6)
+    /// - charset (0x47): max 255 octets (Section 5.1.7)
+    /// - naturalLanguage (0x48): max 255 octets (Section 5.1.8)
+    /// - mimeMediaType (0x49): max 255 octets (Section 5.1.9)
+    ///
+    /// Characters are converted to octets (bytes) using UTF-8 encoding. Too-long strings are not
+    /// automatically truncated, but instead reject the request with a ClientErrorBadRequest status.
+    /// </summary>
+    private void ValidateStringLengthLimitsRule(IIppRequestMessage request)
+    {
+        var encoding = System.Text.Encoding.UTF8;
+        var charsetAttr = request.OperationAttributes.FirstOrDefault(x => x.Name == IppAttributeNames.AttributesCharset);
+        if (charsetAttr.Value != null)
+        {
+            try
+            {
+                encoding = System.Text.Encoding.GetEncoding(charsetAttr.Value.ToString()!);
+            }
+            catch
+            {
+                // Fallback to UTF-8
+            }
+        }
+
+        var allAttributes = request.OperationAttributes
+            .Concat(request.JobAttributes)
+            .Concat(request.PrinterAttributes)
+            .Concat(request.UnsupportedAttributes)
+            .Concat(request.SubscriptionAttributes)
+            .Concat(request.EventNotificationAttributes)
+            .Concat(request.ResourceAttributes)
+            .Concat(request.DocumentAttributes)
+            .Concat(request.SystemAttributes);
+
+        foreach (var attr in allAttributes)
+        {
+            if (attr.Value == null || attr.Value is NoValue)
+                continue;
+
+            foreach (var val in GetStringOrOctetValues(attr.Value))
+            {
+                switch (attr.Tag)
+                {
+                    case Tag.TextWithoutLanguage:
+                        {
+                            var textStr = val.ToString() ?? string.Empty;
+                            var bytes = encoding.GetByteCount(textStr);
+                            if (bytes > 1023)
+                                throw new IppRequestException($"Attribute '{attr.Name}' of tag '{attr.Tag}' length ({bytes} octets) exceeds RFC 8011 limit of 1023 octets", request, IppStatusCode.ClientErrorBadRequest);
+                        }
+                        break;
+
+                    case Tag.TextWithLanguage:
+                        {
+                            if (val is StringWithLanguage textLg)
+                            {
+                                var valueBytes = encoding.GetByteCount(textLg.Value ?? string.Empty);
+                                if (valueBytes > 1023)
+                                    throw new IppRequestException($"Attribute '{attr.Name}' of tag '{attr.Tag}' value length ({valueBytes} octets) exceeds RFC 8011 limit of 1023 octets", request, IppStatusCode.ClientErrorBadRequest);
+
+                                var langBytes = encoding.GetByteCount(textLg.Language ?? string.Empty);
+                                if (langBytes > 255)
+                                    throw new IppRequestException($"Attribute '{attr.Name}' of tag '{attr.Tag}' language length ({langBytes} octets) exceeds RFC 8011 limit of 255 octets", request, IppStatusCode.ClientErrorBadRequest);
+                            }
+                            else
+                            {
+                                var textStr = val.ToString() ?? string.Empty;
+                                var bytes = encoding.GetByteCount(textStr);
+                                if (bytes > 1023)
+                                    throw new IppRequestException($"Attribute '{attr.Name}' of tag '{attr.Tag}' length ({bytes} octets) exceeds RFC 8011 limit of 1023 octets", request, IppStatusCode.ClientErrorBadRequest);
+                            }
+                        }
+                        break;
+
+                    case Tag.NameWithoutLanguage:
+                        {
+                            var nValue = val.ToString() ?? string.Empty;
+                            var nBytes = encoding.GetByteCount(nValue);
+                            if (nBytes > 255)
+                                throw new IppRequestException($"Attribute '{attr.Name}' of tag '{attr.Tag}' length ({nBytes} octets) exceeds RFC 8011 limit of 255 octets", request, IppStatusCode.ClientErrorBadRequest);
+                        }
+                        break;
+
+                    case Tag.NameWithLanguage:
+                        {
+                            if (val is StringWithLanguage swl)
+                            {
+                                var swlValueBytes = encoding.GetByteCount(swl.Value ?? string.Empty);
+                                if (swlValueBytes > 255)
+                                    throw new IppRequestException($"Attribute '{attr.Name}' of tag '{attr.Tag}' value length ({swlValueBytes} octets) exceeds RFC 8011 limit of 255 octets", request, IppStatusCode.ClientErrorBadRequest);
+
+                                var swlLangBytes = encoding.GetByteCount(swl.Language ?? string.Empty);
+                                if (swlLangBytes > 255)
+                                    throw new IppRequestException($"Attribute '{attr.Name}' of tag '{attr.Tag}' language length ({swlLangBytes} octets) exceeds RFC 8011 limit of 255 octets", request, IppStatusCode.ClientErrorBadRequest);
+                            }
+                            else
+                            {
+                                var nValue = val.ToString() ?? string.Empty;
+                                var nBytes = encoding.GetByteCount(nValue);
+                                if (nBytes > 255)
+                                    throw new IppRequestException($"Attribute '{attr.Name}' of tag '{attr.Tag}' length ({nBytes} octets) exceeds RFC 8011 limit of 255 octets", request, IppStatusCode.ClientErrorBadRequest);
+                            }
+                        }
+                        break;
+
+                    case Tag.Keyword:
+                    case Tag.UriScheme:
+                    case Tag.Charset:
+                    case Tag.NaturalLanguage:
+                    case Tag.MimeMediaType:
+                        {
+                            var valStr = val.ToString();
+                            if (valStr != null)
+                            {
+                                var strBytes = encoding.GetByteCount(valStr);
+                                if (strBytes > 255)
+                                    throw new IppRequestException($"Attribute '{attr.Name}' of tag '{attr.Tag}' length ({strBytes} octets) exceeds RFC 8011 limit of 255 octets", request, IppStatusCode.ClientErrorBadRequest);
+                            }
+                        }
+                        break;
+
+                    case Tag.Uri:
+                        {
+                            var uriStr = val.ToString();
+                            if (uriStr != null)
+                            {
+                                var uriBytes = encoding.GetByteCount(uriStr);
+                                if (uriBytes > 1023)
+                                    throw new IppRequestException($"Attribute '{attr.Name}' of tag '{attr.Tag}' length ({uriBytes} octets) exceeds RFC 8011 limit of 1023 octets", request, IppStatusCode.ClientErrorBadRequest);
+                            }
+                        }
+                        break;
+
+                    case Tag.OctetStringWithAnUnspecifiedFormat:
+                        {
+                            int octetLength = 0;
+                            if (val is OctetString os && os.Value is byte[] octetStringBytes)
+                            {
+                                octetLength = octetStringBytes.Length;
+                            }
+                            else if (val is byte[] bytes)
+                            {
+                                octetLength = bytes.Length;
+                            }
+                            else
+                            {
+                                octetLength = encoding.GetByteCount(val.ToString() ?? string.Empty);
+                            }
+
+                            if (octetLength > 1023)
+                                throw new IppRequestException($"Attribute '{attr.Name}' of tag '{attr.Tag}' length ({octetLength} octets) exceeds RFC 8011 limit of 1023 octets", request, IppStatusCode.ClientErrorBadRequest);
+                        }
+                        break;
+                }
+            }
+        }
+
+        IEnumerable<object> GetStringOrOctetValues(object? value)
+        {
+            if (value == null || value is NoValue)
+                yield break;
+
+            if (value is string || value is StringWithLanguage || value is OctetString || value is byte[])
+            {
+                yield return value;
+            }
+            else if (value is System.Collections.IEnumerable enumerable)
+            {
+                foreach (var item in enumerable)
+                {
+                    foreach (var subItem in GetStringOrOctetValues(item))
+                    {
+                        yield return subItem;
+                    }
+                }
+            }
+            else
+            {
+                yield return value;
+            }
+        }
     }
 
     /// <summary>
@@ -241,8 +445,8 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
 
         if (request.IppOperation is IppOperation.PrintJob or IppOperation.CreateJob or IppOperation.ValidateJob)
         {
-            var hasJobPassword = HasNamedAttribute(request.JobAttributes, JobAttribute.JobPassword);
-            var hasJobPasswordEncryption = HasNamedAttribute(request.JobAttributes, JobAttribute.JobPasswordEncryption);
+            var hasJobPassword = HasNamedAttribute(request.JobAttributes, IppAttributeNames.JobPassword);
+            var hasJobPasswordEncryption = HasNamedAttribute(request.JobAttributes, IppAttributeNames.JobPasswordEncryption);
             if (hasJobPassword != hasJobPasswordEncryption)
                 throw new IppRequestException("'job-password' and 'job-password-encryption' must be either both present or both absent", request, IppStatusCode.ClientErrorBadRequest);
         }
@@ -255,7 +459,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
             {
                 if (attr.Tag == Tag.BegCollection)
                 {
-                    if (depth == 0 && attr.Name == JobAttribute.MediaCol)
+                    if (depth == 0 && attr.Name == IppAttributeNames.MediaCol)
                         hasTopLevelMediaCol = true;
                     depth++;
                 }
@@ -263,7 +467,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
                 {
                     if (depth > 0) depth--;
                 }
-                else if (depth == 0 && attr.Name == JobAttribute.Media)
+                else if (depth == 0 && attr.Name == IppAttributeNames.Media)
                 {
                     hasTopLevelMedia = true;
                 }
@@ -273,19 +477,19 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         }
 
         var pageRangeAttributes = request.JobAttributes
-            .Where(x => x.Name == JobAttribute.PageRanges && x.Tag == Tag.RangeOfInteger && x.Value is SharpIpp.Protocol.Models.Range)
+            .Where(x => x.Name == IppAttributeNames.PageRanges && x.Tag == Tag.RangeOfInteger && x.Value is SharpIpp.Protocol.Models.Range)
             .Select(x => (SharpIpp.Protocol.Models.Range)x.Value)
             .ToArray();
         if (pageRangeAttributes.Length > 0)
-            ValidateRangesAscendingNonOverlapping(pageRangeAttributes, JobAttribute.PageRanges, request);
+            ValidateRangesAscendingNonOverlapping(pageRangeAttributes, IppAttributeNames.PageRanges, request);
 
-        if (request.JobAttributes.TryGetIppValue<int>(JobAttribute.Copies, out var copiesValue) && copiesValue <= 0)
+        if (request.JobAttributes.TryGetIppValue<int>(IppAttributeNames.Copies, out var copiesValue) && copiesValue <= 0)
             throw new IppRequestException("'copies' must be >= 1", request, IppStatusCode.ClientErrorBadRequest);
 
-        if (request.JobAttributes.TryGetIppValue<int>(JobAttribute.JobPriority, out var jobPriorityValue) && (jobPriorityValue < 1 || jobPriorityValue > 100))
+        if (request.JobAttributes.TryGetIppValue<int>(IppAttributeNames.JobPriority, out var jobPriorityValue) && (jobPriorityValue < 1 || jobPriorityValue > 100))
             throw new IppRequestException("'job-priority' must be in the range 1-100", request, IppStatusCode.ClientErrorBadRequest);
 
-        if (request.JobAttributes.TryGetIppValue<int>(JobAttribute.NumberUp, out var numberUpValue) && numberUpValue <= 0)
+        if (request.JobAttributes.TryGetIppValue<int>(IppAttributeNames.NumberUp, out var numberUpValue) && numberUpValue <= 0)
             throw new IppRequestException("'number-up' must be >= 1", request, IppStatusCode.ClientErrorBadRequest);
 
         ValidateFidelityBasedJobAttributes(request);
@@ -302,7 +506,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
 
         var mediaSupported = Context.MediaSupported;
         if (mediaSupported is { Count: > 0 }
-            && request.JobAttributes.TryGetIppValue<string>(JobAttribute.Media, out var media)
+            && request.JobAttributes.TryGetIppValue<string>(IppAttributeNames.Media, out var media)
             && !mediaSupported.Contains((Media)media))
         {
             throw new IppRequestException($"'media' value '{media}' is not supported by target printer", request, IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
@@ -311,7 +515,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         var finishingsSupported = Context.FinishingsSupported;
         if (finishingsSupported is { Count: > 0 })
         {
-            foreach (var finishingsInt in request.JobAttributes.Where(x => x.Name == JobAttribute.Finishings).Select(x => x.Value).OfType<int>())
+            foreach (var finishingsInt in request.JobAttributes.Where(x => x.Name == IppAttributeNames.Finishings).Select(x => x.Value).OfType<int>())
             {
                 if (!finishingsSupported.Contains((Finishings)finishingsInt))
                     throw new IppRequestException($"'finishings' value '{finishingsInt}' is not supported by target printer", request, IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
@@ -319,7 +523,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         }
 
         var sidesSupported = Context.SidesSupported;
-        if (sidesSupported is { Count: > 0 } && request.JobAttributes.TryGetIppValue<string>(JobAttribute.Sides, out var sidesStr))
+        if (sidesSupported is { Count: > 0 } && request.JobAttributes.TryGetIppValue<string>(IppAttributeNames.Sides, out var sidesStr))
         {
             var sides = (Sides)sidesStr;
             if (!sidesSupported.Contains(sides))
@@ -329,19 +533,19 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         var printQualitySupported = Context.PrintQualitySupported;
         if (printQualitySupported is { Count: > 0 })
         {
-            if (request.JobAttributes.TryGetIppValue<int>(JobAttribute.PrintQuality, out var pqInt) && !printQualitySupported.Contains((PrintQuality)pqInt))
+            if (request.JobAttributes.TryGetIppValue<int>(IppAttributeNames.PrintQuality, out var pqInt) && !printQualitySupported.Contains((PrintQuality)pqInt))
                 throw new IppRequestException($"'print-quality' value '{pqInt}' is not supported by target printer", request, IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
         }
 
         var orientationSupported = Context.OrientationRequestedSupported;
         if (orientationSupported is { Count: > 0 })
         {
-            if (request.JobAttributes.TryGetIppValue<int>(JobAttribute.OrientationRequested, out var orientInt) && !orientationSupported.Contains((Orientation)orientInt))
+            if (request.JobAttributes.TryGetIppValue<int>(IppAttributeNames.OrientationRequested, out var orientInt) && !orientationSupported.Contains((Orientation)orientInt))
                 throw new IppRequestException($"'orientation-requested' value '{orientInt}' is not supported by target printer", request, IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
         }
 
         var printColorModeSupported = Context.PrintColorModeSupported;
-        if (printColorModeSupported is { Count: > 0 } && request.JobAttributes.TryGetIppValue<string>(JobAttribute.PrintColorMode, out var pcmStr))
+        if (printColorModeSupported is { Count: > 0 } && request.JobAttributes.TryGetIppValue<string>(IppAttributeNames.PrintColorMode, out var pcmStr))
         {
             var pcm = (PrintColorMode)pcmStr;
             if (!printColorModeSupported.Contains(pcm))
@@ -369,7 +573,9 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
     {
         ValidateDefaultAgainstSupportedAttributes(request.PrinterAttributes, request);
 
-        var destinationUriReadyCollections = EnumerateNamedCollections(request.PrinterAttributes, PrinterAttribute.DestinationUriReady).ToArray();
+        ValidateTrayAndSupplyControlCharacters(request);
+
+        var destinationUriReadyCollections = EnumerateNamedCollections(request.PrinterAttributes, IppAttributeNames.DestinationUriReady).ToArray();
         if (!destinationUriReadyCollections.Any())
             return;
 
@@ -422,8 +628,8 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
     /// </summary>
     private static void ValidateFinishingsMutualExclusivity(IReadOnlyCollection<IppAttribute> attributes, IIppRequestMessage request)
     {
-        var hasFinishings = HasNamedAttribute(attributes, JobAttribute.Finishings);
-        var hasFinishingsCol = HasNamedAttribute(attributes, JobAttribute.FinishingsCol);
+        var hasFinishings = HasNamedAttribute(attributes, IppAttributeNames.Finishings);
+        var hasFinishingsCol = HasNamedAttribute(attributes, IppAttributeNames.FinishingsCol);
         if (hasFinishings && hasFinishingsCol)
             throw new IppRequestException("'finishings' and 'finishings-col' are conflicting attributes and cannot be supplied together.", request, IppStatusCode.ClientErrorBadRequest);
     }
@@ -468,8 +674,8 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
     /// </summary>
     private static void ValidateCollectionMemberConflicts(string collectionName, IReadOnlyCollection<IppAttribute> members, IIppRequestMessage request)
     {
-        var hasMedia = members.Any(x => x.Name == JobAttribute.Media);
-        var hasMediaCol = members.Any(x => x.Name == JobAttribute.MediaCol);
+        var hasMedia = members.Any(x => x.Name == IppAttributeNames.Media);
+        var hasMediaCol = members.Any(x => x.Name == IppAttributeNames.MediaCol);
 
         if (!hasMedia || !hasMediaCol)
             return;
@@ -486,7 +692,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
     /// </summary>
     private void ValidateOutputBinAttributes(IReadOnlyCollection<IppAttribute> attributes, IIppRequestMessage request)
     {
-        var outputBins = attributes.Where(x => x.Name == JobAttribute.OutputBin).ToArray();
+        var outputBins = attributes.Where(x => x.Name == IppAttributeNames.OutputBin).ToArray();
 
         if (outputBins.Length <= 0)
             return;
@@ -539,13 +745,13 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
     public void ValidateOperationRules(IIppRequestMessage request)
     {
         var operationAttributes = request.OperationAttributes;
-        var hasDocumentNumber = ValidateOperationAttributesGroup && HasNamedAttribute(operationAttributes, DocumentAttribute.DocumentNumber);
-        var hasLastDocument = ValidateOperationAttributesGroup && HasNamedAttribute(operationAttributes, JobAttribute.LastDocument);
-        var hasDocumentUri = ValidateOperationAttributesGroup && HasNamedAttribute(operationAttributes, JobAttribute.DocumentUri);
-        var hasOutputDeviceUuid = ValidateOperationAttributesGroup && HasNamedAttribute(operationAttributes, JobAttribute.OutputDeviceUuid);
+        var hasDocumentNumber = ValidateOperationAttributesGroup && HasNamedAttribute(operationAttributes, IppAttributeNames.DocumentNumber);
+        var hasLastDocument = ValidateOperationAttributesGroup && HasNamedAttribute(operationAttributes, IppAttributeNames.LastDocument);
+        var hasDocumentUri = ValidateOperationAttributesGroup && HasNamedAttribute(operationAttributes, IppAttributeNames.DocumentUri);
+        var hasOutputDeviceUuid = ValidateOperationAttributesGroup && HasNamedAttribute(operationAttributes, IppAttributeNames.OutputDeviceUuid);
 
-        var documentNumber = ReadOperationAttributeAs<int>(operationAttributes, DocumentAttribute.DocumentNumber);
-        var lastDocument = ReadOperationAttributeAs<bool>(operationAttributes, JobAttribute.LastDocument);
+        var documentNumber = ReadOperationAttributeAs<int>(operationAttributes, IppAttributeNames.DocumentNumber);
+        var lastDocument = ReadOperationAttributeAs<bool>(operationAttributes, IppAttributeNames.LastDocument);
 
         switch (request.IppOperation)
         {
@@ -607,8 +813,8 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
                 ValidateRequiredOutputDeviceUuid(hasOutputDeviceUuid, request);
                 if (request.IppOperation == IppOperation.RegisterOutputDevice && ValidateOperationAttributesGroup)
                 {
-                    var hasCertificate = HasNamedAttribute(operationAttributes, JobAttribute.OutputDeviceX509Certificate);
-                    var hasRequest = HasNamedAttribute(operationAttributes, JobAttribute.OutputDeviceX509Request);
+                    var hasCertificate = HasNamedAttribute(operationAttributes, IppAttributeNames.OutputDeviceX509Certificate);
+                    var hasRequest = HasNamedAttribute(operationAttributes, IppAttributeNames.OutputDeviceX509Request);
                     if (hasCertificate && hasRequest)
                         throw new IppRequestException("'output-device-x509-certificate' and 'output-device-x509-request' are mutually exclusive", request, IppStatusCode.ClientErrorConflictingAttributes);
                 }
@@ -617,15 +823,15 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
                 ValidateRequiredOutputDeviceUuid(hasOutputDeviceUuid, request);
                 if (ValidateOperationAttributesGroup)
                 {
-                    var hasJobIds = HasNamedAttribute(operationAttributes, JobAttribute.JobIds);
-                    var hasJobStates = HasNamedAttribute(operationAttributes, JobAttribute.OutputDeviceJobStates);
+                    var hasJobIds = HasNamedAttribute(operationAttributes, IppAttributeNames.JobIds);
+                    var hasJobStates = HasNamedAttribute(operationAttributes, IppAttributeNames.OutputDeviceJobStates);
                     if (hasJobIds != hasJobStates)
                         throw new IppRequestException("'job-ids' and 'output-device-job-states' must be either both present or both absent", request, IppStatusCode.ClientErrorBadRequest);
 
                     if (hasJobIds)
                     {
-                        var jobIdsCount = operationAttributes.Count(x => x.Name == JobAttribute.JobIds);
-                        var jobStatesCount = operationAttributes.Count(x => x.Name == JobAttribute.OutputDeviceJobStates);
+                        var jobIdsCount = operationAttributes.Count(x => x.Name == IppAttributeNames.JobIds);
+                        var jobStatesCount = operationAttributes.Count(x => x.Name == IppAttributeNames.OutputDeviceJobStates);
                         if (jobIdsCount != jobStatesCount)
                             throw new IppRequestException("'job-ids' and 'output-device-job-states' must have the same number of values", request, IppStatusCode.ClientErrorBadRequest);
                     }
@@ -645,7 +851,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
 
             case IppOperation.ValidateJob:
             case IppOperation.ValidateDocument:
-                if (ValidateOperationAttributesGroup && HasNamedAttribute(operationAttributes, JobAttribute.DocumentPassword))
+                if (ValidateOperationAttributesGroup && HasNamedAttribute(operationAttributes, IppAttributeNames.DocumentPassword))
                     throw new IppRequestException("document-password is not allowed for validate operations", request, IppStatusCode.ClientErrorBadRequest);
                 break;
 
@@ -656,7 +862,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
             case IppOperation.GetNotifications:
                 if (ValidateOperationAttributesGroup)
                 {
-                    var notifyPullMethodAttr = operationAttributes.FirstOrDefault(x => x.Name == SystemAttribute.NotifyPullMethod);
+                    var notifyPullMethodAttr = operationAttributes.FirstOrDefault(x => x.Name == IppAttributeNames.NotifyPullMethod);
                     var notifyPullMethodValue = notifyPullMethodAttr.Value?.ToString();
                     if (!string.Equals(notifyPullMethodValue, "ippget", StringComparison.OrdinalIgnoreCase))
                         throw new IppRequestException("'notify-pull-method' must be 'ippget'", request, IppStatusCode.ClientErrorBadRequest);
@@ -666,7 +872,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
             case IppOperation.CancelSubscription:
             case IppOperation.GetSubscriptionAttributes:
             case IppOperation.RenewSubscription:
-                if (ValidateOperationAttributesGroup && !HasNamedAttribute(operationAttributes, SystemAttribute.NotifySubscriptionId))
+                if (ValidateOperationAttributesGroup && !HasNamedAttribute(operationAttributes, IppAttributeNames.NotifySubscriptionId))
                     throw new IppRequestException("missing notify-subscription-id", request, IppStatusCode.ClientErrorBadRequest);
                 break;
 
@@ -675,7 +881,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
             case IppOperation.InstallResource:
             case IppOperation.SendResourceData:
             case IppOperation.SetResourceAttributes:
-                if (ValidateOperationAttributesGroup && !HasNamedAttribute(operationAttributes, SystemAttribute.ResourceId))
+                if (ValidateOperationAttributesGroup && !HasNamedAttribute(operationAttributes, IppAttributeNames.ResourceId))
                     throw new IppRequestException("missing resource-id", request, IppStatusCode.ClientErrorBadRequest);
                 break;
 
@@ -686,7 +892,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
             case IppOperation.ShutdownOnePrinter:
             case IppOperation.StartupOnePrinter:
             case IppOperation.RestartOnePrinter:
-                if (ValidateOperationAttributesGroup && !HasNamedAttribute(operationAttributes, JobAttribute.PrinterId))
+                if (ValidateOperationAttributesGroup && !HasNamedAttribute(operationAttributes, IppAttributeNames.PrinterId))
                     throw new IppRequestException("missing printer-id", request, IppStatusCode.ClientErrorBadRequest);
                 break;
 
@@ -700,6 +906,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         ValidateJobRequestedAttributesGroupKeywords(request);
         ValidateDocumentRequestedAttributesGroupKeywords(request);
         ValidateNotifyEventsValues(request);
+        ValidateInputAttributesRules(request);
     }
 
     /// <summary>
@@ -711,7 +918,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         if (!ValidateOperationAttributesGroup)
             return;
 
-        var destinationUriCollections = EnumerateNamedCollections(operationAttributes, JobAttribute.DestinationUris).ToArray();
+        var destinationUriCollections = EnumerateNamedCollections(operationAttributes, IppAttributeNames.DestinationUris).ToArray();
         if (!destinationUriCollections.Any())
             return;
 
@@ -745,7 +952,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
             }
         }
 
-        var destinationAccessesCollections = EnumerateNamedCollections(operationAttributes, JobAttribute.DestinationAccesses).ToArray();
+        var destinationAccessesCollections = EnumerateNamedCollections(operationAttributes, IppAttributeNames.DestinationAccesses).ToArray();
         if (destinationAccessesCollections.Length > 0 && destinationAccessesCollections.Length != destinationUriCollections.Length)
             throw new IppRequestException("destination-accesses cardinality MUST match destination-uris", request, IppStatusCode.ClientErrorBadRequest);
     }
@@ -767,7 +974,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
             return;
 
         var requestedAttributes = request.OperationAttributes
-            .Where(x => x.Name == JobAttribute.RequestedAttributes)
+            .Where(x => x.Name == IppAttributeNames.RequestedAttributes)
             .Select(x => x.Value.ToString())
             .Where(x => !string.IsNullOrWhiteSpace(x))
             .Cast<string>()
@@ -845,7 +1052,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
     public static void ValidateFetchStatusCodeNotSuccessful(IEnumerable<IppAttribute> operationAttributes, IIppRequestMessage request)
     {
         var fetchStatusAttributes = operationAttributes
-            .Where(x => x.Name == JobAttribute.FetchStatusCode)
+            .Where(x => x.Name == IppAttributeNames.FetchStatusCode)
             .ToArray();
         if (fetchStatusAttributes.Length == 0)
             return;
@@ -899,7 +1106,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
             return;
 
         var requestedAttributes = request.OperationAttributes
-            .Where(x => x.Name == JobAttribute.RequestedAttributes)
+            .Where(x => x.Name == IppAttributeNames.RequestedAttributes)
             .Select(x => x.Value.ToString())
             .Where(x => !string.IsNullOrWhiteSpace(x))
             .Cast<string>()
@@ -1022,7 +1229,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
     /// </summary>
     private void ValidateOverridesRules(IIppRequestMessage request)
     {
-        var overrideCollections = EnumerateNamedCollections(request.JobAttributes, JobAttribute.Overrides).ToArray();
+        var overrideCollections = EnumerateNamedCollections(request.JobAttributes, IppAttributeNames.Overrides).ToArray();
         if (!overrideCollections.Any())
             return;
 
@@ -1142,7 +1349,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
     /// </summary>
     private static bool IsIppAttributeFidelityTrue(IIppRequestMessage request)
     {
-        var fidelityAttribute = request.OperationAttributes.FirstOrDefault(x => x.Name == JobAttribute.IppAttributeFidelity);
+        var fidelityAttribute = request.OperationAttributes.FirstOrDefault(x => x.Name == IppAttributeNames.IppAttributeFidelity);
         return fidelityAttribute.Value is bool value && value;
     }
 
@@ -1215,6 +1422,127 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Validates that printer-input-tray, printer-output-tray, and printer-supply collection attributes
+    /// do not contain control characters (0x00-0x1F, 0x7F) in their string values.
+    /// Spec: PWG 5100.13 Sections 6.6.9, 6.6.10, and 6.6.11.
+    /// </summary>
+    private void ValidateTrayAndSupplyControlCharacters(IIppRequestMessage request)
+    {
+        var targetCollectionNames = new[]
+        {
+            IppAttributeNames.PrinterInputTray,
+            IppAttributeNames.PrinterOutputTray,
+            IppAttributeNames.PrinterSupply
+        };
+
+        foreach (var colName in targetCollectionNames)
+        {
+            var collections = EnumerateNamedCollections(request.PrinterAttributes, colName);
+            foreach (var col in collections)
+            {
+                if (col.Count == 1 && col[0].Tag.IsOutOfBand())
+                    continue;
+
+                var members = col.FromBegCollection().Where(x => x.Tag != Tag.EndCollection);
+                foreach (var member in members)
+                {
+                    if (member.Value is NoValue)
+                        continue;
+
+                    if (HasControlCharacters(member.Value))
+                    {
+                        throw new IppRequestException(
+                            $"Attribute '{member.Name}' in '{colName}' collection contains forbidden control character(s) (0x00-0x1F, 0x7F)",
+                            request,
+                            IppStatusCode.ClientErrorBadRequest);
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Validates PWG 5100.15 rules for the input-attributes collection.
+    /// Specifically, if input-auto-exposure is true, then input-brightness, input-contrast,
+    /// and input-sharpness MUST NOT be present.
+    /// Spec: PWG 5100.15-2013 Section 7.1.1.1
+    /// </summary>
+    private void ValidateInputAttributesRules(IIppRequestMessage request)
+    {
+        var groups = new[]
+        {
+            request.OperationAttributes,
+            request.JobAttributes,
+            request.DocumentAttributes
+        };
+
+        foreach (var group in groups)
+        {
+            var collections = EnumerateNamedCollections(group, IppAttributeNames.InputAttributes);
+            foreach (var col in collections)
+            {
+                if (col.Count == 1 && col[0].Tag.IsOutOfBand())
+                    continue;
+
+                var members = col.FromBegCollection().Where(x => x.Tag != Tag.EndCollection).ToArray();
+                var autoExposureAttr = members.FirstOrDefault(x => x.Name == IppAttributeNames.InputAutoExposure);
+                if (autoExposureAttr.Value != null)
+                {
+                    bool isAutoExposureTrue = false;
+                    if (autoExposureAttr.Value is bool autoExposureVal)
+                    {
+                        isAutoExposureTrue = autoExposureVal;
+                    }
+                    else if (autoExposureAttr.Value is int autoExposureInt)
+                    {
+                        isAutoExposureTrue = autoExposureInt != 0;
+                    }
+                    else if (autoExposureAttr.Value.ToString() == "true")
+                    {
+                        isAutoExposureTrue = true;
+                    }
+
+                    if (isAutoExposureTrue)
+                    {
+                        var forbidden = new[] { IppAttributeNames.InputBrightness, IppAttributeNames.InputContrast, IppAttributeNames.InputSharpness };
+                        foreach (var name in forbidden)
+                        {
+                            if (members.Any(x => x.Name == name))
+                            {
+                                throw new IppRequestException(
+                                    $"invalid input-attributes: '{name}' MUST NOT be supplied when 'input-auto-exposure' is true",
+                                    request,
+                                    IppStatusCode.ClientErrorBadRequest);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Helper method to check if a value is a string or StringWithLanguage and contains control characters.
+    /// </summary>
+    private static bool HasControlCharacters(object? value)
+    {
+        if (value is string str)
+        {
+            return HasControlCharacters(str);
+        }
+        if (value is StringWithLanguage swl)
+        {
+            return HasControlCharacters(swl.Value) || HasControlCharacters(swl.Language);
+        }
+        return false;
+    }
+
+    private static bool HasControlCharacters(string? str)
+    {
+        return str != null && str.Any(c => c < 0x20 || c == 0x7F);
     }
 
     /// <summary>
@@ -1337,63 +1665,6 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         }
     }
 
-    private static readonly HashSet<string> DocumentMetadataKeywords = new()
-    {
-        // dc-elements
-        "contributor", "coverage", "creator", "date", "description", "format", "identifier", "language", "publisher", "relation", "rights", "source", "subject", "title", "type",
-        // dc-terms
-        "abstract", "accessRights", "accrualMethod", "accrualPeriodicity", "accrualPolicy", "alternative", "audience", "available", "bibliographicCitation", "conformsTo", "created", "dateAccepted", "dateCopyrighted", "dateSubmitted", "educationLevel", "extent", "hasFormat", "hasPart", "hasVersion", "instructionalMethod", "isFormatOf", "isPartOf", "isReferencedBy", "isReplacedBy", "isRequiredBy", "issued", "isVersionOf", "license", "mediator", "medium", "modified", "provenance", "references", "replaces", "requires", "rightsHolder", "spatial", "tableOfContents", "temporal", "valid"
-    };
-
-    private static readonly System.Text.UTF8Encoding StrictUtf8 = new(false, true);
-
-    /// <summary>
-    /// Verifies that the bytes represent a valid UTF-8 string containing no ASCII control characters.
-    /// Spec: PWG 5100.13 Section 6.1.1 (document-metadata).
-    /// </summary>
-    private static bool IsValidUtf8String(byte[] bytes)
-    {
-        try
-        {
-            var str = StrictUtf8.GetString(bytes);
-            foreach (var c in str)
-            {
-                if (c < 0x20 || c == 0x7F)
-                    return false;
-            }
-            return true;
-        }
-        catch (ArgumentException)
-        {
-            return false;
-        }
-    }
-
-    /// <summary>
-    /// Checks whether a metadata keyword conforms to Dublin Core or vendor-specific keyword patterns.
-    /// Spec: PWG 5100.13 Section 6.1.1 (document-metadata).
-    /// </summary>
-    private static bool IsValidDocumentMetadataKeyword(string keyword)
-    {
-        if (DocumentMetadataKeywords.Contains(keyword))
-            return true;
-
-        if (keyword.StartsWith("x-", StringComparison.Ordinal))
-        {
-            var suffix = keyword.Substring(2);
-            if (suffix.Length == 0)
-                return false;
-            foreach (var c in suffix)
-            {
-                if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '.' || c == '-' || c == '_'))
-                    return false;
-            }
-            return true;
-        }
-
-        return false;
-    }
-
     /// <summary>
     /// Extracts the raw byte array from an octet string or string representation.
     /// </summary>
@@ -1417,7 +1688,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         var metadataAttributes = request.OperationAttributes
             .Concat(request.JobAttributes)
             .Concat(request.DocumentAttributes)
-            .Where(x => x.Name == DocumentAttribute.DocumentMetadata);
+            .Where(x => x.Name == IppAttributeNames.DocumentMetadata);
 
         foreach (var attr in metadataAttributes)
         {
@@ -1428,7 +1699,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
             if (bytes == null)
                 continue;
 
-            if (!IsValidUtf8String(bytes))
+            if (!IppStructuredString.IsValidUtf8String(bytes))
                 throw new IppRequestException("invalid document-metadata value encoding: must be valid UTF-8 and contain no control characters", request, IppStatusCode.ClientErrorBadRequest);
 
             var decoded = System.Text.Encoding.UTF8.GetString(bytes);
@@ -1437,7 +1708,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
                 throw new IppRequestException("invalid document-metadata value: must be in keyword=value format", request, IppStatusCode.ClientErrorBadRequest);
 
             var keyword = decoded.Substring(0, eqIndex);
-            if (!IsValidDocumentMetadataKeyword(keyword))
+            if (!DocumentMetadata.IsValidDocumentMetadataKeyword(keyword))
                 throw new IppRequestException($"invalid document-metadata keyword '{keyword}'", request, IppStatusCode.ClientErrorBadRequest);
         }
     }

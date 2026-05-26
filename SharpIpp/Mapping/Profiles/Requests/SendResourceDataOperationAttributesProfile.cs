@@ -14,9 +14,9 @@ internal class SendResourceDataOperationAttributesProfile : IProfile
         {
             dst ??= new SendResourceDataOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, SystemOperationAttributes>(src, dst);
-            dst.ResourceId = map.MapFromDicNullable<int?>(src, SystemAttribute.ResourceId);
-            dst.ResourceKOctets = map.MapFromDicNullable<int?>(src, SystemAttribute.ResourceKOctets);
-            dst.ResourceSignature = map.MapFromDicSetNullable<OctetString[]?>(src, SystemAttribute.ResourceSignature);
+            dst.ResourceId = map.MapFromDicNullable<int?>(src, IppAttributeNames.ResourceId);
+            dst.ResourceKOctets = map.MapFromDicNullable<int?>(src, IppAttributeNames.ResourceKOctets);
+            dst.ResourceSignature = map.MapFromDicSetNullable<OctetString[]?>(src, IppAttributeNames.ResourceSignature);
             return dst;
         });
 
@@ -25,11 +25,11 @@ internal class SendResourceDataOperationAttributesProfile : IProfile
             dst ??= new List<IppAttribute>();
             map.Map<SystemOperationAttributes, List<IppAttribute>>(src, dst);
             if (src.ResourceId.HasValue)
-                dst.Add(new IppAttribute(Tag.Integer, SystemAttribute.ResourceId, src.ResourceId.Value));
+                dst.Add(new IppAttribute(Tag.Integer, IppAttributeNames.ResourceId, src.ResourceId.Value));
             if (src.ResourceKOctets.HasValue)
-                dst.Add(new IppAttribute(Tag.Integer, SystemAttribute.ResourceKOctets, src.ResourceKOctets.Value));
+                dst.Add(new IppAttribute(Tag.Integer, IppAttributeNames.ResourceKOctets, src.ResourceKOctets.Value));
             if (src.ResourceSignature != null)
-                dst.AddRange(src.ResourceSignature.Select(x => new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, SystemAttribute.ResourceSignature, x)));
+                dst.AddRange(src.ResourceSignature.Select(x => new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, IppAttributeNames.ResourceSignature, x)));
             return dst;
         });
     }

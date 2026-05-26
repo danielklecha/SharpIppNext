@@ -15,16 +15,16 @@ internal class SystemOperationAttributesProfile : IProfile
         {
             dst ??= new SystemOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(src, dst);
-            dst.SystemUri = map.MapFromDicNullable<Uri?>(src, SystemAttribute.SystemUri);
-            dst.PrinterId = map.MapFromDicNullable<int?>(src, JobAttribute.PrinterId);
-            dst.NotifyPrinterIds = map.MapFromDicSetNullable<int[]?>(src, SystemAttribute.NotifyPrinterIds);
-            dst.NotifyResourceId = map.MapFromDicNullable<int?>(src, SystemAttribute.NotifyResourceId);
-            dst.NotifySystemUpTime = map.MapFromDicNullable<int?>(src, SystemAttribute.NotifySystemUpTime);
-            dst.NotifySystemUri = map.MapFromDicNullable<Uri?>(src, SystemAttribute.NotifySystemUri);
-            dst.RestartGetInterval = map.MapFromDicNullable<int?>(src, SystemAttribute.RestartGetInterval);
-            dst.WhichPrinters = map.MapFromDicNullable<WhichPrinters?>(src, SystemAttribute.WhichPrinters);
-            dst.NotifySubscriptionId = map.MapFromDicNullable<int?>(src, SystemAttribute.NotifySubscriptionId);
-            dst.NotifyPullMethod = map.MapFromDicNullable<string?>(src, SystemAttribute.NotifyPullMethod);
+            dst.SystemUri = map.MapFromDicNullable<Uri?>(src, IppAttributeNames.SystemUri);
+            dst.PrinterId = map.MapFromDicNullable<int?>(src, IppAttributeNames.PrinterId);
+            dst.NotifyPrinterIds = map.MapFromDicSetNullable<int[]?>(src, IppAttributeNames.NotifyPrinterIds);
+            dst.NotifyResourceId = map.MapFromDicNullable<int?>(src, IppAttributeNames.NotifyResourceId);
+            dst.NotifySystemUpTime = map.MapFromDicNullable<int?>(src, IppAttributeNames.NotifySystemUpTime);
+            dst.NotifySystemUri = map.MapFromDicNullable<Uri?>(src, IppAttributeNames.NotifySystemUri);
+            dst.RestartGetInterval = map.MapFromDicNullable<int?>(src, IppAttributeNames.RestartGetInterval);
+            dst.WhichPrinters = map.MapFromDicNullable<WhichPrinters?>(src, IppAttributeNames.WhichPrinters);
+            dst.NotifySubscriptionId = map.MapFromDicNullable<int?>(src, IppAttributeNames.NotifySubscriptionId);
+            dst.NotifyPullMethod = map.MapFromDicNullable<string?>(src, IppAttributeNames.NotifyPullMethod);
             return dst;
         });
 
@@ -33,25 +33,25 @@ internal class SystemOperationAttributesProfile : IProfile
             dst ??= new List<IppAttribute>();
             map.Map<OperationAttributes, List<IppAttribute>>(src, dst);
             if (src.SystemUri != null)
-                dst.Add(new IppAttribute(Tag.Uri, SystemAttribute.SystemUri, src.SystemUri.ToString()));
+                dst.Add(new IppAttribute(Tag.Uri, IppAttributeNames.SystemUri, src.SystemUri.ToString()));
             if (src.PrinterId.HasValue)
-                dst.Add(new IppAttribute(Tag.Integer, JobAttribute.PrinterId, src.PrinterId.Value));
+                dst.Add(new IppAttribute(Tag.Integer, IppAttributeNames.PrinterId, src.PrinterId.Value));
             if (src.NotifyPrinterIds != null)
-                dst.AddRange(src.NotifyPrinterIds.Select(x => new IppAttribute(Tag.Integer, SystemAttribute.NotifyPrinterIds, x)));
+                dst.AddRange(src.NotifyPrinterIds.Select(x => new IppAttribute(Tag.Integer, IppAttributeNames.NotifyPrinterIds, x)));
             if (src.NotifyResourceId.HasValue)
-                dst.Add(new IppAttribute(Tag.Integer, SystemAttribute.NotifyResourceId, src.NotifyResourceId.Value));
+                dst.Add(new IppAttribute(Tag.Integer, IppAttributeNames.NotifyResourceId, src.NotifyResourceId.Value));
             if (src.NotifySystemUpTime.HasValue)
-                dst.Add(new IppAttribute(Tag.Integer, SystemAttribute.NotifySystemUpTime, src.NotifySystemUpTime.Value));
+                dst.Add(new IppAttribute(Tag.Integer, IppAttributeNames.NotifySystemUpTime, src.NotifySystemUpTime.Value));
             if (src.NotifySystemUri != null)
-                dst.Add(new IppAttribute(Tag.Uri, SystemAttribute.NotifySystemUri, src.NotifySystemUri.ToString()));
+                dst.Add(new IppAttribute(Tag.Uri, IppAttributeNames.NotifySystemUri, src.NotifySystemUri.ToString()));
             if (src.RestartGetInterval.HasValue)
-                dst.Add(new IppAttribute(Tag.Integer, SystemAttribute.RestartGetInterval, src.RestartGetInterval.Value));
+                dst.Add(new IppAttribute(Tag.Integer, IppAttributeNames.RestartGetInterval, src.RestartGetInterval.Value));
             if (src.WhichPrinters != null)
-                dst.Add(new IppAttribute(Tag.Keyword, SystemAttribute.WhichPrinters, src.WhichPrinters.Value.Value));
+                dst.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.WhichPrinters, src.WhichPrinters.Value.Value));
             if (src.NotifySubscriptionId.HasValue)
-                dst.Add(new IppAttribute(Tag.Integer, SystemAttribute.NotifySubscriptionId, src.NotifySubscriptionId.Value));
+                dst.Add(new IppAttribute(Tag.Integer, IppAttributeNames.NotifySubscriptionId, src.NotifySubscriptionId.Value));
             if (src.NotifyPullMethod != null)
-                dst.Add(new IppAttribute(Tag.Keyword, SystemAttribute.NotifyPullMethod, src.NotifyPullMethod));
+                dst.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.NotifyPullMethod, src.NotifyPullMethod));
             return dst;
         });
     }

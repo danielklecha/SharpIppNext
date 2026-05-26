@@ -25,7 +25,7 @@ public class PrintJobResponseProfileTests : MapperTestBase
             Version = new IppVersion(1, 1),
             RequestId = 42,
             StatusCode = IppStatusCode.SuccessfulOk,
-            DocumentAttributes = { new List<IppAttribute> { new IppAttribute(Tag.Integer, DocumentAttribute.DocumentNumber, 1) } }
+            DocumentAttributes = { new List<IppAttribute> { new IppAttribute(Tag.Integer, IppAttributeNames.DocumentNumber, 1) } }
         };
 
         // Act
@@ -71,7 +71,7 @@ public class PrintJobResponseProfileTests : MapperTestBase
 
         // Assert
         dst.DocumentAttributes.Should().NotBeEmpty();
-        dst.DocumentAttributes.First().Any(a => a.Name == DocumentAttribute.DocumentNumber && (int)a.Value == 1).Should().BeTrue();
+        dst.DocumentAttributes.First().Any(a => a.Name == IppAttributeNames.DocumentNumber && (int)a.Value == 1).Should().BeTrue();
     }
 
     [TestMethod]

@@ -48,7 +48,7 @@ internal class FinishingsColProfile : IProfile
         mapper.CreateMap<FinishingsCol, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return [new IppAttribute(Tag.NoValue, JobAttribute.FinishingsCol, NoValue.Instance)];
+                return [new IppAttribute(Tag.NoValue, IppAttributeNames.FinishingsCol, NoValue.Instance)];
 
             var attributes = new List<IppAttribute>();
             if (src.FinishingTemplate.HasValue)

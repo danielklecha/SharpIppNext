@@ -32,7 +32,7 @@ internal class JobAccountingSheetsProfile : IProfile
         mapper.CreateMap<JobAccountingSheets, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.JobAccountingSheets, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.JobAccountingSheets, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
             if (src.JobAccountingOutputBin != null)

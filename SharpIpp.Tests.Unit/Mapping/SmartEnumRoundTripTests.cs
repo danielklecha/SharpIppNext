@@ -96,7 +96,7 @@ public class SmartEnumRoundTripTests : MapperTestBase
             var original = new JobStateReason(value);
 
             // Encode to IppAttribute
-            var attr = new IppAttribute(Tag.Keyword, JobAttribute.JobStateReasons, _mapper.Map<string>(original));
+            var attr = new IppAttribute(Tag.Keyword, IppAttributeNames.JobStateReasons, _mapper.Map<string>(original));
 
             // Decode back
             var decoded = _mapper.Map<string, JobStateReason>((string)attr.Value!);
@@ -117,7 +117,7 @@ public class SmartEnumRoundTripTests : MapperTestBase
             var value = "vendor-" + RandomString(rng);
             var original = new JobStateReason(value);
 
-            var attr = new IppAttribute(Tag.Keyword, JobAttribute.JobStateReasons, _mapper.Map<string>(original));
+            var attr = new IppAttribute(Tag.Keyword, IppAttributeNames.JobStateReasons, _mapper.Map<string>(original));
             var decoded = _mapper.Map<string, JobStateReason>((string)attr.Value!);
 
             decoded.Value.Should().Be(original.Value, $"iteration {i}: JobStateReason unrecognized value '{value}': Value mismatch");
@@ -136,7 +136,7 @@ public class SmartEnumRoundTripTests : MapperTestBase
             // PrinterStateReason(string Value, bool IsValue = true)
             var original = new PrinterStateReason(value);
 
-            var attr = new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterStateReasons, _mapper.Map<string>(original));
+            var attr = new IppAttribute(Tag.Keyword, IppAttributeNames.PrinterStateReasons, _mapper.Map<string>(original));
             var decoded = _mapper.Map<string, PrinterStateReason>((string)attr.Value!);
 
             decoded.Value.Should().Be(original.Value, $"PrinterStateReason '{value}': Value mismatch");
@@ -155,7 +155,7 @@ public class SmartEnumRoundTripTests : MapperTestBase
             var value = "vendor-" + RandomString(rng);
             var original = new PrinterStateReason(value);
 
-            var attr = new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterStateReasons, _mapper.Map<string>(original));
+            var attr = new IppAttribute(Tag.Keyword, IppAttributeNames.PrinterStateReasons, _mapper.Map<string>(original));
             var decoded = _mapper.Map<string, PrinterStateReason>((string)attr.Value!);
 
             decoded.Value.Should().Be(original.Value, $"iteration {i}: PrinterStateReason unrecognized value '{value}': Value mismatch");

@@ -6,8 +6,8 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public class CoverSheetInfo : IIppCollection
 {
-    bool IIppCollection.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
+    bool INoValueWritable.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
     public string? FromName { get; set; }
     public string? Logo { get; set; }
     public string? Message { get; set; }

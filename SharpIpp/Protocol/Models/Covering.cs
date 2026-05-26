@@ -7,8 +7,8 @@ namespace SharpIpp.Protocol.Models;
 public class Covering : IIppCollection
 {
     /// <inheritdoc />
-    bool IIppCollection.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
+    bool INoValueWritable.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     /// <summary>
     /// type2 keyword | name(MAX)

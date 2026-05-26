@@ -33,12 +33,12 @@ public class AcknowledgeDocumentOperationAttributesProfileTests : MapperTestBase
         var attrs = _mapper.Map<List<IppAttribute>>(src);
 
         // Assert
-        attrs.Should().Contain(a => a.Name == JobAttribute.PrinterUri && a.Tag == Tag.Uri && (string)a.Value == "ipp://127.0.0.1/printers/printer1");
-        attrs.Should().Contain(a => a.Name == JobAttribute.RequestingUserName && a.Tag == Tag.NameWithoutLanguage && (string)a.Value == "user");
-        attrs.Should().Contain(a => a.Name == DocumentAttribute.DocumentNumber && a.Tag == Tag.Integer && (int)a.Value == 2);
-        attrs.Should().Contain(a => a.Name == JobAttribute.OutputDeviceUuid && a.Tag == Tag.Uri && (string)a.Value == "urn:uuid:123e4567-e89b-12d3-a456-426614174001");
-        attrs.Should().Contain(a => a.Name == JobAttribute.FetchStatusCode && a.Tag == Tag.Enum && (int)a.Value == (int)IppStatusCode.ClientErrorDocumentFormatError);
-        attrs.Should().Contain(a => a.Name == JobAttribute.FetchStatusMessage && a.Tag == Tag.TextWithoutLanguage && (string)a.Value == "Unsupported format");
+        attrs.Should().Contain(a => a.Name == IppAttributeNames.PrinterUri && a.Tag == Tag.Uri && (string)a.Value == "ipp://127.0.0.1/printers/printer1");
+        attrs.Should().Contain(a => a.Name == IppAttributeNames.RequestingUserName && a.Tag == Tag.NameWithoutLanguage && (string)a.Value == "user");
+        attrs.Should().Contain(a => a.Name == IppAttributeNames.DocumentNumber && a.Tag == Tag.Integer && (int)a.Value == 2);
+        attrs.Should().Contain(a => a.Name == IppAttributeNames.OutputDeviceUuid && a.Tag == Tag.Uri && (string)a.Value == "urn:uuid:123e4567-e89b-12d3-a456-426614174001");
+        attrs.Should().Contain(a => a.Name == IppAttributeNames.FetchStatusCode && a.Tag == Tag.Enum && (int)a.Value == (int)IppStatusCode.ClientErrorDocumentFormatError);
+        attrs.Should().Contain(a => a.Name == IppAttributeNames.FetchStatusMessage && a.Tag == Tag.TextWithoutLanguage && (string)a.Value == "Unsupported format");
     }
 
     [TestMethod]
@@ -47,12 +47,12 @@ public class AcknowledgeDocumentOperationAttributesProfileTests : MapperTestBase
         // Arrange
         var dict = new Dictionary<string, IppAttribute[]>
         {
-            { JobAttribute.PrinterUri, new[] { new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://127.0.0.1/printers/printer1") } },
-            { JobAttribute.RequestingUserName, new[] { new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "user") } },
-            { DocumentAttribute.DocumentNumber, new[] { new IppAttribute(Tag.Integer, DocumentAttribute.DocumentNumber, 2) } },
-            { JobAttribute.OutputDeviceUuid, new[] { new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174001") } },
-            { JobAttribute.FetchStatusCode, new[] { new IppAttribute(Tag.Enum, JobAttribute.FetchStatusCode, (int)IppStatusCode.ClientErrorDocumentFormatError) } },
-            { JobAttribute.FetchStatusMessage, new[] { new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.FetchStatusMessage, "Unsupported format") } }
+            { IppAttributeNames.PrinterUri, new[] { new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://127.0.0.1/printers/printer1") } },
+            { IppAttributeNames.RequestingUserName, new[] { new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.RequestingUserName, "user") } },
+            { IppAttributeNames.DocumentNumber, new[] { new IppAttribute(Tag.Integer, IppAttributeNames.DocumentNumber, 2) } },
+            { IppAttributeNames.OutputDeviceUuid, new[] { new IppAttribute(Tag.Uri, IppAttributeNames.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174001") } },
+            { IppAttributeNames.FetchStatusCode, new[] { new IppAttribute(Tag.Enum, IppAttributeNames.FetchStatusCode, (int)IppStatusCode.ClientErrorDocumentFormatError) } },
+            { IppAttributeNames.FetchStatusMessage, new[] { new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.FetchStatusMessage, "Unsupported format") } }
         };
 
         // Act

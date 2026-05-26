@@ -30,7 +30,7 @@ internal class PowerStateCounterProfile : IProfile
         mapper.CreateMap<PowerStateCounter, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, SystemAttribute.PowerStateCountersCol, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.PowerStateCountersCol, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
             if (src.HibernateTransitions.HasValue)

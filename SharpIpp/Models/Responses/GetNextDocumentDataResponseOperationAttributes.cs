@@ -1,4 +1,5 @@
 using SharpIpp.Protocol.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace SharpIpp.Models.Responses;
 
@@ -16,6 +17,7 @@ public class GetNextDocumentDataResponseOperationAttributes : OperationAttribute
     /// <summary>
     /// The <c>document-data-get-interval</c> operation attribute.
     /// </summary>
+    [Range(0, int.MaxValue)]
     public int? DocumentDataGetInterval { get; set; }
 
     /// <summary>
@@ -29,5 +31,6 @@ public class GetNextDocumentDataResponseOperationAttributes : OperationAttribute
     /// See: PWG 5100.17-2014 Section 6.1.2
     /// See: PWG 5100.5-2024 Section 6.2.4
     /// </summary>
+    [Range(1, int.MaxValue)]
     public int? DocumentNumber { get; set; }
 }

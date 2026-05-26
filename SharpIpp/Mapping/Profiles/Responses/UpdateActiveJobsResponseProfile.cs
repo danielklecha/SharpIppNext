@@ -17,8 +17,8 @@ internal class UpdateActiveJobsResponseProfile : IProfile
             var dst = new UpdateActiveJobsResponse();
             map.Map<IppResponseMessage, IIppResponse>(src, dst);
             var dic = src.OperationAttributes.SelectMany(x => x).ToIppDictionary();
-            dst.JobIds = map.MapFromDicSetNullable<int[]?>(dic, JobAttribute.JobIds);
-            dst.OutputDeviceJobStates = map.MapFromDicSetNullable<JobState[]?>(dic, JobAttribute.OutputDeviceJobStates);
+            dst.JobIds = map.MapFromDicSetNullable<int[]?>(dic, IppAttributeNames.JobIds);
+            dst.OutputDeviceJobStates = map.MapFromDicSetNullable<JobState[]?>(dic, IppAttributeNames.OutputDeviceJobStates);
             return dst;
         });
 
@@ -28,9 +28,9 @@ internal class UpdateActiveJobsResponseProfile : IProfile
             map.Map<IIppResponse, IppResponseMessage>(src, dst);
             var operationAttrs = dst.OperationAttributes.First();
             if (src.JobIds != null)
-                operationAttrs.AddRange(src.JobIds.Select(x => new IppAttribute(Tag.Integer, JobAttribute.JobIds, x)));
+                operationAttrs.AddRange(src.JobIds.Select(x => new IppAttribute(Tag.Integer, IppAttributeNames.JobIds, x)));
             if (src.OutputDeviceJobStates != null)
-                operationAttrs.AddRange(src.OutputDeviceJobStates.Select(x => new IppAttribute(Tag.Enum, JobAttribute.OutputDeviceJobStates, (int)x)));
+                operationAttrs.AddRange(src.OutputDeviceJobStates.Select(x => new IppAttribute(Tag.Enum, IppAttributeNames.OutputDeviceJobStates, (int)x)));
             return dst;
         });
     }

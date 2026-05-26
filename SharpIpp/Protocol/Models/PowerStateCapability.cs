@@ -6,8 +6,8 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public class PowerStateCapability : IIppCollection
 {
-    bool IIppCollection.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
+    bool INoValueWritable.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     public bool? CanAcceptJobs { get; set; }
     public bool? CanProcessJobs { get; set; }

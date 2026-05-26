@@ -18,7 +18,7 @@ public class PrinterAlertProfileTests : MapperTestBase
     {
         // Arrange
         var alert = new PrinterAlert { Code = "jam", Severity = "critical" };
-        var expectedString = PrinterAlert.Serialize(alert);
+        var expectedString = "code=jam;severity=critical";
         var expectedBytes = Encoding.UTF8.GetBytes(expectedString);
 
         // Act
@@ -49,7 +49,7 @@ public class PrinterAlertProfileTests : MapperTestBase
     {
         // Arrange
         var alert = new PrinterAlert { Code = "jam", Severity = "critical" };
-        var expectedString = PrinterAlert.Serialize(alert);
+        var expectedString = "code=jam;severity=critical";
         var expectedBytes = Encoding.UTF8.GetBytes(expectedString);
 
         // Act

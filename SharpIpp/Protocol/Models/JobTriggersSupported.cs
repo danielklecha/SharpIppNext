@@ -8,8 +8,8 @@ namespace SharpIpp.Protocol.Models;
 public class JobTriggersSupported : IIppCollection
 {
     /// <inheritdoc />
-    bool IIppCollection.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
+    bool INoValueWritable.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     /// <summary>
     /// trigger-name — name of the trigger (name).

@@ -29,7 +29,7 @@ internal class SystemXriProfile : IProfile
         mapper.CreateMap<SystemXri, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, SystemAttribute.SystemXriSupported, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.SystemXriSupported, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
             if (src.XriUri != null)

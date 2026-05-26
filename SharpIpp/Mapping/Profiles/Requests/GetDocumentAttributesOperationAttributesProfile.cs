@@ -14,8 +14,8 @@ internal class GetDocumentAttributesOperationAttributesProfile : IProfile
         {
             dst ??= new GetDocumentAttributesOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, JobOperationAttributes>(src, dst);
-            dst.DocumentNumber = map.MapFromDicNullable<int?>(src, DocumentAttribute.DocumentNumber) ?? 0;
-            var requestedAttributes = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.RequestedAttributes);
+            dst.DocumentNumber = map.MapFromDicNullable<int?>(src, IppAttributeNames.DocumentNumber) ?? 0;
+            var requestedAttributes = map.MapFromDicSetNullable<string[]?>(src, IppAttributeNames.RequestedAttributes);
             if (requestedAttributes?.Any() ?? false)
                 dst.RequestedAttributes = requestedAttributes;
             return dst;
@@ -25,9 +25,9 @@ internal class GetDocumentAttributesOperationAttributesProfile : IProfile
         {
             dst ??= new List<IppAttribute>();
             map.Map<JobOperationAttributes, List<IppAttribute>>(src, dst);
-            dst.Add(new IppAttribute(Tag.Integer, DocumentAttribute.DocumentNumber, src.DocumentNumber));
+            dst.Add(new IppAttribute(Tag.Integer, IppAttributeNames.DocumentNumber, src.DocumentNumber));
             if (src.RequestedAttributes != null)
-                dst.AddRange(src.RequestedAttributes.Select(requestedAttribute => new IppAttribute(Tag.Keyword, JobAttribute.RequestedAttributes, requestedAttribute)));
+                dst.AddRange(src.RequestedAttributes.Select(requestedAttribute => new IppAttribute(Tag.Keyword, IppAttributeNames.RequestedAttributes, requestedAttribute)));
             return dst;
         });
     }

@@ -61,8 +61,8 @@ public class IppRequestMessageExtensionsTests
     public void Validate_WhenJobAttributesGroupDisabled_ShouldSkipJobValidation()
     {
         var message = CreateMessage(IppOperation.CreateJob);
-        message.JobAttributes.Add(new IppAttribute(Tag.Enum, JobAttribute.Finishings, 3));
-        message.JobAttributes.Add(new IppAttribute(Tag.BegCollection, JobAttribute.FinishingsCol, NoValue.Instance));
+        message.JobAttributes.Add(new IppAttribute(Tag.Enum, IppAttributeNames.Finishings, 3));
+        message.JobAttributes.Add(new IppAttribute(Tag.BegCollection, IppAttributeNames.FinishingsCol, NoValue.Instance));
         message.JobAttributes.Add(new IppAttribute(Tag.EndCollection, string.Empty, NoValue.Instance));
 
         Action act = () => ValidateWith(message, v =>
@@ -78,8 +78,8 @@ public class IppRequestMessageExtensionsTests
     public void Validate_WhenDocumentAttributesGroupDisabled_ShouldSkipDocumentValidation()
     {
         var message = CreateMessage(IppOperation.CreateJob);
-        message.DocumentAttributes.Add(new IppAttribute(Tag.Enum, JobAttribute.Finishings, 3));
-        message.DocumentAttributes.Add(new IppAttribute(Tag.BegCollection, JobAttribute.FinishingsCol, NoValue.Instance));
+        message.DocumentAttributes.Add(new IppAttribute(Tag.Enum, IppAttributeNames.Finishings, 3));
+        message.DocumentAttributes.Add(new IppAttribute(Tag.BegCollection, IppAttributeNames.FinishingsCol, NoValue.Instance));
         message.DocumentAttributes.Add(new IppAttribute(Tag.EndCollection, string.Empty, NoValue.Instance));
 
         Action act = () => ValidateWith(message, v =>
@@ -151,7 +151,7 @@ public class IppRequestMessageExtensionsTests
     public void ValidateCore_FirstOperationAttributeInvalid_ShouldThrowException()
     {
         var message = CreateMessage(IppOperation.CreateJob);
-        message.OperationAttributes[0] = new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en");
+        message.OperationAttributes[0] = new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en");
 
         Action act = () => ValidateCoreOnly(message);
 
@@ -164,7 +164,7 @@ public class IppRequestMessageExtensionsTests
     public void ValidateCore_SecondOperationAttributeInvalid_ShouldThrowException()
     {
         var message = CreateMessage(IppOperation.CreateJob);
-        message.OperationAttributes[1] = new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://127.0.0.1:631/");
+        message.OperationAttributes[1] = new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://127.0.0.1:631/");
 
         Action act = () => ValidateCoreOnly(message);
 
@@ -233,11 +233,11 @@ public class IppRequestMessageExtensionsTests
     public void ValidateJobAttributes_ConflictingFinishings_ShouldThrowException()
     {
         var message = CreateMessage(IppOperation.CreateJob);
-        message.JobAttributes.Add(new IppAttribute(Tag.Enum, JobAttribute.Finishings, 3));
+        message.JobAttributes.Add(new IppAttribute(Tag.Enum, IppAttributeNames.Finishings, 3));
         message.JobAttributes.AddRange(new[]
         {
             new IppAttribute(Tag.Integer, "some-value", 1)
-        }.ToBegCollection(JobAttribute.FinishingsCol));
+        }.ToBegCollection(IppAttributeNames.FinishingsCol));
 
         Action act = () => ValidateJobOnly(message);
 
@@ -250,11 +250,11 @@ public class IppRequestMessageExtensionsTests
     public void ValidateDocumentAttributes_ConflictingFinishings_ShouldThrowException()
     {
         var message = CreateMessage(IppOperation.CreateJob);
-        message.DocumentAttributes.Add(new IppAttribute(Tag.Enum, JobAttribute.Finishings, 3));
+        message.DocumentAttributes.Add(new IppAttribute(Tag.Enum, IppAttributeNames.Finishings, 3));
         message.DocumentAttributes.AddRange(new[]
         {
             new IppAttribute(Tag.Integer, "some-value", 1)
-        }.ToBegCollection(JobAttribute.FinishingsCol));
+        }.ToBegCollection(IppAttributeNames.FinishingsCol));
 
         Action act = () => ValidateDocumentOnly(message);
 
@@ -264,12 +264,12 @@ public class IppRequestMessageExtensionsTests
     }
 
     [TestMethod]
-    [DataRow(JobAttribute.CoverBack)]
-    [DataRow(JobAttribute.CoverFront)]
-    [DataRow(JobAttribute.InsertSheet)]
-    [DataRow(JobAttribute.JobAccountingSheets)]
-    [DataRow(JobAttribute.JobErrorSheet)]
-    [DataRow(JobAttribute.SeparatorSheets)]
+    [DataRow(IppAttributeNames.CoverBack)]
+    [DataRow(IppAttributeNames.CoverFront)]
+    [DataRow(IppAttributeNames.InsertSheet)]
+    [DataRow(IppAttributeNames.JobAccountingSheets)]
+    [DataRow(IppAttributeNames.JobErrorSheet)]
+    [DataRow(IppAttributeNames.SeparatorSheets)]
     public void ValidateJobAttributes_Pwg51003CollectionWithMediaAndMediaCol_ShouldThrowConflictingAttributes(string collectionName)
     {
         var message = CreateMessage(IppOperation.CreateJob);
@@ -287,7 +287,7 @@ public class IppRequestMessageExtensionsTests
     public void ValidateDocumentAttributes_Pwg51003CollectionWithMediaAndMediaCol_ShouldThrowConflictingAttributes()
     {
         var message = CreateMessage(IppOperation.CreateJob);
-        message.DocumentAttributes.AddRange(CreateCollectionWithMediaAndMediaCol(JobAttribute.JobErrorSheet));
+        message.DocumentAttributes.AddRange(CreateCollectionWithMediaAndMediaCol(IppAttributeNames.JobErrorSheet));
 
         Action act = () => ValidateDocumentOnly(message);
 
@@ -301,8 +301,8 @@ public class IppRequestMessageExtensionsTests
     public void ValidateJobAttributes_Pwg51003CollectionValuesWithSeparateMediaSelection_ShouldBeSuccess()
     {
         var message = CreateMessage(IppOperation.CreateJob);
-        message.JobAttributes.AddRange(CreateCollectionWithMediaOnly(JobAttribute.SeparatorSheets));
-        message.JobAttributes.AddRange(CreateCollectionWithMediaColOnly(JobAttribute.SeparatorSheets));
+        message.JobAttributes.AddRange(CreateCollectionWithMediaOnly(IppAttributeNames.SeparatorSheets));
+        message.JobAttributes.AddRange(CreateCollectionWithMediaColOnly(IppAttributeNames.SeparatorSheets));
 
         Action act = () => ValidateJobOnly(message);
 
@@ -313,8 +313,8 @@ public class IppRequestMessageExtensionsTests
     public void ValidateJobAttributes_OutputBinMultipleValues_ShouldThrowException()
     {
         var message = CreateMessage(IppOperation.CreateJob);
-        message.JobAttributes.Add(new IppAttribute(Tag.Keyword, JobAttribute.OutputBin, "top"));
-        message.JobAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.OutputBin, "Accounting Bin"));
+        message.JobAttributes.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.OutputBin, "top"));
+        message.JobAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.OutputBin, "Accounting Bin"));
 
         Action act = () => ValidateJobOnly(message);
 
@@ -327,7 +327,7 @@ public class IppRequestMessageExtensionsTests
     public void ValidateJobAttributes_OutputBinWrongTag_ShouldThrowException()
     {
         var message = CreateMessage(IppOperation.CreateJob);
-        message.JobAttributes.Add(new IppAttribute(Tag.Integer, JobAttribute.OutputBin, 1));
+        message.JobAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.OutputBin, 1));
 
         Action act = () => ValidateJobOnly(message);
 
@@ -340,7 +340,7 @@ public class IppRequestMessageExtensionsTests
     public void ValidateDocumentAttributes_OutputBinWrongTag_ShouldThrowException()
     {
         var message = CreateMessage(IppOperation.CreateJob);
-        message.DocumentAttributes.Add(new IppAttribute(Tag.Integer, JobAttribute.OutputBin, 1));
+        message.DocumentAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.OutputBin, 1));
 
         Action act = () => ValidateDocumentOnly(message);
 
@@ -353,10 +353,10 @@ public class IppRequestMessageExtensionsTests
     public void ValidateDocumentAttributes_OutputBinKeywordOrName_ShouldBeSuccess()
     {
         var keywordMessage = CreateMessage(IppOperation.CreateJob);
-        keywordMessage.DocumentAttributes.Add(new IppAttribute(Tag.Keyword, JobAttribute.OutputBin, "top"));
+        keywordMessage.DocumentAttributes.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.OutputBin, "top"));
 
         var nameMessage = CreateMessage(IppOperation.CreateJob);
-        nameMessage.DocumentAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.OutputBin, "Accounting Bin"));
+        nameMessage.DocumentAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.OutputBin, "Accounting Bin"));
 
         Action keywordAct = () => ValidateDocumentOnly(keywordMessage);
         Action nameAct = () => ValidateDocumentOnly(nameMessage);
@@ -369,7 +369,7 @@ public class IppRequestMessageExtensionsTests
     public void ValidateJobAttributes_OutputBinUnsupportedMembersWithoutSupportContext_ShouldBeSuccess()
     {
         var message = CreateMessage(IppOperation.CreateJob);
-        message.JobAttributes.Add(new IppAttribute(Tag.Keyword, JobAttribute.OutputBin, "vendor-bin-99"));
+        message.JobAttributes.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.OutputBin, "vendor-bin-99"));
 
         Action act = () => ValidateJobOnly(message);
 
@@ -380,7 +380,7 @@ public class IppRequestMessageExtensionsTests
     public void ValidateJobAttributes_OutputBinUnsupportedMembers_ShouldThrowCapabilityException()
     {
         var message = CreateMessage(IppOperation.CreateJob);
-        message.JobAttributes.Add(new IppAttribute(Tag.Keyword, JobAttribute.OutputBin, "vendor-bin-99"));
+        message.JobAttributes.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.OutputBin, "vendor-bin-99"));
 
         Action act = () => ValidateJobOnly(message, v =>
         {
@@ -397,8 +397,8 @@ public class IppRequestMessageExtensionsTests
     public void ValidateJobAttributes_OutputBinUnsupportedMembersWithFidelityDisabled_ShouldBeSuccess()
     {
         var message = CreateMessage(IppOperation.CreateJob);
-        message.OperationAttributes.Add(new IppAttribute(Tag.Boolean, JobAttribute.IppAttributeFidelity, false));
-        message.JobAttributes.Add(new IppAttribute(Tag.Keyword, JobAttribute.OutputBin, "vendor-bin-99"));
+        message.OperationAttributes.Add(new IppAttribute(Tag.Boolean, IppAttributeNames.IppAttributeFidelity, false));
+        message.JobAttributes.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.OutputBin, "vendor-bin-99"));
 
         Action act = () => ValidateJobOnly(message, v =>
         {
@@ -413,8 +413,8 @@ public class IppRequestMessageExtensionsTests
     public void ValidateJobAttributes_OutputBinUnsupportedMembersWithFidelityEnabled_ShouldThrowCapabilityException()
     {
         var message = CreateMessage(IppOperation.CreateJob);
-        message.OperationAttributes.Add(new IppAttribute(Tag.Boolean, JobAttribute.IppAttributeFidelity, true));
-        message.JobAttributes.Add(new IppAttribute(Tag.Keyword, JobAttribute.OutputBin, "vendor-bin-99"));
+        message.OperationAttributes.Add(new IppAttribute(Tag.Boolean, IppAttributeNames.IppAttributeFidelity, true));
+        message.JobAttributes.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.OutputBin, "vendor-bin-99"));
 
         Action act = () => ValidateJobOnly(message, v =>
         {
@@ -432,7 +432,7 @@ public class IppRequestMessageExtensionsTests
     public void ValidateDocumentAttributes_OutputBinNameRequiresNameSupport_ShouldThrowCapabilityException()
     {
         var message = CreateMessage(IppOperation.CreateJob);
-        message.DocumentAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.OutputBin, "top"));
+        message.DocumentAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.OutputBin, "top"));
 
         Action act = () => ValidateDocumentOnly(message, v =>
         {
@@ -449,10 +449,10 @@ public class IppRequestMessageExtensionsTests
     public void ValidateDocumentAttributes_OutputBinSupportedKeywordOrName_ShouldBeSuccess()
     {
         var keywordMessage = CreateMessage(IppOperation.CreateJob);
-        keywordMessage.DocumentAttributes.Add(new IppAttribute(Tag.Keyword, JobAttribute.OutputBin, "top"));
+        keywordMessage.DocumentAttributes.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.OutputBin, "top"));
 
         var nameMessage = CreateMessage(IppOperation.CreateJob);
-        nameMessage.DocumentAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.OutputBin, "Accounting Bin"));
+        nameMessage.DocumentAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.OutputBin, "Accounting Bin"));
 
         Action keywordAct = () => ValidateDocumentOnly(keywordMessage, v =>
         {
@@ -484,7 +484,7 @@ public class IppRequestMessageExtensionsTests
     public void ValidateOperationRules_GetDocumentAttributesInvalidDocumentNumber_ShouldThrowException()
     {
         var message = CreateMessage(IppOperation.GetDocumentAttributes);
-        message.OperationAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, DocumentAttribute.DocumentNumber, "x"));
+        message.OperationAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.DocumentNumber, "x"));
 
         Action act = () => ValidateOperationOnly(message);
 
@@ -497,8 +497,8 @@ public class IppRequestMessageExtensionsTests
     public void ValidateOperationRules_SetDocumentAttributesValidDocumentNumber_ShouldBeSuccess()
     {
         var message = CreateMessage(IppOperation.SetDocumentAttributes);
-        message.OperationAttributes.Add(new IppAttribute(Tag.Integer, DocumentAttribute.DocumentNumber, 1));
-        message.DocumentAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, DocumentAttribute.DocumentName, "doc"));
+        message.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.DocumentNumber, 1));
+        message.DocumentAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.DocumentName, "doc"));
 
         Action act = () => ValidateOperationOnly(message);
 
@@ -509,7 +509,7 @@ public class IppRequestMessageExtensionsTests
     public void ValidateOperationRules_SetDocumentAttributesWithoutDocumentAttributes_ShouldThrowException()
     {
         var message = CreateMessage(IppOperation.SetDocumentAttributes);
-        message.OperationAttributes.Add(new IppAttribute(Tag.Integer, DocumentAttribute.DocumentNumber, 1));
+        message.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.DocumentNumber, 1));
 
         Action act = () => ValidateWith(message);
 
@@ -522,7 +522,7 @@ public class IppRequestMessageExtensionsTests
     public void ValidateOperationRules_CancelDocumentWithCompletedState_ShouldThrowNotPossible()
     {
         var message = CreateMessage(IppOperation.CancelDocument);
-        message.OperationAttributes.Add(new IppAttribute(Tag.Integer, DocumentAttribute.DocumentNumber, 1));
+        message.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.DocumentNumber, 1));
 
         Action act = () => ValidateOperationOnly(message, v =>
         {
@@ -542,7 +542,7 @@ public class IppRequestMessageExtensionsTests
     public void ValidateOperationRules_CancelDocumentWithProcessingToStopPointReason_ShouldThrowNotPossible()
     {
         var message = CreateMessage(IppOperation.CancelDocument);
-        message.OperationAttributes.Add(new IppAttribute(Tag.Integer, DocumentAttribute.DocumentNumber, 1));
+        message.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.DocumentNumber, 1));
 
         Action act = () => ValidateOperationOnly(message, v =>
         {
@@ -566,8 +566,8 @@ public class IppRequestMessageExtensionsTests
     public void ValidateOperationRules_SetDocumentAttributesWithProcessingStateAndProcessingNotAllowed_ShouldThrowNotPossible()
     {
         var message = CreateMessage(IppOperation.SetDocumentAttributes);
-        message.OperationAttributes.Add(new IppAttribute(Tag.Integer, DocumentAttribute.DocumentNumber, 1));
-        message.DocumentAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, DocumentAttribute.DocumentName, "doc"));
+        message.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.DocumentNumber, 1));
+        message.DocumentAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.DocumentName, "doc"));
 
         Action act = () => ValidateOperationOnly(message, v =>
         {
@@ -588,8 +588,8 @@ public class IppRequestMessageExtensionsTests
     public void ValidateOperationRules_SetDocumentAttributesWithProcessingStateAndProcessingAllowed_ShouldBeSuccess()
     {
         var message = CreateMessage(IppOperation.SetDocumentAttributes);
-        message.OperationAttributes.Add(new IppAttribute(Tag.Integer, DocumentAttribute.DocumentNumber, 1));
-        message.DocumentAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, DocumentAttribute.DocumentName, "doc"));
+        message.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.DocumentNumber, 1));
+        message.DocumentAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.DocumentName, "doc"));
 
         Action act = () => ValidateOperationOnly(message, v =>
         {
@@ -607,11 +607,11 @@ public class IppRequestMessageExtensionsTests
     public void ValidateOperationRules_GetDocumentsWithUnsupportedRequestedAttributesGroup_ShouldThrowNotSupported()
     {
         var message = CreateMessage(IppOperation.GetDocuments);
-        message.OperationAttributes.Add(new IppAttribute(Tag.Keyword, JobAttribute.RequestedAttributes, DocumentAttribute.DocumentTemplate));
+        message.OperationAttributes.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.RequestedAttributes, IppAttributeNames.DocumentTemplate));
 
         Action act = () => ValidateOperationOnly(message, v =>
         {
-            v.Context.DocumentRequestedAttributeGroupKeywordsSupported = [DocumentAttribute.DocumentDescription];
+            v.Context.DocumentRequestedAttributeGroupKeywordsSupported = [IppAttributeNames.DocumentDescription];
         });
 
         act.Should().Throw<IppRequestException>()
@@ -624,11 +624,11 @@ public class IppRequestMessageExtensionsTests
     public void ValidateOperationRules_GetDocumentsWithSupportedRequestedAttributesGroup_ShouldBeSuccess()
     {
         var message = CreateMessage(IppOperation.GetDocuments);
-        message.OperationAttributes.Add(new IppAttribute(Tag.Keyword, JobAttribute.RequestedAttributes, DocumentAttribute.DocumentDescription));
+        message.OperationAttributes.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.RequestedAttributes, IppAttributeNames.DocumentDescription));
 
         Action act = () => ValidateOperationOnly(message, v =>
         {
-            v.Context.DocumentRequestedAttributeGroupKeywordsSupported = [DocumentAttribute.DocumentDescription, DocumentAttribute.DocumentTemplate, "all"];
+            v.Context.DocumentRequestedAttributeGroupKeywordsSupported = [IppAttributeNames.DocumentDescription, IppAttributeNames.DocumentTemplate, "all"];
         });
 
         act.Should().NotThrow();
@@ -706,7 +706,7 @@ public class IppRequestMessageExtensionsTests
     public void ValidateOperationRules_PrintUriWithDocumentUri_ShouldBeSuccess()
     {
         var message = CreateMessage(IppOperation.PrintUri);
-        message.OperationAttributes.Add(new IppAttribute(Tag.Uri, JobAttribute.DocumentUri, "https://example.test/doc.pdf"));
+        message.OperationAttributes.Add(new IppAttribute(Tag.Uri, IppAttributeNames.DocumentUri, "https://example.test/doc.pdf"));
 
         Action act = () => ValidateOperationOnly(message);
 
@@ -729,7 +729,7 @@ public class IppRequestMessageExtensionsTests
     public void ValidateOperationRules_SendDocumentInvalidLastDocument_ShouldThrowException()
     {
         var message = CreateMessage(IppOperation.SendDocument);
-        message.OperationAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.LastDocument, "false"));
+        message.OperationAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.LastDocument, "false"));
 
         Action act = () => ValidateOperationOnly(message);
 
@@ -742,7 +742,7 @@ public class IppRequestMessageExtensionsTests
     public void ValidateOperationRules_SendDocumentWithoutDocumentWhenLastDocumentFalse_ShouldThrowException()
     {
         var message = CreateMessage(IppOperation.SendDocument);
-        message.OperationAttributes.Add(new IppAttribute(Tag.Boolean, JobAttribute.LastDocument, false));
+        message.OperationAttributes.Add(new IppAttribute(Tag.Boolean, IppAttributeNames.LastDocument, false));
 
         Action act = () => ValidateOperationOnly(message);
 
@@ -755,7 +755,7 @@ public class IppRequestMessageExtensionsTests
     public void ValidateOperationRules_SendDocumentWithLastDocumentTrueAndNoStream_ShouldBeSuccess()
     {
         var message = CreateMessage(IppOperation.SendDocument);
-        message.OperationAttributes.Add(new IppAttribute(Tag.Boolean, JobAttribute.LastDocument, true));
+        message.OperationAttributes.Add(new IppAttribute(Tag.Boolean, IppAttributeNames.LastDocument, true));
 
         Action act = () => ValidateOperationOnly(message);
 
@@ -778,7 +778,7 @@ public class IppRequestMessageExtensionsTests
     public void ValidateOperationRules_SendUriInvalidLastDocument_ShouldThrowException()
     {
         var message = CreateMessage(IppOperation.SendUri);
-        message.OperationAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.LastDocument, "false"));
+        message.OperationAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.LastDocument, "false"));
 
         Action act = () => ValidateOperationOnly(message);
 
@@ -791,7 +791,7 @@ public class IppRequestMessageExtensionsTests
     public void ValidateOperationRules_SendUriLastDocumentFalseMissingDocumentUri_ShouldThrowException()
     {
         var message = CreateMessage(IppOperation.SendUri);
-        message.OperationAttributes.Add(new IppAttribute(Tag.Boolean, JobAttribute.LastDocument, false));
+        message.OperationAttributes.Add(new IppAttribute(Tag.Boolean, IppAttributeNames.LastDocument, false));
 
         Action act = () => ValidateOperationOnly(message);
 
@@ -804,7 +804,7 @@ public class IppRequestMessageExtensionsTests
     public void ValidateOperationRules_SendUriLastDocumentTrueWithoutDocumentUri_ShouldBeSuccess()
     {
         var message = CreateMessage(IppOperation.SendUri);
-        message.OperationAttributes.Add(new IppAttribute(Tag.Boolean, JobAttribute.LastDocument, true));
+        message.OperationAttributes.Add(new IppAttribute(Tag.Boolean, IppAttributeNames.LastDocument, true));
 
         Action act = () => ValidateOperationOnly(message);
 
@@ -815,8 +815,8 @@ public class IppRequestMessageExtensionsTests
     public void ValidateOperationRules_SendUriLastDocumentFalseWithDocumentUri_ShouldBeSuccess()
     {
         var message = CreateMessage(IppOperation.SendUri);
-        message.OperationAttributes.Add(new IppAttribute(Tag.Boolean, JobAttribute.LastDocument, false));
-        message.OperationAttributes.Add(new IppAttribute(Tag.Uri, JobAttribute.DocumentUri, "https://example.test/doc.pdf"));
+        message.OperationAttributes.Add(new IppAttribute(Tag.Boolean, IppAttributeNames.LastDocument, false));
+        message.OperationAttributes.Add(new IppAttribute(Tag.Uri, IppAttributeNames.DocumentUri, "https://example.test/doc.pdf"));
 
         Action act = () => ValidateOperationOnly(message);
 
@@ -837,7 +837,7 @@ public class IppRequestMessageExtensionsTests
     public void ValidateJobAttributes_OverridesOutOfBandCollection_ShouldBeIgnored()
     {
         var message = CreateValidateJobMessage();
-        message.JobAttributes.Add(new IppAttribute(Tag.NoValue, JobAttribute.Overrides, NoValue.Instance));
+        message.JobAttributes.Add(new IppAttribute(Tag.NoValue, IppAttributeNames.Overrides, NoValue.Instance));
 
         Action act = () => ValidateJobOnly(message);
 
@@ -850,7 +850,7 @@ public class IppRequestMessageExtensionsTests
         var message = CreateValidateJobMessage();
         message.JobAttributes.AddRange(
         [
-            new IppAttribute(Tag.BegCollection, JobAttribute.Overrides, NoValue.Instance),
+            new IppAttribute(Tag.BegCollection, IppAttributeNames.Overrides, NoValue.Instance),
             new IppAttribute(Tag.MemberAttrName, string.Empty, "pages"),
             new IppAttribute(Tag.EndCollection, string.Empty, NoValue.Instance)
         ]);
@@ -869,8 +869,8 @@ public class IppRequestMessageExtensionsTests
         message.JobAttributes.AddRange(new[]
         {
             new IppAttribute(Tag.RangeOfInteger, "document-numbers", new SharpIpp.Protocol.Models.Range(1, 1)),
-            new IppAttribute(Tag.Keyword, JobAttribute.Sides, "one-sided")
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Sides, "one-sided")
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message);
 
@@ -886,8 +886,8 @@ public class IppRequestMessageExtensionsTests
         message.JobAttributes.AddRange(new[]
         {
             new IppAttribute(Tag.Integer, "pages", 1),
-            new IppAttribute(Tag.Keyword, JobAttribute.Sides, "one-sided")
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Sides, "one-sided")
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message);
 
@@ -904,8 +904,8 @@ public class IppRequestMessageExtensionsTests
         {
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 1)),
             new IppAttribute(Tag.Integer, "document-numbers", 1),
-            new IppAttribute(Tag.Keyword, JobAttribute.Sides, "one-sided")
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Sides, "one-sided")
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message);
 
@@ -922,8 +922,8 @@ public class IppRequestMessageExtensionsTests
         {
             new IppAttribute(Tag.RangeOfInteger, "document-numbers", new SharpIpp.Protocol.Models.Range(1, 1)),
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 1)),
-            new IppAttribute(Tag.Keyword, JobAttribute.Sides, "one-sided")
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Sides, "one-sided")
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message);
 
@@ -941,8 +941,8 @@ public class IppRequestMessageExtensionsTests
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 1)),
             new IppAttribute(Tag.RangeOfInteger, "document-copies", new SharpIpp.Protocol.Models.Range(1, 1)),
             new IppAttribute(Tag.RangeOfInteger, "document-numbers", new SharpIpp.Protocol.Models.Range(1, 1)),
-            new IppAttribute(Tag.Keyword, JobAttribute.Sides, "one-sided")
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Sides, "one-sided")
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message);
 
@@ -958,9 +958,9 @@ public class IppRequestMessageExtensionsTests
         message.JobAttributes.AddRange(new[]
         {
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 1)),
-            new IppAttribute(Tag.Keyword, JobAttribute.Sides, "one-sided"),
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Sides, "one-sided"),
             new IppAttribute(Tag.RangeOfInteger, "document-numbers", new SharpIpp.Protocol.Models.Range(1, 1))
-        }.ToBegCollection(JobAttribute.Overrides));
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message);
 
@@ -976,8 +976,8 @@ public class IppRequestMessageExtensionsTests
         message.JobAttributes.AddRange(new[]
         {
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(3, 1)),
-            new IppAttribute(Tag.Keyword, JobAttribute.Sides, "one-sided")
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Sides, "one-sided")
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message);
 
@@ -993,8 +993,8 @@ public class IppRequestMessageExtensionsTests
         message.JobAttributes.AddRange(new[]
         {
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(0, 1)),
-            new IppAttribute(Tag.Keyword, JobAttribute.Sides, "one-sided")
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Sides, "one-sided")
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message);
 
@@ -1011,8 +1011,8 @@ public class IppRequestMessageExtensionsTests
         {
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 3)),
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(3, 4)),
-            new IppAttribute(Tag.Keyword, JobAttribute.Media, "iso_a4_210x297mm")
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Media, "iso_a4_210x297mm")
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message);
 
@@ -1029,8 +1029,8 @@ public class IppRequestMessageExtensionsTests
         {
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 1)),
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(2, 3)),
-            new IppAttribute(Tag.Keyword, JobAttribute.Sides, "one-sided")
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Sides, "one-sided")
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message, v =>
         {
@@ -1049,8 +1049,8 @@ public class IppRequestMessageExtensionsTests
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 1)),
             new IppAttribute(Tag.RangeOfInteger, "document-numbers", new SharpIpp.Protocol.Models.Range(1, 3)),
             new IppAttribute(Tag.RangeOfInteger, "document-numbers", new SharpIpp.Protocol.Models.Range(3, 4)),
-            new IppAttribute(Tag.Keyword, JobAttribute.Sides, "one-sided")
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Sides, "one-sided")
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message);
 
@@ -1067,8 +1067,8 @@ public class IppRequestMessageExtensionsTests
         {
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 1)),
             new IppAttribute(Tag.RangeOfInteger, "document-numbers", new SharpIpp.Protocol.Models.Range(0, 1)),
-            new IppAttribute(Tag.Keyword, JobAttribute.Sides, "one-sided")
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Sides, "one-sided")
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message);
 
@@ -1086,8 +1086,8 @@ public class IppRequestMessageExtensionsTests
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 1)),
             new IppAttribute(Tag.RangeOfInteger, "document-copies", new SharpIpp.Protocol.Models.Range(1, 3)),
             new IppAttribute(Tag.RangeOfInteger, "document-copies", new SharpIpp.Protocol.Models.Range(3, 4)),
-            new IppAttribute(Tag.Keyword, JobAttribute.Sides, "one-sided")
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Sides, "one-sided")
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message);
 
@@ -1104,8 +1104,8 @@ public class IppRequestMessageExtensionsTests
         {
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 1)),
             new IppAttribute(Tag.RangeOfInteger, "document-copies", new SharpIpp.Protocol.Models.Range(0, 1)),
-            new IppAttribute(Tag.Keyword, JobAttribute.Sides, "one-sided")
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Sides, "one-sided")
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message);
 
@@ -1121,7 +1121,7 @@ public class IppRequestMessageExtensionsTests
         message.JobAttributes.AddRange(new[]
         {
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 1))
-        }.ToBegCollection(JobAttribute.Overrides));
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message);
 
@@ -1138,14 +1138,14 @@ public class IppRequestMessageExtensionsTests
         {
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 1)),
             new IppAttribute(Tag.RangeOfInteger, "document-numbers", new SharpIpp.Protocol.Models.Range(1, 1)),
-            new IppAttribute(Tag.Keyword, JobAttribute.Sides, "one-sided")
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Sides, "one-sided")
+        }.ToBegCollection(IppAttributeNames.Overrides));
         message.JobAttributes.AddRange(new[]
         {
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(2, 2)),
             new IppAttribute(Tag.RangeOfInteger, "document-numbers", new SharpIpp.Protocol.Models.Range(1, 2)),
-            new IppAttribute(Tag.Keyword, JobAttribute.Sides, "two-sided-long-edge")
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Sides, "two-sided-long-edge")
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message);
 
@@ -1158,7 +1158,7 @@ public class IppRequestMessageExtensionsTests
     public void ValidateJobAttributes_OverridesWithTagNotBegCollection_ShouldBeIgnored()
     {
         var message = CreateValidateJobMessage();
-        message.JobAttributes.Add(new IppAttribute(Tag.Integer, JobAttribute.Overrides, 123));
+        message.JobAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.Overrides, 123));
 
         Action act = () => ValidateJobOnly(message);
 
@@ -1173,7 +1173,7 @@ public class IppRequestMessageExtensionsTests
         {
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 1)),
             new IppAttribute(Tag.Keyword, "x-custom-member", "value")
-        }.ToBegCollection(JobAttribute.Overrides));
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message);
 
@@ -1187,8 +1187,8 @@ public class IppRequestMessageExtensionsTests
         message.JobAttributes.AddRange(new[]
         {
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 1)),
-            new IppAttribute(Tag.Keyword, JobAttribute.Sides, "one-sided")
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Sides, "one-sided")
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message);
 
@@ -1204,8 +1204,8 @@ public class IppRequestMessageExtensionsTests
         message.JobAttributes.AddRange(new[]
         {
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 1)),
-            new IppAttribute(Tag.Keyword, JobAttribute.Sides, "one-sided")
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Sides, "one-sided")
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message, v =>
         {
@@ -1222,12 +1222,12 @@ public class IppRequestMessageExtensionsTests
     public void ValidateJobAttributes_OverridesOnOperationUnsupportedByContextWithFidelityDisabled_ShouldBeSuccess()
     {
         var message = CreateValidateJobMessage();
-        message.OperationAttributes.Add(new IppAttribute(Tag.Boolean, JobAttribute.IppAttributeFidelity, false));
+        message.OperationAttributes.Add(new IppAttribute(Tag.Boolean, IppAttributeNames.IppAttributeFidelity, false));
         message.JobAttributes.AddRange(new[]
         {
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 1)),
-            new IppAttribute(Tag.Keyword, JobAttribute.Sides, "one-sided")
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Sides, "one-sided")
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message, v =>
         {
@@ -1245,8 +1245,8 @@ public class IppRequestMessageExtensionsTests
         message.JobAttributes.AddRange(new[]
         {
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 1)),
-            new IppAttribute(Tag.Integer, JobAttribute.Copies, 2)
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Integer, IppAttributeNames.Copies, 2)
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message);
 
@@ -1260,12 +1260,12 @@ public class IppRequestMessageExtensionsTests
     public void ValidateJobAttributes_OverridesWithDocumentScopeMemberAndFidelityDisabled_ShouldBeSuccess()
     {
         var message = CreateValidateJobMessage();
-        message.OperationAttributes.Add(new IppAttribute(Tag.Boolean, JobAttribute.IppAttributeFidelity, false));
+        message.OperationAttributes.Add(new IppAttribute(Tag.Boolean, IppAttributeNames.IppAttributeFidelity, false));
         message.JobAttributes.AddRange(new[]
         {
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 1)),
-            new IppAttribute(Tag.Integer, JobAttribute.Copies, 2)
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Integer, IppAttributeNames.Copies, 2)
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message, v =>
         {
@@ -1282,15 +1282,15 @@ public class IppRequestMessageExtensionsTests
         message.JobAttributes.AddRange(new[]
         {
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 1)),
-            new IppAttribute(Tag.Integer, JobAttribute.Copies, 2)
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Integer, IppAttributeNames.Copies, 2)
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message, v =>
         {
             v.Context.OverrideMemberScopesByName = new Dictionary<string, OverrideMemberScope>(StringComparer.Ordinal)
             {
                 ["pages"] = OverrideMemberScope.Page,
-                [JobAttribute.Copies] = OverrideMemberScope.Document,
+                [IppAttributeNames.Copies] = OverrideMemberScope.Document,
             };
         });
 
@@ -1307,15 +1307,15 @@ public class IppRequestMessageExtensionsTests
         message.JobAttributes.AddRange(new[]
         {
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 1)),
-            new IppAttribute(Tag.Integer, JobAttribute.Copies, 2)
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Integer, IppAttributeNames.Copies, 2)
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message, v =>
         {
             v.Context.OverrideMemberScopesByName = new Dictionary<string, OverrideMemberScope>(StringComparer.Ordinal)
             {
                 ["pages"] = OverrideMemberScope.Page,
-                [JobAttribute.Copies] = OverrideMemberScope.Page,
+                [IppAttributeNames.Copies] = OverrideMemberScope.Page,
             };
         });
 
@@ -1330,7 +1330,7 @@ public class IppRequestMessageExtensionsTests
         {
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 1)),
             new IppAttribute(Tag.Keyword, "x-custom-member", "value")
-        }.ToBegCollection(JobAttribute.Overrides));
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message, v =>
         {
@@ -1347,8 +1347,8 @@ public class IppRequestMessageExtensionsTests
         message.JobAttributes.AddRange(new[]
         {
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 1)),
-            new IppAttribute(Tag.Keyword, JobAttribute.Sides, "one-sided")
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Sides, "one-sided")
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message, v =>
         {
@@ -1365,8 +1365,8 @@ public class IppRequestMessageExtensionsTests
         message.JobAttributes.AddRange(new[]
         {
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 1)),
-            new IppAttribute(Tag.Keyword, JobAttribute.Media, "iso_a4_210x297mm")
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Media, "iso_a4_210x297mm")
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message, v =>
         {
@@ -1383,12 +1383,12 @@ public class IppRequestMessageExtensionsTests
     public void ValidateJobAttributes_OverridesUnsupportedMembersWithFidelityDisabled_ShouldBeSuccess()
     {
         var message = CreateValidateJobMessage();
-        message.OperationAttributes.Add(new IppAttribute(Tag.Boolean, JobAttribute.IppAttributeFidelity, false));
+        message.OperationAttributes.Add(new IppAttribute(Tag.Boolean, IppAttributeNames.IppAttributeFidelity, false));
         message.JobAttributes.AddRange(new[]
         {
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 1)),
-            new IppAttribute(Tag.Keyword, JobAttribute.Media, "iso_a4_210x297mm")
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Media, "iso_a4_210x297mm")
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message, v =>
         {
@@ -1403,12 +1403,12 @@ public class IppRequestMessageExtensionsTests
     public void ValidateJobAttributes_OverridesUnsupportedMembersWithFidelityEnabled_ShouldThrowCapabilityException()
     {
         var message = CreateValidateJobMessage();
-        message.OperationAttributes.Add(new IppAttribute(Tag.Boolean, JobAttribute.IppAttributeFidelity, true));
+        message.OperationAttributes.Add(new IppAttribute(Tag.Boolean, IppAttributeNames.IppAttributeFidelity, true));
         message.JobAttributes.AddRange(new[]
         {
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 1)),
-            new IppAttribute(Tag.Keyword, JobAttribute.Media, "iso_a4_210x297mm")
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Media, "iso_a4_210x297mm")
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message, v =>
         {
@@ -1430,14 +1430,14 @@ public class IppRequestMessageExtensionsTests
         {
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 1)),
             new IppAttribute(Tag.RangeOfInteger, "document-numbers", new SharpIpp.Protocol.Models.Range(1, 1)),
-            new IppAttribute(Tag.Keyword, JobAttribute.Sides, "one-sided")
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Sides, "one-sided")
+        }.ToBegCollection(IppAttributeNames.Overrides));
         message.JobAttributes.AddRange(new[]
         {
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(2, 2)),
             new IppAttribute(Tag.RangeOfInteger, "document-numbers", new SharpIpp.Protocol.Models.Range(2, 2)),
-            new IppAttribute(Tag.Keyword, JobAttribute.Sides, "two-sided-long-edge")
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Sides, "two-sided-long-edge")
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message, v =>
         {
@@ -1461,12 +1461,12 @@ public class IppRequestMessageExtensionsTests
             new IppAttribute(Tag.Integer, "x-dimension", 21000),
             new IppAttribute(Tag.EndCollection, string.Empty, NoValue.Instance),
             new IppAttribute(Tag.EndCollection, string.Empty, NoValue.Instance),
-            new IppAttribute(Tag.Keyword, JobAttribute.Sides, "one-sided")
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Sides, "one-sided")
         };
 
         var result = (IEnumerable<string>)method!.Invoke(null, [members])!;
 
-        result.Should().ContainInOrder("pages", "media-col", JobAttribute.Sides);
+        result.Should().ContainInOrder("pages", "media-col", IppAttributeNames.Sides);
     }
 
     [TestMethod]
@@ -1479,7 +1479,7 @@ public class IppRequestMessageExtensionsTests
         var message = CreateValidateJobMessage();
         var members = new[]
         {
-            new IppAttribute(Tag.Keyword, JobAttribute.Sides, "one-sided")
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Sides, "one-sided")
         };
 
         Action act = () => method!.Invoke(null, [members, false, false, message]);
@@ -1504,7 +1504,7 @@ public class IppRequestMessageExtensionsTests
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 1)),
             new IppAttribute(Tag.RangeOfInteger, "document-numbers", new SharpIpp.Protocol.Models.Range(1, 1)),
             new IppAttribute(Tag.RangeOfInteger, "document-copies", new SharpIpp.Protocol.Models.Range(1, 1)),
-            new IppAttribute(Tag.Keyword, JobAttribute.Sides, "one-sided")
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Sides, "one-sided")
         };
 
         Action act = () => method!.Invoke(null, [members, false, true, message]);
@@ -1597,8 +1597,8 @@ public class IppRequestMessageExtensionsTests
         message.JobAttributes.AddRange(new[]
         {
             new IppAttribute(Tag.RangeOfInteger, "pages", 1),
-            new IppAttribute(Tag.Keyword, JobAttribute.Sides, "one-sided")
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Sides, "one-sided")
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message);
 
@@ -1616,8 +1616,8 @@ public class IppRequestMessageExtensionsTests
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 1)),
             new IppAttribute(Tag.RangeOfInteger, "document-numbers", new SharpIpp.Protocol.Models.Range(1, 1)),
             new IppAttribute(Tag.RangeOfInteger, "document-copies", new SharpIpp.Protocol.Models.Range(1, 2)),
-            new IppAttribute(Tag.Keyword, JobAttribute.Sides, "one-sided")
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Sides, "one-sided")
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message, v =>
         {
@@ -1634,8 +1634,8 @@ public class IppRequestMessageExtensionsTests
         message.JobAttributes.AddRange(new[]
         {
             new IppAttribute(Tag.RangeOfInteger, "pages", new SharpIpp.Protocol.Models.Range(1, 1)),
-            new IppAttribute(Tag.Keyword, JobAttribute.Media, "iso_a4_210x297mm")
-        }.ToBegCollection(JobAttribute.Overrides));
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Media, "iso_a4_210x297mm")
+        }.ToBegCollection(IppAttributeNames.Overrides));
 
         Action act = () => ValidateJobOnly(message, v =>
         {
@@ -1656,13 +1656,13 @@ public class IppRequestMessageExtensionsTests
         var attributes = new[]
         {
             new IppAttribute(Tag.Integer, "not-overrides", 1),
-            new IppAttribute(Tag.BegCollection, JobAttribute.Overrides, NoValue.Instance),
+            new IppAttribute(Tag.BegCollection, IppAttributeNames.Overrides, NoValue.Instance),
             new IppAttribute(Tag.BegCollection, "nested", NoValue.Instance),
             new IppAttribute(Tag.EndCollection, string.Empty, NoValue.Instance),
             new IppAttribute(Tag.EndCollection, string.Empty, NoValue.Instance),
         };
 
-        var result = (IEnumerable<IReadOnlyList<IppAttribute>>)method!.Invoke(null, [attributes, JobAttribute.Overrides])!;
+        var result = (IEnumerable<IReadOnlyList<IppAttribute>>)method!.Invoke(null, [attributes, IppAttributeNames.Overrides])!;
 
         result.Should().ContainSingle();
     }
@@ -1708,7 +1708,7 @@ public class IppRequestMessageExtensionsTests
     public void ValidateOperationRules_FetchJobMissingOutputDeviceUuid_ShouldThrowException()
     {
         var message = CreateMessage(IppOperation.FetchJob);
-        message.OperationAttributes.Add(new IppAttribute(Tag.Integer, JobAttribute.JobId, 123));
+        message.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 123));
 
         Action act = () => ValidateOperationOnly(message);
 
@@ -1721,9 +1721,9 @@ public class IppRequestMessageExtensionsTests
     public void ValidateOperationRules_AcknowledgeJobWithSuccessfulFetchStatusCode_ShouldThrowException()
     {
         var message = CreateMessage(IppOperation.AcknowledgeJob);
-        message.OperationAttributes.Add(new IppAttribute(Tag.Integer, JobAttribute.JobId, 123));
-        message.OperationAttributes.Add(new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174001"));
-        message.OperationAttributes.Add(new IppAttribute(Tag.Enum, JobAttribute.FetchStatusCode, 0));
+        message.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 123));
+        message.OperationAttributes.Add(new IppAttribute(Tag.Uri, IppAttributeNames.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174001"));
+        message.OperationAttributes.Add(new IppAttribute(Tag.Enum, IppAttributeNames.FetchStatusCode, 0));
 
         Action act = () => ValidateOperationOnly(message);
 
@@ -1746,18 +1746,18 @@ public class IppRequestMessageExtensionsTests
 
         message.OperationAttributes.AddRange(
         [
-            new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"),
-            new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en")
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en")
         ]);
 
         if (includePrinterUri)
-            message.OperationAttributes.Add(new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://127.0.0.1:631/"));
+            message.OperationAttributes.Add(new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://127.0.0.1:631/"));
 
         if (includeSystemUri)
-            message.OperationAttributes.Add(new IppAttribute(Tag.Uri, SystemAttribute.SystemUri, "ipp://127.0.0.1:8631/system"));
+            message.OperationAttributes.Add(new IppAttribute(Tag.Uri, IppAttributeNames.SystemUri, "ipp://127.0.0.1:8631/system"));
 
         if (includeJobUri)
-            message.OperationAttributes.Add(new IppAttribute(Tag.Uri, JobAttribute.JobUri, "ipp://127.0.0.1:631/jobs/123"));
+            message.OperationAttributes.Add(new IppAttribute(Tag.Uri, IppAttributeNames.JobUri, "ipp://127.0.0.1:631/jobs/123"));
 
         return message;
     }
@@ -1766,7 +1766,7 @@ public class IppRequestMessageExtensionsTests
     {
         var members = new List<IppAttribute>
         {
-            new(Tag.Keyword, JobAttribute.Media, "iso_a4_210x297mm")
+            new(Tag.Keyword, IppAttributeNames.Media, "iso_a4_210x297mm")
         };
         members.AddRange(CreateMediaColCollection());
         return members.ToBegCollection(collectionName);
@@ -1776,7 +1776,7 @@ public class IppRequestMessageExtensionsTests
     {
         return new[]
         {
-            new IppAttribute(Tag.Keyword, JobAttribute.Media, "iso_a4_210x297mm")
+            new IppAttribute(Tag.Keyword, IppAttributeNames.Media, "iso_a4_210x297mm")
         }.ToBegCollection(collectionName);
     }
 
@@ -1793,7 +1793,7 @@ public class IppRequestMessageExtensionsTests
         {
             new IppAttribute(Tag.Integer, "x-dimension", 21000),
             new IppAttribute(Tag.Integer, "y-dimension", 29700)
-        }.ToBegCollection(JobAttribute.MediaCol);
+        }.ToBegCollection(IppAttributeNames.MediaCol);
     }
 
     private static IppRequestMessage CreateValidateJobMessage()

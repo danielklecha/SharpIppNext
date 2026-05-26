@@ -47,22 +47,22 @@ internal class IppJobResponseProfile : IProfile
             map) =>
         {
             dst ??= new JobAttributes();
-            dst.JobUri = map.MapFromDicNullable<string?>(src, JobAttribute.JobUri);
-            dst.JobId = map.MapFromDic<int>(src, JobAttribute.JobId);
-            dst.JobState = map.MapFromDic<JobState>(src, JobAttribute.JobState);
-            dst.JobStateReasons = map.MapFromDicSetNullable<JobStateReason[]?>(src, JobAttribute.JobStateReasons);
-            dst.JobStateMessage = map.MapFromDicNullable<string?>(src, JobAttribute.JobStateMessage);
-            dst.NumberOfInterveningJobs = map.MapFromDicNullable<int?>(src, JobAttribute.NumberOfInterveningJobs);
-            if (src.TryGetValue(JobAttribute.ClientInfo, out var clientInfo))
+            dst.JobUri = map.MapFromDicNullable<string?>(src, IppAttributeNames.JobUri);
+            dst.JobId = map.MapFromDic<int>(src, IppAttributeNames.JobId);
+            dst.JobState = map.MapFromDic<JobState>(src, IppAttributeNames.JobState);
+            dst.JobStateReasons = map.MapFromDicSetNullable<JobStateReason[]?>(src, IppAttributeNames.JobStateReasons);
+            dst.JobStateMessage = map.MapFromDicNullable<string?>(src, IppAttributeNames.JobStateMessage);
+            dst.NumberOfInterveningJobs = map.MapFromDicNullable<int?>(src, IppAttributeNames.NumberOfInterveningJobs);
+            if (src.TryGetValue(IppAttributeNames.ClientInfo, out var clientInfo))
                 dst.ClientInfo = clientInfo.GroupBegCollection().Select(x => map.Map<ClientInfo>(x.FromBegCollection().ToIppDictionary())).ToArray();
-            if (src.ContainsKey(JobAttribute.JobImpressionsCompletedCol))
-                dst.JobImpressionsCompletedCol = map.Map<JobCounter>(src[JobAttribute.JobImpressionsCompletedCol].FromBegCollection().ToIppDictionary());
-            if (src.ContainsKey(JobAttribute.JobMediaSheetsCompletedCol))
-                dst.JobMediaSheetsCompletedCol = map.Map<JobCounter>(src[JobAttribute.JobMediaSheetsCompletedCol].FromBegCollection().ToIppDictionary());
-            dst.JobPagesCompleted = map.MapFromDicNullable<int?>(src, JobAttribute.JobPagesCompleted);
-            if (src.ContainsKey(JobAttribute.JobPagesCompletedCol))
-                dst.JobPagesCompletedCol = map.Map<JobCounter>(src[JobAttribute.JobPagesCompletedCol].FromBegCollection().ToIppDictionary());
-            dst.JobProcessingTime = map.MapFromDicNullable<int?>(src, JobAttribute.JobProcessingTime);
+            if (src.ContainsKey(IppAttributeNames.JobImpressionsCompletedCol))
+                dst.JobImpressionsCompletedCol = map.Map<JobCounter>(src[IppAttributeNames.JobImpressionsCompletedCol].FromBegCollection().ToIppDictionary());
+            if (src.ContainsKey(IppAttributeNames.JobMediaSheetsCompletedCol))
+                dst.JobMediaSheetsCompletedCol = map.Map<JobCounter>(src[IppAttributeNames.JobMediaSheetsCompletedCol].FromBegCollection().ToIppDictionary());
+            dst.JobPagesCompleted = map.MapFromDicNullable<int?>(src, IppAttributeNames.JobPagesCompleted);
+            if (src.ContainsKey(IppAttributeNames.JobPagesCompletedCol))
+                dst.JobPagesCompletedCol = map.Map<JobCounter>(src[IppAttributeNames.JobPagesCompletedCol].FromBegCollection().ToIppDictionary());
+            dst.JobProcessingTime = map.MapFromDicNullable<int?>(src, IppAttributeNames.JobProcessingTime);
             return dst;
         });
 
@@ -74,29 +74,29 @@ internal class IppJobResponseProfile : IProfile
             // dst is ignored — always creates a new dictionary
             var dic = new Dictionary<string, IppAttribute[]>
             {
-                { JobAttribute.JobId, [new IppAttribute(Tag.Integer, JobAttribute.JobId, src.JobId )] },
-                { JobAttribute.JobState, new IppAttribute[] { new IppAttribute(Tag.Enum, JobAttribute.JobState, (int)src.JobState ) } }
+                { IppAttributeNames.JobId, [new IppAttribute(Tag.Integer, IppAttributeNames.JobId, src.JobId )] },
+                { IppAttributeNames.JobState, new IppAttribute[] { new IppAttribute(Tag.Enum, IppAttributeNames.JobState, (int)src.JobState ) } }
             };
             if (src.JobUri != null)
-                dic.Add(JobAttribute.JobUri, new IppAttribute[] { new IppAttribute(Tag.Uri, JobAttribute.JobUri, src.JobUri) });
+                dic.Add(IppAttributeNames.JobUri, new IppAttribute[] { new IppAttribute(Tag.Uri, IppAttributeNames.JobUri, src.JobUri) });
             if (src.JobStateReasons != null)
-                dic.Add(JobAttribute.JobStateReasons, src.JobStateReasons.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.JobStateReasons, map.Map<string>(x))).ToArray());
+                dic.Add(IppAttributeNames.JobStateReasons, src.JobStateReasons.Select(x => new IppAttribute(Tag.Keyword, IppAttributeNames.JobStateReasons, map.Map<string>(x))).ToArray());
             if (src.JobStateMessage != null)
-                dic.Add(JobAttribute.JobStateMessage, new IppAttribute[] { new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.JobStateMessage, src.JobStateMessage) });
+                dic.Add(IppAttributeNames.JobStateMessage, new IppAttribute[] { new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.JobStateMessage, src.JobStateMessage) });
             if (src.NumberOfInterveningJobs != null)
-                dic.Add(JobAttribute.NumberOfInterveningJobs, [new IppAttribute(Tag.Integer, JobAttribute.NumberOfInterveningJobs, src.NumberOfInterveningJobs.Value)]);
+                dic.Add(IppAttributeNames.NumberOfInterveningJobs, [new IppAttribute(Tag.Integer, IppAttributeNames.NumberOfInterveningJobs, src.NumberOfInterveningJobs.Value)]);
             if (src.ClientInfo != null)
-                dic.Add(JobAttribute.ClientInfo, src.ClientInfo.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(JobAttribute.ClientInfo)).ToArray());
+                dic.Add(IppAttributeNames.ClientInfo, src.ClientInfo.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(IppAttributeNames.ClientInfo)).ToArray());
             if (src.JobImpressionsCompletedCol != null)
-                dic.Add(JobAttribute.JobImpressionsCompletedCol, map.Map<IEnumerable<IppAttribute>>(src.JobImpressionsCompletedCol).ToBegCollection(JobAttribute.JobImpressionsCompletedCol).ToArray());
+                dic.Add(IppAttributeNames.JobImpressionsCompletedCol, map.Map<IEnumerable<IppAttribute>>(src.JobImpressionsCompletedCol).ToBegCollection(IppAttributeNames.JobImpressionsCompletedCol).ToArray());
             if (src.JobMediaSheetsCompletedCol != null)
-                dic.Add(JobAttribute.JobMediaSheetsCompletedCol, map.Map<IEnumerable<IppAttribute>>(src.JobMediaSheetsCompletedCol).ToBegCollection(JobAttribute.JobMediaSheetsCompletedCol).ToArray());
+                dic.Add(IppAttributeNames.JobMediaSheetsCompletedCol, map.Map<IEnumerable<IppAttribute>>(src.JobMediaSheetsCompletedCol).ToBegCollection(IppAttributeNames.JobMediaSheetsCompletedCol).ToArray());
             if (src.JobPagesCompleted != null)
-                dic.Add(JobAttribute.JobPagesCompleted, [new IppAttribute(Tag.Integer, JobAttribute.JobPagesCompleted, src.JobPagesCompleted.Value)]);
+                dic.Add(IppAttributeNames.JobPagesCompleted, [new IppAttribute(Tag.Integer, IppAttributeNames.JobPagesCompleted, src.JobPagesCompleted.Value)]);
             if (src.JobPagesCompletedCol != null)
-                dic.Add(JobAttribute.JobPagesCompletedCol, map.Map<IEnumerable<IppAttribute>>(src.JobPagesCompletedCol).ToBegCollection(JobAttribute.JobPagesCompletedCol).ToArray());
+                dic.Add(IppAttributeNames.JobPagesCompletedCol, map.Map<IEnumerable<IppAttribute>>(src.JobPagesCompletedCol).ToBegCollection(IppAttributeNames.JobPagesCompletedCol).ToArray());
             if (src.JobProcessingTime != null)
-                dic.Add(JobAttribute.JobProcessingTime, [new IppAttribute(Tag.Integer, JobAttribute.JobProcessingTime, src.JobProcessingTime.Value)]);
+                dic.Add(IppAttributeNames.JobProcessingTime, [new IppAttribute(Tag.Integer, IppAttributeNames.JobProcessingTime, src.JobProcessingTime.Value)]);
             return dic;
         });
     }

@@ -39,7 +39,7 @@ public class SetPrinterAttributesTests : SharpIppIntegrationTestBase
                 OperationAttributes = new()
                 {
                     StatusMessage = "successful-ok",
-                    DetailedStatusMessage = ["set-printer-attributes detail"],
+                    DetailedStatusMessage = "set-printer-attributes detail",
                 }
             };
             var memoryStream = new MemoryStream();

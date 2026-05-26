@@ -6,8 +6,8 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public class PowerStateTransition : IIppCollection
 {
-    bool IIppCollection.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
+    bool INoValueWritable.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     public PowerState? EndPowerState { get; set; }
     public PowerState? StartPowerState { get; set; }

@@ -24,7 +24,7 @@ internal class PrintColorModeIccProfileProfile : IProfile
         mapper.CreateMap<PrintColorModeIccProfile, IEnumerable<IppAttribute>>((src, _) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, PrinterAttribute.PrintColorModeIccProfiles, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.PrintColorModeIccProfiles, NoValue.Instance) };
 
             var attrs = new List<IppAttribute>();
             if (src.PrintColorMode != null) attrs.Add(new IppAttribute(Tag.Keyword, "print-color-mode", src.PrintColorMode));

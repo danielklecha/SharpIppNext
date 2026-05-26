@@ -8,8 +8,8 @@ namespace SharpIpp.Protocol.Models;
 public class JobPresetsSupported : IIppCollection
 {
     /// <inheritdoc />
-    bool IIppCollection.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
+    bool INoValueWritable.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     /// <summary>
     /// preset-name — human-readable name of the preset (name).

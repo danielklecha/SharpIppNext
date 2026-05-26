@@ -8,9 +8,9 @@ public class SetDocumentAttributesOperationAttributes : JobOperationAttributes
 {
     /// <summary>
     /// The document-number IPP attribute.
-    /// Type: integer(1:MAX)
     /// See: PWG 5100.5-2024 Section 6.2.4
     /// </summary>
     /// <code>document-number</code>
+    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
     public int DocumentNumber { get; set; }
 }

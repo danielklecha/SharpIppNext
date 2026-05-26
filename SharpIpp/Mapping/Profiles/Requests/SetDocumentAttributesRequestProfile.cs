@@ -21,8 +21,8 @@ internal class SetDocumentAttributesRequestProfile : IProfile
             map.Map<IIppJobRequest, IppRequestMessage>(src, dst);
             if (src.OperationAttributes != null)
                 dst.OperationAttributes.AddRange(map.Map<SetDocumentAttributesOperationAttributes, List<IppAttribute>>(src.OperationAttributes));
-            if (src.DocumentName != null)
-                dst.DocumentAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, DocumentAttribute.DocumentName, src.DocumentName));
+            if (src.DocumentDescriptionAttributes?.DocumentName != null)
+                dst.DocumentAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.DocumentName, src.DocumentDescriptionAttributes.DocumentName));
             if (src.DocumentTemplateAttributes != null)
                 dst.DocumentAttributes.AddRange(map.Map<DocumentTemplateAttributes, List<IppAttribute>>(src.DocumentTemplateAttributes));
             return dst;
@@ -36,7 +36,14 @@ internal class SetDocumentAttributesRequestProfile : IProfile
             if (src.DocumentAttributes.Any())
             {
                 var documentAttributes = src.DocumentAttributes.ToIppDictionary();
-                dst.DocumentName = map.MapFromDicNullable<string?>(documentAttributes, DocumentAttribute.DocumentName);
+                var docName = map.MapFromDicNullable<string?>(documentAttributes, IppAttributeNames.DocumentName);
+                if (docName != null)
+                {
+                    dst.DocumentDescriptionAttributes = new DocumentDescriptionAttributes
+                    {
+                        DocumentName = docName
+                    };
+                }
                 dst.DocumentTemplateAttributes = map.Map<DocumentTemplateAttributes>(documentAttributes);
             }
             return dst;

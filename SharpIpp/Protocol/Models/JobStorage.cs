@@ -6,8 +6,8 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public class JobStorage : IIppCollection
 {
-    bool IIppCollection.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
+    bool INoValueWritable.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
     public JobStorageAccess? JobStorageAccess { get; set; }
     public JobStorageDisposition? JobStorageDisposition { get; set; }
     public string? JobStorageGroup { get; set; }

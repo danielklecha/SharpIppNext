@@ -13,7 +13,7 @@ internal class DeleteDocumentOperationAttributesProfile : IProfile
         {
             dst ??= new DeleteDocumentOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, JobOperationAttributes>(src, dst);
-            dst.DocumentNumber = map.MapFromDicNullable<int?>(src, DocumentAttribute.DocumentNumber);
+            dst.DocumentNumber = map.MapFromDicNullable<int?>(src, IppAttributeNames.DocumentNumber);
             return dst;
         });
 
@@ -22,7 +22,7 @@ internal class DeleteDocumentOperationAttributesProfile : IProfile
             dst ??= new List<IppAttribute>();
             map.Map<JobOperationAttributes, List<IppAttribute>>(src, dst);
             if (src.DocumentNumber.HasValue)
-                dst.Add(new IppAttribute(Tag.Integer, DocumentAttribute.DocumentNumber, src.DocumentNumber.Value));
+                dst.Add(new IppAttribute(Tag.Integer, IppAttributeNames.DocumentNumber, src.DocumentNumber.Value));
             return dst;
         });
     }

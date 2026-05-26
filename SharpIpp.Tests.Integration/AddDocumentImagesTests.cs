@@ -26,7 +26,7 @@ public class AddDocumentImagesTests : SharpIppIntegrationTestBase
                 InputAttributes = new DocumentTemplateAttributes
                 {
                     Media = (Media)"iso_a4_210x297mm",
-                    InputAutoExposure = true,
+                    InputAutoExposure = false,
                     InputAutoScaling = false,
                     InputAutoSkewCorrection = true,
                     InputBrightness = 50,

@@ -6,16 +6,16 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public class Material : IIppCollection
 {
-    bool IIppCollection.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
+    bool INoValueWritable.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
     public int? MaterialAmount { get; set; }
     public MaterialColor? MaterialColor { get; set; }
     public int? MaterialDiameter { get; set; }
     /// <summary>
     /// The material-fill-density member attribute.
-    /// Type: integer(0:100)
     /// See: PWG 5100.21-2019 Section 8.1.3.4
     /// </summary>
+    [System.ComponentModel.DataAnnotations.Range(0, 100)]
     public int? MaterialFillDensity { get; set; }
     public MaterialKey? MaterialKey { get; set; }
     public string? MaterialName { get; set; }

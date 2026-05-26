@@ -30,7 +30,7 @@ internal class DocumentFormatDetailsProfile : IProfile
         mapper.CreateMap<DocumentFormatDetails, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.DocumentFormatDetails, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.DocumentFormatDetails, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
             if (src.DocumentSourceApplicationName != null)

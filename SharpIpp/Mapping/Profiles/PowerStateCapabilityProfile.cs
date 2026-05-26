@@ -31,7 +31,7 @@ internal class PowerStateCapabilityProfile : IProfile
         mapper.CreateMap<PowerStateCapability, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, SystemAttribute.PowerStateCapabilitiesCol, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.PowerStateCapabilitiesCol, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
             if (src.CanAcceptJobs.HasValue)

@@ -10,8 +10,8 @@ namespace SharpIpp.Protocol.Models;
 [Obsolete("The 'document-access' attribute is deprecated in favor of URI authentication. See PWG 5100.18-2025 Section 7.1.5.")]
 public class DocumentAccess : IIppCollection
 {
-    bool IIppCollection.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
+    bool INoValueWritable.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
     public string? AccessOAuthToken { get; set; }
     public string? AccessOAuthUri { get; set; }
     public string? AccessPassword { get; set; }

@@ -28,7 +28,7 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
 
         var request = _mapper.Map<IppRequestMessage>(src);
 
-        var finishingsCol = request.JobAttributes.Single(a => a.Name == JobAttribute.FinishingsCol);
+        var finishingsCol = request.JobAttributes.Single(a => a.Name == IppAttributeNames.FinishingsCol);
         finishingsCol.Tag.Should().Be(Tag.NoValue);
         finishingsCol.Value.Should().Be(NoValue.Instance);
     }
@@ -43,7 +43,7 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
 
         var request = _mapper.Map<IppRequestMessage>(src);
 
-        var outputBin = request.JobAttributes.Single(a => a.Name == JobAttribute.OutputBin);
+        var outputBin = request.JobAttributes.Single(a => a.Name == IppAttributeNames.OutputBin);
         outputBin.Tag.Should().Be(Tag.Keyword);
         outputBin.Value.Should().Be("top");
     }
@@ -58,7 +58,7 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
 
         var request = _mapper.Map<IppRequestMessage>(src);
 
-        var outputBin = request.JobAttributes.Single(a => a.Name == JobAttribute.OutputBin);
+        var outputBin = request.JobAttributes.Single(a => a.Name == IppAttributeNames.OutputBin);
         outputBin.Tag.Should().Be(Tag.NameWithoutLanguage);
         outputBin.Value.Should().Be("custom-finisher-bin");
     }
@@ -73,7 +73,7 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
 
         var request = _mapper.Map<IppRequestMessage>(src);
 
-        var outputBin = request.JobAttributes.Single(a => a.Name == JobAttribute.OutputBin);
+        var outputBin = request.JobAttributes.Single(a => a.Name == IppAttributeNames.OutputBin);
         outputBin.Tag.Should().Be(Tag.Keyword);
         outputBin.Value.Should().Be("vendor-bin-42");
     }
@@ -82,7 +82,7 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
     public void Map_FromRequest_WithNamedOutputBin_PreservesNameIntent()
     {
         var request = new IppRequestMessage();
-        request.JobAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.OutputBin, "custom-finisher-bin"));
+        request.JobAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.OutputBin, "custom-finisher-bin"));
 
         var mapped = _mapper.Map<IIppRequestMessage, JobTemplateAttributes>(request);
 
@@ -106,7 +106,7 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
                 OutputBin = source
             });
 
-            var outputBin = request.JobAttributes.Single(a => a.Name == JobAttribute.OutputBin);
+            var outputBin = request.JobAttributes.Single(a => a.Name == IppAttributeNames.OutputBin);
             outputBin.Tag.Should().Be(Tag.Keyword);
             outputBin.Value.Should().Be(source.Value);
         }
@@ -123,11 +123,11 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
 
         var request = _mapper.Map<IppRequestMessage>(src);
 
-        var media = request.JobAttributes.Single(a => a.Name == JobAttribute.Media);
+        var media = request.JobAttributes.Single(a => a.Name == IppAttributeNames.Media);
         media.Tag.Should().Be(Tag.NameWithoutLanguage);
         media.Value.Should().Be("Accounting Team");
 
-        var impositionTemplate = request.JobAttributes.Single(a => a.Name == JobAttribute.ImpositionTemplate);
+        var impositionTemplate = request.JobAttributes.Single(a => a.Name == IppAttributeNames.ImpositionTemplate);
         impositionTemplate.Tag.Should().Be(Tag.NameWithoutLanguage);
         impositionTemplate.Value.Should().Be("Layout A");
     }
@@ -142,7 +142,7 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
 
         var request = _mapper.Map<IppRequestMessage>(src);
 
-        var finishings = request.JobAttributes.Where(a => a.Name == JobAttribute.Finishings).ToArray();
+        var finishings = request.JobAttributes.Where(a => a.Name == IppAttributeNames.Finishings).ToArray();
         finishings.Should().HaveCount(1);
         finishings[0].Tag.Should().Be(Tag.Enum);
         finishings[0].Value.Should().Be((int)Finishings.Staple);
@@ -162,9 +162,9 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
         request.RequestId = 123;
         request.OperationAttributes.AddRange(
         [
-            new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"),
-            new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"),
-            new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://127.0.0.1:631/")
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://127.0.0.1:631/")
         ]);
 
         var validator = new IppRequestMessageValidator
@@ -188,7 +188,7 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
 
         var request = _mapper.Map<IppRequestMessage>(src);
 
-        var mediaCol = request.JobAttributes.Single(a => a.Name == JobAttribute.MediaCol);
+        var mediaCol = request.JobAttributes.Single(a => a.Name == IppAttributeNames.MediaCol);
         mediaCol.Tag.Should().Be(Tag.NoValue);
         mediaCol.Value.Should().Be(NoValue.Instance);
     }
@@ -217,15 +217,15 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
 
         var request = _mapper.Map<IppRequestMessage>(src);
 
-        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.MaterialsCol);
-        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.MultipleObjectHandling && a.Tag == Tag.Keyword && Equals(a.Value, "abort-job"));
-        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.PlatformTemperature && a.Tag == Tag.Integer && Equals(a.Value, 75));
-        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.PrintAccuracy);
-        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.PrintBase && a.Tag == Tag.Keyword && Equals(a.Value, "raft"));
-        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.PrintObjects);
-        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.PrintSupports && a.Tag == Tag.Keyword && Equals(a.Value, "generated-supports"));
-        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.ChamberHumidity && a.Tag == Tag.Integer && Equals(a.Value, 45));
-        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.ChamberTemperature && a.Tag == Tag.Integer && Equals(a.Value, 60));
+        request.JobAttributes.Should().Contain(a => a.Name == IppAttributeNames.MaterialsCol);
+        request.JobAttributes.Should().Contain(a => a.Name == IppAttributeNames.MultipleObjectHandling && a.Tag == Tag.Keyword && Equals(a.Value, "abort-job"));
+        request.JobAttributes.Should().Contain(a => a.Name == IppAttributeNames.PlatformTemperature && a.Tag == Tag.Integer && Equals(a.Value, 75));
+        request.JobAttributes.Should().Contain(a => a.Name == IppAttributeNames.PrintAccuracy);
+        request.JobAttributes.Should().Contain(a => a.Name == IppAttributeNames.PrintBase && a.Tag == Tag.Keyword && Equals(a.Value, "raft"));
+        request.JobAttributes.Should().Contain(a => a.Name == IppAttributeNames.PrintObjects);
+        request.JobAttributes.Should().Contain(a => a.Name == IppAttributeNames.PrintSupports && a.Tag == Tag.Keyword && Equals(a.Value, "generated-supports"));
+        request.JobAttributes.Should().Contain(a => a.Name == IppAttributeNames.ChamberHumidity && a.Tag == Tag.Integer && Equals(a.Value, 45));
+        request.JobAttributes.Should().Contain(a => a.Name == IppAttributeNames.ChamberTemperature && a.Tag == Tag.Integer && Equals(a.Value, 60));
     }
 
     [TestMethod]
@@ -239,23 +239,23 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
 
         var request = _mapper.Map<IppRequestMessage>(src);
 
-        request.JobAttributes.Should().Contain(x => x.Name == JobAttribute.RetryInterval && x.Tag == Tag.Integer && (int)x.Value! == 15);
-        request.JobAttributes.Should().Contain(x => x.Name == JobAttribute.RetryTimeOut && x.Tag == Tag.Integer && (int)x.Value! == 300);
+        request.JobAttributes.Should().Contain(x => x.Name == IppAttributeNames.RetryInterval && x.Tag == Tag.Integer && (int)x.Value! == 15);
+        request.JobAttributes.Should().Contain(x => x.Name == IppAttributeNames.RetryTimeOut && x.Tag == Tag.Integer && (int)x.Value! == 300);
     }
 
     [TestMethod]
     public void Map_FromRequest_With3DJobTemplateAttributes_ReadsJobAttributes()
     {
         var request = new IppRequestMessage();
-        request.JobAttributes.AddRange(_mapper.Map<Material, IEnumerable<IppAttribute>>(new Material { MaterialName = "pla" }).ToBegCollection(JobAttribute.MaterialsCol));
-        request.JobAttributes.Add(new IppAttribute(Tag.Keyword, JobAttribute.MultipleObjectHandling, "abort-job"));
-        request.JobAttributes.Add(new IppAttribute(Tag.Integer, JobAttribute.PlatformTemperature, 75));
-        request.JobAttributes.AddRange(_mapper.Map<PrintAccuracy, IEnumerable<IppAttribute>>(new PrintAccuracy { AccuracyUnits = (AccuracyUnits?)"mm", XAccuracy = 100, YAccuracy = 100, ZAccuracy = 50 }).ToBegCollection(JobAttribute.PrintAccuracy));
-        request.JobAttributes.Add(new IppAttribute(Tag.Keyword, JobAttribute.PrintBase, "raft"));
-        request.JobAttributes.AddRange(_mapper.Map<PrintObject, IEnumerable<IppAttribute>>(new PrintObject { DocumentNumber = 1, PrintObjectsSource = "ipp://example/doc/1" }).ToBegCollection(JobAttribute.PrintObjects));
-        request.JobAttributes.Add(new IppAttribute(Tag.Keyword, JobAttribute.PrintSupports, "generated-supports"));
-        request.JobAttributes.Add(new IppAttribute(Tag.Integer, JobAttribute.ChamberHumidity, 45));
-        request.JobAttributes.Add(new IppAttribute(Tag.Integer, JobAttribute.ChamberTemperature, 60));
+        request.JobAttributes.AddRange(_mapper.Map<Material, IEnumerable<IppAttribute>>(new Material { MaterialName = "pla" }).ToBegCollection(IppAttributeNames.MaterialsCol));
+        request.JobAttributes.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.MultipleObjectHandling, "abort-job"));
+        request.JobAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.PlatformTemperature, 75));
+        request.JobAttributes.AddRange(_mapper.Map<PrintAccuracy, IEnumerable<IppAttribute>>(new PrintAccuracy { AccuracyUnits = (AccuracyUnits?)"mm", XAccuracy = 100, YAccuracy = 100, ZAccuracy = 50 }).ToBegCollection(IppAttributeNames.PrintAccuracy));
+        request.JobAttributes.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.PrintBase, "raft"));
+        request.JobAttributes.AddRange(_mapper.Map<PrintObject, IEnumerable<IppAttribute>>(new PrintObject { DocumentNumber = 1, PrintObjectsSource = "ipp://example/doc/1" }).ToBegCollection(IppAttributeNames.PrintObjects));
+        request.JobAttributes.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.PrintSupports, "generated-supports"));
+        request.JobAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.ChamberHumidity, 45));
+        request.JobAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.ChamberTemperature, 60));
 
         var dst = _mapper.Map<IIppRequestMessage, JobTemplateAttributes>((IIppRequestMessage)request);
 
@@ -327,9 +327,9 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
         mapper.CreateMap<JobTemplateAttributes, IppRequestMessage>((_, dst, _) =>
         {
             dst ??= new IppRequestMessage();
-            dst.JobAttributes.Add(new IppAttribute(Tag.Integer, JobAttribute.Copies, 3));
-            dst.JobAttributes.Add(new IppAttribute(Tag.Integer, JobAttribute.Overrides, 1));
-            dst.JobAttributes.Add(new IppAttribute(Tag.Integer, JobAttribute.OverridesActual, 2));
+            dst.JobAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.Copies, 3));
+            dst.JobAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.Overrides, 1));
+            dst.JobAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.OverridesActual, 2));
             return dst;
         });
 
@@ -340,9 +340,9 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
 
         var attributes = mapper.Map<OverrideInstruction, IEnumerable<IppAttribute>>(src).ToArray();
 
-        attributes.Should().ContainSingle(a => a.Name == JobAttribute.Copies && a.Tag == Tag.Integer && Equals(a.Value, 3));
-        attributes.Should().NotContain(a => a.Name == JobAttribute.Overrides);
-        attributes.Should().NotContain(a => a.Name == JobAttribute.OverridesActual);
+        attributes.Should().ContainSingle(a => a.Name == IppAttributeNames.Copies && a.Tag == Tag.Integer && Equals(a.Value, 3));
+        attributes.Should().NotContain(a => a.Name == IppAttributeNames.Overrides);
+        attributes.Should().NotContain(a => a.Name == IppAttributeNames.OverridesActual);
     }
 
     [TestMethod]
@@ -369,43 +369,43 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
 
         var request = _mapper.Map<IppRequestMessage>(src);
 
-        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.JobCopies && a.Tag == Tag.Integer && Equals(a.Value, 3));
-        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.JobCoverBack);
-        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.JobCoverFront);
-        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.JobFinishings && a.Tag == Tag.Enum && Equals(a.Value, (int)Finishings.Staple));
-        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.JobFinishingsCol);
-        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.SheetCollate && a.Tag == Tag.Keyword && Equals(a.Value, "collated"));
-        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.PageOverrides);
-        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.PagesPerSubset && a.Tag == Tag.Integer && Equals(a.Value, 4));
-        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.PagesPerSubset && a.Tag == Tag.Integer && Equals(a.Value, 8));
-        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.DocumentOverrides);
-        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.MediaSource && a.Tag == Tag.Keyword);
-        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.MediaSourceFeedDirection && a.Tag == Tag.Keyword);
-        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.MediaSourceFeedOrientation && a.Tag == Tag.Enum);
-        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.RequestingUserUri && a.Tag == Tag.Uri && Equals(a.Value, "mailto:user@example.com"));
-        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.JobMandatoryAttributes && a.Tag == Tag.Keyword && Equals(a.Value, "copies"));
-        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.JobMandatoryAttributes && a.Tag == Tag.Keyword && Equals(a.Value, "sides"));
-        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.JobIds && a.Tag == Tag.Integer && Equals(a.Value, 101));
-        request.JobAttributes.Should().Contain(a => a.Name == JobAttribute.JobIds && a.Tag == Tag.Integer && Equals(a.Value, 102));
+        request.JobAttributes.Should().Contain(a => a.Name == IppAttributeNames.JobCopies && a.Tag == Tag.Integer && Equals(a.Value, 3));
+        request.JobAttributes.Should().Contain(a => a.Name == IppAttributeNames.JobCoverBack);
+        request.JobAttributes.Should().Contain(a => a.Name == IppAttributeNames.JobCoverFront);
+        request.JobAttributes.Should().Contain(a => a.Name == IppAttributeNames.JobFinishings && a.Tag == Tag.Enum && Equals(a.Value, (int)Finishings.Staple));
+        request.JobAttributes.Should().Contain(a => a.Name == IppAttributeNames.JobFinishingsCol);
+        request.JobAttributes.Should().Contain(a => a.Name == IppAttributeNames.SheetCollate && a.Tag == Tag.Keyword && Equals(a.Value, "collated"));
+        request.JobAttributes.Should().Contain(a => a.Name == IppAttributeNames.PageOverrides);
+        request.JobAttributes.Should().Contain(a => a.Name == IppAttributeNames.PagesPerSubset && a.Tag == Tag.Integer && Equals(a.Value, 4));
+        request.JobAttributes.Should().Contain(a => a.Name == IppAttributeNames.PagesPerSubset && a.Tag == Tag.Integer && Equals(a.Value, 8));
+        request.JobAttributes.Should().Contain(a => a.Name == IppAttributeNames.DocumentOverrides);
+        request.JobAttributes.Should().Contain(a => a.Name == IppAttributeNames.MediaSource && a.Tag == Tag.Keyword);
+        request.JobAttributes.Should().Contain(a => a.Name == IppAttributeNames.MediaSourceFeedDirection && a.Tag == Tag.Keyword);
+        request.JobAttributes.Should().Contain(a => a.Name == IppAttributeNames.MediaSourceFeedOrientation && a.Tag == Tag.Enum);
+        request.JobAttributes.Should().Contain(a => a.Name == IppAttributeNames.RequestingUserUri && a.Tag == Tag.Uri && Equals(a.Value, "mailto:user@example.com"));
+        request.JobAttributes.Should().Contain(a => a.Name == IppAttributeNames.JobMandatoryAttributes && a.Tag == Tag.Keyword && Equals(a.Value, "copies"));
+        request.JobAttributes.Should().Contain(a => a.Name == IppAttributeNames.JobMandatoryAttributes && a.Tag == Tag.Keyword && Equals(a.Value, "sides"));
+        request.JobAttributes.Should().Contain(a => a.Name == IppAttributeNames.JobIds && a.Tag == Tag.Integer && Equals(a.Value, 101));
+        request.JobAttributes.Should().Contain(a => a.Name == IppAttributeNames.JobIds && a.Tag == Tag.Integer && Equals(a.Value, 102));
     }
 
     [TestMethod]
     public void Map_FromRequest_WithJobCopiesAndJobCoversAndJobFinishings_ReadsAttributes()
     {
         var request = new IppRequestMessage();
-        request.JobAttributes.Add(new IppAttribute(Tag.Integer, JobAttribute.JobCopies, 3));
-        request.JobAttributes.AddRange(_mapper.Map<Cover, IEnumerable<IppAttribute>>(new Cover { CoverType = CoverType.PrintBack }).ToBegCollection(JobAttribute.JobCoverBack));
-        request.JobAttributes.AddRange(_mapper.Map<Cover, IEnumerable<IppAttribute>>(new Cover { CoverType = CoverType.PrintFront }).ToBegCollection(JobAttribute.JobCoverFront));
-        request.JobAttributes.Add(new IppAttribute(Tag.Enum, JobAttribute.JobFinishings, (int)Finishings.Staple));
-        request.JobAttributes.AddRange(_mapper.Map<FinishingsCol, IEnumerable<IppAttribute>>(new FinishingsCol { FinishingTemplate = FinishingTemplate.Staple }).ToBegCollection(JobAttribute.JobFinishingsCol));
-        request.JobAttributes.Add(new IppAttribute(Tag.Keyword, JobAttribute.SheetCollate, "collated"));
-        request.JobAttributes.Add(new IppAttribute(Tag.Integer, JobAttribute.PagesPerSubset, 4));
-        request.JobAttributes.Add(new IppAttribute(Tag.Keyword, JobAttribute.MediaSource, "main"));
-        request.JobAttributes.Add(new IppAttribute(Tag.Keyword, JobAttribute.MediaSourceFeedDirection, "long-edge-first"));
-        request.JobAttributes.Add(new IppAttribute(Tag.Enum, JobAttribute.MediaSourceFeedOrientation, (int)Orientation.Portrait));
-        request.JobAttributes.Add(new IppAttribute(Tag.Uri, JobAttribute.RequestingUserUri, "mailto:user@example.com"));
-        request.JobAttributes.Add(new IppAttribute(Tag.Keyword, JobAttribute.JobMandatoryAttributes, "copies"));
-        request.JobAttributes.Add(new IppAttribute(Tag.Integer, JobAttribute.JobIds, 101));
+        request.JobAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.JobCopies, 3));
+        request.JobAttributes.AddRange(_mapper.Map<Cover, IEnumerable<IppAttribute>>(new Cover { CoverType = CoverType.PrintBack }).ToBegCollection(IppAttributeNames.JobCoverBack));
+        request.JobAttributes.AddRange(_mapper.Map<Cover, IEnumerable<IppAttribute>>(new Cover { CoverType = CoverType.PrintFront }).ToBegCollection(IppAttributeNames.JobCoverFront));
+        request.JobAttributes.Add(new IppAttribute(Tag.Enum, IppAttributeNames.JobFinishings, (int)Finishings.Staple));
+        request.JobAttributes.AddRange(_mapper.Map<FinishingsCol, IEnumerable<IppAttribute>>(new FinishingsCol { FinishingTemplate = FinishingTemplate.Staple }).ToBegCollection(IppAttributeNames.JobFinishingsCol));
+        request.JobAttributes.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.SheetCollate, "collated"));
+        request.JobAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.PagesPerSubset, 4));
+        request.JobAttributes.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.MediaSource, "main"));
+        request.JobAttributes.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.MediaSourceFeedDirection, "long-edge-first"));
+        request.JobAttributes.Add(new IppAttribute(Tag.Enum, IppAttributeNames.MediaSourceFeedOrientation, (int)Orientation.Portrait));
+        request.JobAttributes.Add(new IppAttribute(Tag.Uri, IppAttributeNames.RequestingUserUri, "mailto:user@example.com"));
+        request.JobAttributes.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.JobMandatoryAttributes, "copies"));
+        request.JobAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.JobIds, 101));
 
         var dst = _mapper.Map<IIppRequestMessage, JobTemplateAttributes>((IIppRequestMessage)request);
 

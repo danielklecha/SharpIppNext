@@ -22,7 +22,7 @@ internal class JobPresetsSupportedProfile : IProfile
         mapper.CreateMap<JobPresetsSupported, IEnumerable<IppAttribute>>((src, _) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, PrinterAttribute.JobPresetsSupported, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.JobPresetsSupported, NoValue.Instance) };
 
             var attrs = new List<IppAttribute>();
             if (src.PresetName != null) attrs.Add(new IppAttribute(Tag.NameWithoutLanguage, "preset-name", src.PresetName));

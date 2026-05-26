@@ -140,6 +140,8 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
                 SystemDescriptionAttributes = new()
                 {
                     SystemConfigChanges = 15,
+                    SystemUpTime = 60,
+                    SystemUuid = new Uri("urn:uuid:1234"),
                     SystemStringsLanguagesSupported = ["en-us"],
                     IppVersionsSupported = [new IppVersion(2, 0)],
                     SystemInfo = "test-info",
@@ -168,6 +170,8 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
         clientRequest.Should().BeEquivalentTo(serverRequest);
         mapped.Should().NotBeNull();
         mapped!.SystemConfigChanges.Should().Be(15);
+        mapped.SystemUpTime.Should().Be(60);
+        mapped.SystemUuid.Should().Be(new Uri("urn:uuid:1234"));
         mapped.SystemStringsLanguagesSupported.Should().Contain("en-us");
         mapped.IppVersionsSupported.Should().Contain(new IppVersion(2, 0));
         mapped.SystemInfo.Should().Be("test-info");
@@ -421,8 +425,6 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
                     SystemPagesCompletedCol = 100,
                     SystemConfigChangeTime = 11,
                     SystemConfigChangeDateTime = new DateTimeOffset(2026, 3, 29, 11, 0, 0, TimeSpan.Zero),
-                    SystemUpTime = 56775,
-                    SystemUuid = new Uri("urn:uuid:1234"),
                     SystemGeoLocation = new Uri("geo:37.7749,-122.4194"),
                     SystemAssetTag = new byte[] { 1, 2, 3 },
                     SystemCurrentTime = new DateTimeOffset(2026, 3, 29, 12, 0, 0, TimeSpan.Zero),
@@ -515,8 +517,7 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
                     PrinterServiceTypeSupported = [PrinterServiceType.Print],
                     ResourceFormatSupported = ["application/pdf"],
                     ResourceTypeSupported = [(ResourceType)"document"],
-                    ResourceSettableAttributesSupported = [(ResourceSettableAttribute)"resource-state"],
-                    SystemTimeSourceConfigured = (SystemTimeSourceConfigured)"ntp"
+                    ResourceSettableAttributesSupported = [(ResourceSettableAttribute)"resource-state"]
                 }
             };
 

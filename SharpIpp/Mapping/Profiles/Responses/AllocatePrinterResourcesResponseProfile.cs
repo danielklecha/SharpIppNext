@@ -17,7 +17,7 @@ internal class AllocatePrinterResourcesResponseProfile : IProfile
             var dst = new AllocatePrinterResourcesResponse();
             map.Map<IppResponseMessage, IIppResponse>(src, dst);
             var printerAttrsDict = src.PrinterAttributes.SelectMany(x => x).ToIppDictionary();
-            dst.PrinterResourceIds = map.MapFromDicSetNullable<int[]?>(printerAttrsDict, PrinterAttribute.PrinterResourceIds);
+            dst.PrinterResourceIds = map.MapFromDicSetNullable<int[]?>(printerAttrsDict, IppAttributeNames.PrinterResourceIds);
             return dst;
         });
 
@@ -27,7 +27,7 @@ internal class AllocatePrinterResourcesResponseProfile : IProfile
             map.Map<IIppResponse, IppResponseMessage>(src, dst);
             if (src.PrinterResourceIds != null)
                 dst.PrinterAttributes.Add(src.PrinterResourceIds
-                    .Select(id => new IppAttribute(Tag.Integer, PrinterAttribute.PrinterResourceIds, id))
+                    .Select(id => new IppAttribute(Tag.Integer, IppAttributeNames.PrinterResourceIds, id))
                     .ToList());
             return dst;
         });

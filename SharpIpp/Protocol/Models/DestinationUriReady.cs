@@ -9,8 +9,8 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public class DestinationUriReady : IIppCollection
 {
-    bool IIppCollection.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
+    bool INoValueWritable.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     /// <summary>
     /// The <c>destination-attributes</c> member attribute (1setOf collection).

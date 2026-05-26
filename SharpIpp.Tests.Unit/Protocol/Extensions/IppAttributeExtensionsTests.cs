@@ -256,14 +256,14 @@ public class IppAttributeExtensionsTests
     {
         var inner = new List<IppAttribute>
         {
-            new IppAttribute(Tag.NoValue, JobAttribute.FinishingsCol, NoValue.Instance)
+            new IppAttribute(Tag.NoValue, IppAttributeNames.FinishingsCol, NoValue.Instance)
         };
 
-        var result = inner.ToBegCollection(JobAttribute.FinishingsCol).ToList();
+        var result = inner.ToBegCollection(IppAttributeNames.FinishingsCol).ToList();
 
         result.Should().HaveCount(1);
         result[0].Tag.Should().Be(Tag.NoValue);
-        result[0].Name.Should().Be(JobAttribute.FinishingsCol);
+        result[0].Name.Should().Be(IppAttributeNames.FinishingsCol);
         result[0].Value.Should().Be(NoValue.Instance);
     }
 

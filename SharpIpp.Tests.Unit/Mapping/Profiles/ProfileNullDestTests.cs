@@ -58,9 +58,9 @@ public class ProfileNullDestTests
             {
                 var src = new Dictionary<string, IppAttribute[]>
                 {
-                    { JobAttribute.JobUri, new[] { new IppAttribute(Tag.Uri, JobAttribute.JobUri, "ipp://localhost/jobs/1") } },
-                    { JobAttribute.JobId, new[] { new IppAttribute(Tag.Integer, JobAttribute.JobId, 1) } },
-                    { JobAttribute.JobState, new[] { new IppAttribute(Tag.Enum, JobAttribute.JobState, (int)JobState.Pending) } }
+                    { IppAttributeNames.JobUri, new[] { new IppAttribute(Tag.Uri, IppAttributeNames.JobUri, "ipp://localhost/jobs/1") } },
+                    { IppAttributeNames.JobId, new[] { new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 1) } },
+                    { IppAttributeNames.JobState, new[] { new IppAttribute(Tag.Enum, IppAttributeNames.JobState, (int)JobState.Pending) } }
                 };
                 yield return [(object)src, typeof(IDictionary<string, IppAttribute[]>), typeof(JobAttributes), "IDictionary -> JobAttributes"];
             }
@@ -107,8 +107,8 @@ public class ProfileNullDestTests
             {
                 var src = new Dictionary<string, IppAttribute[]>
                 {
-                    { DocumentAttribute.DocumentNumber, [new IppAttribute(Tag.Integer, DocumentAttribute.DocumentNumber, 1)] },
-                    { DocumentAttribute.DocumentState, [new IppAttribute(Tag.Enum, DocumentAttribute.DocumentState, (int)DocumentState.Pending)] }
+                    { IppAttributeNames.DocumentNumber, [new IppAttribute(Tag.Integer, IppAttributeNames.DocumentNumber, 1)] },
+                    { IppAttributeNames.DocumentState, [new IppAttribute(Tag.Enum, IppAttributeNames.DocumentState, (int)DocumentState.Pending)] }
                 };
                 yield return [(object)src, typeof(IDictionary<string, IppAttribute[]>), typeof(DocumentAttributes), "IDictionary -> DocumentAttributes"];
             }
@@ -147,9 +147,9 @@ public class ProfileNullDestTests
                 {
                     JobAttributes = { new List<IppAttribute>
                     {
-                        new IppAttribute(Tag.Uri, JobAttribute.JobUri, "ipp://localhost/jobs/1"),
-                        new IppAttribute(Tag.Integer, JobAttribute.JobId, 1),
-                        new IppAttribute(Tag.Enum, JobAttribute.JobState, (int)JobState.Pending)
+                        new IppAttribute(Tag.Uri, IppAttributeNames.JobUri, "ipp://localhost/jobs/1"),
+                        new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 1),
+                        new IppAttribute(Tag.Enum, IppAttributeNames.JobState, (int)JobState.Pending)
                     }}
                 };
                 yield return [(object)src, typeof(IppResponseMessage), typeof(IIppJobResponse), "IppResponseMessage -> IIppJobResponse"];

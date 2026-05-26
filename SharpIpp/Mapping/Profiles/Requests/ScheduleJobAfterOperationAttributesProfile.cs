@@ -13,8 +13,8 @@ internal class ScheduleJobAfterOperationAttributesProfile : IProfile
         {
             dst ??= new ScheduleJobAfterOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, JobOperationAttributes>(src, dst);
-            dst.PredecessorJobId = map.MapFromDicNullable<int?>(src, JobAttribute.PredecessorJobId);
-            dst.JobMessageFromOperator = map.MapFromDicNullable<string?>(src, JobAttribute.JobMessageFromOperator);
+            dst.PredecessorJobId = map.MapFromDicNullable<int?>(src, IppAttributeNames.PredecessorJobId);
+            dst.JobMessageFromOperator = map.MapFromDicNullable<string?>(src, IppAttributeNames.JobMessageFromOperator);
             return dst;
         });
 
@@ -23,9 +23,9 @@ internal class ScheduleJobAfterOperationAttributesProfile : IProfile
             dst ??= new List<IppAttribute>();
             map.Map<JobOperationAttributes, List<IppAttribute>>(src, dst);
             if (src.PredecessorJobId.HasValue)
-                dst.Add(new IppAttribute(Tag.Integer, JobAttribute.PredecessorJobId, src.PredecessorJobId.Value));
+                dst.Add(new IppAttribute(Tag.Integer, IppAttributeNames.PredecessorJobId, src.PredecessorJobId.Value));
             if (src.JobMessageFromOperator != null)
-                dst.Add(new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.JobMessageFromOperator, src.JobMessageFromOperator));
+                dst.Add(new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.JobMessageFromOperator, src.JobMessageFromOperator));
             return dst;
         });
     }

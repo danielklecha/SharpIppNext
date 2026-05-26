@@ -4,7 +4,7 @@ namespace SharpIpp.Models.Requests;
 
 /// <summary>
 /// Get-Output-Device-Attributes operation attributes.
-/// See: PWG 5100.18-2025
+/// See: PWG 5100.18-2025 Section 6.1.1
 /// </summary>
 public class GetOutputDeviceAttributesOperationAttributes : OperationAttributes
 {

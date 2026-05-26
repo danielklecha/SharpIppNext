@@ -1,6 +1,7 @@
 using System;
 using SharpIpp.Protocol.Models;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SharpIpp.Models.Responses;
 
@@ -19,6 +20,7 @@ public class JobAttributes
     /// See: RFC 8011 Section 5.3.1
     /// </summary>
     /// <code>job-id</code>
+    [Range(1, int.MaxValue)]
     public int JobId { get; set; }
     /// <summary>
     /// The job-state IPP attribute.
@@ -43,6 +45,7 @@ public class JobAttributes
     /// See: pwg5100.7-2023 Section 6.1.1
     /// </summary>
     /// <code>number-of-intervening-jobs</code>
+    [Range(0, int.MaxValue)]
     public int? NumberOfInterveningJobs { get; set; }
 
     /// <summary>
@@ -71,6 +74,7 @@ public class JobAttributes
     /// See: PWG 5100.7-2023 Section 6.7.4
     /// </summary>
     /// <code>job-pages-completed</code>
+    [Range(0, int.MaxValue)]
     public int? JobPagesCompleted { get; set; }
 
     /// <summary>
@@ -85,5 +89,6 @@ public class JobAttributes
     /// See: PWG 5100.7-2023 Section 6.7.6
     /// </summary>
     /// <code>job-processing-time</code>
+    [Range(0, int.MaxValue)]
     public int? JobProcessingTime { get; set; }
 }

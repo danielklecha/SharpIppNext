@@ -14,9 +14,9 @@ internal class GetDocumentsOperationAttributesProfile : IProfile
         {
             dst ??= new GetDocumentsOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, JobOperationAttributes>(src, dst);
-            dst.FirstIndex = map.MapFromDicNullable<int?>(src, JobAttribute.FirstIndex);
-            dst.Limit = map.MapFromDicNullable<int?>(src, JobAttribute.Limit);
-            dst.RequestedAttributes = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.RequestedAttributes);
+            dst.FirstIndex = map.MapFromDicNullable<int?>(src, IppAttributeNames.FirstIndex);
+            dst.Limit = map.MapFromDicNullable<int?>(src, IppAttributeNames.Limit);
+            dst.RequestedAttributes = map.MapFromDicSetNullable<string[]?>(src, IppAttributeNames.RequestedAttributes);
             return dst;
         });
 
@@ -25,11 +25,11 @@ internal class GetDocumentsOperationAttributesProfile : IProfile
             dst ??= new List<IppAttribute>();
             map.Map<JobOperationAttributes, List<IppAttribute>>(src, dst);
             if (src.FirstIndex.HasValue)
-                dst.Add(new IppAttribute(Tag.Integer, JobAttribute.FirstIndex, src.FirstIndex.Value));
+                dst.Add(new IppAttribute(Tag.Integer, IppAttributeNames.FirstIndex, src.FirstIndex.Value));
             if (src.Limit.HasValue)
-                dst.Add(new IppAttribute(Tag.Integer, JobAttribute.Limit, src.Limit.Value));
+                dst.Add(new IppAttribute(Tag.Integer, IppAttributeNames.Limit, src.Limit.Value));
             if (src.RequestedAttributes != null)
-                dst.AddRange(src.RequestedAttributes.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.RequestedAttributes, x)));
+                dst.AddRange(src.RequestedAttributes.Select(x => new IppAttribute(Tag.Keyword, IppAttributeNames.RequestedAttributes, x)));
             return dst;
         });
     }

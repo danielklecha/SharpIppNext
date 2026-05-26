@@ -1,4 +1,6 @@
 using System;
+using System.ComponentModel.DataAnnotations;
+using SharpIpp.Validation;
 
 namespace SharpIpp.Protocol.Models;
 
@@ -17,14 +19,14 @@ namespace SharpIpp.Protocol.Models;
 public class DocumentTemplateAttributes : IIppCollection
 {
     /// <inheritdoc />
-    bool IIppCollection.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
+    bool INoValueWritable.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     /// <summary>
     /// The <c>copies</c> Document Template attribute.
-    /// Type: integer(1:MAX)
     /// See: RFC 8011 Section 5.2.5
     /// </summary>
+    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
     public int? Copies { get; set; }
 
     /// <summary>
@@ -86,9 +88,9 @@ public class DocumentTemplateAttributes : IIppCollection
 
     /// <summary>
     /// The <c>number-up</c> Document Template attribute.
-    /// Type: integer(1:MAX)
     /// See: RFC 8011 Section 5.2.9
     /// </summary>
+    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
     public int? NumberUp { get; set; }
 
     /// <summary>
@@ -234,9 +236,9 @@ public class DocumentTemplateAttributes : IIppCollection
 
     /// <summary>
     /// The <c>input-contrast</c> input attribute.
-    /// Type: integer(-100:100)
     /// See: PWG 5100.15-2013 Section 7.1.1.7
     /// </summary>
+    [System.ComponentModel.DataAnnotations.Range(-100, 100)]
     public int? InputContrast { get; set; }
 
     /// <summary>
@@ -277,23 +279,23 @@ public class DocumentTemplateAttributes : IIppCollection
 
     /// <summary>
     /// The <c>input-scaling-height</c> input attribute.
-    /// Type: integer(1:1000)
     /// See: PWG 5100.15-2013 Section 7.1.1.14
     /// </summary>
+    [System.ComponentModel.DataAnnotations.Range(1, 1000)]
     public int? InputScalingHeight { get; set; }
 
     /// <summary>
     /// The <c>input-scaling-width</c> input attribute.
-    /// Type: integer(1:1000)
     /// See: PWG 5100.15-2013 Section 7.1.1.15
     /// </summary>
+    [System.ComponentModel.DataAnnotations.Range(1, 1000)]
     public int? InputScalingWidth { get; set; }
 
     /// <summary>
     /// The <c>input-sharpness</c> input attribute.
-    /// Type: integer(-100:100)
     /// See: PWG 5100.15-2013 Section 7.1.1.17
     /// </summary>
+    [System.ComponentModel.DataAnnotations.Range(-100, 100)]
     public int? InputSharpness { get; set; }
 
     /// <summary>
@@ -339,7 +341,8 @@ public class DocumentTemplateAttributes : IIppCollection
     /// The <c>document-metadata</c> Document Template attribute. Arbitrary metadata associated with the document.
     /// See: PWG 5100.5-2024 Section 6.5.6
     /// </summary>
-    public OctetString[]? DocumentMetadata { get; set; }
+    [Metadata]
+    public DocumentMetadata? DocumentMetadata { get; set; }
 
     /// <summary>
     /// The <c>document-name</c> Document Template attribute. The name of the document.
@@ -356,9 +359,10 @@ public class DocumentTemplateAttributes : IIppCollection
 
 
     /// <summary>
-    /// The <c>document-password</c> Document Template attribute. A password required to access the document.
+    /// The <c>document-password</c> Document Template attribute. A password required to access the document (maximum 1023 octets).
     /// See: PWG 5100.5-2024 Section 6.5.10
     /// </summary>
+    [ByteRange(1, 1023)]
     public OctetString? DocumentPassword { get; set; }
 
     /// <summary>

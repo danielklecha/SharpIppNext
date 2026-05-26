@@ -74,20 +74,135 @@ internal class TypesProfile : IProfile
 
     private static void ConfigureSmartEnums(IMapperConstructor map)
     {
-        var method = typeof(TypesProfile).GetMethod(nameof(ConfigureSmartEnum), BindingFlags.NonPublic | BindingFlags.Static);
-        if (method != null)
-        {
-            var assembly = typeof(ISmartEnum).Assembly;
-            var smartEnumTypes = assembly.GetTypes()
-                .Where(type => typeof(ISmartEnum).IsAssignableFrom(type) && type is { IsAbstract: false, IsInterface: false, IsValueType: true })
-                .OrderBy(type => type.FullName);
-
-            foreach (var recordType in smartEnumTypes)
-                method.MakeGenericMethod(recordType).Invoke(null, new object[] { map });
-        }
+         ConfigureSmartEnum<AccuracyUnits>(map);
+         ConfigureSmartEnum<BalingType>(map);
+         ConfigureSmartEnum<BalingWhen>(map);
+         ConfigureSmartEnum<BindingType>(map);
+         ConfigureSmartEnum<ClientInfoMember>(map);
+         ConfigureSmartEnum<CoatingSides>(map);
+         ConfigureSmartEnum<CoatingType>(map);
+         ConfigureSmartEnum<Compression>(map);
+         ConfigureSmartEnum<CoveringName>(map);
+         ConfigureSmartEnum<CoverMember>(map);
+         ConfigureSmartEnum<CoverSheetInfoMember>(map);
+         ConfigureSmartEnum<CoverType>(map);
+         ConfigureSmartEnum<CurrentPageOrder>(map);
+         ConfigureSmartEnum<DestinationAccessMember>(map);
+         ConfigureSmartEnum<DocumentAccessMember>(map);
+         ConfigureSmartEnum<DocumentCreationAttribute>(map);
+         ConfigureSmartEnum<DocumentDigitalSignature>(map);
+         ConfigureSmartEnum<DocumentFormatDetail>(map);
+         ConfigureSmartEnum<DocumentStateReason>(map);
+         ConfigureSmartEnum<FetchDocumentAttribute>(map);
+         ConfigureSmartEnum<FinishingReferenceEdge>(map);
+         ConfigureSmartEnum<FinishingsColMember>(map);
+         ConfigureSmartEnum<FinishingTemplate>(map);
+         ConfigureSmartEnum<FoldingDirection>(map);
+         ConfigureSmartEnum<IdentifyAction>(map);
+         ConfigureSmartEnum<ImpositionTemplate>(map);
+         ConfigureSmartEnum<InputAttributesMember>(map);
+         ConfigureSmartEnum<InputColorMode>(map);
+         ConfigureSmartEnum<InputContentType>(map);
+         ConfigureSmartEnum<InputFilmScanMode>(map);
+         ConfigureSmartEnum<InputSource>(map);
+         ConfigureSmartEnum<InsertSheetMember>(map);
+         ConfigureSmartEnum<IppFeature>(map);
+         ConfigureSmartEnum<JobAccountingSheetsMember>(map);
+         ConfigureSmartEnum<JobAccountingSheetsType>(map);
+         ConfigureSmartEnum<JobAccountType>(map);
+         ConfigureSmartEnum<JobCompleteBefore>(map);
+         ConfigureSmartEnum<JobCreationAttribute>(map);
+         ConfigureSmartEnum<JobErrorAction>(map);
+         ConfigureSmartEnum<JobErrorSheetMember>(map);
+         ConfigureSmartEnum<JobErrorSheetType>(map);
+         ConfigureSmartEnum<JobErrorSheetWhen>(map);
+         ConfigureSmartEnum<JobHistoryAttribute>(map);
+         ConfigureSmartEnum<JobHoldUntil>(map);
+         ConfigureSmartEnum<JobPasswordEncryption>(map);
+         ConfigureSmartEnum<JobPhoneNumberScheme>(map);
+         ConfigureSmartEnum<JobReleaseAction>(map);
+         ConfigureSmartEnum<JobSheets>(map);
+         ConfigureSmartEnum<JobSheetsColMember>(map);
+         ConfigureSmartEnum<JobSheetsType>(map);
+         ConfigureSmartEnum<JobSpooling>(map);
+         ConfigureSmartEnum<JobStateReason>(map);
+         ConfigureSmartEnum<JobStorageAccess>(map);
+         ConfigureSmartEnum<JobStorageDisposition>(map);
+         ConfigureSmartEnum<LaminatingType>(map);
+         ConfigureSmartEnum<MaterialAmountUnits>(map);
+         ConfigureSmartEnum<MaterialColor>(map);
+         ConfigureSmartEnum<MaterialKey>(map);
+         ConfigureSmartEnum<MaterialPurpose>(map);
+         ConfigureSmartEnum<MaterialRateUnits>(map);
+         ConfigureSmartEnum<MaterialsColMember>(map);
+         ConfigureSmartEnum<MaterialType>(map);
+         ConfigureSmartEnum<Media>(map);
+         ConfigureSmartEnum<MediaCoating>(map);
+         ConfigureSmartEnum<MediaColMember>(map);
+         ConfigureSmartEnum<MediaColor>(map);
+         ConfigureSmartEnum<MediaGrain>(map);
+         ConfigureSmartEnum<MediaInputTrayCheck>(map);
+         ConfigureSmartEnum<MediaKey>(map);
+         ConfigureSmartEnum<MediaPrePrinted>(map);
+         ConfigureSmartEnum<MediaRecycled>(map);
+         ConfigureSmartEnum<MediaSource>(map);
+         ConfigureSmartEnum<MediaSourceFeedDirection>(map);
+         ConfigureSmartEnum<MediaTooth>(map);
+         ConfigureSmartEnum<MediaType>(map);
+         ConfigureSmartEnum<MultipleDocumentHandling>(map);
+         ConfigureSmartEnum<MultipleObjectHandling>(map);
+         ConfigureSmartEnum<NotifyEvent>(map);
+         ConfigureSmartEnum<NotifyPullMethod>(map);
+         ConfigureSmartEnum<OutputAttributesMember>(map);
+         ConfigureSmartEnum<OutputBin>(map);
+         ConfigureSmartEnum<OutputDevice>(map);
+         ConfigureSmartEnum<OverrideSupported>(map);
+         ConfigureSmartEnum<PageDelivery>(map);
+         ConfigureSmartEnum<PageOrderReceived>(map);
+         ConfigureSmartEnum<PdfFeature>(map);
+         ConfigureSmartEnum<PdfVersion>(map);
+         ConfigureSmartEnum<PdlOverride>(map);
+         ConfigureSmartEnum<PlatformShape>(map);
+         ConfigureSmartEnum<PowerState>(map);
+         ConfigureSmartEnum<PresentationDirectionNumberUp>(map);
+         ConfigureSmartEnum<PrintBase>(map);
+         ConfigureSmartEnum<PrintColorMode>(map);
+         ConfigureSmartEnum<PrintContentOptimize>(map);
+         ConfigureSmartEnum<PrinterCreationAttribute>(map);
+         ConfigureSmartEnum<PrinterMandatoryJobAttribute>(map);
+         ConfigureSmartEnum<PrinterMode>(map);
+         ConfigureSmartEnum<PrinterRequestedJobAttribute>(map);
+         ConfigureSmartEnum<PrinterServiceType>(map);
+         ConfigureSmartEnum<PrinterStateReason>(map);
+         ConfigureSmartEnum<PrintObjectsMember>(map);
+         ConfigureSmartEnum<PrintRenderingIntent>(map);
+         ConfigureSmartEnum<PrintScaling>(map);
+         ConfigureSmartEnum<PrintSupports>(map);
+         ConfigureSmartEnum<ResourceSettableAttribute>(map);
+         ConfigureSmartEnum<ResourceStateReason>(map);
+         ConfigureSmartEnum<ResourceType>(map);
+         ConfigureSmartEnum<SeparatorSheetsMember>(map);
+         ConfigureSmartEnum<SeparatorSheetsType>(map);
+         ConfigureSmartEnum<Sides>(map);
+         ConfigureSmartEnum<StitchingMethod>(map);
+         ConfigureSmartEnum<SystemMandatoryPrinterAttribute>(map);
+         ConfigureSmartEnum<SystemMandatoryRegistrationAttribute>(map);
+         ConfigureSmartEnum<SystemSettableAttribute>(map);
+         ConfigureSmartEnum<SystemStateReason>(map);
+         ConfigureSmartEnum<SystemTimeSourceConfigured>(map);
+         ConfigureSmartEnum<TrimmingType>(map);
+         ConfigureSmartEnum<TrimmingWhen>(map);
+         ConfigureSmartEnum<UriAuthentication>(map);
+         ConfigureSmartEnum<UriScheme>(map);
+         ConfigureSmartEnum<UriSecurity>(map);
+         ConfigureSmartEnum<WhichJobs>(map);
+         ConfigureSmartEnum<WhichPrinters>(map);
+         ConfigureSmartEnum<X509Type>(map);
+         ConfigureSmartEnum<XImagePosition>(map);
+         ConfigureSmartEnum<YImagePosition>(map);
     }
 
-    private static void ConfigureSmartEnum<T>(IMapperConstructor map) where T : struct
+    private static void ConfigureSmartEnum<[System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T>(IMapperConstructor map) where T : struct
     {
         var smartEnumType = typeof(T);
         if (typeof(IMarkedSmartEnum).IsAssignableFrom(smartEnumType))

@@ -43,7 +43,7 @@ public class RestartJobTests : SharpIppIntegrationTestBase
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
                 StatusCode = IppStatusCode.SuccessfulOk,
-                OperationAttributes = new() { StatusMessage = "successful-ok", DetailedStatusMessage = ["detail1"], DocumentAccessError = "none" },
+                OperationAttributes = new() { StatusMessage = "successful-ok", DetailedStatusMessage = "detail1", DocumentAccessError = "none" },
             };
             var responseStream = new MemoryStream();
             await server.SendResponseAsync(serverResponse, responseStream, c);

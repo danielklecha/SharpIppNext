@@ -33,9 +33,9 @@ public class OperationAttributesRequestProfileTests
         // Arrange
         var src = new Dictionary<string, IppAttribute[]>
         {
-            { JobAttribute.AttributesCharset, [new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8")] },
-            { JobAttribute.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en")] },
-            { JobAttribute.RequestedAttributes, [new IppAttribute(Tag.Keyword, JobAttribute.RequestedAttributes, "attr1"), new IppAttribute(Tag.Keyword, JobAttribute.RequestedAttributes, "attr2")] }
+            { IppAttributeNames.AttributesCharset, [new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8")] },
+            { IppAttributeNames.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en")] },
+            { IppAttributeNames.RequestedAttributes, [new IppAttribute(Tag.Keyword, IppAttributeNames.RequestedAttributes, "attr1"), new IppAttribute(Tag.Keyword, IppAttributeNames.RequestedAttributes, "attr2")] }
         };
 
         // Act
@@ -52,8 +52,8 @@ public class OperationAttributesRequestProfileTests
         // Arrange
         var src = new Dictionary<string, IppAttribute[]>
         {
-            { JobAttribute.AttributesCharset, [new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8")] },
-            { JobAttribute.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en")] }
+            { IppAttributeNames.AttributesCharset, [new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8")] },
+            { IppAttributeNames.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en")] }
         };
 
         // Act
@@ -69,9 +69,9 @@ public class OperationAttributesRequestProfileTests
         // Arrange
         var src = new Dictionary<string, IppAttribute[]>
         {
-            { JobAttribute.AttributesCharset, [new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8")] },
-            { JobAttribute.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en")] },
-            { JobAttribute.RequestedAttributes, [] } 
+            { IppAttributeNames.AttributesCharset, [new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8")] },
+            { IppAttributeNames.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en")] },
+            { IppAttributeNames.RequestedAttributes, [] } 
         };
 
         // Act
@@ -87,8 +87,8 @@ public class OperationAttributesRequestProfileTests
         // Arrange
         var src = new Dictionary<string, IppAttribute[]>
         {
-            { JobAttribute.AttributesCharset, [new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8")] },
-            { JobAttribute.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en")] }
+            { IppAttributeNames.AttributesCharset, [new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8")] },
+            { IppAttributeNames.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en")] }
         };
         var dst = new GetDocumentAttributesOperationAttributes { RequestedAttributes = ["existing"] };
 
@@ -111,7 +111,7 @@ public class OperationAttributesRequestProfileTests
 
         var dst = _mapper.Map<PrintJobOperationAttributes, List<IppAttribute>>(src);
 
-        dst.Should().Contain(x => x.Name == DocumentAttribute.DocumentMessage && Equals(x.Value, "operator note"));
+        dst.Should().Contain(x => x.Name == IppAttributeNames.DocumentMessage && Equals(x.Value, "operator note"));
     }
 
     [TestMethod]
@@ -119,10 +119,10 @@ public class OperationAttributesRequestProfileTests
     {
         var src = new Dictionary<string, IppAttribute[]>
         {
-            { JobAttribute.AttributesCharset, [new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8")] },
-            { JobAttribute.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en")] },
-            { DocumentAttribute.DocumentMessage, [new IppAttribute(Tag.TextWithoutLanguage, DocumentAttribute.DocumentMessage, "doc note")] },
-            { JobAttribute.LastDocument, [new IppAttribute(Tag.Boolean, JobAttribute.LastDocument, true)] }
+            { IppAttributeNames.AttributesCharset, [new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8")] },
+            { IppAttributeNames.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en")] },
+            { IppAttributeNames.DocumentMessage, [new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.DocumentMessage, "doc note")] },
+            { IppAttributeNames.LastDocument, [new IppAttribute(Tag.Boolean, IppAttributeNames.LastDocument, true)] }
         };
 
         var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, SendDocumentOperationAttributes>(src);
@@ -146,9 +146,9 @@ public class OperationAttributesRequestProfileTests
         var dst = _mapper.Map<GetOutputDeviceAttributesOperationAttributes, List<IppAttribute>>(src);
 
         // Assert
-        dst.Should().Contain(x => x.Name == JobAttribute.OutputDeviceUuid && x.Tag == Tag.Uri && x.Value.Equals("urn:uuid:123e4567-e89b-12d3-a456-426614174003"));
-        dst.Should().Contain(x => x.Name == JobAttribute.RequestedAttributes && x.Tag == Tag.Keyword && x.Value.Equals("printer-name"));
-        dst.Should().Contain(x => x.Name == JobAttribute.RequestedAttributes && x.Tag == Tag.Keyword && x.Value.Equals("printer-state"));
+        dst.Should().Contain(x => x.Name == IppAttributeNames.OutputDeviceUuid && x.Tag == Tag.Uri && x.Value.Equals("urn:uuid:123e4567-e89b-12d3-a456-426614174003"));
+        dst.Should().Contain(x => x.Name == IppAttributeNames.RequestedAttributes && x.Tag == Tag.Keyword && x.Value.Equals("printer-name"));
+        dst.Should().Contain(x => x.Name == IppAttributeNames.RequestedAttributes && x.Tag == Tag.Keyword && x.Value.Equals("printer-state"));
     }
 
     [TestMethod]
@@ -164,7 +164,7 @@ public class OperationAttributesRequestProfileTests
 
         var dst = _mapper.Map<GetPrinterAttributesOperationAttributes, List<IppAttribute>>(src);
 
-        dst.Should().Contain(x => x.Name == JobAttribute.OutputDeviceUuid && x.Tag == Tag.Uri && x.Value.Equals("urn:uuid:123e4567-e89b-12d3-a456-426614174003"));
+        dst.Should().Contain(x => x.Name == IppAttributeNames.OutputDeviceUuid && x.Tag == Tag.Uri && x.Value.Equals("urn:uuid:123e4567-e89b-12d3-a456-426614174003"));
     }
 
     [TestMethod]
@@ -172,10 +172,10 @@ public class OperationAttributesRequestProfileTests
     {
         var src = new Dictionary<string, IppAttribute[]>
         {
-            { JobAttribute.AttributesCharset, [new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8")] },
-            { JobAttribute.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en")] },
-            { JobAttribute.PrinterUri, [new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://printer")] },
-            { JobAttribute.OutputDeviceUuid, [new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174003")] }
+            { IppAttributeNames.AttributesCharset, [new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8")] },
+            { IppAttributeNames.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en")] },
+            { IppAttributeNames.PrinterUri, [new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://printer")] },
+            { IppAttributeNames.OutputDeviceUuid, [new IppAttribute(Tag.Uri, IppAttributeNames.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174003")] }
         };
 
         var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, GetPrinterAttributesOperationAttributes>(src);
@@ -196,7 +196,7 @@ public class OperationAttributesRequestProfileTests
 
         var dst = _mapper.Map<GetJobsOperationAttributes, List<IppAttribute>>(src);
 
-        dst.Should().Contain(x => x.Name == JobAttribute.OutputDeviceUuid && x.Tag == Tag.Uri && x.Value.Equals("urn:uuid:123e4567-e89b-12d3-a456-426614174003"));
+        dst.Should().Contain(x => x.Name == IppAttributeNames.OutputDeviceUuid && x.Tag == Tag.Uri && x.Value.Equals("urn:uuid:123e4567-e89b-12d3-a456-426614174003"));
     }
 
     [TestMethod]
@@ -204,10 +204,10 @@ public class OperationAttributesRequestProfileTests
     {
         var src = new Dictionary<string, IppAttribute[]>
         {
-            { JobAttribute.AttributesCharset, [new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8")] },
-            { JobAttribute.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en")] },
-            { JobAttribute.PrinterUri, [new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://printer")] },
-            { JobAttribute.OutputDeviceUuid, [new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174003")] }
+            { IppAttributeNames.AttributesCharset, [new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8")] },
+            { IppAttributeNames.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en")] },
+            { IppAttributeNames.PrinterUri, [new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://printer")] },
+            { IppAttributeNames.OutputDeviceUuid, [new IppAttribute(Tag.Uri, IppAttributeNames.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174003")] }
         };
 
         var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, GetJobsOperationAttributes>(src);
@@ -229,7 +229,7 @@ public class OperationAttributesRequestProfileTests
 
         var dst = _mapper.Map<ReleaseJobOperationAttributes, List<IppAttribute>>(src);
 
-        dst.Should().Contain(x => x.Name == JobAttribute.OutputDeviceUuid && x.Tag == Tag.Uri && x.Value.Equals("urn:uuid:123e4567-e89b-12d3-a456-426614174003"));
+        dst.Should().Contain(x => x.Name == IppAttributeNames.OutputDeviceUuid && x.Tag == Tag.Uri && x.Value.Equals("urn:uuid:123e4567-e89b-12d3-a456-426614174003"));
     }
 
     [TestMethod]
@@ -237,11 +237,11 @@ public class OperationAttributesRequestProfileTests
     {
         var src = new Dictionary<string, IppAttribute[]>
         {
-            { JobAttribute.AttributesCharset, [new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8")] },
-            { JobAttribute.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en")] },
-            { JobAttribute.PrinterUri, [new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://printer")] },
-            { JobAttribute.JobId, [new IppAttribute(Tag.Integer, JobAttribute.JobId, 123)] },
-            { JobAttribute.OutputDeviceUuid, [new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174003")] }
+            { IppAttributeNames.AttributesCharset, [new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8")] },
+            { IppAttributeNames.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en")] },
+            { IppAttributeNames.PrinterUri, [new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://printer")] },
+            { IppAttributeNames.JobId, [new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 123)] },
+            { IppAttributeNames.OutputDeviceUuid, [new IppAttribute(Tag.Uri, IppAttributeNames.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174003")] }
         };
 
         var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, ReleaseJobOperationAttributes>(src);
@@ -255,7 +255,7 @@ public class OperationAttributesRequestProfileTests
         // Arrange
         var src = new Dictionary<string, IppAttribute[]>
         {
-            { SystemAttribute.SystemUri, [new IppAttribute(Tag.Uri, SystemAttribute.SystemUri, "ipp://system")] }
+            { IppAttributeNames.SystemUri, [new IppAttribute(Tag.Uri, IppAttributeNames.SystemUri, "ipp://system")] }
         };
 
         // Act
@@ -273,13 +273,13 @@ public class OperationAttributesRequestProfileTests
         // Arrange
         var src = new Dictionary<string, IppAttribute[]>
         {
-            { JobAttribute.AttributesCharset, [new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8")] },
-            { JobAttribute.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en")] },
+            { IppAttributeNames.AttributesCharset, [new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8")] },
+            { IppAttributeNames.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en")] },
             {
-                SystemAttribute.ResourceIds,
+                IppAttributeNames.ResourceIds,
                 [
-                    new IppAttribute(Tag.Integer, SystemAttribute.ResourceIds, 101),
-                    new IppAttribute(Tag.Integer, SystemAttribute.ResourceIds, 202)
+                    new IppAttribute(Tag.Integer, IppAttributeNames.ResourceIds, 101),
+                    new IppAttribute(Tag.Integer, IppAttributeNames.ResourceIds, 202)
                 ]
             }
         };
@@ -306,7 +306,7 @@ public class OperationAttributesRequestProfileTests
         var dst = _mapper.Map<CreateJobOperationAttributes, List<IppAttribute>>(src);
 
         // Assert
-        dst.Where(x => x.Name == SystemAttribute.ResourceIds)
+        dst.Where(x => x.Name == IppAttributeNames.ResourceIds)
             .Select(x => (int)x.Value)
             .Should()
             .BeEquivalentTo(new[] { 301, 302 });
@@ -318,12 +318,12 @@ public class OperationAttributesRequestProfileTests
         // Arrange
         var src = new Dictionary<string, IppAttribute[]>
         {
-            { JobAttribute.AttributesCharset, [new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8")] },
-            { JobAttribute.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en")] },
+            { IppAttributeNames.AttributesCharset, [new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8")] },
+            { IppAttributeNames.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en")] },
             {
-                JobAttribute.DestinationAccesses,
+                IppAttributeNames.DestinationAccesses,
                 [
-                    new IppAttribute(Tag.BegCollection, JobAttribute.DestinationAccesses, NoValue.Instance),
+                    new IppAttribute(Tag.BegCollection, IppAttributeNames.DestinationAccesses, NoValue.Instance),
                     new IppAttribute(Tag.MemberAttrName, "", "access-user-name"),
                     new IppAttribute(Tag.NameWithoutLanguage, "", "scan-user"),
                     new IppAttribute(Tag.MemberAttrName, "", "access-password"),
@@ -365,7 +365,7 @@ public class OperationAttributesRequestProfileTests
         var dst = _mapper.Map<CreateJobOperationAttributes, List<IppAttribute>>(src);
 
         // Assert
-        dst.Should().Contain(x => x.Name == JobAttribute.DestinationAccesses && x.Tag == Tag.BegCollection);
+        dst.Should().Contain(x => x.Name == IppAttributeNames.DestinationAccesses && x.Tag == Tag.BegCollection);
         dst.Should().Contain(x => x.Tag == Tag.MemberAttrName && (string)x.Value == "access-user-name");
         dst.Should().Contain(x => x.Tag == Tag.NameWithoutLanguage && (string)x.Value == "scan-user");
         dst.Should().Contain(x => x.Tag == Tag.MemberAttrName && (string)x.Value == "access-password");
@@ -378,16 +378,16 @@ public class OperationAttributesRequestProfileTests
         // Arrange
         var src = new Dictionary<string, IppAttribute[]>
         {
-            { JobAttribute.AttributesCharset, [new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8")] },
-            { JobAttribute.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en")] },
+            { IppAttributeNames.AttributesCharset, [new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8")] },
+            { IppAttributeNames.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en")] },
             {
-                SystemAttribute.ResourceIds,
+                IppAttributeNames.ResourceIds,
                 [
-                    new IppAttribute(Tag.Integer, SystemAttribute.ResourceIds, 401),
-                    new IppAttribute(Tag.Integer, SystemAttribute.ResourceIds, 402)
+                    new IppAttribute(Tag.Integer, IppAttributeNames.ResourceIds, 401),
+                    new IppAttribute(Tag.Integer, IppAttributeNames.ResourceIds, 402)
                 ]
             },
-            { JobAttribute.LastDocument, [new IppAttribute(Tag.Boolean, JobAttribute.LastDocument, true)] }
+            { IppAttributeNames.LastDocument, [new IppAttribute(Tag.Boolean, IppAttributeNames.LastDocument, true)] }
         };
 
         // Act
@@ -413,7 +413,7 @@ public class OperationAttributesRequestProfileTests
         var dst = _mapper.Map<SendDocumentOperationAttributes, List<IppAttribute>>(src);
 
         // Assert
-        dst.Where(x => x.Name == SystemAttribute.ResourceIds)
+        dst.Where(x => x.Name == IppAttributeNames.ResourceIds)
             .Select(x => (int)x.Value)
             .Should()
             .BeEquivalentTo(new[] { 501, 502 });
@@ -435,10 +435,10 @@ public class OperationAttributesRequestProfileTests
         var dst = _mapper.Map<GetNextDocumentDataOperationAttributes, List<IppAttribute>>(src);
 
         // Assert
-        dst.Should().Contain(x => x.Name == JobAttribute.PrinterUri && Equals(x.Value, "ipp://printer/"));
-        dst.Should().Contain(x => x.Name == JobAttribute.JobId && Equals(x.Value, 123));
-        dst.Should().Contain(x => x.Name == JobAttribute.DocumentDataWait && Equals(x.Value, true));
-        dst.Should().NotContain(x => x.Name == JobAttribute.JobUri);
+        dst.Should().Contain(x => x.Name == IppAttributeNames.PrinterUri && Equals(x.Value, "ipp://printer/"));
+        dst.Should().Contain(x => x.Name == IppAttributeNames.JobId && Equals(x.Value, 123));
+        dst.Should().Contain(x => x.Name == IppAttributeNames.DocumentDataWait && Equals(x.Value, true));
+        dst.Should().NotContain(x => x.Name == IppAttributeNames.JobUri);
     }
 
     [TestMethod]
@@ -447,11 +447,11 @@ public class OperationAttributesRequestProfileTests
         // Arrange
         var src = new Dictionary<string, IppAttribute[]>
         {
-            { JobAttribute.AttributesCharset, [new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8")] },
-            { JobAttribute.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en")] },
-            { JobAttribute.PrinterUri, [new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://printer/")] },
-            { JobAttribute.JobId, [new IppAttribute(Tag.Integer, JobAttribute.JobId, 456)] },
-            { JobAttribute.DocumentDataWait, [new IppAttribute(Tag.Boolean, JobAttribute.DocumentDataWait, false)] }
+            { IppAttributeNames.AttributesCharset, [new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8")] },
+            { IppAttributeNames.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en")] },
+            { IppAttributeNames.PrinterUri, [new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://printer/")] },
+            { IppAttributeNames.JobId, [new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 456)] },
+            { IppAttributeNames.DocumentDataWait, [new IppAttribute(Tag.Boolean, IppAttributeNames.DocumentDataWait, false)] }
         };
 
         // Act
@@ -480,10 +480,10 @@ public class OperationAttributesRequestProfileTests
         var dst = _mapper.Map<AddDocumentImagesOperationAttributes, List<IppAttribute>>(src);
 
         // Assert
-        dst.Should().Contain(x => x.Name == JobAttribute.PrinterUri && Equals(x.Value, "ipp://printer/"));
-        dst.Should().Contain(x => x.Name == JobAttribute.JobId && Equals(x.Value, 789));
+        dst.Should().Contain(x => x.Name == IppAttributeNames.PrinterUri && Equals(x.Value, "ipp://printer/"));
+        dst.Should().Contain(x => x.Name == IppAttributeNames.JobId && Equals(x.Value, 789));
         dst.Should().Contain(x => Equals(x.Value, "image/pwg-raster"));
-        dst.Should().NotContain(x => x.Name == JobAttribute.JobUri);
+        dst.Should().NotContain(x => x.Name == IppAttributeNames.JobUri);
     }
 
     [TestMethod]
@@ -492,11 +492,11 @@ public class OperationAttributesRequestProfileTests
         // Arrange
         var src = new Dictionary<string, IppAttribute[]>
         {
-            { JobAttribute.AttributesCharset, [new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8")] },
-            { JobAttribute.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en")] },
-            { JobAttribute.PrinterUri, [new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://printer")] },
-            { JobAttribute.JobId, [new IppAttribute(Tag.Integer, JobAttribute.JobId, 101)] },
-            { JobAttribute.InputAttributes, [new IppAttribute(Tag.BegCollection, JobAttribute.InputAttributes, NoValue.Instance), new IppAttribute(Tag.MemberAttrName, "", JobAttribute.DocumentFormat), new IppAttribute(Tag.MimeMediaType, "", "image/tiff"), new IppAttribute(Tag.EndCollection, "", NoValue.Instance)] }
+            { IppAttributeNames.AttributesCharset, [new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8")] },
+            { IppAttributeNames.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en")] },
+            { IppAttributeNames.PrinterUri, [new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://printer")] },
+            { IppAttributeNames.JobId, [new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 101)] },
+            { IppAttributeNames.InputAttributes, [new IppAttribute(Tag.BegCollection, IppAttributeNames.InputAttributes, NoValue.Instance), new IppAttribute(Tag.MemberAttrName, "", IppAttributeNames.DocumentFormat), new IppAttribute(Tag.MimeMediaType, "", "image/tiff"), new IppAttribute(Tag.EndCollection, "", NoValue.Instance)] }
         };
 
         // Act
@@ -550,6 +550,7 @@ public class OperationAttributesRequestProfileTests
             PrinterUri = new Uri("ipp://printer/"),
             FirstIndex = 10,
             Limit = 5,
+            PrinterId = 42,
             DocumentFormat = "application/pdf",
             OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174002"),
             RequestedAttributes = new[] { "printer-name", "printer-state" },
@@ -567,6 +568,7 @@ public class OperationAttributesRequestProfileTests
         dst.PrinterUri.Should().Be(src.PrinterUri);
         dst.FirstIndex.Should().Be(src.FirstIndex);
         dst.Limit.Should().Be(src.Limit);
+        dst.PrinterId.Should().Be(src.PrinterId);
         dst.DocumentFormat.Should().Be(src.DocumentFormat);
         dst.OutputDeviceUuid.Should().Be(src.OutputDeviceUuid);
         dst.RequestedAttributes.Should().BeEquivalentTo(src.RequestedAttributes);

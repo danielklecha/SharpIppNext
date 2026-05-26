@@ -17,8 +17,8 @@ internal class PrintUriOperationAttributesProfile : IProfile
         {
             dst ??= new PrintUriOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, PrintJobOperationAttributes>(src, dst);
-            dst.DocumentUri = map.MapFromDicNullable<Uri?>(src, JobAttribute.DocumentUri);
-            if (src.TryGetValue(JobAttribute.DocumentAccess, out var documentAccess))
+            dst.DocumentUri = map.MapFromDicNullable<Uri?>(src, IppAttributeNames.DocumentUri);
+            if (src.TryGetValue(IppAttributeNames.DocumentAccess, out var documentAccess))
                 dst.DocumentAccess = map.Map<DocumentAccess>(documentAccess.GroupBegCollection().First().FromBegCollection().ToIppDictionary());
             return dst;
         });
@@ -28,9 +28,9 @@ internal class PrintUriOperationAttributesProfile : IProfile
             dst ??= new List<IppAttribute>();
             map.Map<PrintJobOperationAttributes, List<IppAttribute>>(src, dst);
             if (src.DocumentUri != null)
-                dst.Add(new IppAttribute(Tag.Uri, JobAttribute.DocumentUri, src.DocumentUri.ToString()));
+                dst.Add(new IppAttribute(Tag.Uri, IppAttributeNames.DocumentUri, src.DocumentUri.ToString()));
             if (src.DocumentAccess != null)
-                dst.AddRange(map.Map<IEnumerable<IppAttribute>>(src.DocumentAccess).ToBegCollection(JobAttribute.DocumentAccess));
+                dst.AddRange(map.Map<IEnumerable<IppAttribute>>(src.DocumentAccess).ToBegCollection(IppAttributeNames.DocumentAccess));
             return dst;
         });
     }

@@ -8,8 +8,8 @@ namespace SharpIpp.Protocol.Models;
 public class PrinterInputTray : IIppCollection
 {
     /// <inheritdoc />
-    bool IIppCollection.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
+    bool INoValueWritable.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     /// <summary>
     /// type — keyword describing the tray type (e.g., "sheetFeedAutoRemovableTray").

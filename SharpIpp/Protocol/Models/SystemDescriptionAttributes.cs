@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace SharpIpp.Protocol.Models;
 
@@ -97,6 +98,7 @@ public class SystemDescriptionAttributes
     /// <c>notify-lease-duration-default</c>
     /// See: PWG 5100.22-2025 Section 7.3.16
     /// </summary>
+    [Range(0, 67108863)]
     public int? NotifyLeaseDurationDefault { get; set; }
 
     /// <summary>

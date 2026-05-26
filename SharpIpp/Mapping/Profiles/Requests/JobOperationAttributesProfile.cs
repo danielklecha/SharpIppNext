@@ -14,8 +14,8 @@ internal class JobOperationAttributesProfile : IProfile
         {
             dst ??= new JobOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(src, dst);
-            dst.JobId = map.MapFromDicNullable<int?>(src, JobAttribute.JobId);
-            dst.JobUri = map.MapFromDicNullable<Uri?>(src, JobAttribute.JobUri);
+            dst.JobId = map.MapFromDicNullable<int?>(src, IppAttributeNames.JobId);
+            dst.JobUri = map.MapFromDicNullable<Uri?>(src, IppAttributeNames.JobUri);
             return dst;
         });
 
@@ -24,9 +24,9 @@ internal class JobOperationAttributesProfile : IProfile
             dst ??= new List<IppAttribute>();
             map.Map<OperationAttributes, List<IppAttribute>>(src, dst);
             if (src.JobId != null)
-                dst.Add(new IppAttribute(Tag.Integer, JobAttribute.JobId, src.JobId.Value));
+                dst.Add(new IppAttribute(Tag.Integer, IppAttributeNames.JobId, src.JobId.Value));
             if (src.JobUri != null)
-                dst.Add(new IppAttribute(Tag.Uri, JobAttribute.JobUri, src.JobUri.ToString()));
+                dst.Add(new IppAttribute(Tag.Uri, IppAttributeNames.JobUri, src.JobUri.ToString()));
             return dst;
         });
     }

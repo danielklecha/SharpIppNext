@@ -10,10 +10,10 @@ public class GetJobsOperationAttributes : OperationAttributes
 {
     /// <summary>
     /// The first-index IPP attribute.
-    /// Type: integer(1:MAX)
     /// See: PWG 5100.13-2023 Section 6.1.3 and Section 8.4
     /// </summary>
     /// <code>first-index</code>
+    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
     public int? FirstIndex { get; set; }
 
     /// <summary>
@@ -40,11 +40,11 @@ public class GetJobsOperationAttributes : OperationAttributes
     public WhichJobs? WhichJobs { get; set; }
     /// <summary>
     /// The client OPTIONALLY supplies this attribute. The Printer object MUST support this attribute. It is an integer value that determines the maximum number of jobs that a client will receive from the Printer even if "which-jobs" or "my-jobs" constrain which jobs are returned. The limit is a "stateless limit" in that if the value supplied by the client is 'N', then only the first 'N' jobs are returned in the Get-Jobs Response. There is no mechanism to allow for the next 'M' jobs after the first 'N' jobs. If the client does not supply this attribute, the Printer object responds with all applicable jobs
-    /// Type: integer(1:MAX)
     /// See: PWG 5100.13-2023 Section 6.1.4
     /// See: RFC 8011 Section 4.2.6.1
     /// </summary>
     /// <code>limit</code>
+    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
     public int? Limit { get; set; }
     /// <summary>
     /// The client OPTIONALLY supplies this attribute. The Printer object MUST support this attribute. It indicates whether jobs from all users or just the jobs submitted by the requesting user of this request MUST be considered as candidate jobs to be returned by the Printer object. If the client does not supply this attribute, the Printer object MUST respond as if the client had supplied the attribute with a value of 'false', i.e., jobs from all users. The means for authenticating the requesting user and matching the jobs is described in section

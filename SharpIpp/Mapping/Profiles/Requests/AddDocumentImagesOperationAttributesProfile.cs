@@ -14,9 +14,9 @@ internal class AddDocumentImagesOperationAttributesProfile : IProfile
         {
             dst ??= new AddDocumentImagesOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(src, dst);
-            dst.JobId = map.MapFromDicNullable<int?>(src, JobAttribute.JobId);
-            if (src.ContainsKey(JobAttribute.InputAttributes))
-                dst.InputAttributes = map.Map<DocumentTemplateAttributes>(src[JobAttribute.InputAttributes].FromBegCollection().ToIppDictionary());
+            dst.JobId = map.MapFromDicNullable<int?>(src, IppAttributeNames.JobId);
+            if (src.ContainsKey(IppAttributeNames.InputAttributes))
+                dst.InputAttributes = map.Map<DocumentTemplateAttributes>(src[IppAttributeNames.InputAttributes].FromBegCollection().ToIppDictionary());
             return dst;
         });
 
@@ -25,9 +25,9 @@ internal class AddDocumentImagesOperationAttributesProfile : IProfile
             dst ??= new List<IppAttribute>();
             map.Map<OperationAttributes, List<IppAttribute>>(src, dst);
             if (src.JobId.HasValue)
-                dst.Add(new IppAttribute(Tag.Integer, JobAttribute.JobId, src.JobId.Value));
+                dst.Add(new IppAttribute(Tag.Integer, IppAttributeNames.JobId, src.JobId.Value));
             if (src.InputAttributes != null)
-                dst.AddRange(map.Map<List<IppAttribute>>(src.InputAttributes).ToBegCollection(JobAttribute.InputAttributes));
+                dst.AddRange(map.Map<List<IppAttribute>>(src.InputAttributes).ToBegCollection(IppAttributeNames.InputAttributes));
             return dst;
         });
     }

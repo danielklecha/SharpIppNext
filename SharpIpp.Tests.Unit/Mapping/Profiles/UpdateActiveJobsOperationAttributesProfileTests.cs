@@ -39,10 +39,10 @@ public class UpdateActiveJobsOperationAttributesProfileTests
 
         var result = mapper.Map<UpdateActiveJobsOperationAttributes, List<IppAttribute>>(src);
 
-        result.Should().Contain(x => x.Name == JobAttribute.PrinterUri && x.Value.ToString() == src.PrinterUri.ToString());
-        result.Should().Contain(x => x.Name == JobAttribute.OutputDeviceUuid && x.Value.ToString() == src.OutputDeviceUuid.ToString());
-        result.Where(x => x.Name == JobAttribute.OutputDeviceJobStates).Select(x => (JobState)x.Value).Should().BeEquivalentTo(src.OutputDeviceJobStates);
-        result.Where(x => x.Name == JobAttribute.JobIds).Select(x => (int)x.Value).Should().BeEquivalentTo(src.JobIds);
+        result.Should().Contain(x => x.Name == IppAttributeNames.PrinterUri && x.Value.ToString() == src.PrinterUri.ToString());
+        result.Should().Contain(x => x.Name == IppAttributeNames.OutputDeviceUuid && x.Value.ToString() == src.OutputDeviceUuid.ToString());
+        result.Where(x => x.Name == IppAttributeNames.OutputDeviceJobStates).Select(x => (JobState)x.Value).Should().BeEquivalentTo(src.OutputDeviceJobStates);
+        result.Where(x => x.Name == IppAttributeNames.JobIds).Select(x => (int)x.Value).Should().BeEquivalentTo(src.JobIds);
     }
 
     [TestMethod]
@@ -51,17 +51,17 @@ public class UpdateActiveJobsOperationAttributesProfileTests
         var mapper = CreateMapper();
         var dic = new Dictionary<string, IppAttribute[]>
         {
-            [JobAttribute.PrinterUri] = [new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://127.0.0.1/printer")],
-            [JobAttribute.OutputDeviceUuid] = [new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, "uuid:123")],
-            [JobAttribute.OutputDeviceJobStates] = 
+            [IppAttributeNames.PrinterUri] = [new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://127.0.0.1/printer")],
+            [IppAttributeNames.OutputDeviceUuid] = [new IppAttribute(Tag.Uri, IppAttributeNames.OutputDeviceUuid, "uuid:123")],
+            [IppAttributeNames.OutputDeviceJobStates] = 
             [
-                new IppAttribute(Tag.Enum, JobAttribute.OutputDeviceJobStates, (int)JobState.Processing),
-                new IppAttribute(Tag.Enum, JobAttribute.OutputDeviceJobStates, (int)JobState.Pending)
+                new IppAttribute(Tag.Enum, IppAttributeNames.OutputDeviceJobStates, (int)JobState.Processing),
+                new IppAttribute(Tag.Enum, IppAttributeNames.OutputDeviceJobStates, (int)JobState.Pending)
             ],
-            [JobAttribute.JobIds] = 
+            [IppAttributeNames.JobIds] = 
             [
-                new IppAttribute(Tag.Integer, JobAttribute.JobIds, 1),
-                new IppAttribute(Tag.Integer, JobAttribute.JobIds, 2)
+                new IppAttribute(Tag.Integer, IppAttributeNames.JobIds, 1),
+                new IppAttribute(Tag.Integer, IppAttributeNames.JobIds, 2)
             ]
         };
 

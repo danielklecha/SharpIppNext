@@ -28,7 +28,7 @@ internal class MediaSizeSupportedProfile : IProfile
         mapper.CreateMap<MediaSizeSupported, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, PrinterAttribute.MediaSizeSupported, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.MediaSizeSupported, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
 

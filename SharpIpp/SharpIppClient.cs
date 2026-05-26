@@ -15,6 +15,7 @@ using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Extensions;
 using SharpIpp.Protocol.Models;
+using SharpIpp.Validation;
 
 namespace SharpIpp;
 
@@ -25,34 +26,52 @@ public partial class SharpIppClient : ISharpIppClient
     private readonly bool _disposeHttpClient;
     private readonly HttpClient _httpClient;
     private readonly IIppProtocol _ippProtocol;
-    private readonly IIppRequestMessageValidator _requestValidator;
+    private readonly IIppRequestMessageValidator? _requestValidator;
+    private readonly IIppRequestValidator? _ippRequestValidator;
+    private readonly IIppResponseValidator? _ippResponseValidator;
+    private readonly IIppResponseMessageValidator? _responseMessageValidator;
 
     static SharpIppClient()
     {
         MapperSingleton = new Lazy<IMapper>(MapperFactory);
     }
 
-    public SharpIppClient() : this(new HttpClient(), new IppProtocol(), IppRequestMessageValidator.Default, true)
+    public SharpIppClient() : this(new HttpClient(), new IppProtocol(), IppRequestMessageValidator.Default, IppRequestValidator.Default, null, null, true)
     {
     }
 
-    public SharpIppClient(HttpClient httpClient) : this(httpClient, new IppProtocol(), IppRequestMessageValidator.Default, false )
+    public SharpIppClient(HttpClient httpClient) : this(httpClient, new IppProtocol(), IppRequestMessageValidator.Default, IppRequestValidator.Default, null, null, false )
     {
     }
 
-    public SharpIppClient(HttpClient httpClient, IIppProtocol ippProtocol) : this(httpClient, ippProtocol, IppRequestMessageValidator.Default, false)
+    public SharpIppClient(HttpClient httpClient, IIppProtocol ippProtocol) : this(httpClient, ippProtocol, IppRequestMessageValidator.Default, IppRequestValidator.Default, null, null, false)
     {
     }
 
-    public SharpIppClient(HttpClient httpClient, IIppProtocol ippProtocol, IIppRequestMessageValidator requestValidator) : this(httpClient, ippProtocol, requestValidator, false)
+    public SharpIppClient(HttpClient httpClient, IIppProtocol ippProtocol, IIppRequestMessageValidator requestValidator) : this(httpClient, ippProtocol, requestValidator, IppRequestValidator.Default, null, null, false)
     {
     }
 
-    internal SharpIppClient(HttpClient httpClient, IIppProtocol ippProtocol, IIppRequestMessageValidator requestValidator, bool disposeHttpClient)
+    public SharpIppClient(HttpClient httpClient, IIppProtocol ippProtocol, IIppRequestMessageValidator requestValidator, IIppRequestValidator ippRequestValidator) : this(httpClient, ippProtocol, requestValidator, ippRequestValidator, null, null, false)
+    {
+    }
+
+    public SharpIppClient(HttpClient httpClient, IIppProtocol ippProtocol, IIppRequestMessageValidator requestValidator, IIppRequestValidator ippRequestValidator, IIppResponseValidator? ippResponseValidator) : this(httpClient, ippProtocol, requestValidator, ippRequestValidator, ippResponseValidator, null, false)
+    {
+    }
+
+    public SharpIppClient(HttpClient httpClient, IIppProtocol ippProtocol, IIppRequestMessageValidator requestValidator, IIppRequestValidator ippRequestValidator, IIppResponseValidator? ippResponseValidator, IIppResponseMessageValidator? responseMessageValidator) : this(httpClient, ippProtocol, requestValidator, ippRequestValidator, ippResponseValidator, responseMessageValidator, false)
+    {
+    }
+
+    internal SharpIppClient(HttpClient httpClient, IIppProtocol ippProtocol, IIppRequestMessageValidator requestValidator, IIppRequestValidator ippRequestValidator, IIppResponseValidator? ippResponseValidator, IIppResponseMessageValidator? responseMessageValidator, bool disposeHttpClient)
     {
         _httpClient = httpClient;
         _ippProtocol = ippProtocol;
-        _requestValidator = requestValidator ?? throw new ArgumentNullException(nameof(requestValidator));
+        _requestValidator = requestValidator;
+        _ippRequestValidator = ippRequestValidator;
+        _ippResponseValidator = ippResponseValidator;
+        _responseMessageValidator = responseMessageValidator;
         _disposeHttpClient = disposeHttpClient;
     }
 
@@ -76,8 +95,11 @@ public partial class SharpIppClient : ISharpIppClient
         IIppRequestMessage ippRequest,
         CancellationToken cancellationToken = default)
     {
-        _requestValidator.Context.Source = nameof(SharpIppClient);
-        _requestValidator.Validate(ippRequest);
+        if (_requestValidator != null)
+        {
+            _requestValidator.Context.Source = nameof(SharpIppClient);
+            _requestValidator.Validate(ippRequest);
+        }
 
         var httpRequest = GetHttpRequestMessage( printerUri );
 
@@ -113,6 +135,7 @@ public partial class SharpIppClient : ISharpIppClient
         {
             using var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
             ippResponse = await _ippProtocol.ReadIppResponseAsync(responseStream, cancellationToken).ConfigureAwait(false);
+            _responseMessageValidator?.Validate(ippResponse);
             if (!ippResponse.IsSuccessfulStatusCode())
                 throw new IppResponseException($"Printer returned error code", ippResponse);
         }
@@ -148,6 +171,7 @@ public partial class SharpIppClient : ISharpIppClient
         where TIn : IIppRequest
         where TOut : IIppResponse
     {
+        _ippRequestValidator?.Validate(data);
         var ippRequest = CreateRawRequest(data);
         if (data.OperationAttributes == null)
             throw new Exception("OperationAttributes is not set");
@@ -170,6 +194,7 @@ public partial class SharpIppClient : ISharpIppClient
 
         var ippResponse = await SendAsync(targetUri, ippRequest, cancellationToken).ConfigureAwait(false);
         var res = CreateResponse<TOut>(ippResponse);
+        _ippResponseValidator?.Validate(res);
         return res;
     }
 
@@ -215,6 +240,7 @@ public partial class SharpIppClient : ISharpIppClient
         return new HttpRequestMessage( HttpMethod.Post, uriBuilder.Uri );
     }
 
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "Mapping profiles are preserved via ILLink.Descriptors.xml")]
     private static IMapper MapperFactory()
     {
         var mapper = new SimpleMapper();
@@ -340,7 +366,6 @@ public partial class SharpIppClient : ISharpIppClient
     }
 
     /// <inheritdoc />
-    [Obsolete("The 'Validate-Document' operation is deprecated. See PWG 5100.13-2023 Section 5.2.")]
     public Task<ValidateDocumentResponse> ValidateDocumentAsync(ValidateDocumentRequest request, CancellationToken cancellationToken = default)
     {
         return SendAsync<ValidateDocumentRequest, ValidateDocumentResponse>(request, cancellationToken);

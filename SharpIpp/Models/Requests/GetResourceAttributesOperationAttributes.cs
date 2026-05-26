@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace SharpIpp.Models.Requests;
 
 /// <summary>
@@ -10,6 +12,7 @@ public class GetResourceAttributesOperationAttributes : SystemOperationAttribute
     /// The resource-id for the requested resource.
     /// See: PWG 5100.22-2025 Section 7.1.14
     /// </summary>
+    [Range(1, 2147483647)]
     public int? ResourceId { get; set; }
 
     /// <summary>

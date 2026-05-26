@@ -92,7 +92,7 @@ public class ValidateJobTests : SharpIppIntegrationTestBase
                 JobImpressionsEstimated = 10,
                 ChargeInfoMessage = "charge-info",
                 ProofCopies = 1,
-                DocumentMetadata = ["x-meta1=val1", "x-meta2=val2"],
+                DocumentMetadata = GetTestDocumentMetadata(),
                 DocumentPassword = "test-password",
                 DocumentMessage = "test-message",
             },
@@ -109,7 +109,7 @@ public class ValidateJobTests : SharpIppIntegrationTestBase
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
                 StatusCode = IppStatusCode.SuccessfulOk,
-                OperationAttributes = new() { StatusMessage = "successful-ok", DetailedStatusMessage = ["detail1"], DocumentAccessError = "none" },
+                OperationAttributes = new() { StatusMessage = "successful-ok", DetailedStatusMessage = "detail1", DocumentAccessError = "none" },
             };
             var responseStream = new MemoryStream();
             await server.SendResponseAsync(serverResponse, responseStream, c);

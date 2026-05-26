@@ -8,6 +8,7 @@ namespace SharpIpp.Mapping.Extensions;
 
 public static class MapperConstructorExtensions
 {
+    [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode("Registers mapping profiles from assembly via reflection.")]
     public static void FillFromAssembly(this IMapperConstructor mapper, Assembly assembly)
     {
         var profiles = assembly.GetTypes()

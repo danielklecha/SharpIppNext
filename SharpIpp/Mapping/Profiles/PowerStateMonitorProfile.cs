@@ -36,7 +36,7 @@ internal class PowerStateMonitorProfile : IProfile
         mapper.CreateMap<PowerStateMonitor, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, SystemAttribute.PowerStateMonitorCol, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.PowerStateMonitorCol, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
             if (src.CurrentMonthKwh.HasValue)

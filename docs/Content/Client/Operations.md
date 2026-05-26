@@ -33,6 +33,7 @@ For the PWG 5100.21 IPP 3D attribute extensions (for example `chamber-humidity`,
 | Create-System-Subscriptions | `CreateSystemSubscriptionsAsync` | [CreateSystemSubscriptions.md](CreateSystemSubscriptions.md) |
 | CUPS-Get-Printers | `GetCUPSPrintersAsync` | [CUPSGetPrinters.md](CUPSGetPrinters.md) |
 | Deallocate-Printer-Resources | `DeallocatePrinterResourcesAsync` | [DeallocatePrinterResources.md](DeallocatePrinterResources.md) |
+| Delete-Document | `DeleteDocumentAsync` | [DeleteDocument.md](DeleteDocument.md) |
 | Delete-Printer | `DeletePrinterAsync` | [DeletePrinter.md](DeletePrinter.md) |
 | Disable-All-Printers | `DisableAllPrintersAsync` | [DisableAllPrinters.md](DisableAllPrinters.md) |
 | Deregister-Output-Device | `DeregisterOutputDeviceAsync` | [DeregisterOutputDevice.md](DeregisterOutputDevice.md) |

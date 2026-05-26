@@ -46,7 +46,7 @@ public class CancelDocumentTests : SharpIppIntegrationTestBase
                 OperationAttributes = new()
                 {
                     StatusMessage = "successful-ok",
-                    DetailedStatusMessage = ["detail1"],
+                    DetailedStatusMessage = "detail1",
                     DocumentAccessError = "none"
                 },
             };
@@ -96,7 +96,7 @@ public class CancelDocumentTests : SharpIppIntegrationTestBase
                 OperationAttributes = new()
                 {
                     StatusMessage = "successful-ok",
-                    DetailedStatusMessage = ["detail1"],
+                    DetailedStatusMessage = "detail1",
                     DocumentAccessError = "none"
                 },
             };
@@ -146,7 +146,7 @@ public class CancelDocumentTests : SharpIppIntegrationTestBase
                 OperationAttributes = new()
                 {
                     StatusMessage = "successful-ok",
-                    DetailedStatusMessage = ["detail1"],
+                    DetailedStatusMessage = "detail1",
                     DocumentAccessError = "none"
                 },
             };

@@ -29,7 +29,7 @@ internal class PowerStateTransitionProfile : IProfile
         mapper.CreateMap<PowerStateTransition, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, SystemAttribute.PowerStateTransitionsCol, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.PowerStateTransitionsCol, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
             if (src.EndPowerState.HasValue)

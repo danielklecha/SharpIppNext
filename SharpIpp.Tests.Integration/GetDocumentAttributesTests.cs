@@ -88,7 +88,7 @@ public class GetDocumentAttributesTests : SharpIppIntegrationTestBase
                     DateTimeAtCreation = new DateTimeOffset(2024, 1, 1, 1, 1, 1, TimeSpan.Zero),
                     DateTimeAtProcessing = new DateTimeOffset(2024, 1, 1, 1, 1, 1, TimeSpan.Zero),
                     DateTimeAtCompleted = new DateTimeOffset(2024, 1, 1, 1, 1, 1, TimeSpan.Zero),
-                    DocumentMetadata = ["meta-1", "meta-2"],
+                    DocumentMetadata = GetTestDocumentMetadata(),
                     DocumentDigitalSignature = DocumentDigitalSignature.XmlDsig,
                     DocumentFormatVersion = "1.2",
                     DocumentFormatVersionDetected = "1.2.3",
@@ -96,7 +96,7 @@ public class GetDocumentAttributesTests : SharpIppIntegrationTestBase
                 OperationAttributes = new()
                 {
                     StatusMessage = "successful-ok",
-                    DetailedStatusMessage = ["detail1"],
+                    DetailedStatusMessage = "detail1",
                     DocumentAccessError = "none"
                 }
             };
@@ -146,7 +146,7 @@ public class GetDocumentAttributesTests : SharpIppIntegrationTestBase
                 OperationAttributes = new()
                 {
                     StatusMessage = "successful-ok",
-                    DetailedStatusMessage = ["detail1"],
+                    DetailedStatusMessage = "detail1",
                     DocumentAccessError = "none"
                 }
             };

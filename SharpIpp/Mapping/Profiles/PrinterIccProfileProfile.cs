@@ -24,7 +24,7 @@ internal class PrinterIccProfileProfile : IProfile
         mapper.CreateMap<PrinterIccProfile, IEnumerable<IppAttribute>>((src, _) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, PrinterAttribute.PrinterIccProfiles, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.PrinterIccProfiles, NoValue.Instance) };
 
             var attrs = new List<IppAttribute>();
             if (src.ProfileName != null) attrs.Add(new IppAttribute(Tag.NameWithoutLanguage, "profile-name", src.ProfileName));

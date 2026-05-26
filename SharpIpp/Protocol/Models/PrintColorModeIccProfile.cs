@@ -10,8 +10,8 @@ namespace SharpIpp.Protocol.Models;
 public class PrintColorModeIccProfile : IIppCollection
 {
     /// <inheritdoc />
-    bool IIppCollection.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
+    bool INoValueWritable.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     /// <summary>
     /// print-color-mode — the print color mode keyword this profile applies to.

@@ -46,8 +46,8 @@ public class GetResourcesResponseProfileTests : MapperTestBase
             {
                 new List<IppAttribute>
                 {
-                    new IppAttribute(Tag.Integer, SystemAttribute.ResourceId, 7),
-                    new IppAttribute(Tag.NameWithoutLanguage, SystemAttribute.ResourceName, "TrayProfile")
+                    new IppAttribute(Tag.Integer, IppAttributeNames.ResourceId, 7),
+                    new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.ResourceName, "TrayProfile")
                 }
             }
         };
@@ -106,7 +106,7 @@ public class GetResourcesResponseProfileTests : MapperTestBase
         // Assert
         dst.ResourceAttributes.Should().HaveCount(1);
         var firstResource = dst.ResourceAttributes.First();
-        firstResource.Should().ContainSingle(a => a.Name == SystemAttribute.ResourceId && (int)a.Value == 9);
-        firstResource.Should().ContainSingle(a => a.Name == SystemAttribute.ResourceType && (string)a.Value == "printer-resource");
+        firstResource.Should().ContainSingle(a => a.Name == IppAttributeNames.ResourceId && (int)a.Value == 9);
+        firstResource.Should().ContainSingle(a => a.Name == IppAttributeNames.ResourceType && (string)a.Value == "printer-resource");
     }
 }

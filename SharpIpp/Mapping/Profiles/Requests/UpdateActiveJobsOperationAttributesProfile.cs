@@ -15,9 +15,9 @@ internal class UpdateActiveJobsOperationAttributesProfile : IProfile
         {
             dst ??= new UpdateActiveJobsOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(src, dst);
-            dst.OutputDeviceUuid = map.MapFromDicNullable<Uri?>(src, JobAttribute.OutputDeviceUuid);
-            dst.OutputDeviceJobStates = map.MapFromDicSetNullable<JobState[]?>(src, JobAttribute.OutputDeviceJobStates);
-            dst.JobIds = map.MapFromDicSetNullable<int[]?>(src, JobAttribute.JobIds);
+            dst.OutputDeviceUuid = map.MapFromDicNullable<Uri?>(src, IppAttributeNames.OutputDeviceUuid);
+            dst.OutputDeviceJobStates = map.MapFromDicSetNullable<JobState[]?>(src, IppAttributeNames.OutputDeviceJobStates);
+            dst.JobIds = map.MapFromDicSetNullable<int[]?>(src, IppAttributeNames.JobIds);
             return dst;
         });
 
@@ -26,11 +26,11 @@ internal class UpdateActiveJobsOperationAttributesProfile : IProfile
             dst ??= new List<IppAttribute>();
             map.Map<OperationAttributes, List<IppAttribute>>(src, dst);
             if (src.OutputDeviceUuid != null)
-                dst.Add(new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, src.OutputDeviceUuid.ToString()));
+                dst.Add(new IppAttribute(Tag.Uri, IppAttributeNames.OutputDeviceUuid, src.OutputDeviceUuid.ToString()));
             if (src.OutputDeviceJobStates != null)
-                dst.AddRange(src.OutputDeviceJobStates.Select(x => new IppAttribute(Tag.Enum, JobAttribute.OutputDeviceJobStates, (int)x)));
+                dst.AddRange(src.OutputDeviceJobStates.Select(x => new IppAttribute(Tag.Enum, IppAttributeNames.OutputDeviceJobStates, (int)x)));
             if (src.JobIds != null)
-                dst.AddRange(src.JobIds.Select(x => new IppAttribute(Tag.Integer, JobAttribute.JobIds, x)));
+                dst.AddRange(src.JobIds.Select(x => new IppAttribute(Tag.Integer, IppAttributeNames.JobIds, x)));
             return dst;
         });
     }

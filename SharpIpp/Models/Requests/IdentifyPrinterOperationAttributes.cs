@@ -25,11 +25,11 @@ public class IdentifyPrinterOperationAttributes : OperationAttributes
 
     /// <summary>
     /// The optional <c>job-id</c> target attribute for Identify-Printer.
-    /// Type: integer(1:MAX)
     /// See: PWG 5100.18-2025 Section 8.5
     /// See: RFC 8011 Section 5.3.1
     /// </summary>
     /// <code>job-id</code>
+    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
     public int? JobId { get; set; }
 
     /// <summary>

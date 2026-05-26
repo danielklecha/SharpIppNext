@@ -30,7 +30,10 @@ public class SetDocumentAttributesTests : SharpIppIntegrationTestBase
                 JobUri = new Uri("ipp://localhost:631/jobs/1"),
                 DocumentNumber = 1,
             },
-            DocumentName = "Updated Document Name",
+            DocumentDescriptionAttributes = new()
+            {
+                DocumentName = "Updated Document Name"
+            },
             DocumentTemplateAttributes = new()
             {
                 Copies = 1,
@@ -101,6 +104,7 @@ public class SetDocumentAttributesTests : SharpIppIntegrationTestBase
                 YImageShift = 0,
                 YSide1ImageShift = 0,
                 YSide2ImageShift = 0,
+                DocumentMetadata = GetTestDocumentMetadata(),
             }
         };
         IIppRequest? serverRequest = null;
@@ -117,7 +121,7 @@ public class SetDocumentAttributesTests : SharpIppIntegrationTestBase
                 OperationAttributes = new()
                 {
                     StatusMessage = "successful-ok",
-                    DetailedStatusMessage = ["detail1"],
+                    DetailedStatusMessage = "detail1",
                     DocumentAccessError = "none"
                 },
             };

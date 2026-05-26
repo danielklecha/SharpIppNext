@@ -31,6 +31,7 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                 DocumentFormat = "application/pdf",
                 FirstIndex = 1,
                 Limit = 10,
+                PrinterId = 42,
             },
         };
         IIppRequest? serverRequest = null;
@@ -515,7 +516,7 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                     OperationAttributes = new()
                     {
                         StatusMessage = "successful-ok",
-                        DetailedStatusMessage = ["detail1"],
+                        DetailedStatusMessage = "detail1",
                         DocumentAccessError = "none"
                     }
                 };
@@ -566,45 +567,45 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
             };
 
             serverRawResponse.OperationAttributes.Add([
-                new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"),
-                new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"),
-                new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.StatusMessage, "successful-ok"),
-                new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.DetailedStatusMessage, "detail1"),
-                new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.DocumentAccessError, "none")
+                new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+                new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+                new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.StatusMessage, "successful-ok"),
+                new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.DetailedStatusMessage, "detail1"),
+                new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.DocumentAccessError, "none")
             ]);
 
             serverRawResponse.PrinterAttributes.Add([
-                new IppAttribute(Tag.NoValue, PrinterAttribute.PrinterName, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.PrinterLocation, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.PrinterInfo, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.QueuedJobCount, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.PrinterCurrentTime, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.PrinterState, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.JobKOctetsSupported, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.PrinterResolutionDefault, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.MediaColDefault, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.MultipleDocumentJobsSupported, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.PrinterIsAcceptingJobs, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.ColorSupported, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.JpegXDimensionSupported, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.JpegYDimensionSupported, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.JobPasswordSupported, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.JobPasswordLengthSupported, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.DocumentPasswordSupported, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.PrinterUpTime, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.MultipleOperationTimeOut, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.JpegKOctetsSupported, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.PdfKOctetsSupported, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.JobImpressionsSupported, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.JobMediaSheetsSupported, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.PagesPerMinute, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.PagesPerMinuteColor, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.PrinterResolutionSupported, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.JobPriorityDefault, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.JobPrioritySupported, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.CopiesDefault, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.CopiesSupported, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, PrinterAttribute.PageRangesSupported, NoValue.Instance)
+                new IppAttribute(Tag.NoValue, IppAttributeNames.PrinterName, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.PrinterLocation, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.PrinterInfo, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.QueuedJobCount, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.PrinterCurrentTime, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.PrinterState, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.JobKOctetsSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.PrinterResolutionDefault, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.MediaColDefault, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.MultipleDocumentJobsSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.PrinterIsAcceptingJobs, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.ColorSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.JpegXDimensionSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.JpegYDimensionSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.JobPasswordSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.JobPasswordLengthSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.DocumentPasswordSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.PrinterUpTime, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.MultipleOperationTimeOut, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.JpegKOctetsSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.PdfKOctetsSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.JobImpressionsSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.JobMediaSheetsSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.PagesPerMinute, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.PagesPerMinuteColor, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.PrinterResolutionSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.JobPriorityDefault, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.JobPrioritySupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.CopiesDefault, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.CopiesSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.PageRangesSupported, NoValue.Instance)
             ]);
 
             var memoryStream = new MemoryStream();
@@ -624,7 +625,7 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                 AttributesCharset = "utf-8",
                 AttributesNaturalLanguage = "en",
                 StatusMessage = "successful-ok",
-                DetailedStatusMessage = ["detail1"],
+                DetailedStatusMessage = "detail1",
                 DocumentAccessError = "none"
             },
             PrinterAttributes = new()

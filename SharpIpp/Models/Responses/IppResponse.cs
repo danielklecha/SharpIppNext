@@ -1,5 +1,6 @@
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace SharpIpp.Models.Responses;
 
@@ -24,6 +25,7 @@ public abstract class IppResponse<TOperationAttributes> : IIppResponse where TOp
     /// See: pwg5100.18 - IPP Shared Infrastructure Extensions v1.1 Section 5.10
     /// </summary>
     /// <code>request-id</code>
+    [Range(1, int.MaxValue)]
     public int RequestId { get; set; }
 
     /// <summary>

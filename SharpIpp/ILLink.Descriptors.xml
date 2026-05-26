@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<linker>
+  <assembly fullname="SharpIpp">
+    <!-- Keep all profile classes so they can be loaded via reflection in FillFromAssembly -->
+    <type fullname="SharpIpp.Mapping.Profiles.*" required="true" />
+    <type fullname="SharpIpp.Mapping.Profiles.Requests.*" required="true" />
+    <type fullname="SharpIpp.Mapping.Profiles.Responses.*" required="true" />
+
+    <!-- Keep all requests, responses and models for validation and mapping -->
+    <type fullname="SharpIpp.Models.Requests.*" required="true" />
+    <type fullname="SharpIpp.Models.Responses.*" required="true" />
+    <type fullname="SharpIpp.Protocol.Models.*" required="true" />
+  </assembly>
+</linker>

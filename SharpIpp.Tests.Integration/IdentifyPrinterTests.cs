@@ -44,7 +44,7 @@ public class IdentifyPrinterTests : SharpIppIntegrationTestBase
                 OperationAttributes = new()
                 {
                     StatusMessage = "successful-ok",
-                    DetailedStatusMessage = ["identify detail"],
+                    DetailedStatusMessage = "identify detail",
                 }
             };
             var memoryStream = new MemoryStream();

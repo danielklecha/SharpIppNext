@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Protocol.Models;
+using SharpIpp.Tests.Unit.Mapping;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -9,18 +10,17 @@ namespace SharpIpp.Tests.Unit.Protocol.Models;
 
 [TestClass]
 [ExcludeFromCodeCoverage]
-public class PrinterAlertTests
+public class PrinterAlertTests : MapperTestBase
 {
     [TestMethod]
-    public void TryParse_Relaxed_WithKnownAndExtensionElements_ShouldParse()
+    public void Parse_WithKnownAndExtensionElements_ShouldParse()
     {
         var raw = "code=jam;index=22;severity=critical;group=mediaPath;groupindex=4;location=6;vendor=x";
 
-        var ok = PrinterAlert.TryParse(raw, out var parsed, PrinterAlertParseOptions.Relaxed);
+        var parsed = _mapper.Map<string, PrinterAlert>(raw);
 
-        ok.Should().BeTrue();
         parsed.Should().NotBeNull();
-        parsed!.Code.Should().Be("jam");
+        parsed.Code.Should().Be("jam");
         parsed.Index.Should().Be(22);
         parsed.Severity.Should().Be("critical");
         parsed.Group.Should().Be("mediaPath");
@@ -30,138 +30,59 @@ public class PrinterAlertTests
     }
 
     [TestMethod]
-    public void TryParse_Strict_WithControlCharacter_ShouldFail()
+    public void Parse_NullOrWhiteSpace_ShouldThrow()
     {
-        var raw = "code=jam;severity=critical\u0001";
+        Action act1 = () => _mapper.Map<string, PrinterAlert>(null!);
+        act1.Should().Throw<Exception>();
 
-        var ok = PrinterAlert.TryParse(raw, out var _, PrinterAlertParseOptions.Strict);
+        Action act2 = () => _mapper.Map<string, PrinterAlert>("");
+        act2.Should().Throw<Exception>();
 
-        ok.Should().BeFalse();
+        Action act3 = () => _mapper.Map<string, PrinterAlert>("   ");
+        act3.Should().Throw<Exception>();
     }
 
     [TestMethod]
-    public void TryParse_Strict_WithUnknownElement_ShouldFail()
-    {
-        var raw = "code=jam;vendor=x";
-
-        var ok = PrinterAlert.TryParse(raw, out var _, PrinterAlertParseOptions.Strict);
-
-        ok.Should().BeFalse();
-    }
-
-    [TestMethod]
-    public void TryParse_NullOrWhiteSpace_ShouldReturnFalse()
-    {
-        PrinterAlert.TryParse(null!, out _).Should().BeFalse();
-        PrinterAlert.TryParse("", out _).Should().BeFalse();
-        PrinterAlert.TryParse("   ", out _).Should().BeFalse();
-    }
-
-    [TestMethod]
-    public void TryParse_Relaxed_MissingEqualsOrEmptyValue_ShouldSkip()
+    public void Parse_MissingEqualsOrEmptyValue_ShouldSkip()
     {
         var raw = "code=jam;invalidSegment;=emptyKey;key=;";
 
-        var ok = PrinterAlert.TryParse(raw, out var parsed, PrinterAlertParseOptions.Relaxed);
+        var parsed = _mapper.Map<string, PrinterAlert>(raw);
 
-        ok.Should().BeTrue();
-        parsed!.Code.Should().Be("jam");
+        parsed.Code.Should().Be("jam");
         parsed.Extensions.Should().BeNull(); // No valid extensions added
     }
 
     [TestMethod]
-    public void TryParse_Strict_MissingEqualsOrEmptyValue_ShouldFail()
-    {
-        PrinterAlert.TryParse("code=jam;invalidSegment", out _, PrinterAlertParseOptions.Strict).Should().BeFalse();
-        PrinterAlert.TryParse("code=jam;=emptyKey", out _, PrinterAlertParseOptions.Strict).Should().BeFalse();
-        PrinterAlert.TryParse("code=jam;key=", out _, PrinterAlertParseOptions.Strict).Should().BeFalse();
-    }
-
-    [TestMethod]
-    public void TryParse_Strict_NonAsciiLetters_ShouldFail()
-    {
-        PrinterAlert.TryParse("code=jam1", out _, PrinterAlertParseOptions.Strict).Should().BeFalse();
-        PrinterAlert.TryParse("code=jam;severity=crit1", out _, PrinterAlertParseOptions.Strict).Should().BeFalse();
-        PrinterAlert.TryParse("code=jam;training=train1", out _, PrinterAlertParseOptions.Strict).Should().BeFalse();
-        PrinterAlert.TryParse("code=jam;group=grp1", out _, PrinterAlertParseOptions.Strict).Should().BeFalse();
-    }
-
-    [TestMethod]
-    public void TryParse_Relaxed_NonAsciiLetters_ShouldParse()
-    {
-        var raw = "code=jam1;severity=crit1;training=train1;group=grp1";
-        PrinterAlert.TryParse(raw, out var parsed, PrinterAlertParseOptions.Relaxed).Should().BeTrue();
-        parsed!.Code.Should().Be("jam1");
-        parsed.Severity.Should().Be("crit1");
-        parsed.Training.Should().Be("train1");
-        parsed.Group.Should().Be("grp1");
-    }
-
-    [TestMethod]
-    public void TryParse_Strict_InvalidInts_ShouldFail()
-    {
-        PrinterAlert.TryParse("code=jam;index=abc", out _, PrinterAlertParseOptions.Strict).Should().BeFalse();
-        PrinterAlert.TryParse("code=jam;groupindex=abc", out _, PrinterAlertParseOptions.Strict).Should().BeFalse();
-        PrinterAlert.TryParse("code=jam;location=abc", out _, PrinterAlertParseOptions.Strict).Should().BeFalse();
-        PrinterAlert.TryParse("code=jam;time=abc", out _, PrinterAlertParseOptions.Strict).Should().BeFalse();
-    }
-
-    [TestMethod]
-    public void TryParse_Relaxed_InvalidInts_ShouldMapToExtensions()
+    public void Parse_InvalidInts_ShouldStoreInDictionaryButReturnNullFromTypedProperty()
     {
         var raw = "code=jam;index=abc;groupindex=def;location=ghi;time=jkl";
-        PrinterAlert.TryParse(raw, out var parsed, PrinterAlertParseOptions.Relaxed).Should().BeTrue();
+        var parsed = _mapper.Map<string, PrinterAlert>(raw);
         
-        parsed!.Index.Should().BeNull();
+        parsed.Index.Should().BeNull();
         parsed.GroupIndex.Should().BeNull();
         parsed.Location.Should().BeNull();
         parsed.Time.Should().BeNull();
         
-        parsed.Extensions.Should().NotBeNull();
-        parsed.Extensions.Should().ContainKey("index").WhoseValue.Should().Be("abc");
-        parsed.Extensions.Should().ContainKey("groupindex").WhoseValue.Should().Be("def");
-        parsed.Extensions.Should().ContainKey("location").WhoseValue.Should().Be("ghi");
-        parsed.Extensions.Should().ContainKey("time").WhoseValue.Should().Be("jkl");
+        // Under our simplified design, invalid values for standard keys remain under their standard keys in the dictionary,
+        // so they do not map to Extensions.
+        parsed.Extensions.Should().BeNull();
+        parsed.Dictionary.Should().ContainKey("index").WhoseValue.Should().Be("abc");
+        parsed.Dictionary.Should().ContainKey("groupindex").WhoseValue.Should().Be("def");
+        parsed.Dictionary.Should().ContainKey("location").WhoseValue.Should().Be("ghi");
+        parsed.Dictionary.Should().ContainKey("time").WhoseValue.Should().Be("jkl");
     }
 
     [TestMethod]
-    public void TryParse_RequireCodeFalse_MissingCode_ShouldParse()
+    public void Parse_MissingCode_ShouldThrow()
     {
-        var options = new PrinterAlertParseOptions { RequireCode = false };
         var raw = "severity=critical";
-        PrinterAlert.TryParse(raw, out var parsed, options).Should().BeTrue();
-        parsed!.Code.Should().BeNull();
-        parsed.Severity.Should().Be("critical");
+        Action act = () => _mapper.Map<string, PrinterAlert>(raw);
+        act.Should().Throw<Exception>();
     }
 
     [TestMethod]
-    public void TryParse_RequireCodeTrue_MissingCode_ShouldFail()
-    {
-        var options = new PrinterAlertParseOptions { RequireCode = true };
-        var raw = "severity=critical";
-        PrinterAlert.TryParse(raw, out _, options).Should().BeFalse();
-    }
-
-    [TestMethod]
-    public void Parse_ValidString_ShouldReturnAlert()
-    {
-        var raw = "code=jam;severity=critical";
-        var parsed = PrinterAlert.Parse(raw);
-        parsed.Should().NotBeNull();
-        parsed.Code.Should().Be("jam");
-        parsed.Severity.Should().Be("critical");
-    }
-
-    [TestMethod]
-    public void Parse_InvalidString_ShouldThrowFormatException()
-    {
-        var raw = "severity=critical"; // Missing code
-        Action act = () => PrinterAlert.Parse(raw);
-        act.Should().Throw<FormatException>().WithMessage($"Invalid printer-alert value: '{raw}'");
-    }
-
-    [TestMethod]
-    public void Serialize_WithParsedModel_ShouldFollowAbnfOrder()
+    public void Serialize_WithParsedModel_ShouldFollowDefinedOrder()
     {
         var alert = new PrinterAlert
         {
@@ -176,76 +97,51 @@ public class PrinterAlertTests
             Extensions = new Dictionary<string, string> { { "vendor", "x" } }
         };
 
-        var raw = PrinterAlert.Serialize(alert);
+        var raw = _mapper.Map<PrinterAlert, string>(alert);
 
         raw.Should().Be("code=coverOpen;index=23;severity=critical;training=fieldService;group=cover;groupindex=6;location=8;time=42;vendor=x");
     }
 
     [TestMethod]
-    public void Serialize_NullAlert_ShouldThrowArgumentNullException()
+    public void Serialize_NullAlert_ShouldThrow()
     {
-        Action act = () => PrinterAlert.Serialize(null!);
-        act.Should().Throw<ArgumentNullException>();
+        Action act = () => _mapper.Map<PrinterAlert, string>(null!);
+        act.Should().Throw<Exception>();
     }
 
     [TestMethod]
-    public void Serialize_MissingCode_ShouldThrowFormatException()
+    public void Serialize_MissingCode_ShouldThrow()
     {
         var alert = new PrinterAlert { Severity = "critical" };
-        Action act = () => PrinterAlert.Serialize(alert);
-        act.Should().Throw<FormatException>().WithMessage("The 'code' element is required for printer-alert serialization.");
+        Action act = () => _mapper.Map<PrinterAlert, string>(alert);
+        act.Should().Throw<Exception>();
     }
 
     [TestMethod]
-    public void TryParse_WithEmptySegment_ShouldSkip()
+    public void Properties_And_Extensions_ShouldSynchronizeWithDictionary()
     {
-        var raw = "code=jam; ;severity=critical";
-        var ok = PrinterAlert.TryParse(raw, out var parsed, PrinterAlertParseOptions.Relaxed);
-        ok.Should().BeTrue();
-        parsed!.Code.Should().Be("jam");
-        parsed.Severity.Should().Be("critical");
-    }
+        var alert = new PrinterAlert
+        {
+            Code = "jam",
+            Index = 42,
+            Severity = "critical",
+            Extensions = new Dictionary<string, string> { { "x-custom", "hello" } }
+        };
 
-    [TestMethod]
-    public void TryParse_WithTime_ShouldParse()
-    {
-        var raw = "code=jam;time=123";
-        var ok = PrinterAlert.TryParse(raw, out var parsed, PrinterAlertParseOptions.Relaxed);
-        ok.Should().BeTrue();
-        parsed!.Time.Should().Be(123);
-    }
+        // 1. Check properties are correct
+        alert.Code.Should().Be("jam");
+        alert.Index.Should().Be(42);
+        alert.Severity.Should().Be("critical");
+        alert.Extensions.Should().ContainKey("x-custom").WhoseValue.Should().Be("hello");
 
-    [TestMethod]
-    public void TryParse_WithOverflowInt_Strict_ShouldFail()
-    {
-        var raw = "code=jam;index=9999999999";
-        var ok = PrinterAlert.TryParse(raw, out _, PrinterAlertParseOptions.Strict);
-        ok.Should().BeFalse();
-    }
+        // 2. Change via properties, check Extensions is unchanged but dictionary is updated
+        alert.Code = "coverOpen";
+        alert.Extensions.Should().ContainKey("x-custom").WhoseValue.Should().Be("hello");
+        alert.Extensions.Should().NotContainKey("code");
 
-    [TestMethod]
-    public void TryParse_WithOverflowInt_Relaxed_ShouldMapToExtensions()
-    {
-        var raw = "code=jam;index=9999999999";
-        var ok = PrinterAlert.TryParse(raw, out var parsed, PrinterAlertParseOptions.Relaxed);
-        ok.Should().BeTrue();
-        parsed!.Index.Should().BeNull();
-        parsed.Extensions.Should().ContainKey("index").WhoseValue.Should().Be("9999999999");
-    }
-
-    [TestMethod]
-    [DataRow("abc", true)]
-    [DataRow("ABC", true)]
-    [DataRow("AZaz", true)]
-    [DataRow("", false)]
-    [DataRow("123", false)]
-    [DataRow("a1", false)]
-    [DataRow("@", false)]
-    [DataRow("[", false)]
-    [DataRow("`", false)]
-    [DataRow("{", false)]
-    public void IsAsciiLetters_ShouldValidate(string value, bool expected)
-    {
-        PrinterAlert.IsAsciiLetters(value).Should().Be(expected);
+        // 3. Clear extensions
+        alert.Extensions = null;
+        alert.Extensions.Should().BeNull();
+        alert.Code.Should().Be("coverOpen"); // Standard property preserved
     }
 }

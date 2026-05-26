@@ -45,8 +45,13 @@ public class SendUriTests : SharpIppIntegrationTestBase
                     AccessPin = "1234",
                     AccessX509Certificate = "-----BEGIN CERTIFICATE-----"
                 },
+                DocumentMetadata = GetTestDocumentMetadata(),
             },
-            DocumentTemplateAttributes = new() { Copies = 1 }
+            DocumentTemplateAttributes = new()
+            {
+                Copies = 1,
+                DocumentMetadata = GetTestDocumentMetadata()
+            }
         };
         IIppRequest? serverRequest = null;
         SendUriResponse? serverResponse = null;
@@ -59,9 +64,13 @@ public class SendUriTests : SharpIppIntegrationTestBase
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
                 StatusCode = IppStatusCode.SuccessfulOk,
-                OperationAttributes = new() { StatusMessage = "successful-ok", DetailedStatusMessage = ["detail1"], DocumentAccessError = "none" },
+                OperationAttributes = new() { StatusMessage = "successful-ok", DetailedStatusMessage = "detail1", DocumentAccessError = "none" },
                 JobAttributes = new() { JobId = 456 },
-                DocumentAttributes = new() { DocumentNumber = 1 }
+                DocumentAttributes = new()
+                {
+                    DocumentNumber = 1,
+                    DocumentMetadata = GetTestDocumentMetadata()
+                }
             };
             var responseStream = new MemoryStream();
             await server.SendResponseAsync(serverResponse, responseStream, c);

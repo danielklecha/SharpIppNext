@@ -32,7 +32,7 @@ internal class JobSheetsColProfile : IProfile
         mapper.CreateMap<JobSheetsCol, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.JobSheetsCol, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.JobSheetsCol, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
             if (src.JobSheets.HasValue)
@@ -61,7 +61,7 @@ internal class JobSheetsColProfile : IProfile
         mapper.CreateMap<ProofPrint, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.ProofPrint, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.ProofPrint, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
             if (src.ProofPrintCopies.HasValue)
@@ -88,7 +88,7 @@ internal class JobSheetsColProfile : IProfile
         mapper.CreateMap<JobStorage, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.JobStorage, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.JobStorage, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
             if (src.JobStorageAccess != null)
@@ -118,7 +118,7 @@ internal class JobSheetsColProfile : IProfile
         mapper.CreateMap<DocumentAccess, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.DocumentAccess, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.DocumentAccess, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
             if (src.AccessOAuthToken != null)
@@ -154,7 +154,7 @@ internal class JobSheetsColProfile : IProfile
         mapper.CreateMap<CoverSheetInfo, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.CoverSheetInfo, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.CoverSheetInfo, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
             if (src.FromName != null) attributes.Add(new IppAttribute(Tag.NameWithoutLanguage, nameof(CoverSheetInfo.FromName).ConvertCamelCaseToKebabCase(), src.FromName));
@@ -182,7 +182,7 @@ internal class JobSheetsColProfile : IProfile
         mapper.CreateMap<DestinationUri, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.DestinationUris, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.DestinationUris, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
             if (src.DestinationUriValue != null) attributes.Add(new IppAttribute(Tag.Uri, "destination-uri", src.DestinationUriValue));
@@ -208,7 +208,7 @@ internal class JobSheetsColProfile : IProfile
         mapper.CreateMap<DestinationStatus, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.DestinationStatuses, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.DestinationStatuses, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
             if (src.DestinationUri != null)
@@ -252,7 +252,7 @@ internal class JobSheetsColProfile : IProfile
         mapper.CreateMap<DestinationUriReady, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, PrinterAttribute.DestinationUriReady, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.DestinationUriReady, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
             if (src.DestinationAttributes != null)
@@ -296,7 +296,7 @@ internal class JobSheetsColProfile : IProfile
         mapper.CreateMap<OutputAttributes, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.OutputAttributes, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.OutputAttributes, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
             if (src.NoiseRemoval.HasValue) attributes.Add(new IppAttribute(Tag.Integer, nameof(OutputAttributes.NoiseRemoval).ConvertCamelCaseToKebabCase(), src.NoiseRemoval.Value));
@@ -328,7 +328,7 @@ internal class JobSheetsColProfile : IProfile
         mapper.CreateMap<Material, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.MaterialsCol, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.MaterialsCol, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
             if (src.MaterialAmount.HasValue) attributes.Add(new IppAttribute(Tag.Integer, nameof(Material.MaterialAmount).ConvertCamelCaseToKebabCase(), src.MaterialAmount.Value));
@@ -362,7 +362,7 @@ internal class JobSheetsColProfile : IProfile
         mapper.CreateMap<PrintAccuracy, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.PrintAccuracy, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.PrintAccuracy, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
             if (src.AccuracyUnits != null) attributes.Add(new IppAttribute(Tag.Keyword, nameof(PrintAccuracy.AccuracyUnits).ConvertCamelCaseToKebabCase(), src.AccuracyUnits.Value.Value));
@@ -387,7 +387,7 @@ internal class JobSheetsColProfile : IProfile
         mapper.CreateMap<PrintObject, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.PrintObjects, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.PrintObjects, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
             if (src.DocumentNumber.HasValue) attributes.Add(new IppAttribute(Tag.Integer, nameof(PrintObject.DocumentNumber).ConvertCamelCaseToKebabCase(), src.DocumentNumber.Value));
@@ -413,7 +413,7 @@ internal class JobSheetsColProfile : IProfile
         mapper.CreateMap<PrinterVolumeSupported, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, PrinterAttribute.PrinterVolumeSupported, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.PrinterVolumeSupported, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
             if (src.XDimension.HasValue) attributes.Add(new IppAttribute(Tag.Integer, nameof(PrinterVolumeSupported.XDimension).ConvertCamelCaseToKebabCase(), src.XDimension.Value));
@@ -454,7 +454,7 @@ internal class JobSheetsColProfile : IProfile
         mapper.CreateMap<OverrideInstruction, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, JobAttribute.Overrides, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.Overrides, NoValue.Instance) };
 
             var pageRanges = src.PageRanges;
 
@@ -475,7 +475,7 @@ internal class JobSheetsColProfile : IProfile
                 var templateRequest = map.Map<IppRequestMessage>(src.JobTemplateAttributes);
                 var overrideTemplateMembers = templateRequest.JobAttributes
                     .ToIppDictionary()
-                    .Where(x => x.Key != JobAttribute.Overrides && x.Key != JobAttribute.OverridesActual)
+                    .Where(x => x.Key != IppAttributeNames.Overrides && x.Key != IppAttributeNames.OverridesActual)
                     .SelectMany(x => x.Value);
                 attributes.AddRange(overrideTemplateMembers);
             }

@@ -29,7 +29,7 @@ internal class PowerEventPolicyProfile : IProfile
         mapper.CreateMap<PowerEventPolicy, IEnumerable<IppAttribute>>((src, map) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, SystemAttribute.PowerEventPolicyCol, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.PowerEventPolicyCol, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
             if (src.EventId.HasValue)

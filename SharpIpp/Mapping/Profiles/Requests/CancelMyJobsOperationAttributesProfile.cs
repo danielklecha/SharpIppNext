@@ -14,8 +14,8 @@ internal class CancelMyJobsOperationAttributesProfile : IProfile
         {
             dst ??= new CancelMyJobsOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(src, dst);
-            dst.JobIds = map.MapFromDicSetNullable<int[]?>(src, JobAttribute.JobIds);
-            dst.Message = map.MapFromDicNullable<string?>(src, JobAttribute.Message);
+            dst.JobIds = map.MapFromDicSetNullable<int[]?>(src, IppAttributeNames.JobIds);
+            dst.Message = map.MapFromDicNullable<string?>(src, IppAttributeNames.Message);
             return dst;
         });
 
@@ -24,9 +24,9 @@ internal class CancelMyJobsOperationAttributesProfile : IProfile
             dst ??= new List<IppAttribute>();
             map.Map<OperationAttributes, List<IppAttribute>>(src, dst);
             if (src.JobIds != null)
-                dst.AddRange(src.JobIds.Select(x => new IppAttribute(Tag.Integer, JobAttribute.JobIds, x)));
+                dst.AddRange(src.JobIds.Select(x => new IppAttribute(Tag.Integer, IppAttributeNames.JobIds, x)));
             if (src.Message != null)
-                dst.Add(new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.Message, src.Message));
+                dst.Add(new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.Message, src.Message));
             return dst;
         });
     }

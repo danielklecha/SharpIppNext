@@ -128,7 +128,7 @@ namespace SharpIpp.Protocol
                         var attribute = ReadAttribute((Tag)data, reader, prevAttribute, prevBegCollectionAttribute, encoding);
                         switch (attribute.Tag)
                         {
-                            case Tag.Charset when currentSectionTag == SectionTag.OperationAttributesTag && attribute.Name == JobAttribute.AttributesCharset:
+                            case Tag.Charset when currentSectionTag == SectionTag.OperationAttributesTag && attribute.Name == IppAttributeNames.AttributesCharset:
                                 encoding = Encoding.GetEncoding((string)attribute.Value);
                                 break;
                             case Tag.BegCollection:
@@ -204,7 +204,7 @@ namespace SharpIpp.Protocol
                         var attribute = ReadAttribute((Tag)data, reader, prevAttribute, prevBegCollectionAttribute, encoding);
                         switch (attribute.Tag)
                         {
-                            case Tag.Charset when attributes == res.OperationAttributes && attribute.Name == JobAttribute.AttributesCharset:
+                            case Tag.Charset when attributes == res.OperationAttributes && attribute.Name == IppAttributeNames.AttributesCharset:
                                 encoding = Encoding.GetEncoding((string)attribute.Value);
                                 break;
                             case Tag.BegCollection:
@@ -320,10 +320,10 @@ namespace SharpIpp.Protocol
                 throw new ArgumentNullException( nameof( stream ) );
             var charsetAttribute = ippResponseMessage.OperationAttributes
                 .SelectMany(x => x)
-                .FirstOrDefault(x => x.Tag == Tag.Charset && x.Name == JobAttribute.AttributesCharset);
+                .FirstOrDefault(x => x.Tag == Tag.Charset && x.Name == IppAttributeNames.AttributesCharset);
             if (charsetAttribute.Value is not string charset)
             {
-                throw new ArgumentException($"The operation attribute '{JobAttribute.AttributesCharset}' is missing or invalid.");
+                throw new ArgumentException($"The operation attribute '{IppAttributeNames.AttributesCharset}' is missing or invalid.");
             }
             var encoding = Encoding.GetEncoding(charset);
             using var writer = new BinaryWriter( stream, Encoding.ASCII, true );
@@ -489,10 +489,10 @@ namespace SharpIpp.Protocol
                 && requestMessage.SystemAttributes.Count == 0)
                 return;
             var charsetAttribute = requestMessage.OperationAttributes
-                    .FirstOrDefault(x => x.Tag == Tag.Charset && x.Name == JobAttribute.AttributesCharset);
+                    .FirstOrDefault(x => x.Tag == Tag.Charset && x.Name == IppAttributeNames.AttributesCharset);
             if (charsetAttribute.Value is not string charset)
             {
-                throw new ArgumentException($"The operation attribute '{JobAttribute.AttributesCharset}' is missing or invalid.");
+                throw new ArgumentException($"The operation attribute '{IppAttributeNames.AttributesCharset}' is missing or invalid.");
             }
             var encoding = Encoding.GetEncoding(charset);
             WriteSection(SectionTag.OperationAttributesTag, requestMessage.OperationAttributes, writer, encoding);
@@ -531,6 +531,16 @@ namespace SharpIpp.Protocol
             }
         }
 
+        /// <summary>
+        /// Writes a single section of IPP attributes.
+        /// </summary>
+        /// <remarks>
+        /// Attributes are serialized in the exact order they appear in the list.
+        /// RFC 8011 Section 4.1.4 requires that for the Operation Attributes section,
+        /// 'attributes-charset' and 'attributes-natural-language' MUST be the first
+        /// and second attributes respectively. The caller/mapping layer must ensure
+        /// they are placed first in the list.
+        /// </remarks>
         public void WriteSection( SectionTag sectionTag, List<IppAttribute> attributes, BinaryWriter writer, Encoding encoding )
         {
             if (attributes is null)

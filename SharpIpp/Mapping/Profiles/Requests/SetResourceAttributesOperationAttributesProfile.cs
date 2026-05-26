@@ -13,14 +13,14 @@ internal class SetResourceAttributesOperationAttributesProfile : IProfile
         {
             dst ??= new SetResourceAttributesOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, SystemOperationAttributes>(src, dst);
-            dst.ResourceId = map.MapFromDicNullable<int?>(src, SystemAttribute.ResourceId);
-            dst.ResourceName = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceName);
-            dst.ResourceInfo = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceInfo);
-            dst.ResourceNaturalLanguage = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceNaturalLanguage);
-            dst.ResourcePatches = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourcePatches);
-            dst.ResourceStringVersion = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceStringVersion);
-            dst.ResourceType = map.MapFromDicNullable<ResourceType?>(src, SystemAttribute.ResourceType);
-            dst.ResourceVersion = map.MapFromDicNullable<string?>(src, SystemAttribute.ResourceVersion);
+            dst.ResourceId = map.MapFromDicNullable<int?>(src, IppAttributeNames.ResourceId);
+            dst.ResourceName = map.MapFromDicNullable<string?>(src, IppAttributeNames.ResourceName);
+            dst.ResourceInfo = map.MapFromDicNullable<string?>(src, IppAttributeNames.ResourceInfo);
+            dst.ResourceNaturalLanguage = map.MapFromDicNullable<string?>(src, IppAttributeNames.ResourceNaturalLanguage);
+            dst.ResourcePatches = map.MapFromDicNullable<string?>(src, IppAttributeNames.ResourcePatches);
+            dst.ResourceStringVersion = map.MapFromDicNullable<string?>(src, IppAttributeNames.ResourceStringVersion);
+            dst.ResourceType = map.MapFromDicNullable<ResourceType?>(src, IppAttributeNames.ResourceType);
+            dst.ResourceVersion = map.MapFromDicNullable<string?>(src, IppAttributeNames.ResourceVersion);
             return dst;
         });
 
@@ -29,21 +29,21 @@ internal class SetResourceAttributesOperationAttributesProfile : IProfile
             dst ??= new List<IppAttribute>();
             map.Map<SystemOperationAttributes, List<IppAttribute>>(src, dst);
             if (src.ResourceId.HasValue)
-                dst.Add(new IppAttribute(Tag.Integer, SystemAttribute.ResourceId, src.ResourceId.Value));
+                dst.Add(new IppAttribute(Tag.Integer, IppAttributeNames.ResourceId, src.ResourceId.Value));
             if (src.ResourceName != null)
-                dst.Add(new IppAttribute(Tag.NameWithoutLanguage, SystemAttribute.ResourceName, src.ResourceName));
+                dst.Add(new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.ResourceName, src.ResourceName));
             if (src.ResourceInfo != null)
-                dst.Add(new IppAttribute(Tag.TextWithoutLanguage, SystemAttribute.ResourceInfo, src.ResourceInfo));
+                dst.Add(new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.ResourceInfo, src.ResourceInfo));
             if (src.ResourceNaturalLanguage != null)
-                dst.Add(new IppAttribute(Tag.NaturalLanguage, SystemAttribute.ResourceNaturalLanguage, src.ResourceNaturalLanguage));
+                dst.Add(new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.ResourceNaturalLanguage, src.ResourceNaturalLanguage));
             if (src.ResourcePatches != null)
-                dst.Add(new IppAttribute(Tag.TextWithoutLanguage, SystemAttribute.ResourcePatches, src.ResourcePatches));
+                dst.Add(new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.ResourcePatches, src.ResourcePatches));
             if (src.ResourceStringVersion != null)
-                dst.Add(new IppAttribute(Tag.TextWithoutLanguage, SystemAttribute.ResourceStringVersion, src.ResourceStringVersion));
+                dst.Add(new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.ResourceStringVersion, src.ResourceStringVersion));
             if (src.ResourceType != null)
-                dst.Add(new IppAttribute(Tag.Keyword, SystemAttribute.ResourceType, src.ResourceType.Value.Value));
+                dst.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.ResourceType, src.ResourceType.Value.Value));
             if (src.ResourceVersion != null)
-                dst.Add(new IppAttribute(Tag.TextWithoutLanguage, SystemAttribute.ResourceVersion, src.ResourceVersion));
+                dst.Add(new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.ResourceVersion, src.ResourceVersion));
             return dst;
         });
     }

@@ -1,4 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpIpp.Validation;
+using System.ComponentModel.DataAnnotations;
 using Moq.Protected;
 using Moq;
 using SharpIpp;
@@ -51,9 +53,9 @@ public class SharpIppClientTests
             RequestId = 123,
             StatusCode = IppStatusCode.SuccessfulOk,
             JobAttributes = { new List<IppAttribute> { 
-                new IppAttribute(Tag.Uri, JobAttribute.JobUri, "ipp://127.0.0.1:631/jobs/1"),
-                new IppAttribute(Tag.Integer, JobAttribute.JobId, 1),
-                new IppAttribute(Tag.Enum, JobAttribute.JobState, (int)JobState.Pending)
+                new IppAttribute(Tag.Uri, IppAttributeNames.JobUri, "ipp://127.0.0.1:631/jobs/1"),
+                new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 1),
+                new IppAttribute(Tag.Enum, IppAttributeNames.JobState, (int)JobState.Pending)
             } }
         } );
         return protocol;
@@ -184,9 +186,9 @@ public class SharpIppClientTests
         };
         request.OperationAttributes.AddRange(
         [
-            new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"),
-            new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"),
-            new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://127.0.0.1:631/")
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://127.0.0.1:631/")
         ]);
 
         await client.SendAsync(new Uri("http://127.0.0.1:631/"), request);
@@ -196,12 +198,70 @@ public class SharpIppClientTests
     }
 
     [TestMethod]
-    public void Constructor_WithNullRequestValidator_ShouldThrowArgumentNullException()
+    public void Constructor_WithNullValidators_ShouldNotThrow()
     {
-        Action act = () => _ = new SharpIppClient(new HttpClient(GetMockOfHttpMessageHandler().Object), Mock.Of<IIppProtocol>(), null!);
+        Action act1 = () => _ = new SharpIppClient(new HttpClient(GetMockOfHttpMessageHandler().Object), Mock.Of<IIppProtocol>(), null!);
+        act1.Should().NotThrow();
 
-        act.Should().Throw<ArgumentNullException>()
-            .WithParameterName("requestValidator");
+        Action act2 = () => _ = new SharpIppClient(new HttpClient(GetMockOfHttpMessageHandler().Object), Mock.Of<IIppProtocol>(), null!, null!);
+        act2.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public async Task SendAsync_WithNullValidators_ShouldNotThrowNullReferenceException()
+    {
+        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
+        protocol.Setup(x => x.WriteIppRequestAsync(It.IsAny<IIppRequestMessage>(), It.IsAny<Stream>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+
+        using SharpIppClient client = new SharpIppClient(new HttpClient(GetMockOfHttpMessageHandler().Object), protocol.Object, null!, null!);
+
+        var request = new IppRequestMessage
+        {
+            IppOperation = IppOperation.GetPrinterAttributes,
+            RequestId = 123,
+        };
+        request.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://127.0.0.1:631/")
+        ]);
+
+        Func<Task<IIppResponseMessage>> act = () => client.SendAsync(new Uri("http://127.0.0.1:631/"), request);
+        await act.Should().NotThrowAsync();
+    }
+
+    [TestMethod]
+    public async Task SendAsync_WithInjectedResponseValidator_ShouldInvokeValidator()
+    {
+        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
+        protocol.Setup(x => x.WriteIppRequestAsync(It.IsAny<IIppRequestMessage>(), It.IsAny<Stream>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+
+        Mock<IIppResponseMessageValidator> validator = new();
+
+        using SharpIppClient client = new SharpIppClient(
+            new HttpClient(GetMockOfHttpMessageHandler().Object),
+            protocol.Object,
+            IppRequestMessageValidator.Default,
+            IppRequestValidator.Default,
+            null,
+            validator.Object);
+
+        var request = new IppRequestMessage
+        {
+            IppOperation = IppOperation.GetPrinterAttributes,
+            RequestId = 123,
+        };
+        request.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://127.0.0.1:631/")
+        ]);
+
+        var response = await client.SendAsync(new Uri("http://127.0.0.1:631/"), request);
+
+        validator.Verify(x => x.Validate(It.Is<IIppResponseMessage>(m => m == response)), Times.Once);
     }
 
 
@@ -213,28 +273,28 @@ public class SharpIppClientTests
                 IppOperation.CancelJob,
                 new CancelJobRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", JobId = 234 } },
                 new Func<SharpIppClient, object, Task>(async (c, r) => await c.CancelJobAsync((CancelJobRequest)r)),
-                new[] { new IppAttribute(Tag.Integer, JobAttribute.JobId, 234) },
+                new[] { new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 234) },
                 "CancelJob"
             ];
             yield return [
                 IppOperation.HoldJob,
                 new HoldJobRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", JobId = 234 } },
                 new Func<SharpIppClient, object, Task>(async (c, r) => await c.HoldJobAsync((HoldJobRequest)r)),
-                new[] { new IppAttribute(Tag.Integer, JobAttribute.JobId, 234) },
+                new[] { new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 234) },
                 "HoldJob"
             ];
             yield return [
                 IppOperation.ReleaseJob,
                 new ReleaseJobRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", JobId = 234 } },
                 new Func<SharpIppClient, object, Task>(async (c, r) => await c.ReleaseJobAsync((ReleaseJobRequest)r)),
-                new[] { new IppAttribute(Tag.Integer, JobAttribute.JobId, 234) },
+                new[] { new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 234) },
                 "ReleaseJob"
             ];
             yield return [
                 IppOperation.RestartJob,
                 new RestartJobRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", JobId = 234 } },
                 new Func<SharpIppClient, object, Task>(async (c, r) => await c.RestartJobAsync((RestartJobRequest)r)),
-                new[] { new IppAttribute(Tag.Integer, JobAttribute.JobId, 234) },
+                new[] { new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 234) },
                 "RestartJob"
             ];
             yield return [
@@ -276,14 +336,14 @@ public class SharpIppClientTests
                 IppOperation.RestartOnePrinter,
                 new RestartOnePrinterRequest { RequestId = 123, OperationAttributes = new SystemOperationAttributes { SystemUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", PrinterId = 99 } },
                 new Func<SharpIppClient, object, Task>(async (c, r) => await c.RestartOnePrinterAsync((RestartOnePrinterRequest)r)),
-                new[] { new IppAttribute(Tag.Integer, JobAttribute.PrinterId, 99) },
+                new[] { new IppAttribute(Tag.Integer, IppAttributeNames.PrinterId, 99) },
                 "RestartOnePrinter"
             ];
             yield return [
                 IppOperation.CancelResource,
                 new CancelResourceRequest { RequestId = 123, OperationAttributes = new CancelResourceOperationAttributes { SystemUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", ResourceId = 1 } },
                 new Func<SharpIppClient, object, Task>(async (c, r) => await c.CancelResourceAsync((CancelResourceRequest)r)),
-                new[] { new IppAttribute(Tag.Integer, SystemAttribute.ResourceId, 1) },
+                new[] { new IppAttribute(Tag.Integer, IppAttributeNames.ResourceId, 1) },
                 "CancelResource"
             ];
             yield return [
@@ -297,35 +357,35 @@ public class SharpIppClientTests
                 IppOperation.InstallResource,
                 new InstallResourceRequest { RequestId = 123, OperationAttributes = new InstallResourceOperationAttributes { SystemUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", ResourceId = 1 } },
                 new Func<SharpIppClient, object, Task>(async (c, r) => await c.InstallResourceAsync((InstallResourceRequest)r)),
-                new[] { new IppAttribute(Tag.Integer, SystemAttribute.ResourceId, 1) },
+                new[] { new IppAttribute(Tag.Integer, IppAttributeNames.ResourceId, 1) },
                 "InstallResource"
             ];
             yield return [
                 IppOperation.SendResourceData,
                 new SendResourceDataRequest { RequestId = 123, OperationAttributes = new SendResourceDataOperationAttributes { SystemUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", ResourceId = 1 } },
                 new Func<SharpIppClient, object, Task>(async (c, r) => await c.SendResourceDataAsync((SendResourceDataRequest)r)),
-                new[] { new IppAttribute(Tag.Integer, SystemAttribute.ResourceId, 1) },
+                new[] { new IppAttribute(Tag.Integer, IppAttributeNames.ResourceId, 1) },
                 "SendResourceData"
             ];
             yield return [
                 IppOperation.SetResourceAttributes,
                 new SetResourceAttributesRequest { RequestId = 123, OperationAttributes = new SetResourceAttributesOperationAttributes { SystemUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", ResourceId = 1 } },
                 new Func<SharpIppClient, object, Task>(async (c, r) => await c.SetResourceAttributesAsync((SetResourceAttributesRequest)r)),
-                new[] { new IppAttribute(Tag.Integer, SystemAttribute.ResourceId, 1) },
+                new[] { new IppAttribute(Tag.Integer, IppAttributeNames.ResourceId, 1) },
                 "SetResourceAttributes"
             ];
             yield return [
                 IppOperation.GetJobs,
                 new GetJobsRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", MyJobs = true } },
                 new Func<SharpIppClient, object, Task>(async (c, r) => await c.GetJobsAsync((GetJobsRequest)r)),
-                new[] { new IppAttribute(Tag.Boolean, JobAttribute.MyJobs, true) },
+                new[] { new IppAttribute(Tag.Boolean, IppAttributeNames.MyJobs, true) },
                 "GetJobs"
             ];
             yield return [
                 IppOperation.GetJobAttributes,
                 new GetJobAttributesRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", JobId = 234 } },
                 new Func<SharpIppClient, object, Task>(async (c, r) => await c.GetJobAttributesAsync((GetJobAttributesRequest)r)),
-                new[] { new IppAttribute(Tag.Integer, JobAttribute.JobId, 234) },
+                new[] { new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 234) },
                 "GetJobAttributes"
             ];
             yield return [
@@ -353,63 +413,63 @@ public class SharpIppClientTests
                 IppOperation.PrintUri,
                 new PrintUriRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", DocumentUri = new Uri("http://test.com/document.pdf") } },
                 new Func<SharpIppClient, object, Task>(async (c, r) => await c.PrintUriAsync((PrintUriRequest)r)),
-                new[] { new IppAttribute(Tag.Uri, JobAttribute.DocumentUri, "http://test.com/document.pdf") },
+                new[] { new IppAttribute(Tag.Uri, IppAttributeNames.DocumentUri, "http://test.com/document.pdf") },
                 "PrintUri"
             ];
             yield return [
                 IppOperation.SendDocument,
                 new SendDocumentRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", JobId = 456 }, Document = new MemoryStream() },
                 new Func<SharpIppClient, object, Task>(async (c, r) => await c.SendDocumentAsync((SendDocumentRequest)r)),
-                new[] { new IppAttribute(Tag.Integer, JobAttribute.JobId, 456), new IppAttribute(Tag.Boolean, JobAttribute.LastDocument, false) },
+                new[] { new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 456), new IppAttribute(Tag.Boolean, IppAttributeNames.LastDocument, false) },
                 "SendDocument"
             ];
             yield return [
                 IppOperation.SendUri,
                 new SendUriRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", JobId = 456, DocumentUri = new Uri("http://test.com/document.pdf") } },
                 new Func<SharpIppClient, object, Task>(async (c, r) => await c.SendUriAsync((SendUriRequest)r)),
-                new[] { new IppAttribute(Tag.Uri, JobAttribute.DocumentUri, "http://test.com/document.pdf"), new IppAttribute(Tag.Integer, JobAttribute.JobId, 456), new IppAttribute(Tag.Boolean, JobAttribute.LastDocument, false) },
+                new[] { new IppAttribute(Tag.Uri, IppAttributeNames.DocumentUri, "http://test.com/document.pdf"), new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 456), new IppAttribute(Tag.Boolean, IppAttributeNames.LastDocument, false) },
                 "SendUri"
             ];
             yield return [
                 IppOperation.AcknowledgeIdentifyPrinter,
                 new AcknowledgeIdentifyPrinterRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174001") } },
                 new Func<SharpIppClient, object, Task>(async (c, r) => await c.AcknowledgeIdentifyPrinterAsync((AcknowledgeIdentifyPrinterRequest)r)),
-                new[] { new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174001") },
+                new[] { new IppAttribute(Tag.Uri, IppAttributeNames.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174001") },
                 "AcknowledgeIdentifyPrinter"
             ];
             yield return [
                 IppOperation.DeregisterOutputDevice,
                 new DeregisterOutputDeviceRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174002") } },
                 new Func<SharpIppClient, object, Task>(async (c, r) => await c.DeregisterOutputDeviceAsync((DeregisterOutputDeviceRequest)r)),
-                new[] { new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174002") },
+                new[] { new IppAttribute(Tag.Uri, IppAttributeNames.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174002") },
                 "DeregisterOutputDevice"
             ];
             yield return [
                 IppOperation.FetchJob,
                 new FetchJobRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", JobId = 456, OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174003") } },
                 new Func<SharpIppClient, object, Task>(async (c, r) => await c.FetchJobAsync((FetchJobRequest)r)),
-                new[] { new IppAttribute(Tag.Integer, JobAttribute.JobId, 456), new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174003") },
+                new[] { new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 456), new IppAttribute(Tag.Uri, IppAttributeNames.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174003") },
                 "FetchJob"
             ];
             yield return [
                 IppOperation.UpdateDocumentStatus,
                 new UpdateDocumentStatusRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", JobId = 456, DocumentNumber = 1, OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174004") } },
                 new Func<SharpIppClient, object, Task>(async (c, r) => await c.UpdateDocumentStatusAsync((UpdateDocumentStatusRequest)r)),
-                new[] { new IppAttribute(Tag.Integer, JobAttribute.JobId, 456), new IppAttribute(Tag.Integer, DocumentAttribute.DocumentNumber, 1), new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174004") },
+                new[] { new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 456), new IppAttribute(Tag.Integer, IppAttributeNames.DocumentNumber, 1), new IppAttribute(Tag.Uri, IppAttributeNames.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174004") },
                 "UpdateDocumentStatus"
             ];
             yield return [
                 IppOperation.UpdateJobStatus,
                 new UpdateJobStatusRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", JobId = 456, OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174005") } },
                 new Func<SharpIppClient, object, Task>(async (c, r) => await c.UpdateJobStatusAsync((UpdateJobStatusRequest)r)),
-                new[] { new IppAttribute(Tag.Integer, JobAttribute.JobId, 456), new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174005") },
+                new[] { new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 456), new IppAttribute(Tag.Uri, IppAttributeNames.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174005") },
                 "UpdateJobStatus"
             ];
             yield return [
                 IppOperation.UpdateOutputDeviceAttributes,
                 new UpdateOutputDeviceAttributesRequest { RequestId = 123, OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), RequestingUserName = "test-user", OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174006") } },
                 new Func<SharpIppClient, object, Task>(async (c, r) => await c.UpdateOutputDeviceAttributesAsync((UpdateOutputDeviceAttributesRequest)r)),
-                new[] { new IppAttribute(Tag.Uri, JobAttribute.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174006") },
+                new[] { new IppAttribute(Tag.Uri, IppAttributeNames.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174006") },
                 "UpdateOutputDeviceAttributes"
             ];
         }
@@ -440,7 +500,7 @@ public class SharpIppClientTests
             RequestId = 123,
             Document = document
         };
-        var uriAttribute = new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "http://127.0.0.1:631/");
+        var uriAttribute = new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "http://127.0.0.1:631/");
         if (operation == IppOperation.GetSystemAttributes
             || operation == IppOperation.GetSystemSupportedValues
             || operation == IppOperation.RegisterOutputDevice
@@ -464,14 +524,14 @@ public class SharpIppClientTests
             || operation == IppOperation.ShutdownAllPrinters
             || operation == IppOperation.StartupAllPrinters)
         {
-            uriAttribute = new IppAttribute(Tag.Uri, SystemAttribute.SystemUri, "http://127.0.0.1:631/");
+            uriAttribute = new IppAttribute(Tag.Uri, IppAttributeNames.SystemUri, "http://127.0.0.1:631/");
         }
 
         rawRequestMessage.OperationAttributes.AddRange(new[]
         {
-            new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"),
-            new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"),
-            new IppAttribute(Tag.NameWithoutLanguage, JobAttribute.RequestingUserName, "test-user"),
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.RequestingUserName, "test-user"),
             uriAttribute
         });
         if (additionalAttributes != null)
@@ -498,9 +558,9 @@ public class SharpIppClientTests
             RequestId = 123,
             StatusCode = IppStatusCode.SuccessfulOk,
             JobAttributes = { new List<IppAttribute> { 
-                new IppAttribute(Tag.Uri, JobAttribute.JobUri, "ipp://127.0.0.1:631/jobs/1"),
-                new IppAttribute(Tag.Integer, JobAttribute.JobId, 1),
-                new IppAttribute(Tag.Enum, JobAttribute.JobState, (int)JobState.Pending)
+                new IppAttribute(Tag.Uri, IppAttributeNames.JobUri, "ipp://127.0.0.1:631/jobs/1"),
+                new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 1),
+                new IppAttribute(Tag.Enum, IppAttributeNames.JobState, (int)JobState.Pending)
             } }
         } );
         SharpIppClient client = new( httpClient, protocol.Object );
@@ -529,9 +589,9 @@ public class SharpIppClientTests
             RequestId = 123,
             StatusCode = IppStatusCode.SuccessfulOk,
             JobAttributes = { new List<IppAttribute> { 
-                new IppAttribute(Tag.Uri, JobAttribute.JobUri, "ipp://127.0.0.1:631/jobs/1"),
-                new IppAttribute(Tag.Integer, JobAttribute.JobId, 1),
-                new IppAttribute(Tag.Enum, JobAttribute.JobState, (int)JobState.Pending)
+                new IppAttribute(Tag.Uri, IppAttributeNames.JobUri, "ipp://127.0.0.1:631/jobs/1"),
+                new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 1),
+                new IppAttribute(Tag.Enum, IppAttributeNames.JobState, (int)JobState.Pending)
             } }
         } );
         SharpIppClient client = new( httpClient, protocol.Object );
@@ -559,9 +619,9 @@ public class SharpIppClientTests
             RequestId = 123,
             StatusCode = IppStatusCode.ServerErrorBusy,
             JobAttributes = { new List<IppAttribute> { 
-                new IppAttribute(Tag.Uri, JobAttribute.JobUri, "ipp://127.0.0.1:631/jobs/1"),
-                new IppAttribute(Tag.Integer, JobAttribute.JobId, 1),
-                new IppAttribute(Tag.Enum, JobAttribute.JobState, (int)JobState.Pending)
+                new IppAttribute(Tag.Uri, IppAttributeNames.JobUri, "ipp://127.0.0.1:631/jobs/1"),
+                new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 1),
+                new IppAttribute(Tag.Enum, IppAttributeNames.JobState, (int)JobState.Pending)
             } }
         } );
         SharpIppClient client = new( new( GetMockOfHttpMessageHandler().Object ), protocol.Object );
@@ -675,6 +735,14 @@ public class SharpIppClientTests
     }
 
     [TestMethod]
+    public void CreateRawRequest_Null_ShouldThrowArgumentNullException()
+    {
+        using SharpIppClient client = new();
+        Action act = () => client.CreateRawRequest<IIppRequest>(null!);
+        act.Should().Throw<ArgumentNullException>().WithParameterName("ippRequestMessage");
+    }
+
+    [TestMethod]
     [DataRow("http://127.0.0.1:631", "http://127.0.0.1:631")]
     [DataRow("https://127.0.0.1:631", "https://127.0.0.1:631")]
     [DataRow("ipp://127.0.0.1:631", "http://127.0.0.1:631")]
@@ -736,7 +804,7 @@ public class SharpIppClientTests
             StatusCode = IppStatusCode.SuccessfulOk,
             PrinterAttributes = { new List<IppAttribute> { 
                 // PrinterState is expected to be int, but we provide a string
-                new IppAttribute(Tag.Charset, PrinterAttribute.PrinterState, "invalid-type-should-be-int")
+                new IppAttribute(Tag.Charset, IppAttributeNames.PrinterState, "invalid-type-should-be-int")
             } }
         } );
         using SharpIppClient client = new(new(GetMockOfHttpMessageHandler().Object), protocol.Object);
@@ -769,9 +837,9 @@ public class SharpIppClientTests
         };
         request.OperationAttributes.AddRange(
         [
-            new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"),
-            new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"),
-            new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://127.0.0.1:631/")
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://127.0.0.1:631/")
         ]);
 
         Func<Task<IIppResponseMessage>> act = () => client.SendAsync(new Uri("ipp://127.0.0.1:631/"), request);
@@ -801,7 +869,7 @@ public class SharpIppClientTests
             }
         });
 
-        await act.Should().ThrowAsync<IppRequestException>().WithMessage("invalid document-number");
+        await act.Should().ThrowAsync<System.ComponentModel.DataAnnotations.ValidationException>().WithMessage("*DocumentNumber*");
     }
 
     [TestMethod]
@@ -824,6 +892,120 @@ public class SharpIppClientTests
         await act.Should().ThrowAsync<IppRequestException>().WithMessage("missing document attributes");
     }
 
+    [TestMethod]
+    public async Task SendAsync_WithResponseValidatorInjected_WhenResponseIsInvalid_ShouldThrowValidationException()
+    {
+        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
+        var responseMessage = new IppResponseMessage
+        {
+            RequestId = 0, // Invalid: RequestId should be 1 or greater
+            StatusCode = IppStatusCode.SuccessfulOk
+        };
+        protocol.Setup(x => x.WriteIppRequestAsync(It.IsAny<IIppRequestMessage>(), It.IsAny<Stream>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+        protocol.Setup(x => x.ReadIppResponseAsync(It.IsAny<Stream>(), It.IsAny<CancellationToken>())).ReturnsAsync(responseMessage);
+
+        using var client = new TestSharpIppClient(
+            new HttpClient(GetMockOfHttpMessageHandler().Object),
+            protocol.Object,
+            IppResponseValidator.Default);
+
+        var request = new GetPrinterAttributesRequest
+        {
+            Version = new IppVersion(2, 0),
+            RequestId = 123,
+            OperationAttributes = new GetPrinterAttributesOperationAttributes
+            {
+                PrinterUri = new Uri("ipp://127.0.0.1:631/")
+            }
+        };
+
+        Func<Task<GetPrinterAttributesResponse>> act = async () => await client.SendForTestsAsync<GetPrinterAttributesRequest, GetPrinterAttributesResponse>(request);
+        await act.Should().ThrowAsync<ValidationException>().WithMessage("*RequestId*");
+    }
+
+    [TestMethod]
+    public async Task SendAsync_WithoutResponseValidator_WhenResponseIsInvalid_ShouldNotThrow()
+    {
+        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
+        var responseMessage = new IppResponseMessage
+        {
+            RequestId = 0, // Invalid value, but validator is null by default
+            StatusCode = IppStatusCode.SuccessfulOk
+        };
+        protocol.Setup(x => x.WriteIppRequestAsync(It.IsAny<IIppRequestMessage>(), It.IsAny<Stream>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+        protocol.Setup(x => x.ReadIppResponseAsync(It.IsAny<Stream>(), It.IsAny<CancellationToken>())).ReturnsAsync(responseMessage);
+
+        using var client = new TestSharpIppClient(
+            new HttpClient(GetMockOfHttpMessageHandler().Object),
+            protocol.Object);
+
+        var request = new GetPrinterAttributesRequest
+        {
+            Version = new IppVersion(2, 0),
+            RequestId = 123,
+            OperationAttributes = new GetPrinterAttributesOperationAttributes
+            {
+                PrinterUri = new Uri("ipp://127.0.0.1:631/")
+            }
+        };
+
+        Func<Task<GetPrinterAttributesResponse>> act = async () => await client.SendForTestsAsync<GetPrinterAttributesRequest, GetPrinterAttributesResponse>(request);
+        var result = await act.Should().NotThrowAsync();
+        result.Subject.RequestId.Should().Be(0);
+    }
+
+    [TestMethod]
+    public async Task SendAsync_WithNullRequestValidator_ShouldNotThrowNullReferenceException()
+    {
+        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
+        protocol.Setup(x => x.WriteIppRequestAsync(It.IsAny<IIppRequestMessage>(), It.IsAny<Stream>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+
+        using var client = new TestSharpIppClient(
+            new HttpClient(GetMockOfHttpMessageHandler().Object),
+            protocol.Object,
+            (IIppRequestValidator)null!);
+
+        var request = new GetPrinterAttributesRequest
+        {
+            Version = new IppVersion(2, 0),
+            RequestId = 123,
+            OperationAttributes = new GetPrinterAttributesOperationAttributes
+            {
+                PrinterUri = new Uri("ipp://127.0.0.1:631/")
+            }
+        };
+
+        Func<Task<GetPrinterAttributesResponse>> act = async () => await client.SendForTestsAsync<GetPrinterAttributesRequest, GetPrinterAttributesResponse>(request);
+        await act.Should().NotThrowAsync();
+    }
+
+    [TestMethod]
+    public async Task SendAsync_WithResponseValidatorInjected_WhenResponseIsValid_ShouldValidateSuccessfully()
+    {
+        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
+        protocol.Setup(x => x.WriteIppRequestAsync(It.IsAny<IIppRequestMessage>(), It.IsAny<Stream>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+
+        using var client = new TestSharpIppClient(
+            new HttpClient(GetMockOfHttpMessageHandler().Object),
+            protocol.Object,
+            IppRequestValidator.Default,
+            IppResponseValidator.Default);
+
+        var request = new GetPrinterAttributesRequest
+        {
+            Version = new IppVersion(2, 0),
+            RequestId = 123,
+            OperationAttributes = new GetPrinterAttributesOperationAttributes
+            {
+                PrinterUri = new Uri("ipp://127.0.0.1:631/")
+            }
+        };
+
+        Func<Task<GetPrinterAttributesResponse>> act = async () => await client.SendForTestsAsync<GetPrinterAttributesRequest, GetPrinterAttributesResponse>(request);
+        var result = await act.Should().NotThrowAsync();
+        result.Subject.RequestId.Should().Be(123);
+    }
+
     private sealed class TestSharpIppClient : SharpIppClient
     {
         public TestSharpIppClient(HttpClient httpClient, IIppProtocol ippProtocol)
@@ -831,10 +1013,32 @@ public class SharpIppClientTests
         {
         }
 
+        public TestSharpIppClient(HttpClient httpClient, IIppProtocol ippProtocol, IIppResponseValidator ippResponseValidator)
+            : base(httpClient, ippProtocol, IppRequestMessageValidator.Default, IppRequestValidator.Default, ippResponseValidator)
+        {
+        }
+
+        public TestSharpIppClient(HttpClient httpClient, IIppProtocol ippProtocol, IIppRequestValidator ippRequestValidator)
+            : base(httpClient, ippProtocol, IppRequestMessageValidator.Default, ippRequestValidator, null)
+        {
+        }
+
+        public TestSharpIppClient(HttpClient httpClient, IIppProtocol ippProtocol, IIppRequestValidator ippRequestValidator, IIppResponseValidator ippResponseValidator)
+            : base(httpClient, ippProtocol, IppRequestMessageValidator.Default, ippRequestValidator, ippResponseValidator)
+        {
+        }
+
         public Task<TOut> SendForTestsAsync<TOut>(IIppRequest request, CancellationToken cancellationToken = default)
             where TOut : IIppResponse
         {
             return SendAsync<IIppRequest, TOut>(request, cancellationToken);
+        }
+
+        public Task<TOut> SendForTestsAsync<TIn, TOut>(TIn request, CancellationToken cancellationToken = default)
+            where TIn : IIppRequest
+            where TOut : IIppResponse
+        {
+            return SendAsync<TIn, TOut>(request, cancellationToken);
         }
     }
 

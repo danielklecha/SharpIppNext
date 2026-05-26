@@ -22,62 +22,62 @@ internal class DocumentAttributesProfile : IProfile
                 return NoValue.GetNoValue<DocumentAttributes>();
 
             dst ??= new DocumentAttributes();
-            dst.DocumentNumber = map.MapFromDicNullable<int?>(src, DocumentAttribute.DocumentNumber);
-            dst.DocumentState = map.MapFromDicNullable<DocumentState?>(src, DocumentAttribute.DocumentState);
-            dst.DocumentStateReasons = map.MapFromDicSetNullable<DocumentStateReason[]?>(src, DocumentAttribute.DocumentStateReasons);
-            dst.DocumentStateMessage = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentStateMessage);
-            dst.AttributesCharset = map.MapFromDicNullable<string?>(src, DocumentAttribute.AttributesCharset);
-            dst.AttributesNaturalLanguage = map.MapFromDicNullable<string?>(src, DocumentAttribute.AttributesNaturalLanguage);
-            dst.CurrentPageOrder = map.MapFromDicNullable<CurrentPageOrder?>(src, DocumentAttribute.CurrentPageOrder);
-            dst.DateTimeAtCompleted = map.MapFromDicNullable<DateTimeOffset?>(src, DocumentAttribute.DateTimeAtCompleted);
-            dst.DateTimeAtCreation = map.MapFromDicNullable<DateTimeOffset?>(src, DocumentAttribute.DateTimeAtCreation);
-            dst.DateTimeAtProcessing = map.MapFromDicNullable<DateTimeOffset?>(src, DocumentAttribute.DateTimeAtProcessing);
-            dst.DetailedStatusMessages = map.MapFromDicSetNullable<string[]?>(src, DocumentAttribute.DetailedStatusMessages);
-            dst.DocumentAccessErrors = map.MapFromDicSetNullable<string[]?>(src, DocumentAttribute.DocumentAccessErrors);
-            dst.DocumentCharset = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentCharset);
-            dst.DocumentFormat = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentFormat);
-            dst.DocumentFormatDetected = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentFormatDetected);
-            dst.DocumentFormatReady = map.MapFromDicSetNullable<string[]?>(src, DocumentAttribute.DocumentFormatReady);
-            dst.OutputDeviceDocumentState = map.MapFromDicNullable<DocumentState?>(src, DocumentAttribute.OutputDeviceDocumentState);
-            dst.OutputDeviceDocumentStateMessage = map.MapFromDicNullable<string?>(src, DocumentAttribute.OutputDeviceDocumentStateMessage);
-            dst.OutputDeviceDocumentStateReasons = map.MapFromDicSetNullable<DocumentStateReason[]?>(src, DocumentAttribute.OutputDeviceDocumentStateReasons);
-            if (src.ContainsKey(DocumentAttribute.DocumentFormatDetails))
-                dst.DocumentFormatDetails = map.Map<DocumentFormatDetails>(src[DocumentAttribute.DocumentFormatDetails].FromBegCollection().ToIppDictionary());
-            if (src.ContainsKey(DocumentAttribute.DocumentFormatDetailsDetected))
-                dst.DocumentFormatDetailsDetected = map.Map<DocumentFormatDetails>(src[DocumentAttribute.DocumentFormatDetailsDetected].FromBegCollection().ToIppDictionary());
-            dst.DocumentDigitalSignature = map.MapFromDicNullable<DocumentDigitalSignature?>(src, DocumentAttribute.DocumentDigitalSignature);
-            dst.DocumentFormatVersion = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentFormatVersion);
-            dst.DocumentFormatVersionDetected = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentFormatVersionDetected);
-            dst.ErrorsCount = map.MapFromDicNullable<int?>(src, DocumentAttribute.ErrorsCount);
-            dst.WarningsCount = map.MapFromDicNullable<int?>(src, DocumentAttribute.WarningsCount);
-            dst.PrintContentOptimizeActual = map.MapFromDicSetNullable<PrintContentOptimize[]?>(src, DocumentAttribute.PrintContentOptimizeActual);
-            dst.DocumentJobId = map.MapFromDicNullable<int?>(src, DocumentAttribute.DocumentJobId);
-            dst.DocumentJobUri = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentJobUri);
-            dst.DocumentMessage = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentMessage);
-            dst.DocumentName = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentName);
-            dst.DocumentResourceIds = map.MapFromDicSetNullable<int[]?>(src, DocumentAttribute.DocumentResourceIds);
-            dst.DocumentNaturalLanguage = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentNaturalLanguage);
-            dst.DocumentPrinterUri = map.MapFromDicNullable<Uri?>(src, DocumentAttribute.DocumentPrinterUri);
-            dst.DocumentUri = map.MapFromDicNullable<string?>(src, DocumentAttribute.DocumentUri);
-            dst.Impressions = map.MapFromDicNullable<int?>(src, DocumentAttribute.Impressions);
-            dst.ImpressionsCompleted = map.MapFromDicNullable<int?>(src, DocumentAttribute.ImpressionsCompleted);
-            dst.KOctets = map.MapFromDicNullable<int?>(src, DocumentAttribute.KOctets);
-            dst.KOctetsProcessed = map.MapFromDicNullable<int?>(src, DocumentAttribute.KOctetsProcessed);
-            dst.LastDocument = map.MapFromDicNullable<bool?>(src, DocumentAttribute.LastDocument);
-            dst.MediaSheets = map.MapFromDicNullable<int?>(src, DocumentAttribute.MediaSheets);
-            dst.MediaSheetsCompleted = map.MapFromDicNullable<int?>(src, DocumentAttribute.MediaSheetsCompleted);
-            dst.MoreInfo = map.MapFromDicNullable<string?>(src, DocumentAttribute.MoreInfo);
-            dst.OutputDeviceAssigned = map.MapFromDicNullable<string?>(src, DocumentAttribute.OutputDeviceAssigned);
-            dst.PrinterUpTime = map.MapFromDicNullable<int?>(src, DocumentAttribute.PrinterUpTime);
-            dst.TimeAtCompleted = map.MapFromDicNullable<int?>(src, DocumentAttribute.TimeAtCompleted);
-            dst.TimeAtCreation = map.MapFromDicNullable<int?>(src, DocumentAttribute.TimeAtCreation);
-            dst.TimeAtProcessing = map.MapFromDicNullable<int?>(src, DocumentAttribute.TimeAtProcessing);
-            dst.Pages = map.MapFromDicNullable<int?>(src, DocumentAttribute.Pages);
-            dst.PagesCompleted = map.MapFromDicNullable<int?>(src, DocumentAttribute.PagesCompleted);
-            dst.PrintContentOptimize = map.MapFromDicNullable<PrintContentOptimize?>(src, DocumentAttribute.PrintContentOptimize);
-            if (src.ContainsKey(DocumentAttribute.InputAttributesActual))
-                dst.InputAttributesActual = map.Map<DocumentTemplateAttributes>(src[DocumentAttribute.InputAttributesActual].FromBegCollection().ToIppDictionary());
-            dst.DocumentMetadata = map.MapFromDicSetNullable<OctetString[]?>(src, DocumentAttribute.DocumentMetadata);
+            dst.DocumentNumber = map.MapFromDicNullable<int?>(src, IppAttributeNames.DocumentNumber);
+            dst.DocumentState = map.MapFromDicNullable<DocumentState?>(src, IppAttributeNames.DocumentState);
+            dst.DocumentStateReasons = map.MapFromDicSetNullable<DocumentStateReason[]?>(src, IppAttributeNames.DocumentStateReasons);
+            dst.DocumentStateMessage = map.MapFromDicNullable<string?>(src, IppAttributeNames.DocumentStateMessage);
+            dst.AttributesCharset = map.MapFromDicNullable<string?>(src, IppAttributeNames.AttributesCharset);
+            dst.AttributesNaturalLanguage = map.MapFromDicNullable<string?>(src, IppAttributeNames.AttributesNaturalLanguage);
+            dst.CurrentPageOrder = map.MapFromDicNullable<CurrentPageOrder?>(src, IppAttributeNames.CurrentPageOrder);
+            dst.DateTimeAtCompleted = map.MapFromDicNullable<DateTimeOffset?>(src, IppAttributeNames.DateTimeAtCompleted);
+            dst.DateTimeAtCreation = map.MapFromDicNullable<DateTimeOffset?>(src, IppAttributeNames.DateTimeAtCreation);
+            dst.DateTimeAtProcessing = map.MapFromDicNullable<DateTimeOffset?>(src, IppAttributeNames.DateTimeAtProcessing);
+            dst.DetailedStatusMessages = map.MapFromDicSetNullable<string[]?>(src, IppAttributeNames.DetailedStatusMessages);
+            dst.DocumentAccessErrors = map.MapFromDicSetNullable<string[]?>(src, IppAttributeNames.DocumentAccessErrors);
+            dst.DocumentCharset = map.MapFromDicNullable<string?>(src, IppAttributeNames.DocumentCharset);
+            dst.DocumentFormat = map.MapFromDicNullable<string?>(src, IppAttributeNames.DocumentFormat);
+            dst.DocumentFormatDetected = map.MapFromDicNullable<string?>(src, IppAttributeNames.DocumentFormatDetected);
+            dst.DocumentFormatReady = map.MapFromDicSetNullable<string[]?>(src, IppAttributeNames.DocumentFormatReady);
+            dst.OutputDeviceDocumentState = map.MapFromDicNullable<DocumentState?>(src, IppAttributeNames.OutputDeviceDocumentState);
+            dst.OutputDeviceDocumentStateMessage = map.MapFromDicNullable<string?>(src, IppAttributeNames.OutputDeviceDocumentStateMessage);
+            dst.OutputDeviceDocumentStateReasons = map.MapFromDicSetNullable<DocumentStateReason[]?>(src, IppAttributeNames.OutputDeviceDocumentStateReasons);
+            if (src.ContainsKey(IppAttributeNames.DocumentFormatDetails))
+                dst.DocumentFormatDetails = map.Map<DocumentFormatDetails>(src[IppAttributeNames.DocumentFormatDetails].FromBegCollection().ToIppDictionary());
+            if (src.ContainsKey(IppAttributeNames.DocumentFormatDetailsDetected))
+                dst.DocumentFormatDetailsDetected = map.Map<DocumentFormatDetails>(src[IppAttributeNames.DocumentFormatDetailsDetected].FromBegCollection().ToIppDictionary());
+            dst.DocumentDigitalSignature = map.MapFromDicNullable<DocumentDigitalSignature?>(src, IppAttributeNames.DocumentDigitalSignature);
+            dst.DocumentFormatVersion = map.MapFromDicNullable<string?>(src, IppAttributeNames.DocumentFormatVersion);
+            dst.DocumentFormatVersionDetected = map.MapFromDicNullable<string?>(src, IppAttributeNames.DocumentFormatVersionDetected);
+            dst.ErrorsCount = map.MapFromDicNullable<int?>(src, IppAttributeNames.ErrorsCount);
+            dst.WarningsCount = map.MapFromDicNullable<int?>(src, IppAttributeNames.WarningsCount);
+            dst.PrintContentOptimizeActual = map.MapFromDicSetNullable<PrintContentOptimize[]?>(src, IppAttributeNames.PrintContentOptimizeActual);
+            dst.DocumentJobId = map.MapFromDicNullable<int?>(src, IppAttributeNames.DocumentJobId);
+            dst.DocumentJobUri = map.MapFromDicNullable<string?>(src, IppAttributeNames.DocumentJobUri);
+            dst.DocumentMessage = map.MapFromDicNullable<string?>(src, IppAttributeNames.DocumentMessage);
+            dst.DocumentName = map.MapFromDicNullable<string?>(src, IppAttributeNames.DocumentName);
+            dst.DocumentResourceIds = map.MapFromDicSetNullable<int[]?>(src, IppAttributeNames.DocumentResourceIds);
+            dst.DocumentNaturalLanguage = map.MapFromDicNullable<string?>(src, IppAttributeNames.DocumentNaturalLanguage);
+            dst.DocumentPrinterUri = map.MapFromDicNullable<Uri?>(src, IppAttributeNames.DocumentPrinterUri);
+            dst.DocumentUri = map.MapFromDicNullable<string?>(src, IppAttributeNames.DocumentUri);
+            dst.Impressions = map.MapFromDicNullable<int?>(src, IppAttributeNames.Impressions);
+            dst.ImpressionsCompleted = map.MapFromDicNullable<int?>(src, IppAttributeNames.ImpressionsCompleted);
+            dst.KOctets = map.MapFromDicNullable<int?>(src, IppAttributeNames.KOctets);
+            dst.KOctetsProcessed = map.MapFromDicNullable<int?>(src, IppAttributeNames.KOctetsProcessed);
+            dst.LastDocument = map.MapFromDicNullable<bool?>(src, IppAttributeNames.LastDocument);
+            dst.MediaSheets = map.MapFromDicNullable<int?>(src, IppAttributeNames.MediaSheets);
+            dst.MediaSheetsCompleted = map.MapFromDicNullable<int?>(src, IppAttributeNames.MediaSheetsCompleted);
+            dst.MoreInfo = map.MapFromDicNullable<string?>(src, IppAttributeNames.MoreInfo);
+            dst.OutputDeviceAssigned = map.MapFromDicNullable<string?>(src, IppAttributeNames.OutputDeviceAssigned);
+            dst.PrinterUpTime = map.MapFromDicNullable<int?>(src, IppAttributeNames.PrinterUpTime);
+            dst.TimeAtCompleted = map.MapFromDicNullable<int?>(src, IppAttributeNames.TimeAtCompleted);
+            dst.TimeAtCreation = map.MapFromDicNullable<int?>(src, IppAttributeNames.TimeAtCreation);
+            dst.TimeAtProcessing = map.MapFromDicNullable<int?>(src, IppAttributeNames.TimeAtProcessing);
+            dst.Pages = map.MapFromDicNullable<int?>(src, IppAttributeNames.Pages);
+            dst.PagesCompleted = map.MapFromDicNullable<int?>(src, IppAttributeNames.PagesCompleted);
+            dst.PrintContentOptimize = map.MapFromDicNullable<PrintContentOptimize?>(src, IppAttributeNames.PrintContentOptimize);
+            if (src.ContainsKey(IppAttributeNames.InputAttributesActual))
+                dst.InputAttributesActual = map.Map<DocumentTemplateAttributes>(src[IppAttributeNames.InputAttributesActual].FromBegCollection().ToIppDictionary());
+            dst.DocumentMetadata = map.MapFromDicSetNullable<DocumentMetadata?>(src, IppAttributeNames.DocumentMetadata);
             return dst;
         });
 
@@ -88,111 +88,111 @@ internal class DocumentAttributesProfile : IProfile
         {
             dst ??= new Dictionary<string, IppAttribute[]>();
             if (src.DocumentNumber != null)
-                dst.Add(DocumentAttribute.DocumentNumber, [new IppAttribute(Tag.Integer, DocumentAttribute.DocumentNumber, src.DocumentNumber.Value)]);
+                dst.Add(IppAttributeNames.DocumentNumber, [new IppAttribute(Tag.Integer, IppAttributeNames.DocumentNumber, src.DocumentNumber.Value)]);
             if (src.DocumentState != null)
-                dst.Add(DocumentAttribute.DocumentState, [new IppAttribute(Tag.Enum, DocumentAttribute.DocumentState, (int)src.DocumentState.Value)]);
+                dst.Add(IppAttributeNames.DocumentState, [new IppAttribute(Tag.Enum, IppAttributeNames.DocumentState, (int)src.DocumentState.Value)]);
             if (src.DocumentStateReasons != null)
-                dst.Add(DocumentAttribute.DocumentStateReasons, src.DocumentStateReasons.Select(x => new IppAttribute(Tag.Keyword, DocumentAttribute.DocumentStateReasons, map.Map<string>(x))).ToArray());
+                dst.Add(IppAttributeNames.DocumentStateReasons, src.DocumentStateReasons.Select(x => new IppAttribute(Tag.Keyword, IppAttributeNames.DocumentStateReasons, map.Map<string>(x))).ToArray());
             if (src.DocumentStateMessage != null)
-                dst.Add(DocumentAttribute.DocumentStateMessage, [new IppAttribute(Tag.TextWithoutLanguage, DocumentAttribute.DocumentStateMessage, src.DocumentStateMessage)]);
+                dst.Add(IppAttributeNames.DocumentStateMessage, [new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.DocumentStateMessage, src.DocumentStateMessage)]);
             if (src.AttributesCharset != null)
-                dst.Add(DocumentAttribute.AttributesCharset, [new IppAttribute(Tag.Charset, DocumentAttribute.AttributesCharset, src.AttributesCharset)]);
+                dst.Add(IppAttributeNames.AttributesCharset, [new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, src.AttributesCharset)]);
             if (src.AttributesNaturalLanguage != null)
-                dst.Add(DocumentAttribute.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, DocumentAttribute.AttributesNaturalLanguage, src.AttributesNaturalLanguage)]);
+                dst.Add(IppAttributeNames.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, src.AttributesNaturalLanguage)]);
             if (src.CurrentPageOrder != null)
-                dst.Add(DocumentAttribute.CurrentPageOrder, [new IppAttribute(Tag.Keyword, DocumentAttribute.CurrentPageOrder, map.Map<string>(src.CurrentPageOrder.Value))]);
+                dst.Add(IppAttributeNames.CurrentPageOrder, [new IppAttribute(Tag.Keyword, IppAttributeNames.CurrentPageOrder, map.Map<string>(src.CurrentPageOrder.Value))]);
             if (src.DateTimeAtCompleted != null)
-                dst.Add(DocumentAttribute.DateTimeAtCompleted, [new IppAttribute(Tag.DateTime, DocumentAttribute.DateTimeAtCompleted, src.DateTimeAtCompleted.Value)]);
+                dst.Add(IppAttributeNames.DateTimeAtCompleted, [new IppAttribute(Tag.DateTime, IppAttributeNames.DateTimeAtCompleted, src.DateTimeAtCompleted.Value)]);
             if (src.DateTimeAtCreation != null)
-                dst.Add(DocumentAttribute.DateTimeAtCreation, [new IppAttribute(Tag.DateTime, DocumentAttribute.DateTimeAtCreation, src.DateTimeAtCreation.Value)]);
+                dst.Add(IppAttributeNames.DateTimeAtCreation, [new IppAttribute(Tag.DateTime, IppAttributeNames.DateTimeAtCreation, src.DateTimeAtCreation.Value)]);
             if (src.DateTimeAtProcessing != null)
-                dst.Add(DocumentAttribute.DateTimeAtProcessing, [new IppAttribute(Tag.DateTime, DocumentAttribute.DateTimeAtProcessing, src.DateTimeAtProcessing.Value)]);
+                dst.Add(IppAttributeNames.DateTimeAtProcessing, [new IppAttribute(Tag.DateTime, IppAttributeNames.DateTimeAtProcessing, src.DateTimeAtProcessing.Value)]);
             if (src.DetailedStatusMessages != null)
-                dst.Add(DocumentAttribute.DetailedStatusMessages, src.DetailedStatusMessages.Select(x => new IppAttribute(Tag.TextWithoutLanguage, DocumentAttribute.DetailedStatusMessages, x)).ToArray());
+                dst.Add(IppAttributeNames.DetailedStatusMessages, src.DetailedStatusMessages.Select(x => new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.DetailedStatusMessages, x)).ToArray());
             if (src.DocumentAccessErrors != null)
-                dst.Add(DocumentAttribute.DocumentAccessErrors, src.DocumentAccessErrors.Select(x => new IppAttribute(Tag.TextWithoutLanguage, DocumentAttribute.DocumentAccessErrors, x)).ToArray());
+                dst.Add(IppAttributeNames.DocumentAccessErrors, src.DocumentAccessErrors.Select(x => new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.DocumentAccessErrors, x)).ToArray());
             if (src.DocumentCharset != null)
-                dst.Add(DocumentAttribute.DocumentCharset, [new IppAttribute(Tag.Charset, DocumentAttribute.DocumentCharset, src.DocumentCharset)]);
+                dst.Add(IppAttributeNames.DocumentCharset, [new IppAttribute(Tag.Charset, IppAttributeNames.DocumentCharset, src.DocumentCharset)]);
             if (src.DocumentFormat != null)
-                dst.Add(DocumentAttribute.DocumentFormat, [new IppAttribute(Tag.MimeMediaType, DocumentAttribute.DocumentFormat, src.DocumentFormat)]);
+                dst.Add(IppAttributeNames.DocumentFormat, [new IppAttribute(Tag.MimeMediaType, IppAttributeNames.DocumentFormat, src.DocumentFormat)]);
             if (src.DocumentFormatDetected != null)
-                dst.Add(DocumentAttribute.DocumentFormatDetected, [new IppAttribute(Tag.MimeMediaType, DocumentAttribute.DocumentFormatDetected, src.DocumentFormatDetected)]);
+                dst.Add(IppAttributeNames.DocumentFormatDetected, [new IppAttribute(Tag.MimeMediaType, IppAttributeNames.DocumentFormatDetected, src.DocumentFormatDetected)]);
             if (src.DocumentFormatReady != null)
-                dst.Add(DocumentAttribute.DocumentFormatReady, src.DocumentFormatReady.Select(x => new IppAttribute(Tag.MimeMediaType, DocumentAttribute.DocumentFormatReady, x)).ToArray());
+                dst.Add(IppAttributeNames.DocumentFormatReady, src.DocumentFormatReady.Select(x => new IppAttribute(Tag.MimeMediaType, IppAttributeNames.DocumentFormatReady, x)).ToArray());
             if (src.OutputDeviceDocumentState != null)
-                dst.Add(DocumentAttribute.OutputDeviceDocumentState, [new IppAttribute(Tag.Enum, DocumentAttribute.OutputDeviceDocumentState, (int)src.OutputDeviceDocumentState.Value)]);
+                dst.Add(IppAttributeNames.OutputDeviceDocumentState, [new IppAttribute(Tag.Enum, IppAttributeNames.OutputDeviceDocumentState, (int)src.OutputDeviceDocumentState.Value)]);
             if (src.OutputDeviceDocumentStateMessage != null)
-                dst.Add(DocumentAttribute.OutputDeviceDocumentStateMessage, [new IppAttribute(Tag.TextWithoutLanguage, DocumentAttribute.OutputDeviceDocumentStateMessage, src.OutputDeviceDocumentStateMessage)]);
+                dst.Add(IppAttributeNames.OutputDeviceDocumentStateMessage, [new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.OutputDeviceDocumentStateMessage, src.OutputDeviceDocumentStateMessage)]);
             if (src.OutputDeviceDocumentStateReasons != null)
-                dst.Add(DocumentAttribute.OutputDeviceDocumentStateReasons, src.OutputDeviceDocumentStateReasons.Select(x => new IppAttribute(Tag.Keyword, DocumentAttribute.OutputDeviceDocumentStateReasons, map.Map<string>(x))).ToArray());
+                dst.Add(IppAttributeNames.OutputDeviceDocumentStateReasons, src.OutputDeviceDocumentStateReasons.Select(x => new IppAttribute(Tag.Keyword, IppAttributeNames.OutputDeviceDocumentStateReasons, map.Map<string>(x))).ToArray());
             if (src.DocumentFormatDetails != null)
-                dst.Add(DocumentAttribute.DocumentFormatDetails, map.Map<IEnumerable<IppAttribute>>(src.DocumentFormatDetails).ToBegCollection(DocumentAttribute.DocumentFormatDetails).ToArray());
+                dst.Add(IppAttributeNames.DocumentFormatDetails, map.Map<IEnumerable<IppAttribute>>(src.DocumentFormatDetails).ToBegCollection(IppAttributeNames.DocumentFormatDetails).ToArray());
             if (src.DocumentFormatDetailsDetected != null)
-                dst.Add(DocumentAttribute.DocumentFormatDetailsDetected, map.Map<IEnumerable<IppAttribute>>(src.DocumentFormatDetailsDetected).ToBegCollection(DocumentAttribute.DocumentFormatDetailsDetected).ToArray());
+                dst.Add(IppAttributeNames.DocumentFormatDetailsDetected, map.Map<IEnumerable<IppAttribute>>(src.DocumentFormatDetailsDetected).ToBegCollection(IppAttributeNames.DocumentFormatDetailsDetected).ToArray());
             if (src.DocumentDigitalSignature != null)
-                dst.Add(DocumentAttribute.DocumentDigitalSignature, [new IppAttribute(Tag.Keyword, DocumentAttribute.DocumentDigitalSignature, map.Map<string>(src.DocumentDigitalSignature.Value))]);
+                dst.Add(IppAttributeNames.DocumentDigitalSignature, [new IppAttribute(Tag.Keyword, IppAttributeNames.DocumentDigitalSignature, map.Map<string>(src.DocumentDigitalSignature.Value))]);
             if (src.DocumentFormatVersion != null)
-                dst.Add(DocumentAttribute.DocumentFormatVersion, [new IppAttribute(Tag.TextWithoutLanguage, DocumentAttribute.DocumentFormatVersion, src.DocumentFormatVersion)]);
+                dst.Add(IppAttributeNames.DocumentFormatVersion, [new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.DocumentFormatVersion, src.DocumentFormatVersion)]);
             if (src.DocumentFormatVersionDetected != null)
-                dst.Add(DocumentAttribute.DocumentFormatVersionDetected, [new IppAttribute(Tag.TextWithoutLanguage, DocumentAttribute.DocumentFormatVersionDetected, src.DocumentFormatVersionDetected)]);
+                dst.Add(IppAttributeNames.DocumentFormatVersionDetected, [new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.DocumentFormatVersionDetected, src.DocumentFormatVersionDetected)]);
             if (src.ErrorsCount != null)
-                dst.Add(DocumentAttribute.ErrorsCount, [new IppAttribute(Tag.Integer, DocumentAttribute.ErrorsCount, src.ErrorsCount.Value)]);
+                dst.Add(IppAttributeNames.ErrorsCount, [new IppAttribute(Tag.Integer, IppAttributeNames.ErrorsCount, src.ErrorsCount.Value)]);
             if (src.WarningsCount != null)
-                dst.Add(DocumentAttribute.WarningsCount, [new IppAttribute(Tag.Integer, DocumentAttribute.WarningsCount, src.WarningsCount.Value)]);
+                dst.Add(IppAttributeNames.WarningsCount, [new IppAttribute(Tag.Integer, IppAttributeNames.WarningsCount, src.WarningsCount.Value)]);
             if (src.PrintContentOptimizeActual != null)
-                dst.Add(DocumentAttribute.PrintContentOptimizeActual, src.PrintContentOptimizeActual.Select(x => new IppAttribute(Tag.Keyword, DocumentAttribute.PrintContentOptimizeActual, map.Map<string>(x))).ToArray());
+                dst.Add(IppAttributeNames.PrintContentOptimizeActual, src.PrintContentOptimizeActual.Select(x => new IppAttribute(Tag.Keyword, IppAttributeNames.PrintContentOptimizeActual, map.Map<string>(x))).ToArray());
             if (src.DocumentJobId != null)
-                dst.Add(DocumentAttribute.DocumentJobId, [new IppAttribute(Tag.Integer, DocumentAttribute.DocumentJobId, src.DocumentJobId.Value)]);
+                dst.Add(IppAttributeNames.DocumentJobId, [new IppAttribute(Tag.Integer, IppAttributeNames.DocumentJobId, src.DocumentJobId.Value)]);
             if (src.DocumentJobUri != null)
-                dst.Add(DocumentAttribute.DocumentJobUri, [new IppAttribute(Tag.Uri, DocumentAttribute.DocumentJobUri, src.DocumentJobUri)]);
+                dst.Add(IppAttributeNames.DocumentJobUri, [new IppAttribute(Tag.Uri, IppAttributeNames.DocumentJobUri, src.DocumentJobUri)]);
             if (src.DocumentMessage != null)
-                dst.Add(DocumentAttribute.DocumentMessage, [new IppAttribute(Tag.TextWithoutLanguage, DocumentAttribute.DocumentMessage, src.DocumentMessage)]);
+                dst.Add(IppAttributeNames.DocumentMessage, [new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.DocumentMessage, src.DocumentMessage)]);
             if (src.DocumentName != null)
-                dst.Add(DocumentAttribute.DocumentName, [new IppAttribute(Tag.NameWithoutLanguage, DocumentAttribute.DocumentName, src.DocumentName)]);
+                dst.Add(IppAttributeNames.DocumentName, [new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.DocumentName, src.DocumentName)]);
             if (src.DocumentResourceIds != null)
-                dst.Add(DocumentAttribute.DocumentResourceIds, src.DocumentResourceIds.Select(x => new IppAttribute(Tag.Integer, DocumentAttribute.DocumentResourceIds, x)).ToArray());
+                dst.Add(IppAttributeNames.DocumentResourceIds, src.DocumentResourceIds.Select(x => new IppAttribute(Tag.Integer, IppAttributeNames.DocumentResourceIds, x)).ToArray());
             if (src.DocumentNaturalLanguage != null)
-                dst.Add(DocumentAttribute.DocumentNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, DocumentAttribute.DocumentNaturalLanguage, src.DocumentNaturalLanguage)]);
+                dst.Add(IppAttributeNames.DocumentNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.DocumentNaturalLanguage, src.DocumentNaturalLanguage)]);
             if (src.DocumentPrinterUri != null)
-                dst.Add(DocumentAttribute.DocumentPrinterUri, [new IppAttribute(Tag.Uri, DocumentAttribute.DocumentPrinterUri, src.DocumentPrinterUri.ToString())]);
+                dst.Add(IppAttributeNames.DocumentPrinterUri, [new IppAttribute(Tag.Uri, IppAttributeNames.DocumentPrinterUri, src.DocumentPrinterUri.ToString())]);
             if (src.DocumentUri != null)
-                dst.Add(DocumentAttribute.DocumentUri, [new IppAttribute(Tag.Uri, DocumentAttribute.DocumentUri, src.DocumentUri)]);
+                dst.Add(IppAttributeNames.DocumentUri, [new IppAttribute(Tag.Uri, IppAttributeNames.DocumentUri, src.DocumentUri)]);
             if (src.Impressions != null)
-                dst.Add(DocumentAttribute.Impressions, [new IppAttribute(Tag.Integer, DocumentAttribute.Impressions, src.Impressions.Value)]);
+                dst.Add(IppAttributeNames.Impressions, [new IppAttribute(Tag.Integer, IppAttributeNames.Impressions, src.Impressions.Value)]);
             if (src.ImpressionsCompleted != null)
-                dst.Add(DocumentAttribute.ImpressionsCompleted, [new IppAttribute(Tag.Integer, DocumentAttribute.ImpressionsCompleted, src.ImpressionsCompleted.Value)]);
+                dst.Add(IppAttributeNames.ImpressionsCompleted, [new IppAttribute(Tag.Integer, IppAttributeNames.ImpressionsCompleted, src.ImpressionsCompleted.Value)]);
             if (src.KOctets != null)
-                dst.Add(DocumentAttribute.KOctets, [new IppAttribute(Tag.Integer, DocumentAttribute.KOctets, src.KOctets.Value)]);
+                dst.Add(IppAttributeNames.KOctets, [new IppAttribute(Tag.Integer, IppAttributeNames.KOctets, src.KOctets.Value)]);
             if (src.KOctetsProcessed != null)
-                dst.Add(DocumentAttribute.KOctetsProcessed, [new IppAttribute(Tag.Integer, DocumentAttribute.KOctetsProcessed, src.KOctetsProcessed.Value)]);
+                dst.Add(IppAttributeNames.KOctetsProcessed, [new IppAttribute(Tag.Integer, IppAttributeNames.KOctetsProcessed, src.KOctetsProcessed.Value)]);
             if (src.LastDocument != null)
-                dst.Add(DocumentAttribute.LastDocument, [new IppAttribute(Tag.Boolean, DocumentAttribute.LastDocument, src.LastDocument.Value)]);
+                dst.Add(IppAttributeNames.LastDocument, [new IppAttribute(Tag.Boolean, IppAttributeNames.LastDocument, src.LastDocument.Value)]);
             if (src.MediaSheets != null)
-                dst.Add(DocumentAttribute.MediaSheets, [new IppAttribute(Tag.Integer, DocumentAttribute.MediaSheets, src.MediaSheets.Value)]);
+                dst.Add(IppAttributeNames.MediaSheets, [new IppAttribute(Tag.Integer, IppAttributeNames.MediaSheets, src.MediaSheets.Value)]);
             if (src.MediaSheetsCompleted != null)
-                dst.Add(DocumentAttribute.MediaSheetsCompleted, [new IppAttribute(Tag.Integer, DocumentAttribute.MediaSheetsCompleted, src.MediaSheetsCompleted.Value)]);
+                dst.Add(IppAttributeNames.MediaSheetsCompleted, [new IppAttribute(Tag.Integer, IppAttributeNames.MediaSheetsCompleted, src.MediaSheetsCompleted.Value)]);
             if (src.MoreInfo != null)
-                dst.Add(DocumentAttribute.MoreInfo, [new IppAttribute(Tag.Uri, DocumentAttribute.MoreInfo, src.MoreInfo)]);
+                dst.Add(IppAttributeNames.MoreInfo, [new IppAttribute(Tag.Uri, IppAttributeNames.MoreInfo, src.MoreInfo)]);
             if (src.OutputDeviceAssigned != null)
-                dst.Add(DocumentAttribute.OutputDeviceAssigned, [new IppAttribute(Tag.NameWithoutLanguage, DocumentAttribute.OutputDeviceAssigned, src.OutputDeviceAssigned)]);
+                dst.Add(IppAttributeNames.OutputDeviceAssigned, [new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.OutputDeviceAssigned, src.OutputDeviceAssigned)]);
             if (src.PrinterUpTime != null)
-                dst.Add(DocumentAttribute.PrinterUpTime, [new IppAttribute(Tag.Integer, DocumentAttribute.PrinterUpTime, src.PrinterUpTime.Value)]);
+                dst.Add(IppAttributeNames.PrinterUpTime, [new IppAttribute(Tag.Integer, IppAttributeNames.PrinterUpTime, src.PrinterUpTime.Value)]);
             if (src.TimeAtCompleted != null)
-                dst.Add(DocumentAttribute.TimeAtCompleted, [new IppAttribute(Tag.Integer, DocumentAttribute.TimeAtCompleted, src.TimeAtCompleted.Value)]);
+                dst.Add(IppAttributeNames.TimeAtCompleted, [new IppAttribute(Tag.Integer, IppAttributeNames.TimeAtCompleted, src.TimeAtCompleted.Value)]);
             if (src.TimeAtCreation != null)
-                dst.Add(DocumentAttribute.TimeAtCreation, [new IppAttribute(Tag.Integer, DocumentAttribute.TimeAtCreation, src.TimeAtCreation.Value)]);
+                dst.Add(IppAttributeNames.TimeAtCreation, [new IppAttribute(Tag.Integer, IppAttributeNames.TimeAtCreation, src.TimeAtCreation.Value)]);
             if (src.TimeAtProcessing != null)
-                dst.Add(DocumentAttribute.TimeAtProcessing, [new IppAttribute(Tag.Integer, DocumentAttribute.TimeAtProcessing, src.TimeAtProcessing.Value)]);
+                dst.Add(IppAttributeNames.TimeAtProcessing, [new IppAttribute(Tag.Integer, IppAttributeNames.TimeAtProcessing, src.TimeAtProcessing.Value)]);
             if (src.Pages != null)
-                dst.Add(DocumentAttribute.Pages, [new IppAttribute(Tag.Integer, DocumentAttribute.Pages, src.Pages.Value)]);
+                dst.Add(IppAttributeNames.Pages, [new IppAttribute(Tag.Integer, IppAttributeNames.Pages, src.Pages.Value)]);
             if (src.PagesCompleted != null)
-                dst.Add(DocumentAttribute.PagesCompleted, [new IppAttribute(Tag.Integer, DocumentAttribute.PagesCompleted, src.PagesCompleted.Value)]);
+                dst.Add(IppAttributeNames.PagesCompleted, [new IppAttribute(Tag.Integer, IppAttributeNames.PagesCompleted, src.PagesCompleted.Value)]);
             if (src.PrintContentOptimize != null)
-                dst.Add(DocumentAttribute.PrintContentOptimize, [new IppAttribute(Tag.Keyword, DocumentAttribute.PrintContentOptimize, map.Map<string>(src.PrintContentOptimize.Value))]);
+                dst.Add(IppAttributeNames.PrintContentOptimize, [new IppAttribute(Tag.Keyword, IppAttributeNames.PrintContentOptimize, map.Map<string>(src.PrintContentOptimize.Value))]);
             if (src.InputAttributesActual != null)
-                dst.Add(DocumentAttribute.InputAttributesActual, map.Map<IEnumerable<IppAttribute>>(src.InputAttributesActual).ToBegCollection(DocumentAttribute.InputAttributesActual).ToArray());
+                dst.Add(IppAttributeNames.InputAttributesActual, map.Map<IEnumerable<IppAttribute>>(src.InputAttributesActual).ToBegCollection(IppAttributeNames.InputAttributesActual).ToArray());
             if (src.DocumentMetadata != null)
-                dst.Add(DocumentAttribute.DocumentMetadata, src.DocumentMetadata.Select(x => new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, DocumentAttribute.DocumentMetadata, x)).ToArray());
+                dst.Add(IppAttributeNames.DocumentMetadata, src.DocumentMetadata.Select(x => new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, IppAttributeNames.DocumentMetadata, new OctetString(x))).ToArray());
             return dst;
         });
 

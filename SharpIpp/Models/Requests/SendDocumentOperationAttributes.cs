@@ -1,6 +1,7 @@
 using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Models;
+using SharpIpp.Validation;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,12 +13,15 @@ public class SendDocumentOperationAttributes : JobOperationAttributes
     /// The <c>document-metadata</c> operation attribute.
     /// See: PWG 5100.13-2023 Section 6.1.1
     /// </summary>
-    public OctetString[]? DocumentMetadata { get; set; }
+    [Metadata]
+    public DocumentMetadata? DocumentMetadata { get; set; }
 
     /// <summary>
     /// The <c>document-password</c> operation attribute.
+    /// A password required to access the document (maximum 1023 octets).
     /// See: PWG 5100.13-2023 Section 6.1.2
     /// </summary>
+    [ByteRange(1, 1023)]
     public OctetString? DocumentPassword { get; set; }
 
     /// <summary>

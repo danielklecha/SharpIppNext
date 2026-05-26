@@ -266,13 +266,13 @@ public interface ISharpIppClient : IDisposable
 
     /// <summary>
     /// Validate-Document Operation.
-    /// This DEPRECATED operation allows a client to validate operation and Document Template attributes
+    /// This operation allows a client to validate operation and Document Template attributes
     /// that would be used in a later Send-Document or Send-URI request.
     /// <br/>
-    /// Deprecated/Obsolete Support: The library intentionally implements operations and attributes that the latest standards have deprecated or obsoleted for the sake of backward compatibility, such as Validate-Document (Deprecated in PWG 5100.13-2023).
+    /// Deprecated/Obsolete Support: Note that this operation is deprecated for Print Services per PWG 5100.13-2023 Section 5.2, but remains required and supported for Scan Services per PWG 5100.17 Section 4.2.
     /// See: PWG 5100.13-2023 Section 5.2
+    /// See: PWG 5100.17-2014 Section 4.2
     /// </summary>
-    [Obsolete("The 'Validate-Document' operation is deprecated. See PWG 5100.13-2023 Section 5.2.")]
     Task<ValidateDocumentResponse> ValidateDocumentAsync(ValidateDocumentRequest request, CancellationToken cancellationToken = default);
 
     /// <summary>

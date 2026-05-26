@@ -22,7 +22,7 @@ internal class JobConstraintsSupportedProfile : IProfile
         mapper.CreateMap<JobConstraintsSupported, IEnumerable<IppAttribute>>((src, _) =>
         {
             if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, PrinterAttribute.JobConstraintsSupported, NoValue.Instance) };
+                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.JobConstraintsSupported, NoValue.Instance) };
 
             var attrs = new List<IppAttribute>();
             if (src.ResolverName != null) attrs.Add(new IppAttribute(Tag.NameWithoutLanguage, "resolver-name", src.ResolverName));

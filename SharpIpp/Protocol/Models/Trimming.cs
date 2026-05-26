@@ -7,8 +7,8 @@ namespace SharpIpp.Protocol.Models;
 public class Trimming : IIppCollection
 {
     /// <inheritdoc />
-    bool IIppCollection.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((IIppCollection)this).IsValue;
+    bool INoValueWritable.IsValue { get; set; } = true;
+    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     /// <summary>
     /// 1setOf integer(0:MAX) in hundredths of millimeters (1/2540th of an inch)

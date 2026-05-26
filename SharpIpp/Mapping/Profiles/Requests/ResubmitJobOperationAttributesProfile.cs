@@ -16,10 +16,10 @@ internal class ResubmitJobOperationAttributesProfile : IProfile
         {
             dst ??= new ResubmitJobOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, JobOperationAttributes>(src, dst);
-            if (src.TryGetValue(JobAttribute.DocumentFormatDetails, out var documentFormatDetails) && documentFormatDetails.GroupBegCollection().Any())
+            if (src.TryGetValue(IppAttributeNames.DocumentFormatDetails, out var documentFormatDetails) && documentFormatDetails.GroupBegCollection().Any())
                 dst.DocumentFormatDetails = map.Map<DocumentFormatDetails>(documentFormatDetails.GroupBegCollection().First().FromBegCollection().ToIppDictionary());
-            dst.JobMandatoryAttributes = map.MapFromDicSetNullable<string[]?>(src, JobAttribute.JobMandatoryAttributes);
-            dst.IppAttributeFidelity = map.MapFromDicNullable<bool?>(src, JobAttribute.IppAttributeFidelity);
+            dst.JobMandatoryAttributes = map.MapFromDicSetNullable<string[]?>(src, IppAttributeNames.JobMandatoryAttributes);
+            dst.IppAttributeFidelity = map.MapFromDicNullable<bool?>(src, IppAttributeNames.IppAttributeFidelity);
             return dst;
         });
 
@@ -28,11 +28,11 @@ internal class ResubmitJobOperationAttributesProfile : IProfile
             dst ??= new List<IppAttribute>();
             map.Map<JobOperationAttributes, List<IppAttribute>>(src, dst);
             if (src.DocumentFormatDetails != null)
-                dst.AddRange(map.Map<IEnumerable<IppAttribute>>(src.DocumentFormatDetails).ToBegCollection(JobAttribute.DocumentFormatDetails));
+                dst.AddRange(map.Map<IEnumerable<IppAttribute>>(src.DocumentFormatDetails).ToBegCollection(IppAttributeNames.DocumentFormatDetails));
             if (src.IppAttributeFidelity.HasValue)
-                dst.Add(new IppAttribute(Tag.Boolean, JobAttribute.IppAttributeFidelity, src.IppAttributeFidelity.Value));
+                dst.Add(new IppAttribute(Tag.Boolean, IppAttributeNames.IppAttributeFidelity, src.IppAttributeFidelity.Value));
             if (src.JobMandatoryAttributes != null)
-                dst.AddRange(src.JobMandatoryAttributes.Select(x => new IppAttribute(Tag.Keyword, JobAttribute.JobMandatoryAttributes, x)));
+                dst.AddRange(src.JobMandatoryAttributes.Select(x => new IppAttribute(Tag.Keyword, IppAttributeNames.JobMandatoryAttributes, x)));
             return dst;
         });
     }

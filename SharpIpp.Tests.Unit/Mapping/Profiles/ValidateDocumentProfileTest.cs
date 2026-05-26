@@ -27,7 +27,7 @@ public class ValidateDocumentProfileTest
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
                 DocumentFormat = "application/pdf",
-                DocumentMetadata = ["meta-1"],
+                DocumentMetadata = ["x-meta-1=val-1"],
             },
             DocumentTemplateAttributes = new()
             {
@@ -39,8 +39,8 @@ public class ValidateDocumentProfileTest
 
         result.IppOperation.Should().Be(IppOperation.ValidateDocument);
         result.DocumentAttributes.Should().NotBeEmpty();
-        result.OperationAttributes.Should().Contain(x => x.Name == JobAttribute.DocumentFormat);
-        result.OperationAttributes.Should().Contain(x => x.Name == JobAttribute.DocumentMetadata);
+        result.OperationAttributes.Should().Contain(x => x.Name == IppAttributeNames.DocumentFormat);
+        result.OperationAttributes.Should().Contain(x => x.Name == IppAttributeNames.DocumentMetadata);
     }
 
     [TestMethod]
@@ -54,9 +54,9 @@ public class ValidateDocumentProfileTest
         {
             IppOperation = IppOperation.ValidateDocument,
         };
-        request.OperationAttributes.Add(new IppAttribute(Tag.Charset, JobAttribute.AttributesCharset, "utf-8"));
-        request.OperationAttributes.Add(new IppAttribute(Tag.NaturalLanguage, JobAttribute.AttributesNaturalLanguage, "en"));
-        request.OperationAttributes.Add(new IppAttribute(Tag.Uri, JobAttribute.PrinterUri, "ipp://127.0.0.1:631/"));
+        request.OperationAttributes.Add(new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"));
+        request.OperationAttributes.Add(new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"));
+        request.OperationAttributes.Add(new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://127.0.0.1:631/"));
 
         Action act = () => mapper.Map<IIppRequestMessage, ValidateDocumentRequest>(request);
 

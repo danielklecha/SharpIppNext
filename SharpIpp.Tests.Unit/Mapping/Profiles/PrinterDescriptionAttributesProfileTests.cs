@@ -60,15 +60,15 @@ public class PrinterDescriptionAttributesProfileTests
 
         var dst = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
 
-        dst.Should().ContainKey(PrinterAttribute.FinishingsColDefault);
-        dst[PrinterAttribute.FinishingsColDefault].Should().ContainSingle();
-        dst[PrinterAttribute.FinishingsColDefault][0].Tag.Should().Be(Tag.NoValue);
-        dst[PrinterAttribute.FinishingsColDefault][0].Name.Should().Be(PrinterAttribute.FinishingsColDefault);
+        dst.Should().ContainKey(IppAttributeNames.FinishingsColDefault);
+        dst[IppAttributeNames.FinishingsColDefault].Should().ContainSingle();
+        dst[IppAttributeNames.FinishingsColDefault][0].Tag.Should().Be(Tag.NoValue);
+        dst[IppAttributeNames.FinishingsColDefault][0].Name.Should().Be(IppAttributeNames.FinishingsColDefault);
 
-        dst.Should().ContainKey(PrinterAttribute.FinishingsColDatabase);
-        dst[PrinterAttribute.FinishingsColDatabase].Should().ContainSingle();
-        dst[PrinterAttribute.FinishingsColDatabase][0].Tag.Should().Be(Tag.NoValue);
-        dst[PrinterAttribute.FinishingsColDatabase][0].Name.Should().Be(PrinterAttribute.FinishingsColDatabase);
+        dst.Should().ContainKey(IppAttributeNames.FinishingsColDatabase);
+        dst[IppAttributeNames.FinishingsColDatabase].Should().ContainSingle();
+        dst[IppAttributeNames.FinishingsColDatabase][0].Tag.Should().Be(Tag.NoValue);
+        dst[IppAttributeNames.FinishingsColDatabase][0].Name.Should().Be(IppAttributeNames.FinishingsColDatabase);
     }
 
     [TestMethod]
@@ -76,8 +76,8 @@ public class PrinterDescriptionAttributesProfileTests
     {
         var src = new Dictionary<string, IppAttribute[]>
         {
-            { PrinterAttribute.FinishingsColDefault, [new IppAttribute(Tag.NoValue, PrinterAttribute.FinishingsColDefault, NoValue.Instance)] },
-            { PrinterAttribute.FinishingsColDatabase, [new IppAttribute(Tag.NoValue, PrinterAttribute.FinishingsColDatabase, NoValue.Instance)] }
+            { IppAttributeNames.FinishingsColDefault, [new IppAttribute(Tag.NoValue, IppAttributeNames.FinishingsColDefault, NoValue.Instance)] },
+            { IppAttributeNames.FinishingsColDatabase, [new IppAttribute(Tag.NoValue, IppAttributeNames.FinishingsColDatabase, NoValue.Instance)] }
         };
 
         var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(src);
@@ -97,27 +97,27 @@ public class PrinterDescriptionAttributesProfileTests
         var src = new Dictionary<string, IppAttribute[]>
         {
             {
-                PrinterAttribute.AccuracyUnitsSupported,
+                IppAttributeNames.AccuracyUnitsSupported,
                 [
-                    new IppAttribute(Tag.Keyword, PrinterAttribute.AccuracyUnitsSupported, "mm"),
-                    new IppAttribute(Tag.Keyword, PrinterAttribute.AccuracyUnitsSupported, "um")
+                    new IppAttribute(Tag.Keyword, IppAttributeNames.AccuracyUnitsSupported, "mm"),
+                    new IppAttribute(Tag.Keyword, IppAttributeNames.AccuracyUnitsSupported, "um")
                 ]
             },
             {
-                PrinterAttribute.PrinterCameraImageUri,
-                [new IppAttribute(Tag.Uri, PrinterAttribute.PrinterCameraImageUri, "https://printer.example/camera")]
+                IppAttributeNames.PrinterCameraImageUri,
+                [new IppAttribute(Tag.Uri, IppAttributeNames.PrinterCameraImageUri, "https://printer.example/camera")]
             },
             {
-                PrinterAttribute.PlatformShape,
-                [new IppAttribute(Tag.Keyword, PrinterAttribute.PlatformShape, "rectangular")]
+                IppAttributeNames.PlatformShape,
+                [new IppAttribute(Tag.Keyword, IppAttributeNames.PlatformShape, "rectangular")]
             },
             {
-                PrinterAttribute.PrintBaseDefault,
-                [new IppAttribute(Tag.Keyword, PrinterAttribute.PrintBaseDefault, "raft")]
+                IppAttributeNames.PrintBaseDefault,
+                [new IppAttribute(Tag.Keyword, IppAttributeNames.PrintBaseDefault, "raft")]
             },
             {
-                PrinterAttribute.PrintSupportsSupported,
-                [new IppAttribute(Tag.Keyword, PrinterAttribute.PrintSupportsSupported, "none"), new IppAttribute(Tag.Keyword, PrinterAttribute.PrintSupportsSupported, "standard")]
+                IppAttributeNames.PrintSupportsSupported,
+                [new IppAttribute(Tag.Keyword, IppAttributeNames.PrintSupportsSupported, "none"), new IppAttribute(Tag.Keyword, IppAttributeNames.PrintSupportsSupported, "standard")]
             }
         };
 
@@ -135,7 +135,7 @@ public class PrinterDescriptionAttributesProfileTests
     {
         var src = new Dictionary<string, IppAttribute[]>
         {
-            { PrinterAttribute.PrinterRequestedJobAttributes, [new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterRequestedJobAttributes, "job-account-id"), new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterRequestedJobAttributes, "job-account-type")] }
+            { IppAttributeNames.PrinterRequestedJobAttributes, [new IppAttribute(Tag.Keyword, IppAttributeNames.PrinterRequestedJobAttributes, "job-account-id"), new IppAttribute(Tag.Keyword, IppAttributeNames.PrinterRequestedJobAttributes, "job-account-type")] }
         };
 
         var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(src);
@@ -148,11 +148,11 @@ public class PrinterDescriptionAttributesProfileTests
     {
         var src = new Dictionary<string, IppAttribute[]>
         {
-            { PrinterAttribute.PdfVersionsSupported, [new IppAttribute(Tag.Keyword, PrinterAttribute.PdfVersionsSupported, "adobe-1.7"), new IppAttribute(Tag.Keyword, PrinterAttribute.PdfVersionsSupported, "iso-32000-2_2017")] },
-            { PrinterAttribute.IppFeaturesSupported, [new IppAttribute(Tag.Keyword, PrinterAttribute.IppFeaturesSupported, "subscription"), new IppAttribute(Tag.Keyword, PrinterAttribute.IppFeaturesSupported, "events"), new IppAttribute(Tag.Keyword, PrinterAttribute.IppFeaturesSupported, "faxout")] },
-            { PrinterAttribute.PrinterServiceType, [new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterServiceType, "print"), new IppAttribute(Tag.Keyword, PrinterAttribute.PrinterServiceType, "fax") ] },
-            { PrinterAttribute.CompressionDefault, [new IppAttribute(Tag.Keyword, PrinterAttribute.CompressionDefault, Compression.Deflate.ToString())] },
-            { PrinterAttribute.PrinterResourceIds, [new IppAttribute(Tag.Integer, PrinterAttribute.PrinterResourceIds, 10), new IppAttribute(Tag.Integer, PrinterAttribute.PrinterResourceIds, 20)] }
+            { IppAttributeNames.PdfVersionsSupported, [new IppAttribute(Tag.Keyword, IppAttributeNames.PdfVersionsSupported, "adobe-1.7"), new IppAttribute(Tag.Keyword, IppAttributeNames.PdfVersionsSupported, "iso-32000-2_2017")] },
+            { IppAttributeNames.IppFeaturesSupported, [new IppAttribute(Tag.Keyword, IppAttributeNames.IppFeaturesSupported, "subscription"), new IppAttribute(Tag.Keyword, IppAttributeNames.IppFeaturesSupported, "events"), new IppAttribute(Tag.Keyword, IppAttributeNames.IppFeaturesSupported, "faxout")] },
+            { IppAttributeNames.PrinterServiceType, [new IppAttribute(Tag.Keyword, IppAttributeNames.PrinterServiceType, "print"), new IppAttribute(Tag.Keyword, IppAttributeNames.PrinterServiceType, "fax") ] },
+            { IppAttributeNames.CompressionDefault, [new IppAttribute(Tag.Keyword, IppAttributeNames.CompressionDefault, Compression.Deflate.ToString())] },
+            { IppAttributeNames.PrinterResourceIds, [new IppAttribute(Tag.Integer, IppAttributeNames.PrinterResourceIds, 10), new IppAttribute(Tag.Integer, IppAttributeNames.PrinterResourceIds, 20)] }
         };
 
         var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(src);
@@ -172,14 +172,14 @@ public class PrinterDescriptionAttributesProfileTests
 
         var src = new Dictionary<string, IppAttribute[]>
         {
-            { PrinterAttribute.PrinterStateChangeTime, [new IppAttribute(Tag.Integer, PrinterAttribute.PrinterStateChangeTime, 42)] },
-            { PrinterAttribute.PrinterStateChangeDateTime, [new IppAttribute(Tag.DateTime, PrinterAttribute.PrinterStateChangeDateTime, stateChange)] },
-            { PrinterAttribute.PrinterConfigChangeTime, [new IppAttribute(Tag.Integer, PrinterAttribute.PrinterConfigChangeTime, 84)] },
-            { PrinterAttribute.PrinterConfigChangeDateTime, [new IppAttribute(Tag.DateTime, PrinterAttribute.PrinterConfigChangeDateTime, configChange)] },
-            { PrinterAttribute.PrinterAlert, [new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, PrinterAttribute.PrinterAlert, "code=jam;severity=critical")] },
-            { PrinterAttribute.PrinterAlertDescription, [new IppAttribute(Tag.TextWithoutLanguage, PrinterAttribute.PrinterAlertDescription, "alert text")] },
+            { IppAttributeNames.PrinterStateChangeTime, [new IppAttribute(Tag.Integer, IppAttributeNames.PrinterStateChangeTime, 42)] },
+            { IppAttributeNames.PrinterStateChangeDateTime, [new IppAttribute(Tag.DateTime, IppAttributeNames.PrinterStateChangeDateTime, stateChange)] },
+            { IppAttributeNames.PrinterConfigChangeTime, [new IppAttribute(Tag.Integer, IppAttributeNames.PrinterConfigChangeTime, 84)] },
+            { IppAttributeNames.PrinterConfigChangeDateTime, [new IppAttribute(Tag.DateTime, IppAttributeNames.PrinterConfigChangeDateTime, configChange)] },
+            { IppAttributeNames.PrinterAlert, [new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, IppAttributeNames.PrinterAlert, "code=jam;severity=critical")] },
+            { IppAttributeNames.PrinterAlertDescription, [new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.PrinterAlertDescription, "alert text")] },
             // PrinterSupply read mapping deferred to Task 7 (now PrinterSupply[]? collection type)
-            { PrinterAttribute.PrinterSupplyDescription, [new IppAttribute(Tag.TextWithoutLanguage, PrinterAttribute.PrinterSupplyDescription, "toner status")] }
+            { IppAttributeNames.PrinterSupplyDescription, [new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.PrinterSupplyDescription, "toner status")] }
         };
 
         var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(src);
@@ -218,31 +218,31 @@ public class PrinterDescriptionAttributesProfileTests
 
         var dst = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
 
-        dst.Should().ContainKey(PrinterAttribute.AccuracyUnitsSupported);
-        dst[PrinterAttribute.AccuracyUnitsSupported].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Keyword);
-        dst[PrinterAttribute.AccuracyUnitsSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["mm", "um"]);
+        dst.Should().ContainKey(IppAttributeNames.AccuracyUnitsSupported);
+        dst[IppAttributeNames.AccuracyUnitsSupported].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Keyword);
+        dst[IppAttributeNames.AccuracyUnitsSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["mm", "um"]);
 
-        dst.Should().ContainKey(PrinterAttribute.PrinterCameraImageUri);
-        dst[PrinterAttribute.PrinterCameraImageUri].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Uri);
-        dst[PrinterAttribute.PrinterCameraImageUri].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["https://printer.example/camera"]);
+        dst.Should().ContainKey(IppAttributeNames.PrinterCameraImageUri);
+        dst[IppAttributeNames.PrinterCameraImageUri].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Uri);
+        dst[IppAttributeNames.PrinterCameraImageUri].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["https://printer.example/camera"]);
 
-        dst.Should().ContainKey(PrinterAttribute.PlatformShape);
-        dst[PrinterAttribute.PlatformShape].Single().Tag.Should().Be(Tag.Keyword);
-        dst[PrinterAttribute.PlatformShape].Single().Value.Should().Be("rectangular");
+        dst.Should().ContainKey(IppAttributeNames.PlatformShape);
+        dst[IppAttributeNames.PlatformShape].Single().Tag.Should().Be(Tag.Keyword);
+        dst[IppAttributeNames.PlatformShape].Single().Value.Should().Be("rectangular");
 
-        dst.Should().ContainKey(PrinterAttribute.PrintBaseDefault);
-        dst[PrinterAttribute.PrintBaseDefault].Single().Tag.Should().Be(Tag.Keyword);
-        dst[PrinterAttribute.PrintBaseDefault].Single().Value.Should().Be("raft");
+        dst.Should().ContainKey(IppAttributeNames.PrintBaseDefault);
+        dst[IppAttributeNames.PrintBaseDefault].Single().Tag.Should().Be(Tag.Keyword);
+        dst[IppAttributeNames.PrintBaseDefault].Single().Value.Should().Be("raft");
 
-        dst.Should().ContainKey(PrinterAttribute.PrintSupportsSupported);
-        dst[PrinterAttribute.PrintSupportsSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["none", "standard"]);
+        dst.Should().ContainKey(IppAttributeNames.PrintSupportsSupported);
+        dst[IppAttributeNames.PrintSupportsSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["none", "standard"]);
 
-        dst.Should().ContainKey(PrinterAttribute.PrinterVolumeSupported);
-        dst[PrinterAttribute.PrinterVolumeSupported].Any(x => x.Tag == Tag.BegCollection).Should().BeTrue();
-        dst[PrinterAttribute.PrinterVolumeSupported].Any(x => x.Tag == Tag.MemberAttrName && Equals(x.Value, "x-dimension")).Should().BeTrue();
-        dst[PrinterAttribute.PrinterVolumeSupported].Any(x => x.Tag == Tag.MemberAttrName && Equals(x.Value, "y-dimension")).Should().BeTrue();
-        dst[PrinterAttribute.PrinterVolumeSupported].Any(x => x.Tag == Tag.MemberAttrName && Equals(x.Value, "z-dimension")).Should().BeTrue();
-        dst[PrinterAttribute.PrinterVolumeSupported].Count(x => x.Tag == Tag.Integer).Should().Be(3);
+        dst.Should().ContainKey(IppAttributeNames.PrinterVolumeSupported);
+        dst[IppAttributeNames.PrinterVolumeSupported].Any(x => x.Tag == Tag.BegCollection).Should().BeTrue();
+        dst[IppAttributeNames.PrinterVolumeSupported].Any(x => x.Tag == Tag.MemberAttrName && Equals(x.Value, "x-dimension")).Should().BeTrue();
+        dst[IppAttributeNames.PrinterVolumeSupported].Any(x => x.Tag == Tag.MemberAttrName && Equals(x.Value, "y-dimension")).Should().BeTrue();
+        dst[IppAttributeNames.PrinterVolumeSupported].Any(x => x.Tag == Tag.MemberAttrName && Equals(x.Value, "z-dimension")).Should().BeTrue();
+        dst[IppAttributeNames.PrinterVolumeSupported].Count(x => x.Tag == Tag.Integer).Should().Be(3);
     }
 
     [TestMethod]
@@ -255,9 +255,9 @@ public class PrinterDescriptionAttributesProfileTests
 
         var dst = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
 
-        dst.Should().ContainKey(PrinterAttribute.PrinterRequestedJobAttributes);
-        dst[PrinterAttribute.PrinterRequestedJobAttributes].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Keyword);
-        dst[PrinterAttribute.PrinterRequestedJobAttributes].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["job-account-id", "job-account-type"]);
+        dst.Should().ContainKey(IppAttributeNames.PrinterRequestedJobAttributes);
+        dst[IppAttributeNames.PrinterRequestedJobAttributes].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Keyword);
+        dst[IppAttributeNames.PrinterRequestedJobAttributes].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["job-account-id", "job-account-type"]);
     }
 
     [TestMethod]
@@ -274,25 +274,25 @@ public class PrinterDescriptionAttributesProfileTests
 
         var dst = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
 
-        dst.Should().ContainKey(PrinterAttribute.PdfVersionsSupported);
-        dst[PrinterAttribute.PdfVersionsSupported].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Keyword);
-        dst[PrinterAttribute.PdfVersionsSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["adobe-1.7", "iso-32000-2_2017"]);
+        dst.Should().ContainKey(IppAttributeNames.PdfVersionsSupported);
+        dst[IppAttributeNames.PdfVersionsSupported].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Keyword);
+        dst[IppAttributeNames.PdfVersionsSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["adobe-1.7", "iso-32000-2_2017"]);
 
-        dst.Should().ContainKey(PrinterAttribute.IppFeaturesSupported);
-        dst[PrinterAttribute.IppFeaturesSupported].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Keyword);
-        dst[PrinterAttribute.IppFeaturesSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["subscription", "events", "faxout"]);
+        dst.Should().ContainKey(IppAttributeNames.IppFeaturesSupported);
+        dst[IppAttributeNames.IppFeaturesSupported].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Keyword);
+        dst[IppAttributeNames.IppFeaturesSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["subscription", "events", "faxout"]);
 
-        dst.Should().ContainKey(PrinterAttribute.PrinterServiceType);
-        dst[PrinterAttribute.PrinterServiceType].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Keyword);
-        dst[PrinterAttribute.PrinterServiceType].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["print", "fax"]);
+        dst.Should().ContainKey(IppAttributeNames.PrinterServiceType);
+        dst[IppAttributeNames.PrinterServiceType].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Keyword);
+        dst[IppAttributeNames.PrinterServiceType].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["print", "fax"]);
 
-        dst.Should().ContainKey(PrinterAttribute.CompressionDefault);
-        dst[PrinterAttribute.CompressionDefault].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Keyword);
-        dst[PrinterAttribute.CompressionDefault].Select(x => x.Value?.ToString()).Should().BeEquivalentTo([Compression.Deflate.ToString()]);
+        dst.Should().ContainKey(IppAttributeNames.CompressionDefault);
+        dst[IppAttributeNames.CompressionDefault].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Keyword);
+        dst[IppAttributeNames.CompressionDefault].Select(x => x.Value?.ToString()).Should().BeEquivalentTo([Compression.Deflate.ToString()]);
 
-        dst.Should().ContainKey(PrinterAttribute.PrinterResourceIds);
-        dst[PrinterAttribute.PrinterResourceIds].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Integer);
-        dst[PrinterAttribute.PrinterResourceIds].Select(x => (int)x.Value!).Should().BeEquivalentTo(new[] { 10, 20 });
+        dst.Should().ContainKey(IppAttributeNames.PrinterResourceIds);
+        dst[IppAttributeNames.PrinterResourceIds].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Integer);
+        dst[IppAttributeNames.PrinterResourceIds].Select(x => (int)x.Value!).Should().BeEquivalentTo(new[] { 10, 20 });
     }
 
     [TestMethod]
@@ -315,36 +315,36 @@ public class PrinterDescriptionAttributesProfileTests
 
         var dst = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
 
-        dst.Should().ContainKey(PrinterAttribute.PrinterStateChangeTime);
-        dst[PrinterAttribute.PrinterStateChangeTime].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Integer);
-        dst[PrinterAttribute.PrinterStateChangeTime].Select(x => (int)x.Value!).Should().BeEquivalentTo(new[] { 42 });
+        dst.Should().ContainKey(IppAttributeNames.PrinterStateChangeTime);
+        dst[IppAttributeNames.PrinterStateChangeTime].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Integer);
+        dst[IppAttributeNames.PrinterStateChangeTime].Select(x => (int)x.Value!).Should().BeEquivalentTo(new[] { 42 });
 
-        dst.Should().ContainKey(PrinterAttribute.PrinterStateChangeDateTime);
-        dst[PrinterAttribute.PrinterStateChangeDateTime].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.DateTime);
-        dst[PrinterAttribute.PrinterStateChangeDateTime].Select(x => (DateTimeOffset)x.Value!).Should().BeEquivalentTo(new[] { stateChange });
+        dst.Should().ContainKey(IppAttributeNames.PrinterStateChangeDateTime);
+        dst[IppAttributeNames.PrinterStateChangeDateTime].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.DateTime);
+        dst[IppAttributeNames.PrinterStateChangeDateTime].Select(x => (DateTimeOffset)x.Value!).Should().BeEquivalentTo(new[] { stateChange });
 
-        dst.Should().ContainKey(PrinterAttribute.PrinterConfigChangeTime);
-        dst[PrinterAttribute.PrinterConfigChangeTime].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Integer);
-        dst[PrinterAttribute.PrinterConfigChangeTime].Select(x => (int)x.Value!).Should().BeEquivalentTo(new[] { 84 });
+        dst.Should().ContainKey(IppAttributeNames.PrinterConfigChangeTime);
+        dst[IppAttributeNames.PrinterConfigChangeTime].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Integer);
+        dst[IppAttributeNames.PrinterConfigChangeTime].Select(x => (int)x.Value!).Should().BeEquivalentTo(new[] { 84 });
 
-        dst.Should().ContainKey(PrinterAttribute.PrinterConfigChangeDateTime);
-        dst[PrinterAttribute.PrinterConfigChangeDateTime].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.DateTime);
-        dst[PrinterAttribute.PrinterConfigChangeDateTime].Select(x => (DateTimeOffset)x.Value!).Should().BeEquivalentTo(new[] { configChange });
+        dst.Should().ContainKey(IppAttributeNames.PrinterConfigChangeDateTime);
+        dst[IppAttributeNames.PrinterConfigChangeDateTime].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.DateTime);
+        dst[IppAttributeNames.PrinterConfigChangeDateTime].Select(x => (DateTimeOffset)x.Value!).Should().BeEquivalentTo(new[] { configChange });
 
-        dst.Should().ContainKey(PrinterAttribute.PrinterAlert);
-        dst[PrinterAttribute.PrinterAlert].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.OctetStringWithAnUnspecifiedFormat);
-        dst[PrinterAttribute.PrinterAlert].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["code=jam;severity=critical"]);
+        dst.Should().ContainKey(IppAttributeNames.PrinterAlert);
+        dst[IppAttributeNames.PrinterAlert].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.OctetStringWithAnUnspecifiedFormat);
+        dst[IppAttributeNames.PrinterAlert].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["code=jam;severity=critical"]);
 
-        dst.Should().ContainKey(PrinterAttribute.PrinterAlertDescription);
-        dst[PrinterAttribute.PrinterAlertDescription].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.TextWithoutLanguage);
-        dst[PrinterAttribute.PrinterAlertDescription].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["alert text"]);
+        dst.Should().ContainKey(IppAttributeNames.PrinterAlertDescription);
+        dst[IppAttributeNames.PrinterAlertDescription].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.TextWithoutLanguage);
+        dst[IppAttributeNames.PrinterAlertDescription].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["alert text"]);
 
         // PrinterSupply write mapping deferred to Task 7 (now PrinterSupply[]? collection type)
-        dst.Should().NotContainKey(PrinterAttribute.PrinterSupply);
+        dst.Should().NotContainKey(IppAttributeNames.PrinterSupply);
 
-        dst.Should().ContainKey(PrinterAttribute.PrinterSupplyDescription);
-        dst[PrinterAttribute.PrinterSupplyDescription].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.TextWithoutLanguage);
-        dst[PrinterAttribute.PrinterSupplyDescription].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["toner status"]);
+        dst.Should().ContainKey(IppAttributeNames.PrinterSupplyDescription);
+        dst[IppAttributeNames.PrinterSupplyDescription].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.TextWithoutLanguage);
+        dst[IppAttributeNames.PrinterSupplyDescription].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["toner status"]);
     }
 
     [TestMethod]
@@ -353,20 +353,20 @@ public class PrinterDescriptionAttributesProfileTests
         var src = new Dictionary<string, IppAttribute[]>
         {
             {
-                PrinterAttribute.DestinationAccessesSupported,
+                IppAttributeNames.DestinationAccessesSupported,
                 [
-                    new IppAttribute(Tag.Keyword, PrinterAttribute.DestinationAccessesSupported, "access-user-name"),
-                    new IppAttribute(Tag.Keyword, PrinterAttribute.DestinationAccessesSupported, "access-password")
+                    new IppAttribute(Tag.Keyword, IppAttributeNames.DestinationAccessesSupported, "access-user-name"),
+                    new IppAttribute(Tag.Keyword, IppAttributeNames.DestinationAccessesSupported, "access-password")
                 ]
             },
             {
-                PrinterAttribute.JobDestinationSpoolingSupported,
-                [new IppAttribute(Tag.Keyword, PrinterAttribute.JobDestinationSpoolingSupported, "automatic")]
+                IppAttributeNames.JobDestinationSpoolingSupported,
+                [new IppAttribute(Tag.Keyword, IppAttributeNames.JobDestinationSpoolingSupported, "automatic")]
             },
             {
-                PrinterAttribute.OutputAttributesDefault,
+                IppAttributeNames.OutputAttributesDefault,
                 [
-                    new IppAttribute(Tag.BegCollection, PrinterAttribute.OutputAttributesDefault, NoValue.Instance),
+                    new IppAttribute(Tag.BegCollection, IppAttributeNames.OutputAttributesDefault, NoValue.Instance),
                     new IppAttribute(Tag.MemberAttrName, "", "noise-removal"),
                     new IppAttribute(Tag.Integer, "", 50),
                     new IppAttribute(Tag.MemberAttrName, "", "output-compression-quality-factor"),
@@ -375,10 +375,10 @@ public class PrinterDescriptionAttributesProfileTests
                 ]
             },
             {
-                PrinterAttribute.OutputAttributesSupported,
+                IppAttributeNames.OutputAttributesSupported,
                 [
-                    new IppAttribute(Tag.Keyword, PrinterAttribute.OutputAttributesSupported, "noise-removal"),
-                    new IppAttribute(Tag.Keyword, PrinterAttribute.OutputAttributesSupported, "output-compression-quality-factor")
+                    new IppAttribute(Tag.Keyword, IppAttributeNames.OutputAttributesSupported, "noise-removal"),
+                    new IppAttribute(Tag.Keyword, IppAttributeNames.OutputAttributesSupported, "output-compression-quality-factor")
                 ]
             }
         };
@@ -410,23 +410,23 @@ public class PrinterDescriptionAttributesProfileTests
 
         var dst = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
 
-        dst.Should().ContainKey(PrinterAttribute.DestinationAccessesSupported);
-        dst[PrinterAttribute.DestinationAccessesSupported].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Keyword);
-        dst[PrinterAttribute.DestinationAccessesSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["access-user-name", "access-password"]);
+        dst.Should().ContainKey(IppAttributeNames.DestinationAccessesSupported);
+        dst[IppAttributeNames.DestinationAccessesSupported].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Keyword);
+        dst[IppAttributeNames.DestinationAccessesSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["access-user-name", "access-password"]);
 
-        dst.Should().ContainKey(PrinterAttribute.JobDestinationSpoolingSupported);
-        dst[PrinterAttribute.JobDestinationSpoolingSupported].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Keyword);
-        dst[PrinterAttribute.JobDestinationSpoolingSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["automatic"]);
+        dst.Should().ContainKey(IppAttributeNames.JobDestinationSpoolingSupported);
+        dst[IppAttributeNames.JobDestinationSpoolingSupported].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Keyword);
+        dst[IppAttributeNames.JobDestinationSpoolingSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["automatic"]);
 
-        dst.Should().ContainKey(PrinterAttribute.OutputAttributesDefault);
-        dst[PrinterAttribute.OutputAttributesDefault].Should().Contain(x => x.Tag == Tag.MemberAttrName && x.Value!.Equals("noise-removal"));
-        dst[PrinterAttribute.OutputAttributesDefault].Should().Contain(x => x.Tag == Tag.MemberAttrName && x.Value!.Equals("output-compression-quality-factor"));
-        dst[PrinterAttribute.OutputAttributesDefault].Should().Contain(x => x.Tag == Tag.Integer && x.Value!.Equals(50));
-        dst[PrinterAttribute.OutputAttributesDefault].Should().Contain(x => x.Tag == Tag.Integer && x.Value!.Equals(70));
+        dst.Should().ContainKey(IppAttributeNames.OutputAttributesDefault);
+        dst[IppAttributeNames.OutputAttributesDefault].Should().Contain(x => x.Tag == Tag.MemberAttrName && x.Value!.Equals("noise-removal"));
+        dst[IppAttributeNames.OutputAttributesDefault].Should().Contain(x => x.Tag == Tag.MemberAttrName && x.Value!.Equals("output-compression-quality-factor"));
+        dst[IppAttributeNames.OutputAttributesDefault].Should().Contain(x => x.Tag == Tag.Integer && x.Value!.Equals(50));
+        dst[IppAttributeNames.OutputAttributesDefault].Should().Contain(x => x.Tag == Tag.Integer && x.Value!.Equals(70));
 
-        dst.Should().ContainKey(PrinterAttribute.OutputAttributesSupported);
-        dst[PrinterAttribute.OutputAttributesSupported].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Keyword);
-        dst[PrinterAttribute.OutputAttributesSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["noise-removal", "output-compression-quality-factor"]);
+        dst.Should().ContainKey(IppAttributeNames.OutputAttributesSupported);
+        dst[IppAttributeNames.OutputAttributesSupported].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Keyword);
+        dst[IppAttributeNames.OutputAttributesSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["noise-removal", "output-compression-quality-factor"]);
     }
 
     [TestMethod]
@@ -435,9 +435,9 @@ public class PrinterDescriptionAttributesProfileTests
         var src = new Dictionary<string, IppAttribute[]>
         {
             {
-                PrinterAttribute.DestinationUriReady,
+                IppAttributeNames.DestinationUriReady,
                 [
-                    new IppAttribute(Tag.BegCollection, PrinterAttribute.DestinationUriReady, NoValue.Instance),
+                    new IppAttribute(Tag.BegCollection, IppAttributeNames.DestinationUriReady, NoValue.Instance),
                     new IppAttribute(Tag.MemberAttrName, "", "destination-uri"),
                     new IppAttribute(Tag.Uri, "", "https://example.test/upload"),
                     new IppAttribute(Tag.MemberAttrName, "", "destination-name"),
@@ -482,14 +482,14 @@ public class PrinterDescriptionAttributesProfileTests
 
         var dst = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
 
-        dst.Should().ContainKey(PrinterAttribute.DestinationUriReady);
-        dst[PrinterAttribute.DestinationUriReady].Should().Contain(x => x.Tag == Tag.BegCollection && x.Name == PrinterAttribute.DestinationUriReady);
-        dst[PrinterAttribute.DestinationUriReady].Should().Contain(x => x.Tag == Tag.MemberAttrName && x.Value!.Equals("destination-uri"));
-        dst[PrinterAttribute.DestinationUriReady].Should().Contain(x => x.Tag == Tag.Uri && x.Value!.Equals("https://example.test/upload"));
-        dst[PrinterAttribute.DestinationUriReady].Should().Contain(x => x.Tag == Tag.MemberAttrName && x.Value!.Equals("destination-name"));
-        dst[PrinterAttribute.DestinationUriReady].Should().Contain(x => x.Tag == Tag.NameWithoutLanguage && x.Value!.Equals("Inbox"));
-        dst[PrinterAttribute.DestinationUriReady].Should().Contain(x => x.Tag == Tag.MemberAttrName && x.Value!.Equals("destination-is-directory"));
-        dst[PrinterAttribute.DestinationUriReady].Should().Contain(x => x.Tag == Tag.Boolean && x.Value!.Equals(true));
+        dst.Should().ContainKey(IppAttributeNames.DestinationUriReady);
+        dst[IppAttributeNames.DestinationUriReady].Should().Contain(x => x.Tag == Tag.BegCollection && x.Name == IppAttributeNames.DestinationUriReady);
+        dst[IppAttributeNames.DestinationUriReady].Should().Contain(x => x.Tag == Tag.MemberAttrName && x.Value!.Equals("destination-uri"));
+        dst[IppAttributeNames.DestinationUriReady].Should().Contain(x => x.Tag == Tag.Uri && x.Value!.Equals("https://example.test/upload"));
+        dst[IppAttributeNames.DestinationUriReady].Should().Contain(x => x.Tag == Tag.MemberAttrName && x.Value!.Equals("destination-name"));
+        dst[IppAttributeNames.DestinationUriReady].Should().Contain(x => x.Tag == Tag.NameWithoutLanguage && x.Value!.Equals("Inbox"));
+        dst[IppAttributeNames.DestinationUriReady].Should().Contain(x => x.Tag == Tag.MemberAttrName && x.Value!.Equals("destination-is-directory"));
+        dst[IppAttributeNames.DestinationUriReady].Should().Contain(x => x.Tag == Tag.Boolean && x.Value!.Equals(true));
     }
 
     [TestMethod]
@@ -513,9 +513,9 @@ public class PrinterDescriptionAttributesProfileTests
 
         var dst = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
 
-        dst.Should().ContainKey(PrinterAttribute.PrinterAlert);
-        dst[PrinterAttribute.PrinterAlert].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.OctetStringWithAnUnspecifiedFormat);
-        dst[PrinterAttribute.PrinterAlert].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["code=jam;index=22;severity=critical;group=mediaPath;groupindex=4;location=6"]);
+        dst.Should().ContainKey(IppAttributeNames.PrinterAlert);
+        dst[IppAttributeNames.PrinterAlert].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.OctetStringWithAnUnspecifiedFormat);
+        dst[IppAttributeNames.PrinterAlert].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["code=jam;index=22;severity=critical;group=mediaPath;groupindex=4;location=6"]);
     }
 
     [TestMethod]
@@ -529,15 +529,15 @@ public class PrinterDescriptionAttributesProfileTests
 
         var serialized = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
 
-        serialized.Should().ContainKey(PrinterAttribute.OutputBinDefault);
-        serialized[PrinterAttribute.OutputBinDefault].Single().Tag.Should().Be(Tag.Keyword);
-        serialized[PrinterAttribute.OutputBinDefault].Single().Value.Should().Be("stacker-3");
+        serialized.Should().ContainKey(IppAttributeNames.OutputBinDefault);
+        serialized[IppAttributeNames.OutputBinDefault].Single().Tag.Should().Be(Tag.Keyword);
+        serialized[IppAttributeNames.OutputBinDefault].Single().Value.Should().Be("stacker-3");
 
-        serialized.Should().ContainKey(PrinterAttribute.OutputBinSupported);
-        serialized[PrinterAttribute.OutputBinSupported].Select(x => x.Tag).Should().BeEquivalentTo(
+        serialized.Should().ContainKey(IppAttributeNames.OutputBinSupported);
+        serialized[IppAttributeNames.OutputBinSupported].Select(x => x.Tag).Should().BeEquivalentTo(
             [Tag.Keyword, Tag.Keyword, Tag.Keyword, Tag.NameWithoutLanguage],
             options => options.WithStrictOrdering());
-        serialized[PrinterAttribute.OutputBinSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(
+        serialized[IppAttributeNames.OutputBinSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(
             ["stacker-3", "mailbox-2", "vendor-bin-42", "Accounting Bin"],
             options => options.WithStrictOrdering());
 
@@ -557,9 +557,9 @@ public class PrinterDescriptionAttributesProfileTests
 
         var serialized = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
 
-        serialized.Should().ContainKey(PrinterAttribute.OutputBinDefault);
-        serialized[PrinterAttribute.OutputBinDefault].Single().Tag.Should().Be(Tag.NameWithoutLanguage);
-        serialized[PrinterAttribute.OutputBinDefault].Single().Value.Should().Be("custom-finisher-bin");
+        serialized.Should().ContainKey(IppAttributeNames.OutputBinDefault);
+        serialized[IppAttributeNames.OutputBinDefault].Single().Tag.Should().Be(Tag.NameWithoutLanguage);
+        serialized[IppAttributeNames.OutputBinDefault].Single().Value.Should().Be("custom-finisher-bin");
 
         var roundTripped = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(serialized);
         roundTripped.OutputBinDefault.Should().Be(new OutputBin("custom-finisher-bin", false));
@@ -581,9 +581,9 @@ public class PrinterDescriptionAttributesProfileTests
         };
 
         var serialized = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
-        serialized.Should().ContainKey(PrinterAttribute.OverridesSupported);
-        serialized[PrinterAttribute.OverridesSupported].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Keyword);
-        serialized[PrinterAttribute.OverridesSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(
+        serialized.Should().ContainKey(IppAttributeNames.OverridesSupported);
+        serialized[IppAttributeNames.OverridesSupported].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Keyword);
+        serialized[IppAttributeNames.OverridesSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(
             ["pages", "document-numbers", "document-copies", "sides", "vendor-custom-override"]);
 
         var roundTripped = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(serialized);

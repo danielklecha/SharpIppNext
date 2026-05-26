@@ -43,7 +43,7 @@ public class FinishingsColProfileTests : MapperTestBase
 
         result.Should().HaveCount(1);
         result[0].Tag.Should().Be(Tag.NoValue);
-        result[0].Name.Should().Be(JobAttribute.FinishingsCol);
+        result[0].Name.Should().Be(IppAttributeNames.FinishingsCol);
         result[0].Value.Should().Be(NoValue.Instance);
     }
 

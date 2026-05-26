@@ -76,7 +76,7 @@ public class SetJobAttributesTests : SharpIppIntegrationTestBase
                 OperationAttributes = new()
                 {
                     StatusMessage = "successful-ok",
-                    DetailedStatusMessage = ["set-job-attributes detail"],
+                    DetailedStatusMessage = "set-job-attributes detail",
                 }
             };
             var memoryStream = new MemoryStream();

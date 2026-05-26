@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Requests;
@@ -13,6 +14,7 @@ public class CancelResourceOperationAttributes : SystemOperationAttributes
     /// The <c>resource-id</c> operation attribute identifying the target Resource.
     /// See: PWG 5100.22-2025 Section 7.1.14
     /// </summary>
+    [Range(1, 2147483647)]
     public int? ResourceId { get; set; }
 }
 
@@ -63,6 +65,7 @@ public class InstallResourceOperationAttributes : SystemOperationAttributes
     /// The <c>resource-id</c> operation attribute identifying the target Resource.
     /// See: PWG 5100.22-2025 Section 7.1.14
     /// </summary>
+    [Range(1, 2147483647)]
     public int? ResourceId { get; set; }
 }
 
@@ -76,6 +79,7 @@ public class SendResourceDataOperationAttributes : SystemOperationAttributes
     /// The <c>resource-id</c> operation attribute identifying the target Resource.
     /// See: PWG 5100.22-2025 Section 7.1.14
     /// </summary>
+    [Range(1, 2147483647)]
     public int? ResourceId { get; set; }
 
     /// <summary>
@@ -101,6 +105,7 @@ public class SetResourceAttributesOperationAttributes : SystemOperationAttribute
     /// The <c>resource-id</c> operation attribute identifying the target Resource.
     /// See: PWG 5100.22-2025 Section 7.1.14
     /// </summary>
+    [Range(1, 2147483647)]
     public int? ResourceId { get; set; }
 
     /// <summary>

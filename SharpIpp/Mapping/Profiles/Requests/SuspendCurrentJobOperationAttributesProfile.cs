@@ -13,7 +13,7 @@ internal class SuspendCurrentJobOperationAttributesProfile : IProfile
         {
             dst ??= new SuspendCurrentJobOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, JobOperationAttributes>(src, dst);
-            dst.JobMessageFromOperator = map.MapFromDicNullable<string?>(src, JobAttribute.JobMessageFromOperator);
+            dst.JobMessageFromOperator = map.MapFromDicNullable<string?>(src, IppAttributeNames.JobMessageFromOperator);
             return dst;
         });
 
@@ -22,7 +22,7 @@ internal class SuspendCurrentJobOperationAttributesProfile : IProfile
             dst ??= new List<IppAttribute>();
             map.Map<JobOperationAttributes, List<IppAttribute>>(src, dst);
             if (src.JobMessageFromOperator != null)
-                dst.Add(new IppAttribute(Tag.TextWithoutLanguage, JobAttribute.JobMessageFromOperator, src.JobMessageFromOperator));
+                dst.Add(new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.JobMessageFromOperator, src.JobMessageFromOperator));
             return dst;
         });
     }
