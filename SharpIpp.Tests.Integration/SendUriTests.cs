@@ -23,7 +23,7 @@ public class SendUriTests : SharpIppIntegrationTestBase
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
-                AttributesCharset = "utf-8",
+                AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
                 AttributesNaturalLanguage = "en-us",
                 RequestingUserName = "test-user",
                 JobId = 1,
@@ -31,7 +31,7 @@ public class SendUriTests : SharpIppIntegrationTestBase
                 ResourceIds = [51, 52],
                 DocumentName = "test-document",
                 Compression = Compression.None,
-                DocumentFormat = "application/pdf",
+                DocumentFormat = (SharpIpp.Protocol.Models.DocumentFormat)"application/pdf",
                 DocumentNaturalLanguage = "en",
                 DocumentCharset = "utf-8",
                 LastDocument = true,
@@ -40,7 +40,7 @@ public class SendUriTests : SharpIppIntegrationTestBase
                 {
                     AccessUserName = "ftp-user",
                     AccessPassword = "ftp-pass",
-                    AccessOAuthUri = "https://auth.example.com/token",
+                    AccessOAuthUri = new Uri("https://auth.example.com/token"),
                     AccessOAuthToken = "token",
                     AccessPin = "1234",
                     AccessX509Certificate = "-----BEGIN CERTIFICATE-----"

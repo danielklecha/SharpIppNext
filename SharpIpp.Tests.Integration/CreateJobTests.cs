@@ -43,7 +43,7 @@ public class CreateJobTests : SharpIppIntegrationTestBase
                 },
                 DestinationUris =
                 [
-                    new DestinationUri { DestinationUriValue = "https://example.test/upload" }
+                    new DestinationUri { DestinationUriValue = new Uri("https://example.test/upload") }
                 ],
                 DestinationAccesses =
                 [

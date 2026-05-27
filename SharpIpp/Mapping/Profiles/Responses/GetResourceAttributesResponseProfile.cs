@@ -60,8 +60,8 @@ internal class GetResourceAttributesResponseProfile : IProfile
                 ResourceStringVersion = map.MapFromDicNullable<string?>(src, IppAttributeNames.ResourceStringVersion),
                 ResourceInfo = map.MapFromDicNullable<string?>(src, IppAttributeNames.ResourceInfo),
                 ResourceName = map.MapFromDicNullable<string?>(src, IppAttributeNames.ResourceName),
-                ResourceFormat = map.MapFromDicNullable<string?>(src, IppAttributeNames.ResourceFormat),
-                ResourceFormats = map.MapFromDicSetNullable<string[]?>(src, IppAttributeNames.ResourceFormats),
+                ResourceFormat = map.MapFromDicNullable<ResourceFormat?>(src, IppAttributeNames.ResourceFormat),
+                ResourceFormats = map.MapFromDicSetNullable<ResourceFormat[]?>(src, IppAttributeNames.ResourceFormats),
                 ResourceType = map.MapFromDicNullable<ResourceType?>(src, IppAttributeNames.ResourceType),
             });
 
@@ -110,10 +110,10 @@ internal class GetResourceAttributesResponseProfile : IProfile
                 dic.Add(IppAttributeNames.ResourceInfo, new IppAttribute[] { new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.ResourceInfo, src.ResourceInfo!) });
             if (!string.IsNullOrEmpty(src.ResourceName))
                 dic.Add(IppAttributeNames.ResourceName, new IppAttribute[] { new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.ResourceName, src.ResourceName!) });
-            if (!string.IsNullOrEmpty(src.ResourceFormat))
-                dic.Add(IppAttributeNames.ResourceFormat, new IppAttribute[] { new IppAttribute(Tag.MimeMediaType, IppAttributeNames.ResourceFormat, src.ResourceFormat!) });
+            if (src.ResourceFormat != null)
+                dic.Add(IppAttributeNames.ResourceFormat, new IppAttribute[] { new IppAttribute(Tag.MimeMediaType, IppAttributeNames.ResourceFormat, src.ResourceFormat.Value.Value) });
             if (src.ResourceFormats != null)
-                dic.Add(IppAttributeNames.ResourceFormats, src.ResourceFormats.Select(x => new IppAttribute(Tag.MimeMediaType, IppAttributeNames.ResourceFormats, x)).ToArray());
+                dic.Add(IppAttributeNames.ResourceFormats, src.ResourceFormats.Select(x => new IppAttribute(Tag.MimeMediaType, IppAttributeNames.ResourceFormats, x.Value)).ToArray());
             if (src.ResourceType != null)
                 dic.Add(IppAttributeNames.ResourceType, new IppAttribute[] { new IppAttribute(Tag.Keyword, IppAttributeNames.ResourceType, src.ResourceType.Value.Value) });
             return dic;

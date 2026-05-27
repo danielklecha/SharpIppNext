@@ -20,5 +20,5 @@ public readonly record struct BalingWhen(string Value, bool IsValue = true) : IS
 
     public override string ToString() => Value;
     public static implicit operator string(BalingWhen bin) => bin.Value;
-    public static explicit operator BalingWhen(string value) => new(value);
+    public static implicit operator BalingWhen(string value) => new(value);
 }

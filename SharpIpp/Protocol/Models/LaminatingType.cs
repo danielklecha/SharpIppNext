@@ -68,5 +68,5 @@ public readonly record struct LaminatingType(string Value, bool IsMarked = true,
 
     public override string ToString() => Value;
     public static implicit operator string(LaminatingType bin) => bin.Value;
-    public static explicit operator LaminatingType(string value) => new(value);
+    public static implicit operator LaminatingType(string value) => new(value);
 }

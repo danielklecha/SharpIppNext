@@ -15,7 +15,7 @@ public class PrinterInputTray : IIppCollection
     /// type — keyword describing the tray type (e.g., "sheetFeedAutoRemovableTray").
     /// See: PWG 5100.13-2023 Section 6.6.9
     /// </summary>
-    public string? Type { get; set; }
+    public InputTrayType? Type { get; set; }
 
     /// <summary>
     /// level — current fill level of the tray (integer, -2 = unknown, -3 = no-value).
@@ -45,7 +45,7 @@ public class PrinterInputTray : IIppCollection
     /// media-color — color of the media in the tray (keyword | name).
     /// See: PWG 5100.13-2023 Section 6.6.9
     /// </summary>
-    public string? MediaColor { get; set; }
+    public MediaColor? MediaColor { get; set; }
 
     /// <summary>
     /// media-info — human-readable description of the media in the tray (text).
@@ -57,17 +57,17 @@ public class PrinterInputTray : IIppCollection
     /// media-type — type of media in the tray (keyword | name).
     /// See: PWG 5100.13-2023 Section 6.6.9
     /// </summary>
-    public string? MediaType { get; set; }
+    public MediaType? MediaType { get; set; }
 
     /// <summary>
     /// unit — unit of measure for level (keyword).
     /// See: PWG 5100.13-2023 Section 6.6.9
     /// </summary>
-    public string? Unit { get; set; }
+    public CapacityUnit? Unit { get; set; }
 
     /// <summary>
     /// feed-orientation — orientation of media feed (keyword).
     /// See: PWG 5100.13-2023 Section 6.6.9
     /// </summary>
-    public string? FeedOrientation { get; set; }
+    public FeedOrientation? FeedOrientation { get; set; }
 }

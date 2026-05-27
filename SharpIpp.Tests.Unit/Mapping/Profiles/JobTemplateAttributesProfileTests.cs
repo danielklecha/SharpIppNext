@@ -209,7 +209,7 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
                 ZAccuracy = 50
             },
             PrintBase = (PrintBase?)"raft",
-            PrintObjects = [new PrintObject { DocumentNumber = 1, PrintObjectsSource = "ipp://example/doc/1" }],
+            PrintObjects = [new PrintObject { DocumentNumber = 1, PrintObjectsSource = new Uri("ipp://example/doc/1") }],
             PrintSupports = (PrintSupports?)"generated-supports",
             ChamberHumidity = 45,
             ChamberTemperature = 60
@@ -252,7 +252,7 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
         request.JobAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.PlatformTemperature, 75));
         request.JobAttributes.AddRange(_mapper.Map<PrintAccuracy, IEnumerable<IppAttribute>>(new PrintAccuracy { AccuracyUnits = (AccuracyUnits?)"mm", XAccuracy = 100, YAccuracy = 100, ZAccuracy = 50 }).ToBegCollection(IppAttributeNames.PrintAccuracy));
         request.JobAttributes.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.PrintBase, "raft"));
-        request.JobAttributes.AddRange(_mapper.Map<PrintObject, IEnumerable<IppAttribute>>(new PrintObject { DocumentNumber = 1, PrintObjectsSource = "ipp://example/doc/1" }).ToBegCollection(IppAttributeNames.PrintObjects));
+        request.JobAttributes.AddRange(_mapper.Map<PrintObject, IEnumerable<IppAttribute>>(new PrintObject { DocumentNumber = 1, PrintObjectsSource = new Uri("ipp://example/doc/1") }).ToBegCollection(IppAttributeNames.PrintObjects));
         request.JobAttributes.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.PrintSupports, "generated-supports"));
         request.JobAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.ChamberHumidity, 45));
         request.JobAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.ChamberTemperature, 60));
@@ -414,7 +414,7 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
         dst.JobCoverFront.Should().NotBeNull();
         dst.JobFinishings.Should().Contain(Finishings.Staple);
         dst.JobFinishingsCol.Should().NotBeNull();
-        dst.SheetCollate.Should().Be("collated");
+        dst.SheetCollate.Should().Be(SheetCollate.Collated);
         dst.PagesPerSubset.Should().Contain(4);
         dst.MediaSource.Should().Be(MediaSource.Main);
         dst.MediaSourceFeedDirection.Should().Be(MediaSourceFeedDirection.LongEdgeFirst);

@@ -9,7 +9,7 @@ public class SystemConfiguredResource : IIppCollection
     bool INoValueWritable.IsValue { get; set; } = true;
     bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
-    public string? ResourceFormat { get; set; }
+    public ResourceFormat? ResourceFormat { get; set; }
     public int? ResourceId { get; set; }
     public string? ResourceInfo { get; set; }
     public string? ResourceName { get; set; }

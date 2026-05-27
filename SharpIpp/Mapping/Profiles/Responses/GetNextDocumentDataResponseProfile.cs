@@ -18,8 +18,8 @@ internal class GetNextDocumentDataResponseProfile : IProfile
             map.Map<IppResponseMessage, IIppResponse>(src, dst);
 
             var operationAttributes = src.OperationAttributes.SelectMany(x => x).ToIppDictionary();
-            dst.OperationAttributes.AttributesCharset = map.MapFromDicNullable<string?>(operationAttributes, IppAttributeNames.AttributesCharset) ?? "utf-8";
-            dst.OperationAttributes.AttributesNaturalLanguage = map.MapFromDicNullable<string?>(operationAttributes, IppAttributeNames.AttributesNaturalLanguage) ?? "en";
+            dst.OperationAttributes.AttributesCharset = map.MapFromDicNullable<Charset?>(operationAttributes, IppAttributeNames.AttributesCharset) ?? Charset.Utf8;
+            dst.OperationAttributes.AttributesNaturalLanguage = map.MapFromDicNullable<NaturalLanguage?>(operationAttributes, IppAttributeNames.AttributesNaturalLanguage) ?? NaturalLanguage.En;
             dst.OperationAttributes.Compression = map.MapFromDicNullable<Compression?>(operationAttributes, IppAttributeNames.Compression);
             dst.OperationAttributes.DocumentDataGetInterval = map.MapFromDicNullable<int?>(operationAttributes, IppAttributeNames.DocumentDataGetInterval);
             dst.OperationAttributes.LastDocument = map.MapFromDicNullable<bool?>(operationAttributes, IppAttributeNames.LastDocument);

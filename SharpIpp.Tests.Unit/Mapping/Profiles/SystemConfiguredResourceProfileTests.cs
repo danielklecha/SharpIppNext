@@ -30,7 +30,7 @@ public class SystemConfiguredResourceProfileTests : MapperTestBase
 
         var result = _mapper.Map<SystemConfiguredResource>(dict);
 
-        result.ResourceFormat.Should().Be("application/pdf");
+        result.ResourceFormat.Should().Be((ResourceFormat?)"application/pdf");
         result.ResourceId.Should().Be(202);
         result.ResourceState.Should().Be(ResourceState.Available);
         result.ResourceStateReasons.Should().Contain(ResourceStateReason.None);

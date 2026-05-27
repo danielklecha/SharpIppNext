@@ -64,7 +64,7 @@ public class GetResourceAttributesTests : SharpIppIntegrationTestBase
                     ResourceInfo = "Firmware image",
                     ResourceName = "Firmware",
                     ResourceFormat = "application/octet-stream",
-                    ResourceFormats = new[] { "application/octet-stream", "application/x-firmware" },
+                    ResourceFormats = new ResourceFormat[] { "application/octet-stream", "application/x-firmware" },
                     ResourceType = (ResourceType?)"executable-firmware"
                 }
             };

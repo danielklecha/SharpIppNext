@@ -60,5 +60,5 @@ public readonly record struct PrintColorMode(string Value, bool IsValue = true) 
 
     public override string ToString() => Value;
     public static implicit operator string(PrintColorMode bin) => bin.Value;
-    public static explicit operator PrintColorMode(string value) => new(value);
+    public static implicit operator PrintColorMode(string value) => new(value);
 }

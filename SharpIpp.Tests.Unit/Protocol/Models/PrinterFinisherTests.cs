@@ -21,19 +21,19 @@ public class PrinterFinisherTests
         };
 
         // 1. Check properties are correct
-        finisher.Type.Should().Be("stitcher");
+        finisher.Type.Should().Be(FinisherType.Stitcher);
         finisher.MaxCapacity.Should().Be(100);
         finisher.Extensions.Should().ContainKey("x-custom").WhoseValue.Should().Be("value");
 
         // 2. Change via properties
-        finisher.Type = "folder";
+        finisher.Type = FinisherType.Folder;
         finisher.Extensions.Should().ContainKey("x-custom").WhoseValue.Should().Be("value");
         finisher.Extensions.Should().NotContainKey("type");
 
         // 3. Clear extensions
         finisher.Extensions = null;
         finisher.Extensions.Should().BeNull();
-        finisher.Type.Should().Be("folder");
+        finisher.Type.Should().Be(FinisherType.Folder);
     }
 
     [TestMethod]
@@ -41,24 +41,24 @@ public class PrinterFinisherTests
     {
         var supply = new PrinterFinisherSupply
         {
-            Class = "supplies",
+            Class = (FinisherSupplyClass?)"supplies",
             Max = 500,
             Extensions = new Dictionary<string, string> { { "x-custom-supply", "value2" } }
         };
 
         // 1. Check properties are correct
-        supply.Class.Should().Be("supplies");
+        supply.Class.Should().Be((FinisherSupplyClass?)"supplies");
         supply.Max.Should().Be(500);
         supply.Extensions.Should().ContainKey("x-custom-supply").WhoseValue.Should().Be("value2");
 
         // 2. Change via properties
-        supply.Class = "consumable";
+        supply.Class = (FinisherSupplyClass?)"consumable";
         supply.Extensions.Should().ContainKey("x-custom-supply").WhoseValue.Should().Be("value2");
         supply.Extensions.Should().NotContainKey("class");
 
         // 3. Clear extensions
         supply.Extensions = null;
         supply.Extensions.Should().BeNull();
-        supply.Class.Should().Be("consumable");
+        supply.Class.Should().Be((FinisherSupplyClass?)"consumable");
     }
 }

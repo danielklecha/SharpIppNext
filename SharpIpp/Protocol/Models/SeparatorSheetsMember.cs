@@ -15,5 +15,5 @@ public readonly record struct SeparatorSheetsMember(string Value, bool IsValue =
 
     public override string ToString() => Value;
     public static implicit operator string(SeparatorSheetsMember value) => value.Value;
-    public static explicit operator SeparatorSheetsMember(string value) => new(value);
+    public static implicit operator SeparatorSheetsMember(string value) => new(value);
 }

@@ -44,5 +44,5 @@ public readonly record struct JobStorageAccess(string Value, bool IsMarked = tru
 
     public override string ToString() => Value;
     public static implicit operator string(JobStorageAccess value) => value.Value;
-    public static explicit operator JobStorageAccess(string value) => new(value);
+    public static implicit operator JobStorageAccess(string value) => new(value);
 }

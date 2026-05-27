@@ -20,7 +20,7 @@ public class SetDocumentAttributesRequestProfileTests : MapperTestBase
         {
             OperationAttributes = new SetDocumentAttributesOperationAttributes
             {
-                AttributesCharset = "utf-8",
+                AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
                 AttributesNaturalLanguage = "en",
                 PrinterUri = new Uri("ipp://127.0.0.1:631/printers/p1"),
                 JobId = 123,

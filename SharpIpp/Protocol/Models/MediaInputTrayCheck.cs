@@ -11,5 +11,5 @@ public readonly record struct MediaInputTrayCheck(string Value, bool IsValue = t
 {
     public override string ToString() => Value;
     public static implicit operator string(MediaInputTrayCheck bin) => bin.Value;
-    public static explicit operator MediaInputTrayCheck(string value) => new(value);
+    public static implicit operator MediaInputTrayCheck(string value) => new(value);
 }

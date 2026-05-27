@@ -108,7 +108,7 @@ internal class JobSheetsColProfile : IProfile
             return new DocumentAccess
             {
                 AccessOAuthToken = map.MapFromDicNullable<string?>(src, nameof(DocumentAccess.AccessOAuthToken).ConvertCamelCaseToKebabCase()),
-                AccessOAuthUri = map.MapFromDicNullable<string?>(src, nameof(DocumentAccess.AccessOAuthUri).ConvertCamelCaseToKebabCase()),
+                AccessOAuthUri = map.MapFromDicNullable<Uri?>(src, nameof(DocumentAccess.AccessOAuthUri).ConvertCamelCaseToKebabCase()),
                 AccessPassword = map.MapFromDicNullable<string?>(src, nameof(DocumentAccess.AccessPassword).ConvertCamelCaseToKebabCase()),
                 AccessPin = map.MapFromDicNullable<string?>(src, nameof(DocumentAccess.AccessPin).ConvertCamelCaseToKebabCase()),
                 AccessUserName = map.MapFromDicNullable<string?>(src, nameof(DocumentAccess.AccessUserName).ConvertCamelCaseToKebabCase()),
@@ -124,7 +124,7 @@ internal class JobSheetsColProfile : IProfile
             if (src.AccessOAuthToken != null)
                 attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, nameof(DocumentAccess.AccessOAuthToken).ConvertCamelCaseToKebabCase(), src.AccessOAuthToken));
             if (src.AccessOAuthUri != null)
-                attributes.Add(new IppAttribute(Tag.Uri, nameof(DocumentAccess.AccessOAuthUri).ConvertCamelCaseToKebabCase(), src.AccessOAuthUri));
+                attributes.Add(new IppAttribute(Tag.Uri, nameof(DocumentAccess.AccessOAuthUri).ConvertCamelCaseToKebabCase(), src.AccessOAuthUri.ToString()));
             if (src.AccessPassword != null)
                 attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, nameof(DocumentAccess.AccessPassword).ConvertCamelCaseToKebabCase(), src.AccessPassword));
             if (src.AccessPin != null)
@@ -173,7 +173,7 @@ internal class JobSheetsColProfile : IProfile
 
             return new DestinationUri
             {
-                DestinationUriValue = map.MapFromDicNullable<string?>(src, "destination-uri"),
+                DestinationUriValue = map.MapFromDicNullable<Uri?>(src, "destination-uri"),
                 PostDialString = map.MapFromDicNullable<string?>(src, nameof(DestinationUri.PostDialString).ConvertCamelCaseToKebabCase()),
                 PreDialString = map.MapFromDicNullable<string?>(src, nameof(DestinationUri.PreDialString).ConvertCamelCaseToKebabCase()),
                 T33Subaddress = map.MapFromDicNullable<int?>(src, nameof(DestinationUri.T33Subaddress).ConvertCamelCaseToKebabCase())
@@ -185,7 +185,7 @@ internal class JobSheetsColProfile : IProfile
                 return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.DestinationUris, NoValue.Instance) };
 
             var attributes = new List<IppAttribute>();
-            if (src.DestinationUriValue != null) attributes.Add(new IppAttribute(Tag.Uri, "destination-uri", src.DestinationUriValue));
+            if (src.DestinationUriValue != null) attributes.Add(new IppAttribute(Tag.Uri, "destination-uri", src.DestinationUriValue.ToString()));
             if (src.PostDialString != null) attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, nameof(DestinationUri.PostDialString).ConvertCamelCaseToKebabCase(), src.PostDialString));
             if (src.PreDialString != null) attributes.Add(new IppAttribute(Tag.TextWithoutLanguage, nameof(DestinationUri.PreDialString).ConvertCamelCaseToKebabCase(), src.PreDialString));
             if (src.T33Subaddress.HasValue) attributes.Add(new IppAttribute(Tag.Integer, nameof(DestinationUri.T33Subaddress).ConvertCamelCaseToKebabCase(), src.T33Subaddress.Value));
@@ -199,7 +199,7 @@ internal class JobSheetsColProfile : IProfile
 
             return new DestinationStatus
             {
-                DestinationUri = map.MapFromDicNullable<string?>(src, "destination-uri"),
+                DestinationUri = map.MapFromDicNullable<Uri?>(src, "destination-uri"),
                 ImagesCompleted = map.MapFromDicNullable<int?>(src, "images-completed"),
                 TransmissionStatus = map.MapFromDicNullable<TransmissionStatus?>(src, "transmission-status")
             };
@@ -212,7 +212,7 @@ internal class JobSheetsColProfile : IProfile
 
             var attributes = new List<IppAttribute>();
             if (src.DestinationUri != null)
-                attributes.Add(new IppAttribute(Tag.Uri, "destination-uri", src.DestinationUri));
+                attributes.Add(new IppAttribute(Tag.Uri, "destination-uri", src.DestinationUri.ToString()));
             if (src.ImagesCompleted.HasValue)
                 attributes.Add(new IppAttribute(Tag.Integer, "images-completed", src.ImagesCompleted.Value));
             if (src.TransmissionStatus.HasValue)
@@ -245,7 +245,7 @@ internal class JobSheetsColProfile : IProfile
                 DestinationOAuthScope = map.MapFromDicSetNullable<OctetString[]?>(src, "destination-oauth-scope"),
                 DestinationOAuthToken = map.MapFromDicSetNullable<OctetString[]?>(src, "destination-oauth-token"),
                 DestinationOAuthUri = map.MapFromDicNullable<Uri?>(src, "destination-oauth-uri"),
-                DestinationUri = map.MapFromDicNullable<string?>(src, "destination-uri")
+                DestinationUri = map.MapFromDicNullable<Uri?>(src, "destination-uri")
             };
         });
 
@@ -277,7 +277,7 @@ internal class JobSheetsColProfile : IProfile
             if (src.DestinationOAuthUri != null)
                 attributes.Add(new IppAttribute(Tag.Uri, "destination-oauth-uri", src.DestinationOAuthUri.ToString()));
             if (src.DestinationUri != null)
-                attributes.Add(new IppAttribute(Tag.Uri, "destination-uri", src.DestinationUri));
+                attributes.Add(new IppAttribute(Tag.Uri, "destination-uri", src.DestinationUri.ToString()));
 
             return attributes;
         });
@@ -380,7 +380,7 @@ internal class JobSheetsColProfile : IProfile
             return new PrintObject
             {
                 DocumentNumber = map.MapFromDicNullable<int?>(src, nameof(PrintObject.DocumentNumber).ConvertCamelCaseToKebabCase()),
-                PrintObjectsSource = map.MapFromDicNullable<string?>(src, "print-objects-source"),
+                PrintObjectsSource = map.MapFromDicNullable<Uri?>(src, "print-objects-source"),
             TransformationMatrix = map.MapFromDicSetNullable<int[]?>(src, nameof(PrintObject.TransformationMatrix).ConvertCamelCaseToKebabCase())
             };
         });
@@ -391,7 +391,7 @@ internal class JobSheetsColProfile : IProfile
 
             var attributes = new List<IppAttribute>();
             if (src.DocumentNumber.HasValue) attributes.Add(new IppAttribute(Tag.Integer, nameof(PrintObject.DocumentNumber).ConvertCamelCaseToKebabCase(), src.DocumentNumber.Value));
-            if (src.PrintObjectsSource != null) attributes.Add(new IppAttribute(Tag.Uri, "print-objects-source", src.PrintObjectsSource));
+            if (src.PrintObjectsSource != null) attributes.Add(new IppAttribute(Tag.Uri, "print-objects-source", src.PrintObjectsSource.ToString()));
             if (src.TransformationMatrix != null)
                 attributes.AddRange(src.TransformationMatrix.Select(x => new IppAttribute(Tag.Integer, nameof(PrintObject.TransformationMatrix).ConvertCamelCaseToKebabCase(), x)));
             return attributes;

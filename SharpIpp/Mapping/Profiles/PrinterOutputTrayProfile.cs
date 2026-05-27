@@ -16,12 +16,12 @@ internal class PrinterOutputTrayProfile : IProfile
 
             return new PrinterOutputTray
             {
-                Type = map.MapFromDicNullable<string?>(src, "type"),
+                Type = map.MapFromDicNullable<OutputTrayType?>(src, "type"),
                 Level = map.MapFromDicNullable<int?>(src, "level"),
                 Status = map.MapFromDicNullable<string?>(src, "status"),
-                Unit = map.MapFromDicNullable<string?>(src, "unit"),
-                StackingOrder = map.MapFromDicNullable<string?>(src, "stackingorder"),
-                PageDelivery = map.MapFromDicNullable<string?>(src, "pagedelivery"),
+                Unit = map.MapFromDicNullable<CapacityUnit?>(src, "unit"),
+                StackingOrder = map.MapFromDicNullable<StackingOrder?>(src, "stackingorder"),
+                PageDelivery = map.MapFromDicNullable<PageDelivery?>(src, "pagedelivery"),
             };
         });
         mapper.CreateMap<PrinterOutputTray, IEnumerable<IppAttribute>>((src, _) =>
@@ -30,12 +30,12 @@ internal class PrinterOutputTrayProfile : IProfile
                 return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.PrinterOutputTray, NoValue.Instance) };
 
             var attrs = new List<IppAttribute>();
-            if (src.Type != null) attrs.Add(new IppAttribute(Tag.Keyword, "type", src.Type));
+            if (src.Type != null) attrs.Add(new IppAttribute(Tag.Keyword, "type", src.Type.Value.Value));
             if (src.Level.HasValue) attrs.Add(new IppAttribute(Tag.Integer, "level", src.Level.Value));
             if (src.Status != null) attrs.Add(new IppAttribute(Tag.Keyword, "status", src.Status));
-            if (src.Unit != null) attrs.Add(new IppAttribute(Tag.Keyword, "unit", src.Unit));
-            if (src.StackingOrder != null) attrs.Add(new IppAttribute(Tag.Keyword, "stackingorder", src.StackingOrder));
-            if (src.PageDelivery != null) attrs.Add(new IppAttribute(Tag.Keyword, "pagedelivery", src.PageDelivery));
+            if (src.Unit != null) attrs.Add(new IppAttribute(Tag.Keyword, "unit", src.Unit.Value.Value));
+            if (src.StackingOrder != null) attrs.Add(new IppAttribute(Tag.Keyword, "stackingorder", src.StackingOrder.Value.Value));
+            if (src.PageDelivery != null) attrs.Add(new IppAttribute(Tag.Keyword, "pagedelivery", src.PageDelivery.Value.Value));
             return attrs;
         });
     }

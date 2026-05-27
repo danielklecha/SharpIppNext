@@ -24,7 +24,7 @@ public class GetUserPrinterAttributesTests : SharpIppIntegrationTestBase
                 PrinterUri = new Uri("http://127.0.0.1:631"),
                 FirstIndex = 5,
                 Limit = 10,
-                DocumentFormat = "application/octet-stream",
+                DocumentFormat = DocumentFormat.ApplicationOctetStream,
                 RequestedAttributes = ["printer-name"],
                 RequestingUserVcard = ["vcard-entry-1", "vcard-entry-2"]
             }
@@ -41,7 +41,11 @@ public class GetUserPrinterAttributesTests : SharpIppIntegrationTestBase
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
                 StatusCode = IppStatusCode.SuccessfulOk,
-                PrinterAttributes = new PrinterDescriptionAttributes { PrinterName = "UserScopedPrinter" }
+                PrinterAttributes = new PrinterDescriptionAttributes
+                {
+                    PrinterName = "UserScopedPrinter",
+                    NaturalLanguageConfigured = NaturalLanguage.EnUs
+                }
             };
             var ms = new MemoryStream();
             await server.SendResponseAsync(serverResponse, ms, c);

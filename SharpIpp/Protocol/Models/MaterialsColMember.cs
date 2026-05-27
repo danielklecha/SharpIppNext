@@ -25,5 +25,5 @@ public readonly record struct MaterialsColMember(string Value, bool IsMarked = t
 
     public override string ToString() => Value;
     public static implicit operator string(MaterialsColMember value) => value.Value;
-    public static explicit operator MaterialsColMember(string value) => new(value);
+    public static implicit operator MaterialsColMember(string value) => new(value);
 }

@@ -128,4 +128,19 @@ public class PrinterFinisherProfileTests : MapperTestBase
         // Assert
         result.Extensions.Should().ContainKey("custom-key").WhoseValue.Should().Be("custom-value");
     }
+
+    [TestMethod]
+    public void Map_PrinterFinisher_WithNullType_ToOctetString_OmitsTypeField()
+    {
+        // Arrange – Type is null, so append("type", null) should be a no-op
+        var finisher = new PrinterFinisher { Type = null, Unit = "items" };
+        var expectedString = "unit=items;";
+        var expectedBytes = Encoding.UTF8.GetBytes(expectedString);
+
+        // Act
+        var result = _mapper.Map<PrinterFinisher, OctetString>(finisher);
+
+        // Assert
+        result.Value.Should().BeEquivalentTo(expectedBytes);
+    }
 }

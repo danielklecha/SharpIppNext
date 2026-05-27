@@ -29,5 +29,5 @@ public readonly record struct FetchDocumentAttribute(string Value, bool IsValue 
 
     public override string ToString() => Value;
     public static implicit operator string(FetchDocumentAttribute value) => value.Value;
-    public static explicit operator FetchDocumentAttribute(string value) => new(value);
+    public static implicit operator FetchDocumentAttribute(string value) => new(value);
 }

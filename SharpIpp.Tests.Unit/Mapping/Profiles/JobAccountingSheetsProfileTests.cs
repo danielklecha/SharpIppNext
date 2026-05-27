@@ -48,10 +48,10 @@ public class JobAccountingSheetsProfileTests : MapperTestBase
         // Arrange
         var sheets = new JobAccountingSheets
         {
-            JobAccountingOutputBin = h1 ? (OutputBin)"top" : null,
-            JobAccountingSheetsType = h2 ? JobAccountingSheetsType.Standard : null,
-            Media = h3 ? (Media)"iso_a4_210x297mm" : null,
-            MediaCol = h4 ? new MediaCol { MediaColor = (MediaColor)"blue" } : null
+            JobAccountingOutputBin = h1 ? (OutputBin?)"top" : null,
+            JobAccountingSheetsType = h2 ? (JobAccountingSheetsType?)JobAccountingSheetsType.Standard : null,
+            Media = h3 ? (Media?)"iso_a4_210x297mm" : null,
+            MediaCol = h4 ? new MediaCol { MediaColor = (MediaColor?)"blue" } : null
         };
 
         // Act

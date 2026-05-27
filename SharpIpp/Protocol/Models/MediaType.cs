@@ -80,5 +80,5 @@ public readonly record struct MediaType(string Value, bool IsValue = true) : ISm
 
     public override string ToString() => Value;
     public static implicit operator string(MediaType bin) => bin.Value;
-    public static explicit operator MediaType(string value) => new(value);
+    public static implicit operator MediaType(string value) => new(value);
 }

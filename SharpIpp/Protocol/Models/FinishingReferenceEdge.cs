@@ -32,5 +32,5 @@ public readonly record struct FinishingReferenceEdge(string Value, bool IsValue 
 
     public override string ToString() => Value;
     public static implicit operator string(FinishingReferenceEdge bin) => bin.Value;
-    public static explicit operator FinishingReferenceEdge(string value) => new(value);
+    public static implicit operator FinishingReferenceEdge(string value) => new(value);
 }

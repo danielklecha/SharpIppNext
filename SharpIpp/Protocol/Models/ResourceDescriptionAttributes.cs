@@ -20,14 +20,14 @@ public class ResourceDescriptionAttributes
     /// See: PWG 5100.22-2025 Section 6.2.2
     /// </summary>
     /// <code>resource-format</code>
-    public string? ResourceFormat { get; set; }
+    public ResourceFormat? ResourceFormat { get; set; }
 
     /// <summary>
     /// The list of supported data formats.
     /// See: PWG 5100.22-2025 Section 6.2.3
     /// </summary>
     /// <code>resource-formats</code>
-    public string[]? ResourceFormats { get; set; }
+    public ResourceFormat[]? ResourceFormats { get; set; }
 
     /// <summary>
     /// The resource name.

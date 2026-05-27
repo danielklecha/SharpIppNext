@@ -28,7 +28,7 @@ public class CreatePrinterSubscriptionsTests : SharpIppIntegrationTestBase
             Version = new IppVersion(2, 0),
             OperationAttributes = new CreatePrinterSubscriptionsOperationAttributes
             {
-                AttributesCharset = "utf-8",
+                AttributesCharset = Charset.Utf8,
                 AttributesNaturalLanguage = "en",
                 PrinterUri = new Uri("ipp://127.0.0.1:631/printer"),
                 RequestingUserName = "test-user",
@@ -130,7 +130,7 @@ public class CreatePrinterSubscriptionsTests : SharpIppIntegrationTestBase
             Version = new IppVersion(2, 0),
             OperationAttributes = new CreatePrinterSubscriptionsOperationAttributes
             {
-                AttributesCharset = "utf-8",
+                AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
                 AttributesNaturalLanguage = "en",
                 PrinterUri = new Uri("ipp://127.0.0.1:631/printer"),
                 RequestingUserName = "test-user",

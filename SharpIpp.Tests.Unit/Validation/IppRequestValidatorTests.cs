@@ -425,7 +425,7 @@ public class IppRequestValidatorTests
         {
             Version = new IppVersion(2, 0),
             RequestId = 123,
-            OperationAttributes = new OperationAttributes { AttributesCharset = "utf-8" },
+            OperationAttributes = new OperationAttributes { AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8" },
             StringValue = "hello",
             StringWithLanguageValue = new StringWithLanguage("en", "test"),
             OctetStringValue = new OctetString("hello"),
@@ -445,7 +445,7 @@ public class IppRequestValidatorTests
         {
             Version = new IppVersion(2, 0),
             RequestId = 123,
-            OperationAttributes = new OperationAttributes { AttributesCharset = "utf-8" },
+            OperationAttributes = new OperationAttributes { AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8" },
             StringValue = "abcdefghijk", // 11 bytes, exceeds max 10
         };
 
@@ -480,14 +480,14 @@ public class IppRequestValidatorTests
         {
             Version = new IppVersion(2, 0),
             RequestId = 123,
-            OperationAttributes = new OperationAttributes { AttributesCharset = "utf-16" },
+            OperationAttributes = new OperationAttributes { AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-16" },
             StringValue = "abcdef" // 12 bytes in UTF-16, exceeds 10 bytes limit
         };
 
         Action act = () => validator.Validate(request);
         act.Should().Throw<ValidationException>().WithMessage("*StringValue*");
 
-        request.OperationAttributes.AttributesCharset = "utf-8"; // 6 bytes in UTF-8, fits in 10 bytes limit
+        request.OperationAttributes.AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8"; // 6 bytes in UTF-8, fits in 10 bytes limit
         act.Should().NotThrow();
     }
 
@@ -499,7 +499,7 @@ public class IppRequestValidatorTests
         {
             Version = new IppVersion(2, 0),
             RequestId = 123,
-            OperationAttributes = new OperationAttributes { AttributesCharset = "invalid-charset-name" },
+            OperationAttributes = new OperationAttributes { AttributesCharset = (SharpIpp.Protocol.Models.Charset)"invalid-charset-name" },
             StringValue = "abcdef"
         };
 
@@ -518,7 +518,7 @@ public class IppRequestValidatorTests
         {
             Version = new IppVersion(2, 0),
             RequestId = 123,
-            OperationAttributes = new OperationAttributes { AttributesCharset = "utf-8" },
+            OperationAttributes = new OperationAttributes { AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8" },
             StringValue = "ab" // 2 bytes, falls in [1, 3]
         };
 
@@ -537,7 +537,7 @@ public class IppRequestValidatorTests
         {
             Version = new IppVersion(2, 0),
             RequestId = 123,
-            OperationAttributes = new OperationAttributes { AttributesCharset = "utf-8" },
+            OperationAttributes = new OperationAttributes { AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8" },
             StringValue = "abcde" // 5 bytes, outside [1, 3] and [7, 10]
         };
 
@@ -626,7 +626,7 @@ public class IppRequestValidatorTests
         {
             Version = new IppVersion(2, 0),
             RequestId = 123,
-            OperationAttributes = new OperationAttributes { AttributesCharset = "utf-8" },
+            OperationAttributes = new OperationAttributes { AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8" },
             UnsupportedValue = 123
         };
 

@@ -29,7 +29,7 @@ public class DestinationUriProfileTests : MapperTestBase
 
         var result = _mapper.Map<DestinationUri>(dict);
 
-        result.DestinationUriValue.Should().Be("fax:+12025550123");
+        result.DestinationUriValue.Should().Be(new Uri("fax:+12025550123"));
         result.T33Subaddress.Should().Be(99);
     }
 }

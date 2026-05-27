@@ -16,8 +16,8 @@ internal class OperationAttributesProfile : IProfile
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, OperationAttributes>((src, dst, map) =>
         {
             dst ??= new OperationAttributes();
-            dst.AttributesCharset = map.MapFromDicNullable<string?>(src, IppAttributeNames.AttributesCharset) ?? "utf-8";
-            dst.AttributesNaturalLanguage = map.MapFromDicNullable<string?>(src, IppAttributeNames.AttributesNaturalLanguage) ?? "en";
+            dst.AttributesCharset = map.MapFromDicNullable<Charset?>(src, IppAttributeNames.AttributesCharset) ?? Charset.Utf8;
+            dst.AttributesNaturalLanguage = map.MapFromDicNullable<NaturalLanguage?>(src, IppAttributeNames.AttributesNaturalLanguage) ?? NaturalLanguage.En;
             dst.RequestingUserName = map.MapFromDicNullable<string?>(src, IppAttributeNames.RequestingUserName);
             dst.RequestingUserUri = map.MapFromDicNullable<Uri?>(src, IppAttributeNames.RequestingUserUri);
             dst.PrinterUri = map.MapFromDicNullable<Uri?>(src, IppAttributeNames.PrinterUri);
@@ -33,7 +33,7 @@ internal class OperationAttributesProfile : IProfile
 
             // RFC 8011 Section 4.1.4: attributes-charset and attributes-natural-language
             // MUST be the first and second attributes respectively in the operation attributes group.
-            dst.Add(new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, src.AttributesCharset ?? "utf-8"));
+            dst.Add(new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, src.AttributesCharset?.Value ?? "utf-8"));
             dst.Add(new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, src.AttributesNaturalLanguage ?? "en"));
 
             if (src.PrinterUri != null)

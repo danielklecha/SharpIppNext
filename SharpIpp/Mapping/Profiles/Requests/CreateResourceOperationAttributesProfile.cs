@@ -13,7 +13,7 @@ internal class CreateResourceOperationAttributesProfile : IProfile
         {
             dst ??= new CreateResourceOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, SystemOperationAttributes>(src, dst);
-            dst.ResourceFormat = map.MapFromDicNullable<string?>(src, IppAttributeNames.ResourceFormat);
+            dst.ResourceFormat = map.MapFromDicNullable<ResourceFormat?>(src, IppAttributeNames.ResourceFormat);
             dst.ResourceNaturalLanguage = map.MapFromDicNullable<string?>(src, IppAttributeNames.ResourceNaturalLanguage);
             dst.ResourceType = map.MapFromDicNullable<ResourceType?>(src, IppAttributeNames.ResourceType);
             dst.ResourceName = map.MapFromDicNullable<string?>(src, IppAttributeNames.ResourceName);
@@ -26,7 +26,7 @@ internal class CreateResourceOperationAttributesProfile : IProfile
             dst ??= new List<IppAttribute>();
             map.Map<SystemOperationAttributes, List<IppAttribute>>(src, dst);
             if (src.ResourceFormat != null)
-                dst.Add(new IppAttribute(Tag.MimeMediaType, IppAttributeNames.ResourceFormat, src.ResourceFormat));
+                dst.Add(new IppAttribute(Tag.MimeMediaType, IppAttributeNames.ResourceFormat, src.ResourceFormat.Value.Value));
             if (src.ResourceNaturalLanguage != null)
                 dst.Add(new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.ResourceNaturalLanguage, src.ResourceNaturalLanguage));
             if (src.ResourceType != null)

@@ -26,5 +26,5 @@ public readonly record struct JobAccountType(string Value, bool IsValue = true) 
 
     public override string ToString() => Value;
     public static implicit operator string(JobAccountType value) => value.Value;
-    public static explicit operator JobAccountType(string value) => new(value);
+    public static implicit operator JobAccountType(string value) => new(value);
 }

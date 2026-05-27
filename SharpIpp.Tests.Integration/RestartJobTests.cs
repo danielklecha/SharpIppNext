@@ -23,7 +23,7 @@ public class RestartJobTests : SharpIppIntegrationTestBase
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
-                AttributesCharset = "utf-8",
+                AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
                 AttributesNaturalLanguage = "en-us",
                 RequestingUserName = "test-user",
                 JobId = 1,

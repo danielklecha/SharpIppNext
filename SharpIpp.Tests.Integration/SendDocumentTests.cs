@@ -25,7 +25,7 @@ public class SendDocumentTests : SharpIppIntegrationTestBase
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
-                AttributesCharset = "utf-8",
+                AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
                 AttributesNaturalLanguage = "en-us",
                 RequestingUserName = "test-user",
                 RequestingUserUri = new Uri("mailto:test-user@example.com"),
@@ -49,7 +49,7 @@ public class SendDocumentTests : SharpIppIntegrationTestBase
                 },
                 DocumentName = "test-document",
                 Compression = Compression.None,
-                DocumentFormat = "application/pdf",
+                DocumentFormat = (SharpIpp.Protocol.Models.DocumentFormat)"application/pdf",
                 DocumentNaturalLanguage = "en",
                 DocumentCharset = "utf-8",
                 DocumentMessage = "document-message",
@@ -159,7 +159,7 @@ public class SendDocumentTests : SharpIppIntegrationTestBase
                 InputSides = Sides.TwoSidedLongEdge,
                 InputSource = (InputSource?)"document-feeder",
                 DocumentCharset = "utf-8",
-                DocumentFormat = "application/pdf",
+                DocumentFormat = (SharpIpp.Protocol.Models.DocumentFormat)"application/pdf",
                 DocumentFormatDetails = new DocumentFormatDetails
                 {
                     DocumentSourceApplicationName = "ScanApp",
@@ -200,7 +200,7 @@ public class SendDocumentTests : SharpIppIntegrationTestBase
                     JobStateMessage = "pending",
                     NumberOfInterveningJobs = 0,
                     JobId = 456,
-                    JobUri = "http://127.0.0.1:631/456",
+                    JobUri = new Uri("http://127.0.0.1:631/456"),
                     ClientInfo = [new ClientInfo { ClientName = "SharpIppTests", ClientType = ClientType.Application }],
                     JobImpressionsCompletedCol = new JobCounter { Monochrome = 5 },
                     JobMediaSheetsCompletedCol = new JobCounter { Monochrome = 4 },

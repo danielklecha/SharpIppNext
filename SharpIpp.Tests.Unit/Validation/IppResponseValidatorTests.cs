@@ -132,7 +132,7 @@ public class IppResponseValidatorTests
             Version = new IppVersion(2, 0),
             RequestId = 123,
             StatusCode = IppStatusCode.SuccessfulOk,
-            OperationAttributes = new OperationAttributes { AttributesCharset = "invalid-charset-name" },
+            OperationAttributes = new OperationAttributes { AttributesCharset = (SharpIpp.Protocol.Models.Charset)"invalid-charset-name" },
             StringValue = "abcdef"
         };
 

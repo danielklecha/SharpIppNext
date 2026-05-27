@@ -23,7 +23,7 @@ public class GetPrinterSupportedValuesTests : SharpIppIntegrationTestBase
             {
                 PrinterUri = new Uri("ipp://127.0.0.1:631/"),
                 RequestedAttributes = ["media-supported", "copies-supported"],
-                DocumentFormat = "application/pdf",
+                DocumentFormat = DocumentFormat.ApplicationPdf,
                 FirstIndex = 1,
                 Limit = 10
             }

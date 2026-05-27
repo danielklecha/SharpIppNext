@@ -23,5 +23,5 @@ public readonly record struct JobCompleteBefore(string Value, bool IsValue = tru
 
     public override string ToString() => Value;
     public static implicit operator string(JobCompleteBefore v) => v.Value;
-    public static explicit operator JobCompleteBefore(string value) => new(value);
+    public static implicit operator JobCompleteBefore(string value) => new(value);
 }

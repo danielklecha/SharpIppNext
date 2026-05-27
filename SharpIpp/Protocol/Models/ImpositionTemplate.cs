@@ -126,5 +126,5 @@ public readonly record struct ImpositionTemplate(string Value, bool IsMarked = t
 
     public override string ToString() => Value;
     public static implicit operator string(ImpositionTemplate bin) => bin.Value;
-    public static explicit operator ImpositionTemplate(string value) => new(value);
+    public static implicit operator ImpositionTemplate(string value) => new(value);
 }

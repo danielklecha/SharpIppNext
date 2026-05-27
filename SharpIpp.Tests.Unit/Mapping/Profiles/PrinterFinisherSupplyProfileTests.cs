@@ -76,4 +76,19 @@ public class PrinterFinisherSupplyProfileTests : MapperTestBase
         // Assert
         result.Should().BeEquivalentTo(expectedBytes);
     }
+
+    [TestMethod]
+    public void Map_PrinterFinisherSupply_WithNullType_ToOctetString_OmitsTypeField()
+    {
+        // Arrange – Type is null, so append("type", null) should be a no-op
+        var supply = new PrinterFinisherSupply { Class = "supplyThatIsConsumed", Type = null, Unit = "items" };
+        var expectedString = "class=supplyThatIsConsumed; unit=items;";
+        var expectedBytes = Encoding.UTF8.GetBytes(expectedString);
+
+        // Act
+        var result = _mapper.Map<PrinterFinisherSupply, OctetString>(supply);
+
+        // Assert
+        result.Value.Should().BeEquivalentTo(expectedBytes);
+    }
 }

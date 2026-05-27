@@ -21,5 +21,5 @@ public readonly record struct CurrentPageOrder(string Value, bool IsValue = true
 
     public override string ToString() => Value;
     public static implicit operator string(CurrentPageOrder value) => value.Value;
-    public static explicit operator CurrentPageOrder(string value) => new(value);
+    public static implicit operator CurrentPageOrder(string value) => new(value);
 }

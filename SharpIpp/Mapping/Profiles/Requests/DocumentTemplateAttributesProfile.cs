@@ -138,9 +138,9 @@ internal class DocumentTemplateAttributesProfile : IProfile
             if (src.InputSource != null)
                 dst.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.InputSource, map.Map<string>(src.InputSource.Value)));
             if (src.DocumentCharset != null)
-                dst.Add(new IppAttribute(Tag.Charset, IppAttributeNames.DocumentCharset, src.DocumentCharset));
+                dst.Add(new IppAttribute(Tag.Charset, IppAttributeNames.DocumentCharset, src.DocumentCharset.Value));
             if (src.DocumentFormat != null)
-                dst.Add(new IppAttribute(Tag.MimeMediaType, IppAttributeNames.DocumentFormat, src.DocumentFormat));
+                dst.Add(new IppAttribute(Tag.MimeMediaType, IppAttributeNames.DocumentFormat, src.DocumentFormat.Value));
             if (src.DocumentFormatDetails != null)
                 dst.AddRange(map.Map<IEnumerable<IppAttribute>>(src.DocumentFormatDetails).ToBegCollection(IppAttributeNames.DocumentFormatDetails));
             if (src.DocumentMessage != null)
@@ -150,7 +150,7 @@ internal class DocumentTemplateAttributesProfile : IProfile
             if (src.DocumentName != null)
                 dst.Add(new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.DocumentName, src.DocumentName));
             if (src.DocumentNaturalLanguage != null)
-                dst.Add(new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.DocumentNaturalLanguage, src.DocumentNaturalLanguage));
+                dst.Add(new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.DocumentNaturalLanguage, src.DocumentNaturalLanguage.Value));
             if (src.DocumentPassword != null)
                 dst.Add(new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, IppAttributeNames.DocumentPassword, src.DocumentPassword.Value));
             if (src.DocumentUri != null)
@@ -222,14 +222,14 @@ internal class DocumentTemplateAttributesProfile : IProfile
             dst.InputSharpness = map.MapFromDicNullable<int?>(src, IppAttributeNames.InputSharpness);
             dst.InputSides = map.MapFromDicNullable<Sides?>(src, IppAttributeNames.InputSides);
             dst.InputSource = map.MapFromDicNullable<InputSource?>(src, IppAttributeNames.InputSource);
-            dst.DocumentCharset = map.MapFromDicNullable<string?>(src, IppAttributeNames.DocumentCharset);
-            dst.DocumentFormat = map.MapFromDicNullable<string?>(src, IppAttributeNames.DocumentFormat);
+            dst.DocumentCharset = map.MapFromDicNullable<Charset?>(src, IppAttributeNames.DocumentCharset);
+            dst.DocumentFormat = map.MapFromDicNullable<DocumentFormat?>(src, IppAttributeNames.DocumentFormat);
             if (src.TryGetValue(IppAttributeNames.DocumentFormatDetails, out var documentFormatDetails) && documentFormatDetails.GroupBegCollection().Any())
                 dst.DocumentFormatDetails = map.Map<DocumentFormatDetails>(documentFormatDetails.GroupBegCollection().First().FromBegCollection().ToIppDictionary());
             dst.DocumentMessage = map.MapFromDicNullable<string?>(src, IppAttributeNames.DocumentMessage);
             dst.DocumentMetadata = map.MapFromDicSetNullable<DocumentMetadata?>(src, IppAttributeNames.DocumentMetadata);
             dst.DocumentName = map.MapFromDicNullable<string?>(src, IppAttributeNames.DocumentName);
-            dst.DocumentNaturalLanguage = map.MapFromDicNullable<string?>(src, IppAttributeNames.DocumentNaturalLanguage);
+            dst.DocumentNaturalLanguage = map.MapFromDicNullable<NaturalLanguage?>(src, IppAttributeNames.DocumentNaturalLanguage);
             dst.DocumentPassword = map.MapFromDicNullable<OctetString?>(src, IppAttributeNames.DocumentPassword);
             dst.DocumentUri = map.MapFromDicNullable<string, System.Uri?>(src, IppAttributeNames.DocumentUri, (_, value) => new System.Uri(value));
             dst.LastDocument = map.MapFromDicNullable<bool?>(src, IppAttributeNames.LastDocument);

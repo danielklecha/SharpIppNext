@@ -54,8 +54,8 @@ public class InsertSheetProfileTests : MapperTestBase
         {
             InsertAfterPageNumber = h1 ? 1 : null,
             InsertCount = h2 ? 2 : null,
-            Media = h3 ? (Media)"iso_a4_210x297mm" : null,
-            MediaCol = h4 ? new MediaCol { MediaColor = (MediaColor)"blue" } : null
+            Media = h3 ? (Media?)"iso_a4_210x297mm" : null,
+            MediaCol = h4 ? new MediaCol { MediaColor = (MediaColor?)"blue" } : null
         };
 
         // Act

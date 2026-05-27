@@ -21,7 +21,7 @@ public class GetPrinterSupportedValuesOperationAttributes : OperationAttributes
     /// </summary>
     /// <code>document-format</code>
     /// <example>application/octet-stream</example>
-    public string? DocumentFormat { get; set; }
+    public DocumentFormat? DocumentFormat { get; set; }
 
     /// <summary>
     /// The first-index IPP attribute.

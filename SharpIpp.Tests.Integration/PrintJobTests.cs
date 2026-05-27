@@ -105,7 +105,7 @@ public class PrintJobTests : SharpIppIntegrationTestBase
                 PrinterUri = new Uri("http://127.0.0.1:631"),
                 ResourceIds = [31, 32],
                 DocumentName = "???????????????????????.pdf",
-                DocumentFormat = "application/pdf",
+                DocumentFormat = DocumentFormat.ApplicationPdf,
                 JobPassword = "hashed-secret",
                 JobPasswordEncryption = JobPasswordEncryption.Sha2256,
                 JobReleaseAction = JobReleaseAction.JobPassword,
@@ -116,7 +116,7 @@ public class PrintJobTests : SharpIppIntegrationTestBase
                 JobStorage = new JobStorage { JobStorageAccess = (JobStorageAccess?)"owner", JobStorageDisposition = (JobStorageDisposition?)"store-only", JobStorageGroup = "default" },
                 ProofPrint = new ProofPrint { ProofPrintCopies = 1, Media = (Media)"iso_a4_210x297mm" },
                 CoverSheetInfo = new CoverSheetInfo { FromName = "sender", ToName = "receiver", Subject = "subject" },
-                DestinationUris = [new DestinationUri { DestinationUriValue = "tel:+123456789", PostDialString = "#", PreDialString = "9", T33Subaddress = 12345 }],
+                DestinationUris = [new DestinationUri { DestinationUriValue = new Uri("tel:+123456789"), PostDialString = "#", PreDialString = "9", T33Subaddress = 12345 }],
                 OutputAttributes = new OutputAttributes { NoiseRemoval = 100, OutputCompressionQualityFactor = 80 },
                 DocumentMetadata = GetTestDocumentMetadata(),
             },
@@ -157,7 +157,7 @@ public class PrintJobTests : SharpIppIntegrationTestBase
                     new PrintObject
                     {
                         DocumentNumber = 1,
-                        PrintObjectsSource = "https://example.local/objects/1",
+                        PrintObjectsSource = new Uri("https://example.local/objects/1"),
                         TransformationMatrix = [1, 0, 0, 0, 1, 0]
                     }
                 ],
@@ -227,8 +227,8 @@ public class PrintJobTests : SharpIppIntegrationTestBase
                 PrinterUri = new Uri("http://127.0.0.1:631"),
                 ResourceIds = [33, 34],
                 DocumentName = "???????????????????????.pdf",
-                DocumentFormat = "application/pdf",
-                AttributesCharset = "utf-8",
+                DocumentFormat = (SharpIpp.Protocol.Models.DocumentFormat)"application/pdf",
+                AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
                 AttributesNaturalLanguage = "en-us",
                 RequestingUserName = "test-user",
                 JobName = "Test Job",

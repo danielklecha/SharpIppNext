@@ -56,5 +56,5 @@ public readonly record struct DocumentAccessMember(string Value, bool IsMarked =
 
     public override string ToString() => Value;
     public static implicit operator string(DocumentAccessMember value) => value.Value;
-    public static explicit operator DocumentAccessMember(string value) => new(value);
+    public static implicit operator DocumentAccessMember(string value) => new(value);
 }

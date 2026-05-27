@@ -13,7 +13,7 @@ public class DocumentAccess : IIppCollection
     bool INoValueWritable.IsValue { get; set; } = true;
     bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
     public string? AccessOAuthToken { get; set; }
-    public string? AccessOAuthUri { get; set; }
+    public Uri? AccessOAuthUri { get; set; }
     public string? AccessPassword { get; set; }
     public string? AccessPin { get; set; }
     public string? AccessUserName { get; set; }

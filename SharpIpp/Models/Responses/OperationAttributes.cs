@@ -29,11 +29,11 @@ public class OperationAttributes
     /// See: RFC 8011 Section 5.3.19
     /// </summary>
     /// <code>attributes-charset</code>
-    public string AttributesCharset { get; set; } = "utf-8";
+    public SharpIpp.Protocol.Models.Charset AttributesCharset { get; set; } = SharpIpp.Protocol.Models.Charset.Utf8;
     /// <summary>
     /// The Printer object MUST return this attribute. It identifies the natural language used by any 'name' and 'text' attributes that the Printer object is returning in this response. Defaults to "en"
     /// See: RFC 8011 Section 5.3.20
     /// </summary>
     /// <code>attributes-natural-language</code>
-    public string? AttributesNaturalLanguage { get; set; } = "en";
+    public SharpIpp.Protocol.Models.NaturalLanguage? AttributesNaturalLanguage { get; set; } = SharpIpp.Protocol.Models.NaturalLanguage.En;
 }

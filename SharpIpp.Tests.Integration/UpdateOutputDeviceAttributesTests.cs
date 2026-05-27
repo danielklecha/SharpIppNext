@@ -27,7 +27,8 @@ public class UpdateOutputDeviceAttributesTests : SharpIppIntegrationTestBase
             PrinterAttributes = new PrinterDescriptionAttributes
             {
                 PrinterState = PrinterState.Processing,
-                PrinterStateMessage = "processing"
+                PrinterStateMessage = "processing",
+                NaturalLanguageConfigured = "en-us"
             }
         };
 

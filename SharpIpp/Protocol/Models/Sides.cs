@@ -34,5 +34,5 @@ public readonly record struct Sides(string Value, bool IsValue = true) : ISmartE
 
     public override string ToString() => Value;
     public static implicit operator string(Sides bin) => bin.Value;
-    public static explicit operator Sides(string value) => new(value);
+    public static implicit operator Sides(string value) => new(value);
 }

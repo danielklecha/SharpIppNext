@@ -1,3 +1,5 @@
+using System;
+
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
@@ -8,7 +10,7 @@ public class DestinationUri : IIppCollection
 {
     bool INoValueWritable.IsValue { get; set; } = true;
     bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
-    public string? DestinationUriValue { get; set; }
+    public Uri? DestinationUriValue { get; set; }
     public string? PostDialString { get; set; }
     public string? PreDialString { get; set; }
     public int? T33Subaddress { get; set; }

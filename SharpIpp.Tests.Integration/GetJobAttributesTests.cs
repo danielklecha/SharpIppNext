@@ -23,7 +23,7 @@ public class GetJobAttributesTests : SharpIppIntegrationTestBase
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
-                AttributesCharset = "utf-8",
+                AttributesCharset = Charset.Utf8,
                 AttributesNaturalLanguage = "en-us",
                 RequestingUserName = "test-user",
                 JobId = 1,
@@ -45,7 +45,7 @@ public class GetJobAttributesTests : SharpIppIntegrationTestBase
                 JobAttributes = new JobDescriptionAttributes
                 {
                     JobId = 1,
-                    JobUri = "http://127.0.0.1:631/jobs/1",
+                    JobUri = new Uri("http://127.0.0.1:631/jobs/1"),
                     JobPrinterUri = new Uri("http://127.0.0.1:631"),
                     JobState = JobState.Pending,
                     JobStateReasons = [JobStateReason.None],
@@ -72,7 +72,7 @@ public class GetJobAttributesTests : SharpIppIntegrationTestBase
                         FullColor = 5,
                         MonochromeTwoSided = 6
                     },
-                    JobMoreInfo = "more info",
+                    JobMoreInfo = new Uri("more info", UriKind.RelativeOrAbsolute),
                     JobChargeInfo = "charge info",
                     DocumentFormatDetails = new DocumentFormatDetails
                     {
@@ -232,7 +232,7 @@ public class GetJobAttributesTests : SharpIppIntegrationTestBase
                     OutputDeviceJobStateReasons = [JobStateReason.None],
                     OutputDeviceJobStateMessage = "processing on output device",
                     OutputDeviceUuidAssigned = new Uri("urn:uuid:12345678-1234-1234-1234-123456789012"),
-                    DestinationStatuses = [new DestinationStatus { DestinationUri = "test-uri", ImagesCompleted = 10, TransmissionStatus = TransmissionStatus.Canceled }],
+                    DestinationStatuses = [new DestinationStatus { DestinationUri = new Uri("test-uri", UriKind.RelativeOrAbsolute), ImagesCompleted = 10, TransmissionStatus = TransmissionStatus.Canceled }],
                     JobCopiesActual = [2],
                     JobKOctetsCompleted = 15,
                     JobPassword = new byte[] { 0x01, 0x02, 0x03 },

@@ -24,11 +24,11 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
-                AttributesCharset = "utf-8",
+                AttributesCharset = Charset.Utf8,
                 AttributesNaturalLanguage = "en-us",
                 RequestingUserName = "test-user",
                 RequestedAttributes = ["printer-uri", "printer-state", "printer-name"],
-                DocumentFormat = "application/pdf",
+                DocumentFormat = DocumentFormat.ApplicationPdf,
                 FirstIndex = 1,
                 Limit = 10,
                 PrinterId = 42,
@@ -53,10 +53,10 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                         PrinterName = "Test Printer",
                         PrinterLocation = "Office",
                         PrinterInfo = "Test Printer Info",
-                        PrinterMoreInfo = "http://127.0.0.1:631",
-                        PrinterDriverInstaller = "installer",
+                        PrinterMoreInfo = new Uri("http://127.0.0.1:631"),
+                        PrinterDriverInstaller = new Uri("installer", UriKind.RelativeOrAbsolute),
                         PrinterMakeAndModel = "SharpIpp Virtual Printer",
-                        PrinterMoreInfoManufacturer = "http://manufacturer.com",
+                        PrinterMoreInfoManufacturer = new Uri("http://manufacturer.com"),
                         PrinterState = PrinterState.Idle,
                         PrinterStateReasons = new[] { PrinterStateReason.None, PrinterStateReason.BanderAdded },
                         PrinterStateMessage = "Idle",
@@ -75,7 +75,7 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                         CharsetConfigured = "utf-8",
                         CharsetSupported = new[] { "utf-8" },
                         NaturalLanguageConfigured = "en-us",
-                        GeneratedNaturalLanguageSupported = new[] { "en-us" },
+                        GeneratedNaturalLanguageSupported = ["en-us"],
                         DocumentFormatDefault = "application/pdf",
                         DocumentFormatSupported = new[] { "application/pdf" },
                         PrinterIsAcceptingJobs = true,
@@ -170,7 +170,7 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                         JobPasswordEncryptionSupported = new[] { JobPasswordEncryption.None },
                         JobAuthorizationUriSupported = true,
                         PrinterChargeInfo = "charge-info",
-                        PrinterChargeInfoUri = "http://charge.info",
+                        PrinterChargeInfoUri = new Uri("http://charge.info"),
                         PrinterMandatoryJobAttributes = new[] { (PrinterMandatoryJobAttribute)"copies" },
                         PrinterAlert = new[] { new PrinterAlert { Code = "alert1" } },
                         PrinterAlertDescription = new[] { "alert-desc" },
@@ -203,7 +203,7 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                         JobPasswordSupported = 255,
                         JobPasswordLengthSupported = new Range(4, 1020),
                         DocumentPasswordSupported = 1023,
-                        PrinterCameraImageUri = new[] { "http://camera.example.com/image" },
+                        PrinterCameraImageUri = new[] { new Uri("http://camera.example.com/image") },
                         PrinterResourceIds = new[] { 42 },
                         FinishingTemplateSupported = new[] { FinishingTemplate.None },
                         FinishingsColSupported = new[] { FinishingsColMember.FinishingTemplate },
@@ -452,7 +452,7 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                         CoverSheetInfoDefault = new CoverSheetInfo(),
                         CoverSheetInfoSupported = new[] { (CoverSheetInfoMember)"cover-sheet-info" },
                         DestinationUriSchemesSupported = new[] { UriScheme.Ftp },
-                        DestinationUrisSupported = new[] { "ftp://test.com" },
+                        DestinationUrisSupported = new[] { DestinationUrisMember.DestinationUri },
                         FromNameSupported = 64,
                         InputAttributesDefault = new DocumentTemplateAttributes(),
                         InputAttributesSupported = new[] { (InputAttributesMember)"input-attributes" },
@@ -509,7 +509,7 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                                 DestinationOAuthScope = ["scope1"],
                                 DestinationOAuthToken = ["token1"],
                                 DestinationOAuthUri = new Uri("http://oauth.uri"),
-                                DestinationUri = "http://dest.uri"
+                                DestinationUri = new Uri("http://dest.uri")
                             }
                         }
                     },
@@ -544,11 +544,11 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
-                AttributesCharset = "utf-8",
+                AttributesCharset = Charset.Utf8,
                 AttributesNaturalLanguage = "en-us",
                 RequestingUserName = "test-user",
                 RequestedAttributes = ["printer-state", "queued-job-count"],
-                DocumentFormat = "application/pdf",
+                DocumentFormat = DocumentFormat.ApplicationPdf,
             },
         };
 
@@ -622,7 +622,7 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
             StatusCode = IppStatusCode.SuccessfulOk,
             OperationAttributes = new()
             {
-                AttributesCharset = "utf-8",
+                AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
                 AttributesNaturalLanguage = "en",
                 StatusMessage = "successful-ok",
                 DetailedStatusMessage = "detail1",

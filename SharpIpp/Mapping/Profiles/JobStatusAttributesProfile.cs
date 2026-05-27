@@ -18,7 +18,7 @@ internal class JobStatusAttributesProfile : IProfile
             var dst = new JobStatusAttributes
             {
                 JobId = map.MapFromDicNullable<int?>(src, IppAttributeNames.JobId),
-                JobUri = map.MapFromDicNullable<string?>(src, IppAttributeNames.JobUri),
+                JobUri = map.MapFromDicNullable<Uri?>(src, IppAttributeNames.JobUri),
                 JobPrinterUri = map.MapFromDicNullable<Uri?>(src, IppAttributeNames.JobPrinterUri),
                 JobName = map.MapFromDicNullable<string?>(src, IppAttributeNames.JobName),
                 JobOriginatingUserName = map.MapFromDicNullable<string?>(src, IppAttributeNames.JobOriginatingUserName),
@@ -60,7 +60,7 @@ internal class JobStatusAttributesProfile : IProfile
             if (src.JobId != null)
                 dic.Add(IppAttributeNames.JobId, [new IppAttribute(Tag.Integer, IppAttributeNames.JobId, src.JobId.Value)]);
             if (src.JobUri != null)
-                dic.Add(IppAttributeNames.JobUri, [new IppAttribute(Tag.Uri, IppAttributeNames.JobUri, src.JobUri)]);
+                dic.Add(IppAttributeNames.JobUri, [new IppAttribute(Tag.Uri, IppAttributeNames.JobUri, src.JobUri.ToString())]);
             if (src.JobPrinterUri != null)
                 dic.Add(IppAttributeNames.JobPrinterUri, [new IppAttribute(Tag.Uri, IppAttributeNames.JobPrinterUri, src.JobPrinterUri.ToString())]);
             if (src.JobName != null)

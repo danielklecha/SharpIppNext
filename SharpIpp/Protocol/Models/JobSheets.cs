@@ -46,5 +46,5 @@ public readonly record struct JobSheets(string Value, bool IsValue = true) : ISm
 
     public override string ToString() => Value;
     public static implicit operator string(JobSheets bin) => bin.Value;
-    public static explicit operator JobSheets(string value) => new(value);
+    public static implicit operator JobSheets(string value) => new(value);
 }

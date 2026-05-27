@@ -19,5 +19,5 @@ public readonly record struct JobHistoryAttribute(string Value, bool IsValue = t
 
     public override string ToString() => Value;
     public static implicit operator string(JobHistoryAttribute value) => value.Value;
-    public static explicit operator JobHistoryAttribute(string value) => new(value);
+    public static implicit operator JobHistoryAttribute(string value) => new(value);
 }

@@ -12,16 +12,16 @@ public class PrinterFinisher : IppStructuredString
     {
     }
 
-    public string? Type
+    public FinisherType? Type
     {
-        get => Get("type");
-        set => Set("type", value);
+        get => GetSmartEnum<FinisherType>("type");
+        set => SetSmartEnum("type", value);
     }
 
-    public string? Unit
+    public CapacityUnit? Unit
     {
-        get => Get("unit");
-        set => Set("unit", value);
+        get => GetSmartEnum<CapacityUnit>("unit");
+        set => SetSmartEnum("unit", value);
     }
 
     public int? MaxCapacity
@@ -36,10 +36,10 @@ public class PrinterFinisher : IppStructuredString
         set => SetInt("index", value);
     }
 
-    public string? PresentOnOff
+    public PresentOnOff? PresentOnOff
     {
-        get => Get("presentonoff");
-        set => Set("presentonoff", value);
+        get => GetSmartEnum<PresentOnOff>("presentonoff");
+        set => SetSmartEnum("presentonoff", value);
     }
 
     public int? Status

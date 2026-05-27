@@ -26,5 +26,5 @@ public class DestinationUriReady : IIppCollection
     public OctetString[]? DestinationOAuthScope { get; set; }
     public OctetString[]? DestinationOAuthToken { get; set; }
     public Uri? DestinationOAuthUri { get; set; }
-    public string? DestinationUri { get; set; }
+    public Uri? DestinationUri { get; set; }
 }

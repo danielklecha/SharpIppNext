@@ -314,7 +314,7 @@ public class DocumentTemplateAttributes : IIppCollection
     /// The <c>document-charset</c> Document Template attribute. Specifies the charset of the document data.
     /// See: PWG 5100.5-2024 Section 6.5.1
     /// </summary>
-    public string? DocumentCharset { get; set; }
+    public Charset? DocumentCharset { get; set; }
 
 
 
@@ -322,7 +322,7 @@ public class DocumentTemplateAttributes : IIppCollection
     /// The <c>document-format</c> Document Template attribute. Specifies the MIME media type of the document data.
     /// See: PWG 5100.5-2024 Section 6.5.3
     /// </summary>
-    public string? DocumentFormat { get; set; }
+    public DocumentFormat? DocumentFormat { get; set; }
 
     /// <summary>
     /// The <c>document-format-details</c> Document Template attribute. Provides detailed information about the document format.
@@ -354,7 +354,7 @@ public class DocumentTemplateAttributes : IIppCollection
     /// The <c>document-natural-language</c> Document Template attribute. The natural language of the document content.
     /// See: PWG 5100.5-2024 Section 6.5.8
     /// </summary>
-    public string? DocumentNaturalLanguage { get; set; }
+    public NaturalLanguage? DocumentNaturalLanguage { get; set; }
 
 
 

@@ -38,5 +38,5 @@ public readonly record struct MultipleObjectHandling(string Value, bool IsMarked
 
     public override string ToString() => Value;
     public static implicit operator string(MultipleObjectHandling value) => value.Value;
-    public static explicit operator MultipleObjectHandling(string value) => new(value);
+    public static implicit operator MultipleObjectHandling(string value) => new(value);
 }

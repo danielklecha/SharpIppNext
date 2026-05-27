@@ -32,10 +32,10 @@ public class SetPrinterAttributesRequestProfileTests
             OperationAttributes = new SetPrinterAttributesOperationAttributes
             {
                 PrinterUri = new Uri("ipp://printer/example"),
-                AttributesCharset = "utf-8",
+                AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
                 AttributesNaturalLanguage = "en",
                 RequestingUserName = "alice",
-                DocumentFormat = "application/pdf"
+                DocumentFormat = (SharpIpp.Protocol.Models.DocumentFormat)"application/pdf"
             },
             PrinterAttributes = new PrinterDescriptionAttributes
             {
@@ -70,6 +70,6 @@ public class SetPrinterAttributesRequestProfileTests
         request.PrinterAttributes!.PrinterInfo.Should().Be("Main floor");
         request.OperationAttributes.Should().NotBeNull();
         request.OperationAttributes!.PrinterUri.Should().Be(new Uri("ipp://printer/example"));
-        request.OperationAttributes!.DocumentFormat.Should().Be("application/pdf");
+        ((string?)request.OperationAttributes!.DocumentFormat).Should().Be("application/pdf");
     }
 }

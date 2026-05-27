@@ -38,7 +38,7 @@ namespace SharpIpp.Protocol.Models
         /// See: RFC 8011 Section 5.3.2
         /// </summary>
         [Obsolete("The 'job-uri' attribute is deprecated in favor of 'job-id'. See RFC 8011 Section 5.3.2.")]
-        public string? JobUri { get; set; }
+        public Uri? JobUri { get; set; }
 
         /// <summary>
         /// This REQUIRED attribute identifies the Printer object that created
@@ -178,7 +178,7 @@ namespace SharpIpp.Protocol.Models
         /// information about the Job object.
         /// See: RFC 8011 Section 5.3.4
         /// </summary>
-        public string? JobMoreInfo { get; set; }
+        public Uri? JobMoreInfo { get; set; }
 
         /// <summary>
         /// The <c>job-charge-info</c> Job Description attribute.

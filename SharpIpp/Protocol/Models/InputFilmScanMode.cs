@@ -20,5 +20,5 @@ public readonly record struct InputFilmScanMode(string Value, bool IsMarked = tr
 
     public override string ToString() => Value;
     public static implicit operator string(InputFilmScanMode value) => value.Value;
-    public static explicit operator InputFilmScanMode(string value) => new(value);
+    public static implicit operator InputFilmScanMode(string value) => new(value);
 }

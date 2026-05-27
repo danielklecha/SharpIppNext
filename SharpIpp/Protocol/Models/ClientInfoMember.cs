@@ -38,5 +38,5 @@ public readonly record struct ClientInfoMember(string Value, bool IsMarked = tru
 
     public override string ToString() => Value;
     public static implicit operator string(ClientInfoMember value) => value.Value;
-    public static explicit operator ClientInfoMember(string value) => new(value);
+    public static implicit operator ClientInfoMember(string value) => new(value);
 }

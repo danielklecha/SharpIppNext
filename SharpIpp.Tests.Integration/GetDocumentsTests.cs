@@ -23,7 +23,7 @@ public class GetDocumentsTests : SharpIppIntegrationTestBase
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
-                AttributesCharset = "utf-8",
+                AttributesCharset = Charset.Utf8,
                 AttributesNaturalLanguage = "en-us",
                 RequestingUserName = "test-user",
                 JobId = 1,
@@ -82,7 +82,7 @@ public class GetDocumentsTests : SharpIppIntegrationTestBase
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
-                AttributesCharset = "utf-8",
+                AttributesCharset = Charset.Utf8,
                 AttributesNaturalLanguage = "en-us",
                 RequestingUserName = "test-user",
                 JobId = 1,
@@ -112,7 +112,7 @@ public class GetDocumentsTests : SharpIppIntegrationTestBase
                         CurrentPageOrder = CurrentPageOrder.OneToNOrder,
                         DocumentJobId = 1,
                         DocumentPrinterUri = new Uri("http://127.0.0.1:631"),
-                        AttributesCharset = "utf-8",
+                        AttributesCharset = Charset.Utf8,
                         AttributesNaturalLanguage = "en-us",
                         DocumentStateReasons = [DocumentStateReason.None],
                         DocumentStateMessage = "completed",
@@ -129,7 +129,7 @@ public class GetDocumentsTests : SharpIppIntegrationTestBase
                         CurrentPageOrder = CurrentPageOrder.NTo1Order,
                         DocumentJobId = 1,
                         DocumentPrinterUri = new Uri("http://127.0.0.1:631"),
-                        AttributesCharset = "utf-8",
+                        AttributesCharset = Charset.Utf8,
                         AttributesNaturalLanguage = "en-us",
                         DocumentStateReasons = [DocumentStateReason.None],
                         DocumentStateMessage = "processing",

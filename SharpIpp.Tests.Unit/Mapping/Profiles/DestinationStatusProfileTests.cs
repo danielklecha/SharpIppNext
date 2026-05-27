@@ -23,7 +23,7 @@ public class DestinationStatusProfileTests : MapperTestBase
     {
         var status = new DestinationStatus
         {
-            DestinationUri = "fax:+12025550123",
+            DestinationUri = new Uri("fax:+12025550123"),
             ImagesCompleted = 2,
             TransmissionStatus = TransmissionStatus.Processing
         };

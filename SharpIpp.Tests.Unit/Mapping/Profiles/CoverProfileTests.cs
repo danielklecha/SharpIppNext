@@ -55,8 +55,8 @@ public class CoverProfileTests : MapperTestBase
         // Arrange
         var cover = new Cover
         {
-            CoverType = hasCoverType ? CoverType.PrintBoth : null,
-            Media = hasMedia ? (Media)"iso_a4_210x297mm" : null,
+            CoverType = hasCoverType ? (CoverType?)CoverType.PrintBoth : null,
+            Media = hasMedia ? (Media?)"iso_a4_210x297mm" : null,
             MediaCol = hasMediaCol ? new MediaCol { MediaColor = (MediaColor)"blue" } : null
         };
 

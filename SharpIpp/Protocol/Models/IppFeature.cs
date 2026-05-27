@@ -103,5 +103,5 @@ public readonly record struct IppFeature(string Value, bool IsValue = true) : IS
 
     public override string ToString() => Value;
     public static implicit operator string(IppFeature value) => value.Value;
-    public static explicit operator IppFeature(string value) => new(value);
+    public static implicit operator IppFeature(string value) => new(value);
 }

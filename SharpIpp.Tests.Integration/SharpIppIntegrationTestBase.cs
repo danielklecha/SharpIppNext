@@ -14,7 +14,7 @@ public abstract class SharpIppIntegrationTestBase
     {
         return new T
         {
-            AttributesCharset = "utf-8",
+            AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
             AttributesNaturalLanguage = "en",
             PrinterUri = new Uri("ipp://127.0.0.1:8631/printer"),
             RequestingUserName = "integration-user",

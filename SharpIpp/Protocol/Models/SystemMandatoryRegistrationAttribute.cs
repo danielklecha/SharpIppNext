@@ -13,5 +13,5 @@ public readonly record struct SystemMandatoryRegistrationAttribute(string Value,
 
     public override string ToString() => Value;
     public static implicit operator string(SystemMandatoryRegistrationAttribute value) => value.Value;
-    public static explicit operator SystemMandatoryRegistrationAttribute(string value) => new(value);
+    public static implicit operator SystemMandatoryRegistrationAttribute(string value) => new(value);
 }

@@ -17,5 +17,5 @@ public readonly record struct JobAccountingSheetsMember(string Value, bool IsVal
 
     public override string ToString() => Value;
     public static implicit operator string(JobAccountingSheetsMember value) => value.Value;
-    public static explicit operator JobAccountingSheetsMember(string value) => new(value);
+    public static implicit operator JobAccountingSheetsMember(string value) => new(value);
 }

@@ -24,5 +24,5 @@ public readonly record struct MediaRecycled(string Value, bool IsValue = true) :
 
     public override string ToString() => Value;
     public static implicit operator string(MediaRecycled bin) => bin.Value;
-    public static explicit operator MediaRecycled(string value) => new(value);
+    public static implicit operator MediaRecycled(string value) => new(value);
 }

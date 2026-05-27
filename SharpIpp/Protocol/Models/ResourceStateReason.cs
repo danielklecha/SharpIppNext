@@ -32,5 +32,5 @@ public readonly record struct ResourceStateReason(string Value, bool IsValue = t
 
     public override string ToString() => Value;
     public static implicit operator string(ResourceStateReason r) => r.Value;
-    public static explicit operator ResourceStateReason(string value) => new(value);
+    public static implicit operator ResourceStateReason(string value) => new(value);
 }

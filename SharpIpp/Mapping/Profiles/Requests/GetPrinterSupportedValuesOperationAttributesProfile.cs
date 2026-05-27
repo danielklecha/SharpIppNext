@@ -15,7 +15,7 @@ internal class GetPrinterSupportedValuesOperationAttributesProfile : IProfile
             dst ??= new GetPrinterSupportedValuesOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(src, dst);
             dst.RequestedAttributes = map.MapFromDicSetNullable<string[]?>(src, IppAttributeNames.RequestedAttributes);
-            dst.DocumentFormat = map.MapFromDicNullable<string?>(src, IppAttributeNames.DocumentFormat);
+            dst.DocumentFormat = map.MapFromDicNullable<DocumentFormat?>(src, IppAttributeNames.DocumentFormat);
             dst.FirstIndex = map.MapFromDicNullable<int?>(src, IppAttributeNames.FirstIndex);
             dst.Limit = map.MapFromDicNullable<int?>(src, IppAttributeNames.Limit);
             return dst;
@@ -28,7 +28,7 @@ internal class GetPrinterSupportedValuesOperationAttributesProfile : IProfile
             if (src.RequestedAttributes != null)
                 dst.AddRange(src.RequestedAttributes.Select(x => new IppAttribute(Tag.Keyword, IppAttributeNames.RequestedAttributes, x)));
             if (src.DocumentFormat != null)
-                dst.Add(new IppAttribute(Tag.MimeMediaType, IppAttributeNames.DocumentFormat, src.DocumentFormat));
+                dst.Add(new IppAttribute(Tag.MimeMediaType, IppAttributeNames.DocumentFormat, src.DocumentFormat.Value));
             if (src.FirstIndex != null)
                 dst.Add(new IppAttribute(Tag.Integer, IppAttributeNames.FirstIndex, src.FirstIndex.Value));
             if (src.Limit != null)

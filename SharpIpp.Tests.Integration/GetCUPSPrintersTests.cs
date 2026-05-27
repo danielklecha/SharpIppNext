@@ -24,7 +24,7 @@ public class GetCUPSPrintersTests : SharpIppIntegrationTestBase
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
-                AttributesCharset = "utf-8",
+                AttributesCharset = Charset.Utf8,
                 AttributesNaturalLanguage = "en-us",
                 RequestingUserName = "test-user",
                 FirstPrinterName = "printer-1",
@@ -68,10 +68,10 @@ public class GetCUPSPrintersTests : SharpIppIntegrationTestBase
                     PrinterName = "printer-1",
                     PrinterLocation = "Office",
                     PrinterInfo = "Test Printer Info",
-                    PrinterMoreInfo = "http://127.0.0.1:631",
-                    PrinterDriverInstaller = "installer",
+                    PrinterMoreInfo = new Uri("http://127.0.0.1:631"),
+                    PrinterDriverInstaller = new Uri("installer", UriKind.RelativeOrAbsolute),
                     PrinterMakeAndModel = "SharpIpp Virtual Printer",
-                    PrinterMoreInfoManufacturer = "http://manufacturer.com",
+                    PrinterMoreInfoManufacturer = new Uri("http://manufacturer.com"),
                     PrinterState = PrinterState.Idle,
                     PrinterStateReasons = [PrinterStateReason.None],
                     PrinterStateMessage = "Idle",

@@ -1,3 +1,5 @@
+using System;
+
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
@@ -8,7 +10,7 @@ public class DestinationStatus : IIppCollection
 {
     bool INoValueWritable.IsValue { get; set; } = true;
     bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
-    public string? DestinationUri { get; set; }
+    public Uri? DestinationUri { get; set; }
     public int? ImagesCompleted { get; set; }
     public TransmissionStatus? TransmissionStatus { get; set; }
 }

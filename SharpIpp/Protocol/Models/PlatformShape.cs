@@ -20,5 +20,5 @@ public readonly record struct PlatformShape(string Value, bool IsMarked = true, 
 
     public override string ToString() => Value;
     public static implicit operator string(PlatformShape value) => value.Value;
-    public static explicit operator PlatformShape(string value) => new(value);
+    public static implicit operator PlatformShape(string value) => new(value);
 }

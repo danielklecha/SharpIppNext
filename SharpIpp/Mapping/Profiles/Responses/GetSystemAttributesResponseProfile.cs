@@ -106,7 +106,7 @@ internal class GetSystemAttributesResponseProfile : IProfile
                 PowerTimeoutPolicyCol = src.ContainsKey(IppAttributeNames.PowerTimeoutPolicyCol) ? src[IppAttributeNames.PowerTimeoutPolicyCol].GroupBegCollection().Select(x => map.Map<PowerTimeoutPolicy>(x.FromBegCollection().ToIppDictionary())).ToArray() : null,
                 PrinterCreationAttributesSupported = map.MapFromDicSetNullable<PrinterCreationAttribute[]?>(src, IppAttributeNames.PrinterCreationAttributesSupported),
                 PrinterServiceTypeSupported = map.MapFromDicSetNullable<PrinterServiceType[]?>(src, IppAttributeNames.PrinterServiceTypeSupported),
-                ResourceFormatSupported = map.MapFromDicSetNullable<string[]?>(src, IppAttributeNames.ResourceFormatSupported),
+                ResourceFormatSupported = map.MapFromDicSetNullable<ResourceFormat[]?>(src, IppAttributeNames.ResourceFormatSupported),
                 ResourceTypeSupported = map.MapFromDicSetNullable<ResourceType[]?>(src, IppAttributeNames.ResourceTypeSupported),
                 ResourceSettableAttributesSupported = map.MapFromDicSetNullable<ResourceSettableAttribute[]?>(src, IppAttributeNames.ResourceSettableAttributesSupported),
                 NotifyAttributesSupported = map.MapFromDicSetNullable<string[]?>(src, IppAttributeNames.NotifyAttributesSupported),
@@ -295,7 +295,7 @@ internal class GetSystemAttributesResponseProfile : IProfile
                 if (src.SystemDescriptionAttributes.PrinterServiceTypeSupported != null)
                     attrs.AddRange(src.SystemDescriptionAttributes.PrinterServiceTypeSupported.Select(x => new IppAttribute(Tag.Keyword, IppAttributeNames.PrinterServiceTypeSupported, map.Map<string>(x))));
                 if (src.SystemDescriptionAttributes.ResourceFormatSupported != null)
-                    attrs.AddRange(src.SystemDescriptionAttributes.ResourceFormatSupported.Select(x => new IppAttribute(Tag.MimeMediaType, IppAttributeNames.ResourceFormatSupported, x)));
+                    attrs.AddRange(src.SystemDescriptionAttributes.ResourceFormatSupported.Select(x => new IppAttribute(Tag.MimeMediaType, IppAttributeNames.ResourceFormatSupported, x.Value)));
                 if (src.SystemDescriptionAttributes.ResourceTypeSupported != null)
                     attrs.AddRange(src.SystemDescriptionAttributes.ResourceTypeSupported.Select(x => new IppAttribute(Tag.Keyword, IppAttributeNames.ResourceTypeSupported, x.Value)));
                 if (src.SystemDescriptionAttributes.ResourceSettableAttributesSupported != null)

@@ -46,9 +46,9 @@ public class SeparatorSheetsProfileTests : MapperTestBase
         // Arrange
         var sheets = new SeparatorSheets
         {
-            Media = h1 ? (Media)"iso_a4_210x297mm" : null,
+            Media = h1 ? (Media?)"iso_a4_210x297mm" : null,
             SeparatorSheetsType = h2 ? new[] { SeparatorSheetsType.SlipSheets } : null,
-            MediaCol = h3 ? new MediaCol { MediaColor = (MediaColor)"blue" } : null
+            MediaCol = h3 ? new MediaCol { MediaColor = (MediaColor?)"blue" } : null
         };
 
         // Act

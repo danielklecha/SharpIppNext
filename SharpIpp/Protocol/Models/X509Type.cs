@@ -15,5 +15,5 @@ public readonly record struct X509Type(string Value, bool IsMarked = true, bool 
 
     public override string ToString() => Value;
     public static implicit operator string(X509Type value) => value.Value;
-    public static explicit operator X509Type(string value) => new(value);
+    public static implicit operator X509Type(string value) => new(value);
 }

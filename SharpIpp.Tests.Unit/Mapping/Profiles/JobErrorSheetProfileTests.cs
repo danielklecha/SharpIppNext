@@ -48,10 +48,10 @@ public class JobErrorSheetProfileTests : MapperTestBase
         // Arrange
         var sheet = new JobErrorSheet
         {
-            JobErrorSheetType = h1 ? JobErrorSheetType.Standard : null,
-            JobErrorSheetWhen = h2 ? JobErrorSheetWhen.OnError : null,
-            Media = h3 ? (Media)"iso_a4_210x297mm" : null,
-            MediaCol = h4 ? new MediaCol { MediaColor = (MediaColor)"blue" } : null
+            JobErrorSheetType = h1 ? (JobErrorSheetType?)JobErrorSheetType.Standard : null,
+            JobErrorSheetWhen = h2 ? (JobErrorSheetWhen?)JobErrorSheetWhen.OnError : null,
+            Media = h3 ? (Media?)"iso_a4_210x297mm" : null,
+            MediaCol = h4 ? new MediaCol { MediaColor = (MediaColor?)"blue" } : null
         };
 
         // Act

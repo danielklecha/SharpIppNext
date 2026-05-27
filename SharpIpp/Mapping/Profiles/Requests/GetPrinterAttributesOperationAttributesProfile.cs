@@ -18,7 +18,7 @@ internal class GetPrinterAttributesOperationAttributesProfile : IProfile
             dst.FirstIndex = map.MapFromDicNullable<int?>(src, IppAttributeNames.FirstIndex);
             dst.Limit = map.MapFromDicNullable<int?>(src, IppAttributeNames.Limit);
             dst.PrinterId = map.MapFromDicNullable<int?>(src, IppAttributeNames.PrinterId);
-            dst.DocumentFormat = map.MapFromDicNullable<string?>(src, IppAttributeNames.DocumentFormat);
+            dst.DocumentFormat = map.MapFromDicNullable<DocumentFormat?>(src, IppAttributeNames.DocumentFormat);
             dst.OutputDeviceUuid = map.MapFromDicNullable<Uri?>(src, IppAttributeNames.OutputDeviceUuid);
             var requestedAttributes = map.MapFromDicSetNullable<string[]?>(src, IppAttributeNames.RequestedAttributes);
             if (requestedAttributes?.Any() ?? false)
@@ -37,7 +37,7 @@ internal class GetPrinterAttributesOperationAttributesProfile : IProfile
             if (src.PrinterId != null)
                 dst.Add(new IppAttribute(Tag.Integer, IppAttributeNames.PrinterId, src.PrinterId.Value));
             if (src.DocumentFormat != null)
-                dst.Add(new IppAttribute(Tag.MimeMediaType, IppAttributeNames.DocumentFormat, src.DocumentFormat));
+                dst.Add(new IppAttribute(Tag.MimeMediaType, IppAttributeNames.DocumentFormat, src.DocumentFormat.Value));
             if (src.RequestedAttributes != null)
                 dst.AddRange(src.RequestedAttributes.Select(requestedAttribute => new IppAttribute(Tag.Keyword, IppAttributeNames.RequestedAttributes, requestedAttribute)));
             if (src.OutputDeviceUuid != null)

@@ -36,6 +36,8 @@ public class IppStructuredStringTests
         public void SetUriValue(string key, Uri? val) => SetUri(key, val);
         public int? GetIntValue(string key) => GetInt(key);
         public void SetIntValue(string key, int? val) => SetInt(key, val);
+        public T? GetSmartEnumValue<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string key) where T : struct, ISmartEnum => GetSmartEnum<T>(key);
+        public void SetSmartEnumValue<T>(string key, T? val) where T : struct, ISmartEnum => SetSmartEnum(key, val);
     }
 
     [TestMethod]
@@ -302,5 +304,32 @@ public class IppStructuredStringTests
         // An isolated surrogate character is invalid UTF-16 and throws ArgumentException / EncoderFallbackException when converted to UTF-8
         var invalidString = "\uD800";
         IppStructuredString.IsValidUtf8String(invalidString).Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void GetSmartEnum_WhenTypeIsIMarkedSmartEnum_ShouldUseTwoExtraBoolConstructor()
+    {
+        // Line 132: IMarkedSmartEnum branch — Activator.CreateInstance(typeof(T), [str, true, true])
+        var metadata = new TestMetadata();
+        metadata.SetValue("media", "iso-a4");
+
+        var result = metadata.GetSmartEnumValue<Media>("media");
+
+        result.Should().NotBeNull();
+        result!.Value.Value.Should().Be("iso-a4");
+        result.Value.IsMarked.Should().BeTrue();
+        result.Value.IsValue.Should().BeTrue();
+    }
+
+    [TestMethod]
+    public void SetSmartEnum_WhenValueIsNull_ShouldRemoveKey()
+    {
+        // Line 140: null val branch — Dictionary.Remove(key)
+        var metadata = new TestMetadata();
+        metadata.SetSmartEnumValue<Charset>("charset", new Charset("utf-8"));
+        metadata.GetValue("charset").Should().Be("utf-8");
+
+        metadata.SetSmartEnumValue<Charset>("charset", null);
+        metadata.GetValue("charset").Should().BeNull();
     }
 }

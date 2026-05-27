@@ -50,7 +50,7 @@ internal class IppResponseProfile : IProfile
             var operationAttrs = new List<IppAttribute>
             {
                 new(Tag.Charset, IppAttributeNames.AttributesCharset, src.OperationAttributes?.AttributesCharset ?? "utf-8"),
-                new(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, src.OperationAttributes?.AttributesNaturalLanguage ?? "en")
+                new(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, src.OperationAttributes?.AttributesNaturalLanguage ?? NaturalLanguage.En)
             };
             if (src.OperationAttributes?.StatusMessage != null)
                 operationAttrs.Add(new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.StatusMessage, src.OperationAttributes.StatusMessage));

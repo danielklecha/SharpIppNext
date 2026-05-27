@@ -41,7 +41,7 @@ internal class GetJobAttributesResponseProfile : IProfile
             DateTimeAtCreation = map.MapFromDicNullable<DateTimeOffset?>(src, IppAttributeNames.DateTimeAtCreation),
             DateTimeAtProcessing = map.MapFromDicNullable<DateTimeOffset?>(src, IppAttributeNames.DateTimeAtProcessing),
             JobId = map.MapFromDicNullable<int?>(src, IppAttributeNames.JobId),
-            JobUri = map.MapFromDicNullable<string?>(src, IppAttributeNames.JobUri),
+            JobUri = map.MapFromDicNullable<Uri?>(src, IppAttributeNames.JobUri),
             JobImpressionsCompleted = map.MapFromDicNullable<int?>(src, IppAttributeNames.JobImpressionsCompleted),
             JobMediaSheetsCompleted = map.MapFromDicNullable<int?>(src, IppAttributeNames.JobMediaSheetsCompleted),
             JobOriginatingUserName = map.MapFromDicNullable<string?>(src, IppAttributeNames.JobOriginatingUserName),
@@ -64,7 +64,7 @@ internal class GetJobAttributesResponseProfile : IProfile
             JobMediaSheetsCol = src.ContainsKey(IppAttributeNames.JobMediaSheetsCol)
                 ? map.Map<JobCounter>(src[IppAttributeNames.JobMediaSheetsCol].FromBegCollection().ToIppDictionary())
                 : null,
-            JobMoreInfo = map.MapFromDicNullable<string?>(src, IppAttributeNames.JobMoreInfo),
+            JobMoreInfo = map.MapFromDicNullable<Uri?>(src, IppAttributeNames.JobMoreInfo),
             JobChargeInfo = map.MapFromDicNullable<string?>(src, IppAttributeNames.JobChargeInfo),
             DocumentFormatDetails = src.ContainsKey(IppAttributeNames.DocumentFormatDetails)
                 ? map.Map<DocumentFormatDetails>(src[IppAttributeNames.DocumentFormatDetails].FromBegCollection().ToIppDictionary())
@@ -224,7 +224,7 @@ internal class GetJobAttributesResponseProfile : IProfile
             if (src.JobId != null)
                 dic.Add(IppAttributeNames.JobId, [new IppAttribute(Tag.Integer, IppAttributeNames.JobId, src.JobId.Value)]);
             if (src.JobUri != null)
-                dic.Add(IppAttributeNames.JobUri, new IppAttribute[] { new IppAttribute(Tag.Uri, IppAttributeNames.JobUri, src.JobUri) });
+                dic.Add(IppAttributeNames.JobUri, new IppAttribute[] { new IppAttribute(Tag.Uri, IppAttributeNames.JobUri, src.JobUri.ToString()) });
             if (src.JobImpressionsCompleted != null)
                 dic.Add(IppAttributeNames.JobImpressionsCompleted, [new IppAttribute(Tag.Integer, IppAttributeNames.JobImpressionsCompleted, src.JobImpressionsCompleted.Value)]);
             if (src.JobMediaSheetsCompleted != null)
@@ -262,7 +262,7 @@ internal class GetJobAttributesResponseProfile : IProfile
             if (src.JobMediaSheetsCol != null)
                 dic.Add(IppAttributeNames.JobMediaSheetsCol, map.Map<IEnumerable<IppAttribute>>(src.JobMediaSheetsCol).ToBegCollection(IppAttributeNames.JobMediaSheetsCol).ToArray());
             if (src.JobMoreInfo != null)
-                dic.Add(IppAttributeNames.JobMoreInfo, new IppAttribute[] { new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.JobMoreInfo, src.JobMoreInfo) });
+                dic.Add(IppAttributeNames.JobMoreInfo, new IppAttribute[] { new IppAttribute(Tag.Uri, IppAttributeNames.JobMoreInfo, src.JobMoreInfo.ToString()) });
             if (src.JobChargeInfo != null)
                 dic.Add(IppAttributeNames.JobChargeInfo, [new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.JobChargeInfo, src.JobChargeInfo)]);
             if (src.DocumentFormatDetails != null)

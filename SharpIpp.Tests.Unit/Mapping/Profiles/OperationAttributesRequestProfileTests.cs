@@ -104,7 +104,7 @@ public class OperationAttributesRequestProfileTests
     {
         var src = new PrintJobOperationAttributes
         {
-            AttributesCharset = "utf-8",
+            AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
             AttributesNaturalLanguage = "en",
             DocumentMessage = "operator note"
         };
@@ -136,7 +136,7 @@ public class OperationAttributesRequestProfileTests
         // Arrange
         var src = new GetOutputDeviceAttributesOperationAttributes
         {
-            AttributesCharset = "utf-8",
+            AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
             AttributesNaturalLanguage = "en",
             RequestedAttributes = new[] { "printer-name", "printer-state" },
             OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174003")
@@ -156,7 +156,7 @@ public class OperationAttributesRequestProfileTests
     {
         var src = new GetPrinterAttributesOperationAttributes
         {
-            AttributesCharset = "utf-8",
+            AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
             AttributesNaturalLanguage = "en",
             PrinterUri = new Uri("ipp://printer"),
             OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174003")
@@ -188,7 +188,7 @@ public class OperationAttributesRequestProfileTests
     {
         var src = new GetJobsOperationAttributes
         {
-            AttributesCharset = "utf-8",
+            AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
             AttributesNaturalLanguage = "en",
             PrinterUri = new Uri("ipp://printer"),
             OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174003")
@@ -220,7 +220,7 @@ public class OperationAttributesRequestProfileTests
     {
         var src = new ReleaseJobOperationAttributes
         {
-            AttributesCharset = "utf-8",
+            AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
             AttributesNaturalLanguage = "en",
             PrinterUri = new Uri("ipp://printer"),
             JobId = 123,
@@ -262,8 +262,8 @@ public class OperationAttributesRequestProfileTests
         var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, SystemOperationAttributes>(src);
 
         // Assert
-        dst.AttributesCharset.Should().Be("utf-8");
-        dst.AttributesNaturalLanguage.Should().Be("en");
+        dst.AttributesCharset.Should().Be((SharpIpp.Protocol.Models.Charset)"utf-8");
+        ((string?)dst.AttributesNaturalLanguage).Should().Be("en");
         dst.SystemUri.Should().Be(new Uri("ipp://system"));
     }
 
@@ -297,7 +297,7 @@ public class OperationAttributesRequestProfileTests
         // Arrange
         var src = new CreateJobOperationAttributes
         {
-            AttributesCharset = "utf-8",
+            AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
             AttributesNaturalLanguage = "en",
             ResourceIds = [301, 302]
         };
@@ -349,7 +349,7 @@ public class OperationAttributesRequestProfileTests
         // Arrange
         var src = new CreateJobOperationAttributes
         {
-            AttributesCharset = "utf-8",
+            AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
             AttributesNaturalLanguage = "en",
             DestinationAccesses =
             [
@@ -403,7 +403,7 @@ public class OperationAttributesRequestProfileTests
         // Arrange
         var src = new SendDocumentOperationAttributes
         {
-            AttributesCharset = "utf-8",
+            AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
             AttributesNaturalLanguage = "en",
             LastDocument = true,
             ResourceIds = [501, 502]
@@ -424,7 +424,7 @@ public class OperationAttributesRequestProfileTests
         // Arrange
         var src = new GetNextDocumentDataOperationAttributes
         {
-            AttributesCharset = "utf-8",
+            AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
             AttributesNaturalLanguage = "en",
             PrinterUri = new Uri("ipp://printer"),
             JobId = 123,
@@ -469,11 +469,11 @@ public class OperationAttributesRequestProfileTests
         // Arrange
         var src = new AddDocumentImagesOperationAttributes
         {
-            AttributesCharset = "utf-8",
+            AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
             AttributesNaturalLanguage = "en",
             PrinterUri = new Uri("ipp://printer/"),
             JobId = 789,
-            InputAttributes = new DocumentTemplateAttributes { DocumentFormat = "image/pwg-raster" }
+            InputAttributes = new DocumentTemplateAttributes { DocumentFormat = (SharpIpp.Protocol.Models.DocumentFormat)"image/pwg-raster" }
         };
 
         // Act
@@ -506,7 +506,7 @@ public class OperationAttributesRequestProfileTests
         dst.PrinterUri.Should().Be(new Uri("ipp://printer"));
         dst.JobId.Should().Be(101);
         dst.InputAttributes.Should().NotBeNull();
-        dst.InputAttributes!.DocumentFormat.Should().Be("image/tiff");
+        ((string?)dst.InputAttributes!.DocumentFormat).Should().Be("image/tiff");
     }
 
     [TestMethod]
@@ -515,7 +515,7 @@ public class OperationAttributesRequestProfileTests
         // Arrange
         var src = new IdentifyPrinterOperationAttributes
         {
-            AttributesCharset = "utf-8",
+            AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
             AttributesNaturalLanguage = "en",
             PrinterUri = new Uri("ipp://printer/"),
             IdentifyActions = new[] { IdentifyAction.Flash, IdentifyAction.Sound },
@@ -545,13 +545,13 @@ public class OperationAttributesRequestProfileTests
         // Arrange
         var src = new GetUserPrinterAttributesOperationAttributes
         {
-            AttributesCharset = "utf-8",
+            AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
             AttributesNaturalLanguage = "en",
             PrinterUri = new Uri("ipp://printer/"),
             FirstIndex = 10,
             Limit = 5,
             PrinterId = 42,
-            DocumentFormat = "application/pdf",
+            DocumentFormat = (SharpIpp.Protocol.Models.DocumentFormat)"application/pdf",
             OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174002"),
             RequestedAttributes = new[] { "printer-name", "printer-state" },
             RequestingUserVcard = new[] { "vcard-line-1", "vcard-line-2" }

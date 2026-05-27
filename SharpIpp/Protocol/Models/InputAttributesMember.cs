@@ -27,5 +27,5 @@ public readonly record struct InputAttributesMember(string Value, bool IsMarked 
 
     public override string ToString() => Value;
     public static implicit operator string(InputAttributesMember value) => value.Value;
-    public static explicit operator InputAttributesMember(string value) => new(value);
+    public static implicit operator InputAttributesMember(string value) => new(value);
 }

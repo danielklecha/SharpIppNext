@@ -62,13 +62,13 @@ public class PrinterDescriptionAttributes
     /// printer-more-info
     /// See: RFC 8011 Section 5.4.7
     /// </summary>
-    public string? PrinterMoreInfo { get; set; }
+    public Uri? PrinterMoreInfo { get; set; }
 
     /// <summary>
     /// printer-driver-installer
     /// See: RFC 8011 Section 5.4.8
     /// </summary>
-    public string? PrinterDriverInstaller { get; set; }
+    public Uri? PrinterDriverInstaller { get; set; }
 
     /// <summary>
     /// printer-make-and-model
@@ -80,7 +80,7 @@ public class PrinterDescriptionAttributes
     /// printer-more-info-manufacturer
     /// See: RFC 8011 Section 5.4.10
     /// </summary>
-    public string? PrinterMoreInfoManufacturer { get; set; }
+    public Uri? PrinterMoreInfoManufacturer { get; set; }
 
     /// <summary>
     /// printer-state
@@ -164,13 +164,13 @@ public class PrinterDescriptionAttributes
     /// natural-language-configured
     /// See: RFC 8011 Section 5.4.19
     /// </summary>
-    public string? NaturalLanguageConfigured { get; set; }
+    public NaturalLanguage? NaturalLanguageConfigured { get; set; }
 
     /// <summary>
     /// generated-natural-language-supported
     /// See: RFC 8011 Section 5.4.20
     /// </summary>
-    public string[]? GeneratedNaturalLanguageSupported { get; set; }
+    public NaturalLanguage[]? GeneratedNaturalLanguageSupported { get; set; }
 
     /// <summary>
     /// client-info-supported
@@ -188,13 +188,13 @@ public class PrinterDescriptionAttributes
     /// document-charset-default
     /// See: PWG 5100.7-2023 Section 6.9.16
     /// </summary>
-    public string? DocumentCharsetDefault { get; set; }
+    public Charset? DocumentCharsetDefault { get; set; }
 
     /// <summary>
     /// document-charset-supported
     /// See: PWG 5100.7-2023 Section 6.9.17
     /// </summary>
-    public string[]? DocumentCharsetSupported { get; set; }
+    public Charset[]? DocumentCharsetSupported { get; set; }
 
     /// <summary>
     /// document-format-details-supported
@@ -206,13 +206,13 @@ public class PrinterDescriptionAttributes
     /// document-natural-language-default
     /// See: PWG 5100.7-2023 Section 6.9.48
     /// </summary>
-    public string? DocumentNaturalLanguageDefault { get; set; }
+    public NaturalLanguage? DocumentNaturalLanguageDefault { get; set; }
 
     /// <summary>
     /// document-natural-language-supported
     /// See: PWG 5100.7-2023 Section 6.9.49
     /// </summary>
-    public string[]? DocumentNaturalLanguageSupported { get; set; }
+    public NaturalLanguage[]? DocumentNaturalLanguageSupported { get; set; }
 
     /// <summary>
     /// job-ids-supported
@@ -242,7 +242,7 @@ public class PrinterDescriptionAttributes
     /// document-format-default
     /// See: RFC 8011 Section 5.4.21
     /// </summary>
-    public string? DocumentFormatDefault { get; set; }
+    public DocumentFormat? DocumentFormatDefault { get; set; }
 
     /// <summary>
     /// document-format-supported
@@ -1479,7 +1479,7 @@ public class PrinterDescriptionAttributes
     /// printer-charge-info-uri
     /// See: PWG 5100.11-2024
     /// </summary>
-    public string? PrinterChargeInfoUri { get; set; }
+    public Uri? PrinterChargeInfoUri { get; set; }
 
     /// <summary>
     /// printer-mandatory-job-attributes
@@ -1832,7 +1832,7 @@ public class PrinterDescriptionAttributes
     /// printer-camera-image-uri
     /// See: PWG 5100.21-2019 Section 8.17
     /// </summary>
-    public string[]? PrinterCameraImageUri { get; set; }
+    public Uri[]? PrinterCameraImageUri { get; set; }
 
     /// <summary>
     /// printer-resource-ids
@@ -1880,7 +1880,7 @@ public class PrinterDescriptionAttributes
     /// destination-uris-supported
     /// See: PWG 5100.15-2013 Section 7.4.5
     /// </summary>
-    public string[]? DestinationUrisSupported { get; set; }
+    public DestinationUrisMember[]? DestinationUrisSupported { get; set; }
 
     /// <summary>
     /// from-name-supported

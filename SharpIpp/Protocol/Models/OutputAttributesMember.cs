@@ -13,5 +13,5 @@ public readonly record struct OutputAttributesMember(string Value, bool IsMarked
 
     public override string ToString() => Value;
     public static implicit operator string(OutputAttributesMember value) => value.Value;
-    public static explicit operator OutputAttributesMember(string value) => new(value);
+    public static implicit operator OutputAttributesMember(string value) => new(value);
 }

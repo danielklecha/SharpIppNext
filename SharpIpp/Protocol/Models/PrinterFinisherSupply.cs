@@ -12,22 +12,22 @@ public class PrinterFinisherSupply : IppStructuredString
     {
     }
 
-    public string? Class
+    public FinisherSupplyClass? Class
     {
-        get => Get("class");
-        set => Set("class", value);
+        get => GetSmartEnum<FinisherSupplyClass>("class");
+        set => SetSmartEnum("class", value);
     }
 
-    public string? Type
+    public FinisherSupplyType? Type
     {
-        get => Get("type");
-        set => Set("type", value);
+        get => GetSmartEnum<FinisherSupplyType>("type");
+        set => SetSmartEnum("type", value);
     }
 
-    public string? Unit
+    public CapacityUnit? Unit
     {
-        get => Get("unit");
-        set => Set("unit", value);
+        get => GetSmartEnum<CapacityUnit>("unit");
+        set => SetSmartEnum("unit", value);
     }
 
     public int? Max

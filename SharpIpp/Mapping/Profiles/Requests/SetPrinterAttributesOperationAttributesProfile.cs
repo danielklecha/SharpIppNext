@@ -13,7 +13,7 @@ internal class SetPrinterAttributesOperationAttributesProfile : IProfile
         {
             dst ??= new SetPrinterAttributesOperationAttributes();
             map.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(src, dst);
-            dst.DocumentFormat = map.MapFromDicNullable<string?>(src, IppAttributeNames.DocumentFormat);
+            dst.DocumentFormat = map.MapFromDicNullable<DocumentFormat?>(src, IppAttributeNames.DocumentFormat);
             return dst;
         });
 
@@ -23,7 +23,7 @@ internal class SetPrinterAttributesOperationAttributesProfile : IProfile
             map.Map<OperationAttributes, List<IppAttribute>>(src, dst);
             if (src.DocumentFormat != null)
             {
-                dst.Add(new IppAttribute(Tag.MimeMediaType, IppAttributeNames.DocumentFormat, src.DocumentFormat));
+                dst.Add(new IppAttribute(Tag.MimeMediaType, IppAttributeNames.DocumentFormat, src.DocumentFormat.Value));
             }
             return dst;
         });

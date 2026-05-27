@@ -86,5 +86,5 @@ public readonly record struct JobHoldUntil(string Value, bool IsValue = true) : 
 
     public override string ToString() => Value;
     public static implicit operator string(JobHoldUntil bin) => bin.Value;
-    public static explicit operator JobHoldUntil(string value) => new(value);
+    public static implicit operator JobHoldUntil(string value) => new(value);
 }

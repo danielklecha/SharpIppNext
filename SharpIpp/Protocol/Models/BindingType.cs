@@ -56,5 +56,5 @@ public readonly record struct BindingType(string Value, bool IsMarked = true, bo
 
     public override string ToString() => Value;
     public static implicit operator string(BindingType bin) => bin.Value;
-    public static explicit operator BindingType(string value) => new(value);
+    public static implicit operator BindingType(string value) => new(value);
 }

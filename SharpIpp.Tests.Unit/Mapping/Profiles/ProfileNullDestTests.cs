@@ -47,7 +47,7 @@ public class ProfileNullDestTests
                 src.SetupGet(x => x.StatusCode).Returns(IppStatusCode.SuccessfulOk);
                 src.SetupGet(x => x.JobAttributes).Returns(new JobAttributes
                 {
-                    JobUri = "ipp://localhost/jobs/1",
+                    JobUri = new Uri("ipp://localhost/jobs/1"),
                     JobId = 1,
                     JobState = JobState.Pending
                 });

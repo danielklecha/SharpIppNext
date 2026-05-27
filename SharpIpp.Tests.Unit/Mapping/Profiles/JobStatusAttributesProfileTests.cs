@@ -22,7 +22,7 @@ public class JobStatusAttributesProfileTests : MapperTestBase
         var src = new JobStatusAttributes
         {
             JobId = 42,
-            JobUri = "ipp://127.0.0.1:631/jobs/42",
+            JobUri = new Uri("ipp://127.0.0.1:631/jobs/42"),
             JobPrinterUri = new Uri("ipp://127.0.0.1:631/"),
             JobName = "Test Job",
             JobOriginatingUserName = "test-user",
@@ -119,7 +119,7 @@ public class JobStatusAttributesProfileTests : MapperTestBase
         var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, JobStatusAttributes>(dic);
 
         dst.JobId.Should().Be(42);
-        dst.JobUri.Should().Be("ipp://127.0.0.1:631/jobs/42");
+        dst.JobUri.Should().Be(new Uri("ipp://127.0.0.1:631/jobs/42"));
         dst.JobPrinterUri.Should().Be(new Uri("ipp://127.0.0.1:631/"));
         dst.JobName.Should().Be("Test Job");
         dst.JobOriginatingUserName.Should().Be("test-user");
@@ -153,7 +153,7 @@ public class JobStatusAttributesProfileTests : MapperTestBase
         var original = new JobStatusAttributes
         {
             JobId = 7,
-            JobUri = "ipp://127.0.0.1:631/jobs/7",
+            JobUri = new Uri("ipp://127.0.0.1:631/jobs/7"),
             JobState = JobState.Completed,
             JobStateReasons = [JobStateReason.JobCompletedSuccessfully],
             JobStateMessage = "completed",

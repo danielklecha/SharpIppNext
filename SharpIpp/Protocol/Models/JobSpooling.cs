@@ -26,5 +26,5 @@ public readonly record struct JobSpooling(string Value, bool IsValue = true) : I
 
     public override string ToString() => Value;
     public static implicit operator string(JobSpooling bin) => bin.Value;
-    public static explicit operator JobSpooling(string value) => new(value);
+    public static implicit operator JobSpooling(string value) => new(value);
 }

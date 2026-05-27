@@ -28,7 +28,7 @@ public class CreateResourceOperationAttributes : SystemOperationAttributes
     /// The <c>resource-format</c> operation attribute.
     /// See: PWG 5100.22-2025 Section 7.1.11
     /// </summary>
-    public string? ResourceFormat { get; set; }
+    public ResourceFormat? ResourceFormat { get; set; }
 
     /// <summary>
     /// The <c>resource-natural-language</c> operation attribute.

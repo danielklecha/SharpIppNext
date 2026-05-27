@@ -20,5 +20,5 @@ public readonly record struct JobStorageDisposition(string Value, bool IsMarked 
 
     public override string ToString() => Value;
     public static implicit operator string(JobStorageDisposition value) => value.Value;
-    public static explicit operator JobStorageDisposition(string value) => new(value);
+    public static implicit operator JobStorageDisposition(string value) => new(value);
 }

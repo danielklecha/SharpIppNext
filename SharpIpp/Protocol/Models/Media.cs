@@ -75,5 +75,5 @@ public readonly record struct Media(string Value, bool IsMarked = true, bool IsV
 
     public override string ToString() => Value;
     public static implicit operator string(Media bin) => bin.Value;
-    public static explicit operator Media(string value) => new(value);
+    public static implicit operator Media(string value) => new(value);
 }

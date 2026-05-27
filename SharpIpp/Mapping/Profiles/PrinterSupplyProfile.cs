@@ -16,13 +16,13 @@ internal class PrinterSupplyProfile : IProfile
 
             return new PrinterSupply
             {
-                Type = map.MapFromDicNullable<string?>(src, "type"),
+                Type = map.MapFromDicNullable<PrinterSupplyType?>(src, "type"),
                 Level = map.MapFromDicNullable<int?>(src, "level"),
                 MaxCapacity = map.MapFromDicNullable<int?>(src, "max-capacity"),
                 ColorName = map.MapFromDicNullable<string?>(src, "color-name"),
                 MarkerName = map.MapFromDicNullable<string?>(src, "marker-name"),
-                MarkerType = map.MapFromDicNullable<string?>(src, "marker-type"),
-                Unit = map.MapFromDicNullable<string?>(src, "unit"),
+                MarkerType = map.MapFromDicNullable<MarkerType?>(src, "marker-type"),
+                Unit = map.MapFromDicNullable<CapacityUnit?>(src, "unit"),
             };
         });
         mapper.CreateMap<PrinterSupply, IEnumerable<IppAttribute>>((src, _) =>
@@ -31,13 +31,13 @@ internal class PrinterSupplyProfile : IProfile
                 return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.PrinterSupply, NoValue.Instance) };
 
             var attrs = new List<IppAttribute>();
-            if (src.Type != null) attrs.Add(new IppAttribute(Tag.Keyword, "type", src.Type));
+            if (src.Type != null) attrs.Add(new IppAttribute(Tag.Keyword, "type", src.Type.Value.Value));
             if (src.Level.HasValue) attrs.Add(new IppAttribute(Tag.Integer, "level", src.Level.Value));
             if (src.MaxCapacity.HasValue) attrs.Add(new IppAttribute(Tag.Integer, "max-capacity", src.MaxCapacity.Value));
             if (src.ColorName != null) attrs.Add(new IppAttribute(Tag.Keyword, "color-name", src.ColorName));
             if (src.MarkerName != null) attrs.Add(new IppAttribute(Tag.TextWithoutLanguage, "marker-name", src.MarkerName));
-            if (src.MarkerType != null) attrs.Add(new IppAttribute(Tag.Keyword, "marker-type", src.MarkerType));
-            if (src.Unit != null) attrs.Add(new IppAttribute(Tag.Keyword, "unit", src.Unit));
+            if (src.MarkerType != null) attrs.Add(new IppAttribute(Tag.Keyword, "marker-type", src.MarkerType.Value.Value));
+            if (src.Unit != null) attrs.Add(new IppAttribute(Tag.Keyword, "unit", src.Unit.Value.Value));
             return attrs;
         });
     }

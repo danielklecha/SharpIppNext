@@ -18,5 +18,5 @@ public readonly record struct JobPhoneNumberScheme(string Value, bool IsValue = 
 
     public override string ToString() => Value;
     public static implicit operator string(JobPhoneNumberScheme bin) => bin.Value;
-    public static explicit operator JobPhoneNumberScheme(string value) => new(value);
+    public static implicit operator JobPhoneNumberScheme(string value) => new(value);
 }

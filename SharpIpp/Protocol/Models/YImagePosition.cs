@@ -17,5 +17,5 @@ public readonly record struct YImagePosition(string Value, bool IsValue = true) 
 
     public override string ToString() => Value;
     public static implicit operator string(YImagePosition bin) => bin.Value;
-    public static explicit operator YImagePosition(string value) => new(value);
+    public static implicit operator YImagePosition(string value) => new(value);
 }

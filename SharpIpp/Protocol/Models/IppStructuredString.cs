@@ -122,6 +122,26 @@ public abstract class IppStructuredString : IEnumerable<string>, IIppStructuredS
             Dictionary[key] = val.OriginalString;
     }
 
+    protected T? GetSmartEnum<[System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string key) where T : struct, ISmartEnum
+    {
+        var str = Get(key);
+        if (str == null)
+            return null;
+        if (typeof(IMarkedSmartEnum).IsAssignableFrom(typeof(T)))
+        {
+            return (T)Activator.CreateInstance(typeof(T), [str, true, true])!;
+        }
+        return (T)Activator.CreateInstance(typeof(T), [str, true])!;
+    }
+
+    protected void SetSmartEnum<T>(string key, T? val) where T : struct, ISmartEnum
+    {
+        if (val == null)
+            Dictionary.Remove(key);
+        else
+            Dictionary[key] = val.Value.Value;
+    }
+
     protected int? GetInt(string key)
     {
         var str = Get(key);

@@ -110,5 +110,5 @@ public readonly record struct MediaColor(string Value, bool IsValue = true) : IS
 
     public override string ToString() => Value;
     public static implicit operator string(MediaColor bin) => bin.Value;
-    public static explicit operator MediaColor(string value) => new(value);
+    public static implicit operator MediaColor(string value) => new(value);
 }

@@ -48,13 +48,13 @@ public class DocumentAttributes : IIppCollection
     /// See: RFC 8011 Section 5.3.19
     /// </summary>
     /// <code>attributes-charset</code>
-    public string? AttributesCharset { get; set; }
+    public Charset? AttributesCharset { get; set; }
     /// <summary>
     /// The attributes-natural-language IPP attribute.
     /// See: RFC 8011 Section 5.3.20
     /// </summary>
     /// <code>attributes-natural-language</code>
-    public string? AttributesNaturalLanguage { get; set; }
+    public NaturalLanguage? AttributesNaturalLanguage { get; set; }
 
     /// <summary>
     /// The current-page-order IPP attribute.
@@ -98,19 +98,19 @@ public class DocumentAttributes : IIppCollection
     /// See: pwg5100.5-2024 Section 6.2.1
     /// </summary>
     /// <code>document-charset</code>
-    public string? DocumentCharset { get; set; }
+    public Charset? DocumentCharset { get; set; }
     /// <summary>
     /// The document-format IPP attribute.
     /// See: RFC 8011
     /// </summary>
     /// <code>document-format</code>
-    public string? DocumentFormat { get; set; }
+    public DocumentFormat? DocumentFormat { get; set; }
     /// <summary>
     /// The document-format-detected IPP attribute.
     /// See: pwg5100.5-2024 Section 6.2.2
     /// </summary>
     /// <code>document-format-detected</code>
-    public string? DocumentFormatDetected { get; set; }
+    public DocumentFormat? DocumentFormatDetected { get; set; }
 
     /// <summary>
     /// The document-format-ready IPP attribute.
@@ -216,7 +216,7 @@ public class DocumentAttributes : IIppCollection
     /// See: PWG 5100.5-2024 Section 6.2
     /// </summary>
     /// <code>document-job-uri</code>
-    public string? DocumentJobUri { get; set; }
+    public Uri? DocumentJobUri { get; set; }
     /// <summary>
     /// The document-message IPP attribute.
     /// See: pwg5100.5-2024 Section 6.2.3
@@ -241,7 +241,7 @@ public class DocumentAttributes : IIppCollection
     /// See: PWG 5100.5-2024 Section 6.2
     /// </summary>
     /// <code>document-natural-language</code>
-    public string? DocumentNaturalLanguage { get; set; }
+    public NaturalLanguage? DocumentNaturalLanguage { get; set; }
     /// <summary>
     /// The document-printer-uri IPP attribute.
     /// See: PWG 5100.5-2024 Section 6.2
@@ -253,7 +253,7 @@ public class DocumentAttributes : IIppCollection
     /// See: PWG 5100.5-2024 Section 6.1.2
     /// </summary>
     /// <code>document-uri</code>
-    public string? DocumentUri { get; set; }
+    public Uri? DocumentUri { get; set; }
     /// <summary>
     /// The impressions IPP attribute.
     /// See: pwg5100.1-2022 Section 5.2.1
@@ -302,7 +302,7 @@ public class DocumentAttributes : IIppCollection
     /// See: pwg5100.15 - IPP FaxOut Service Section 7.4.18
     /// </summary>
     /// <code>more-info</code>
-    public string? MoreInfo { get; set; }
+    public Uri? MoreInfo { get; set; }
     /// <summary>
     /// The output-device-assigned IPP attribute.
     /// See: pwg5100.15 - IPP FaxOut Service Section 7.2.2

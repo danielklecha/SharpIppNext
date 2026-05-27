@@ -20,5 +20,5 @@ public readonly record struct JobErrorSheetWhen(string Value, bool IsValue = tru
 
     public override string ToString() => Value;
     public static implicit operator string(JobErrorSheetWhen bin) => bin.Value;
-    public static explicit operator JobErrorSheetWhen(string value) => new(value);
+    public static implicit operator JobErrorSheetWhen(string value) => new(value);
 }

@@ -42,6 +42,6 @@ namespace SharpIpp.Protocol.Models
 
         public override string ToString() => Value;
         public static implicit operator string(UriAuthentication bin) => bin.Value;
-        public static explicit operator UriAuthentication(string value) => new(value);
+        public static implicit operator UriAuthentication(string value) => new(value);
     }
 }

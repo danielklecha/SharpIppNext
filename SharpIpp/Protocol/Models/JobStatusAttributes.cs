@@ -30,7 +30,7 @@ public class JobStatusAttributes
     /// </summary>
     /// <code>job-uri</code>
     [Obsolete("The 'job-uri' attribute is deprecated in favor of 'job-id'. See RFC 8011 Section 5.3.2.")]
-    public string? JobUri { get; set; }
+    public Uri? JobUri { get; set; }
 
     /// <summary>
     /// This REQUIRED attribute identifies the Printer object that created

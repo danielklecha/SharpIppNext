@@ -24,7 +24,7 @@ internal class SystemOperationAttributesProfile : IProfile
             dst.RestartGetInterval = map.MapFromDicNullable<int?>(src, IppAttributeNames.RestartGetInterval);
             dst.WhichPrinters = map.MapFromDicNullable<WhichPrinters?>(src, IppAttributeNames.WhichPrinters);
             dst.NotifySubscriptionId = map.MapFromDicNullable<int?>(src, IppAttributeNames.NotifySubscriptionId);
-            dst.NotifyPullMethod = map.MapFromDicNullable<string?>(src, IppAttributeNames.NotifyPullMethod);
+            dst.NotifyPullMethod = map.MapFromDicNullable<NotifyPullMethod?>(src, IppAttributeNames.NotifyPullMethod);
             return dst;
         });
 
@@ -51,7 +51,7 @@ internal class SystemOperationAttributesProfile : IProfile
             if (src.NotifySubscriptionId.HasValue)
                 dst.Add(new IppAttribute(Tag.Integer, IppAttributeNames.NotifySubscriptionId, src.NotifySubscriptionId.Value));
             if (src.NotifyPullMethod != null)
-                dst.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.NotifyPullMethod, src.NotifyPullMethod));
+                dst.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.NotifyPullMethod, src.NotifyPullMethod.Value));
             return dst;
         });
     }

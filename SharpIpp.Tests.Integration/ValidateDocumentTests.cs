@@ -54,7 +54,7 @@ public class ValidateDocumentTests : SharpIppIntegrationTestBase
                 PrinterUri = new Uri("http://127.0.0.1:631"),
                 RequestingUserName = "test-user",
                 RequestingUserUri = new Uri("mailto:test-user@example.com"),
-                DocumentFormat = "application/pdf",
+                DocumentFormat = (SharpIpp.Protocol.Models.DocumentFormat)"application/pdf",
                 DocumentName = "doc.pdf",
                 DocumentMetadata = GetTestDocumentMetadata(),
             },

@@ -61,19 +61,19 @@ public class PrintJobOperationAttributes : CreateJobOperationAttributes
     /// </summary>
     /// <example>application/octet-stream</example>
     /// <code>document-format</code>
-    public string? DocumentFormat { get; set; }
+    public DocumentFormat? DocumentFormat { get; set; }
     /// <summary>
     /// The client OPTIONALLY supplies this attribute. The Printer object OPTIONALLY supports this attribute. This attribute specifies the natural language of the document for those document-formats that require a specification of the natural language in order to image the document unambiguously. There are no particular values required for the Printer object to support
     /// See: RFC 8011 Section 4.2.1.1
     /// </summary>
     /// <code>document-natural-language</code>
-    public string? DocumentNaturalLanguage { get; set; }
+    public NaturalLanguage? DocumentNaturalLanguage { get; set; }
     /// <summary>
     /// The document-charset IPP attribute.
     /// See: PWG 5100.5-2024 Section 6.2.1
     /// </summary>
     /// <code>document-charset</code>
-    public string? DocumentCharset { get; set; }
+    public Charset? DocumentCharset { get; set; }
 
     /// <summary>
     /// The document-message IPP attribute.

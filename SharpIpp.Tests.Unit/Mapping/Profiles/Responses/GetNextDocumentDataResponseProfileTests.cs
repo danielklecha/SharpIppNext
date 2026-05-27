@@ -33,8 +33,8 @@ public class GetNextDocumentDataResponseProfileTests : MapperTestBase
 
         // Assert
         dst.OperationAttributes.Should().NotBeNull();
-        dst.OperationAttributes.AttributesCharset.Should().Be("utf-8");
-        dst.OperationAttributes.AttributesNaturalLanguage.Should().Be("en");
+        dst.OperationAttributes.AttributesCharset.Should().Be((SharpIpp.Protocol.Models.Charset)"utf-8");
+        ((string?)dst.OperationAttributes.AttributesNaturalLanguage).Should().Be("en");
     }
 
     [TestMethod]
@@ -65,8 +65,8 @@ public class GetNextDocumentDataResponseProfileTests : MapperTestBase
 
         // Assert
         dst.OperationAttributes.Should().NotBeNull();
-        dst.OperationAttributes.AttributesCharset.Should().Be("utf-16");
-        dst.OperationAttributes.AttributesNaturalLanguage.Should().Be("fr");
+        dst.OperationAttributes.AttributesCharset.Should().Be((SharpIpp.Protocol.Models.Charset)"utf-16");
+        ((string?)dst.OperationAttributes.AttributesNaturalLanguage).Should().Be("fr");
         dst.OperationAttributes.Compression.Should().Be(Compression.Gzip);
         dst.OperationAttributes.DocumentDataGetInterval.Should().Be(10);
         dst.OperationAttributes.LastDocument.Should().Be(true);
@@ -84,7 +84,7 @@ public class GetNextDocumentDataResponseProfileTests : MapperTestBase
             StatusCode = IppStatusCode.SuccessfulOk,
             OperationAttributes = new GetNextDocumentDataResponseOperationAttributes
             {
-                AttributesCharset = "utf-16",
+                AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-16",
                 AttributesNaturalLanguage = "fr",
                 Compression = Compression.Gzip,
                 DocumentDataGetInterval = 10,

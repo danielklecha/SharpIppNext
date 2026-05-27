@@ -44,5 +44,5 @@ public readonly record struct InputColorMode(string Value, bool IsMarked = true,
 
     public override string ToString() => Value;
     public static implicit operator string(InputColorMode value) => value.Value;
-    public static explicit operator InputColorMode(string value) => new(value);
+    public static implicit operator InputColorMode(string value) => new(value);
 }

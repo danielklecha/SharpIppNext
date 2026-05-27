@@ -14,7 +14,7 @@ try
         {
             PrinterUri = new Uri("ipp://localhost:631/"),
             DocumentName = "Document Name",
-            DocumentFormat = "application/octet-stream",
+            DocumentFormat = DocumentFormat.ApplicationOctetStream,
             Compression = Compression.None,
             DocumentNaturalLanguage = "en",
             JobName = "Test Job",

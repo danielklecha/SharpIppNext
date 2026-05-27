@@ -38,5 +38,5 @@ public readonly record struct SeparatorSheetsType(string Value, bool IsValue = t
 
     public override string ToString() => Value;
     public static implicit operator string(SeparatorSheetsType bin) => bin.Value;
-    public static explicit operator SeparatorSheetsType(string value) => new(value);
+    public static implicit operator SeparatorSheetsType(string value) => new(value);
 }

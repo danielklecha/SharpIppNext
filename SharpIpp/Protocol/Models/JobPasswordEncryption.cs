@@ -128,5 +128,5 @@ public readonly record struct JobPasswordEncryption(string Value, bool IsValue =
 
     public override string ToString() => Value;
     public static implicit operator string(JobPasswordEncryption value) => value.Value;
-    public static explicit operator JobPasswordEncryption(string value) => new(value);
+    public static implicit operator JobPasswordEncryption(string value) => new(value);
 }

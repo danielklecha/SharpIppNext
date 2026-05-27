@@ -20,5 +20,5 @@ public readonly record struct FoldingDirection(string Value, bool IsValue = true
 
     public override string ToString() => Value;
     public static implicit operator string(FoldingDirection bin) => bin.Value;
-    public static explicit operator FoldingDirection(string value) => new(value);
+    public static implicit operator FoldingDirection(string value) => new(value);
 }

@@ -68,5 +68,5 @@ public readonly record struct CoatingType(string Value, bool IsMarked = true, bo
 
     public override string ToString() => Value;
     public static implicit operator string(CoatingType bin) => bin.Value;
-    public static explicit operator CoatingType(string value) => new(value);
+    public static implicit operator CoatingType(string value) => new(value);
 }

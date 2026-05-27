@@ -38,5 +38,5 @@ public readonly record struct CoverType(string Value, bool IsValue = true) : ISm
 
     public override string ToString() => Value;
     public static implicit operator string(CoverType bin) => bin.Value;
-    public static explicit operator CoverType(string value) => new(value);
+    public static implicit operator CoverType(string value) => new(value);
 }

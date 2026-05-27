@@ -124,7 +124,7 @@ public class PrinterDescriptionAttributesProfileTests
         var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(src);
 
         dst.AccuracyUnitsSupported.Should().BeEquivalentTo(new[] { (AccuracyUnits)"mm", (AccuracyUnits)"um" });
-        dst.PrinterCameraImageUri.Should().BeEquivalentTo("https://printer.example/camera");
+        dst.PrinterCameraImageUri.Should().BeEquivalentTo([new Uri("https://printer.example/camera")]);
         dst.PlatformShape.Should().Be((PlatformShape?)"rectangular");
         dst.PrintBaseDefault.Should().Be((PrintBase?)"raft");
         dst.PrintSupportsSupported.Should().BeEquivalentTo(new[] { (PrintSupports)"none", (PrintSupports)"standard" });
@@ -213,7 +213,7 @@ public class PrinterDescriptionAttributesProfileTests
                 YDimension = 20000,
                 ZDimension = 18000
             },
-            PrinterCameraImageUri = ["https://printer.example/camera"]
+            PrinterCameraImageUri = [new Uri("https://printer.example/camera")]
         };
 
         var dst = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
@@ -310,7 +310,8 @@ public class PrinterDescriptionAttributesProfileTests
             PrinterAlert = [new PrinterAlert { Code = "jam", Severity = "critical" }],
             PrinterAlertDescription = ["alert text"],
             // PrinterSupply is now PrinterSupply[]? — write mapping deferred to Task 7
-            PrinterSupplyDescription = ["toner status"]
+            PrinterSupplyDescription = ["toner status"],
+            NaturalLanguageConfigured = "en-us"
         };
 
         var dst = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
@@ -345,6 +346,10 @@ public class PrinterDescriptionAttributesProfileTests
         dst.Should().ContainKey(IppAttributeNames.PrinterSupplyDescription);
         dst[IppAttributeNames.PrinterSupplyDescription].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.TextWithoutLanguage);
         dst[IppAttributeNames.PrinterSupplyDescription].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["toner status"]);
+
+        dst.Should().ContainKey(IppAttributeNames.NaturalLanguageConfigured);
+        dst[IppAttributeNames.NaturalLanguageConfigured].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.NaturalLanguage);
+        dst[IppAttributeNames.NaturalLanguageConfigured].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["en-us"]);
     }
 
     [TestMethod]
@@ -457,7 +462,7 @@ public class PrinterDescriptionAttributesProfileTests
 
         dst.DestinationUriReady.Should().NotBeNull();
         dst.DestinationUriReady!.Should().ContainSingle();
-        dst.DestinationUriReady[0].DestinationUri.Should().Be("https://example.test/upload");
+        dst.DestinationUriReady[0].DestinationUri.Should().Be(new Uri("https://example.test/upload"));
         dst.DestinationUriReady[0].DestinationName.Should().Be("Inbox");
         dst.DestinationUriReady[0].DestinationIsDirectory.Should().BeTrue();
         dst.DestinationUriReady[0].DestinationMandatoryAccessAttributes.Should().BeEquivalentTo("access-user-name", "access-password");
@@ -472,7 +477,7 @@ public class PrinterDescriptionAttributesProfileTests
             [
                 new DestinationUriReady
                 {
-                    DestinationUri = "https://example.test/upload",
+                    DestinationUri = new Uri("https://example.test/upload"),
                     DestinationName = "Inbox",
                     DestinationIsDirectory = true,
                     DestinationMandatoryAccessAttributes = ["access-user-name", "access-password"]

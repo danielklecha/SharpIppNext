@@ -47,7 +47,7 @@ internal class IppJobResponseProfile : IProfile
             map) =>
         {
             dst ??= new JobAttributes();
-            dst.JobUri = map.MapFromDicNullable<string?>(src, IppAttributeNames.JobUri);
+            dst.JobUri = map.MapFromDicNullable<Uri?>(src, IppAttributeNames.JobUri);
             dst.JobId = map.MapFromDic<int>(src, IppAttributeNames.JobId);
             dst.JobState = map.MapFromDic<JobState>(src, IppAttributeNames.JobState);
             dst.JobStateReasons = map.MapFromDicSetNullable<JobStateReason[]?>(src, IppAttributeNames.JobStateReasons);
@@ -78,7 +78,7 @@ internal class IppJobResponseProfile : IProfile
                 { IppAttributeNames.JobState, new IppAttribute[] { new IppAttribute(Tag.Enum, IppAttributeNames.JobState, (int)src.JobState ) } }
             };
             if (src.JobUri != null)
-                dic.Add(IppAttributeNames.JobUri, new IppAttribute[] { new IppAttribute(Tag.Uri, IppAttributeNames.JobUri, src.JobUri) });
+                dic.Add(IppAttributeNames.JobUri, new IppAttribute[] { new IppAttribute(Tag.Uri, IppAttributeNames.JobUri, src.JobUri.ToString()) });
             if (src.JobStateReasons != null)
                 dic.Add(IppAttributeNames.JobStateReasons, src.JobStateReasons.Select(x => new IppAttribute(Tag.Keyword, IppAttributeNames.JobStateReasons, map.Map<string>(x))).ToArray());
             if (src.JobStateMessage != null)

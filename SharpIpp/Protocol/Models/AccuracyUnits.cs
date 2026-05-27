@@ -26,5 +26,5 @@ public readonly record struct AccuracyUnits(string Value, bool IsMarked = true, 
 
     public override string ToString() => Value;
     public static implicit operator string(AccuracyUnits value) => value.Value;
-    public static explicit operator AccuracyUnits(string value) => new(value);
+    public static implicit operator AccuracyUnits(string value) => new(value);
 }

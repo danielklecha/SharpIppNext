@@ -14,7 +14,7 @@ public class OperationAttributesTests
     {
         // Arrange
         var operationAttributes = new OperationAttributes();
-        var expectedValue = "utf-16";
+        var expectedValue = (SharpIpp.Protocol.Models.Charset)"utf-16";
 
         // Act
         operationAttributes.AttributesCharset = expectedValue;
@@ -34,6 +34,6 @@ public class OperationAttributesTests
         operationAttributes.AttributesNaturalLanguage = expectedValue;
 
         // Assert
-        operationAttributes.AttributesNaturalLanguage.Should().Be(expectedValue);
+        ((string?)operationAttributes.AttributesNaturalLanguage).Should().Be(expectedValue);
     }
 }

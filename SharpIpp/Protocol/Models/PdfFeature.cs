@@ -44,5 +44,5 @@ public readonly record struct PdfFeature(string Value, bool IsMarked = true, boo
 
     public override string ToString() => Value;
     public static implicit operator string(PdfFeature value) => value.Value;
-    public static explicit operator PdfFeature(string value) => new(value);
+    public static implicit operator PdfFeature(string value) => new(value);
 }

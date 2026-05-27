@@ -38,5 +38,5 @@ public readonly record struct ResourceType(string Value, bool IsMarked = true, b
 
     public override string ToString() => Value;
     public static implicit operator string(ResourceType value) => value.Value;
-    public static explicit operator ResourceType(string value) => new(value);
+    public static implicit operator ResourceType(string value) => new(value);
 }

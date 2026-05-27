@@ -46,7 +46,7 @@ public class OperationAttributesTests
         // Arrange
         var operationAttributes = new OperationAttributes
         {
-            AttributesCharset = "utf-8",
+            AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
             AttributesNaturalLanguage = null,
             PrinterUri = new Uri("ipp://printer")
         };
@@ -67,7 +67,7 @@ public class OperationAttributesTests
         // Arrange
         var operationAttributes = new OperationAttributes
         {
-            AttributesCharset = "utf-8",
+            AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
             AttributesNaturalLanguage = "en-us",
             PrinterUri = new Uri("ipp://printer"),
             RequestingUserName = "user"
@@ -105,8 +105,8 @@ public class OperationAttributesTests
         var attributes = mapper.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(dict);
 
         // Assert
-        attributes.AttributesCharset.Should().Be("utf-8");
-        attributes.AttributesNaturalLanguage.Should().Be("en-us");
+        attributes.AttributesCharset.Should().Be((SharpIpp.Protocol.Models.Charset)"utf-8");
+        ((string?)attributes.AttributesNaturalLanguage).Should().Be("en-us");
         attributes.PrinterUri.Should().Be(new Uri("ipp://printer"));
         attributes.RequestingUserName.Should().Be("user");
     }
@@ -127,8 +127,8 @@ public class OperationAttributesTests
         var attributes = mapper.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(dict);
 
         // Assert
-        attributes.AttributesCharset.Should().Be("utf-8");
-        attributes.AttributesNaturalLanguage.Should().Be("en");
+        attributes.AttributesCharset.Should().Be((SharpIpp.Protocol.Models.Charset)"utf-8");
+        ((string?)attributes.AttributesNaturalLanguage).Should().Be("en");
         attributes.PrinterUri.Should().Be(new Uri("ipp://printer"));
     }
 
@@ -222,7 +222,7 @@ public class OperationAttributesTests
         // Arrange
         var src = new JobOperationAttributes
         {
-            AttributesCharset = "utf-8",
+            AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
             AttributesNaturalLanguage = "en-us",
             JobId = 456
         };
@@ -346,7 +346,7 @@ public class OperationAttributesTests
         // Arrange
         var src = new CancelJobsOperationAttributes
         {
-            AttributesCharset = "utf-8",
+            AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
             AttributesNaturalLanguage = "en-us",
             PrinterUri = new Uri("ipp://printer"),
             JobIds = new[] { 10, 20 },
@@ -371,7 +371,7 @@ public class OperationAttributesTests
         // Arrange
         var src = new ResubmitJobOperationAttributes
         {
-            AttributesCharset = "utf-8",
+            AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
             AttributesNaturalLanguage = "en-us",
             PrinterUri = new Uri("ipp://printer"),
             JobId = 123,
@@ -395,13 +395,13 @@ public class OperationAttributesTests
         // Arrange
         var src = new ValidateJobOperationAttributes
         {
-            AttributesCharset = "utf-8",
+            AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
             AttributesNaturalLanguage = "en-us",
             JobKOctets = 100,
             JobMandatoryAttributes = new[] { "copies", "media" },
             DocumentName = "test.txt",
             Compression = Compression.Gzip,
-            DocumentFormat = "text/plain",
+            DocumentFormat = (SharpIpp.Protocol.Models.DocumentFormat)"text/plain",
             DocumentNaturalLanguage = "en-us",
             ClientInfo =
             [

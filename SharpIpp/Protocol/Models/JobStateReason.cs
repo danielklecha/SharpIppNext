@@ -497,6 +497,6 @@ namespace SharpIpp.Protocol.Models
 
         public override string ToString() => Value;
         public static implicit operator string(JobStateReason bin) => bin.Value;
-        public static explicit operator JobStateReason(string value) => new(value);
+        public static implicit operator JobStateReason(string value) => new(value);
     }
 }

@@ -318,5 +318,5 @@ public readonly record struct MediaSource(string Value, bool IsValue = true) : I
 
     public override string ToString() => Value;
     public static implicit operator string(MediaSource bin) => bin.Value;
-    public static explicit operator MediaSource(string value) => new(value);
+    public static implicit operator MediaSource(string value) => new(value);
 }

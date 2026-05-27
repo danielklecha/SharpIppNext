@@ -2,739 +2,738 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace SharpIpp.Protocol.Models
+namespace SharpIpp.Protocol.Models;
+
+/// <summary>
+/// Attributes that describe the processing to be applied to a Job or Document.
+/// See: RFC 8011
+/// See: PWG 5100.1-2022
+/// See: PWG 5100.3-2023
+/// See: PWG 5100.6-2003
+/// See: PWG 5100.7-2023
+/// See: PWG 5100.8-2003
+/// See: PWG 5100.11-2024
+/// See: PWG 5100.13-2023
+/// See: PWG 5100.15-2013
+/// See: PWG 5100.21-2019
+/// </summary>
+public class JobTemplateAttributes
 {
     /// <summary>
-    /// Attributes that describe the processing to be applied to a Job or Document.
-    /// See: RFC 8011
-    /// See: PWG 5100.1-2022
-    /// See: PWG 5100.3-2023
-    /// See: PWG 5100.6-2003
-    /// See: PWG 5100.7-2023
-    /// See: PWG 5100.8-2003
-    /// See: PWG 5100.11-2024
-    /// See: PWG 5100.13-2023
-    /// See: PWG 5100.15-2013
-    /// See: PWG 5100.21-2019
+    /// This attribute specifies a priority for scheduling the Job. A higher
+    /// value specifies a higher priority. The value 1 indicates the lowest
+    /// possible priority. The value 100 indicates the highest possible
+    /// priority.  Among those jobs that are ready to print, a Printer MUST
+    /// print all jobs with a priority value of n before printing those with
+    /// a priority value of n-1 for all n.
+    /// If the Printer object supports this attribute, it MUST always support
+    /// the full range from 1 to 100.  No administrative restrictions are
+    /// permitted.  This way an end-user can always make full use of the
+    /// entire range with any Printer object.  If privileged jobs are
+    /// implemented outside IPP/1.1, they MUST have priorities higher than
+    /// 100, rather than restricting the range available to end-users.
+    /// If the client does not supply this attribute and this attribute is
+    /// supported by the Printer object, the Printer object MUST use the
+    /// value of the Printer object's "job-priority-default" at job
+    /// submission time (unlike most Job Template attributes that are used if
+    /// necessary at job processing time).
+    /// See: RFC 8011 Section 5.2.1
     /// </summary>
-    public class JobTemplateAttributes
-    {
-        /// <summary>
-        /// This attribute specifies a priority for scheduling the Job. A higher
-        /// value specifies a higher priority. The value 1 indicates the lowest
-        /// possible priority. The value 100 indicates the highest possible
-        /// priority.  Among those jobs that are ready to print, a Printer MUST
-        /// print all jobs with a priority value of n before printing those with
-        /// a priority value of n-1 for all n.
-        /// If the Printer object supports this attribute, it MUST always support
-        /// the full range from 1 to 100.  No administrative restrictions are
-        /// permitted.  This way an end-user can always make full use of the
-        /// entire range with any Printer object.  If privileged jobs are
-        /// implemented outside IPP/1.1, they MUST have priorities higher than
-        /// 100, rather than restricting the range available to end-users.
-        /// If the client does not supply this attribute and this attribute is
-        /// supported by the Printer object, the Printer object MUST use the
-        /// value of the Printer object's "job-priority-default" at job
-        /// submission time (unlike most Job Template attributes that are used if
-        /// necessary at job processing time).
-        /// See: RFC 8011 Section 5.2.1
-        /// </summary>
-        [System.ComponentModel.DataAnnotations.Range(1, 100)]
-        public int? JobPriority { get; set; }
-
-        /// <summary>
-        /// This attribute specifies the named time period during which the Job
-        /// MUST become a candidate for printing.
-        /// See: RFC 8011 Section 5.2.2
-        /// </summary>
-        public JobHoldUntil? JobHoldUntil { get; set; }
-
-        /// <summary>
-        /// This attribute specifies how the Printer handles multiple documents
-        /// within a Job.
-        /// See: RFC 8011 Section 5.2.4
-        /// </summary>
-        public MultipleDocumentHandling? MultipleDocumentHandling { get; set; }
-
-        /// <summary>
-        /// This attribute specifies which job start/end sheet(s) the Printer
-        /// uses for the Job.
-        /// See: RFC 8011 Section 5.2.3
-        /// </summary>
-        public JobSheets? JobSheets { get; set; }
-
-        /// <summary>
-        /// This attribute augments the "job-sheets" Job Template attribute and allows a Client to specify distinct media.
-        /// See: PWG 5100.7-2023 Section 6.8.11
-        /// </summary>
-        public JobSheetsCol? JobSheetsCol { get; set; }
-
-        /// <summary>
-        /// This attribute specifies the number of copies to be printed.
-        /// On many devices the supported number of collated copies will be
-        /// limited by the number of physical output bins on the device, and may
-        /// be different from the number of uncollated copies which can be
-        /// supported.
-        /// See: RFC 8011 Section 5.2.5
-        /// </summary>
-        [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
-        public int? Copies { get; set; }
-
-        /// <summary>
-        /// This attribute identifies the finishing operations that the Printer
-        /// uses for each copy of each printed document in the Job. For Jobs with
-        /// multiple documents, the "multiple-document-handling" attribute
-        /// determines what constitutes a "copy" for purposes of finishing.
-        /// See: RFC 8011 Section 5.2.6
-        /// </summary>
-        public Finishings[]? Finishings { get; set; }
-
-        /// <summary>
-        /// This attribute specifies detailed finishing instructions that cannot
-        /// be expressed by the "finishings" Job Template attribute.
-        /// See: PWG 5100.1-2022 Section 5.2
-        /// </summary>
-        public FinishingsCol[]? FinishingsCol { get; set; }
-
-        /// <summary>
-        /// This attribute identifies the range(s) of print-stream pages that the
-        /// Printer object uses for each copy of each document which are to be
-        /// printed.  Nothing is printed for any pages identified that do not
-        /// exist in the document(s).  Ranges MUST be in ascending order, for
-        /// example: 1-3, 5-7, 15-19 and MUST NOT overlap, so that a non-spooling
-        /// Printer object can process the job in a single pass.  If the ranges
-        /// are not ascending or are overlapping, the IPP object MUST reject the
-        /// request and return the 'client-error-bad-request' status code.  The
-        /// attribute is associated with print-stream pages not application-
-        /// numbered pages (for example, the page numbers found in the headers
-        /// and or footers for certain word processing applications).
-        /// For Jobs with multiple documents, the "multiple-document-handling"
-        /// attribute determines what constitutes a "copy" for purposes of the
-        /// specified page range(s).  When "multiple-document-handling" is
-        /// 'single-document', the Printer object MUST apply each supplied page
-        /// range once to the concatenation of the print-stream pages.  For
-        /// example, if there are 8 documents of 10 pages each, the page-range
-        /// '41:60' prints the pages in the 5th and 6th documents as a single
-        /// document and none of the pages of the other documents are printed.
-        /// When "multiple-document- handling" is 'separate-documents-
-        /// uncollated-copies' or 'separate-documents-collated-copies', the
-        /// Printer object MUST apply each supplied page range repeatedly to each
-        /// document copy.  For the same job, the page-range '1:3, 10:10' would
-        /// print the first 3 pages and the 10th page of each of the 8 documents
-        /// in the Job, as 8 separate documents.
-        /// In most cases, the exact pages to be printed will be generated by a
-        /// device driver and this attribute would not be required.  However,
-        /// when printing an archived document which has already been formatted,
-        /// the end user may elect to print just a subset of the pages contained
-        /// in the document.  In this case, if page-range = n.m is specified, the
-        /// first page to be printed will be page n. All subsequent pages of the
-        /// document will be printed through and including page m.
-        /// "page-ranges-supported" is a boolean value indicating whether or not
-        /// the printer is capable of supporting the printing of page ranges.
-        /// This capability may differ from one PDL to another. There is no
-        /// "page-ranges-default" attribute.  If the "page-ranges" attribute is
-        /// not supplied by the client, all pages of the document will be
-        /// printed.
-        /// See: RFC 8011 Section 5.2.7
-        /// </summary>
-        public Range[]? PageRanges { get; set; }
-
-        /// <summary>
-        /// This attribute specifies how print-stream pages are to be imposed
-        /// upon the sides of an instance of a selected medium, i.e., an
-        /// impression.
-        /// See: RFC 8011 Section 5.2.8
-        /// </summary>
-        public Sides? Sides { get; set; }
-
-        /// <summary>
-        /// This attribute specifies the number of print-stream pages to impose
-        /// upon a single side of an instance of a selected medium.  For example,
-        /// if the value is:
-        /// '1'    the Printer MUST place one print-stream page on a single side
-        /// of an instance of the selected medium (MAY add some sort
-        /// of translation, scaling, or rotation).
-        /// '2'    the Printer MUST place two print-stream pages on a single side
-        /// of an instance of the selected medium (MAY add some sort
-        /// of translation, scaling, or rotation).
-        /// '4'    the Printer MUST place four print-stream pages on a single
-        /// side of an instance of the selected medium (MAY add some
-        /// sort of translation, scaling, or rotation).
-        /// This attribute primarily controls the translation, scaling and
-        /// rotation of print-stream pages.
-        /// See: RFC 8011 Section 5.2.9
-        /// </summary>
-        [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
-        public int? NumberUp { get; set; }
-
-        /// <summary>
-        /// This attribute indicates the desired orientation for printed print-
-        /// stream pages; it does not describe the orientation of the client-
-        /// supplied print-stream pages.
-        /// For some document formats (such as 'application/postscript'), the
-        /// desired orientation of the print-stream pages is specified within the
-        /// document data.  This information is generated by a device driver
-        /// prior to the submission of the print job.  Other document formats
-        /// (such as 'text/plain') do not include the notion of desired
-        /// orientation within the document data.  In the latter case it is
-        /// possible for the Printer object to bind the desired orientation to
-        /// the document data after it has been submitted.  It is expected that a
-        /// Printer object would only support "orientations-requested" for some
-        /// document formats (e.g., 'text/plain' or 'text/html') but not others
-        /// (e.g., 'application/postscript').  This is no different than any
-        /// other Job Template attribute since section 4.2, item 1, points out
-        /// that a Printer object may support or not support any Job Template
-        /// attribute based on the document format supplied by the client.
-        /// However, a special mention is made here since it is very likely that
-        /// a Printer object will support "orientation-requested" for only a
-        /// subset of the supported document formats.
-        /// See: RFC 8011 Section 5.2.10
-        /// </summary>
-        public Orientation? OrientationRequested { get; set; }
-
-        /// <summary>
-        /// This attribute identifies the medium that the Printer uses for all
-        /// impressions of the Job.
-        /// The values for "media" include medium-names, medium-sizes, input-
-        /// trays and electronic forms so that one attribute specifies the media.
-        /// If a Printer object supports a medium name as a value of this
-        /// attribute, such a medium name implicitly selects an input-tray that
-        /// contains the specified medium.  If a Printer object supports a medium
-        /// size as a value of this attribute, such a medium size implicitly
-        /// selects a medium name that in turn implicitly selects an input-tray
-        /// that contains the medium with the specified size.  If a Printer
-        /// object supports an input-tray as the value of this attribute, such an
-        /// input-tray implicitly selects the medium that is in that input-tray
-        /// at the time the job prints.  This case includes manual-feed input-
-        /// trays.  If a Printer object supports an electronic form as the value
-        /// of this attribute, such an electronic form implicitly selects a
-        /// medium-name that in turn implicitly selects an input-tray that
-        /// contains the medium specified by the electronic form.  The electronic
-        /// form also implicitly selects an image that the Printer MUST merge
-        /// with the document data as its prints each page.
-        /// See: RFC 8011 Section 5.2.11
-        /// </summary>
-        public Media? Media { get; set; }
-
-        /// <summary>
-        /// This attribute identifies the resolution that Printer uses for the
-        /// Job.
-        /// See: RFC 8011 Section 5.2.12
-        /// </summary>
-        public Resolution? PrinterResolution { get; set; }
-
-        /// <summary>
-        /// This attribute specifies the print quality that the Printer uses for
-        /// the Job.
-        /// See: RFC 8011 Section 5.2.13
-        /// </summary>
-        public PrintQuality? PrintQuality { get; set; }
-
-        /// <summary>
-        /// This attribute specifies how the Printer scales the content.
-        /// See: PWG 5100.13-2023 Section 6.2.5
-        /// </summary>
-        public PrintScaling? PrintScaling { get; set; }
-
-        /// <summary>
-        /// This attribute specifies the color mode for the Job.
-        /// See: PWG 5100.13-2023 Section 6.2.3
-        /// </summary>
-        public PrintColorMode? PrintColorMode { get; set; }
-
-        /// <summary>
-        /// This attribute specifies the rendering intent for color conversion.
-        /// See: PWG 5100.13-2023 Section 6.2.4
-        /// </summary>
-        public PrintRenderingIntent? PrintRenderingIntent { get; set; }
-
-        /// <summary>
-        /// This attribute specifies the action to take when the Printer encounters a Job processing error.
-        /// See: PWG 5100.13-2023 Section 6.2.6
-        /// </summary>
-        public JobErrorAction? JobErrorAction { get; set; }
-
-        /// <summary>
-        /// This attribute specifies the media and media-related attributes
-        /// for the Job using a collection.
-        /// See: PWG 5100.7-2023
-        /// </summary>
-        public MediaCol? MediaCol { get; set; }
-
-        /// <summary>
-        /// This attribute identifies the device output bin to which the job
-        /// is to be delivered.  There are standard values whose attribute
-        /// syntax is 'keyword', but there are no standard values whose
-        /// attribute syntax is 'name'.
-        /// See: PWG 5100.2-2001 Section 2.1
-        /// </summary>
-        public OutputBin? OutputBin { get; set; }
-
-        /// <summary>
-        /// This attribute specifies the account associated with the Job.
-        /// See: PWG 5100.7-2023 Section 6.8.1
-        /// </summary>
-        public string? JobAccountId { get; set; }
-
-        /// <summary>
-        /// This attribute specifies the type of value in <c>job-account-id</c>.
-        /// See: PWG 5100.11-2024 Section 5.3.5
-        /// </summary>
-        public JobAccountType? JobAccountType { get; set; }
-
-        /// <summary>
-        /// This attribute specifies the user ID associated with the account
-        /// specified by the "job-account-id" attribute.
-        /// See: PWG 5100.7-2023 Section 6.8.2
-        /// </summary>
-        public string? JobAccountingUserId { get; set; }
-
-        /// <summary>
-        /// This attribute specifies the maximum number of seconds allowed
-        /// for processing a Job.
-        /// See: PWG 5100.7-2023 Section 6.8.3
-        /// </summary>
-        public int? JobCancelAfter { get; set; }
-
-        /// <summary>
-        /// This attribute specifies a time period in the future when the
-        /// Printer will produce the output for the Job.
-        /// See: PWG 5100.7-2023 Section 6.8.4
-        /// </summary>
-        public JobHoldUntil? JobDelayOutputUntil { get; set; }
-
-        /// <summary>
-        /// This attribute specifies a date and time when the Printer will
-        /// produce the output for the Job.
-        /// See: PWG 5100.7-2023 Section 6.8.5
-        /// </summary>
-        public DateTimeOffset? JobDelayOutputUntilTime { get; set; }
-
-        /// <summary>
-        /// This attribute specifies the date and time after which the Job
-        /// MUST become a candidate for processing.
-        /// See: PWG 5100.7-2023 Section 6.8.6
-        /// </summary>
-        public DateTimeOffset? JobHoldUntilTime { get; set; }
-
-        /// <summary>
-        /// This attribute specifies how long the Job remains in the Job
-        /// Retention phase of a Job's life cycle.
-        /// See: PWG 5100.7-2023 Section 6.8.7
-        /// </summary>
-        public JobHoldUntil? JobRetainUntil { get; set; }
-
-        /// <summary>
-        /// This attribute specifies the number of seconds the Job remains
-        /// in the Job Retention phase of a Job's life cycle.
-        /// See: PWG 5100.7-2023 Section 6.8.8
-        /// </summary>
-        public int? JobRetainUntilInterval { get; set; }
-
-        /// <summary>
-        /// This attribute specifies the date and time when the Job can
-        /// leave the Job Retention phase of a Job's life cycle.
-        /// See: PWG 5100.7-2023 Section 6.8.9
-        /// </summary>
-        public DateTimeOffset? JobRetainUntilTime { get; set; }
-
-        /// <summary>
-        /// This attribute specifies a message that is printed on the Job Sheet.
-        /// See: PWG 5100.7-2023 Section 6.8.10
-        /// </summary>
-        public string? JobSheetMessage { get; set; }
-
-        /// <summary>
-        /// This attribute specifies the output device requested for the Job.
-        /// See: PWG 5100.7-2023 Section 6.3.2
-        /// </summary>
-        public string? OutputDevice { get; set; }
-
-        /// <summary>
-        /// This attribute specifies how the Printer should optimize the
-        /// content of the document for the output device.
-        /// See: PWG 5100.7-2023 Section 6.3.3
-        /// </summary>
-        public PrintContentOptimize? PrintContentOptimize { get; set; }
-
-        /// <summary>
-        /// This attribute specifies the number of pages per set
-        /// for finishing operations.
-        /// See: PWG 5100.1-2022 Section 5.3
-        /// </summary>
-        public int? JobPagesPerSet { get; set; }
-
-        /// <summary>
-        /// The <c>cover-back</c> Job Template attribute.
-        /// See: PWG 5100.3-2023 Section 5.2.1
-        /// Deprecated in: PWG 5100.3-2023 Section 5.2.1
-        /// </summary>
-        [Obsolete("The 'cover-back' attribute is deprecated. See PWG 5100.3-2023 Section 5.2.1.")]
-        public Cover? CoverBack { get; set; }
-
-        /// <summary>
-        /// The <c>cover-front</c> Job Template attribute.
-        /// See: PWG 5100.3-2023 Section 5.2.1
-        /// Deprecated in: PWG 5100.3-2023 Section 5.2.1
-        /// </summary>
-        [Obsolete("The 'cover-front' attribute is deprecated. See PWG 5100.3-2023 Section 5.2.1.")]
-        public Cover? CoverFront { get; set; }
-
-        /// <summary>
-        /// The <c>force-front-side</c> Job Template attribute.
-        /// See: PWG 5100.3-2023 Section 5.2.2
-        /// </summary>
-        public int[]? ForceFrontSide { get; set; }
-
-        /// <summary>
-        /// The <c>image-orientation</c> Job Template attribute.
-        /// See: PWG 5100.3-2023 Section 5.2.3
-        /// </summary>
-        public Orientation? ImageOrientation { get; set; }
-
-        /// <summary>
-        /// The <c>imposition-template</c> Job Template attribute.
-        /// See: PWG 5100.3-2023 Section 5.2.4
-        /// </summary>
-        public ImpositionTemplate? ImpositionTemplate { get; set; }
-
-        /// <summary>
-        /// The <c>insert-sheet</c> Job Template attribute.
-        /// See: PWG 5100.3-2023 Section 5.2.5
-        /// Deprecated in: PWG 5100.3-2023 Section 5.2.5
-        /// </summary>
-        [Obsolete("The 'insert-sheet' attribute is deprecated. See PWG 5100.3-2023 Section 5.2.5.")]
-        public InsertSheet[]? InsertSheet { get; set; }
-
-        /// <summary>
-        /// The <c>job-accounting-sheets</c> Job Template attribute.
-        /// See: PWG 5100.3-2023 Section 5.2.6
-        /// Deprecated in: PWG 5100.3-2023 Section 5.2.6
-        /// </summary>
-        [Obsolete("The 'job-accounting-sheets' attribute is deprecated. See PWG 5100.3-2023 Section 5.2.6.")]
-        public JobAccountingSheets? JobAccountingSheets { get; set; }
-
-        /// <summary>
-        /// The <c>job-complete-before</c> Job Template attribute.
-        /// See: PWG 5100.3-2023 Section 5.2.7
-        /// </summary>
-        public JobCompleteBefore? JobCompleteBefore { get; set; }
-
-        /// <summary>
-        /// The <c>job-complete-before-time</c> Job Template attribute.
-        /// See: PWG 5100.3-2023 Section 5.2.8
-        /// </summary>
-        public DateTimeOffset? JobCompleteBeforeTime { get; set; }
-
-        /// <summary>
-        /// The <c>job-error-sheet</c> Job Template attribute.
-        /// See: PWG 5100.3-2023 Section 5.2.9
-        /// </summary>
-        public JobErrorSheet? JobErrorSheet { get; set; }
-
-        /// <summary>
-        /// The <c>job-message-to-operator</c> Job Template attribute.
-        /// See: PWG 5100.3-2023 Section 5.2.10
-        /// </summary>
-        public string? JobMessageToOperator { get; set; }
-
-        /// <summary>
-        /// The <c>job-phone-number</c> Job Template attribute.
-        /// See: PWG 5100.3-2023 Section 5.2.11
-        /// </summary>
-        public string? JobPhoneNumber { get; set; }
-
-        /// <summary>
-        /// The <c>job-recipient-name</c> Job Template attribute.
-        /// See: PWG 5100.3-2023 Section 5.2.12
-        /// </summary>
-        public string? JobRecipientName { get; set; }
-
-        /// <summary>
-        /// The <c>media-input-tray-check</c> Job Template attribute.
-        /// See: PWG 5100.3-2023 Section 5.2.13
-        /// Deprecated in: PWG 5100.3-2023 Section 5.2.13
-        /// </summary>
-        [Obsolete("The 'media-input-tray-check' attribute is deprecated. See PWG 5100.3-2023 Section 5.2.13.")]
-        public MediaInputTrayCheck? MediaInputTrayCheck { get; set; }
-
-        /// <summary>
-        /// The <c>page-delivery</c> Job Template attribute.
-        /// See: PWG 5100.3-2023 Section 5.2.14
-        /// </summary>
-        public PageDelivery? PageDelivery { get; set; }
-
-        /// <summary>
-        /// The <c>presentation-direction-number-up</c> Job Template attribute.
-        /// See: PWG 5100.3-2023 Section 5.2.15
-        /// Deprecated in: PWG 5100.3-2023 Section 5.2.15
-        /// </summary>
-        [Obsolete("The 'presentation-direction-number-up' attribute is deprecated. See PWG 5100.3-2023 Section 5.2.15.")]
-        public PresentationDirectionNumberUp? PresentationDirectionNumberUp { get; set; }
-
-        /// <summary>
-        /// The <c>separator-sheets</c> Job Template attribute.
-        /// See: PWG 5100.3-2023 Section 5.2.16
-        /// </summary>
-        public SeparatorSheets? SeparatorSheets { get; set; }
-
-        /// <summary>
-        /// The <c>x-image-position</c> Job Template attribute.
-        /// See: PWG 5100.3-2023 Section 5.2.17
-        /// </summary>
-        public XImagePosition? XImagePosition { get; set; }
-
-        /// <summary>
-        /// The <c>x-image-shift</c> Job Template attribute.
-        /// See: PWG 5100.3-2023 Section 5.2.18
-        /// </summary>
-        public int? XImageShift { get; set; }
-
-        /// <summary>
-        /// The <c>x-side1-image-shift</c> Job Template attribute.
-        /// See: PWG 5100.3-2023 Section 5.2.19
-        /// </summary>
-        public int? XSide1ImageShift { get; set; }
-
-        /// <summary>
-        /// The <c>x-side2-image-shift</c> Job Template attribute.
-        /// See: PWG 5100.3-2023 Section 5.2.20
-        /// </summary>
-        public int? XSide2ImageShift { get; set; }
-
-        /// <summary>
-        /// The <c>y-image-position</c> Job Template attribute.
-        /// See: PWG 5100.3-2023 Section 5.2.21
-        /// </summary>
-        public YImagePosition? YImagePosition { get; set; }
-
-        /// <summary>
-        /// The <c>y-image-shift</c> Job Template attribute.
-        /// See: PWG 5100.3-2023 Section 5.2.22
-        /// </summary>
-        public int? YImageShift { get; set; }
-
-        /// <summary>
-        /// The <c>y-side1-image-shift</c> Job Template attribute.
-        /// See: PWG 5100.3-2023 Section 5.2.23
-        /// </summary>
-        public int? YSide1ImageShift { get; set; }
-
-        /// <summary>
-        /// The <c>y-side2-image-shift</c> Job Template attribute.
-        /// See: PWG 5100.3-2023 Section 5.2.24
-        /// </summary>
-        public int? YSide2ImageShift { get; set; }
-
-        /// <summary>
-        /// The <c>confirmation-sheet-print</c> Job Template attribute.
-        /// See: PWG 5100.15-2013 Section 7.4.7
-        /// </summary>
-        public bool? ConfirmationSheetPrint { get; set; }
-
-        /// <summary>
-        /// The <c>number-of-retries</c> Job Template attribute.
-        /// See: PWG 5100.15-2013 Section 7.4.20
-        /// </summary>
-        public int? NumberOfRetries { get; set; }
-
-        /// <summary>
-        /// The <c>retry-interval</c> Job Template attribute.
-        /// See: PWG 5100.15-2013 Section 7.2.5
-        /// </summary>
-        [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
-        public int? RetryInterval { get; set; }
-
-        /// <summary>
-        /// The <c>retry-time-out</c> Job Template attribute.
-        /// See: PWG 5100.15-2013 Section 7.2.6
-        /// </summary>
-        public int? RetryTimeOut { get; set; }
-
-        /// <summary>
-        /// The <c>chamber-humidity</c> Job Template attribute.
-        /// See: PWG 5100.21-2019 Section 8.1.1
-        /// </summary>
-        [System.ComponentModel.DataAnnotations.Range(0, 100)]
-        public int? ChamberHumidity { get; set; }
-
-        /// <summary>
-        /// The <c>chamber-temperature</c> Job Template attribute.
-        /// See: PWG 5100.21-2019 Section 8.1.2
-        /// </summary>
-        [System.ComponentModel.DataAnnotations.Range(-273, int.MaxValue)]
-        public int? ChamberTemperature { get; set; }
-
-        /// <summary>
-        /// The <c>materials-col</c> Job Template attribute.
-        /// See: PWG 5100.21-2019 Section 8.1.3
-        /// </summary>
-        public Material[]? MaterialsCol { get; set; }
-
-        /// <summary>
-        /// The <c>multiple-object-handling</c> Job Template attribute.
-        /// See: PWG 5100.21-2019 Section 8.1.4
-        /// </summary>
-        public MultipleObjectHandling? MultipleObjectHandling { get; set; }
-
-        /// <summary>
-        /// The <c>platform-temperature</c> Job Template attribute.
-        /// See: PWG 5100.21-2019 Section 8.1.5
-        /// </summary>
-        [System.ComponentModel.DataAnnotations.Range(-273, int.MaxValue)]
-        public int? PlatformTemperature { get; set; }
-
-        /// <summary>
-        /// The <c>print-accuracy</c> Job Template attribute.
-        /// See: PWG 5100.21-2019 Section 8.1.6
-        /// </summary>
-        public PrintAccuracy? PrintAccuracy { get; set; }
-
-        /// <summary>
-        /// The <c>print-base</c> Job Template attribute.
-        /// See: PWG 5100.21-2019 Section 8.1.7
-        /// </summary>
-        public PrintBase? PrintBase { get; set; }
-
-        /// <summary>
-        /// The <c>print-objects</c> Job Template attribute.
-        /// See: PWG 5100.21-2019 Section 8.1.8
-        /// </summary>
-        public PrintObject[]? PrintObjects { get; set; }
-
-        /// <summary>
-        /// The <c>print-supports</c> Job Template attribute.
-        /// See: PWG 5100.21-2019 Section 8.1.9
-        /// </summary>
-        public PrintSupports? PrintSupports { get; set; }
-
-        /// <summary>
-        /// The <c>overrides</c> Job Template attribute.
-        /// See: PWG 5100.6-2003 Section 4.1
-        /// </summary>
-        public OverrideInstruction[]? Overrides { get; set; }
-
-        /// <summary>
-        /// This attribute specifies the number of copies to be printed for the entire Job,
-        /// overriding the document-level "copies" attribute.
-        /// See: PWG 5100.7-2023 Section 10.4
-        /// </summary>
-        public int? JobCopies { get; set; }
-
-        /// <summary>
-        /// This attribute specifies the finishing operations to apply to the back cover sheet
-        /// of the Job, overriding the document-level "cover-back" attribute.
-        /// See: PWG 5100.7-2023 Section 10.4
-        /// </summary>
-        public Cover? JobCoverBack { get; set; }
-
-        /// <summary>
-        /// This attribute specifies the finishing operations to apply to the front cover sheet
-        /// of the Job, overriding the document-level "cover-front" attribute.
-        /// See: PWG 5100.7-2023 Section 10.4
-        /// </summary>
-        public Cover? JobCoverFront { get; set; }
-
-        /// <summary>
-        /// This attribute identifies the finishing operations that the Printer uses for each
-        /// copy of each printed document in the Job, overriding the document-level "finishings"
-        /// attribute.
-        /// See: PWG 5100.7-2023 Section 10.4
-        /// </summary>
-        public Finishings[]? JobFinishings { get; set; }
-
-        /// <summary>
-        /// This attribute specifies detailed finishing instructions for the Job, overriding
-        /// the document-level "finishings-col" attribute.
-        /// See: PWG 5100.7-2023 Section 10.4
-        /// </summary>
-        public FinishingsCol[]? JobFinishingsCol { get; set; }
-
-        /// <summary>
-        /// This attribute specifies a password string that the Printer uses to authenticate
-        /// the Job. The value is an octetString encoded according to the encryption method
-        /// specified by "job-password-encryption".
-        /// See: PWG 5100.11-2024 Section 5.3.7
-        /// </summary>
-        public OctetString? JobPassword { get; set; }
-
-        /// <summary>
-        /// This attribute specifies the encryption method used to encode the "job-password"
-        /// attribute value.
-        /// See: PWG 5100.11-2024 Section 5.3.7
-        /// </summary>
-        public JobPasswordEncryption? JobPasswordEncryption { get; set; }
-
-        /// <summary>
-        /// This attribute specifies whether the Printer collates output sheets when producing
-        /// multiple copies of a document.
-        /// See: PWG 5100.8-2003 Section 3
-        /// </summary>
-        public string? SheetCollate { get; set; } // keyword: 'collated' | 'uncollated'
-
-        /// <summary>
-        /// This attribute specifies overrides to Job Template attributes for specific pages
-        /// within the Job.
-        /// See: PWG 5100.8-2003 Section 3
-        /// </summary>
-        public OverrideInstruction[]? PageOverrides { get; set; }
-
-        /// <summary>
-        /// This attribute specifies the number of pages in each subset when the Job is
-        /// divided into subsets for finishing.
-        /// See: PWG 5100.8-2003 Section 3
-        /// </summary>
-        public int[]? PagesPerSubset { get; set; }
-
-        /// <summary>
-        /// This attribute specifies overrides to Job Template attributes for specific
-        /// documents within the Job.
-        /// See: PWG 5100.8-2003 Section 3
-        /// </summary>
-        public OverrideInstruction[]? DocumentOverrides { get; set; }
-
-        /// <summary>
-        /// This attribute specifies the input tray from which the Printer selects media
-        /// for the Job.
-        /// See: PWG 5100.7-2023 Section 15.2
-        /// </summary>
-        public MediaSource? MediaSource { get; set; }
-
-        /// <summary>
-        /// This attribute specifies the direction in which media is fed from the media source
-        /// into the Printer.
-        /// See: PWG 5100.7-2023 Section 15.2
-        /// </summary>
-        public MediaSourceFeedDirection? MediaSourceFeedDirection { get; set; }
-
-        /// <summary>
-        /// This attribute specifies the orientation of the media as it is fed from the
-        /// media source into the Printer.
-        /// See: PWG 5100.7-2023 Section 15.3
-        /// </summary>
-        public Orientation? MediaSourceFeedOrientation { get; set; }
-
-        /// <summary>
-        /// This attribute specifies the URI of the requesting user, which the Printer
-        /// uses for authentication and authorization purposes.
-        /// See: PWG 5100.7-2023 Section 5.1.1
-        /// </summary>
-        public Uri? RequestingUserUri { get; set; }
-
-        /// <summary>
-        /// This attribute specifies the names of Job Template attributes that the Printer
-        /// MUST honor when processing the Job. If the Printer cannot honor any of the
-        /// listed attributes, it MUST reject the Job.
-        /// See: PWG 5100.7-2023 Section 6.1
-        /// </summary>
-        public string[]? JobMandatoryAttributes { get; set; }
-
-        /// <summary>
-        /// This attribute specifies the Job IDs of the Jobs that are associated with
-        /// this Job (e.g., for job chaining or dependency tracking).
-        /// See: PWG 5100.7-2023 Section 6.1
-        /// </summary>
-        public int[]? JobIds { get; set; }
-
-    }
+    [System.ComponentModel.DataAnnotations.Range(1, 100)]
+    public int? JobPriority { get; set; }
+
+    /// <summary>
+    /// This attribute specifies the named time period during which the Job
+    /// MUST become a candidate for printing.
+    /// See: RFC 8011 Section 5.2.2
+    /// </summary>
+    public JobHoldUntil? JobHoldUntil { get; set; }
+
+    /// <summary>
+    /// This attribute specifies how the Printer handles multiple documents
+    /// within a Job.
+    /// See: RFC 8011 Section 5.2.4
+    /// </summary>
+    public MultipleDocumentHandling? MultipleDocumentHandling { get; set; }
+
+    /// <summary>
+    /// This attribute specifies which job start/end sheet(s) the Printer
+    /// uses for the Job.
+    /// See: RFC 8011 Section 5.2.3
+    /// </summary>
+    public JobSheets? JobSheets { get; set; }
+
+    /// <summary>
+    /// This attribute augments the "job-sheets" Job Template attribute and allows a Client to specify distinct media.
+    /// See: PWG 5100.7-2023 Section 6.8.11
+    /// </summary>
+    public JobSheetsCol? JobSheetsCol { get; set; }
+
+    /// <summary>
+    /// This attribute specifies the number of copies to be printed.
+    /// On many devices the supported number of collated copies will be
+    /// limited by the number of physical output bins on the device, and may
+    /// be different from the number of uncollated copies which can be
+    /// supported.
+    /// See: RFC 8011 Section 5.2.5
+    /// </summary>
+    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+    public int? Copies { get; set; }
+
+    /// <summary>
+    /// This attribute identifies the finishing operations that the Printer
+    /// uses for each copy of each printed document in the Job. For Jobs with
+    /// multiple documents, the "multiple-document-handling" attribute
+    /// determines what constitutes a "copy" for purposes of finishing.
+    /// See: RFC 8011 Section 5.2.6
+    /// </summary>
+    public Finishings[]? Finishings { get; set; }
+
+    /// <summary>
+    /// This attribute specifies detailed finishing instructions that cannot
+    /// be expressed by the "finishings" Job Template attribute.
+    /// See: PWG 5100.1-2022 Section 5.2
+    /// </summary>
+    public FinishingsCol[]? FinishingsCol { get; set; }
+
+    /// <summary>
+    /// This attribute identifies the range(s) of print-stream pages that the
+    /// Printer object uses for each copy of each document which are to be
+    /// printed.  Nothing is printed for any pages identified that do not
+    /// exist in the document(s).  Ranges MUST be in ascending order, for
+    /// example: 1-3, 5-7, 15-19 and MUST NOT overlap, so that a non-spooling
+    /// Printer object can process the job in a single pass.  If the ranges
+    /// are not ascending or are overlapping, the IPP object MUST reject the
+    /// request and return the 'client-error-bad-request' status code.  The
+    /// attribute is associated with print-stream pages not application-
+    /// numbered pages (for example, the page numbers found in the headers
+    /// and or footers for certain word processing applications).
+    /// For Jobs with multiple documents, the "multiple-document-handling"
+    /// attribute determines what constitutes a "copy" for purposes of the
+    /// specified page range(s).  When "multiple-document-handling" is
+    /// 'single-document', the Printer object MUST apply each supplied page
+    /// range once to the concatenation of the print-stream pages.  For
+    /// example, if there are 8 documents of 10 pages each, the page-range
+    /// '41:60' prints the pages in the 5th and 6th documents as a single
+    /// document and none of the pages of the other documents are printed.
+    /// When "multiple-document- handling" is 'separate-documents-
+    /// uncollated-copies' or 'separate-documents-collated-copies', the
+    /// Printer object MUST apply each supplied page range repeatedly to each
+    /// document copy.  For the same job, the page-range '1:3, 10:10' would
+    /// print the first 3 pages and the 10th page of each of the 8 documents
+    /// in the Job, as 8 separate documents.
+    /// In most cases, the exact pages to be printed will be generated by a
+    /// device driver and this attribute would not be required.  However,
+    /// when printing an archived document which has already been formatted,
+    /// the end user may elect to print just a subset of the pages contained
+    /// in the document.  In this case, if page-range = n.m is specified, the
+    /// first page to be printed will be page n. All subsequent pages of the
+    /// document will be printed through and including page m.
+    /// "page-ranges-supported" is a boolean value indicating whether or not
+    /// the printer is capable of supporting the printing of page ranges.
+    /// This capability may differ from one PDL to another. There is no
+    /// "page-ranges-default" attribute.  If the "page-ranges" attribute is
+    /// not supplied by the client, all pages of the document will be
+    /// printed.
+    /// See: RFC 8011 Section 5.2.7
+    /// </summary>
+    public Range[]? PageRanges { get; set; }
+
+    /// <summary>
+    /// This attribute specifies how print-stream pages are to be imposed
+    /// upon the sides of an instance of a selected medium, i.e., an
+    /// impression.
+    /// See: RFC 8011 Section 5.2.8
+    /// </summary>
+    public Sides? Sides { get; set; }
+
+    /// <summary>
+    /// This attribute specifies the number of print-stream pages to impose
+    /// upon a single side of an instance of a selected medium.  For example,
+    /// if the value is:
+    /// '1'    the Printer MUST place one print-stream page on a single side
+    /// of an instance of the selected medium (MAY add some sort
+    /// of translation, scaling, or rotation).
+    /// '2'    the Printer MUST place two print-stream pages on a single side
+    /// of an instance of the selected medium (MAY add some sort
+    /// of translation, scaling, or rotation).
+    /// '4'    the Printer MUST place four print-stream pages on a single
+    /// side of an instance of the selected medium (MAY add some
+    /// sort of translation, scaling, or rotation).
+    /// This attribute primarily controls the translation, scaling and
+    /// rotation of print-stream pages.
+    /// See: RFC 8011 Section 5.2.9
+    /// </summary>
+    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+    public int? NumberUp { get; set; }
+
+    /// <summary>
+    /// This attribute indicates the desired orientation for printed print-
+    /// stream pages; it does not describe the orientation of the client-
+    /// supplied print-stream pages.
+    /// For some document formats (such as 'application/postscript'), the
+    /// desired orientation of the print-stream pages is specified within the
+    /// document data.  This information is generated by a device driver
+    /// prior to the submission of the print job.  Other document formats
+    /// (such as 'text/plain') do not include the notion of desired
+    /// orientation within the document data.  In the latter case it is
+    /// possible for the Printer object to bind the desired orientation to
+    /// the document data after it has been submitted.  It is expected that a
+    /// Printer object would only support "orientations-requested" for some
+    /// document formats (e.g., 'text/plain' or 'text/html') but not others
+    /// (e.g., 'application/postscript').  This is no different than any
+    /// other Job Template attribute since section 4.2, item 1, points out
+    /// that a Printer object may support or not support any Job Template
+    /// attribute based on the document format supplied by the client.
+    /// However, a special mention is made here since it is very likely that
+    /// a Printer object will support "orientation-requested" for only a
+    /// subset of the supported document formats.
+    /// See: RFC 8011 Section 5.2.10
+    /// </summary>
+    public Orientation? OrientationRequested { get; set; }
+
+    /// <summary>
+    /// This attribute identifies the medium that the Printer uses for all
+    /// impressions of the Job.
+    /// The values for "media" include medium-names, medium-sizes, input-
+    /// trays and electronic forms so that one attribute specifies the media.
+    /// If a Printer object supports a medium name as a value of this
+    /// attribute, such a medium name implicitly selects an input-tray that
+    /// contains the specified medium.  If a Printer object supports a medium
+    /// size as a value of this attribute, such a medium size implicitly
+    /// selects a medium name that in turn implicitly selects an input-tray
+    /// that contains the medium with the specified size.  If a Printer
+    /// object supports an input-tray as the value of this attribute, such an
+    /// input-tray implicitly selects the medium that is in that input-tray
+    /// at the time the job prints.  This case includes manual-feed input-
+    /// trays.  If a Printer object supports an electronic form as the value
+    /// of this attribute, such an electronic form implicitly selects a
+    /// medium-name that in turn implicitly selects an input-tray that
+    /// contains the medium specified by the electronic form.  The electronic
+    /// form also implicitly selects an image that the Printer MUST merge
+    /// with the document data as its prints each page.
+    /// See: RFC 8011 Section 5.2.11
+    /// </summary>
+    public Media? Media { get; set; }
+
+    /// <summary>
+    /// This attribute identifies the resolution that Printer uses for the
+    /// Job.
+    /// See: RFC 8011 Section 5.2.12
+    /// </summary>
+    public Resolution? PrinterResolution { get; set; }
+
+    /// <summary>
+    /// This attribute specifies the print quality that the Printer uses for
+    /// the Job.
+    /// See: RFC 8011 Section 5.2.13
+    /// </summary>
+    public PrintQuality? PrintQuality { get; set; }
+
+    /// <summary>
+    /// This attribute specifies how the Printer scales the content.
+    /// See: PWG 5100.13-2023 Section 6.2.5
+    /// </summary>
+    public PrintScaling? PrintScaling { get; set; }
+
+    /// <summary>
+    /// This attribute specifies the color mode for the Job.
+    /// See: PWG 5100.13-2023 Section 6.2.3
+    /// </summary>
+    public PrintColorMode? PrintColorMode { get; set; }
+
+    /// <summary>
+    /// This attribute specifies the rendering intent for color conversion.
+    /// See: PWG 5100.13-2023 Section 6.2.4
+    /// </summary>
+    public PrintRenderingIntent? PrintRenderingIntent { get; set; }
+
+    /// <summary>
+    /// This attribute specifies the action to take when the Printer encounters a Job processing error.
+    /// See: PWG 5100.13-2023 Section 6.2.6
+    /// </summary>
+    public JobErrorAction? JobErrorAction { get; set; }
+
+    /// <summary>
+    /// This attribute specifies the media and media-related attributes
+    /// for the Job using a collection.
+    /// See: PWG 5100.7-2023
+    /// </summary>
+    public MediaCol? MediaCol { get; set; }
+
+    /// <summary>
+    /// This attribute identifies the device output bin to which the job
+    /// is to be delivered.  There are standard values whose attribute
+    /// syntax is 'keyword', but there are no standard values whose
+    /// attribute syntax is 'name'.
+    /// See: PWG 5100.2-2001 Section 2.1
+    /// </summary>
+    public OutputBin? OutputBin { get; set; }
+
+    /// <summary>
+    /// This attribute specifies the account associated with the Job.
+    /// See: PWG 5100.7-2023 Section 6.8.1
+    /// </summary>
+    public string? JobAccountId { get; set; }
+
+    /// <summary>
+    /// This attribute specifies the type of value in <c>job-account-id</c>.
+    /// See: PWG 5100.11-2024 Section 5.3.5
+    /// </summary>
+    public JobAccountType? JobAccountType { get; set; }
+
+    /// <summary>
+    /// This attribute specifies the user ID associated with the account
+    /// specified by the "job-account-id" attribute.
+    /// See: PWG 5100.7-2023 Section 6.8.2
+    /// </summary>
+    public string? JobAccountingUserId { get; set; }
+
+    /// <summary>
+    /// This attribute specifies the maximum number of seconds allowed
+    /// for processing a Job.
+    /// See: PWG 5100.7-2023 Section 6.8.3
+    /// </summary>
+    public int? JobCancelAfter { get; set; }
+
+    /// <summary>
+    /// This attribute specifies a time period in the future when the
+    /// Printer will produce the output for the Job.
+    /// See: PWG 5100.7-2023 Section 6.8.4
+    /// </summary>
+    public JobHoldUntil? JobDelayOutputUntil { get; set; }
+
+    /// <summary>
+    /// This attribute specifies a date and time when the Printer will
+    /// produce the output for the Job.
+    /// See: PWG 5100.7-2023 Section 6.8.5
+    /// </summary>
+    public DateTimeOffset? JobDelayOutputUntilTime { get; set; }
+
+    /// <summary>
+    /// This attribute specifies the date and time after which the Job
+    /// MUST become a candidate for processing.
+    /// See: PWG 5100.7-2023 Section 6.8.6
+    /// </summary>
+    public DateTimeOffset? JobHoldUntilTime { get; set; }
+
+    /// <summary>
+    /// This attribute specifies how long the Job remains in the Job
+    /// Retention phase of a Job's life cycle.
+    /// See: PWG 5100.7-2023 Section 6.8.7
+    /// </summary>
+    public JobHoldUntil? JobRetainUntil { get; set; }
+
+    /// <summary>
+    /// This attribute specifies the number of seconds the Job remains
+    /// in the Job Retention phase of a Job's life cycle.
+    /// See: PWG 5100.7-2023 Section 6.8.8
+    /// </summary>
+    public int? JobRetainUntilInterval { get; set; }
+
+    /// <summary>
+    /// This attribute specifies the date and time when the Job can
+    /// leave the Job Retention phase of a Job's life cycle.
+    /// See: PWG 5100.7-2023 Section 6.8.9
+    /// </summary>
+    public DateTimeOffset? JobRetainUntilTime { get; set; }
+
+    /// <summary>
+    /// This attribute specifies a message that is printed on the Job Sheet.
+    /// See: PWG 5100.7-2023 Section 6.8.10
+    /// </summary>
+    public string? JobSheetMessage { get; set; }
+
+    /// <summary>
+    /// This attribute specifies the output device requested for the Job.
+    /// See: PWG 5100.7-2023 Section 6.3.2
+    /// </summary>
+    public string? OutputDevice { get; set; }
+
+    /// <summary>
+    /// This attribute specifies how the Printer should optimize the
+    /// content of the document for the output device.
+    /// See: PWG 5100.7-2023 Section 6.3.3
+    /// </summary>
+    public PrintContentOptimize? PrintContentOptimize { get; set; }
+
+    /// <summary>
+    /// This attribute specifies the number of pages per set
+    /// for finishing operations.
+    /// See: PWG 5100.1-2022 Section 5.3
+    /// </summary>
+    public int? JobPagesPerSet { get; set; }
+
+    /// <summary>
+    /// The <c>cover-back</c> Job Template attribute.
+    /// See: PWG 5100.3-2023 Section 5.2.1
+    /// Deprecated in: PWG 5100.3-2023 Section 5.2.1
+    /// </summary>
+    [Obsolete("The 'cover-back' attribute is deprecated. See PWG 5100.3-2023 Section 5.2.1.")]
+    public Cover? CoverBack { get; set; }
+
+    /// <summary>
+    /// The <c>cover-front</c> Job Template attribute.
+    /// See: PWG 5100.3-2023 Section 5.2.1
+    /// Deprecated in: PWG 5100.3-2023 Section 5.2.1
+    /// </summary>
+    [Obsolete("The 'cover-front' attribute is deprecated. See PWG 5100.3-2023 Section 5.2.1.")]
+    public Cover? CoverFront { get; set; }
+
+    /// <summary>
+    /// The <c>force-front-side</c> Job Template attribute.
+    /// See: PWG 5100.3-2023 Section 5.2.2
+    /// </summary>
+    public int[]? ForceFrontSide { get; set; }
+
+    /// <summary>
+    /// The <c>image-orientation</c> Job Template attribute.
+    /// See: PWG 5100.3-2023 Section 5.2.3
+    /// </summary>
+    public Orientation? ImageOrientation { get; set; }
+
+    /// <summary>
+    /// The <c>imposition-template</c> Job Template attribute.
+    /// See: PWG 5100.3-2023 Section 5.2.4
+    /// </summary>
+    public ImpositionTemplate? ImpositionTemplate { get; set; }
+
+    /// <summary>
+    /// The <c>insert-sheet</c> Job Template attribute.
+    /// See: PWG 5100.3-2023 Section 5.2.5
+    /// Deprecated in: PWG 5100.3-2023 Section 5.2.5
+    /// </summary>
+    [Obsolete("The 'insert-sheet' attribute is deprecated. See PWG 5100.3-2023 Section 5.2.5.")]
+    public InsertSheet[]? InsertSheet { get; set; }
+
+    /// <summary>
+    /// The <c>job-accounting-sheets</c> Job Template attribute.
+    /// See: PWG 5100.3-2023 Section 5.2.6
+    /// Deprecated in: PWG 5100.3-2023 Section 5.2.6
+    /// </summary>
+    [Obsolete("The 'job-accounting-sheets' attribute is deprecated. See PWG 5100.3-2023 Section 5.2.6.")]
+    public JobAccountingSheets? JobAccountingSheets { get; set; }
+
+    /// <summary>
+    /// The <c>job-complete-before</c> Job Template attribute.
+    /// See: PWG 5100.3-2023 Section 5.2.7
+    /// </summary>
+    public JobCompleteBefore? JobCompleteBefore { get; set; }
+
+    /// <summary>
+    /// The <c>job-complete-before-time</c> Job Template attribute.
+    /// See: PWG 5100.3-2023 Section 5.2.8
+    /// </summary>
+    public DateTimeOffset? JobCompleteBeforeTime { get; set; }
+
+    /// <summary>
+    /// The <c>job-error-sheet</c> Job Template attribute.
+    /// See: PWG 5100.3-2023 Section 5.2.9
+    /// </summary>
+    public JobErrorSheet? JobErrorSheet { get; set; }
+
+    /// <summary>
+    /// The <c>job-message-to-operator</c> Job Template attribute.
+    /// See: PWG 5100.3-2023 Section 5.2.10
+    /// </summary>
+    public string? JobMessageToOperator { get; set; }
+
+    /// <summary>
+    /// The <c>job-phone-number</c> Job Template attribute.
+    /// See: PWG 5100.3-2023 Section 5.2.11
+    /// </summary>
+    public string? JobPhoneNumber { get; set; }
+
+    /// <summary>
+    /// The <c>job-recipient-name</c> Job Template attribute.
+    /// See: PWG 5100.3-2023 Section 5.2.12
+    /// </summary>
+    public string? JobRecipientName { get; set; }
+
+    /// <summary>
+    /// The <c>media-input-tray-check</c> Job Template attribute.
+    /// See: PWG 5100.3-2023 Section 5.2.13
+    /// Deprecated in: PWG 5100.3-2023 Section 5.2.13
+    /// </summary>
+    [Obsolete("The 'media-input-tray-check' attribute is deprecated. See PWG 5100.3-2023 Section 5.2.13.")]
+    public MediaInputTrayCheck? MediaInputTrayCheck { get; set; }
+
+    /// <summary>
+    /// The <c>page-delivery</c> Job Template attribute.
+    /// See: PWG 5100.3-2023 Section 5.2.14
+    /// </summary>
+    public PageDelivery? PageDelivery { get; set; }
+
+    /// <summary>
+    /// The <c>presentation-direction-number-up</c> Job Template attribute.
+    /// See: PWG 5100.3-2023 Section 5.2.15
+    /// Deprecated in: PWG 5100.3-2023 Section 5.2.15
+    /// </summary>
+    [Obsolete("The 'presentation-direction-number-up' attribute is deprecated. See PWG 5100.3-2023 Section 5.2.15.")]
+    public PresentationDirectionNumberUp? PresentationDirectionNumberUp { get; set; }
+
+    /// <summary>
+    /// The <c>separator-sheets</c> Job Template attribute.
+    /// See: PWG 5100.3-2023 Section 5.2.16
+    /// </summary>
+    public SeparatorSheets? SeparatorSheets { get; set; }
+
+    /// <summary>
+    /// The <c>x-image-position</c> Job Template attribute.
+    /// See: PWG 5100.3-2023 Section 5.2.17
+    /// </summary>
+    public XImagePosition? XImagePosition { get; set; }
+
+    /// <summary>
+    /// The <c>x-image-shift</c> Job Template attribute.
+    /// See: PWG 5100.3-2023 Section 5.2.18
+    /// </summary>
+    public int? XImageShift { get; set; }
+
+    /// <summary>
+    /// The <c>x-side1-image-shift</c> Job Template attribute.
+    /// See: PWG 5100.3-2023 Section 5.2.19
+    /// </summary>
+    public int? XSide1ImageShift { get; set; }
+
+    /// <summary>
+    /// The <c>x-side2-image-shift</c> Job Template attribute.
+    /// See: PWG 5100.3-2023 Section 5.2.20
+    /// </summary>
+    public int? XSide2ImageShift { get; set; }
+
+    /// <summary>
+    /// The <c>y-image-position</c> Job Template attribute.
+    /// See: PWG 5100.3-2023 Section 5.2.21
+    /// </summary>
+    public YImagePosition? YImagePosition { get; set; }
+
+    /// <summary>
+    /// The <c>y-image-shift</c> Job Template attribute.
+    /// See: PWG 5100.3-2023 Section 5.2.22
+    /// </summary>
+    public int? YImageShift { get; set; }
+
+    /// <summary>
+    /// The <c>y-side1-image-shift</c> Job Template attribute.
+    /// See: PWG 5100.3-2023 Section 5.2.23
+    /// </summary>
+    public int? YSide1ImageShift { get; set; }
+
+    /// <summary>
+    /// The <c>y-side2-image-shift</c> Job Template attribute.
+    /// See: PWG 5100.3-2023 Section 5.2.24
+    /// </summary>
+    public int? YSide2ImageShift { get; set; }
+
+    /// <summary>
+    /// The <c>confirmation-sheet-print</c> Job Template attribute.
+    /// See: PWG 5100.15-2013 Section 7.4.7
+    /// </summary>
+    public bool? ConfirmationSheetPrint { get; set; }
+
+    /// <summary>
+    /// The <c>number-of-retries</c> Job Template attribute.
+    /// See: PWG 5100.15-2013 Section 7.4.20
+    /// </summary>
+    public int? NumberOfRetries { get; set; }
+
+    /// <summary>
+    /// The <c>retry-interval</c> Job Template attribute.
+    /// See: PWG 5100.15-2013 Section 7.2.5
+    /// </summary>
+    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+    public int? RetryInterval { get; set; }
+
+    /// <summary>
+    /// The <c>retry-time-out</c> Job Template attribute.
+    /// See: PWG 5100.15-2013 Section 7.2.6
+    /// </summary>
+    public int? RetryTimeOut { get; set; }
+
+    /// <summary>
+    /// The <c>chamber-humidity</c> Job Template attribute.
+    /// See: PWG 5100.21-2019 Section 8.1.1
+    /// </summary>
+    [System.ComponentModel.DataAnnotations.Range(0, 100)]
+    public int? ChamberHumidity { get; set; }
+
+    /// <summary>
+    /// The <c>chamber-temperature</c> Job Template attribute.
+    /// See: PWG 5100.21-2019 Section 8.1.2
+    /// </summary>
+    [System.ComponentModel.DataAnnotations.Range(-273, int.MaxValue)]
+    public int? ChamberTemperature { get; set; }
+
+    /// <summary>
+    /// The <c>materials-col</c> Job Template attribute.
+    /// See: PWG 5100.21-2019 Section 8.1.3
+    /// </summary>
+    public Material[]? MaterialsCol { get; set; }
+
+    /// <summary>
+    /// The <c>multiple-object-handling</c> Job Template attribute.
+    /// See: PWG 5100.21-2019 Section 8.1.4
+    /// </summary>
+    public MultipleObjectHandling? MultipleObjectHandling { get; set; }
+
+    /// <summary>
+    /// The <c>platform-temperature</c> Job Template attribute.
+    /// See: PWG 5100.21-2019 Section 8.1.5
+    /// </summary>
+    [System.ComponentModel.DataAnnotations.Range(-273, int.MaxValue)]
+    public int? PlatformTemperature { get; set; }
+
+    /// <summary>
+    /// The <c>print-accuracy</c> Job Template attribute.
+    /// See: PWG 5100.21-2019 Section 8.1.6
+    /// </summary>
+    public PrintAccuracy? PrintAccuracy { get; set; }
+
+    /// <summary>
+    /// The <c>print-base</c> Job Template attribute.
+    /// See: PWG 5100.21-2019 Section 8.1.7
+    /// </summary>
+    public PrintBase? PrintBase { get; set; }
+
+    /// <summary>
+    /// The <c>print-objects</c> Job Template attribute.
+    /// See: PWG 5100.21-2019 Section 8.1.8
+    /// </summary>
+    public PrintObject[]? PrintObjects { get; set; }
+
+    /// <summary>
+    /// The <c>print-supports</c> Job Template attribute.
+    /// See: PWG 5100.21-2019 Section 8.1.9
+    /// </summary>
+    public PrintSupports? PrintSupports { get; set; }
+
+    /// <summary>
+    /// The <c>overrides</c> Job Template attribute.
+    /// See: PWG 5100.6-2003 Section 4.1
+    /// </summary>
+    public OverrideInstruction[]? Overrides { get; set; }
+
+    /// <summary>
+    /// This attribute specifies the number of copies to be printed for the entire Job,
+    /// overriding the document-level "copies" attribute.
+    /// See: PWG 5100.7-2023 Section 10.4
+    /// </summary>
+    public int? JobCopies { get; set; }
+
+    /// <summary>
+    /// This attribute specifies the finishing operations to apply to the back cover sheet
+    /// of the Job, overriding the document-level "cover-back" attribute.
+    /// See: PWG 5100.7-2023 Section 10.4
+    /// </summary>
+    public Cover? JobCoverBack { get; set; }
+
+    /// <summary>
+    /// This attribute specifies the finishing operations to apply to the front cover sheet
+    /// of the Job, overriding the document-level "cover-front" attribute.
+    /// See: PWG 5100.7-2023 Section 10.4
+    /// </summary>
+    public Cover? JobCoverFront { get; set; }
+
+    /// <summary>
+    /// This attribute identifies the finishing operations that the Printer uses for each
+    /// copy of each printed document in the Job, overriding the document-level "finishings"
+    /// attribute.
+    /// See: PWG 5100.7-2023 Section 10.4
+    /// </summary>
+    public Finishings[]? JobFinishings { get; set; }
+
+    /// <summary>
+    /// This attribute specifies detailed finishing instructions for the Job, overriding
+    /// the document-level "finishings-col" attribute.
+    /// See: PWG 5100.7-2023 Section 10.4
+    /// </summary>
+    public FinishingsCol[]? JobFinishingsCol { get; set; }
+
+    /// <summary>
+    /// This attribute specifies a password string that the Printer uses to authenticate
+    /// the Job. The value is an octetString encoded according to the encryption method
+    /// specified by "job-password-encryption".
+    /// See: PWG 5100.11-2024 Section 5.3.7
+    /// </summary>
+    public OctetString? JobPassword { get; set; }
+
+    /// <summary>
+    /// This attribute specifies the encryption method used to encode the "job-password"
+    /// attribute value.
+    /// See: PWG 5100.11-2024 Section 5.3.7
+    /// </summary>
+    public JobPasswordEncryption? JobPasswordEncryption { get; set; }
+
+    /// <summary>
+    /// This attribute specifies whether the Printer collates output sheets when producing
+    /// multiple copies of a document.
+    /// See: PWG 5100.8-2003 Section 3
+    /// </summary>
+    public SheetCollate? SheetCollate { get; set; }
+
+    /// <summary>
+    /// This attribute specifies overrides to Job Template attributes for specific pages
+    /// within the Job.
+    /// See: PWG 5100.8-2003 Section 3
+    /// </summary>
+    public OverrideInstruction[]? PageOverrides { get; set; }
+
+    /// <summary>
+    /// This attribute specifies the number of pages in each subset when the Job is
+    /// divided into subsets for finishing.
+    /// See: PWG 5100.8-2003 Section 3
+    /// </summary>
+    public int[]? PagesPerSubset { get; set; }
+
+    /// <summary>
+    /// This attribute specifies overrides to Job Template attributes for specific
+    /// documents within the Job.
+    /// See: PWG 5100.8-2003 Section 3
+    /// </summary>
+    public OverrideInstruction[]? DocumentOverrides { get; set; }
+
+    /// <summary>
+    /// This attribute specifies the input tray from which the Printer selects media
+    /// for the Job.
+    /// See: PWG 5100.7-2023 Section 15.2
+    /// </summary>
+    public MediaSource? MediaSource { get; set; }
+
+    /// <summary>
+    /// This attribute specifies the direction in which media is fed from the media source
+    /// into the Printer.
+    /// See: PWG 5100.7-2023 Section 15.2
+    /// </summary>
+    public MediaSourceFeedDirection? MediaSourceFeedDirection { get; set; }
+
+    /// <summary>
+    /// This attribute specifies the orientation of the media as it is fed from the
+    /// media source into the Printer.
+    /// See: PWG 5100.7-2023 Section 15.3
+    /// </summary>
+    public Orientation? MediaSourceFeedOrientation { get; set; }
+
+    /// <summary>
+    /// This attribute specifies the URI of the requesting user, which the Printer
+    /// uses for authentication and authorization purposes.
+    /// See: PWG 5100.7-2023 Section 5.1.1
+    /// </summary>
+    public Uri? RequestingUserUri { get; set; }
+
+    /// <summary>
+    /// This attribute specifies the names of Job Template attributes that the Printer
+    /// MUST honor when processing the Job. If the Printer cannot honor any of the
+    /// listed attributes, it MUST reject the Job.
+    /// See: PWG 5100.7-2023 Section 6.1
+    /// </summary>
+    public string[]? JobMandatoryAttributes { get; set; }
+
+    /// <summary>
+    /// This attribute specifies the Job IDs of the Jobs that are associated with
+    /// this Job (e.g., for job chaining or dependency tracking).
+    /// See: PWG 5100.7-2023 Section 6.1
+    /// </summary>
+    public int[]? JobIds { get; set; }
+
 }

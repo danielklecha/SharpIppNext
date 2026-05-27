@@ -44,5 +44,5 @@ public readonly record struct TrimmingType(string Value, bool IsMarked = true, b
 
     public override string ToString() => Value;
     public static implicit operator string(TrimmingType bin) => bin.Value;
-    public static explicit operator TrimmingType(string value) => new(value);
+    public static implicit operator TrimmingType(string value) => new(value);
 }

@@ -17,7 +17,7 @@ internal class PrintColorModeIccProfileProfile : IProfile
 
             return new PrintColorModeIccProfile
             {
-                PrintColorMode = map.MapFromDicNullable<string?>(src, "print-color-mode"),
+                PrintColorMode = map.MapFromDicNullable<PrintColorMode?>(src, "print-color-mode"),
                 ProfileUri = map.MapFromDicNullable<Uri?>(src, "profile-uri"),
             };
         });
@@ -27,7 +27,7 @@ internal class PrintColorModeIccProfileProfile : IProfile
                 return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.PrintColorModeIccProfiles, NoValue.Instance) };
 
             var attrs = new List<IppAttribute>();
-            if (src.PrintColorMode != null) attrs.Add(new IppAttribute(Tag.Keyword, "print-color-mode", src.PrintColorMode));
+            if (src.PrintColorMode != null) attrs.Add(new IppAttribute(Tag.Keyword, "print-color-mode", src.PrintColorMode.Value));
             if (src.ProfileUri != null) attrs.Add(new IppAttribute(Tag.Uri, "profile-uri", src.ProfileUri.ToString()));
             return attrs;
         });

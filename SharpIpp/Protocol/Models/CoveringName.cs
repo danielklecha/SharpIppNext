@@ -26,5 +26,5 @@ public readonly record struct CoveringName(string Value, bool IsMarked = true, b
 
     public override string ToString() => Value;
     public static implicit operator string(CoveringName bin) => bin.Value;
-    public static explicit operator CoveringName(string value) => new(value);
+    public static implicit operator CoveringName(string value) => new(value);
 }

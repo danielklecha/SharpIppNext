@@ -17,5 +17,5 @@ public readonly record struct TrimmingWhen(string Value, bool IsValue = true) : 
 
     public override string ToString() => Value;
     public static implicit operator string(TrimmingWhen bin) => bin.Value;
-    public static explicit operator TrimmingWhen(string value) => new(value);
+    public static implicit operator TrimmingWhen(string value) => new(value);
 }

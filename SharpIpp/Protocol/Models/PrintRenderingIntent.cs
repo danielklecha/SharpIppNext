@@ -44,5 +44,5 @@ public readonly record struct PrintRenderingIntent(string Value, bool IsValue = 
 
     public override string ToString() => Value;
     public static implicit operator string(PrintRenderingIntent value) => value.Value;
-    public static explicit operator PrintRenderingIntent(string value) => new(value);
+    public static implicit operator PrintRenderingIntent(string value) => new(value);
 }

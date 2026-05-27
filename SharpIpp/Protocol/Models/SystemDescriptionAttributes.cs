@@ -178,7 +178,7 @@ public class SystemDescriptionAttributes
     /// <c>resource-format-supported</c>
     /// See: PWG 5100.22-2025 Section 7.3.29
     /// </summary>
-    public string[]? ResourceFormatSupported { get; set; }
+    public ResourceFormat[]? ResourceFormatSupported { get; set; }
 
     /// <summary>
     /// <c>resource-type-supported</c>

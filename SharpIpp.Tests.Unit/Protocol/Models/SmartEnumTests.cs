@@ -122,14 +122,14 @@ public class SmartEnumTests
 
     [TestMethod]
     [DynamicData(nameof(SmartEnumData))]
-    public void ExplicitOperator_FromString_ReturnsInstance(Type type, string value)
+    public void ConversionOperator_FromString_ReturnsInstance(Type type, string value)
     {
         // Arrange
-        var explicitOperator = type.GetMethods(BindingFlags.Public | BindingFlags.Static)
-            .FirstOrDefault(m => m.Name == "op_Explicit" && m.ReturnType == type);
+        var conversionOperator = type.GetMethods(BindingFlags.Public | BindingFlags.Static)
+            .FirstOrDefault(m => (m.Name == "op_Implicit" || m.Name == "op_Explicit") && m.ReturnType == type);
 
         // Act
-        var result = explicitOperator?.Invoke(null, new object[] { value });
+        var result = conversionOperator?.Invoke(null, new object[] { value });
 
         // Assert
         result.Should().BeOfType(type);

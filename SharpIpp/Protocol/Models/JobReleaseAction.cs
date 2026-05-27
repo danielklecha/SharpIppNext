@@ -32,5 +32,5 @@ public readonly record struct JobReleaseAction(string Value, bool IsValue = true
 
     public override string ToString() => Value;
     public static implicit operator string(JobReleaseAction value) => value.Value;
-    public static explicit operator JobReleaseAction(string value) => new(value);
+    public static implicit operator JobReleaseAction(string value) => new(value);
 }

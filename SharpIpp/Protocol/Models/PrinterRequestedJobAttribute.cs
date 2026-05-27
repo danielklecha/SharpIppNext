@@ -17,5 +17,5 @@ public readonly record struct PrinterRequestedJobAttribute(string Value, bool Is
 
     public override string ToString() => Value;
     public static implicit operator string(PrinterRequestedJobAttribute value) => value.Value;
-    public static explicit operator PrinterRequestedJobAttribute(string value) => new(value);
+    public static implicit operator PrinterRequestedJobAttribute(string value) => new(value);
 }

@@ -47,7 +47,10 @@ public class GetSubscriptionsTests : SharpIppIntegrationTestBase
                 Version = serverRequest.Version,
                 RequestId = serverRequest.RequestId,
                 StatusCode = IppStatusCode.SuccessfulOk,
-                OperationAttributes = new SharpIpp.Models.Responses.OperationAttributes { AttributesCharset = "utf-8", AttributesNaturalLanguage = "en" }
+                OperationAttributes = new SharpIpp.Models.Responses.OperationAttributes {
+                    AttributesCharset = Charset.Utf8,
+                    AttributesNaturalLanguage = NaturalLanguage.En
+                }
             };
             var ms = new MemoryStream();
             await srv.SendResponseAsync(serverResponse, ms, c);

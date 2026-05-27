@@ -24,5 +24,5 @@ public readonly record struct MediaGrain(string Value, bool IsValue = true) : IS
 
     public override string ToString() => Value;
     public static implicit operator string(MediaGrain bin) => bin.Value;
-    public static explicit operator MediaGrain(string value) => new(value);
+    public static implicit operator MediaGrain(string value) => new(value);
 }

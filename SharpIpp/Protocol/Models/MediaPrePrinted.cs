@@ -30,5 +30,5 @@ public readonly record struct MediaPrePrinted(string Value, bool IsValue = true)
 
     public override string ToString() => Value;
     public static implicit operator string(MediaPrePrinted bin) => bin.Value;
-    public static explicit operator MediaPrePrinted(string value) => new(value);
+    public static implicit operator MediaPrePrinted(string value) => new(value);
 }

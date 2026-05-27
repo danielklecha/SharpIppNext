@@ -70,5 +70,5 @@ public class SystemOperationAttributes : OperationAttributes
     /// notify-pull-method — the pull method for Get-Notifications; must be "ippget".
     /// See: RFC 3996 Section 5.1
     /// </summary>
-    public string? NotifyPullMethod { get; set; }
+    public NotifyPullMethod? NotifyPullMethod { get; set; }
 }

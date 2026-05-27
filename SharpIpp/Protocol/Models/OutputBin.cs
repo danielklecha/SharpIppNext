@@ -161,7 +161,7 @@ public readonly record struct OutputBin(string Value, bool IsMarked = true, bool
 
     public override string ToString() => Value;
     public static implicit operator string(OutputBin bin) => bin.Value;
-    public static explicit operator OutputBin(string value) => new(value);
+    public static implicit operator OutputBin(string value) => new(value);
 
     private static int ValidatePositive(int value, string parameterName)
     {

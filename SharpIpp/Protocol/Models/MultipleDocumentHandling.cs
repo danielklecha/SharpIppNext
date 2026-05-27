@@ -32,6 +32,6 @@ namespace SharpIpp.Protocol.Models
 
         public override string ToString() => Value;
         public static implicit operator string(MultipleDocumentHandling bin) => bin.Value;
-        public static explicit operator MultipleDocumentHandling(string value) => new(value);
+        public static implicit operator MultipleDocumentHandling(string value) => new(value);
     }
 }

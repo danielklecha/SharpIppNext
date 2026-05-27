@@ -92,5 +92,5 @@ public readonly record struct DocumentCreationAttribute(string Value, bool IsVal
 
     public override string ToString() => Value;
     public static implicit operator string(DocumentCreationAttribute value) => value.Value;
-    public static explicit operator DocumentCreationAttribute(string value) => new(value);
+    public static implicit operator DocumentCreationAttribute(string value) => new(value);
 }

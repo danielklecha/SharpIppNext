@@ -19,5 +19,5 @@ public readonly record struct SystemSettableAttribute(string Value, bool IsMarke
 
     public override string ToString() => Value;
     public static implicit operator string(SystemSettableAttribute value) => value.Value;
-    public static explicit operator SystemSettableAttribute(string value) => new(value);
+    public static implicit operator SystemSettableAttribute(string value) => new(value);
 }

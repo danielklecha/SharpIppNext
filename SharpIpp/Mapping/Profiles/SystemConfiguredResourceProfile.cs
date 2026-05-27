@@ -20,7 +20,7 @@ internal class SystemConfiguredResourceProfile : IProfile
 
             return new SystemConfiguredResource
             {
-                ResourceFormat = map.MapFromDicNullable<string?>(src, IppAttributeNames.ResourceFormat),
+                ResourceFormat = map.MapFromDicNullable<ResourceFormat?>(src, IppAttributeNames.ResourceFormat),
                 ResourceId = map.MapFromDicNullable<int?>(src, IppAttributeNames.ResourceId),
                 ResourceInfo = map.MapFromDicNullable<string?>(src, IppAttributeNames.ResourceInfo),
                 ResourceName = map.MapFromDicNullable<string?>(src, IppAttributeNames.ResourceName),
@@ -37,7 +37,7 @@ internal class SystemConfiguredResourceProfile : IProfile
 
             var attributes = new List<IppAttribute>();
             if (src.ResourceFormat != null)
-                attributes.Add(new IppAttribute(Tag.MimeMediaType, IppAttributeNames.ResourceFormat, src.ResourceFormat));
+                attributes.Add(new IppAttribute(Tag.MimeMediaType, IppAttributeNames.ResourceFormat, src.ResourceFormat.Value.Value));
             if (src.ResourceId.HasValue)
                 attributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.ResourceId, src.ResourceId.Value));
             if (src.ResourceInfo != null)

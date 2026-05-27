@@ -324,7 +324,7 @@ internal class JobTemplateAttributesProfile : IProfile
                 job.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.JobPasswordEncryption, map.Map<string>(src.JobPasswordEncryption.Value)));
 
             if (src.SheetCollate != null)
-                job.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.SheetCollate, src.SheetCollate));
+                job.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.SheetCollate, src.SheetCollate.Value.Value));
 
             if (src.PageOverrides != null)
                 job.AddRange(src.PageOverrides.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(IppAttributeNames.PageOverrides)));
@@ -457,7 +457,7 @@ internal class JobTemplateAttributesProfile : IProfile
                 dst.JobFinishingsCol = jobDict[IppAttributeNames.JobFinishingsCol].GroupBegCollection().Select(x => map.Map<FinishingsCol>(x.FromBegCollection().ToIppDictionary())).ToArray();
             dst.JobPassword = map.MapFromDicNullable<OctetString?>(jobDict, IppAttributeNames.JobPassword);
             dst.JobPasswordEncryption = map.MapFromDicNullable<JobPasswordEncryption?>(jobDict, IppAttributeNames.JobPasswordEncryption);
-            dst.SheetCollate = map.MapFromDicNullable<string?>(jobDict, IppAttributeNames.SheetCollate);
+            dst.SheetCollate = map.MapFromDicNullable<SheetCollate?>(jobDict, IppAttributeNames.SheetCollate);
             if (jobDict.ContainsKey(IppAttributeNames.PageOverrides))
                 dst.PageOverrides = jobDict[IppAttributeNames.PageOverrides].GroupBegCollection().Select(x => map.Map<OverrideInstruction>(x.FromBegCollection().ToIppDictionary())).ToArray();
             dst.PagesPerSubset = map.MapFromDicSetNullable<int[]?>(jobDict, IppAttributeNames.PagesPerSubset);

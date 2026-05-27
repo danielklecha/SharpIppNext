@@ -28,7 +28,7 @@ public class CreateSystemSubscriptionsTests : SharpIppIntegrationTestBase
             Version = new IppVersion(2, 0),
             OperationAttributes = new SystemOperationAttributes
             {
-                AttributesCharset = "utf-8",
+                AttributesCharset = Charset.Utf8,
                 AttributesNaturalLanguage = "en",
                 PrinterUri = new Uri("ipp://127.0.0.1:631/printer"),
                 SystemUri = new Uri("ipp://127.0.0.1:8631/system"),
@@ -141,7 +141,7 @@ public class CreateSystemSubscriptionsTests : SharpIppIntegrationTestBase
             Version = new IppVersion(2, 0),
             OperationAttributes = new SystemOperationAttributes
             {
-                AttributesCharset = "utf-8",
+                AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
                 AttributesNaturalLanguage = "en",
                 PrinterUri = new Uri("ipp://127.0.0.1:631/printer"),
                 SystemUri = new Uri("ipp://127.0.0.1:8631/system"),
@@ -201,7 +201,7 @@ public class CreateSystemSubscriptionsTests : SharpIppIntegrationTestBase
             Version = new IppVersion(2, 0),
             OperationAttributes = new SystemOperationAttributes
             {
-                AttributesCharset = "utf-8",
+                AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
                 AttributesNaturalLanguage = "en",
                 PrinterUri = new Uri("ipp://127.0.0.1:631/printer"),
                 SystemUri = new Uri("ipp://127.0.0.1:8631/system"),

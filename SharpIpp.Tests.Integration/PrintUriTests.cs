@@ -27,7 +27,7 @@ public class PrintUriTests : SharpIppIntegrationTestBase
                 DocumentAccess = new DocumentAccess
                 {
                     AccessOAuthToken = "oauth-token",
-                    AccessOAuthUri = "https://example.local/oauth",
+                    AccessOAuthUri = new Uri("https://example.local/oauth"),
                     AccessPassword = "password",
                     AccessPin = "1234",
                     AccessUserName = "user",
@@ -61,7 +61,7 @@ public class PrintUriTests : SharpIppIntegrationTestBase
                     new PrintObject
                     {
                         DocumentNumber = 2,
-                        PrintObjectsSource = "https://example.local/objects/2",
+                        PrintObjectsSource = new Uri("https://example.local/objects/2"),
                         TransformationMatrix = [0, 1, 0, 1, 0, 0]
                     }
                 ]
@@ -92,7 +92,7 @@ public class PrintUriTests : SharpIppIntegrationTestBase
                 ResourceIds = [43, 44],
                 DocumentUri = new Uri("ftp://document.pdf"),
                 DocumentName = "???????????????????????.pdf",
-                DocumentFormat = "application/pdf",
+                DocumentFormat = DocumentFormat.ApplicationPdf,
                 DocumentMetadata = GetTestDocumentMetadata(),
             },
             JobTemplateAttributes = new() { Copies = 1 }

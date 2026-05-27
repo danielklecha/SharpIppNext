@@ -15,7 +15,7 @@ public class PrinterSupply : IIppCollection
     /// type — keyword describing the supply type (e.g., "toner", "ink", "paper").
     /// See: PWG 5100.13-2023 Section 6.6.11
     /// </summary>
-    public string? Type { get; set; }
+    public PrinterSupplyType? Type { get; set; }
 
     /// <summary>
     /// level — current fill level of the supply (integer, -2 = unknown, -3 = no-value).
@@ -45,11 +45,11 @@ public class PrinterSupply : IIppCollection
     /// marker-type — type of marker (keyword).
     /// See: PWG 5100.13-2023 Section 6.6.11
     /// </summary>
-    public string? MarkerType { get; set; }
+    public MarkerType? MarkerType { get; set; }
 
     /// <summary>
     /// unit — unit of measure for level (keyword).
     /// See: PWG 5100.13-2023 Section 6.6.11
     /// </summary>
-    public string? Unit { get; set; }
+    public CapacityUnit? Unit { get; set; }
 }

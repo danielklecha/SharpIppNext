@@ -44,5 +44,5 @@ public readonly record struct PrinterServiceType(string Value, bool IsValue = tr
 
     public override string ToString() => Value;
     public static implicit operator string(PrinterServiceType value) => value.Value;
-    public static explicit operator PrinterServiceType(string value) => new(value);
+    public static implicit operator PrinterServiceType(string value) => new(value);
 }

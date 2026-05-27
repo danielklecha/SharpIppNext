@@ -32,5 +32,5 @@ public readonly record struct JobErrorAction(string Value, bool IsValue = true) 
 
     public override string ToString() => Value;
     public static implicit operator string(JobErrorAction value) => value.Value;
-    public static explicit operator JobErrorAction(string value) => new(value);
+    public static implicit operator JobErrorAction(string value) => new(value);
 }

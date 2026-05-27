@@ -20,9 +20,9 @@ internal class ValidateJobOperationAttributesProfile : IProfile
             dst.DocumentPassword = map.MapFromDicNullable<OctetString?>(src, IppAttributeNames.DocumentPassword);
             dst.DocumentName = map.MapFromDicNullable<string?>(src, IppAttributeNames.DocumentName);
             dst.Compression = map.MapFromDicNullable<Compression?>(src, IppAttributeNames.Compression);
-            dst.DocumentFormat = map.MapFromDicNullable<string?>(src, IppAttributeNames.DocumentFormat);
-            dst.DocumentNaturalLanguage = map.MapFromDicNullable<string?>(src, IppAttributeNames.DocumentNaturalLanguage);
-            dst.DocumentCharset = map.MapFromDicNullable<string?>(src, IppAttributeNames.DocumentCharset);
+            dst.DocumentFormat = map.MapFromDicNullable<DocumentFormat?>(src, IppAttributeNames.DocumentFormat);
+            dst.DocumentNaturalLanguage = map.MapFromDicNullable<NaturalLanguage?>(src, IppAttributeNames.DocumentNaturalLanguage);
+            dst.DocumentCharset = map.MapFromDicNullable<Charset?>(src, IppAttributeNames.DocumentCharset);
             dst.DocumentMessage = map.MapFromDicNullable<string?>(src, IppAttributeNames.DocumentMessage);
             return dst;
         });
@@ -40,11 +40,11 @@ internal class ValidateJobOperationAttributesProfile : IProfile
             if (src.Compression != null)
                 dst.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.Compression, map.Map<string>(src.Compression.Value)));
             if (src.DocumentFormat != null)
-                dst.Add(new IppAttribute(Tag.MimeMediaType, IppAttributeNames.DocumentFormat, src.DocumentFormat));
+                dst.Add(new IppAttribute(Tag.MimeMediaType, IppAttributeNames.DocumentFormat, src.DocumentFormat.Value.Value));
             if (src.DocumentNaturalLanguage != null)
-                dst.Add(new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.DocumentNaturalLanguage, src.DocumentNaturalLanguage));
+                dst.Add(new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.DocumentNaturalLanguage, src.DocumentNaturalLanguage.Value));
             if (src.DocumentCharset != null)
-                dst.Add(new IppAttribute(Tag.Charset, IppAttributeNames.DocumentCharset, src.DocumentCharset));
+                dst.Add(new IppAttribute(Tag.Charset, IppAttributeNames.DocumentCharset, src.DocumentCharset.Value));
             if (src.DocumentMessage != null)
                 dst.Add(new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.DocumentMessage, src.DocumentMessage));
             return dst;

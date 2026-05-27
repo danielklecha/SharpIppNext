@@ -24,7 +24,7 @@ public class DestinationUriReadyProfileTests : MapperTestBase
         // Arrange
         var destinationUriReady = new DestinationUriReady
         {
-            DestinationUri = "https://example.test/upload",
+            DestinationUri = new Uri("https://example.test/upload"),
             DestinationName = "Inbox",
             DestinationIsDirectory = true,
             DestinationAttributesSupported = ["job-name"],
@@ -45,7 +45,7 @@ public class DestinationUriReadyProfileTests : MapperTestBase
         // Assert
         serialized.Should().Contain(x => x.Tag == Tag.Uri && x.Name == "destination-uri" && x.Value!.Equals("https://example.test/upload"));
         serialized.Should().Contain(x => x.Tag == Tag.BegCollection && x.Name == "destination-attributes");
-        parsed.DestinationUri.Should().Be("https://example.test/upload");
+        parsed.DestinationUri.Should().Be(new Uri("https://example.test/upload"));
         parsed.DestinationName.Should().Be("Inbox");
         parsed.DestinationIsDirectory.Should().BeTrue();
         parsed.DestinationAttributesSupported.Should().BeEquivalentTo("job-name");

@@ -26,5 +26,5 @@ public readonly record struct WhichPrinters(string Value, bool IsMarked = true, 
 
     public override string ToString() => Value;
     public static implicit operator string(WhichPrinters value) => value.Value;
-    public static explicit operator WhichPrinters(string value) => new(value);
+    public static implicit operator WhichPrinters(string value) => new(value);
 }

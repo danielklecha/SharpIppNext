@@ -23,7 +23,7 @@ public class GetJobsTests : SharpIppIntegrationTestBase
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
-                AttributesCharset = "utf-8",
+                AttributesCharset = Charset.Utf8,
                 AttributesNaturalLanguage = "en-us",
                 RequestingUserName = "test-user",
                 RequestedAttributes = ["job-id", "job-uri", "job-state"],
@@ -56,7 +56,7 @@ public class GetJobsTests : SharpIppIntegrationTestBase
                     new JobDescriptionAttributes
                     {
                         JobId = 1,
-                        JobUri = "http://127.0.0.1:631/jobs/1",
+                        JobUri = new Uri("http://127.0.0.1:631/jobs/1"),
                         JobPrinterUri = new Uri("http://127.0.0.1:631"),
                         JobName = "Test Job",
                         JobOriginatingUserName = "test-user",
@@ -64,7 +64,7 @@ public class GetJobsTests : SharpIppIntegrationTestBase
                         JobImpressions = 5,
                         JobImpressionsCompleted = 0,
                         JobMediaSheets = 2,
-                        JobMoreInfo = "more info",
+                        JobMoreInfo = new Uri("more info", UriKind.RelativeOrAbsolute),
                         NumberOfDocuments = 1,
                         NumberOfInterveningJobs = 0,
                         OutputDeviceAssigned = "printer",

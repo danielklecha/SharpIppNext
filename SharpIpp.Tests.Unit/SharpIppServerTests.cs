@@ -289,7 +289,7 @@ public class SharpIppServerTests
             JobAttributes = new()
             {
                 JobId = 234,
-                JobUri = "http://127.0.0.1:631/234",
+                JobUri = new Uri("http://127.0.0.1:631/234"),
                 JobState = JobState.Pending,
                 JobStateMessage = "custom state",
                 NumberOfInterveningJobs = 0,
@@ -338,7 +338,7 @@ public class SharpIppServerTests
             JobAttributes = new()
             {
                 JobId = 234,
-                JobUri = "http://127.0.0.1:631/234",
+                JobUri = new Uri("http://127.0.0.1:631/234"),
                 JobState = JobState.Pending,
                 JobStateMessage = "custom state",
                 NumberOfInterveningJobs = 0,

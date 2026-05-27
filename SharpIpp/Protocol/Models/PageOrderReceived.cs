@@ -20,5 +20,5 @@ public readonly record struct PageOrderReceived(string Value, bool IsValue = tru
 
     public override string ToString() => Value;
     public static implicit operator string(PageOrderReceived value) => value.Value;
-    public static explicit operator PageOrderReceived(string value) => new(value);
+    public static implicit operator PageOrderReceived(string value) => new(value);
 }

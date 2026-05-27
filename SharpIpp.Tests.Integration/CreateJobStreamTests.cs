@@ -23,7 +23,7 @@ public class CreateJobStreamTests : SharpIppIntegrationTestBase
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
-                AttributesCharset = "utf-8",
+                AttributesCharset = Charset.Utf8,
                 AttributesNaturalLanguage = "en-us",
                 RequestingUserName = "test-user",
                 JobName = "Test Job",
@@ -153,7 +153,7 @@ public class CreateJobStreamTests : SharpIppIntegrationTestBase
                     JobStateMessage = "pending",
                     NumberOfInterveningJobs = 0,
                     JobId = 456,
-                    JobUri = "http://127.0.0.1:631/456",
+                    JobUri = new Uri("http://127.0.0.1:631/456"),
                     ClientInfo = [new ClientInfo { ClientName = "SharpIppTests", ClientType = ClientType.Application }],
                     JobImpressionsCompletedCol = new JobCounter { Monochrome = 5 },
                     JobMediaSheetsCompletedCol = new JobCounter { Monochrome = 4 },

@@ -1,3 +1,5 @@
+using SharpIpp.Protocol.Models;
+
 namespace SharpIpp.Models.Requests;
 
 /// <summary>
@@ -13,5 +15,5 @@ public class SetPrinterAttributesOperationAttributes : OperationAttributes
     /// </summary>
     /// <example>application/octet-stream</example>
     /// <code>document-format</code>
-    public string? DocumentFormat { get; set; }
+    public DocumentFormat? DocumentFormat { get; set; }
 }

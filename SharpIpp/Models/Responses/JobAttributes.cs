@@ -13,7 +13,7 @@ public class JobAttributes
     /// </summary>
     /// <code>job-uri</code>
     [Obsolete("The 'job-uri' attribute is deprecated. See RFC 8011 Section 4.1.2.1.")]
-    public string? JobUri { get; set; }
+    public Uri? JobUri { get; set; }
     /// <summary>
     /// The job-id IPP attribute.
     /// Type: integer(1:MAX)

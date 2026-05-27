@@ -45,6 +45,6 @@ namespace SharpIpp.Protocol.Models
 
         public override string ToString() => Value;
         public static implicit operator string(PowerState value) => value.Value;
-        public static explicit operator PowerState(string value) => new(value);
+        public static implicit operator PowerState(string value) => new(value);
     }
 }

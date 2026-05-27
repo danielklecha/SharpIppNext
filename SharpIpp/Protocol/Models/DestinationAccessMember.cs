@@ -44,5 +44,5 @@ public readonly record struct DestinationAccessMember(string Value, bool IsMarke
 
     public override string ToString() => Value;
     public static implicit operator string(DestinationAccessMember value) => value.Value;
-    public static explicit operator DestinationAccessMember(string value) => new(value);
+    public static implicit operator DestinationAccessMember(string value) => new(value);
 }

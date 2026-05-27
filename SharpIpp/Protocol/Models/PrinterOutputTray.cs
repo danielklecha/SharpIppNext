@@ -15,7 +15,7 @@ public class PrinterOutputTray : IIppCollection
     /// type — keyword describing the output tray type.
     /// See: PWG 5100.13-2023 Section 6.6.10
     /// </summary>
-    public string? Type { get; set; }
+    public OutputTrayType? Type { get; set; }
 
     /// <summary>
     /// level — current fill level of the output tray (integer, -2 = unknown, -3 = no-value).
@@ -33,17 +33,17 @@ public class PrinterOutputTray : IIppCollection
     /// unit — unit of measure for level (keyword).
     /// See: PWG 5100.13-2023 Section 6.6.10
     /// </summary>
-    public string? Unit { get; set; }
+    public CapacityUnit? Unit { get; set; }
 
     /// <summary>
     /// stackingorder — stacking order of output (keyword).
     /// See: PWG 5100.13-2023 Section 6.6.10
     /// </summary>
-    public string? StackingOrder { get; set; }
+    public StackingOrder? StackingOrder { get; set; }
 
     /// <summary>
     /// pagedelivery — page delivery orientation (keyword).
     /// See: PWG 5100.13-2023 Section 6.6.10
     /// </summary>
-    public string? PageDelivery { get; set; }
+    public PageDelivery? PageDelivery { get; set; }
 }

@@ -110,6 +110,6 @@ namespace SharpIpp.Protocol.Models
 
         public override string ToString() => Value;
         public static implicit operator string(WhichJobs bin) => bin.Value;
-        public static explicit operator WhichJobs(string value) => new(value);
+        public static implicit operator WhichJobs(string value) => new(value);
     }
 }

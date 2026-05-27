@@ -38,6 +38,6 @@ namespace SharpIpp.Protocol.Models
 
         public override string ToString() => Value;
         public static implicit operator string(PrintScaling bin) => bin.Value;
-        public static explicit operator PrintScaling(string value) => new(value);
+        public static implicit operator PrintScaling(string value) => new(value);
     }
 }
