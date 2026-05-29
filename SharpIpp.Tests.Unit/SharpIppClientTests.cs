@@ -177,7 +177,10 @@ public class SharpIppClientTests
         var context = new IppRequestValidationContext();
         validator.SetupGet(x => x.Context).Returns(context);
 
-        using SharpIppClient client = new(new(GetMockOfHttpMessageHandler().Object), protocol.Object, validator.Object);
+        using SharpIppClient client = new(new(GetMockOfHttpMessageHandler().Object), protocol.Object)
+        {
+            RequestMessageValidator = validator.Object
+        };
 
         var request = new IppRequestMessage
         {
@@ -193,18 +196,21 @@ public class SharpIppClientTests
 
         await client.SendAsync(new Uri("http://127.0.0.1:631/"), request);
 
-        validator.Verify(x => x.Validate(It.Is<IIppRequestMessage>(m => m == request)), Times.Once);
-        context.Source.Should().Be(nameof(SharpIppClient));
+        validator.Verify(x => x.Validate(It.Is<IIppRequestMessage>(m => m == request), null), Times.Once);
     }
 
     [TestMethod]
-    public void Constructor_WithNullValidators_ShouldNotThrow()
+    public void Properties_WithNullValidators_ShouldNotThrow()
     {
-        Action act1 = () => _ = new SharpIppClient(new HttpClient(GetMockOfHttpMessageHandler().Object), Mock.Of<IIppProtocol>(), null!);
-        act1.Should().NotThrow();
-
-        Action act2 = () => _ = new SharpIppClient(new HttpClient(GetMockOfHttpMessageHandler().Object), Mock.Of<IIppProtocol>(), null!, null!);
-        act2.Should().NotThrow();
+        Action act = () =>
+        {
+            using var client = new SharpIppClient();
+            client.RequestMessageValidator = null;
+            client.RequestValidator = null;
+            client.ResponseMessageValidator = null;
+            client.ResponseValidator = null;
+        };
+        act.Should().NotThrow();
     }
 
     [TestMethod]
@@ -213,7 +219,11 @@ public class SharpIppClientTests
         Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
         protocol.Setup(x => x.WriteIppRequestAsync(It.IsAny<IIppRequestMessage>(), It.IsAny<Stream>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
-        using SharpIppClient client = new SharpIppClient(new HttpClient(GetMockOfHttpMessageHandler().Object), protocol.Object, null!, null!);
+        using SharpIppClient client = new SharpIppClient(new HttpClient(GetMockOfHttpMessageHandler().Object), protocol.Object)
+        {
+            RequestMessageValidator = null,
+            RequestValidator = null
+        };
 
         var request = new IppRequestMessage
         {
@@ -241,11 +251,13 @@ public class SharpIppClientTests
 
         using SharpIppClient client = new SharpIppClient(
             new HttpClient(GetMockOfHttpMessageHandler().Object),
-            protocol.Object,
-            IppRequestMessageValidator.Default,
-            IppRequestValidator.Default,
-            null,
-            validator.Object);
+            protocol.Object)
+        {
+            RequestMessageValidator = IppRequestMessageValidator.Default,
+            RequestValidator = IppRequestValidator.Default,
+            ResponseMessageValidator = validator.Object,
+            ResponseValidator = null
+        };
 
         var request = new IppRequestMessage
         {
@@ -1014,18 +1026,22 @@ public class SharpIppClientTests
         }
 
         public TestSharpIppClient(HttpClient httpClient, IIppProtocol ippProtocol, IIppResponseValidator ippResponseValidator)
-            : base(httpClient, ippProtocol, IppRequestMessageValidator.Default, IppRequestValidator.Default, ippResponseValidator)
+            : base(httpClient, ippProtocol)
         {
+            ResponseValidator = ippResponseValidator;
         }
 
         public TestSharpIppClient(HttpClient httpClient, IIppProtocol ippProtocol, IIppRequestValidator ippRequestValidator)
-            : base(httpClient, ippProtocol, IppRequestMessageValidator.Default, ippRequestValidator, null)
+            : base(httpClient, ippProtocol)
         {
+            RequestValidator = ippRequestValidator;
         }
 
         public TestSharpIppClient(HttpClient httpClient, IIppProtocol ippProtocol, IIppRequestValidator ippRequestValidator, IIppResponseValidator ippResponseValidator)
-            : base(httpClient, ippProtocol, IppRequestMessageValidator.Default, ippRequestValidator, ippResponseValidator)
+            : base(httpClient, ippProtocol)
         {
+            RequestValidator = ippRequestValidator;
+            ResponseValidator = ippResponseValidator;
         }
 
         public Task<TOut> SendForTestsAsync<TOut>(IIppRequest request, CancellationToken cancellationToken = default)

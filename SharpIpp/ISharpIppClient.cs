@@ -4,11 +4,17 @@ using System.Threading.Tasks;
 using SharpIpp.Models.Requests;
 using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
+using SharpIpp.Validation;
 
 namespace SharpIpp;
 
 public interface ISharpIppClient : IDisposable
 {
+    IIppRequestMessageValidator? RequestMessageValidator { get; set; }
+    IIppRequestValidator? RequestValidator { get; set; }
+    IIppResponseMessageValidator? ResponseMessageValidator { get; set; }
+    IIppResponseValidator? ResponseValidator { get; set; }
+
     /// <summary>
     /// Custom Operation, not yet implemented via SharpIpp
     /// </summary>

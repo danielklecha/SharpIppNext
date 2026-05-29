@@ -22,6 +22,8 @@ jobs:
       run: dotnet build --configuration Release --no-restore
     - name: Test
       run: dotnet test --configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutput=${{ github.workspace }}/CoverageResults/coverage /p:MergeWith=${{ github.workspace }}/CoverageResults/coverage.json /p:CoverletOutputFormat=\"json,lcov\"
+    - name: Publish Native AOT Client Sample
+      run: dotnet publish SharpIpp.Samples.Client.NativeAot/SharpIpp.Samples.Client.NativeAot.csproj -c Release -r linux-x64 --self-contained
     - name: Publish coverage report to coveralls.io   
       uses: coverallsapp/github-action@master
       continue-on-error: true

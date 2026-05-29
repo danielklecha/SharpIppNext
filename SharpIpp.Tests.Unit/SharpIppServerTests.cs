@@ -33,9 +33,16 @@ public class SharpIppServerTests
     }
 
     [TestMethod]
-    public void Constructor_WithNullRequestValidator_ShouldNotThrow()
+    public void Properties_WithNullValidators_ShouldNotThrow()
     {
-        Action act = () => _ = new SharpIppServer(Mock.Of<IIppProtocol>(), null!);
+        Action act = () =>
+        {
+            var server = new SharpIppServer();
+            server.RequestMessageValidator = null;
+            server.RequestValidator = null;
+            server.ResponseMessageValidator = null;
+            server.ResponseValidator = null;
+        };
 
         act.Should().NotThrow();
     }
@@ -43,7 +50,10 @@ public class SharpIppServerTests
     [TestMethod]
     public async Task ReceiveRequestAsync_WithNullRequestValidator_ShouldNotThrowNullReferenceException()
     {
-        SharpIppServer server = new SharpIppServer(Mock.Of<IIppProtocol>(), null!);
+        SharpIppServer server = new SharpIppServer(Mock.Of<IIppProtocol>())
+        {
+            RequestMessageValidator = null
+        };
         IppRequestMessage ippRequestMessage = new()
         {
             IppOperation = IppOperation.Reserved1,
@@ -80,7 +90,10 @@ public class SharpIppServerTests
         var context = new IppRequestValidationContext();
         validator.SetupGet(x => x.Context).Returns(context);
 
-        var server = new SharpIppServer(Mock.Of<IIppProtocol>(), validator.Object);
+        var server = new SharpIppServer(Mock.Of<IIppProtocol>())
+        {
+            RequestMessageValidator = validator.Object
+        };
         var request = new IppRequestMessage
         {
             IppOperation = (IppOperation)0x7FFF,
@@ -141,7 +154,10 @@ public class SharpIppServerTests
         var context = new IppRequestValidationContext();
         validator.SetupGet(x => x.Context).Returns(context);
 
-        var server = new SharpIppServer(Mock.Of<IIppProtocol>(), validator.Object);
+        var server = new SharpIppServer(Mock.Of<IIppProtocol>())
+        {
+            RequestMessageValidator = validator.Object
+        };
         var request = new IppRequestMessage
         {
             IppOperation = IppOperation.CreateJob,
@@ -157,8 +173,7 @@ public class SharpIppServerTests
         var result = await server.ReceiveRequestAsync(request);
 
         result.Should().NotBeNull();
-        validator.Verify(x => x.Validate(It.Is<IIppRequestMessage>(m => m == request)), Times.Once);
-        context.Source.Should().Be(nameof(SharpIppServer));
+        validator.Verify(x => x.Validate(It.Is<IIppRequestMessage>(m => m == request), null), Times.Once);
     }
 
     [TestMethod()]
@@ -680,7 +695,12 @@ public class SharpIppServerTests
     public async Task CreateRawResponseAsync_WithNullResponseValidator_WhenResponseIsInvalid_ShouldNotThrow()
     {
         // Disable response validator and response message validator on the server by passing null
-        SharpIppServer server = new(Mock.Of<IIppProtocol>(), IppRequestMessageValidator.Default, null, null);
+        SharpIppServer server = new(Mock.Of<IIppProtocol>())
+        {
+            RequestMessageValidator = IppRequestMessageValidator.Default,
+            ResponseValidator = null,
+            ResponseMessageValidator = null
+        };
         var message = new CreateJobResponse
         {
             RequestId = 0, // Invalid value
@@ -695,7 +715,12 @@ public class SharpIppServerTests
     public async Task CreateRawResponseAsync_WithResponseMessageValidator_ShouldInvokeValidator()
     {
         Mock<IIppResponseMessageValidator> responseMessageValidator = new();
-        SharpIppServer server = new(Mock.Of<IIppProtocol>(), IppRequestMessageValidator.Default, null, responseMessageValidator.Object);
+        SharpIppServer server = new(Mock.Of<IIppProtocol>())
+        {
+            RequestMessageValidator = IppRequestMessageValidator.Default,
+            ResponseValidator = null,
+            ResponseMessageValidator = responseMessageValidator.Object
+        };
         var message = new CreateJobResponse
         {
             RequestId = 123,
@@ -711,7 +736,12 @@ public class SharpIppServerTests
     public async Task SendRawResponseAsync_WithResponseMessageValidator_ShouldInvokeValidator()
     {
         Mock<IIppResponseMessageValidator> responseMessageValidator = new();
-        SharpIppServer server = new(Mock.Of<IIppProtocol>(), IppRequestMessageValidator.Default, null, responseMessageValidator.Object);
+        SharpIppServer server = new(Mock.Of<IIppProtocol>())
+        {
+            RequestMessageValidator = IppRequestMessageValidator.Default,
+            ResponseValidator = null,
+            ResponseMessageValidator = responseMessageValidator.Object
+        };
         var response = new IppResponseMessage
         {
             RequestId = 123,
@@ -725,26 +755,25 @@ public class SharpIppServerTests
     }
 
     [TestMethod]
-    public void Constructor_WithThreeArguments_ShouldUseDefaultResponseMessageValidator()
+    public void Server_Properties_ShouldHaveDefaultValues()
     {
-        // Arrange
-        var server = new SharpIppServer(
-            Mock.Of<IIppProtocol>(),
-            Mock.Of<IIppRequestMessageValidator>(),
-            Mock.Of<IIppResponseValidator>());
-
-        // Act
-        Action act = () => server.SendRawResponseAsync(new IppResponseMessage(), Stream.Null);
-
-        // Assert
-        act.Should().Throw<IppResponseException>();
+        var server = new SharpIppServer();
+        server.RequestMessageValidator.Should().BeEquivalentTo(IppRequestMessageValidator.Default);
+        server.RequestValidator.Should().BeOfType<IppRequestValidator>();
+        server.ResponseMessageValidator.Should().BeEquivalentTo(IppResponseMessageValidator.Default);
+        server.ResponseValidator.Should().BeOfType<IppResponseValidator>();
     }
 
     [TestMethod]
     public async Task SendRawResponseAsync_WithNullResponseMessageValidator_ShouldNotThrow()
     {
         // Arrange
-        SharpIppServer server = new(Mock.Of<IIppProtocol>(), IppRequestMessageValidator.Default, null, null);
+        SharpIppServer server = new(Mock.Of<IIppProtocol>())
+        {
+            RequestMessageValidator = IppRequestMessageValidator.Default,
+            ResponseValidator = null,
+            ResponseMessageValidator = null
+        };
         var response = new IppResponseMessage(); // Invalid response, but should not throw because validator is null
 
         // Act
@@ -752,5 +781,95 @@ public class SharpIppServerTests
 
         // Assert
         await act.Should().NotThrowAsync();
+    }
+
+    [TestMethod]
+    public void Constructors_Overloads_ShouldInstantiateSuccessfully()
+    {
+        var protocol = Mock.Of<IIppProtocol>();
+
+        var s1 = new SharpIppServer();
+        s1.Should().NotBeNull();
+
+        var s2 = new SharpIppServer(protocol);
+        s2.Should().NotBeNull();
+    }
+
+    [TestMethod]
+    public async Task ReceiveRequestAsync_WithDefaultRequestValidator_WhenRequestIsInvalid_ShouldThrowValidationException()
+    {
+        // Default request validator is IppRequestValidator.Default on the server
+        SharpIppServer server = new(Mock.Of<IIppProtocol>());
+        IppRequestMessage ippRequestMessage = new()
+        {
+            IppOperation = IppOperation.GetPrinterAttributes,
+            RequestId = 1,
+        };
+        ippRequestMessage.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://127.0.0.1:631/"),
+            new IppAttribute(Tag.Integer, "printer-id", 0)
+        ]);
+
+        Func<Task<IIppRequest>> act = () => server.ReceiveRequestAsync(ippRequestMessage);
+        await act.Should().ThrowAsync<ValidationException>().WithMessage("*PrinterId*");
+    }
+
+    [TestMethod]
+    public async Task ReceiveRequestAsync_WithNullRequestValidator_WhenRequestIsInvalid_ShouldNotThrow()
+    {
+        // Disable request validator on the server by passing null
+        SharpIppServer server = new(Mock.Of<IIppProtocol>())
+        {
+            RequestMessageValidator = IppRequestMessageValidator.Default,
+            RequestValidator = null,
+            ResponseMessageValidator = null,
+            ResponseValidator = null
+        };
+        IppRequestMessage ippRequestMessage = new()
+        {
+            IppOperation = IppOperation.GetPrinterAttributes,
+            RequestId = 1,
+        };
+        ippRequestMessage.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://127.0.0.1:631/"),
+            new IppAttribute(Tag.Integer, "printer-id", 0)
+        ]);
+
+        Func<Task<IIppRequest>> act = () => server.ReceiveRequestAsync(ippRequestMessage);
+        await act.Should().NotThrowAsync();
+    }
+
+    [TestMethod]
+    public async Task ReceiveRequestAsync_WithRequestValidator_ShouldInvokeValidator()
+    {
+        Mock<IIppRequestValidator> requestValidator = new();
+        SharpIppServer server = new(Mock.Of<IIppProtocol>())
+        {
+            RequestMessageValidator = IppRequestMessageValidator.Default,
+            RequestValidator = requestValidator.Object,
+            ResponseMessageValidator = null,
+            ResponseValidator = null
+        };
+        IppRequestMessage ippRequestMessage = new()
+        {
+            IppOperation = IppOperation.GetPrinterAttributes,
+            RequestId = 123,
+        };
+        ippRequestMessage.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://127.0.0.1:631/")
+        ]);
+
+        var mappedRequest = await server.ReceiveRequestAsync(ippRequestMessage);
+
+        requestValidator.Verify(x => x.Validate(It.Is<IIppRequest>(r => r == mappedRequest)), Times.Once);
     }
 }

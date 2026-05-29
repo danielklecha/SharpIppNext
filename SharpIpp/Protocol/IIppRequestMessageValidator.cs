@@ -36,5 +36,5 @@ public interface IIppRequestMessageValidator
 
     bool UseIppAttributeFidelityForCapabilityValidation { get; set; }
 
-    void Validate(IIppRequestMessage? request);
+    void Validate(IIppRequestMessage? request, IppRequestValidationContext? context = null);
 }

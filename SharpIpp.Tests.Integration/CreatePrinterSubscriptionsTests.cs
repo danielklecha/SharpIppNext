@@ -48,7 +48,10 @@ public class CreatePrinterSubscriptionsTests : SharpIppIntegrationTestBase
         IIppRequest? serverRequest = null;
         async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
         {
-            var server = new SharpIppServer(new IppProtocol(), NoOpSpecificRulesValidator);
+            var server = new SharpIppServer(new IppProtocol())
+            {
+                RequestMessageValidator = NoOpSpecificRulesValidator
+            };
             serverRequest = await server.ReceiveRequestAsync(s, c);
             var serverResponse = new CreatePrinterSubscriptionsResponse
             {
@@ -64,8 +67,10 @@ public class CreatePrinterSubscriptionsTests : SharpIppIntegrationTestBase
 
         var client = new SharpIppClient(
             new HttpClient(GetMockOfHttpMessageHandler(func).Object),
-            new IppProtocol(),
-            NoOpSpecificRulesValidator);
+            new IppProtocol())
+        {
+            RequestMessageValidator = NoOpSpecificRulesValidator
+        };
 
         await client.CreatePrinterSubscriptionsAsync(clientRequest);
 
@@ -95,7 +100,10 @@ public class CreatePrinterSubscriptionsTests : SharpIppIntegrationTestBase
         IIppRequest? serverRequest = null;
         async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
         {
-            var server = new SharpIppServer(new IppProtocol(), NoOpSpecificRulesValidator);
+            var server = new SharpIppServer(new IppProtocol())
+            {
+                RequestMessageValidator = NoOpSpecificRulesValidator
+            };
             serverRequest = await server.ReceiveRequestAsync(s, c);
             var serverResponse = new CreatePrinterSubscriptionsResponse
             {
@@ -111,8 +119,10 @@ public class CreatePrinterSubscriptionsTests : SharpIppIntegrationTestBase
 
         var client = new SharpIppClient(
             new HttpClient(GetMockOfHttpMessageHandler(func).Object),
-            new IppProtocol(),
-            NoOpSpecificRulesValidator);
+            new IppProtocol())
+        {
+            RequestMessageValidator = NoOpSpecificRulesValidator
+        };
 
         await client.CreatePrinterSubscriptionsAsync(clientRequest);
 
@@ -151,7 +161,10 @@ public class CreatePrinterSubscriptionsTests : SharpIppIntegrationTestBase
         CreatePrinterSubscriptionsResponse? serverResponse = null;
         async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
         {
-            var server = new SharpIppServer(new IppProtocol(), NoOpSpecificRulesValidator);
+            var server = new SharpIppServer(new IppProtocol())
+            {
+                RequestMessageValidator = NoOpSpecificRulesValidator
+            };
             serverRequest = await server.ReceiveRequestAsync(s, c);
             serverResponse = new CreatePrinterSubscriptionsResponse
             {
@@ -167,8 +180,10 @@ public class CreatePrinterSubscriptionsTests : SharpIppIntegrationTestBase
 
         var client = new SharpIppClient(
             new HttpClient(GetMockOfHttpMessageHandler(func).Object),
-            new IppProtocol(),
-            NoOpSpecificRulesValidator);
+            new IppProtocol())
+        {
+            RequestMessageValidator = NoOpSpecificRulesValidator
+        };
 
         var clientResponse = await client.CreatePrinterSubscriptionsAsync(clientRequest);
 

@@ -33,7 +33,7 @@ dotnet add package SharpIppNext.StrongName
 
 ## Getting started
 
-- An example of the IPP client is included in the solution (`SharpIpp.Samples.Client`).
+- Examples of the IPP client are included in the solution ([SharpIpp.Samples.Client](SharpIpp.Samples.Client) and [SharpIpp.Samples.Client.NativeAot](SharpIpp.Samples.Client.NativeAot)).
 - An example of the IPP server is available in the [SharpIppNextServer repository](https://github.com/danielklecha/SharpIppNextServer).
 
 ## Documentation

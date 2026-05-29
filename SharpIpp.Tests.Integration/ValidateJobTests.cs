@@ -53,7 +53,10 @@ public class ValidateJobTests : SharpIppIntegrationTestBase
     [TestMethod()]
     public async Task ValidateJobAsync_WhenSendingStream_ServerReceivesSameRequestAndReturnsExpectedResponse()
     {
-        SharpIppServer server = new(new IppProtocol(), new IppRequestMessageValidator { ValidateOperationSpecificRules = false });
+        SharpIppServer server = new(new IppProtocol())
+        {
+            RequestMessageValidator = new IppRequestMessageValidator { ValidateOperationSpecificRules = false }
+        };
         ValidateJobRequest clientRequest = new()
         {
             RequestId = 123,
@@ -118,8 +121,10 @@ public class ValidateJobTests : SharpIppIntegrationTestBase
         }
         SharpIppClient client = new(
             new HttpClient(GetMockOfHttpMessageHandler(func).Object),
-            new IppProtocol(),
-            new IppRequestMessageValidator { ValidateOperationSpecificRules = false });
+            new IppProtocol())
+        {
+            RequestMessageValidator = new IppRequestMessageValidator { ValidateOperationSpecificRules = false }
+        };
 
         ValidateJobResponse? clientResponse = await client.ValidateJobAsync(clientRequest);
 

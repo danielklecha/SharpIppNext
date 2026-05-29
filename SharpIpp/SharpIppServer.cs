@@ -20,9 +20,11 @@ public partial class SharpIppServer : ISharpIppServer
 {
     private static readonly Lazy<IMapper> MapperSingleton;
     private readonly IIppProtocol _ippProtocol;
-    private readonly IIppRequestMessageValidator _requestValidator;
-    private readonly IIppResponseValidator? _ippResponseValidator;
-    private readonly IIppResponseMessageValidator? _responseMessageValidator;
+
+    public IIppRequestMessageValidator? RequestMessageValidator { get; set; } = IppRequestMessageValidator.Default;
+    public IIppRequestValidator? RequestValidator { get; set; } = IppRequestValidator.Default;
+    public IIppResponseMessageValidator? ResponseMessageValidator { get; set; } = IppResponseMessageValidator.Default;
+    public IIppResponseValidator? ResponseValidator { get; set; } = IppResponseValidator.Default;
     private IMapper Mapper => MapperSingleton.Value;
 
     static SharpIppServer()
@@ -30,28 +32,13 @@ public partial class SharpIppServer : ISharpIppServer
         MapperSingleton = new Lazy<IMapper>(MapperFactory);
     }
 
-    public SharpIppServer() : this(new IppProtocol(), IppRequestMessageValidator.Default, IppResponseValidator.Default, IppResponseMessageValidator.Default)
+    public SharpIppServer() : this(new IppProtocol())
     {
     }
 
-    public SharpIppServer(IIppProtocol ippProtocol) : this(ippProtocol, IppRequestMessageValidator.Default, IppResponseValidator.Default, IppResponseMessageValidator.Default)
-    {
-    }
-
-    public SharpIppServer(IIppProtocol ippProtocol, IIppRequestMessageValidator requestValidator) : this(ippProtocol, requestValidator, IppResponseValidator.Default, IppResponseMessageValidator.Default)
-    {
-    }
-
-    public SharpIppServer(IIppProtocol ippProtocol, IIppRequestMessageValidator requestValidator, IIppResponseValidator? ippResponseValidator) : this(ippProtocol, requestValidator, ippResponseValidator, IppResponseMessageValidator.Default)
-    {
-    }
-
-    public SharpIppServer(IIppProtocol ippProtocol, IIppRequestMessageValidator requestValidator, IIppResponseValidator? ippResponseValidator, IIppResponseMessageValidator? responseMessageValidator)
+    public SharpIppServer(IIppProtocol ippProtocol)
     {
         _ippProtocol = ippProtocol;
-        _requestValidator = requestValidator;
-        _ippResponseValidator = ippResponseValidator;
-        _responseMessageValidator = responseMessageValidator;
     }
 
     public Task<IIppRequestMessage> ReceiveRawRequestAsync(
@@ -78,10 +65,9 @@ public partial class SharpIppServer : ISharpIppServer
         if (request is null)
             throw new ArgumentNullException(nameof(request));
 
-        if (_requestValidator != null)
+        if (RequestMessageValidator != null)
         {
-            _requestValidator.Context.Source = nameof(SharpIppServer);
-            _requestValidator.Validate(request);
+            RequestMessageValidator.Validate(request);
         }
 
         IIppRequest mappedRequest = request.IppOperation switch
@@ -188,6 +174,7 @@ public partial class SharpIppServer : ISharpIppServer
             IppOperation.CreateJobSubscriptions => Mapper.Map<IIppRequestMessage, CreateJobSubscriptionsRequest>(request),
             _ => throw new IppRequestException($"Unable to handle {request.IppOperation} operation", request, IppStatusCode.ClientErrorBadRequest)
         };
+        RequestValidator?.Validate(mappedRequest);
         cancellationToken.ThrowIfCancellationRequested();
         return Task.FromResult(mappedRequest);
     }
@@ -201,7 +188,7 @@ public partial class SharpIppServer : ISharpIppServer
             throw new ArgumentNullException(nameof(ippResponseMessage));
         if (stream is null)
             throw new ArgumentNullException(nameof(stream));
-        _responseMessageValidator?.Validate(ippResponseMessage);
+        ResponseMessageValidator?.Validate(ippResponseMessage);
         return _ippProtocol.WriteIppResponseAsync(ippResponseMessage, stream, cancellationToken);
     }
 
@@ -220,9 +207,9 @@ public partial class SharpIppServer : ISharpIppServer
     {
         if (ippResponsMessage is null)
             throw new ArgumentNullException(nameof(ippResponsMessage));
-        _ippResponseValidator?.Validate(ippResponsMessage);
+        ResponseValidator?.Validate(ippResponsMessage);
         var ippResponse = Mapper.Map<IppResponseMessage>(ippResponsMessage);
-        _responseMessageValidator?.Validate(ippResponse);
+        ResponseMessageValidator?.Validate(ippResponse);
         return Task.FromResult<IIppResponseMessage>(ippResponse);
     }
 

@@ -160,25 +160,27 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
     /// Validates the request message by executing enabled core, job, document, printer, and operation-specific rules.
     /// Spec: RFC 8011, PWG 5100.x.
     /// </summary>
-    public void Validate(IIppRequestMessage? request)
+    public void Validate(IIppRequestMessage? request, IppRequestValidationContext? context = null)
     {
         if (request is null)
             throw new ArgumentNullException(nameof(request));
+
+        var ctx = context ?? Context;
 
         if (ValidateCoreRules)
             ValidateCore(request);
 
         if (ValidateJobAttributesGroup)
-            ValidateJobAttributes(request);
+            ValidateJobAttributes(request, ctx);
 
         if (ValidateDocumentAttributesGroup)
-            ValidateDocumentAttributes(request);
+            ValidateDocumentAttributes(request, ctx);
 
         if (ValidatePrinterAttributesGroup)
-            ValidatePrinterAttributes(request);
+            ValidatePrinterAttributes(request, ctx);
 
         if (ValidateOperationSpecificRules)
-            ValidateOperationRules(request);
+            ValidateOperationRules(request, ctx);
 
         if (ValidateStringLengthLimits)
             ValidateStringLengthLimitsRule(request);
@@ -434,14 +436,14 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
     /// Validates job-level attributes (mutual exclusivity of finishings and media collection, valid copies/priority/number-up ranges).
     /// Spec: RFC 8011 Section 4.2 (Job Template Attributes), PWG 5100.3 (Production Printing).
     /// </summary>
-    private void ValidateJobAttributes(IIppRequestMessage request)
+    private void ValidateJobAttributes(IIppRequestMessage request, IppRequestValidationContext context)
     {
         ValidateFinishingsMutualExclusivity(request.JobAttributes, request);
 
-        ValidateOutputBinAttributes(request.JobAttributes, request);
+        ValidateOutputBinAttributes(request.JobAttributes, request, context);
         ValidateCollectionMediaSelectionRules(request.JobAttributes, request);
 
-        ValidateOverridesRules(request);
+        ValidateOverridesRules(request, context);
 
         if (request.IppOperation is IppOperation.PrintJob or IppOperation.CreateJob or IppOperation.ValidateJob)
         {
@@ -492,19 +494,19 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         if (request.JobAttributes.TryGetIppValue<int>(IppAttributeNames.NumberUp, out var numberUpValue) && numberUpValue <= 0)
             throw new IppRequestException("'number-up' must be >= 1", request, IppStatusCode.ClientErrorBadRequest);
 
-        ValidateFidelityBasedJobAttributes(request);
+        ValidateFidelityBasedJobAttributes(request, context);
     }
 
     /// <summary>
     /// Enforces capability matching for job template attributes (media, finishings, sides, etc.) against printer capabilities when ipp-attribute-fidelity is enabled.
     /// Spec: RFC 8011 Section 3.2.1.1 (Fidelity validation).
     /// </summary>
-    private void ValidateFidelityBasedJobAttributes(IIppRequestMessage request)
+    private void ValidateFidelityBasedJobAttributes(IIppRequestMessage request, IppRequestValidationContext context)
     {
         if (!UseIppAttributeFidelityForCapabilityValidation && !IsIppAttributeFidelityTrue(request))
             return;
 
-        var mediaSupported = Context.MediaSupported;
+        var mediaSupported = context.MediaSupported;
         if (mediaSupported is { Count: > 0 }
             && request.JobAttributes.TryGetIppValue<string>(IppAttributeNames.Media, out var media)
             && !mediaSupported.Contains((Media)media))
@@ -512,7 +514,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
             throw new IppRequestException($"'media' value '{media}' is not supported by target printer", request, IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
         }
 
-        var finishingsSupported = Context.FinishingsSupported;
+        var finishingsSupported = context.FinishingsSupported;
         if (finishingsSupported is { Count: > 0 })
         {
             foreach (var finishingsInt in request.JobAttributes.Where(x => x.Name == IppAttributeNames.Finishings).Select(x => x.Value).OfType<int>())
@@ -522,7 +524,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
             }
         }
 
-        var sidesSupported = Context.SidesSupported;
+        var sidesSupported = context.SidesSupported;
         if (sidesSupported is { Count: > 0 } && request.JobAttributes.TryGetIppValue<string>(IppAttributeNames.Sides, out var sidesStr))
         {
             var sides = (Sides)sidesStr;
@@ -530,21 +532,21 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
                 throw new IppRequestException($"'sides' value '{sides}' is not supported by target printer", request, IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
         }
 
-        var printQualitySupported = Context.PrintQualitySupported;
+        var printQualitySupported = context.PrintQualitySupported;
         if (printQualitySupported is { Count: > 0 })
         {
             if (request.JobAttributes.TryGetIppValue<int>(IppAttributeNames.PrintQuality, out var pqInt) && !printQualitySupported.Contains((PrintQuality)pqInt))
                 throw new IppRequestException($"'print-quality' value '{pqInt}' is not supported by target printer", request, IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
         }
 
-        var orientationSupported = Context.OrientationRequestedSupported;
+        var orientationSupported = context.OrientationRequestedSupported;
         if (orientationSupported is { Count: > 0 })
         {
             if (request.JobAttributes.TryGetIppValue<int>(IppAttributeNames.OrientationRequested, out var orientInt) && !orientationSupported.Contains((Orientation)orientInt))
                 throw new IppRequestException($"'orientation-requested' value '{orientInt}' is not supported by target printer", request, IppStatusCode.ClientErrorAttributesOrValuesNotSupported);
         }
 
-        var printColorModeSupported = Context.PrintColorModeSupported;
+        var printColorModeSupported = context.PrintColorModeSupported;
         if (printColorModeSupported is { Count: > 0 } && request.JobAttributes.TryGetIppValue<string>(IppAttributeNames.PrintColorMode, out var pcmStr))
         {
             var pcm = (PrintColorMode)pcmStr;
@@ -557,11 +559,11 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
     /// Validates document-level attributes (mutual exclusivity of finishings, output-bin, media collection).
     /// Spec: PWG 5100.5 (Document Object).
     /// </summary>
-    private void ValidateDocumentAttributes(IIppRequestMessage request)
+    private void ValidateDocumentAttributes(IIppRequestMessage request, IppRequestValidationContext context)
     {
         ValidateFinishingsMutualExclusivity(request.DocumentAttributes, request);
 
-        ValidateOutputBinAttributes(request.DocumentAttributes, request);
+        ValidateOutputBinAttributes(request.DocumentAttributes, request, context);
         ValidateCollectionMediaSelectionRules(request.DocumentAttributes, request);
     }
 
@@ -569,7 +571,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
     /// Validates printer-level attributes, ensuring destination-uri-ready OAuth dependency rules and forbidden password properties.
     /// Spec: PWG 5101.7 / PWG 5100.17 (Scan Service).
     /// </summary>
-    public void ValidatePrinterAttributes(IIppRequestMessage request)
+    public void ValidatePrinterAttributes(IIppRequestMessage request, IppRequestValidationContext? context = null)
     {
         ValidateDefaultAgainstSupportedAttributes(request.PrinterAttributes, request);
 
@@ -690,7 +692,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
     /// Validates that the 'output-bin' attribute is single-valued and is represented using keyword or name syntax.
     /// Spec: PWG 5100.2 Section 4.1 (output-bin).
     /// </summary>
-    private void ValidateOutputBinAttributes(IReadOnlyCollection<IppAttribute> attributes, IIppRequestMessage request)
+    private void ValidateOutputBinAttributes(IReadOnlyCollection<IppAttribute> attributes, IIppRequestMessage request, IppRequestValidationContext context)
     {
         var outputBins = attributes.Where(x => x.Name == IppAttributeNames.OutputBin).ToArray();
 
@@ -704,16 +706,17 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         if (outputBinTag != Tag.Keyword && outputBinTag != Tag.NameWithoutLanguage)
             throw new IppRequestException("'output-bin' MUST use 'keyword' or 'nameWithoutLanguage' syntax.", request, IppStatusCode.ClientErrorBadRequest);
 
-        ValidateOutputBinAgainstSupportedValues(outputBins[0], request);
+        ValidateOutputBinAgainstSupportedValues(outputBins[0], request, context);
     }
 
     /// <summary>
     /// Validates that the value of the 'output-bin' attribute matches one of the printer-supported output bins.
     /// Spec: PWG 5100.2 Section 4.1 (output-bin-supported).
     /// </summary>
-    public void ValidateOutputBinAgainstSupportedValues(IppAttribute outputBin, IIppRequestMessage request)
+    public void ValidateOutputBinAgainstSupportedValues(IppAttribute outputBin, IIppRequestMessage request, IppRequestValidationContext? context = null)
     {
-        var outputBinSupported = Context.OutputBinSupported;
+        var ctx = context ?? Context;
+        var outputBinSupported = ctx.OutputBinSupported;
         if (outputBinSupported is null || outputBinSupported.Count == 0)
             return;
 
@@ -742,8 +745,9 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
     /// Executes operation-specific validation rules for all supported IPP/PWG operations.
     /// Spec: RFC 8011, PWG 5100.5, PWG 5100.22.
     /// </summary>
-    public void ValidateOperationRules(IIppRequestMessage request)
+    public void ValidateOperationRules(IIppRequestMessage request, IppRequestValidationContext? context = null)
     {
+        var ctx = context ?? Context;
         var operationAttributes = request.OperationAttributes;
         var hasDocumentNumber = ValidateOperationAttributesGroup && HasNamedAttribute(operationAttributes, IppAttributeNames.DocumentNumber);
         var hasLastDocument = ValidateOperationAttributesGroup && HasNamedAttribute(operationAttributes, IppAttributeNames.LastDocument);
@@ -760,7 +764,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
                 ValidateRequiredDocumentNumber(hasDocumentNumber, documentNumber, request);
 
                 if (request.IppOperation == IppOperation.CancelDocument && documentNumber is int cancelDocumentNumber)
-                    ValidateCancelDocumentStateRules(cancelDocumentNumber, request);
+                    ValidateCancelDocumentStateRules(cancelDocumentNumber, request, ctx);
 
                 break;
 
@@ -771,7 +775,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
                     throw new IppRequestException("missing document attributes", request, IppStatusCode.ClientErrorBadRequest);
 
                 if (documentNumber is int setDocumentNumber)
-                    ValidateSetDocumentAttributesStateRules(setDocumentNumber, request);
+                    ValidateSetDocumentAttributesStateRules(setDocumentNumber, request, ctx);
 
                 break;
 
@@ -903,9 +907,9 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
                 break;
         }
 
-        ValidateJobRequestedAttributesGroupKeywords(request);
-        ValidateDocumentRequestedAttributesGroupKeywords(request);
-        ValidateNotifyEventsValues(request);
+        ValidateJobRequestedAttributesGroupKeywords(request, ctx);
+        ValidateDocumentRequestedAttributesGroupKeywords(request, ctx);
+        ValidateNotifyEventsValues(request, ctx);
         ValidateInputAttributesRules(request);
     }
 
@@ -961,7 +965,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
     /// Validates that requested attribute group keywords for Job query operations are supported by the target.
     /// Spec: RFC 8011 Section 3.2.5.1 / PWG 5100.8.
     /// </summary>
-    public void ValidateJobRequestedAttributesGroupKeywords(IIppRequestMessage request)
+    public void ValidateJobRequestedAttributesGroupKeywords(IIppRequestMessage request, IppRequestValidationContext? context = null)
     {
         if (!ValidateOperationAttributesGroup)
             return;
@@ -969,7 +973,8 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         if (request.IppOperation is not (IppOperation.GetJobAttributes or IppOperation.GetJobs))
             return;
 
-        var supported = Context.JobRequestedAttributeGroupKeywordsSupported;
+        var ctx = context ?? Context;
+        var supported = ctx.JobRequestedAttributeGroupKeywordsSupported;
         if (supported is null || supported.Count == 0)
             return;
 
@@ -1093,7 +1098,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
     /// Validates that requested attribute group keywords for Document query operations are supported by the target.
     /// Spec: PWG 5100.5 (Document Object).
     /// </summary>
-    public void ValidateDocumentRequestedAttributesGroupKeywords(IIppRequestMessage request)
+    public void ValidateDocumentRequestedAttributesGroupKeywords(IIppRequestMessage request, IppRequestValidationContext? context = null)
     {
         if (!ValidateOperationAttributesGroup)
             return;
@@ -1101,7 +1106,8 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         if (request.IppOperation is not (IppOperation.GetDocumentAttributes or IppOperation.GetDocuments))
             return;
 
-        var supported = Context.DocumentRequestedAttributeGroupKeywordsSupported;
+        var ctx = context ?? Context;
+        var supported = ctx.DocumentRequestedAttributeGroupKeywordsSupported;
         if (supported is null || supported.Count == 0)
             return;
 
@@ -1138,12 +1144,13 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
     /// Validates that notify-events keywords are supported by the target printer/system.
     /// Spec: RFC 3995 Section 5.3.3 (notify-events).
     /// </summary>
-    public void ValidateNotifyEventsValues(IIppRequestMessage request)
+    public void ValidateNotifyEventsValues(IIppRequestMessage request, IppRequestValidationContext? context = null)
     {
         if (!ValidateSubscriptionAttributesGroup)
             return;
 
-        var supported = Context.NotifyEventsSupported;
+        var ctx = context ?? Context;
+        var supported = ctx.NotifyEventsSupported;
         if (supported is null || supported.Count == 0)
             return;
 
@@ -1180,12 +1187,13 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
     /// Validates that a Document is in a state that permits cancellation.
     /// Spec: PWG 5100.5 Section 5 (Cancel-Document state rules).
     /// </summary>
-    public void ValidateCancelDocumentStateRules(int documentNumber, IIppRequestMessage request)
+    public void ValidateCancelDocumentStateRules(int documentNumber, IIppRequestMessage request, IppRequestValidationContext? context = null)
     {
-        if (Context.DocumentStatesByNumber == null)
+        var ctx = context ?? Context;
+        if (ctx.DocumentStatesByNumber == null)
             return;
 
-        if (!Context.DocumentStatesByNumber.TryGetValue(documentNumber, out var documentState))
+        if (!ctx.DocumentStatesByNumber.TryGetValue(documentNumber, out var documentState))
             return;
 
         if (documentState is DocumentState.Completed or DocumentState.Canceled or DocumentState.Aborted)
@@ -1194,10 +1202,10 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         if (documentState != DocumentState.Processing)
             return;
 
-        if (Context.DocumentStateReasonsByNumber == null)
+        if (ctx.DocumentStateReasonsByNumber == null)
             return;
 
-        if (!Context.DocumentStateReasonsByNumber.TryGetValue(documentNumber, out var stateReasons) || stateReasons == null)
+        if (!ctx.DocumentStateReasonsByNumber.TryGetValue(documentNumber, out var stateReasons) || stateReasons == null)
             return;
 
         if (stateReasons.Contains(DocumentStateReason.ProcessingToStopPoint))
@@ -1208,18 +1216,19 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
     /// Validates that a Document is in a state that permits setting of attributes.
     /// Spec: PWG 5100.5 Section 5 (Set-Document-Attributes state rules).
     /// </summary>
-    public void ValidateSetDocumentAttributesStateRules(int documentNumber, IIppRequestMessage request)
+    public void ValidateSetDocumentAttributesStateRules(int documentNumber, IIppRequestMessage request, IppRequestValidationContext? context = null)
     {
-        if (Context.DocumentStatesByNumber == null)
+        var ctx = context ?? Context;
+        if (ctx.DocumentStatesByNumber == null)
             return;
 
-        if (!Context.DocumentStatesByNumber.TryGetValue(documentNumber, out var documentState))
+        if (!ctx.DocumentStatesByNumber.TryGetValue(documentNumber, out var documentState))
             return;
 
         if (documentState is DocumentState.Completed or DocumentState.Canceled or DocumentState.Aborted)
             throw new IppRequestException("invalid document-state for Set-Document-Attributes", request, IppStatusCode.ClientErrorNotPossible);
 
-        if (documentState == DocumentState.Processing && !Context.AllowSetDocumentAttributesWhenProcessing)
+        if (documentState == DocumentState.Processing && !ctx.AllowSetDocumentAttributesWhenProcessing)
             throw new IppRequestException("invalid document-state for Set-Document-Attributes", request, IppStatusCode.ClientErrorNotPossible);
     }
 
@@ -1227,13 +1236,13 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
     /// Validates job overrides collections including formatting, page/document selectors, and membership rules.
     /// Spec: PWG 5100.6 Section 3 (Overrides).
     /// </summary>
-    private void ValidateOverridesRules(IIppRequestMessage request)
+    private void ValidateOverridesRules(IIppRequestMessage request, IppRequestValidationContext context)
     {
         var overrideCollections = EnumerateNamedCollections(request.JobAttributes, IppAttributeNames.Overrides).ToArray();
         if (!overrideCollections.Any())
             return;
 
-        var supportedOperations = Context.OverridesSupportedOperations;
+        var supportedOperations = context.OverridesSupportedOperations;
         if (supportedOperations is not null && supportedOperations.Count > 0)
         {
             if (!supportedOperations.Contains(request.IppOperation))
@@ -1281,7 +1290,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
                 if (!hasOverrideAttributes)
                     throw new IppRequestException("invalid overrides: each collection must contain at least one overriding Job Template attribute", request, IppStatusCode.ClientErrorBadRequest);
 
-                ValidateOverrideMembersAgainstSupportedValues(members, request);
+                ValidateOverrideMembersAgainstSupportedValues(members, request, context);
 
                 effectiveDocumentRangesByCollection.Add(documentNumberRanges ?? [new SharpIpp.Protocol.Models.Range(1, int.MaxValue)]);
             }
@@ -1298,7 +1307,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
     /// Validates that the member attributes inside an overrides collection are supported by the target printer/system.
     /// Spec: PWG 5100.6 Section 3 (Overrides).
     /// </summary>
-    public void ValidateOverrideMembersAgainstSupportedValues(IReadOnlyCollection<IppAttribute> members, IIppRequestMessage request)
+    public void ValidateOverrideMembersAgainstSupportedValues(IReadOnlyCollection<IppAttribute> members, IIppRequestMessage request, IppRequestValidationContext? context = null)
     {
         var memberNames = EnumerateTopLevelOverrideMemberNames(members)
             .Distinct(StringComparer.Ordinal)
@@ -1306,7 +1315,8 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
 
         var unsupportedMembers = new List<string>();
 
-        var overrideMemberScopesByName = Context.OverrideMemberScopesByName;
+        var ctx = context ?? Context;
+        var overrideMemberScopesByName = ctx.OverrideMemberScopesByName;
         if (overrideMemberScopesByName is not null && overrideMemberScopesByName.Count > 0)
         {
             unsupportedMembers.AddRange(memberNames.Where(x =>
@@ -1318,7 +1328,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
             unsupportedMembers.AddRange(memberNames.Where(Pwg51006NonOverrideScopeMembers.Contains));
         }
 
-        var overridesSupported = Context.OverridesSupported;
+        var overridesSupported = ctx.OverridesSupported;
         if (overridesSupported is not null && overridesSupported.Count > 0)
         {
             var supportedMemberNames = new HashSet<string>(overridesSupported.Select(x => x.Value), StringComparer.Ordinal);

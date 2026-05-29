@@ -58,7 +58,10 @@ public class CreateSystemSubscriptionsTests : SharpIppIntegrationTestBase
         IIppRequest? serverRequest = null;
         async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
         {
-            var server = new SharpIppServer(new IppProtocol(), NoOpSpecificRulesValidator);
+            var server = new SharpIppServer(new IppProtocol())
+            {
+                RequestMessageValidator = NoOpSpecificRulesValidator
+            };
             serverRequest = await server.ReceiveRequestAsync(s, c);
             var serverResponse = new CreateSystemSubscriptionsResponse
             {
@@ -74,8 +77,10 @@ public class CreateSystemSubscriptionsTests : SharpIppIntegrationTestBase
 
         var client = new SharpIppClient(
             new HttpClient(GetMockOfHttpMessageHandler(func).Object),
-            new IppProtocol(),
-            NoOpSpecificRulesValidator);
+            new IppProtocol())
+        {
+            RequestMessageValidator = NoOpSpecificRulesValidator
+        };
 
         await client.CreateSystemSubscriptionsAsync(clientRequest);
 
@@ -106,7 +111,10 @@ public class CreateSystemSubscriptionsTests : SharpIppIntegrationTestBase
         IIppRequest? serverRequest = null;
         async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
         {
-            var server = new SharpIppServer(new IppProtocol(), NoOpSpecificRulesValidator);
+            var server = new SharpIppServer(new IppProtocol())
+            {
+                RequestMessageValidator = NoOpSpecificRulesValidator
+            };
             serverRequest = await server.ReceiveRequestAsync(s, c);
             var serverResponse = new CreateSystemSubscriptionsResponse
             {
@@ -122,8 +130,10 @@ public class CreateSystemSubscriptionsTests : SharpIppIntegrationTestBase
 
         var client = new SharpIppClient(
             new HttpClient(GetMockOfHttpMessageHandler(func).Object),
-            new IppProtocol(),
-            NoOpSpecificRulesValidator);
+            new IppProtocol())
+        {
+            RequestMessageValidator = NoOpSpecificRulesValidator
+        };
 
         await client.CreateSystemSubscriptionsAsync(clientRequest);
 
@@ -162,7 +172,10 @@ public class CreateSystemSubscriptionsTests : SharpIppIntegrationTestBase
         IIppRequest? serverRequest = null;
         async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
         {
-            var server = new SharpIppServer(new IppProtocol(), NoOpSpecificRulesValidator);
+            var server = new SharpIppServer(new IppProtocol())
+            {
+                RequestMessageValidator = NoOpSpecificRulesValidator
+            };
             serverRequest = await server.ReceiveRequestAsync(s, c);
             var serverResponse = new CreateSystemSubscriptionsResponse
             {
@@ -178,8 +191,10 @@ public class CreateSystemSubscriptionsTests : SharpIppIntegrationTestBase
 
         var client = new SharpIppClient(
             new HttpClient(GetMockOfHttpMessageHandler(func).Object),
-            new IppProtocol(),
-            NoOpSpecificRulesValidator);
+            new IppProtocol())
+        {
+            RequestMessageValidator = NoOpSpecificRulesValidator
+        };
 
         await client.CreateSystemSubscriptionsAsync(clientRequest);
 
@@ -232,7 +247,10 @@ public class CreateSystemSubscriptionsTests : SharpIppIntegrationTestBase
         CreateSystemSubscriptionsResponse? serverResponse = null;
         async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
         {
-            var server = new SharpIppServer(new IppProtocol(), NoOpSpecificRulesValidator);
+            var server = new SharpIppServer(new IppProtocol())
+            {
+                RequestMessageValidator = NoOpSpecificRulesValidator
+            };
             serverRequest = await server.ReceiveRequestAsync(s, c);
             serverResponse = new CreateSystemSubscriptionsResponse
             {
@@ -248,8 +266,10 @@ public class CreateSystemSubscriptionsTests : SharpIppIntegrationTestBase
 
         var client = new SharpIppClient(
             new HttpClient(GetMockOfHttpMessageHandler(func).Object),
-            new IppProtocol(),
-            NoOpSpecificRulesValidator);
+            new IppProtocol())
+        {
+            RequestMessageValidator = NoOpSpecificRulesValidator
+        };
 
         var clientResponse = await client.CreateSystemSubscriptionsAsync(clientRequest);
 

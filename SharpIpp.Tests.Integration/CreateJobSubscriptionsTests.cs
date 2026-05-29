@@ -49,7 +49,10 @@ public class CreateJobSubscriptionsTests : SharpIppIntegrationTestBase
         IIppRequest? serverRequest = null;
         async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
         {
-            var server = new SharpIppServer(new IppProtocol(), NoOpSpecificRulesValidator);
+            var server = new SharpIppServer(new IppProtocol())
+            {
+                RequestMessageValidator = NoOpSpecificRulesValidator
+            };
             serverRequest = await server.ReceiveRequestAsync(s, c);
             var serverResponse = new CreateJobSubscriptionsResponse
             {
@@ -65,8 +68,10 @@ public class CreateJobSubscriptionsTests : SharpIppIntegrationTestBase
 
         var client = new SharpIppClient(
             new HttpClient(GetMockOfHttpMessageHandler(func).Object),
-            new IppProtocol(),
-            NoOpSpecificRulesValidator);
+            new IppProtocol())
+        {
+            RequestMessageValidator = NoOpSpecificRulesValidator
+        };
 
         await client.CreateJobSubscriptionsAsync(clientRequest);
 
@@ -97,7 +102,10 @@ public class CreateJobSubscriptionsTests : SharpIppIntegrationTestBase
         IIppRequest? serverRequest = null;
         async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
         {
-            var server = new SharpIppServer(new IppProtocol(), NoOpSpecificRulesValidator);
+            var server = new SharpIppServer(new IppProtocol())
+            {
+                RequestMessageValidator = NoOpSpecificRulesValidator
+            };
             serverRequest = await server.ReceiveRequestAsync(s, c);
             var serverResponse = new CreateJobSubscriptionsResponse
             {
@@ -113,8 +121,10 @@ public class CreateJobSubscriptionsTests : SharpIppIntegrationTestBase
 
         var client = new SharpIppClient(
             new HttpClient(GetMockOfHttpMessageHandler(func).Object),
-            new IppProtocol(),
-            NoOpSpecificRulesValidator);
+            new IppProtocol())
+        {
+            RequestMessageValidator = NoOpSpecificRulesValidator
+        };
 
         await client.CreateJobSubscriptionsAsync(clientRequest);
 
@@ -143,7 +153,10 @@ public class CreateJobSubscriptionsTests : SharpIppIntegrationTestBase
         IIppRequest? serverRequest = null;
         async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
         {
-            var server = new SharpIppServer(new IppProtocol(), NoOpSpecificRulesValidator);
+            var server = new SharpIppServer(new IppProtocol())
+            {
+                RequestMessageValidator = NoOpSpecificRulesValidator
+            };
             serverRequest = await server.ReceiveRequestAsync(s, c);
             var serverResponse = new CreateJobSubscriptionsResponse
             {
@@ -159,8 +172,10 @@ public class CreateJobSubscriptionsTests : SharpIppIntegrationTestBase
 
         var client = new SharpIppClient(
             new HttpClient(GetMockOfHttpMessageHandler(func).Object),
-            new IppProtocol(),
-            NoOpSpecificRulesValidator);
+            new IppProtocol())
+        {
+            RequestMessageValidator = NoOpSpecificRulesValidator
+        };
 
         await client.CreateJobSubscriptionsAsync(clientRequest);
 
@@ -204,7 +219,10 @@ public class CreateJobSubscriptionsTests : SharpIppIntegrationTestBase
         CreateJobSubscriptionsResponse? serverResponse = null;
         async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
         {
-            var server = new SharpIppServer(new IppProtocol(), NoOpSpecificRulesValidator);
+            var server = new SharpIppServer(new IppProtocol())
+            {
+                RequestMessageValidator = NoOpSpecificRulesValidator
+            };
             serverRequest = await server.ReceiveRequestAsync(s, c);
             serverResponse = new CreateJobSubscriptionsResponse
             {
@@ -220,8 +238,10 @@ public class CreateJobSubscriptionsTests : SharpIppIntegrationTestBase
 
         var client = new SharpIppClient(
             new HttpClient(GetMockOfHttpMessageHandler(func).Object),
-            new IppProtocol(),
-            NoOpSpecificRulesValidator);
+            new IppProtocol())
+        {
+            RequestMessageValidator = NoOpSpecificRulesValidator
+        };
 
         var clientResponse = await client.CreateJobSubscriptionsAsync(clientRequest);
 

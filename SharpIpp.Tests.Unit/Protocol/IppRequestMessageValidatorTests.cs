@@ -3132,5 +3132,30 @@ public class IppRequestMessageValidatorTests
         Action act = () => validator.Validate(request);
         act.Should().NotThrow();
     }
+
+    [TestMethod]
+    public void Validate_WithPassedContext_UsesPassedContextInsteadOfInstanceContext()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            UseIppAttributeFidelityForCapabilityValidation = true
+        };
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+        request.JobAttributes.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.Media, "iso_a5_148x210mm"));
+
+        // Case 1: Call without passing context (falls back to validator.Context which has null MediaSupported)
+        Action actDefault = () => validator.Validate(request);
+        actDefault.Should().NotThrow();
+
+        // Case 2: Call passing context with limited MediaSupported
+        var customContext = new IppRequestValidationContext
+        {
+            MediaSupported = [ (Media)"iso_a4_210x297mm" ]
+        };
+        Action actCustom = () => validator.Validate(request, customContext);
+        actCustom.Should().Throw<IppRequestException>()
+            .WithMessage("'media' value 'iso_a5_148x210mm' is not supported by target printer");
+    }
     #endregion
 }
