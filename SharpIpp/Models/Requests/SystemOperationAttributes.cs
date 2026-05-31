@@ -1,5 +1,6 @@
 using System;
 using SharpIpp.Protocol.Models;
+using SharpIpp.Validation;
 
 namespace SharpIpp.Models.Requests;
 
@@ -28,6 +29,7 @@ public class SystemOperationAttributes : OperationAttributes
     /// notify-printer-ids
     /// See: PWG 5100.22-2025 Section 7.1.1
     /// </summary>
+    [ItemRange(1, 65535)]
     public int[]? NotifyPrinterIds { get; set; }
 
     /// <summary>

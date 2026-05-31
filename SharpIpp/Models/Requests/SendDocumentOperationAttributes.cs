@@ -94,6 +94,7 @@ public class SendDocumentOperationAttributes : JobOperationAttributes
     /// The <c>resource-ids</c> operation attribute.
     /// See: PWG 5100.22-2025 Section 8.4
     /// </summary>
+    [ItemRange(1, int.MaxValue)]
     public int[]? ResourceIds { get; set; }
 
     /// <summary>

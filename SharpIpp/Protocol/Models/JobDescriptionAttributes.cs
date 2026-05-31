@@ -1,4 +1,5 @@
 using System;
+using SharpIpp.Validation;
 
 namespace SharpIpp.Protocol.Models
 {
@@ -60,6 +61,7 @@ namespace SharpIpp.Protocol.Models
         /// See: PWG 5100.22-2025 Section 7.1.15
         /// </summary>
         /// <code>job-resource-ids</code>
+        [ItemRange(1, int.MaxValue)]
         public int[]? JobResourceIds { get; set; }
 
         /// <summary>
@@ -473,6 +475,7 @@ namespace SharpIpp.Protocol.Models
         /// that were produced for the Job.
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
+        [ItemRange(1, int.MaxValue)]
         public int[]? CopiesActual { get; set; }
 
         /// <summary>
@@ -508,6 +511,7 @@ namespace SharpIpp.Protocol.Models
         /// value(s) used by the Printer.
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
+        [ItemRange(1, 100)]
         public int[]? JobPriorityActual { get; set; }
 
         /// <summary>
@@ -599,6 +603,7 @@ namespace SharpIpp.Protocol.Models
         /// value(s) used by the Printer.
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
+        [ItemRange(1, int.MaxValue)]
         public int[]? NumberUpActual { get; set; }
 
         /// <summary>
@@ -690,6 +695,7 @@ namespace SharpIpp.Protocol.Models
         /// value(s) used by the Printer.
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
+        [ItemRange(int.MinValue, int.MaxValue)]
         public int[]? XImageShiftActual { get; set; }
 
         /// <summary>
@@ -697,6 +703,7 @@ namespace SharpIpp.Protocol.Models
         /// value(s) used by the Printer.
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
+        [ItemRange(int.MinValue, int.MaxValue)]
         public int[]? XSide1ImageShiftActual { get; set; }
 
         /// <summary>
@@ -704,6 +711,7 @@ namespace SharpIpp.Protocol.Models
         /// value(s) used by the Printer.
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
+        [ItemRange(int.MinValue, int.MaxValue)]
         public int[]? XSide2ImageShiftActual { get; set; }
 
         /// <summary>
@@ -718,6 +726,7 @@ namespace SharpIpp.Protocol.Models
         /// value(s) used by the Printer.
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
+        [ItemRange(int.MinValue, int.MaxValue)]
         public int[]? YImageShiftActual { get; set; }
 
         /// <summary>
@@ -725,6 +734,7 @@ namespace SharpIpp.Protocol.Models
         /// value(s) used by the Printer.
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
+        [ItemRange(int.MinValue, int.MaxValue)]
         public int[]? YSide1ImageShiftActual { get; set; }
 
         /// <summary>
@@ -732,6 +742,7 @@ namespace SharpIpp.Protocol.Models
         /// value(s) used by the Printer.
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
+        [ItemRange(int.MinValue, int.MaxValue)]
         public int[]? YSide2ImageShiftActual { get; set; }
 
         /// <summary>
@@ -816,6 +827,7 @@ namespace SharpIpp.Protocol.Models
         /// See: PWG 5100.21-2019 Section 8.2.1
         /// </summary>
         /// <code>chamber-humidity-actual</code>
+        [ItemRange(0, 100)]
         public int[]? ChamberHumidityActual { get; set; }
 
         /// <summary>
@@ -824,6 +836,7 @@ namespace SharpIpp.Protocol.Models
         /// See: PWG 5100.21-2019 Section 8.2.2
         /// </summary>
         /// <code>chamber-temperature-actual</code>
+        [ItemRange(-273, int.MaxValue)]
         public int[]? ChamberTemperatureActual { get; set; }
 
         /// <summary>
@@ -846,6 +859,7 @@ namespace SharpIpp.Protocol.Models
         /// See: PWG 5100.21-2019 Section 8.2.6
         /// </summary>
         /// <code>platform-temperature-actual</code>
+        [ItemRange(-273, int.MaxValue)]
         public int[]? PlatformTemperatureActual { get; set; }
 
         /// <summary>
@@ -883,6 +897,7 @@ namespace SharpIpp.Protocol.Models
         /// See: PWG 5100.7-2023 Section 10.3
         /// </summary>
         /// <code>job-copies-actual</code>
+        [ItemRange(1, int.MaxValue)]
         public int[]? JobCopiesActual { get; set; }
 
         /// <summary>
@@ -924,6 +939,7 @@ namespace SharpIpp.Protocol.Models
         /// See: PWG 5100.7-2023 Section 6.1
         /// </summary>
         /// <code>job-ids</code>
+        [ItemRange(1, int.MaxValue)]
         public int[]? JobIds { get; set; }
 
         /// <summary>
@@ -975,6 +991,7 @@ namespace SharpIpp.Protocol.Models
         /// See: PWG 5100.8-2003 Section 4.2
         /// </summary>
         [Obsolete("The 'pages-per-subset-actual' attribute is obsolete. See PWG 5100.13-2023 Section 7.1.")]
+        [ItemRange(1, int.MaxValue)]
         public int[]? PagesPerSubsetActual { get; set; }
     }
 }

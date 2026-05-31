@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using SharpIpp.Validation;
 
 namespace SharpIpp.Protocol.Models;
 
@@ -384,6 +385,7 @@ public class JobTemplateAttributes
     /// The <c>force-front-side</c> Job Template attribute.
     /// See: PWG 5100.3-2023 Section 5.2.2
     /// </summary>
+    [ItemRange(1, int.MaxValue)]
     public int[]? ForceFrontSide { get; set; }
 
     /// <summary>
@@ -685,6 +687,7 @@ public class JobTemplateAttributes
     /// See: PWG 5100.8-2003 Section 3
     /// </summary>
     [Obsolete("The 'pages-per-subset' attribute is obsolete. See PWG 5100.13-2023 Section 7.1.")]
+    [ItemRange(1, int.MaxValue)]
     public int[]? PagesPerSubset { get; set; }
 
     /// <summary>
@@ -735,6 +738,7 @@ public class JobTemplateAttributes
     /// this Job (e.g., for job chaining or dependency tracking).
     /// See: PWG 5100.7-2023 Section 6.1
     /// </summary>
+    [ItemRange(1, int.MaxValue)]
     public int[]? JobIds { get; set; }
 
     /// <summary>

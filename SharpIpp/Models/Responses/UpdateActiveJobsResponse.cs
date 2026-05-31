@@ -1,4 +1,5 @@
 using SharpIpp.Protocol.Models;
+using SharpIpp.Validation;
 
 namespace SharpIpp.Models.Responses;
 
@@ -12,6 +13,7 @@ public class UpdateActiveJobsResponse : IppResponse<OperationAttributes>
     /// The <c>job-ids</c> operation attribute.
     /// See: PWG 5100.18-2025 Section 5.7.2
     /// </summary>
+    [ItemRange(1, int.MaxValue)]
     public int[]? JobIds { get; set; }
 
     /// <summary>

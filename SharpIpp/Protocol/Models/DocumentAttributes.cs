@@ -235,6 +235,7 @@ public class DocumentAttributes : IIppCollection
     /// See: PWG 5100.22-2025 Section 7.4.1
     /// </summary>
     /// <code>document-resource-ids</code>
+    [ItemRange(1, int.MaxValue)]
     public int[]? DocumentResourceIds { get; set; }
     /// <summary>
     /// The document-natural-language IPP attribute.

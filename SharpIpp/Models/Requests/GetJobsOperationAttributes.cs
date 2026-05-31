@@ -1,6 +1,7 @@
 using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Models;
+using SharpIpp.Validation;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -21,6 +22,7 @@ public class GetJobsOperationAttributes : OperationAttributes
     /// See: PWG 5100.7-2023 Section 6.1.4
     /// </summary>
     /// <code>job-ids</code>
+    [ItemRange(1, int.MaxValue)]
     public int[]? JobIds { get; set; }
 
     /// <summary>

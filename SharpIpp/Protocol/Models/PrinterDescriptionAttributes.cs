@@ -338,6 +338,7 @@ public class PrinterDescriptionAttributes
     /// printer-ids
     /// See: PWG 5100.22-2025 Section 7.1.6
     /// </summary>
+    [ItemRange(1, 65535)]
     public int[]? PrinterIds { get; set; }
 
     /// <summary>
@@ -808,24 +809,28 @@ public class PrinterDescriptionAttributes
     /// media-bottom-margin-supported
     /// See: PWG 5100.7-2023 Section 6.9.35
     /// </summary>
+    [ItemRange(0, int.MaxValue)]
     public int[]? MediaBottomMarginSupported { get; set; }
 
     /// <summary>
     /// media-left-margin-supported
     /// See: PWG 5100.7-2023 Section 6.9.45
     /// </summary>
+    [ItemRange(0, int.MaxValue)]
     public int[]? MediaLeftMarginSupported { get; set; }
 
     /// <summary>
     /// media-right-margin-supported
     /// See: PWG 5100.7-2023 Section 6.9.49
     /// </summary>
+    [ItemRange(0, int.MaxValue)]
     public int[]? MediaRightMarginSupported { get; set; }
 
     /// <summary>
     /// media-top-margin-supported
     /// See: PWG 5100.7-2023 Section 6.9.54
     /// </summary>
+    [ItemRange(0, int.MaxValue)]
     public int[]? MediaTopMarginSupported { get; set; }
 
     /// <summary>
@@ -1874,6 +1879,7 @@ public class PrinterDescriptionAttributes
     /// printer-resource-ids
     /// See: PWG 5100.22-2025 Section 6.1.2
     /// </summary>
+    [ItemRange(1, int.MaxValue)]
     public int[]? PrinterResourceIds { get; set; }
 
     /// <summary>

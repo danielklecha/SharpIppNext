@@ -2,6 +2,7 @@ using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Extensions;
 using SharpIpp.Protocol.Models;
+using SharpIpp.Validation;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -59,6 +60,7 @@ public class CreateJobOperationAttributes : OperationAttributes
     /// The <c>resource-ids</c> operation attribute.
     /// See: PWG 5100.22-2025 Section 8.2
     /// </summary>
+    [ItemRange(1, int.MaxValue)]
     public int[]? ResourceIds { get; set; }
 
     /// <summary>

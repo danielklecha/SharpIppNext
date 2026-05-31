@@ -59,6 +59,7 @@ public class DocumentTemplateAttributes : IIppCollection
     /// The <c>force-front-side</c> Document Template attribute.
     /// See: PWG 5100.3-2023 Section 5.2.2
     /// </summary>
+    [ItemRange(1, int.MaxValue)]
     public int[]? ForceFrontSide { get; set; }
 
     /// <summary>
