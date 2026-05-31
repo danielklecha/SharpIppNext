@@ -214,6 +214,12 @@ internal class PrinterDescriptionAttributesProfile : IProfile
                 MultipleObjectHandlingSupported = map.MapFromDicSetNullable<MultipleObjectHandling[]?>(src, IppAttributeNames.MultipleObjectHandlingSupported),
                 PdfFeaturesSupported = map.MapFromDicSetNullable<PdfFeature[]?>(src, IppAttributeNames.PdfFeaturesSupported),
                 PlatformShape = map.MapFromDicNullable<PlatformShape?>(src, IppAttributeNames.PlatformShape),
+                RepertoireSupported = map.MapFromDicSetNullable<string, Repertoire>(src, IppAttributeNames.RepertoireSupported, (attribute, value) => attribute.Tag == Tag.NoValue ? new Repertoire() : new Repertoire(value, attribute.Tag == Tag.Keyword)),
+                PwgRasterDocumentResolutionSupported = map.MapFromDicSetNullable<Resolution[]?>(src, IppAttributeNames.PwgRasterDocumentResolutionSupported),
+                PwgRasterDocumentSheetBack = map.MapFromDicNullable<PwgRasterDocumentSheetBack?>(src, IppAttributeNames.PwgRasterDocumentSheetBack),
+                PwgRasterDocumentTypeSupported = map.MapFromDicSetNullable<string[]?>(src, IppAttributeNames.PwgRasterDocumentTypeSupported),
+                PrinterDeviceId = map.MapFromDicNullable<string?>(src, IppAttributeNames.PrinterDeviceId),
+
                 PlatformTemperatureDefault = map.MapFromDicNullable<int?>(src, IppAttributeNames.PlatformTemperatureDefault),
                 PlatformTemperatureSupported = map.MapFromDicSetNullable<Protocol.Models.Range[]?>(src, IppAttributeNames.PlatformTemperatureSupported),
                 PrintBaseDefault = map.MapFromDicNullable<PrintBase?>(src, IppAttributeNames.PrintBaseDefault),
@@ -352,6 +358,7 @@ internal class PrinterDescriptionAttributesProfile : IProfile
                 SaveDispositionSupported = map.MapFromDicSetNullable<SaveDisposition[]?>(src, IppAttributeNames.SaveDispositionSupported),
                 SaveInfoSupported = map.MapFromDicSetNullable<string[]?>(src, IppAttributeNames.SaveInfoSupported),
                 SaveLocationSupported = map.MapFromDicSetNullable<Uri[]?>(src, IppAttributeNames.SaveLocationSupported),
+                PagesPerSubsetSupported = map.MapFromDicNullable<bool?>(src, IppAttributeNames.PagesPerSubsetSupported),
             };
 
             if (src.TryGetValue(IppAttributeNames.JobSheetsColDefault, out var jobSheetsColDefault))
@@ -972,6 +979,17 @@ internal class PrinterDescriptionAttributesProfile : IProfile
                 dic.Add(IppAttributeNames.PdfFeaturesSupported, src.PdfFeaturesSupported.Select(x => new IppAttribute(Tag.Keyword, IppAttributeNames.PdfFeaturesSupported, map.Map<string>(x))).ToArray());
             if (src.PlatformShape != null)
                 dic.Add(IppAttributeNames.PlatformShape, [new IppAttribute(Tag.Keyword, IppAttributeNames.PlatformShape, src.PlatformShape.Value.Value)]);
+            if (src.RepertoireSupported != null)
+                dic.Add(IppAttributeNames.RepertoireSupported, src.RepertoireSupported.Select(x => new IppAttribute(x.ToIppTag(), IppAttributeNames.RepertoireSupported, x.Value)).ToArray());
+            if (src.PwgRasterDocumentResolutionSupported != null)
+                dic.Add(IppAttributeNames.PwgRasterDocumentResolutionSupported, src.PwgRasterDocumentResolutionSupported.Select(x => new IppAttribute(Tag.Resolution, IppAttributeNames.PwgRasterDocumentResolutionSupported, x)).ToArray());
+            if (src.PwgRasterDocumentSheetBack != null)
+                dic.Add(IppAttributeNames.PwgRasterDocumentSheetBack, [new IppAttribute(Tag.Keyword, IppAttributeNames.PwgRasterDocumentSheetBack, src.PwgRasterDocumentSheetBack.Value.Value)]);
+            if (src.PwgRasterDocumentTypeSupported != null)
+                dic.Add(IppAttributeNames.PwgRasterDocumentTypeSupported, src.PwgRasterDocumentTypeSupported.Select(x => new IppAttribute(Tag.Keyword, IppAttributeNames.PwgRasterDocumentTypeSupported, x)).ToArray());
+            if (src.PrinterDeviceId != null)
+                dic.Add(IppAttributeNames.PrinterDeviceId, [new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.PrinterDeviceId, src.PrinterDeviceId)]);
+
             if (src.PlatformTemperatureDefault != null)
                 dic.Add(IppAttributeNames.PlatformTemperatureDefault, [new IppAttribute(Tag.Integer, IppAttributeNames.PlatformTemperatureDefault, src.PlatformTemperatureDefault.Value)]);
             if (src.PlatformTemperatureSupported != null)
@@ -1329,6 +1347,8 @@ internal class PrinterDescriptionAttributesProfile : IProfile
                 dic.Add(IppAttributeNames.SaveInfoSupported, src.SaveInfoSupported.Select(x => new IppAttribute(Tag.Keyword, IppAttributeNames.SaveInfoSupported, x)).ToArray());
             if (src.SaveLocationSupported != null)
                 dic.Add(IppAttributeNames.SaveLocationSupported, src.SaveLocationSupported.Select(x => new IppAttribute(Tag.Uri, IppAttributeNames.SaveLocationSupported, x.ToString())).ToArray());
+            if (src.PagesPerSubsetSupported != null)
+                dic.Add(IppAttributeNames.PagesPerSubsetSupported, [new IppAttribute(Tag.Boolean, IppAttributeNames.PagesPerSubsetSupported, src.PagesPerSubsetSupported.Value)]);
             return dic;
         });
     }

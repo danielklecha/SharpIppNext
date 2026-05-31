@@ -684,6 +684,7 @@ public class JobTemplateAttributes
     /// divided into subsets for finishing.
     /// See: PWG 5100.8-2003 Section 3
     /// </summary>
+    [Obsolete("The 'pages-per-subset' attribute is obsolete. See PWG 5100.13-2023 Section 7.1.")]
     public int[]? PagesPerSubset { get; set; }
 
     /// <summary>

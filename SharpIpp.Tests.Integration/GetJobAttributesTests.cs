@@ -243,6 +243,7 @@ public class GetJobAttributesTests : SharpIppIntegrationTestBase
                     JobChargeInfoUri = new Uri("http://example.com/charge/123"),
                     JobPagesCompletedCurrentCopy = 8,
                     PagesCompletedCurrentCopy = 4,
+                    PagesPerSubsetActual = [2, 3],
                     ChamberHumidityCurrent = 42,
                     ChamberTemperatureCurrent = 55
                 },

@@ -1760,6 +1760,36 @@ public class PrinterDescriptionAttributes
     public PlatformShape? PlatformShape { get; set; }
 
     /// <summary>
+    /// repertoire-supported
+    /// See: PWG 5101.2-2004 Section 8
+    /// </summary>
+    public Repertoire[]? RepertoireSupported { get; set; }
+
+    /// <summary>
+    /// pwg-raster-document-resolution-supported
+    /// See: PWG 5102.4-2012 Section 10.1
+    /// </summary>
+    public Resolution[]? PwgRasterDocumentResolutionSupported { get; set; }
+
+    /// <summary>
+    /// pwg-raster-document-sheet-back
+    /// See: PWG 5102.4-2012 Section 10.2
+    /// </summary>
+    public PwgRasterDocumentSheetBack? PwgRasterDocumentSheetBack { get; set; }
+
+    /// <summary>
+    /// pwg-raster-document-type-supported
+    /// See: PWG 5102.4-2012 Section 10.3
+    /// </summary>
+    public string[]? PwgRasterDocumentTypeSupported { get; set; }
+
+    /// <summary>
+    /// printer-device-id
+    /// See: PWG 5107.2-2010 Section 5.2
+    /// </summary>
+    public string? PrinterDeviceId { get; set; }
+
+    /// <summary>
     /// platform-temperature-default
     /// Type: integer(-273:MAX)
     /// See: PWG 5100.21-2019 Section 8.3.24
@@ -2201,4 +2231,11 @@ public class PrinterDescriptionAttributes
     /// </summary>
     [Obsolete("The 'save-location-supported' attribute is obsolete. See PWG 5100.11-2024 Section 9.1.")]
     public Uri[]? SaveLocationSupported { get; set; }
+
+    /// <summary>
+    /// The pages-per-subset-supported Printer Description attribute.
+    /// See: PWG 5100.8-2003 Section 4.2
+    /// </summary>
+    [Obsolete("The 'pages-per-subset-supported' attribute is obsolete. See PWG 5100.13-2023 Section 7.1.")]
+    public bool? PagesPerSubsetSupported { get; set; }
 }

@@ -95,6 +95,7 @@ internal class GetJobAttributesResponseProfile : IProfile
                 : null,
             JobProcessingTime = map.MapFromDicNullable<int?>(src, IppAttributeNames.JobProcessingTime),
             JobPagesCompletedCurrentCopy = map.MapFromDicNullable<int?>(src, IppAttributeNames.JobPagesCompletedCurrentCopy),
+            PagesPerSubsetActual = map.MapFromDicSetNullable<int[]?>(src, IppAttributeNames.PagesPerSubsetActual),
             PagesCompletedCurrentCopy = map.MapFromDicNullable<int?>(src, IppAttributeNames.PagesCompletedCurrentCopy),
             ClientInfo = null,
             JobSheetsCol = src.ContainsKey(IppAttributeNames.JobSheetsCol)
@@ -467,6 +468,8 @@ internal class GetJobAttributesResponseProfile : IProfile
                 dic.Add(IppAttributeNames.ChamberHumidityCurrent, [new IppAttribute(Tag.Integer, IppAttributeNames.ChamberHumidityCurrent, src.ChamberHumidityCurrent.Value)]);
             if (src.ChamberTemperatureCurrent != null)
                 dic.Add(IppAttributeNames.ChamberTemperatureCurrent, [new IppAttribute(Tag.Integer, IppAttributeNames.ChamberTemperatureCurrent, src.ChamberTemperatureCurrent.Value)]);
+            if (src.PagesPerSubsetActual != null)
+                dic.Add(IppAttributeNames.PagesPerSubsetActual, src.PagesPerSubsetActual.Select(x => new IppAttribute(Tag.Integer, IppAttributeNames.PagesPerSubsetActual, x)).ToArray());
             return dic;
         });
     }

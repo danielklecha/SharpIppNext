@@ -624,4 +624,54 @@ public class PrinterDescriptionAttributesProfileTests
         roundTripped.JpegYDimensionSupported.Should().Be(src.JpegYDimensionSupported);
         roundTripped.PdfKOctetsSupported.Should().Be(src.PdfKOctetsSupported);
     }
+
+    [TestMethod]
+    public void Map_PrinterDescriptionAttributes_PWGAttributes_RoundTripsCorrectly()
+    {
+        var src = new PrinterDescriptionAttributes
+        {
+            RepertoireSupported = new[] { new Repertoire("unicode_utf-8", false), new Repertoire("iana_iso_8859-1", false) },
+            PwgRasterDocumentResolutionSupported = new[] { new Resolution(300, 300, ResolutionUnit.DotsPerInch) },
+            PwgRasterDocumentSheetBack = PwgRasterDocumentSheetBack.Normal,
+            PwgRasterDocumentTypeSupported = new[] { "srgb_8" },
+            PrinterDeviceId = "1284-device-id",
+            PagesPerSubsetSupported = true
+        };
+
+        var ippDict = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
+
+        ippDict.Should().ContainKey(IppAttributeNames.RepertoireSupported);
+        ippDict[IppAttributeNames.RepertoireSupported].Select(x => x.Tag).Should().BeEquivalentTo([Tag.NameWithoutLanguage, Tag.NameWithoutLanguage]);
+        ippDict[IppAttributeNames.RepertoireSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["unicode_utf-8", "iana_iso_8859-1"]);
+
+
+        ippDict.Should().ContainKey(IppAttributeNames.PwgRasterDocumentResolutionSupported);
+        ippDict[IppAttributeNames.PwgRasterDocumentResolutionSupported].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Resolution);
+        ippDict[IppAttributeNames.PwgRasterDocumentResolutionSupported].Select(x => x.Value).Should().BeEquivalentTo(src.PwgRasterDocumentResolutionSupported);
+
+        ippDict.Should().ContainKey(IppAttributeNames.PwgRasterDocumentSheetBack);
+        ippDict[IppAttributeNames.PwgRasterDocumentSheetBack].Single().Tag.Should().Be(Tag.Keyword);
+        ippDict[IppAttributeNames.PwgRasterDocumentSheetBack].Single().Value.Should().Be("normal");
+
+        ippDict.Should().ContainKey(IppAttributeNames.PwgRasterDocumentTypeSupported);
+        ippDict[IppAttributeNames.PwgRasterDocumentTypeSupported].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Keyword);
+        ippDict[IppAttributeNames.PwgRasterDocumentTypeSupported].Select(x => x.Value?.ToString()).Should().BeEquivalentTo(["srgb_8"]);
+
+        ippDict.Should().ContainKey(IppAttributeNames.PrinterDeviceId);
+        ippDict[IppAttributeNames.PrinterDeviceId].Single().Tag.Should().Be(Tag.TextWithoutLanguage);
+        ippDict[IppAttributeNames.PrinterDeviceId].Single().Value.Should().Be("1284-device-id");
+
+        ippDict.Should().ContainKey(IppAttributeNames.PagesPerSubsetSupported);
+        ippDict[IppAttributeNames.PagesPerSubsetSupported].Single().Tag.Should().Be(Tag.Boolean);
+        ippDict[IppAttributeNames.PagesPerSubsetSupported].Single().Value.Should().Be(true);
+
+        var roundTripped = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(ippDict);
+        roundTripped.RepertoireSupported.Should().BeEquivalentTo(src.RepertoireSupported);
+        roundTripped.PwgRasterDocumentResolutionSupported.Should().BeEquivalentTo(src.PwgRasterDocumentResolutionSupported);
+        roundTripped.PwgRasterDocumentSheetBack.Should().Be(src.PwgRasterDocumentSheetBack);
+        roundTripped.PwgRasterDocumentTypeSupported.Should().BeEquivalentTo(src.PwgRasterDocumentTypeSupported);
+        roundTripped.PrinterDeviceId.Should().Be(src.PrinterDeviceId);
+        roundTripped.PagesPerSubsetSupported.Should().Be(src.PagesPerSubsetSupported);
+    }
 }
+

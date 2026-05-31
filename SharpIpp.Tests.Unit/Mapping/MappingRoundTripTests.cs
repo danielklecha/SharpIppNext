@@ -324,6 +324,7 @@ public class MappingRoundTripTests : MapperTestBase
                 WarningsCount = RandomInt(rng),
                 JobPagesCompletedCurrentCopy = RandomInt(rng),
                 PagesCompletedCurrentCopy = RandomInt(rng),
+                PagesPerSubsetActual = new[] { RandomInt(rng), RandomInt(rng) }
             };
 
             // JobDescriptionAttributes maps to/from IDictionary<string, IppAttribute[]>
@@ -342,6 +343,7 @@ public class MappingRoundTripTests : MapperTestBase
             roundTripped.WarningsCount.Should().Be(original.WarningsCount, $"iteration {i}: WarningsCount");
             roundTripped.JobPagesCompletedCurrentCopy.Should().Be(original.JobPagesCompletedCurrentCopy, $"iteration {i}: JobPagesCompletedCurrentCopy");
             roundTripped.PagesCompletedCurrentCopy.Should().Be(original.PagesCompletedCurrentCopy, $"iteration {i}: PagesCompletedCurrentCopy");
+            roundTripped.PagesPerSubsetActual.Should().BeEquivalentTo(original.PagesPerSubsetActual, $"iteration {i}: PagesPerSubsetActual");
         }
     }
 

@@ -969,5 +969,12 @@ namespace SharpIpp.Protocol.Models
         /// </summary>
         /// <code>chamber-temperature-current</code>
         public int? ChamberTemperatureCurrent { get; set; }
+
+        /// <summary>
+        /// The pages-per-subset-actual Job Description attribute.
+        /// See: PWG 5100.8-2003 Section 4.2
+        /// </summary>
+        [Obsolete("The 'pages-per-subset-actual' attribute is obsolete. See PWG 5100.13-2023 Section 7.1.")]
+        public int[]? PagesPerSubsetActual { get; set; }
     }
 }

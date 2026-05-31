@@ -12,6 +12,8 @@ For the PWG 5100.9 printer state extension attributes (`printer-alert`, `printer
 
 For the PWG 5100.21 IPP 3D attribute extensions (for example `chamber-humidity`, `chamber-temperature`, `materials-col`, `materials-col-actual`, `print-accuracy`, `print-accuracy-actual`, `printer-volume-supported`, and chamber/platform state attributes), use the strongly typed properties on `JobTemplateAttributes`, `DocumentTemplateAttributes`, `JobDescriptionAttributes`, and `PrinterDescriptionAttributes`.
 
+For the PWG 5101.2 (`repertoire-supported`), PWG 5102.4 (`pwg-raster-document-resolution-supported`, `pwg-raster-document-sheet-back`, `pwg-raster-document-type-supported`), and PWG 5107.2 (`printer-device-id`) Printer Description attributes, use the strongly typed properties on `PrinterDescriptionAttributes`.
+
 | Operation | Method | Example |
 | --- | --- | --- |
 | Acknowledge-Document | `AcknowledgeDocumentAsync` | [AcknowledgeDocument.md](AcknowledgeDocument.md) |

@@ -189,6 +189,12 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                         PdfVersionsSupported = new[] { PdfVersion.Adobe17 },
                         PrinterServiceType = new[] { (PrinterServiceType)"office-print" },
                         PlatformShape = (PlatformShape?)"rectangular",
+                        RepertoireSupported = new Repertoire[] { Repertoire.UnicodeUtf8, Repertoire.IanaIso88591 },
+                        PwgRasterDocumentResolutionSupported = new[] { new Resolution(300, 300, ResolutionUnit.DotsPerInch) },
+                        PwgRasterDocumentSheetBack = PwgRasterDocumentSheetBack.Normal,
+                        PwgRasterDocumentTypeSupported = new[] { "srgb_8" },
+                        PrinterDeviceId = "1284-device-id",
+
                         PrintBaseDefault = (PrintBase?)"raft",
                         PrintSupportsSupported = new[] { "none", "standard" }.Select(x => (PrintSupports)x).ToArray(),
                         PrinterVolumeSupported = new PrinterVolumeSupported
@@ -531,7 +537,8 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                         JobSaveDispositionDefault = new JobSaveDisposition { SaveDisposition = SaveDisposition.SaveOnly, SaveLocation = new Uri("http://host/save") },
                         SaveDispositionSupported = new[] { SaveDisposition.SaveOnly },
                         SaveInfoSupported = new[] { "save-name" },
-                        SaveLocationSupported = new[] { new Uri("http://host/save") }
+                        SaveLocationSupported = new[] { new Uri("http://host/save") },
+                        PagesPerSubsetSupported = true
                     },
                     OperationAttributes = new()
                     {
@@ -626,8 +633,14 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                 new IppAttribute(Tag.NoValue, IppAttributeNames.JobPrioritySupported, NoValue.Instance),
                 new IppAttribute(Tag.NoValue, IppAttributeNames.CopiesDefault, NoValue.Instance),
                 new IppAttribute(Tag.NoValue, IppAttributeNames.CopiesSupported, NoValue.Instance),
-                new IppAttribute(Tag.NoValue, IppAttributeNames.PageRangesSupported, NoValue.Instance)
+                new IppAttribute(Tag.NoValue, IppAttributeNames.PageRangesSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.RepertoireSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.PwgRasterDocumentResolutionSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.PwgRasterDocumentSheetBack, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.PwgRasterDocumentTypeSupported, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.PrinterDeviceId, NoValue.Instance)
             ]);
+
 
             var memoryStream = new MemoryStream();
             await server.SendRawResponseAsync(serverRawResponse, memoryStream, c);
@@ -674,6 +687,12 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                 CopiesDefault = NoValue.GetNoValue<int>(),
                 CopiesSupported = NoValue.GetNoValue<SharpIpp.Protocol.Models.Range>(),
                 PageRangesSupported = NoValue.GetNoValue<bool?>(),
+                RepertoireSupported = [NoValue.GetNoValue<Repertoire>()],
+                PwgRasterDocumentResolutionSupported = [NoValue.GetNoValue<Resolution>()],
+                PwgRasterDocumentSheetBack = NoValue.GetNoValue<PwgRasterDocumentSheetBack>(),
+                PwgRasterDocumentTypeSupported = [NoValue.GetNoValue<string>()],
+                PrinterDeviceId = NoValue.GetNoValue<string>(),
+
                 PrinterName = NoValue.GetNoValue<string>(),
                 PrinterLocation = NoValue.GetNoValue<string>(),
                 PrinterInfo = NoValue.GetNoValue<string>(),

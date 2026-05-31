@@ -2434,6 +2434,16 @@ namespace SharpIpp.Protocol.Models
         public const string PagesPerSubset = "pages-per-subset";
 
         /// <summary>
+        /// The pages-per-subset-supported attribute.
+        /// </summary>
+        public const string PagesPerSubsetSupported = "pages-per-subset-supported";
+
+        /// <summary>
+        /// The pages-per-subset-actual attribute.
+        /// </summary>
+        public const string PagesPerSubsetActual = "pages-per-subset-actual";
+
+        /// <summary>
         /// The pdf-features-supported attribute.
         /// </summary>
         public const string PdfFeaturesSupported = "pdf-features-supported";
@@ -2789,6 +2799,11 @@ namespace SharpIpp.Protocol.Models
         public const string PrinterCreationAttributesSupported = "printer-creation-attributes-supported";
 
         /// <summary>
+        /// The printer-device-id attribute.
+        /// </summary>
+        public const string PrinterDeviceId = "printer-device-id";
+
+        /// <summary>
         /// The printer-current-time attribute.
         /// </summary>
         public const string PrinterCurrentTime = "printer-current-time";
@@ -3115,6 +3130,21 @@ namespace SharpIpp.Protocol.Models
         public const string ProofPrint = "proof-print";
 
         /// <summary>
+        /// The pwg-raster-document-resolution-supported attribute.
+        /// </summary>
+        public const string PwgRasterDocumentResolutionSupported = "pwg-raster-document-resolution-supported";
+
+        /// <summary>
+        /// The pwg-raster-document-sheet-back attribute.
+        /// </summary>
+        public const string PwgRasterDocumentSheetBack = "pwg-raster-document-sheet-back";
+
+        /// <summary>
+        /// The pwg-raster-document-type-supported attribute.
+        /// </summary>
+        public const string PwgRasterDocumentTypeSupported = "pwg-raster-document-type-supported";
+
+        /// <summary>
         /// The punching-hole-diameter-configured attribute.
         /// </summary>
         public const string PunchingHoleDiameterConfigured = "punching-hole-diameter-configured";
@@ -3143,6 +3173,11 @@ namespace SharpIpp.Protocol.Models
         /// The reference-uri-schemes-supported attribute.
         /// </summary>
         public const string ReferenceUriSchemesSupported = "reference-uri-schemes-supported";
+
+        /// <summary>
+        /// The repertoire-supported attribute.
+        /// </summary>
+        public const string RepertoireSupported = "repertoire-supported";
 
         /// <summary>
         /// The requested-attributes attribute.

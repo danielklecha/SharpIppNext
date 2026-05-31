@@ -176,6 +176,8 @@ internal class TypesProfile : IProfile
           ConfigureSmartEnum<PdfVersion>(map);
           ConfigureSmartEnum<PdlOverride>(map);
           ConfigureSmartEnum<PlatformShape>(map);
+          ConfigureSmartEnum<PwgRasterDocumentSheetBack>(map);
+          ConfigureSmartEnum<Repertoire>(map);
           ConfigureSmartEnum<PowerState>(map);
           ConfigureSmartEnum<PresentationDirectionNumberUp>(map);
           ConfigureSmartEnum<PresentOnOff>(map);
