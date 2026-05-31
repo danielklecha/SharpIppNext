@@ -1,5 +1,11 @@
+- name: Conformance Matrix
+  href: conformance-matrix.md
 - name: RFC 2911 (2000)
   href: rfc2911-2000-docling.md
+- name: RFC 3380 (2002)
+  href: rfc3380-2002-docling.md
+- name: RFC 3998 (2005)
+  href: rfc3998-2005-docling.md
 - name: RFC 8010 (2017)
   href: rfc8010-2017-docling.md
 - name: RFC 8011 (2017)
