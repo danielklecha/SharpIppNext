@@ -1,3 +1,5 @@
+using SharpIpp.Validation;
+
 namespace SharpIpp.Protocol.Models;
 public class MediaSize : IIppCollection
 {
@@ -6,12 +8,14 @@ public class MediaSize : IIppCollection
     bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     /// <summary>
-    /// integer(0:MAX))
+    /// integer(1:MAX) | rangeOfInteger(1:MAX)
     /// </summary>
-    public int? XDimension { get; set; }
+    [IppRange(1, int.MaxValue)]
+    public Range? XDimension { get; set; }
 
     /// <summary>
-    /// integer(0:MAX))
+    /// integer(0:MAX) | rangeOfInteger(0:MAX)
     /// </summary>
-    public int? YDimension { get; set; }
+    [IppRange(0, int.MaxValue)]
+    public Range? YDimension { get; set; }
 }

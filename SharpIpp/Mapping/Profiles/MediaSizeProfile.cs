@@ -17,8 +17,8 @@ internal class MediaSizeProfile : IProfile
 
             return new MediaSize
             {
-                XDimension = map.MapFromDicNullable<int?>(src, nameof(MediaSize.XDimension).ConvertCamelCaseToKebabCase()),
-                YDimension = map.MapFromDicNullable<int?>(src, nameof(MediaSize.YDimension).ConvertCamelCaseToKebabCase())
+                XDimension = map.MapFromDicNullable<Range?>(src, nameof(MediaSize.XDimension).ConvertCamelCaseToKebabCase()),
+                YDimension = map.MapFromDicNullable<Range?>(src, nameof(MediaSize.YDimension).ConvertCamelCaseToKebabCase())
             };
         });
 
@@ -29,9 +29,19 @@ internal class MediaSizeProfile : IProfile
 
             var attributes = new List<IppAttribute>();
             if (src.XDimension.HasValue)
-                attributes.Add(new IppAttribute(Tag.Integer, nameof(MediaSize.XDimension).ConvertCamelCaseToKebabCase(), src.XDimension.Value));
+            {
+                var range = src.XDimension.Value;
+                attributes.Add(range.Lower == range.Upper
+                    ? new IppAttribute(Tag.Integer, nameof(MediaSize.XDimension).ConvertCamelCaseToKebabCase(), range.Lower)
+                    : new IppAttribute(Tag.RangeOfInteger, nameof(MediaSize.XDimension).ConvertCamelCaseToKebabCase(), range));
+            }
             if (src.YDimension.HasValue)
-                attributes.Add(new IppAttribute(Tag.Integer, nameof(MediaSize.YDimension).ConvertCamelCaseToKebabCase(), src.YDimension.Value));
+            {
+                var range = src.YDimension.Value;
+                attributes.Add(range.Lower == range.Upper
+                    ? new IppAttribute(Tag.Integer, nameof(MediaSize.YDimension).ConvertCamelCaseToKebabCase(), range.Lower)
+                    : new IppAttribute(Tag.RangeOfInteger, nameof(MediaSize.YDimension).ConvertCamelCaseToKebabCase(), range));
+            }
             return attributes;
         });
     }

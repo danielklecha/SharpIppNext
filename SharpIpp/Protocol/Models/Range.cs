@@ -31,4 +31,6 @@ public readonly struct Range(int lower, int upper, bool isValue = true) : IEquat
     public static bool operator ==(Range left, Range right) => left.Equals(right);
 
     public static bool operator !=(Range left, Range right) => !left.Equals(right);
+
+    public static implicit operator Range(int value) => new(value, value);
 }
