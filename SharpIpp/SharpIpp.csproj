@@ -40,7 +40,7 @@
     <PackageReference Include="System.ComponentModel.Annotations" />
   </ItemGroup>
   
-  <ItemGroup>
+  <ItemGroup Condition="'$(SignAssembly)' != 'true'">
     <InternalsVisibleTo Include="SharpIpp.Tests.Unit" />
     <InternalsVisibleTo Include="SharpIpp.Tests.Integration" />
   </ItemGroup>
