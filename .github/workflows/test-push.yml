@@ -2,7 +2,9 @@ name: Test push
 
 on:
   push:
-    branches: [ "master" ]
+    branches:
+      - "master"
+      - "v[0-9]*"
 
 permissions:
   contents: read
@@ -12,9 +14,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
         dotnet-version: 10.0.x
     - name: Restore dependencies
@@ -26,9 +28,9 @@ jobs:
     - name: Publish Native AOT Client Sample
       run: dotnet publish SharpIpp.Samples.Client.NativeAot/SharpIpp.Samples.Client.NativeAot.csproj -c Release -r linux-x64 --self-contained
     - name: Publish coverage report to coveralls.io   
-      uses: coverallsapp/github-action@master
+      uses: coverallsapp/github-action@v2
       continue-on-error: true
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }} 
-        path-to-lcov: CoverageResults/coverage.info 
+        file: CoverageResults/coverage.info 
 

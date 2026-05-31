@@ -190,6 +190,136 @@ public class IppRequestValidatorTests
     }
 
     [TestMethod]
+    public void Validate_WhenMaterialAmountOutOfRange_ThrowsValidationException()
+    {
+        var validator = IppRequestValidator.Default;
+        var request = new CreateJobRequest
+        {
+            OperationAttributes = new CreateJobOperationAttributes
+            {
+                PrinterUri = new Uri("ipp://127.0.0.1:631/")
+            },
+            JobTemplateAttributes = new JobTemplateAttributes
+            {
+                MaterialsCol = new[]
+                {
+                    new Material
+                    {
+                        MaterialAmount = -1 // Out of range [0, int.MaxValue]
+                    }
+                }
+            }
+        };
+
+        Action act = () => validator.Validate(request);
+        act.Should().Throw<ValidationException>().WithMessage("*MaterialAmount*");
+    }
+
+    [TestMethod]
+    public void Validate_WhenMaterialDiameterOutOfRange_ThrowsValidationException()
+    {
+        var validator = IppRequestValidator.Default;
+        var request = new CreateJobRequest
+        {
+            OperationAttributes = new CreateJobOperationAttributes
+            {
+                PrinterUri = new Uri("ipp://127.0.0.1:631/")
+            },
+            JobTemplateAttributes = new JobTemplateAttributes
+            {
+                MaterialsCol = new[]
+                {
+                    new Material
+                    {
+                        MaterialDiameter = -5 // Out of range [0, int.MaxValue]
+                    }
+                }
+            }
+        };
+
+        Action act = () => validator.Validate(request);
+        act.Should().Throw<ValidationException>().WithMessage("*MaterialDiameter*");
+    }
+
+    [TestMethod]
+    public void Validate_WhenMaterialRateOutOfRange_ThrowsValidationException()
+    {
+        var validator = IppRequestValidator.Default;
+        var request = new CreateJobRequest
+        {
+            OperationAttributes = new CreateJobOperationAttributes
+            {
+                PrinterUri = new Uri("ipp://127.0.0.1:631/")
+            },
+            JobTemplateAttributes = new JobTemplateAttributes
+            {
+                MaterialsCol = new[]
+                {
+                    new Material
+                    {
+                        MaterialRate = 0 // Out of range [1, int.MaxValue]
+                    }
+                }
+            }
+        };
+
+        Action act = () => validator.Validate(request);
+        act.Should().Throw<ValidationException>().WithMessage("*MaterialRate*");
+    }
+
+    [TestMethod]
+    public void Validate_WhenMaterialShellThicknessOutOfRange_ThrowsValidationException()
+    {
+        var validator = IppRequestValidator.Default;
+        var request = new CreateJobRequest
+        {
+            OperationAttributes = new CreateJobOperationAttributes
+            {
+                PrinterUri = new Uri("ipp://127.0.0.1:631/")
+            },
+            JobTemplateAttributes = new JobTemplateAttributes
+            {
+                MaterialsCol = new[]
+                {
+                    new Material
+                    {
+                        MaterialShellThickness = -10 // Out of range [0, int.MaxValue]
+                    }
+                }
+            }
+        };
+
+        Action act = () => validator.Validate(request);
+        act.Should().Throw<ValidationException>().WithMessage("*MaterialShellThickness*");
+    }
+
+    [TestMethod]
+    public void Validate_WhenMaterialTemperatureOutOfRange_ThrowsValidationException()
+    {
+        var validator = IppRequestValidator.Default;
+        var request = new CreateJobRequest
+        {
+            OperationAttributes = new CreateJobOperationAttributes
+            {
+                PrinterUri = new Uri("ipp://127.0.0.1:631/")
+            },
+            JobTemplateAttributes = new JobTemplateAttributes
+            {
+                MaterialsCol = new[]
+                {
+                    new Material
+                    {
+                        MaterialTemperature = -300 // Out of range [-273, int.MaxValue]
+                    }
+                }
+            }
+        };
+
+        Action act = () => validator.Validate(request);
+        act.Should().Throw<ValidationException>().WithMessage("*MaterialTemperature*");
+    }
+
+    [TestMethod]
     public void Validate_WhenOutputAttributesNoiseRemovalOutOfRange_ThrowsValidationException()
     {
         var validator = IppRequestValidator.Default;

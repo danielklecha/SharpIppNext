@@ -384,6 +384,12 @@ public class PrinterDescriptionAttributes
     public int? MultipleOperationTimeOut { get; set; }
 
     /// <summary>
+    /// multiple-operation-time-out-action
+    /// See: PWG 5100.13-2023 Section 6.5.19
+    /// </summary>
+    public MultipleOperationTimeOutAction? MultipleOperationTimeOutAction { get; set; }
+
+    /// <summary>
     /// compression-supported
     /// See: RFC 8011 Section 5.4.32
     /// </summary>
@@ -2111,4 +2117,88 @@ public class PrinterDescriptionAttributes
     /// </summary>
     [MultiRange(0, 0, 255, 1023)]
     public int? DocumentPasswordSupported { get; set; }
+
+    /// <summary>
+    /// x-side1-image-offset-supported
+    /// See: PWG 5100.3-2023
+    /// </summary>
+    [Obsolete("The 'x-side1-image-offset-supported' attribute is obsolete. See PWG 5100.3-2023 Section 12.")]
+    public Range? XSide1ImageOffsetSupported { get; set; }
+
+    /// <summary>
+    /// x-side2-image-offset-supported
+    /// See: PWG 5100.3-2023
+    /// </summary>
+    [Obsolete("The 'x-side2-image-offset-supported' attribute is obsolete. See PWG 5100.3-2023 Section 12.")]
+    public Range? XSide2ImageOffsetSupported { get; set; }
+
+    /// <summary>
+    /// y-side1-image-offset-supported
+    /// See: PWG 5100.3-2023
+    /// </summary>
+    [Obsolete("The 'y-side1-image-offset-supported' attribute is obsolete. See PWG 5100.3-2023 Section 12.")]
+    public Range? YSide1ImageOffsetSupported { get; set; }
+
+    /// <summary>
+    /// y-side2-image-offset-supported
+    /// See: PWG 5100.3-2023
+    /// </summary>
+    [Obsolete("The 'y-side2-image-offset-supported' attribute is obsolete. See PWG 5100.3-2023 Section 12.")]
+    public Range? YSide2ImageOffsetSupported { get; set; }
+
+    /// <summary>
+    /// user-defined-values-supported
+    /// See: PWG 5100.3-2023
+    /// </summary>
+    [Obsolete("The 'user-defined-values-supported' attribute is obsolete. See PWG 5100.3-2023 Section 12.")]
+    public string[]? UserDefinedValuesSupported { get; set; }
+
+    /// <summary>
+    /// pdl-init-file-supported
+    /// See: PWG 5100.11
+    /// </summary>
+    [Obsolete("The 'pdl-init-file-supported' attribute is obsolete. See PWG 5100.11-2024 Section 9.1.")]
+    public string[]? PdlInitFileSupported { get; set; }
+
+    /// <summary>
+    /// pdl-init-file-default
+    /// See: PWG 5100.11
+    /// </summary>
+    [Obsolete("The 'pdl-init-file-default' attribute is obsolete. See PWG 5100.11-2024 Section 9.1.")]
+    public PdlInitFile? PdlInitFileDefault { get; set; }
+
+    /// <summary>
+    /// job-save-disposition-supported
+    /// See: PWG 5100.11
+    /// </summary>
+    [Obsolete("The 'job-save-disposition-supported' attribute is obsolete. See PWG 5100.11-2024 Section 9.1.")]
+    public string[]? JobSaveDispositionSupported { get; set; }
+
+    /// <summary>
+    /// job-save-disposition-default
+    /// See: PWG 5100.11
+    /// </summary>
+    [Obsolete("The 'job-save-disposition-default' attribute is obsolete. See PWG 5100.11-2024 Section 9.1.")]
+    public JobSaveDisposition? JobSaveDispositionDefault { get; set; }
+
+    /// <summary>
+    /// save-disposition-supported
+    /// See: PWG 5100.11
+    /// </summary>
+    [Obsolete("The 'save-disposition-supported' attribute is obsolete. See PWG 5100.11-2024 Section 9.1.")]
+    public SaveDisposition[]? SaveDispositionSupported { get; set; }
+
+    /// <summary>
+    /// save-info-supported
+    /// See: PWG 5100.11
+    /// </summary>
+    [Obsolete("The 'save-info-supported' attribute is obsolete. See PWG 5100.11-2024 Section 9.1.")]
+    public string[]? SaveInfoSupported { get; set; }
+
+    /// <summary>
+    /// save-location-supported
+    /// See: PWG 5100.11
+    /// </summary>
+    [Obsolete("The 'save-location-supported' attribute is obsolete. See PWG 5100.11-2024 Section 9.1.")]
+    public Uri[]? SaveLocationSupported { get; set; }
 }

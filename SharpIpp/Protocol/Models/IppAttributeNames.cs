@@ -1365,6 +1365,11 @@ namespace SharpIpp.Protocol.Models
         public const string JobPagesCompletedCol = "job-pages-completed-col";
 
         /// <summary>
+        /// The job-pages-completed-current-copy attribute.
+        /// </summary>
+        public const string JobPagesCompletedCurrentCopy = "job-pages-completed-current-copy";
+
+        /// <summary>
         /// The job-pages-per-set attribute.
         /// </summary>
         public const string JobPagesPerSet = "job-pages-per-set";
@@ -1523,6 +1528,21 @@ namespace SharpIpp.Protocol.Models
         /// The job-retain-until-time-supported attribute.
         /// </summary>
         public const string JobRetainUntilTimeSupported = "job-retain-until-time-supported";
+
+        /// <summary>
+        /// The job-save-disposition attribute.
+        /// </summary>
+        public const string JobSaveDisposition = "job-save-disposition";
+
+        /// <summary>
+        /// The job-save-disposition-default attribute.
+        /// </summary>
+        public const string JobSaveDispositionDefault = "job-save-disposition-default";
+
+        /// <summary>
+        /// The job-save-disposition-supported attribute.
+        /// </summary>
+        public const string JobSaveDispositionSupported = "job-save-disposition-supported";
 
         /// <summary>
         /// The job-sheet-message attribute.
@@ -2026,6 +2046,11 @@ namespace SharpIpp.Protocol.Models
         public const string MultipleOperationTimeOut = "multiple-operation-time-out";
 
         /// <summary>
+        /// The multiple-operation-time-out-action attribute.
+        /// </summary>
+        public const string MultipleOperationTimeOutAction = "multiple-operation-time-out-action";
+
+        /// <summary>
         /// The my-jobs attribute.
         /// </summary>
         public const string MyJobs = "my-jobs";
@@ -2389,6 +2414,11 @@ namespace SharpIpp.Protocol.Models
         public const string PagesCompleted = "pages-completed";
 
         /// <summary>
+        /// The pages-completed-current-copy attribute.
+        /// </summary>
+        public const string PagesCompletedCurrentCopy = "pages-completed-current-copy";
+
+        /// <summary>
         /// The pages-per-minute attribute.
         /// </summary>
         public const string PagesPerMinute = "pages-per-minute";
@@ -2417,6 +2447,31 @@ namespace SharpIpp.Protocol.Models
         /// The pdf-versions-supported attribute.
         /// </summary>
         public const string PdfVersionsSupported = "pdf-versions-supported";
+
+        /// <summary>
+        /// The pdl-init-file attribute.
+        /// </summary>
+        public const string PdlInitFile = "pdl-init-file";
+
+        /// <summary>
+        /// The pdl-init-file-default attribute.
+        /// </summary>
+        public const string PdlInitFileDefault = "pdl-init-file-default";
+
+        /// <summary>
+        /// The pdl-init-file-location attribute.
+        /// </summary>
+        public const string PdlInitFileLocation = "pdl-init-file-location";
+
+        /// <summary>
+        /// The pdl-init-file-name attribute.
+        /// </summary>
+        public const string PdlInitFileName = "pdl-init-file-name";
+
+        /// <summary>
+        /// The pdl-init-file-supported attribute.
+        /// </summary>
+        public const string PdlInitFileSupported = "pdl-init-file-supported";
 
         /// <summary>
         /// The pdl-override-supported attribute.
@@ -3332,6 +3387,46 @@ namespace SharpIpp.Protocol.Models
         public const string RetryTimeOutSupported = "retry-time-out-supported";
 
         /// <summary>
+        /// The save-disposition attribute.
+        /// </summary>
+        public const string SaveDisposition = "save-disposition";
+
+        /// <summary>
+        /// The save-disposition-supported attribute.
+        /// </summary>
+        public const string SaveDispositionSupported = "save-disposition-supported";
+
+        /// <summary>
+        /// The save-info attribute.
+        /// </summary>
+        public const string SaveInfo = "save-info";
+
+        /// <summary>
+        /// The save-info-supported attribute.
+        /// </summary>
+        public const string SaveInfoSupported = "save-info-supported";
+
+        /// <summary>
+        /// The save-location attribute.
+        /// </summary>
+        public const string SaveLocation = "save-location";
+
+        /// <summary>
+        /// The save-location-supported attribute.
+        /// </summary>
+        public const string SaveLocationSupported = "save-location-supported";
+
+        /// <summary>
+        /// The save-name attribute.
+        /// </summary>
+        public const string SaveName = "save-name";
+
+        /// <summary>
+        /// The save-document-format attribute.
+        /// </summary>
+        public const string SaveDocumentFormat = "save-document-format";
+
+        /// <summary>
         /// The separator-sheets attribute.
         /// </summary>
         public const string SeparatorSheets = "separator-sheets";
@@ -3776,6 +3871,11 @@ namespace SharpIpp.Protocol.Models
         public const string UriSecuritySupported = "uri-security-supported";
 
         /// <summary>
+        /// The user-defined-values-supported attribute.
+        /// </summary>
+        public const string UserDefinedValuesSupported = "user-defined-values-supported";
+
+        /// <summary>
         /// The warnings-count attribute.
         /// </summary>
         public const string WarningsCount = "warnings-count";
@@ -3837,6 +3937,11 @@ namespace SharpIpp.Protocol.Models
         public const string XImageShiftSupported = "x-image-shift-supported";
 
         /// <summary>
+        /// The x-side1-image-offset-supported attribute.
+        /// </summary>
+        public const string XSide1ImageOffsetSupported = "x-side1-image-offset-supported";
+
+        /// <summary>
         /// The x-side1-image-shift attribute.
         /// </summary>
         public const string XSide1ImageShift = "x-side1-image-shift";
@@ -3850,6 +3955,11 @@ namespace SharpIpp.Protocol.Models
         /// The x-side1-image-shift-default attribute.
         /// </summary>
         public const string XSide1ImageShiftDefault = "x-side1-image-shift-default";
+
+        /// <summary>
+        /// The x-side2-image-offset-supported attribute.
+        /// </summary>
+        public const string XSide2ImageOffsetSupported = "x-side2-image-offset-supported";
 
         /// <summary>
         /// The x-side2-image-shift attribute.
@@ -3925,6 +4035,11 @@ namespace SharpIpp.Protocol.Models
         public const string YImageShiftSupported = "y-image-shift-supported";
 
         /// <summary>
+        /// The y-side1-image-offset-supported attribute.
+        /// </summary>
+        public const string YSide1ImageOffsetSupported = "y-side1-image-offset-supported";
+
+        /// <summary>
         /// The y-side1-image-shift attribute.
         /// </summary>
         public const string YSide1ImageShift = "y-side1-image-shift";
@@ -3938,6 +4053,11 @@ namespace SharpIpp.Protocol.Models
         /// The y-side1-image-shift-default attribute.
         /// </summary>
         public const string YSide1ImageShiftDefault = "y-side1-image-shift-default";
+
+        /// <summary>
+        /// The y-side2-image-offset-supported attribute.
+        /// </summary>
+        public const string YSide2ImageOffsetSupported = "y-side2-image-offset-supported";
 
         /// <summary>
         /// The y-side2-image-shift attribute.

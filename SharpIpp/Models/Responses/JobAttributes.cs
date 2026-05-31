@@ -91,4 +91,39 @@ public class JobAttributes
     /// <code>job-processing-time</code>
     [Range(0, int.MaxValue)]
     public int? JobProcessingTime { get; set; }
+
+    /// <summary>
+    /// The platform-temperature-actual IPP attribute.
+    /// See: PWG 5100.21-2019 Section 8.2.6
+    /// </summary>
+    /// <code>platform-temperature-actual</code>
+    public int[]? PlatformTemperatureActual { get; set; }
+
+    /// <summary>
+    /// The chamber-humidity-actual IPP attribute.
+    /// See: PWG 5100.21-2019 Section 8.2.1
+    /// </summary>
+    /// <code>chamber-humidity-actual</code>
+    public int[]? ChamberHumidityActual { get; set; }
+
+    /// <summary>
+    /// The chamber-temperature-actual IPP attribute.
+    /// See: PWG 5100.21-2019 Section 8.2.2
+    /// </summary>
+    /// <code>chamber-temperature-actual</code>
+    public int[]? ChamberTemperatureActual { get; set; }
+
+    /// <summary>
+    /// The chamber-humidity-current IPP attribute.
+    /// See: PWG 5100.21-2019 Section 8.4.1
+    /// </summary>
+    /// <code>chamber-humidity-current</code>
+    public int? ChamberHumidityCurrent { get; set; }
+
+    /// <summary>
+    /// The chamber-temperature-current IPP attribute.
+    /// See: PWG 5100.21-2019 Section 8.4.2
+    /// </summary>
+    /// <code>chamber-temperature-current</code>
+    public int? ChamberTemperatureCurrent { get; set; }
 }

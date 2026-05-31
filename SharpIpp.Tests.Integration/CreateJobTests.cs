@@ -64,7 +64,25 @@ public class CreateJobTests : SharpIppIntegrationTestBase
                     MediaCol = new MediaCol { MediaColor = (MediaColor)"blue" }
                 },
                 ChamberHumidity = 45,
-                ChamberTemperature = 60
+                ChamberTemperature = 60,
+                JobSaveDisposition = new JobSaveDisposition
+                {
+                    SaveDisposition = SaveDisposition.SaveOnly,
+                    SaveLocation = new Uri("ipp://127.0.0.1/save"),
+                    SaveInfo = new[]
+                    {
+                        new SaveInfo
+                        {
+                            SaveName = "job.ps",
+                            SaveDocumentFormat = "application/postscript"
+                        }
+                    }
+                },
+                PdlInitFile = new PdlInitFile
+                {
+                    PdlInitFileName = "setup.ps",
+                    PdlInitFileLocation = new Uri("ipp://127.0.0.1/setup")
+                }
             }
         };
 
@@ -78,7 +96,17 @@ public class CreateJobTests : SharpIppIntegrationTestBase
             {
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
-                StatusCode = IppStatusCode.SuccessfulOk
+                StatusCode = IppStatusCode.SuccessfulOk,
+                JobAttributes = new JobAttributes
+                {
+                    JobId = 1,
+                    JobState = JobState.Pending,
+                    PlatformTemperatureActual = [55, 60],
+                    ChamberHumidityActual = [30],
+                    ChamberTemperatureActual = [45],
+                    ChamberHumidityCurrent = 31,
+                    ChamberTemperatureCurrent = 46
+                }
             };
 
             var responseStream = new MemoryStream();

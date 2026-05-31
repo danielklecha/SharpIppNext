@@ -44,6 +44,7 @@ public class CreateJobOperationAttributes : OperationAttributes
     /// </summary>
     /// <code>job-impressions</code>
     /// <example>no value</example>
+    [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
     public int? JobImpressions { get; set; }
     /// <summary>
     /// This attribute specifies the total number of media sheets to be produced for this job. Unlike the "job-k-octets" and the "job-impressions" attributes, this value MUST include the multiplicative factors contributed by the number of copies specified by the "copies" attribute and a 'number of copies' instruction embedded in the document data, if any. This difference allows the system administrator to control the lower and upper bounds of both (1) the size of the document(s) with "job-k- octets-supported" and "job-impressions-supported" and (2) the size of the job with "job-media-sheets-supported"
@@ -51,6 +52,7 @@ public class CreateJobOperationAttributes : OperationAttributes
     /// </summary>
     /// <code>job-media-sheets</code>
     /// <example>no value</example>
+    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
     public int? JobMediaSheets { get; set; }
 
     /// <summary>
@@ -65,6 +67,7 @@ public class CreateJobOperationAttributes : OperationAttributes
     /// </summary>
     /// <code>job-k-octets</code>
     /// <example>26</example>
+    [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
     public int? JobKOctets { get; set; }
 
     /// <summary>
@@ -95,6 +98,7 @@ public class CreateJobOperationAttributes : OperationAttributes
     /// The <c>job-impressions-estimated</c> operation attribute.
     /// See: PWG 5100.16-2020 Section 6.1.3
     /// </summary>
+    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
     public int? JobImpressionsEstimated { get; set; }
 
     /// <summary>
@@ -107,6 +111,7 @@ public class CreateJobOperationAttributes : OperationAttributes
     /// The <c>proof-copies</c> operation attribute.
     /// See: PWG 5100.11-2024 Section 6.2.2
     /// </summary>
+    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
     public int? ProofCopies { get; set; }
 
     /// <summary>

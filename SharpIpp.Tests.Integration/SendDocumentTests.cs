@@ -173,7 +173,47 @@ public class SendDocumentTests : SharpIppIntegrationTestBase
                 DocumentUri = new Uri("http://example.com/doc.pdf"),
                 LastDocument = false,
                 JobPassword = new byte[] { 0x01, 0x02 },
-                JobPasswordEncryption = JobPasswordEncryption.None
+                JobPasswordEncryption = JobPasswordEncryption.None,
+                MaterialsCol =
+                [
+                    new Material
+                    {
+                        MaterialAmount = 1,
+                        MaterialColor = (MaterialColor?)"blue",
+                        MaterialDiameter = 2,
+                        MaterialFillDensity = 3,
+                        MaterialKey = (MaterialKey?)"pla-blue",
+                        MaterialName = "PLA Blue",
+                        MaterialPurpose = [(MaterialPurpose)"model"],
+                        MaterialRate = 4,
+                        MaterialRateUnits = (MaterialRateUnits?)"mm-per-second",
+                        MaterialShellThickness = 5,
+                        MaterialTemperature = 200,
+                        MaterialType = (MaterialType?)"pla"
+                    }
+                ],
+                MultipleObjectHandling = (MultipleObjectHandling?)"abort-job",
+                PlatformTemperature = 75,
+                PrintAccuracy = new PrintAccuracy
+                {
+                    AccuracyUnits = (AccuracyUnits?)"mm",
+                    XAccuracy = 100,
+                    YAccuracy = 100,
+                    ZAccuracy = 50
+                },
+                PrintBase = (PrintBase?)"raft",
+                PrintObjects =
+                [
+                    new PrintObject
+                    {
+                        DocumentNumber = 1,
+                        PrintObjectsSource = new Uri("https://example.local/objects/1"),
+                        TransformationMatrix = [1, 0, 0, 0, 1, 0]
+                    }
+                ],
+                PrintSupports = (PrintSupports?)"generated-supports",
+                ChamberHumidity = 45,
+                ChamberTemperature = 60
             }
         };
         IIppRequest? serverRequest = null;

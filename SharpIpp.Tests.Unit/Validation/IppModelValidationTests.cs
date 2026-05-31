@@ -128,4 +128,213 @@ public class IppModelValidationTests
         Action act = () => validator.Validate(response);
         act.Should().NotThrow();
     }
+
+    [TestMethod]
+    public void Validate_WhenJobImpressionsIsNegative_ThrowsValidationException()
+    {
+        var validator = IppRequestValidator.Default;
+        var request = new CreateJobRequest
+        {
+            Version = new IppVersion(2, 0),
+            RequestId = 123,
+            OperationAttributes = new CreateJobOperationAttributes
+            {
+                PrinterUri = new Uri("ipp://127.0.0.1:631/"),
+                JobImpressions = -1
+            }
+        };
+
+        Action act = () => validator.Validate(request);
+        act.Should().Throw<ValidationException>().WithMessage("*JobImpressions*");
+    }
+
+    [TestMethod]
+    public void Validate_WhenJobMediaSheetsIsZero_ThrowsValidationException()
+    {
+        var validator = IppRequestValidator.Default;
+        var request = new CreateJobRequest
+        {
+            Version = new IppVersion(2, 0),
+            RequestId = 123,
+            OperationAttributes = new CreateJobOperationAttributes
+            {
+                PrinterUri = new Uri("ipp://127.0.0.1:631/"),
+                JobMediaSheets = 0
+            }
+        };
+
+        Action act = () => validator.Validate(request);
+        act.Should().Throw<ValidationException>().WithMessage("*JobMediaSheets*");
+    }
+
+    [TestMethod]
+    public void Validate_WhenJobKOctetsIsNegative_ThrowsValidationException()
+    {
+        var validator = IppRequestValidator.Default;
+        var request = new CreateJobRequest
+        {
+            Version = new IppVersion(2, 0),
+            RequestId = 123,
+            OperationAttributes = new CreateJobOperationAttributes
+            {
+                PrinterUri = new Uri("ipp://127.0.0.1:631/"),
+                JobKOctets = -1
+            }
+        };
+
+        Action act = () => validator.Validate(request);
+        act.Should().Throw<ValidationException>().WithMessage("*JobKOctets*");
+    }
+
+    [TestMethod]
+    public void Validate_WhenJobImpressionsEstimatedIsZero_ThrowsValidationException()
+    {
+        var validator = IppRequestValidator.Default;
+        var request = new CreateJobRequest
+        {
+            Version = new IppVersion(2, 0),
+            RequestId = 123,
+            OperationAttributes = new CreateJobOperationAttributes
+            {
+                PrinterUri = new Uri("ipp://127.0.0.1:631/"),
+                JobImpressionsEstimated = 0
+            }
+        };
+
+        Action act = () => validator.Validate(request);
+        act.Should().Throw<ValidationException>().WithMessage("*JobImpressionsEstimated*");
+    }
+
+    [TestMethod]
+    public void Validate_WhenProofCopiesIsZero_ThrowsValidationException()
+    {
+        var validator = IppRequestValidator.Default;
+        var request = new CreateJobRequest
+        {
+            Version = new IppVersion(2, 0),
+            RequestId = 123,
+            OperationAttributes = new CreateJobOperationAttributes
+            {
+                PrinterUri = new Uri("ipp://127.0.0.1:631/"),
+                ProofCopies = 0
+            }
+        };
+
+        Action act = () => validator.Validate(request);
+        act.Should().Throw<ValidationException>().WithMessage("*ProofCopies*");
+    }
+
+    [TestMethod]
+    public void Validate_WhenResourceKOctetsIsNegative_ThrowsValidationException()
+    {
+        var validator = IppRequestValidator.Default;
+        var request = new SendResourceDataRequest
+        {
+            Version = new IppVersion(2, 0),
+            RequestId = 123,
+            OperationAttributes = new SendResourceDataOperationAttributes
+            {
+                PrinterUri = new Uri("ipp://127.0.0.1:631/"),
+                ResourceKOctets = -1
+            }
+        };
+
+        Action act = () => validator.Validate(request);
+        act.Should().Throw<ValidationException>().WithMessage("*ResourceKOctets*");
+    }
+
+    [TestMethod]
+    public void Validate_WhenNotifyResourceIdIsZero_ThrowsValidationException()
+    {
+        var validator = IppRequestValidator.Default;
+        var request = new CancelSubscriptionRequest
+        {
+            Version = new IppVersion(2, 0),
+            RequestId = 123,
+            OperationAttributes = new SystemOperationAttributes
+            {
+                PrinterUri = new Uri("ipp://127.0.0.1:631/"),
+                NotifyResourceId = 0
+            }
+        };
+
+        Action act = () => validator.Validate(request);
+        act.Should().Throw<ValidationException>().WithMessage("*NotifyResourceId*");
+    }
+
+    [TestMethod]
+    public void Validate_WhenRestartGetIntervalIsNegative_ThrowsValidationException()
+    {
+        var validator = IppRequestValidator.Default;
+        var request = new CancelSubscriptionRequest
+        {
+            Version = new IppVersion(2, 0),
+            RequestId = 123,
+            OperationAttributes = new SystemOperationAttributes
+            {
+                PrinterUri = new Uri("ipp://127.0.0.1:631/"),
+                RestartGetInterval = -1
+            }
+        };
+
+        Action act = () => validator.Validate(request);
+        act.Should().Throw<ValidationException>().WithMessage("*RestartGetInterval*");
+    }
+
+    [TestMethod]
+    public void Validate_WhenNotifySystemUpTimeIsNegative_ThrowsValidationException()
+    {
+        var validator = IppRequestValidator.Default;
+        var request = new CancelSubscriptionRequest
+        {
+            Version = new IppVersion(2, 0),
+            RequestId = 123,
+            OperationAttributes = new SystemOperationAttributes
+            {
+                PrinterUri = new Uri("ipp://127.0.0.1:631/"),
+                NotifySystemUpTime = -1
+            }
+        };
+
+        Action act = () => validator.Validate(request);
+        act.Should().Throw<ValidationException>().WithMessage("*NotifySystemUpTime*");
+    }
+
+    [TestMethod]
+    public void Validate_WhenNotifySubscriptionIdIsZero_ThrowsValidationException()
+    {
+        var validator = IppRequestValidator.Default;
+        var request = new CancelSubscriptionRequest
+        {
+            Version = new IppVersion(2, 0),
+            RequestId = 123,
+            OperationAttributes = new SystemOperationAttributes
+            {
+                PrinterUri = new Uri("ipp://127.0.0.1:631/"),
+                NotifySubscriptionId = 0
+            }
+        };
+
+        Action act = () => validator.Validate(request);
+        act.Should().Throw<ValidationException>().WithMessage("*NotifySubscriptionId*");
+    }
+
+    [TestMethod]
+    public void Validate_WhenAddDocumentImagesJobIdIsZero_ThrowsValidationException()
+    {
+        var validator = IppRequestValidator.Default;
+        var request = new AddDocumentImagesRequest
+        {
+            Version = new IppVersion(2, 0),
+            RequestId = 123,
+            OperationAttributes = new AddDocumentImagesOperationAttributes
+            {
+                PrinterUri = new Uri("ipp://127.0.0.1:631/"),
+                JobId = 0
+            }
+        };
+
+        Action act = () => validator.Validate(request);
+        act.Should().Throw<ValidationException>().WithMessage("*JobId*");
+    }
 }

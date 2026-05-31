@@ -12,6 +12,7 @@ public class AddDocumentImagesOperationAttributes : OperationAttributes
     /// The <c>job-id</c> operation attribute.
     /// See: PWG 5100.15-2013 Section 6.1.1
     /// </summary>
+    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
     public int? JobId { get; set; }
 
     /// <summary>

@@ -941,5 +941,33 @@ namespace SharpIpp.Protocol.Models
         /// </summary>
         /// <code>job-charge-info-uri</code>
         public Uri? JobChargeInfoUri { get; set; }
+
+        /// <summary>
+        /// The job-pages-completed-current-copy attribute.
+        /// See: PWG 5100.13-2023 (obsolete)
+        /// </summary>
+        [Obsolete("The 'job-pages-completed-current-copy' attribute is obsolete. See PWG 5100.13-2023 Section 7.1.")]
+        public int? JobPagesCompletedCurrentCopy { get; set; }
+
+        /// <summary>
+        /// The pages-completed-current-copy attribute.
+        /// See: PWG 5100.13-2023 (obsolete)
+        /// </summary>
+        [Obsolete("The 'pages-completed-current-copy' attribute is obsolete. See PWG 5100.13-2023 Section 7.1.")]
+        public int? PagesCompletedCurrentCopy { get; set; }
+
+        /// <summary>
+        /// The chamber-humidity-current 3D status attribute.
+        /// See: PWG 5100.21-2019 Section 8.4.1
+        /// </summary>
+        /// <code>chamber-humidity-current</code>
+        public int? ChamberHumidityCurrent { get; set; }
+
+        /// <summary>
+        /// The chamber-temperature-current 3D status attribute.
+        /// See: PWG 5100.21-2019 Section 8.4.2
+        /// </summary>
+        /// <code>chamber-temperature-current</code>
+        public int? ChamberTemperatureCurrent { get; set; }
     }
 }

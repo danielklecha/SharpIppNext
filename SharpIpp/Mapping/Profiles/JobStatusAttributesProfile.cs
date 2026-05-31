@@ -50,6 +50,8 @@ internal class JobStatusAttributesProfile : IProfile
                 DateTimeAtCreation = map.MapFromDicNullable<DateTimeOffset?>(src, IppAttributeNames.DateTimeAtCreation),
                 DateTimeAtProcessing = map.MapFromDicNullable<DateTimeOffset?>(src, IppAttributeNames.DateTimeAtProcessing),
                 DateTimeAtCompleted = map.MapFromDicNullable<DateTimeOffset?>(src, IppAttributeNames.DateTimeAtCompleted),
+                JobPagesCompletedCurrentCopy = map.MapFromDicNullable<int?>(src, IppAttributeNames.JobPagesCompletedCurrentCopy),
+                PagesCompletedCurrentCopy = map.MapFromDicNullable<int?>(src, IppAttributeNames.PagesCompletedCurrentCopy),
             };
             return dst;
         });
@@ -111,6 +113,10 @@ internal class JobStatusAttributesProfile : IProfile
                 dic.Add(IppAttributeNames.DateTimeAtProcessing, [new IppAttribute(Tag.DateTime, IppAttributeNames.DateTimeAtProcessing, src.DateTimeAtProcessing.Value)]);
             if (src.DateTimeAtCompleted != null)
                 dic.Add(IppAttributeNames.DateTimeAtCompleted, [new IppAttribute(Tag.DateTime, IppAttributeNames.DateTimeAtCompleted, src.DateTimeAtCompleted.Value)]);
+            if (src.JobPagesCompletedCurrentCopy != null)
+                dic.Add(IppAttributeNames.JobPagesCompletedCurrentCopy, [new IppAttribute(Tag.Integer, IppAttributeNames.JobPagesCompletedCurrentCopy, src.JobPagesCompletedCurrentCopy.Value)]);
+            if (src.PagesCompletedCurrentCopy != null)
+                dic.Add(IppAttributeNames.PagesCompletedCurrentCopy, [new IppAttribute(Tag.Integer, IppAttributeNames.PagesCompletedCurrentCopy, src.PagesCompletedCurrentCopy.Value)]);
             return dic;
         });
     }

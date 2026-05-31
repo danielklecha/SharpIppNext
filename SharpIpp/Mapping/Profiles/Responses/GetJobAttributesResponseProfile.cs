@@ -94,6 +94,8 @@ internal class GetJobAttributesResponseProfile : IProfile
                 ? map.Map<JobCounter>(src[IppAttributeNames.JobPagesCompletedCol].FromBegCollection().ToIppDictionary())
                 : null,
             JobProcessingTime = map.MapFromDicNullable<int?>(src, IppAttributeNames.JobProcessingTime),
+            JobPagesCompletedCurrentCopy = map.MapFromDicNullable<int?>(src, IppAttributeNames.JobPagesCompletedCurrentCopy),
+            PagesCompletedCurrentCopy = map.MapFromDicNullable<int?>(src, IppAttributeNames.PagesCompletedCurrentCopy),
             ClientInfo = null,
             JobSheetsCol = src.ContainsKey(IppAttributeNames.JobSheetsCol)
                 ? map.Map<JobSheetsCol>(src[IppAttributeNames.JobSheetsCol].FromBegCollection().ToIppDictionary())
@@ -156,6 +158,8 @@ internal class GetJobAttributesResponseProfile : IProfile
             PrintObjectsActual3d = null,
             MaterialsColActual = null,
             DestinationStatuses = null,
+            ChamberHumidityCurrent = map.MapFromDicNullable<int?>(src, IppAttributeNames.ChamberHumidityCurrent),
+            ChamberTemperatureCurrent = map.MapFromDicNullable<int?>(src, IppAttributeNames.ChamberTemperatureCurrent),
             };
 
             if (src.TryGetValue(IppAttributeNames.ClientInfo, out var clientInfo))
@@ -455,6 +459,14 @@ internal class GetJobAttributesResponseProfile : IProfile
                 dic.Add(IppAttributeNames.RequestingUserUri, [new IppAttribute(Tag.Uri, IppAttributeNames.RequestingUserUri, src.RequestingUserUri.ToString())]);
             if (src.JobChargeInfoUri != null)
                 dic.Add(IppAttributeNames.JobChargeInfoUri, [new IppAttribute(Tag.Uri, IppAttributeNames.JobChargeInfoUri, src.JobChargeInfoUri.ToString())]);
+            if (src.JobPagesCompletedCurrentCopy != null)
+                dic.Add(IppAttributeNames.JobPagesCompletedCurrentCopy, [new IppAttribute(Tag.Integer, IppAttributeNames.JobPagesCompletedCurrentCopy, src.JobPagesCompletedCurrentCopy.Value)]);
+            if (src.PagesCompletedCurrentCopy != null)
+                dic.Add(IppAttributeNames.PagesCompletedCurrentCopy, [new IppAttribute(Tag.Integer, IppAttributeNames.PagesCompletedCurrentCopy, src.PagesCompletedCurrentCopy.Value)]);
+            if (src.ChamberHumidityCurrent != null)
+                dic.Add(IppAttributeNames.ChamberHumidityCurrent, [new IppAttribute(Tag.Integer, IppAttributeNames.ChamberHumidityCurrent, src.ChamberHumidityCurrent.Value)]);
+            if (src.ChamberTemperatureCurrent != null)
+                dic.Add(IppAttributeNames.ChamberTemperatureCurrent, [new IppAttribute(Tag.Integer, IppAttributeNames.ChamberTemperatureCurrent, src.ChamberTemperatureCurrent.Value)]);
             return dic;
         });
     }

@@ -161,6 +161,7 @@ internal class TypesProfile : IProfile
           ConfigureSmartEnum<MediaType>(map);
           ConfigureSmartEnum<MultipleDocumentHandling>(map);
           ConfigureSmartEnum<MultipleObjectHandling>(map);
+          ConfigureSmartEnum<MultipleOperationTimeOutAction>(map);
           ConfigureSmartEnum<NaturalLanguage>(map);
           ConfigureSmartEnum<NotifyEvent>(map);
           ConfigureSmartEnum<NotifyPullMethod>(map);
@@ -196,6 +197,7 @@ internal class TypesProfile : IProfile
           ConfigureSmartEnum<ResourceSettableAttribute>(map);
           ConfigureSmartEnum<ResourceStateReason>(map);
           ConfigureSmartEnum<ResourceType>(map);
+          ConfigureSmartEnum<SaveDisposition>(map);
           ConfigureSmartEnum<SeparatorSheetsMember>(map);
           ConfigureSmartEnum<SeparatorSheetsType>(map);
           ConfigureSmartEnum<SheetCollate>(map);

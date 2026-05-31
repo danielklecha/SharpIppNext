@@ -186,4 +186,70 @@ public class DocumentTemplateAttributesProfileTests : MapperTestBase
         act.Should().Throw<SharpIpp.Exceptions.IppRequestException>()
             .WithMessage("'finishings' and 'finishings-col' are conflicting attributes and cannot be supplied together.");
     }
+
+    [TestMethod]
+    public void Map_DocumentTemplateAttributes_ToAttributes_With3DAttributes_WritesCorrectAttributes()
+    {
+        var src = new DocumentTemplateAttributes
+        {
+            MaterialsCol = [new Material { MaterialName = "pla" }],
+            MultipleObjectHandling = (MultipleObjectHandling?)"abort-job",
+            PlatformTemperature = 75,
+            PrintAccuracy = new PrintAccuracy
+            {
+                AccuracyUnits = (AccuracyUnits?)"mm",
+                XAccuracy = 100,
+                YAccuracy = 100,
+                ZAccuracy = 50
+            },
+            PrintBase = (PrintBase?)"raft",
+            PrintObjects = [new PrintObject { DocumentNumber = 1, PrintObjectsSource = new Uri("ipp://example/doc/1") }],
+            PrintSupports = (PrintSupports?)"generated-supports",
+            ChamberHumidity = 45,
+            ChamberTemperature = 60
+        };
+
+        var attributes = _mapper.Map<System.Collections.Generic.List<IppAttribute>>(src);
+
+        attributes.Should().Contain(a => a.Name == IppAttributeNames.MaterialsCol);
+        attributes.Should().Contain(a => a.Name == IppAttributeNames.MultipleObjectHandling && a.Tag == Tag.Keyword && Equals(a.Value, "abort-job"));
+        attributes.Should().Contain(a => a.Name == IppAttributeNames.PlatformTemperature && a.Tag == Tag.Integer && Equals(a.Value, 75));
+        attributes.Should().Contain(a => a.Name == IppAttributeNames.PrintAccuracy);
+        attributes.Should().Contain(a => a.Name == IppAttributeNames.PrintBase && a.Tag == Tag.Keyword && Equals(a.Value, "raft"));
+        attributes.Should().Contain(a => a.Name == IppAttributeNames.PrintObjects);
+        attributes.Should().Contain(a => a.Name == IppAttributeNames.PrintSupports && a.Tag == Tag.Keyword && Equals(a.Value, "generated-supports"));
+        attributes.Should().Contain(a => a.Name == IppAttributeNames.ChamberHumidity && a.Tag == Tag.Integer && Equals(a.Value, 45));
+        attributes.Should().Contain(a => a.Name == IppAttributeNames.ChamberTemperature && a.Tag == Tag.Integer && Equals(a.Value, 60));
+    }
+
+    [TestMethod]
+    public void Map_DocumentTemplateAttributes_FromAttributes_With3DAttributes_ReadsCorrectAttributes()
+    {
+        var attributesList = new System.Collections.Generic.List<IppAttribute>();
+        attributesList.AddRange(_mapper.Map<Material, System.Collections.Generic.IEnumerable<IppAttribute>>(new Material { MaterialName = "pla" }).ToBegCollection(IppAttributeNames.MaterialsCol));
+        attributesList.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.MultipleObjectHandling, "abort-job"));
+        attributesList.Add(new IppAttribute(Tag.Integer, IppAttributeNames.PlatformTemperature, 75));
+        attributesList.AddRange(_mapper.Map<PrintAccuracy, System.Collections.Generic.IEnumerable<IppAttribute>>(new PrintAccuracy { AccuracyUnits = (AccuracyUnits?)"mm", XAccuracy = 100, YAccuracy = 100, ZAccuracy = 50 }).ToBegCollection(IppAttributeNames.PrintAccuracy));
+        attributesList.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.PrintBase, "raft"));
+        attributesList.AddRange(_mapper.Map<PrintObject, System.Collections.Generic.IEnumerable<IppAttribute>>(new PrintObject { DocumentNumber = 1, PrintObjectsSource = new Uri("ipp://example/doc/1") }).ToBegCollection(IppAttributeNames.PrintObjects));
+        attributesList.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.PrintSupports, "generated-supports"));
+        attributesList.Add(new IppAttribute(Tag.Integer, IppAttributeNames.ChamberHumidity, 45));
+        attributesList.Add(new IppAttribute(Tag.Integer, IppAttributeNames.ChamberTemperature, 60));
+
+        var attributes = attributesList.ToIppDictionary();
+        var dst = _mapper.Map<DocumentTemplateAttributes>(attributes);
+
+        dst.MaterialsCol.Should().NotBeNull();
+        dst.MaterialsCol![0].MaterialName.Should().Be("pla");
+        dst.MultipleObjectHandling.Should().Be((MultipleObjectHandling?)"abort-job");
+        dst.PlatformTemperature.Should().Be(75);
+        dst.PrintAccuracy.Should().NotBeNull();
+        dst.PrintAccuracy!.AccuracyUnits.Should().Be((AccuracyUnits?)"mm");
+        dst.PrintBase.Should().Be((PrintBase?)"raft");
+        dst.PrintObjects.Should().NotBeNull();
+        dst.PrintObjects![0].DocumentNumber.Should().Be(1);
+        dst.PrintSupports.Should().Be((PrintSupports?)"generated-supports");
+        dst.ChamberHumidity.Should().Be(45);
+        dst.ChamberTemperature.Should().Be(60);
+    }
 }

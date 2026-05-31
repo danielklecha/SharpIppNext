@@ -48,6 +48,8 @@ public class JobStatusAttributesProfileTests : MapperTestBase
             DateTimeAtCreation = new DateTimeOffset(2024, 1, 1, 0, 0, 0, TimeSpan.Zero),
             DateTimeAtProcessing = new DateTimeOffset(2024, 1, 1, 0, 1, 0, TimeSpan.Zero),
             DateTimeAtCompleted = new DateTimeOffset(2024, 1, 1, 0, 2, 0, TimeSpan.Zero),
+            JobPagesCompletedCurrentCopy = 8,
+            PagesCompletedCurrentCopy = 4,
         };
 
         var dic = _mapper.Map<IDictionary<string, IppAttribute[]>>(src);
@@ -79,6 +81,8 @@ public class JobStatusAttributesProfileTests : MapperTestBase
         dic.Should().ContainKey(IppAttributeNames.DateTimeAtCreation);
         dic.Should().ContainKey(IppAttributeNames.DateTimeAtProcessing);
         dic.Should().ContainKey(IppAttributeNames.DateTimeAtCompleted);
+        dic.Should().ContainKey(IppAttributeNames.JobPagesCompletedCurrentCopy);
+        dic.Should().ContainKey(IppAttributeNames.PagesCompletedCurrentCopy);
     }
 
     [TestMethod]
@@ -110,6 +114,8 @@ public class JobStatusAttributesProfileTests : MapperTestBase
             [IppAttributeNames.DateTimeAtCreation] = [new IppAttribute(Tag.DateTime, IppAttributeNames.DateTimeAtCreation, new DateTimeOffset(2024, 1, 1, 0, 0, 0, TimeSpan.Zero))],
             [IppAttributeNames.DateTimeAtProcessing] = [new IppAttribute(Tag.DateTime, IppAttributeNames.DateTimeAtProcessing, new DateTimeOffset(2024, 1, 1, 0, 1, 0, TimeSpan.Zero))],
             [IppAttributeNames.DateTimeAtCompleted] = [new IppAttribute(Tag.DateTime, IppAttributeNames.DateTimeAtCompleted, new DateTimeOffset(2024, 1, 1, 0, 2, 0, TimeSpan.Zero))],
+            [IppAttributeNames.JobPagesCompletedCurrentCopy] = [new IppAttribute(Tag.Integer, IppAttributeNames.JobPagesCompletedCurrentCopy, 8)],
+            [IppAttributeNames.PagesCompletedCurrentCopy] = [new IppAttribute(Tag.Integer, IppAttributeNames.PagesCompletedCurrentCopy, 4)],
         };
         // Add collection attributes
         dic[IppAttributeNames.JobPagesCompletedCol] = _mapper.Map<JobCounter, IEnumerable<IppAttribute>>(new JobCounter { Monochrome = 10 }).ToBegCollection(IppAttributeNames.JobPagesCompletedCol).ToArray();
@@ -145,6 +151,8 @@ public class JobStatusAttributesProfileTests : MapperTestBase
         dst.DateTimeAtCreation.Should().Be(new DateTimeOffset(2024, 1, 1, 0, 0, 0, TimeSpan.Zero));
         dst.DateTimeAtProcessing.Should().Be(new DateTimeOffset(2024, 1, 1, 0, 1, 0, TimeSpan.Zero));
         dst.DateTimeAtCompleted.Should().Be(new DateTimeOffset(2024, 1, 1, 0, 2, 0, TimeSpan.Zero));
+        dst.JobPagesCompletedCurrentCopy.Should().Be(8);
+        dst.PagesCompletedCurrentCopy.Should().Be(4);
     }
 
     [TestMethod]
@@ -170,6 +178,8 @@ public class JobStatusAttributesProfileTests : MapperTestBase
             TimeAtCreation = 200,
             TimeAtProcessing = 210,
             TimeAtCompleted = 225,
+            JobPagesCompletedCurrentCopy = 8,
+            PagesCompletedCurrentCopy = 4,
         };
 
         var dic = _mapper.Map<IDictionary<string, IppAttribute[]>>(original);
@@ -192,5 +202,7 @@ public class JobStatusAttributesProfileTests : MapperTestBase
         roundTripped.TimeAtCreation.Should().Be(original.TimeAtCreation);
         roundTripped.TimeAtProcessing.Should().Be(original.TimeAtProcessing);
         roundTripped.TimeAtCompleted.Should().Be(original.TimeAtCompleted);
+        roundTripped.JobPagesCompletedCurrentCopy.Should().Be(original.JobPagesCompletedCurrentCopy);
+        roundTripped.PagesCompletedCurrentCopy.Should().Be(original.PagesCompletedCurrentCopy);
     }
 }

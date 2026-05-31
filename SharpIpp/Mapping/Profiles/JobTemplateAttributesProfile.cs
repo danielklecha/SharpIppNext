@@ -353,6 +353,12 @@ internal class JobTemplateAttributesProfile : IProfile
             if (src.JobIds != null)
                 job.AddRange(src.JobIds.Select(x => new IppAttribute(Tag.Integer, IppAttributeNames.JobIds, x)));
 
+            if (src.JobSaveDisposition != null)
+                job.AddRange(map.Map<IEnumerable<IppAttribute>>(src.JobSaveDisposition).ToBegCollection(IppAttributeNames.JobSaveDisposition));
+
+            if (src.PdlInitFile != null)
+                job.AddRange(map.Map<IEnumerable<IppAttribute>>(src.PdlInitFile).ToBegCollection(IppAttributeNames.PdlInitFile));
+
             return dst;
         });
 
@@ -469,6 +475,10 @@ internal class JobTemplateAttributesProfile : IProfile
             dst.RequestingUserUri = map.MapFromDicNullable<string, Uri?>(jobDict, IppAttributeNames.RequestingUserUri, (_, value) => new Uri(value));
             dst.JobMandatoryAttributes = map.MapFromDicSetNullable<string[]?>(jobDict, IppAttributeNames.JobMandatoryAttributes);
             dst.JobIds = map.MapFromDicSetNullable<int[]?>(jobDict, IppAttributeNames.JobIds);
+            if (jobDict.ContainsKey(IppAttributeNames.JobSaveDisposition))
+                dst.JobSaveDisposition = map.Map<JobSaveDisposition>(jobDict[IppAttributeNames.JobSaveDisposition].FromBegCollection().ToIppDictionary());
+            if (jobDict.ContainsKey(IppAttributeNames.PdlInitFile))
+                dst.PdlInitFile = map.Map<PdlInitFile>(jobDict[IppAttributeNames.PdlInitFile].FromBegCollection().ToIppDictionary());
             return dst;
         });
     }

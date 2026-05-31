@@ -23,6 +23,12 @@ public class ByteMultiRangeAttribute : ValidationAttribute
         Ranges = ranges;
     }
 
+    /// <summary>
+    /// Validates the specified value with respect to the current validation attribute.
+    /// </summary>
+    /// <param name="value">The value to validate.</param>
+    /// <param name="validationContext">The context information about the validation operation.</param>
+    /// <returns>A ValidationResult value indicating whether validation succeeded or failed.</returns>
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
         if (value == null)

@@ -240,7 +240,11 @@ public class GetJobAttributesTests : SharpIppIntegrationTestBase
                     JobMandatoryAttributes = ["copies", "sides"],
                     JobIds = [101, 102],
                     RequestingUserUri = new Uri("mailto:user@example.com"),
-                    JobChargeInfoUri = new Uri("http://example.com/charge/123")
+                    JobChargeInfoUri = new Uri("http://example.com/charge/123"),
+                    JobPagesCompletedCurrentCopy = 8,
+                    PagesCompletedCurrentCopy = 4,
+                    ChamberHumidityCurrent = 42,
+                    ChamberTemperatureCurrent = 55
                 },
                 OperationAttributes = new()
                 {

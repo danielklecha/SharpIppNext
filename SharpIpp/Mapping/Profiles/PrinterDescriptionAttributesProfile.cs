@@ -61,6 +61,7 @@ internal class PrinterDescriptionAttributesProfile : IProfile
                 MultipleDocumentHandlingDefault = map.MapFromDicNullable<MultipleDocumentHandling?>(src, IppAttributeNames.MultipleDocumentHandlingDefault),
                 MultipleDocumentHandlingSupported = map.MapFromDicSetNullable<MultipleDocumentHandling[]?>(src, IppAttributeNames.MultipleDocumentHandlingSupported),
                 MultipleOperationTimeOut = map.MapFromDicNullable<int?>(src, IppAttributeNames.MultipleOperationTimeOut),
+                MultipleOperationTimeOutAction = map.MapFromDicNullable<MultipleOperationTimeOutAction?>(src, IppAttributeNames.MultipleOperationTimeOutAction),
                 NaturalLanguageConfigured = map.MapFromDicNullable<NaturalLanguage?>(src, IppAttributeNames.NaturalLanguageConfigured),
                 OperationsSupported = map.MapFromDicSetNullable<IppOperation[]?>(src, IppAttributeNames.OperationsSupported),
                 PagesPerMinute = map.MapFromDicNullable<int?>(src, IppAttributeNames.PagesPerMinute),
@@ -341,6 +342,16 @@ internal class PrinterDescriptionAttributesProfile : IProfile
                 JobPasswordSupported = map.MapFromDicNullable<int?>(src, IppAttributeNames.JobPasswordSupported),
                 JobPasswordLengthSupported = map.MapFromDicNullable<Protocol.Models.Range?>(src, IppAttributeNames.JobPasswordLengthSupported),
                 DocumentPasswordSupported = map.MapFromDicNullable<int?>(src, IppAttributeNames.DocumentPasswordSupported),
+                XSide1ImageOffsetSupported = map.MapFromDicNullable<Protocol.Models.Range?>(src, IppAttributeNames.XSide1ImageOffsetSupported),
+                XSide2ImageOffsetSupported = map.MapFromDicNullable<Protocol.Models.Range?>(src, IppAttributeNames.XSide2ImageOffsetSupported),
+                YSide1ImageOffsetSupported = map.MapFromDicNullable<Protocol.Models.Range?>(src, IppAttributeNames.YSide1ImageOffsetSupported),
+                YSide2ImageOffsetSupported = map.MapFromDicNullable<Protocol.Models.Range?>(src, IppAttributeNames.YSide2ImageOffsetSupported),
+                UserDefinedValuesSupported = map.MapFromDicSetNullable<string[]?>(src, IppAttributeNames.UserDefinedValuesSupported),
+                PdlInitFileSupported = map.MapFromDicSetNullable<string[]?>(src, IppAttributeNames.PdlInitFileSupported),
+                JobSaveDispositionSupported = map.MapFromDicSetNullable<string[]?>(src, IppAttributeNames.JobSaveDispositionSupported),
+                SaveDispositionSupported = map.MapFromDicSetNullable<SaveDisposition[]?>(src, IppAttributeNames.SaveDispositionSupported),
+                SaveInfoSupported = map.MapFromDicSetNullable<string[]?>(src, IppAttributeNames.SaveInfoSupported),
+                SaveLocationSupported = map.MapFromDicSetNullable<Uri[]?>(src, IppAttributeNames.SaveLocationSupported),
             };
 
             if (src.TryGetValue(IppAttributeNames.JobSheetsColDefault, out var jobSheetsColDefault))
@@ -513,6 +524,16 @@ internal class PrinterDescriptionAttributesProfile : IProfile
                 result.OutputAttributesDefault = map.Map<OutputAttributes>(outputAttributesDefault.FromBegCollection().ToIppDictionary());
             }
 
+            if (src.TryGetValue(IppAttributeNames.PdlInitFileDefault, out var pdlInitFileDefault))
+            {
+                result.PdlInitFileDefault = map.Map<PdlInitFile>(pdlInitFileDefault.FromBegCollection().ToIppDictionary());
+            }
+
+            if (src.TryGetValue(IppAttributeNames.JobSaveDispositionDefault, out var jobSaveDispositionDefault))
+            {
+                result.JobSaveDispositionDefault = map.Map<JobSaveDisposition>(jobSaveDispositionDefault.FromBegCollection().ToIppDictionary());
+            }
+
             return result;
         });
 
@@ -586,6 +607,8 @@ internal class PrinterDescriptionAttributesProfile : IProfile
                 dic.Add(IppAttributeNames.MultipleDocumentHandlingSupported, src.MultipleDocumentHandlingSupported.Select(x => new IppAttribute(Tag.Keyword, IppAttributeNames.MultipleDocumentHandlingSupported, map.Map<string>(x))).ToArray());
             if (src.MultipleOperationTimeOut != null)
                 dic.Add(IppAttributeNames.MultipleOperationTimeOut, new IppAttribute[] { new IppAttribute(Tag.Integer, IppAttributeNames.MultipleOperationTimeOut, src.MultipleOperationTimeOut.Value) });
+            if (src.MultipleOperationTimeOutAction != null)
+                dic.Add(IppAttributeNames.MultipleOperationTimeOutAction, [new IppAttribute(Tag.Keyword, IppAttributeNames.MultipleOperationTimeOutAction, map.Map<string>(src.MultipleOperationTimeOutAction.Value))]);
             if (src.NaturalLanguageConfigured != null)
                 dic.Add(IppAttributeNames.NaturalLanguageConfigured, new IppAttribute[] { new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.NaturalLanguageConfigured, src.NaturalLanguageConfigured.Value) });
             if (src.OperationsSupported != null)
@@ -1282,6 +1305,30 @@ internal class PrinterDescriptionAttributesProfile : IProfile
                 dic.Add(IppAttributeNames.JobPasswordLengthSupported, [new IppAttribute(Tag.RangeOfInteger, IppAttributeNames.JobPasswordLengthSupported, src.JobPasswordLengthSupported.Value)]);
             if (src.DocumentPasswordSupported.HasValue)
                 dic.Add(IppAttributeNames.DocumentPasswordSupported, [new IppAttribute(Tag.Integer, IppAttributeNames.DocumentPasswordSupported, src.DocumentPasswordSupported.Value)]);
+            if (src.XSide1ImageOffsetSupported != null)
+                dic.Add(IppAttributeNames.XSide1ImageOffsetSupported, [new IppAttribute(Tag.RangeOfInteger, IppAttributeNames.XSide1ImageOffsetSupported, src.XSide1ImageOffsetSupported.Value)]);
+            if (src.XSide2ImageOffsetSupported != null)
+                dic.Add(IppAttributeNames.XSide2ImageOffsetSupported, [new IppAttribute(Tag.RangeOfInteger, IppAttributeNames.XSide2ImageOffsetSupported, src.XSide2ImageOffsetSupported.Value)]);
+            if (src.YSide1ImageOffsetSupported != null)
+                dic.Add(IppAttributeNames.YSide1ImageOffsetSupported, [new IppAttribute(Tag.RangeOfInteger, IppAttributeNames.YSide1ImageOffsetSupported, src.YSide1ImageOffsetSupported.Value)]);
+            if (src.YSide2ImageOffsetSupported != null)
+                dic.Add(IppAttributeNames.YSide2ImageOffsetSupported, [new IppAttribute(Tag.RangeOfInteger, IppAttributeNames.YSide2ImageOffsetSupported, src.YSide2ImageOffsetSupported.Value)]);
+            if (src.UserDefinedValuesSupported != null)
+                dic.Add(IppAttributeNames.UserDefinedValuesSupported, src.UserDefinedValuesSupported.Select(x => new IppAttribute(Tag.Keyword, IppAttributeNames.UserDefinedValuesSupported, x)).ToArray());
+            if (src.PdlInitFileSupported != null)
+                dic.Add(IppAttributeNames.PdlInitFileSupported, src.PdlInitFileSupported.Select(x => new IppAttribute(Tag.Keyword, IppAttributeNames.PdlInitFileSupported, x)).ToArray());
+            if (src.PdlInitFileDefault != null)
+                dic.Add(IppAttributeNames.PdlInitFileDefault, map.Map<IEnumerable<IppAttribute>>(src.PdlInitFileDefault).ToBegCollection(IppAttributeNames.PdlInitFileDefault).ToArray());
+            if (src.JobSaveDispositionSupported != null)
+                dic.Add(IppAttributeNames.JobSaveDispositionSupported, src.JobSaveDispositionSupported.Select(x => new IppAttribute(Tag.Keyword, IppAttributeNames.JobSaveDispositionSupported, x)).ToArray());
+            if (src.JobSaveDispositionDefault != null)
+                dic.Add(IppAttributeNames.JobSaveDispositionDefault, map.Map<IEnumerable<IppAttribute>>(src.JobSaveDispositionDefault).ToBegCollection(IppAttributeNames.JobSaveDispositionDefault).ToArray());
+            if (src.SaveDispositionSupported != null)
+                dic.Add(IppAttributeNames.SaveDispositionSupported, src.SaveDispositionSupported.Select(x => new IppAttribute(Tag.Keyword, IppAttributeNames.SaveDispositionSupported, x.Value)).ToArray());
+            if (src.SaveInfoSupported != null)
+                dic.Add(IppAttributeNames.SaveInfoSupported, src.SaveInfoSupported.Select(x => new IppAttribute(Tag.Keyword, IppAttributeNames.SaveInfoSupported, x)).ToArray());
+            if (src.SaveLocationSupported != null)
+                dic.Add(IppAttributeNames.SaveLocationSupported, src.SaveLocationSupported.Select(x => new IppAttribute(Tag.Uri, IppAttributeNames.SaveLocationSupported, x.ToString())).ToArray());
             return dic;
         });
     }

@@ -388,4 +388,61 @@ public class DocumentTemplateAttributes : IIppCollection
     /// See: PWG 5100.5-2024 Section 6.5.14
     /// </summary>
     public JobPasswordEncryption? JobPasswordEncryption { get; set; }
+
+    /// <summary>
+    /// The <c>chamber-humidity</c> Document Template attribute.
+    /// See: PWG 5100.21-2019 Section 8.1.1
+    /// </summary>
+    [System.ComponentModel.DataAnnotations.Range(0, 100)]
+    public int? ChamberHumidity { get; set; }
+
+    /// <summary>
+    /// The <c>chamber-temperature</c> Document Template attribute.
+    /// See: PWG 5100.21-2019 Section 8.1.2
+    /// </summary>
+    [System.ComponentModel.DataAnnotations.Range(-273, int.MaxValue)]
+    public int? ChamberTemperature { get; set; }
+
+    /// <summary>
+    /// The <c>materials-col</c> Document Template attribute.
+    /// See: PWG 5100.21-2019 Section 8.1.3
+    /// </summary>
+    public Material[]? MaterialsCol { get; set; }
+
+    /// <summary>
+    /// The <c>multiple-object-handling</c> Document Template attribute.
+    /// See: PWG 5100.21-2019 Section 8.1.4
+    /// </summary>
+    public MultipleObjectHandling? MultipleObjectHandling { get; set; }
+
+    /// <summary>
+    /// The <c>platform-temperature</c> Document Template attribute.
+    /// See: PWG 5100.21-2019 Section 8.1.5
+    /// </summary>
+    [System.ComponentModel.DataAnnotations.Range(-273, int.MaxValue)]
+    public int? PlatformTemperature { get; set; }
+
+    /// <summary>
+    /// The <c>print-accuracy</c> Document Template attribute.
+    /// See: PWG 5100.21-2019 Section 8.1.6
+    /// </summary>
+    public PrintAccuracy? PrintAccuracy { get; set; }
+
+    /// <summary>
+    /// The <c>print-base</c> Document Template attribute.
+    /// See: PWG 5100.21-2019 Section 8.1.7
+    /// </summary>
+    public PrintBase? PrintBase { get; set; }
+
+    /// <summary>
+    /// The <c>print-objects</c> Document Template attribute.
+    /// See: PWG 5100.21-2019 Section 8.1.8
+    /// </summary>
+    public PrintObject[]? PrintObjects { get; set; }
+
+    /// <summary>
+    /// The <c>print-supports</c> Document Template attribute.
+    /// See: PWG 5100.21-2019 Section 8.1.9
+    /// </summary>
+    public PrintSupports? PrintSupports { get; set; }
 }

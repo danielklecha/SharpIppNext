@@ -86,6 +86,7 @@ public class SendResourceDataOperationAttributes : SystemOperationAttributes
     /// The <c>resource-k-octets</c> operation attribute.
     /// See: PWG 5100.22-2025 Section 7.1.16
     /// </summary>
+    [Range(0, 2147483647)]
     public int? ResourceKOctets { get; set; }
 
     /// <summary>

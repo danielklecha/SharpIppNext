@@ -736,4 +736,18 @@ public class JobTemplateAttributes
     /// </summary>
     public int[]? JobIds { get; set; }
 
+    /// <summary>
+    /// The job-save-disposition Job Template attribute.
+    /// See: PWG 5100.11 (obsolete)
+    /// </summary>
+    [Obsolete("The 'job-save-disposition' attribute is obsolete. See PWG 5100.11-2024 Section 9.1.")]
+    public JobSaveDisposition? JobSaveDisposition { get; set; }
+
+    /// <summary>
+    /// The pdl-init-file Job Template attribute.
+    /// See: PWG 5100.11 (obsolete)
+    /// </summary>
+    [Obsolete("The 'pdl-init-file' attribute is obsolete. See PWG 5100.11-2024 Section 9.1.")]
+    public PdlInitFile? PdlInitFile { get; set; }
+
 }

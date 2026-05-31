@@ -10,21 +10,52 @@ namespace SharpIpp;
 
 public interface ISharpIppClient : IDisposable
 {
+    /// <summary>
+    /// Gets or sets the validator used to validate raw IPP request messages.
+    /// </summary>
     IIppRequestMessageValidator? RequestMessageValidator { get; set; }
+
+    /// <summary>
+    /// Gets or sets the validator used to validate typed IPP request objects.
+    /// </summary>
     IIppRequestValidator? RequestValidator { get; set; }
+
+    /// <summary>
+    /// Gets or sets the validator used to validate raw IPP response messages.
+    /// </summary>
     IIppResponseMessageValidator? ResponseMessageValidator { get; set; }
+
+    /// <summary>
+    /// Gets or sets the validator used to validate typed IPP response objects.
+    /// </summary>
     IIppResponseValidator? ResponseValidator { get; set; }
 
     /// <summary>
-    /// Custom Operation, not yet implemented via SharpIpp
+    /// Sends a raw IPP request message to the target printer.
+    /// This method can be used to send custom operations
     /// </summary>
+    /// <param name="printerUri">The target printer URI.</param>
+    /// <param name="request">The raw IPP request message to send.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the raw IPP response message.</returns>
     Task<IIppResponseMessage> SendAsync(Uri printerUri, IIppRequestMessage request, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Creates a raw IPP request message from a typed IPP request model.
+    /// </summary>
+    /// <typeparam name="T">The type of the IPP request.</typeparam>
+    /// <param name="ippRequestMessage">The typed IPP request model.</param>
+    /// <returns>The raw IPP request message.</returns>
     IIppRequestMessage CreateRawRequest<T>(T ippRequestMessage) where T : IIppRequest;
 
+    /// <summary>
+    /// Maps a raw IPP response message to a typed IPP response model.
+    /// </summary>
+    /// <typeparam name="T">The type of the IPP response.</typeparam>
+    /// <param name="ippResponse">The raw IPP response message.</param>
+    /// <returns>The mapped typed IPP response model.</returns>
     T CreateResponse<T>(IIppResponseMessage ippResponse) where T : IIppResponse;
 
-    #region V11
 
     /// <summary>
     /// Cancel-Job Operation
@@ -299,10 +330,6 @@ public interface ISharpIppClient : IDisposable
     /// </summary>
     Task<ValidateJobResponse> ValidateJobAsync(ValidateJobRequest request, CancellationToken cancellationToken = default);
 
-    #endregion
-
-    #region PWG 5100.7-2023 (IPP Job Extensions v2.1)
-
     /// <summary>
     /// Cancel-Jobs Operation
     /// This operation allows a client to cancel multiple Jobs at once.
@@ -330,10 +357,6 @@ public interface ISharpIppClient : IDisposable
     /// See: PWG 5100.7-2023
     /// </summary>
     Task<CloseJobResponse> CloseJobAsync(CloseJobRequest request, CancellationToken cancellationToken = default);
-
-    #endregion
-
-    #region PWG 5100.5-2024 (Document Object)
 
     /// <summary>
     /// Cancel-Document Operation
@@ -367,10 +390,6 @@ public interface ISharpIppClient : IDisposable
     /// See: PWG 5100.5-2024 Section 5.1.3
     /// </summary>
     Task<SetDocumentAttributesResponse> SetDocumentAttributesAsync(SetDocumentAttributesRequest request, CancellationToken cancellationToken = default);
-
-    #endregion
-
-    #region PWG 5100.18-2025 (Shared Infrastructure Extensions)
 
     /// <summary>
     /// Acknowledge-Document Operation.
@@ -439,10 +458,6 @@ public interface ISharpIppClient : IDisposable
     /// See: PWG 5100.18-2025 Section 5.10
     /// </summary>
     Task<UpdateOutputDeviceAttributesResponse> UpdateOutputDeviceAttributesAsync(UpdateOutputDeviceAttributesRequest request, CancellationToken cancellationToken = default);
-
-    #endregion
-
-    #region PWG 5100.22-2025 (System Service)
 
     /// <summary>
     /// Allocate-Printer-Resources Operation.
@@ -652,10 +667,7 @@ public interface ISharpIppClient : IDisposable
     /// See: PWG 5100.22-2025 Section 6.1.6
     /// </summary>
     Task<RestartOnePrinterResponse> RestartOnePrinterAsync(RestartOnePrinterRequest request, CancellationToken cancellationToken = default);
-    #endregion
-
-    #region PWG 5100.11/5100.15/5100.17 Extensions
-
+    
     /// <summary>
     /// Get-User-Printer-Attributes Operation.
     /// See: PWG 5100.11-2024 Section 5.1
@@ -814,11 +826,6 @@ public interface ISharpIppClient : IDisposable
     /// </summary>
     Task<CreateJobSubscriptionsResponse> CreateJobSubscriptionsAsync(CreateJobSubscriptionsRequest request, CancellationToken cancellationToken = default);
 
-    #endregion
-
-
-    #region CUPS10
-
     /// <summary>
     /// CUPS-Get-Printers Operation
     /// The CUPS-Get-Printers operation (0x4002) returns the printer attributes for every printer known to the system. This
@@ -826,6 +833,4 @@ public interface ISharpIppClient : IDisposable
     /// See: CUPS Implementation of IPP
     /// </summary>
     Task<CUPSGetPrintersResponse> GetCUPSPrintersAsync(CUPSGetPrintersRequest request, CancellationToken cancellationToken = default);
-    
-    #endregion
 }

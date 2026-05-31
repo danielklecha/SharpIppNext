@@ -12,7 +12,8 @@ SharpIpp implements two tiers of validation to ensure that IPP requests are corr
 The `IppRequestValidator` processes your high-level request objects (e.g., `PrintJobRequest`) recursively before they are mapped into low-level messages. 
 
 It checks:
-* Standard data annotations like `[Required]`.
+* Standard data annotations:
+  * `[Range]`: Enforces standard integer ranges defined by the IPP specifications (e.g., `JobPriority` is restricted to `1..100`, `Copies` $\ge 1$, `NumberUp` $\ge 1$, and 3D printing attributes such as `MaterialFillDensity` or `ChamberHumidity` in the range `0..100`).
 * Custom validation attributes:
   * `[ByteRange]`: Verifies that string or binary properties do not exceed specific byte size limits when encoded (e.g., `DocumentPassword` is validated to be $\le 1023$ bytes).
   * `[Metadata]`: Verifies that `document-metadata` is properly structured.

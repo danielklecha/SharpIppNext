@@ -63,6 +63,11 @@ internal class IppJobResponseProfile : IProfile
             if (src.ContainsKey(IppAttributeNames.JobPagesCompletedCol))
                 dst.JobPagesCompletedCol = map.Map<JobCounter>(src[IppAttributeNames.JobPagesCompletedCol].FromBegCollection().ToIppDictionary());
             dst.JobProcessingTime = map.MapFromDicNullable<int?>(src, IppAttributeNames.JobProcessingTime);
+            dst.PlatformTemperatureActual = map.MapFromDicSetNullable<int[]?>(src, IppAttributeNames.PlatformTemperatureActual);
+            dst.ChamberHumidityActual = map.MapFromDicSetNullable<int[]?>(src, IppAttributeNames.ChamberHumidityActual);
+            dst.ChamberTemperatureActual = map.MapFromDicSetNullable<int[]?>(src, IppAttributeNames.ChamberTemperatureActual);
+            dst.ChamberHumidityCurrent = map.MapFromDicNullable<int?>(src, IppAttributeNames.ChamberHumidityCurrent);
+            dst.ChamberTemperatureCurrent = map.MapFromDicNullable<int?>(src, IppAttributeNames.ChamberTemperatureCurrent);
             return dst;
         });
 
@@ -97,6 +102,16 @@ internal class IppJobResponseProfile : IProfile
                 dic.Add(IppAttributeNames.JobPagesCompletedCol, map.Map<IEnumerable<IppAttribute>>(src.JobPagesCompletedCol).ToBegCollection(IppAttributeNames.JobPagesCompletedCol).ToArray());
             if (src.JobProcessingTime != null)
                 dic.Add(IppAttributeNames.JobProcessingTime, [new IppAttribute(Tag.Integer, IppAttributeNames.JobProcessingTime, src.JobProcessingTime.Value)]);
+            if (src.PlatformTemperatureActual != null)
+                dic.Add(IppAttributeNames.PlatformTemperatureActual, src.PlatformTemperatureActual.Select(x => new IppAttribute(Tag.Integer, IppAttributeNames.PlatformTemperatureActual, x)).ToArray());
+            if (src.ChamberHumidityActual != null)
+                dic.Add(IppAttributeNames.ChamberHumidityActual, src.ChamberHumidityActual.Select(x => new IppAttribute(Tag.Integer, IppAttributeNames.ChamberHumidityActual, x)).ToArray());
+            if (src.ChamberTemperatureActual != null)
+                dic.Add(IppAttributeNames.ChamberTemperatureActual, src.ChamberTemperatureActual.Select(x => new IppAttribute(Tag.Integer, IppAttributeNames.ChamberTemperatureActual, x)).ToArray());
+            if (src.ChamberHumidityCurrent != null)
+                dic.Add(IppAttributeNames.ChamberHumidityCurrent, [new IppAttribute(Tag.Integer, IppAttributeNames.ChamberHumidityCurrent, src.ChamberHumidityCurrent.Value)]);
+            if (src.ChamberTemperatureCurrent != null)
+                dic.Add(IppAttributeNames.ChamberTemperatureCurrent, [new IppAttribute(Tag.Integer, IppAttributeNames.ChamberTemperatureCurrent, src.ChamberTemperatureCurrent.Value)]);
             return dic;
         });
     }

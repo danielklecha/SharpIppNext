@@ -67,6 +67,7 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                         PrinterConfigChangeTime = 456,
                         PrinterConfigChangeDateTime = new DateTimeOffset(2024, 01, 02, 3, 4, 6, TimeSpan.Zero),
                         MultipleOperationTimeOut = 60,
+                        MultipleOperationTimeOutAction = MultipleOperationTimeOutAction.AbortJob,
                         IppVersionsSupported = new IppVersion[] { new IppVersion(1,1) },
                         OperationsSupported = new[] { IppOperation.PrintJob },
                         MultipleDocumentJobsSupported = true,
@@ -436,7 +437,14 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                         PrinterMediaSheetsCompletedCol = 3,
                         PrinterPagesCompleted = 4,
                         PrinterPagesCompletedCol = 5,
-                        MaterialsColSupported = new[] { (MaterialsColMember)"materials-col-sup" },
+                        MaterialsColSupported = new[]
+                        {
+                            (MaterialsColMember)"materials-col-sup",
+                            MaterialsColMember.MaterialDiameter,
+                            MaterialsColMember.MaterialFillDensity,
+                            MaterialsColMember.MaterialShellThickness,
+                            MaterialsColMember.MaterialTemperature
+                        },
                         MaxMaterialsColSupported = 10,
                         MultipleObjectHandlingDefault = (MultipleObjectHandling?)"auto",
                         MultipleObjectHandlingSupported = new[] { "auto" }.Select(x => (MultipleObjectHandling)x).ToArray(),
@@ -511,7 +519,19 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                                 DestinationOAuthUri = new Uri("http://oauth.uri"),
                                 DestinationUri = new Uri("http://dest.uri")
                             }
-                        }
+                        },
+                        XSide1ImageOffsetSupported = new Range(1, 10),
+                        XSide2ImageOffsetSupported = new Range(1, 10),
+                        YSide1ImageOffsetSupported = new Range(2, 20),
+                        YSide2ImageOffsetSupported = new Range(2, 20),
+                        UserDefinedValuesSupported = new[] { "foo" },
+                        PdlInitFileSupported = new[] { "pdl-init-file-name" },
+                        PdlInitFileDefault = new PdlInitFile { PdlInitFileName = "init.ps", PdlInitFileLocation = new Uri("http://host/init.ps") },
+                        JobSaveDispositionSupported = new[] { "save-disposition" },
+                        JobSaveDispositionDefault = new JobSaveDisposition { SaveDisposition = SaveDisposition.SaveOnly, SaveLocation = new Uri("http://host/save") },
+                        SaveDispositionSupported = new[] { SaveDisposition.SaveOnly },
+                        SaveInfoSupported = new[] { "save-name" },
+                        SaveLocationSupported = new[] { new Uri("http://host/save") }
                     },
                     OperationAttributes = new()
                     {
@@ -594,6 +614,7 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                 new IppAttribute(Tag.NoValue, IppAttributeNames.DocumentPasswordSupported, NoValue.Instance),
                 new IppAttribute(Tag.NoValue, IppAttributeNames.PrinterUpTime, NoValue.Instance),
                 new IppAttribute(Tag.NoValue, IppAttributeNames.MultipleOperationTimeOut, NoValue.Instance),
+                new IppAttribute(Tag.NoValue, IppAttributeNames.MultipleOperationTimeOutAction, NoValue.Instance),
                 new IppAttribute(Tag.NoValue, IppAttributeNames.JpegKOctetsSupported, NoValue.Instance),
                 new IppAttribute(Tag.NoValue, IppAttributeNames.PdfKOctetsSupported, NoValue.Instance),
                 new IppAttribute(Tag.NoValue, IppAttributeNames.JobImpressionsSupported, NoValue.Instance),
@@ -640,6 +661,7 @@ public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
                 DocumentPasswordSupported = NoValue.GetNoValue<int>(),
                 PrinterUpTime = NoValue.GetNoValue<int>(),
                 MultipleOperationTimeOut = NoValue.GetNoValue<int>(),
+                MultipleOperationTimeOutAction = NoValue.GetNoValue<MultipleOperationTimeOutAction>(),
                 JpegKOctetsSupported = NoValue.GetNoValue<SharpIpp.Protocol.Models.Range>(),
                 PdfKOctetsSupported = NoValue.GetNoValue<SharpIpp.Protocol.Models.Range>(),
                 JobImpressionsSupported = NoValue.GetNoValue<SharpIpp.Protocol.Models.Range>(),

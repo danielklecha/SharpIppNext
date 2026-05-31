@@ -161,6 +161,24 @@ internal class DocumentTemplateAttributesProfile : IProfile
                 dst.Add(new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, IppAttributeNames.JobPassword, src.JobPassword.Value));
             if (src.JobPasswordEncryption != null)
                 dst.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.JobPasswordEncryption, map.Map<string>(src.JobPasswordEncryption.Value)));
+            if (src.ChamberHumidity.HasValue)
+                dst.Add(new IppAttribute(Tag.Integer, IppAttributeNames.ChamberHumidity, src.ChamberHumidity.Value));
+            if (src.ChamberTemperature.HasValue)
+                dst.Add(new IppAttribute(Tag.Integer, IppAttributeNames.ChamberTemperature, src.ChamberTemperature.Value));
+            if (src.MaterialsCol != null)
+                dst.AddRange(src.MaterialsCol.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(IppAttributeNames.MaterialsCol)));
+            if (src.MultipleObjectHandling != null)
+                dst.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.MultipleObjectHandling, map.Map<string>(src.MultipleObjectHandling.Value)));
+            if (src.PlatformTemperature.HasValue)
+                dst.Add(new IppAttribute(Tag.Integer, IppAttributeNames.PlatformTemperature, src.PlatformTemperature.Value));
+            if (src.PrintAccuracy != null)
+                dst.AddRange(map.Map<IEnumerable<IppAttribute>>(src.PrintAccuracy).ToBegCollection(IppAttributeNames.PrintAccuracy));
+            if (src.PrintBase != null)
+                dst.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.PrintBase, map.Map<string>(src.PrintBase.Value)));
+            if (src.PrintObjects != null)
+                dst.AddRange(src.PrintObjects.SelectMany(x => map.Map<IEnumerable<IppAttribute>>(x).ToBegCollection(IppAttributeNames.PrintObjects)));
+            if (src.PrintSupports != null)
+                dst.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.PrintSupports, map.Map<string>(src.PrintSupports.Value)));
             return dst;
         });
 
@@ -235,6 +253,18 @@ internal class DocumentTemplateAttributesProfile : IProfile
             dst.LastDocument = map.MapFromDicNullable<bool?>(src, IppAttributeNames.LastDocument);
             dst.JobPassword = map.MapFromDicNullable<OctetString?>(src, IppAttributeNames.JobPassword);
             dst.JobPasswordEncryption = map.MapFromDicNullable<JobPasswordEncryption?>(src, IppAttributeNames.JobPasswordEncryption);
+            dst.ChamberHumidity = map.MapFromDicNullable<int?>(src, IppAttributeNames.ChamberHumidity);
+            dst.ChamberTemperature = map.MapFromDicNullable<int?>(src, IppAttributeNames.ChamberTemperature);
+            if (src.ContainsKey(IppAttributeNames.MaterialsCol))
+                dst.MaterialsCol = src[IppAttributeNames.MaterialsCol].GroupBegCollection().Select(x => map.Map<Material>(x.FromBegCollection().ToIppDictionary())).ToArray();
+            dst.MultipleObjectHandling = map.MapFromDicNullable<MultipleObjectHandling?>(src, IppAttributeNames.MultipleObjectHandling);
+            dst.PlatformTemperature = map.MapFromDicNullable<int?>(src, IppAttributeNames.PlatformTemperature);
+            if (src.ContainsKey(IppAttributeNames.PrintAccuracy))
+                dst.PrintAccuracy = map.Map<PrintAccuracy>(src[IppAttributeNames.PrintAccuracy].GroupBegCollection().First().FromBegCollection().ToIppDictionary());
+            dst.PrintBase = map.MapFromDicNullable<PrintBase?>(src, IppAttributeNames.PrintBase);
+            if (src.ContainsKey(IppAttributeNames.PrintObjects))
+                dst.PrintObjects = src[IppAttributeNames.PrintObjects].GroupBegCollection().Select(x => map.Map<PrintObject>(x.FromBegCollection().ToIppDictionary())).ToArray();
+            dst.PrintSupports = map.MapFromDicNullable<PrintSupports?>(src, IppAttributeNames.PrintSupports);
             return dst;
         });
     }

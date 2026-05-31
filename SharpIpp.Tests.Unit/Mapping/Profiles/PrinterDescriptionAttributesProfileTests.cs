@@ -594,4 +594,34 @@ public class PrinterDescriptionAttributesProfileTests
         var roundTripped = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(serialized);
         roundTripped.OverridesSupported.Should().BeEquivalentTo(src.OverridesSupported);
     }
+
+    [TestMethod]
+    public void Map_PrinterDescriptionAttributes_RoundTripsComplexRanges()
+    {
+        var src = new PrinterDescriptionAttributes
+        {
+            JpegXDimensionSupported = new SharpIpp.Protocol.Models.Range(100, 2000),
+            JpegYDimensionSupported = new SharpIpp.Protocol.Models.Range(100, 3000),
+            PdfKOctetsSupported = new SharpIpp.Protocol.Models.Range(0, int.MaxValue)
+        };
+
+        var ippDict = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
+
+        ippDict.Should().ContainKey(IppAttributeNames.JpegXDimensionSupported);
+        ippDict[IppAttributeNames.JpegXDimensionSupported].Single().Value.Should().Be(src.JpegXDimensionSupported);
+        ippDict[IppAttributeNames.JpegXDimensionSupported].Single().Tag.Should().Be(Tag.RangeOfInteger);
+
+        ippDict.Should().ContainKey(IppAttributeNames.JpegYDimensionSupported);
+        ippDict[IppAttributeNames.JpegYDimensionSupported].Single().Value.Should().Be(src.JpegYDimensionSupported);
+        ippDict[IppAttributeNames.JpegYDimensionSupported].Single().Tag.Should().Be(Tag.RangeOfInteger);
+
+        ippDict.Should().ContainKey(IppAttributeNames.PdfKOctetsSupported);
+        ippDict[IppAttributeNames.PdfKOctetsSupported].Single().Value.Should().Be(src.PdfKOctetsSupported);
+        ippDict[IppAttributeNames.PdfKOctetsSupported].Single().Tag.Should().Be(Tag.RangeOfInteger);
+
+        var roundTripped = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(ippDict);
+        roundTripped.JpegXDimensionSupported.Should().Be(src.JpegXDimensionSupported);
+        roundTripped.JpegYDimensionSupported.Should().Be(src.JpegYDimensionSupported);
+        roundTripped.PdfKOctetsSupported.Should().Be(src.PdfKOctetsSupported);
+    }
 }

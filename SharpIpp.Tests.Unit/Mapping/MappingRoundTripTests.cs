@@ -119,6 +119,18 @@ public class MappingRoundTripTests : MapperTestBase
                         ProfileUri = new Uri($"https://example.com/{RandomString(rng)}.icc"),
                     }
                 },
+                XSide1ImageOffsetSupported = new SharpIpp.Protocol.Models.Range(1, 10),
+                XSide2ImageOffsetSupported = new SharpIpp.Protocol.Models.Range(1, 10),
+                YSide1ImageOffsetSupported = new SharpIpp.Protocol.Models.Range(2, 20),
+                YSide2ImageOffsetSupported = new SharpIpp.Protocol.Models.Range(2, 20),
+                UserDefinedValuesSupported = new[] { RandomString(rng) },
+                PdlInitFileSupported = new[] { RandomString(rng) },
+                PdlInitFileDefault = new PdlInitFile { PdlInitFileName = RandomString(rng), PdlInitFileLocation = new Uri($"https://example.com/{RandomString(rng)}") },
+                JobSaveDispositionSupported = new[] { RandomString(rng) },
+                JobSaveDispositionDefault = new JobSaveDisposition { SaveDisposition = SaveDisposition.SaveOnly, SaveLocation = new Uri($"https://example.com/{RandomString(rng)}") },
+                SaveDispositionSupported = new[] { SaveDisposition.SaveOnly, SaveDisposition.PrintSave },
+                SaveInfoSupported = new[] { RandomString(rng) },
+                SaveLocationSupported = new[] { new Uri($"https://example.com/{RandomString(rng)}") },
             };
 
             // Serialize to IDictionary<string, IppAttribute[]>
@@ -193,6 +205,23 @@ public class MappingRoundTripTests : MapperTestBase
             roundTripped.PrinterIccProfile!.Should().HaveCount(1, $"iteration {i}");
             roundTripped.PrinterIccProfile[0].ProfileName.Should().Be(original.PrinterIccProfile[0].ProfileName, $"iteration {i}: PrinterIccProfile.ProfileName");
             roundTripped.PrinterIccProfile[0].ProfileUri.Should().Be(original.PrinterIccProfile[0].ProfileUri, $"iteration {i}: PrinterIccProfile.ProfileUri");
+
+            roundTripped.XSide1ImageOffsetSupported.Should().Be(original.XSide1ImageOffsetSupported, $"iteration {i}: XSide1ImageOffsetSupported");
+            roundTripped.XSide2ImageOffsetSupported.Should().Be(original.XSide2ImageOffsetSupported, $"iteration {i}: XSide2ImageOffsetSupported");
+            roundTripped.YSide1ImageOffsetSupported.Should().Be(original.YSide1ImageOffsetSupported, $"iteration {i}: YSide1ImageOffsetSupported");
+            roundTripped.YSide2ImageOffsetSupported.Should().Be(original.YSide2ImageOffsetSupported, $"iteration {i}: YSide2ImageOffsetSupported");
+            roundTripped.UserDefinedValuesSupported.Should().BeEquivalentTo(original.UserDefinedValuesSupported, $"iteration {i}: UserDefinedValuesSupported");
+            roundTripped.PdlInitFileSupported.Should().BeEquivalentTo(original.PdlInitFileSupported, $"iteration {i}: PdlInitFileSupported");
+            roundTripped.PdlInitFileDefault.Should().NotBeNull($"iteration {i}: PdlInitFileDefault");
+            roundTripped.PdlInitFileDefault!.PdlInitFileName.Should().Be(original.PdlInitFileDefault!.PdlInitFileName, $"iteration {i}: PdlInitFileDefault.PdlInitFileName");
+            roundTripped.PdlInitFileDefault!.PdlInitFileLocation.Should().Be(original.PdlInitFileDefault!.PdlInitFileLocation, $"iteration {i}: PdlInitFileDefault.PdlInitFileLocation");
+            roundTripped.JobSaveDispositionSupported.Should().BeEquivalentTo(original.JobSaveDispositionSupported, $"iteration {i}: JobSaveDispositionSupported");
+            roundTripped.JobSaveDispositionDefault.Should().NotBeNull($"iteration {i}: JobSaveDispositionDefault");
+            roundTripped.JobSaveDispositionDefault!.SaveDisposition.Should().Be(original.JobSaveDispositionDefault!.SaveDisposition, $"iteration {i}: JobSaveDispositionDefault.SaveDisposition");
+            roundTripped.JobSaveDispositionDefault!.SaveLocation.Should().Be(original.JobSaveDispositionDefault!.SaveLocation, $"iteration {i}: JobSaveDispositionDefault.SaveLocation");
+            roundTripped.SaveDispositionSupported.Should().BeEquivalentTo(original.SaveDispositionSupported, $"iteration {i}: SaveDispositionSupported");
+            roundTripped.SaveInfoSupported.Should().BeEquivalentTo(original.SaveInfoSupported, $"iteration {i}: SaveInfoSupported");
+            roundTripped.SaveLocationSupported.Should().BeEquivalentTo(original.SaveLocationSupported, $"iteration {i}: SaveLocationSupported");
         }
     }
 
@@ -221,6 +250,24 @@ public class MappingRoundTripTests : MapperTestBase
                 PrintContentOptimize = PrintContentOptimize.Auto,
                 NumberUp = RandomInt(rng),
                 Copies = RandomInt(rng),
+                JobSaveDisposition = new JobSaveDisposition
+                {
+                    SaveDisposition = SaveDisposition.SaveOnly,
+                    SaveLocation = new Uri($"https://example.com/{RandomString(rng)}"),
+                    SaveInfo = new[]
+                    {
+                        new SaveInfo
+                        {
+                            SaveName = RandomString(rng),
+                            SaveDocumentFormat = RandomString(rng)
+                        }
+                    }
+                },
+                PdlInitFile = new PdlInitFile
+                {
+                    PdlInitFileName = RandomString(rng),
+                    PdlInitFileLocation = new Uri($"https://example.com/{RandomString(rng)}")
+                }
             };
 
             var request = _mapper.Map<JobTemplateAttributes, IppRequestMessage>(original);
@@ -239,6 +286,17 @@ public class MappingRoundTripTests : MapperTestBase
             roundTripped.PrintContentOptimize.Should().Be(original.PrintContentOptimize, $"iteration {i}: PrintContentOptimize");
             roundTripped.NumberUp.Should().Be(original.NumberUp, $"iteration {i}: NumberUp");
             roundTripped.Copies.Should().Be(original.Copies, $"iteration {i}: Copies");
+
+            roundTripped.JobSaveDisposition.Should().NotBeNull($"iteration {i}: JobSaveDisposition");
+            roundTripped.JobSaveDisposition!.SaveDisposition.Should().Be(original.JobSaveDisposition!.SaveDisposition, $"iteration {i}: JobSaveDisposition.SaveDisposition");
+            roundTripped.JobSaveDisposition!.SaveLocation.Should().Be(original.JobSaveDisposition!.SaveLocation, $"iteration {i}: JobSaveDisposition.SaveLocation");
+            roundTripped.JobSaveDisposition!.SaveInfo.Should().HaveCount(1, $"iteration {i}: JobSaveDisposition.SaveInfo");
+            roundTripped.JobSaveDisposition!.SaveInfo![0].SaveName.Should().Be(original.JobSaveDisposition!.SaveInfo![0].SaveName, $"iteration {i}: JobSaveDisposition.SaveInfo.SaveName");
+            roundTripped.JobSaveDisposition!.SaveInfo![0].SaveDocumentFormat.Should().Be(original.JobSaveDisposition!.SaveInfo![0].SaveDocumentFormat, $"iteration {i}: JobSaveDisposition.SaveInfo.SaveDocumentFormat");
+
+            roundTripped.PdlInitFile.Should().NotBeNull($"iteration {i}: PdlInitFile");
+            roundTripped.PdlInitFile!.PdlInitFileName.Should().Be(original.PdlInitFile!.PdlInitFileName, $"iteration {i}: PdlInitFile.PdlInitFileName");
+            roundTripped.PdlInitFile!.PdlInitFileLocation.Should().Be(original.PdlInitFile!.PdlInitFileLocation, $"iteration {i}: PdlInitFile.PdlInitFileLocation");
         }
     }
 
@@ -264,6 +322,8 @@ public class MappingRoundTripTests : MapperTestBase
                 JobProcessingTime = RandomInt(rng),
                 ErrorsCount = RandomInt(rng),
                 WarningsCount = RandomInt(rng),
+                JobPagesCompletedCurrentCopy = RandomInt(rng),
+                PagesCompletedCurrentCopy = RandomInt(rng),
             };
 
             // JobDescriptionAttributes maps to/from IDictionary<string, IppAttribute[]>
@@ -280,6 +340,8 @@ public class MappingRoundTripTests : MapperTestBase
             roundTripped.JobProcessingTime.Should().Be(original.JobProcessingTime, $"iteration {i}: JobProcessingTime");
             roundTripped.ErrorsCount.Should().Be(original.ErrorsCount, $"iteration {i}: ErrorsCount");
             roundTripped.WarningsCount.Should().Be(original.WarningsCount, $"iteration {i}: WarningsCount");
+            roundTripped.JobPagesCompletedCurrentCopy.Should().Be(original.JobPagesCompletedCurrentCopy, $"iteration {i}: JobPagesCompletedCurrentCopy");
+            roundTripped.PagesCompletedCurrentCopy.Should().Be(original.PagesCompletedCurrentCopy, $"iteration {i}: PagesCompletedCurrentCopy");
         }
     }
 

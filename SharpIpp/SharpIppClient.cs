@@ -27,9 +27,16 @@ public partial class SharpIppClient : ISharpIppClient
     private readonly HttpClient _httpClient;
     private readonly IIppProtocol _ippProtocol;
 
+    /// <inheritdoc />
     public IIppRequestMessageValidator? RequestMessageValidator { get; set; } = IppRequestMessageValidator.Default;
+
+    /// <inheritdoc />
     public IIppRequestValidator? RequestValidator { get; set; } = IppRequestValidator.Default;
+
+    /// <inheritdoc />
     public IIppResponseMessageValidator? ResponseMessageValidator { get; set; }
+
+    /// <inheritdoc />
     public IIppResponseValidator? ResponseValidator { get; set; }
 
     static SharpIppClient()
@@ -137,6 +144,7 @@ public partial class SharpIppClient : ISharpIppClient
         throw new IppResponseException(httpException.Message, httpException, ippResponse);
     }
 
+    /// <inheritdoc />
     public void Dispose()
     {
         if (_disposeHttpClient)
@@ -178,6 +186,7 @@ public partial class SharpIppClient : ISharpIppClient
         return res;
     }
 
+    /// <inheritdoc />
     public IIppRequestMessage CreateRawRequest<T>(T ippRequestMessage) where T : IIppRequest
     {
         if (ippRequestMessage is null)
@@ -186,11 +195,18 @@ public partial class SharpIppClient : ISharpIppClient
         return ippRequest;
     }
 
+    /// <inheritdoc />
     public virtual T CreateResponse<T>(IIppResponseMessage ippResponse) where T : IIppResponse
     {
         return (T)CreateResponse(typeof(T), ippResponse);
     }
 
+    /// <summary>
+    /// Maps a raw IPP response message to the specified response type.
+    /// </summary>
+    /// <param name="responseType">The type of the IPP response.</param>
+    /// <param name="ippResponse">The raw IPP response message.</param>
+    /// <returns>The mapped IPP response object.</returns>
     public virtual object CreateResponse(Type responseType, IIppResponseMessage ippResponse)
     {
         try

@@ -48,7 +48,7 @@ When running tests with the coverage flags as shown above, coverage reports are 
 ### Coding Standards
 
 - Follow standard C# naming conventions and best practices.
-- Adhere to the rules defined in the [.editorconfig](.editorconfig) file.
+- Adhere to the rules defined in the [.editorconfig](https://github.com/danielklecha/SharpIppNext/blob/master/.editorconfig) file.
 - Keep methods focused and classes loosely coupled.
 
 ### Pull Request Process
@@ -58,6 +58,19 @@ When running tests with the coverage flags as shown above, coverage reports are 
 3. **Draft Pull Request**: If your work is still in progress, open a Draft Pull Request to get early feedback.
 4. **Final Pull Request**: Ensure your branch is up-to-date with `master` and all CI checks pass.
 5. **Review**: At least one maintainer will review your PR before merging.
+
+## Maintainer Notes: Releasing Maintenance Branches
+
+When creating a maintenance branch for an older version (e.g., creating branch `v3.x` after `v4` is already released):
+
+1. **Modify Release Workflow**: In the new maintenance branch, update the `.github/workflows/create-release.yml` file so that new releases do not overwrite the "Latest" tag on GitHub:
+   ```yaml
+   # Change this:
+   # gh release create "$tag" --generate-notes
+   # To this:
+   gh release create "$tag" --generate-notes --latest=false
+   ```
+2. **Push Tags**: When you push a new release tag from this branch (e.g., `v3.1.2`), the GitHub Action will build and publish it to NuGet, but it will not mark it as the latest release on GitHub.
 
 ## Reporting Issues
 

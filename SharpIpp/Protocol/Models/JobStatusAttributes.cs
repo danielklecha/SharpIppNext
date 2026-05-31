@@ -250,4 +250,18 @@ public class JobStatusAttributes
     /// </summary>
     /// <code>date-time-at-completed</code>
     public DateTimeOffset? DateTimeAtCompleted { get; set; }
+
+    /// <summary>
+    /// The job-pages-completed-current-copy attribute.
+    /// See: PWG 5100.13-2023 (obsolete)
+    /// </summary>
+    [Obsolete("The 'job-pages-completed-current-copy' attribute is obsolete. See PWG 5100.13-2023 Section 7.1.")]
+    public int? JobPagesCompletedCurrentCopy { get; set; }
+
+    /// <summary>
+    /// The pages-completed-current-copy attribute.
+    /// See: PWG 5100.13-2023 (obsolete)
+    /// </summary>
+    [Obsolete("The 'pages-completed-current-copy' attribute is obsolete. See PWG 5100.13-2023 Section 7.1.")]
+    public int? PagesCompletedCurrentCopy { get; set; }
 }
