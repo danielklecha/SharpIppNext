@@ -673,5 +673,18 @@ public class PrinterDescriptionAttributesProfileTests
         roundTripped.PrinterDeviceId.Should().Be(src.PrinterDeviceId);
         roundTripped.PagesPerSubsetSupported.Should().Be(src.PagesPerSubsetSupported);
     }
+
+    [TestMethod]
+    public void Map_PrinterDescriptionAttributes_FromDictionary_WhenPageRangesSupportedIsRange_MapsToTrue()
+    {
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { IppAttributeNames.PageRangesSupported, [new IppAttribute(Tag.RangeOfInteger, IppAttributeNames.PageRangesSupported, new SharpIpp.Protocol.Models.Range(1, 2147483647))] }
+        };
+
+        var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(src);
+
+        dst.PageRangesSupported.Should().BeTrue();
+    }
 }
 
