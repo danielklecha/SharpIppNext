@@ -38,6 +38,14 @@ namespace SharpIpp.Protocol
         /// </summary>
         public bool ReadDocumentStream { get; set; } = true;
 
+        /// <summary>
+        /// Gets or sets the maximum allowed size (in bytes) of the IPP document payload when <see cref="ReadDocumentStream"/> is true.
+        /// If the document stream exceeds this limit, an <see cref="Exceptions.IppRequestException"/> is thrown 
+        /// with the <see cref="Models.IppStatusCode.ClientErrorRequestEntityTooLarge"/> status code.
+        /// Defaults to 128 MB. Set to null to disable the size limit.
+        /// </summary>
+        public long? MaxDocumentStreamBytes { get; set; } = 128L * 1024 * 1024;
+
         public async Task WriteIppRequestAsync(IIppRequestMessage ippRequestMessage, Stream stream, CancellationToken cancellationToken = default)
         {
             if (ippRequestMessage is null)
@@ -466,7 +474,8 @@ namespace SharpIpp.Protocol
             if (ReadDocumentStream)
             {
                 message.Document = new MemoryStream();
-                await reader.BaseStream.CopyToAsync(message.Document);
+                await CopyDocumentStreamAsync(reader.BaseStream, message.Document,
+                    message, cancellationToken).ConfigureAwait(false);
                 message.Document.Seek(0, SeekOrigin.Begin);
             }
             else
@@ -474,6 +483,30 @@ namespace SharpIpp.Protocol
                 message.Document = Stream.Null;
             }
             return message;
+        }
+
+        protected virtual async Task CopyDocumentStreamAsync(Stream source, Stream destination, IIppRequestMessage message, CancellationToken cancellationToken = default)
+        {
+            if (MaxDocumentStreamBytes == null)
+            {
+                await source.CopyToAsync(destination, 81920, cancellationToken).ConfigureAwait(false);
+                return;
+            }
+
+            byte[] buffer = new byte[81920];
+            int read;
+            long totalRead = 0;
+
+            while ((read = await source.ReadAsync(buffer, 0, buffer.Length, cancellationToken).ConfigureAwait(false)) > 0)
+            {
+                totalRead += read;
+                if (totalRead > MaxDocumentStreamBytes.Value)
+                {
+                    throw new IppRequestException("Document stream size exceeded the maximum allowed limit.", message, IppStatusCode.ClientErrorRequestEntityTooLarge);
+                }
+
+                await destination.WriteAsync(buffer, 0, read, cancellationToken).ConfigureAwait(false);
+            }
         }
 
         private void WriteSections(IIppRequestMessage requestMessage, BinaryWriter writer)

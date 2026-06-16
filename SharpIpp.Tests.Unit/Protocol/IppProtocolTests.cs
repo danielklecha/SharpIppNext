@@ -352,6 +352,22 @@ public class IppProtocolTests
     }
 
     [TestMethod()]
+    public async Task ReadIppRequestAsync_DocumentExceedsMaxSize_ShouldThrowClientErrorRequestEntityTooLarge()
+    {
+        // Arrange
+        var protocol = new IppProtocol { MaxDocumentStreamBytes = 4 };
+        // 5 bytes of payload: 0x4C, 0x6F, 0x72, 0x65, 0x6D ("Lorem")
+        using MemoryStream requestStream = new( new byte[] { 0x01, 0x01, 0x00, 0x02, 0x00, 0x00, 0x00, 0x7B, 0x4C, 0x6F, 0x72, 0x65, 0x6D } );
+        
+        // Act
+        Func<Task<IIppRequestMessage>> act = async () => await protocol.ReadIppRequestAsync( requestStream );
+        
+        // Assert
+        var exceptionAssertion = await act.Should().ThrowAsync<IppRequestException>();
+        exceptionAssertion.Which.StatusCode.Should().Be(IppStatusCode.ClientErrorRequestEntityTooLarge);
+    }
+
+    [TestMethod()]
     public void WriteSection_EmptyListOfAttributes_ShouldNotWriteAnything()
     {
         // Arrange
