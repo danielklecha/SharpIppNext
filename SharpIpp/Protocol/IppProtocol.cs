@@ -28,24 +28,16 @@ namespace SharpIpp.Protocol
     /// </summary>
     public partial class IppProtocol : IIppProtocol
     {
-        /// <summary>
-        /// Controls the behavior of ReadIppRequestAsync() method.
-        /// If true, the whole incoming document is read into a memory stream,
-        /// and can be accessed via message.Document.
-        /// If false, the document is not read into a memory stream, and it should
-        /// be consumed from the input stream by the caller.
-        /// Defaults to true.
-        /// </summary>
+        /// <inheritdoc />
         public bool ReadDocumentStream { get; set; } = true;
 
-        /// <summary>
-        /// Gets or sets the maximum allowed size (in bytes) of the IPP document payload when <see cref="ReadDocumentStream"/> is true.
-        /// If the document stream exceeds this limit, an <see cref="Exceptions.IppRequestException"/> is thrown 
-        /// with the <see cref="Models.IppStatusCode.ClientErrorRequestEntityTooLarge"/> status code.
-        /// Defaults to 128 MB. Set to null to disable the size limit.
-        /// </summary>
+        /// <inheritdoc />
         public long? MaxDocumentStreamBytes { get; set; } = 128L * 1024 * 1024;
 
+        /// <inheritdoc />
+        public int? MaxMessageAttributes { get; set; } = 100_000;
+
+        /// <inheritdoc />
         public async Task WriteIppRequestAsync(IIppRequestMessage ippRequestMessage, Stream stream, CancellationToken cancellationToken = default)
         {
             if (ippRequestMessage is null)
@@ -63,6 +55,7 @@ namespace SharpIpp.Protocol
             }
         }
 
+        /// <inheritdoc />
         public async Task<IIppRequestMessage> ReadIppRequestAsync( Stream stream, CancellationToken cancellationToken = default )
         {
             if (stream is null)
@@ -71,6 +64,7 @@ namespace SharpIpp.Protocol
             return await ReadIppRequestAsync( reader, cancellationToken );
         }
 
+        /// <inheritdoc />
         public Task<IIppResponseMessage> ReadIppResponseAsync(Stream stream, CancellationToken cancellationToken = default)
         {
             if (stream is null)
@@ -99,8 +93,14 @@ namespace SharpIpp.Protocol
             List<IppAttribute>? currentAttributes = null;
             SectionTag currentSectionTag = default;
             Encoding encoding = Encoding.ASCII;
+            int parsedAttributesCount = 0;
             do
             {
+                parsedAttributesCount++;
+                if (MaxMessageAttributes.HasValue && parsedAttributesCount > MaxMessageAttributes.Value)
+                {
+                    throw new ArgumentException($"Maximum attribute limit of {MaxMessageAttributes.Value} exceeded.");
+                }
                 var data = reader.ReadByte();
                 var sectionTag = (SectionTag)data;
 
@@ -143,6 +143,10 @@ namespace SharpIpp.Protocol
                                 prevBegCollectionAttributes.Push(attribute);
                                 break;
                             case Tag.EndCollection:
+                                if (prevBegCollectionAttributes.Count == 0)
+                                {
+                                    throw new ArgumentException("Unexpected EndCollection tag. No matching BegCollection.");
+                                }
                                 prevBegCollectionAttribute = prevBegCollectionAttributes.Pop();
                                 break;
                         }
@@ -161,8 +165,14 @@ namespace SharpIpp.Protocol
             IppAttribute? prevBegCollectionAttribute = null;
             List<IppAttribute>? attributes = null;
             Encoding encoding = Encoding.ASCII;
+            int parsedAttributesCount = 0;
             do
             {
+                parsedAttributesCount++;
+                if (MaxMessageAttributes.HasValue && parsedAttributesCount > MaxMessageAttributes.Value)
+                {
+                    throw new IppRequestException($"Maximum attribute limit of {MaxMessageAttributes.Value} exceeded.", res, IppStatusCode.ClientErrorRequestEntityTooLarge);
+                }
                 var data = reader.ReadByte();
                 var sectionTag = (SectionTag)data;
 
@@ -206,8 +216,7 @@ namespace SharpIpp.Protocol
                         }
                         if ( attributes is null )
                         {
-                            reader.BaseStream.Position--;
-                            return;
+                            throw new IppRequestException($"<Hex dump> Expected section tag, found {data:X2}", res, IppStatusCode.ClientErrorBadRequest);
                         }
                         var attribute = ReadAttribute((Tag)data, reader, prevAttribute, prevBegCollectionAttribute, encoding);
                         switch (attribute.Tag)
@@ -219,6 +228,10 @@ namespace SharpIpp.Protocol
                                 prevBegCollectionAttributes.Push(attribute);
                                 break;
                             case Tag.EndCollection:
+                                if (prevBegCollectionAttributes.Count == 0)
+                                {
+                                    throw new IppRequestException("Unexpected EndCollection tag. No matching BegCollection.", res, IppStatusCode.ClientErrorBadRequest);
+                                }
                                 prevBegCollectionAttribute = prevBegCollectionAttributes.Pop();
                                 break;
                         }
@@ -320,6 +333,7 @@ namespace SharpIpp.Protocol
             }
         }
 
+        /// <inheritdoc />
         public Task WriteIppResponseAsync( IIppResponseMessage ippResponseMessage, Stream stream, CancellationToken cancellationToken = default )
         {
             if (ippResponseMessage is null)

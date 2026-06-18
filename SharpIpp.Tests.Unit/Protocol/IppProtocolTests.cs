@@ -338,7 +338,7 @@ public class IppProtocolTests
     {
         // Arrange
         var protocol = new IppProtocol();
-        using MemoryStream requestStream = new( new byte[] { 0x01, 0x01, 0x00, 0x02, 0x00, 0x00, 0x00, 0x7B, 0x4C, 0x6F, 0x72, 0x65, 0x6D } );
+        using MemoryStream requestStream = new( new byte[] { 0x01, 0x01, 0x00, 0x02, 0x00, 0x00, 0x00, 0x7B, 0x03, 0x4C, 0x6F, 0x72, 0x65, 0x6D } );
         // Act
         Func<Task<IIppRequestMessage>> act = async () => await protocol.ReadIppRequestAsync( requestStream );
         // Assert
@@ -357,7 +357,7 @@ public class IppProtocolTests
         // Arrange
         var protocol = new IppProtocol { MaxDocumentStreamBytes = 4 };
         // 5 bytes of payload: 0x4C, 0x6F, 0x72, 0x65, 0x6D ("Lorem")
-        using MemoryStream requestStream = new( new byte[] { 0x01, 0x01, 0x00, 0x02, 0x00, 0x00, 0x00, 0x7B, 0x4C, 0x6F, 0x72, 0x65, 0x6D } );
+        using MemoryStream requestStream = new( new byte[] { 0x01, 0x01, 0x00, 0x02, 0x00, 0x00, 0x00, 0x7B, 0x03, 0x4C, 0x6F, 0x72, 0x65, 0x6D } );
         
         // Act
         Func<Task<IIppRequestMessage>> act = async () => await protocol.ReadIppRequestAsync( requestStream );
@@ -365,6 +365,24 @@ public class IppProtocolTests
         // Assert
         var exceptionAssertion = await act.Should().ThrowAsync<IppRequestException>();
         exceptionAssertion.Which.StatusCode.Should().Be(IppStatusCode.ClientErrorRequestEntityTooLarge);
+    }
+
+    [TestMethod()]
+    public async Task ReadIppRequestAsync_DocumentWithNullMaxBytes_ShouldMatch()
+    {
+        // Arrange
+        var protocol = new IppProtocol { MaxDocumentStreamBytes = null };
+        using MemoryStream requestStream = new( new byte[] { 0x01, 0x01, 0x00, 0x02, 0x00, 0x00, 0x00, 0x7B, 0x03, 0x4C, 0x6F, 0x72, 0x65, 0x6D } );
+        // Act
+        Func<Task<IIppRequestMessage>> act = async () => await protocol.ReadIppRequestAsync( requestStream );
+        // Assert
+        using var expectedStream = new MemoryStream( new byte[] { 0x4C, 0x6F, 0x72, 0x65, 0x6D } );
+        (await act.Should().NotThrowAsync()).Which.Should().BeEquivalentTo( new IppRequestMessage
+        {
+            IppOperation = IppOperation.PrintJob,
+            RequestId = 123,
+            Document = expectedStream
+        }, x => x.Excluding( ( IMemberInfo x ) => x.Path == "Document.ReadTimeout" || x.Path == "Document.WriteTimeout" ) );
     }
 
     [TestMethod()]
@@ -652,6 +670,44 @@ public class IppProtocolTests
         Func<Task<IIppResponseMessage>> act = async () => await protocol.ReadIppResponseAsync( requestStream );
         // Assert
         await act.Should().ThrowAsync<IppResponseException>();
+    }
+
+    [TestMethod]
+    public async Task ReadIppResponseAsync_MaxAttributesExceeded_ThrowsIppResponseExceptionWithArgumentExceptionInnerException()
+    {
+        // Arrange
+        var protocol = new IppProtocol { MaxMessageAttributes = 1 };
+        using MemoryStream requestStream = new( new byte[] {
+            0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7B,
+            0x01, // operation-attributes-tag
+            0x47, 0x00, 0x12, 0x61, 0x74, 0x74, 0x72, 0x69, 0x62, 0x75, 0x74, 0x65, 0x73, 0x2D, 0x63, 0x68, 0x61, 0x72, 0x73, 0x65, 0x74, 0x00, 0x05, 0x75, 0x74, 0x66, 0x2D, 0x38,
+            0x03 // EndOfAttributesTag
+        } );
+        // Act
+        Func<Task<IIppResponseMessage>> act = async () => await protocol.ReadIppResponseAsync( requestStream );
+        // Assert
+        var exception = await act.Should().ThrowAsync<IppResponseException>();
+        exception.Which.InnerException.Should().BeOfType<ArgumentException>()
+            .Which.Message.Should().Contain("Maximum attribute limit of 1 exceeded.");
+    }
+
+    [TestMethod]
+    public async Task ReadIppResponseAsync_UnexpectedEndCollection_ThrowsIppResponseExceptionWithArgumentExceptionInnerException()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        using MemoryStream requestStream = new( new byte[] {
+            0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7B,
+            0x01, // operation-attributes-tag
+            0x37, 0x00, 0x00, 0x00, 0x00, // Tag.EndCollection, name length 0, value length 0
+            0x03 // EndOfAttributesTag
+        } );
+        // Act
+        Func<Task<IIppResponseMessage>> act = async () => await protocol.ReadIppResponseAsync( requestStream );
+        // Assert
+        var exception = await act.Should().ThrowAsync<IppResponseException>();
+        exception.Which.InnerException.Should().BeOfType<ArgumentException>()
+            .Which.Message.Should().Contain("Unexpected EndCollection tag. No matching BegCollection.");
     }
 
     [TestMethod]
@@ -1572,5 +1628,71 @@ public class IppProtocolTests
 
         var name = IppProtocol.GetNormalizedName(Tag.BegCollection, "", prevAttribute, prevBeg);
         name.Should().Be("collection-name");
+    }
+    [TestMethod]
+    public async Task ReadIppRequestAsync_MaxMessageAttributesExceeded_ThrowsException()
+    {
+        var protocol = new IppProtocol { MaxMessageAttributes = 0 };
+        // 0x01 = OperationAttributesTag, 0x47 = Charset tag (1 attribute)
+        using MemoryStream requestStream = new( new byte[] { 0x01, 0x01, 0x00, 0x02, 0x00, 0x00, 0x00, 0x7B, 0x01, 0x47, 0x00, 0x12, 0x61, 0x74, 0x74, 0x72, 0x69, 0x62, 0x75, 0x74, 0x65, 0x73, 0x2D, 0x63, 0x68, 0x61, 0x72, 0x73, 0x65, 0x74, 0x00, 0x05, 0x75, 0x74, 0x66, 0x2D, 0x38, 0x03 } );
+        Func<Task> act = async () => await protocol.ReadIppRequestAsync( requestStream );
+        var ex = await act.Should().ThrowAsync<IppRequestException>();
+        ex.Which.StatusCode.Should().Be(IppStatusCode.ClientErrorRequestEntityTooLarge);
+    }
+
+    [TestMethod]
+    public async Task ReadIppRequestAsync_InvalidSectionTag_ThrowsException()
+    {
+        var protocol = new IppProtocol();
+        // 0x50 is invalid section tag
+        using MemoryStream requestStream = new( new byte[] { 0x01, 0x01, 0x00, 0x02, 0x00, 0x00, 0x00, 0x7B, 0x50 } );
+        Func<Task> act = async () => await protocol.ReadIppRequestAsync( requestStream );
+        var ex = await act.Should().ThrowAsync<IppRequestException>();
+        ex.Which.StatusCode.Should().Be(IppStatusCode.ClientErrorBadRequest);
+    }
+
+    [TestMethod]
+    public async Task ReadIppRequestAsync_MismatchedEndCollection_ThrowsException()
+    {
+        var protocol = new IppProtocol();
+        // 0x01 = OperationAttributesTag, 0x37 = EndCollection (no BegCollection)
+        using MemoryStream requestStream = new( new byte[] { 0x01, 0x01, 0x00, 0x02, 0x00, 0x00, 0x00, 0x7B, 0x01, 0x37, 0x00, 0x00, 0x00, 0x00, 0x03 } );
+        Func<Task> act = async () => await protocol.ReadIppRequestAsync( requestStream );
+        var ex = await act.Should().ThrowAsync<IppRequestException>();
+        ex.Which.StatusCode.Should().Be(IppStatusCode.ClientErrorBadRequest);
+    }
+
+    [TestMethod]
+    public async Task ReadIppRequestAsync_MaxMessageAttributesNull_ShouldSucceed()
+    {
+        // Arrange
+        var protocol = new IppProtocol { MaxMessageAttributes = null };
+        // 0x01 = OperationAttributesTag, 0x47 = Charset tag (1 attribute)
+        using MemoryStream requestStream = new( new byte[] { 0x01, 0x01, 0x00, 0x02, 0x00, 0x00, 0x00, 0x7B, 0x01, 0x47, 0x00, 0x12, 0x61, 0x74, 0x74, 0x72, 0x69, 0x62, 0x75, 0x74, 0x65, 0x73, 0x2D, 0x63, 0x68, 0x61, 0x72, 0x73, 0x65, 0x74, 0x00, 0x05, 0x75, 0x74, 0x66, 0x2D, 0x38, 0x03 } );
+
+        // Act
+        var result = await protocol.ReadIppRequestAsync( requestStream );
+
+        // Assert
+        result.OperationAttributes.Should().HaveCount(1);
+    }
+
+    [TestMethod]
+    public async Task ReadIppResponseAsync_MaxMessageAttributesNull_ShouldSucceed()
+    {
+        // Arrange
+        var protocol = new IppProtocol { MaxMessageAttributes = null };
+        using MemoryStream requestStream = new( new byte[] {
+            0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7B,
+            0x01, // operation-attributes-tag
+            0x47, 0x00, 0x12, 0x61, 0x74, 0x74, 0x72, 0x69, 0x62, 0x75, 0x74, 0x65, 0x73, 0x2D, 0x63, 0x68, 0x61, 0x72, 0x73, 0x65, 0x74, 0x00, 0x05, 0x75, 0x74, 0x66, 0x2D, 0x38,
+            0x03 // EndOfAttributesTag
+        } );
+
+        // Act
+        var result = await protocol.ReadIppResponseAsync( requestStream );
+
+        // Assert
+        result.OperationAttributes.Should().HaveCount( 1 );
     }
 }

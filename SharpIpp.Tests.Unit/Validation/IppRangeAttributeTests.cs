@@ -177,4 +177,32 @@ public class IppRangeAttributeTests
         results.Should().ContainSingle();
         results.Single().ErrorMessage.Should().Be("The field TestField must be a number or a range.");
     }
+
+    [TestMethod]
+    public void IsValid_WhenCollectionContainsNullElement_SkipsNullAndReturnsSuccess()
+    {
+        var attribute = new IppRangeAttribute(1, 10);
+        var context = new ValidationContext(new object()) { DisplayName = "TestField" };
+        var results = new List<ValidationResult>();
+        var collection = new object?[] { 5, null, 8 };
+
+        var isValid = Validator.TryValidateValue(collection, context, results, new[] { attribute });
+
+        isValid.Should().BeTrue();
+        results.Should().BeEmpty();
+    }
+
+    [TestMethod]
+    public void IsValid_WhenSingleValueLessThanMinimum_ReturnsValidationError()
+    {
+        var attribute = new IppRangeAttribute(1, 10);
+        var context = new ValidationContext(new object()) { DisplayName = "TestField" };
+        var results = new List<ValidationResult>();
+
+        var isValid = Validator.TryValidateValue(0, context, results, new[] { attribute });
+
+        isValid.Should().BeFalse();
+        results.Should().ContainSingle();
+        results.Single().ErrorMessage.Should().Be("The field TestField must contain values between 1 and 10.");
+    }
 }

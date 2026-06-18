@@ -258,6 +258,7 @@ public class MappingRoundTripTests : MapperTestBase
                     {
                         new SaveInfo
                         {
+                            SaveLocation = new Uri($"https://example.com/{RandomString(rng)}"),
                             SaveName = RandomString(rng),
                             SaveDocumentFormat = RandomString(rng)
                         }
@@ -291,6 +292,7 @@ public class MappingRoundTripTests : MapperTestBase
             roundTripped.JobSaveDisposition!.SaveDisposition.Should().Be(original.JobSaveDisposition!.SaveDisposition, $"iteration {i}: JobSaveDisposition.SaveDisposition");
             roundTripped.JobSaveDisposition!.SaveLocation.Should().Be(original.JobSaveDisposition!.SaveLocation, $"iteration {i}: JobSaveDisposition.SaveLocation");
             roundTripped.JobSaveDisposition!.SaveInfo.Should().HaveCount(1, $"iteration {i}: JobSaveDisposition.SaveInfo");
+            roundTripped.JobSaveDisposition!.SaveInfo![0].SaveLocation.Should().Be(original.JobSaveDisposition!.SaveInfo![0].SaveLocation, $"iteration {i}: JobSaveDisposition.SaveInfo.SaveLocation");
             roundTripped.JobSaveDisposition!.SaveInfo![0].SaveName.Should().Be(original.JobSaveDisposition!.SaveInfo![0].SaveName, $"iteration {i}: JobSaveDisposition.SaveInfo.SaveName");
             roundTripped.JobSaveDisposition!.SaveInfo![0].SaveDocumentFormat.Should().Be(original.JobSaveDisposition!.SaveInfo![0].SaveDocumentFormat, $"iteration {i}: JobSaveDisposition.SaveInfo.SaveDocumentFormat");
 

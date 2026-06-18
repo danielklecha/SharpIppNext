@@ -132,4 +132,33 @@ public class ItemRangeAttributeTests
         results.Should().ContainSingle();
         results.Single().ErrorMessage.Should().Be("The field TestField must contain only numbers.");
     }
+
+    [TestMethod]
+    public void IsValid_WhenValueIsLessThanMinimum_ReturnsValidationError()
+    {
+        var attribute = new ItemRangeAttribute(1, 10);
+        var context = new ValidationContext(new object()) { DisplayName = "TestField" };
+        var results = new List<ValidationResult>();
+
+        var isValid = Validator.TryValidateValue(0, context, results, new[] { attribute });
+
+        isValid.Should().BeFalse();
+        results.Should().ContainSingle();
+        results.Single().ErrorMessage.Should().Be("The field TestField must contain values between 1 and 10.");
+    }
+
+    [TestMethod]
+    public void IsValid_WhenValueOutOfRangeAndCustomErrorMessageSet_ReturnsCustomErrorMessage()
+    {
+        var attribute = new ItemRangeAttribute(1, 10) { ErrorMessage = "Custom error message" };
+        var context = new ValidationContext(new object()) { DisplayName = "TestField" };
+        var results = new List<ValidationResult>();
+
+        var isValid = Validator.TryValidateValue(15, context, results, new[] { attribute });
+
+        isValid.Should().BeFalse();
+        results.Should().ContainSingle();
+        results.Single().ErrorMessage.Should().Be("Custom error message");
+    }
 }
+

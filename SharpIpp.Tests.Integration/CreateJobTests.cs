@@ -73,6 +73,7 @@ public class CreateJobTests : SharpIppIntegrationTestBase
                     {
                         new SaveInfo
                         {
+                            SaveLocation = new Uri("ipp://127.0.0.1/save-location"),
                             SaveName = "job.ps",
                             SaveDocumentFormat = "application/postscript"
                         }

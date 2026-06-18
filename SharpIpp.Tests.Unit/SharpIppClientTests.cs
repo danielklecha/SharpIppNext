@@ -36,11 +36,16 @@ public class SharpIppClientTests
               ItExpr.IsAny<HttpRequestMessage>(),
               ItExpr.IsAny<CancellationToken>()
            )
-           .ReturnsAsync( new HttpResponseMessage()
+           .Returns((HttpRequestMessage req, CancellationToken token) =>
            {
-               StatusCode = statusCode,
-               Content = new ByteArrayContent( Array.Empty<byte>() ),
-           } )
+               if (req.Content != null)
+                   req.Content.ReadAsStreamAsync().GetAwaiter().GetResult();
+               return Task.FromResult(new HttpResponseMessage()
+               {
+                   StatusCode = statusCode,
+                   Content = new ByteArrayContent( Array.Empty<byte>() ),
+               });
+           })
            .Verifiable();
         return handlerMock;
     }
