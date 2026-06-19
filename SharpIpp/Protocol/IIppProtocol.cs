@@ -28,9 +28,15 @@ public interface IIppProtocol
 
     /// <summary>
     /// Gets or sets the maximum allowed number of attributes to parse in a single message.
-    /// Defaults to 100,000. Set to null to disable the limit.
+    /// Defaults to 5,000. Set to null to disable the limit.
     /// </summary>
-    int? MaxMessageAttributes { get; set; }
+    int? MaxMessageAttributesCount { get; set; }
+
+    /// <summary>
+    /// Gets or sets the maximum allowed size (in bytes) of the IPP attributes section.
+    /// Defaults to 10 MB. Set to null to disable the limit.
+    /// </summary>
+    long? MaxMessageAttributesBytes { get; set; }
 
     /// <summary>
     /// Reads and parses an IPP request from the specified stream.

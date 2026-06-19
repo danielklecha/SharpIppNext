@@ -13,8 +13,8 @@ public class IppVersionTests
     [TestMethod]
     public void Constructor_Int16BigEndian_SetsMajorMinorCorrectly()
     {
-        short bigEndian = BitConverter.ToInt16(new byte[] { 2, 1 }, 0);
-        var version = new IppVersion(bigEndian);
+        short versionValue = 0x0102;
+        var version = new IppVersion(versionValue);
         version.Major.Should().Be(1);
         version.Minor.Should().Be(2);
     }

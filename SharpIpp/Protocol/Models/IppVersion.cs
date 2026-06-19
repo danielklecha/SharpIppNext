@@ -16,9 +16,8 @@ public readonly struct IppVersion : IEquatable<IppVersion>, IComparable<IppVersi
 
     public IppVersion( short int16BigEndian )
     {
-        byte[] bytes = BitConverter.GetBytes( int16BigEndian );
-        Major = bytes[ 1 ];
-        Minor = bytes[ 0 ];
+        Major = (byte)(int16BigEndian >> 8);
+        Minor = (byte)(int16BigEndian & 0xFF);
     }
 
     public IppVersion( byte major, byte minor )
@@ -45,7 +44,7 @@ public readonly struct IppVersion : IEquatable<IppVersion>, IComparable<IppVersi
 
     public decimal ToDecimal() => Major + Minor / 100m;
 
-    public short ToInt16BigEndian() => BitConverter.ToInt16( [Minor, Major], 0 );
+    public short ToInt16BigEndian() => (short)((Major << 8) | Minor);
 
     public bool Equals( IppVersion other )
     {

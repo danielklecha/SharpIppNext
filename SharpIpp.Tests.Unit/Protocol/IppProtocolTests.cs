@@ -386,6 +386,24 @@ public class IppProtocolTests
     }
 
     [TestMethod()]
+    public async Task ReadIppRequestAsync_DocumentStreamCopyThrows_ThrowsIppRequestException()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        // Header bytes (9 bytes): version 1.1, operation print-job, request id 123, end-of-attributes 0x03
+        var headerBytes = new byte[] { 0x01, 0x01, 0x00, 0x02, 0x00, 0x00, 0x00, 0x7B, 0x03 };
+        using var requestStream = new ThrowingStream(headerBytes);
+
+        // Act
+        Func<Task<IIppRequestMessage>> act = async () => await protocol.ReadIppRequestAsync( requestStream );
+
+        // Assert
+        var exceptionAssertion = await act.Should().ThrowAsync<IppRequestException>();
+        exceptionAssertion.Which.Message.Should().Be("Failed to copy document stream.");
+        exceptionAssertion.Which.InnerException.Should().BeOfType<IOException>().Which.Message.Should().Be("Simulated stream read failure");
+    }
+
+    [TestMethod()]
     public void WriteSection_EmptyListOfAttributes_ShouldNotWriteAnything()
     {
         // Arrange
@@ -676,7 +694,7 @@ public class IppProtocolTests
     public async Task ReadIppResponseAsync_MaxAttributesExceeded_ThrowsIppResponseExceptionWithArgumentExceptionInnerException()
     {
         // Arrange
-        var protocol = new IppProtocol { MaxMessageAttributes = 1 };
+        var protocol = new IppProtocol { MaxMessageAttributesCount = 1 };
         using MemoryStream requestStream = new( new byte[] {
             0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7B,
             0x01, // operation-attributes-tag
@@ -822,15 +840,39 @@ public class IppProtocolTests
     }
 
     [TestMethod]
-    public void ReadValue_ExtendedTag_WithPayloadShorterThanLengthPrefix_ThrowsArgumentException()
+    [DataRow(false)]
+    [DataRow(true)]
+    public void ReadValue_ExtendedTag_WithPayloadShorterThanLengthPrefix_ThrowsArgumentException(bool useDisposedStream)
     {
         var protocol = new IppProtocol();
-        using MemoryStream memoryStream = new(new byte[] { 0x00 });
-        using BinaryReader binaryReader = new(memoryStream);
+        BinaryReader binaryReader;
+        if (useDisposedStream)
+        {
+            var ms = new MemoryStream();
+            binaryReader = new BinaryReader(ms);
+            binaryReader.Dispose();
+        }
+        else
+        {
+            var ms = new MemoryStream(new byte[] { 0x00 });
+            binaryReader = new BinaryReader(ms);
+        }
 
-        Action act = () => protocol.ReadValue(binaryReader, Tag.Extended);
+        Action act = () =>
+        {
+            try
+            {
+                protocol.ReadValue(binaryReader, Tag.Extended);
+            }
+            finally
+            {
+                binaryReader.Dispose();
+            }
+        };
 
-        act.Should().Throw<ArgumentException>().WithMessage("Invalid extended value payload*");
+        act.Should().Throw<ArgumentException>()
+           .WithMessage("Invalid extended value payload*")
+           .Which.InnerException.Should().Match(ex => ex is EndOfStreamException || ex is ObjectDisposedException);
     }
 
     [TestMethod]
@@ -846,15 +888,38 @@ public class IppProtocolTests
     }
 
     [TestMethod]
-    public void ReadValue_ExtendedTag_InvalidPayloadLength_ThrowsArgumentException()
+    [DataRow(false)]
+    [DataRow(true)]
+    public void ReadValue_ExtendedTag_InvalidPayloadLength_ThrowsArgumentException(bool useDisposedStream)
     {
         var protocol = new IppProtocol();
-        using MemoryStream memoryStream = new(new byte[] { 0x00, 0x05, 0x00, 0x00, 0x01, 0x02 });
-        using BinaryReader binaryReader = new(memoryStream);
+        BinaryReader binaryReader;
+        if (useDisposedStream)
+        {
+            var ms = new CustomExceptionStream(new byte[] { 0x00, 0x05, 0x00, 0x00, 0x01, 0x02 }, 2, new ObjectDisposedException("Stream"));
+            binaryReader = new BinaryReader(ms);
+        }
+        else
+        {
+            var ms = new MemoryStream(new byte[] { 0x00, 0x05, 0x00, 0x00, 0x01, 0x02 });
+            binaryReader = new BinaryReader(ms);
+        }
 
-        Action act = () => protocol.ReadValue(binaryReader, Tag.Extended);
+        Action act = () =>
+        {
+            try
+            {
+                protocol.ReadValue(binaryReader, Tag.Extended);
+            }
+            finally
+            {
+                binaryReader.Dispose();
+            }
+        };
 
-        act.Should().Throw<ArgumentException>().WithMessage("Invalid extended value payload*");
+        act.Should().Throw<ArgumentException>()
+           .WithMessage("Invalid extended value payload*")
+           .Which.InnerException.Should().Match(ex => ex is EndOfStreamException || ex is ObjectDisposedException);
     }
 
     [TestMethod]
@@ -919,29 +984,76 @@ public class IppProtocolTests
     }
 
     [TestMethod]
-    public void ReadValue_UnknownTag_WithPayloadShorterThanLengthPrefix_ThrowsArgumentException()
+    [DataRow(false)]
+    [DataRow(true)]
+    public void ReadValue_UnknownTag_WithPayloadShorterThanLengthPrefix_ThrowsArgumentException(bool useDisposedStream)
     {
         var protocol = new IppProtocol();
-        using MemoryStream memoryStream = new(new byte[] { 0x00 });
-        using BinaryReader binaryReader = new(memoryStream);
+        BinaryReader binaryReader;
+        if (useDisposedStream)
+        {
+            var ms = new MemoryStream();
+            binaryReader = new BinaryReader(ms);
+            binaryReader.Dispose();
+        }
+        else
+        {
+            var ms = new MemoryStream(new byte[] { 0x00 });
+            binaryReader = new BinaryReader(ms);
+        }
 
         var tag = (Tag)0x60;
-        Action act = () => protocol.ReadValue(binaryReader, tag);
+        Action act = () =>
+        {
+            try
+            {
+                protocol.ReadValue(binaryReader, tag);
+            }
+            finally
+            {
+                binaryReader.Dispose();
+            }
+        };
 
-        act.Should().Throw<ArgumentException>().WithMessage("Invalid unknown value payload*");
+        act.Should().Throw<ArgumentException>()
+           .WithMessage("Invalid unknown value payload*")
+           .Which.InnerException.Should().Match(ex => ex is EndOfStreamException || ex is ObjectDisposedException);
     }
 
     [TestMethod]
-    public void ReadValue_UnknownTag_WithDeclaredLengthGreaterThanPayload_ThrowsArgumentException()
+    [DataRow(false)]
+    [DataRow(true)]
+    public void ReadValue_UnknownTag_WithDeclaredLengthGreaterThanPayload_ThrowsArgumentException(bool useDisposedStream)
     {
         var protocol = new IppProtocol();
-        using MemoryStream memoryStream = new(new byte[] { 0x00, 0x02, 0xDE });
-        using BinaryReader binaryReader = new(memoryStream);
+        BinaryReader binaryReader;
+        if (useDisposedStream)
+        {
+            var ms = new CustomExceptionStream(new byte[] { 0x00, 0x02, 0xDE }, 2, new ObjectDisposedException("Stream"));
+            binaryReader = new BinaryReader(ms);
+        }
+        else
+        {
+            var ms = new MemoryStream(new byte[] { 0x00, 0x02, 0xDE });
+            binaryReader = new BinaryReader(ms);
+        }
 
         var tag = (Tag)0x60;
-        Action act = () => protocol.ReadValue(binaryReader, tag);
+        Action act = () =>
+        {
+            try
+            {
+                protocol.ReadValue(binaryReader, tag);
+            }
+            finally
+            {
+                binaryReader.Dispose();
+            }
+        };
 
-        act.Should().Throw<ArgumentException>().WithMessage("Invalid unknown value payload*");
+        act.Should().Throw<ArgumentException>()
+           .WithMessage("Invalid unknown value payload*")
+           .Which.InnerException.Should().Match(ex => ex is EndOfStreamException || ex is ObjectDisposedException);
     }
 
     [TestMethod]
@@ -1395,6 +1507,7 @@ public class IppProtocolTests
             RequestId = 123
         };
         message.OperationAttributes.Add( new IppAttribute( Tag.Integer, IppAttributeNames.Copies, 1 ) );
+        message.OperationAttributes.Add( new IppAttribute( Tag.Integer, IppAttributeNames.Copies, 2 ) );
         message.OperationAttributes.Add( new IppAttribute( Tag.Charset, IppAttributeNames.JobName, "utf-8" ) );
         message.OperationAttributes.Add( new IppAttribute( Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8" ) );
         
@@ -1632,7 +1745,7 @@ public class IppProtocolTests
     [TestMethod]
     public async Task ReadIppRequestAsync_MaxMessageAttributesExceeded_ThrowsException()
     {
-        var protocol = new IppProtocol { MaxMessageAttributes = 0 };
+        var protocol = new IppProtocol { MaxMessageAttributesCount = 0 };
         // 0x01 = OperationAttributesTag, 0x47 = Charset tag (1 attribute)
         using MemoryStream requestStream = new( new byte[] { 0x01, 0x01, 0x00, 0x02, 0x00, 0x00, 0x00, 0x7B, 0x01, 0x47, 0x00, 0x12, 0x61, 0x74, 0x74, 0x72, 0x69, 0x62, 0x75, 0x74, 0x65, 0x73, 0x2D, 0x63, 0x68, 0x61, 0x72, 0x73, 0x65, 0x74, 0x00, 0x05, 0x75, 0x74, 0x66, 0x2D, 0x38, 0x03 } );
         Func<Task> act = async () => await protocol.ReadIppRequestAsync( requestStream );
@@ -1666,7 +1779,7 @@ public class IppProtocolTests
     public async Task ReadIppRequestAsync_MaxMessageAttributesNull_ShouldSucceed()
     {
         // Arrange
-        var protocol = new IppProtocol { MaxMessageAttributes = null };
+        var protocol = new IppProtocol { MaxMessageAttributesCount = null, MaxMessageAttributesBytes = null };
         // 0x01 = OperationAttributesTag, 0x47 = Charset tag (1 attribute)
         using MemoryStream requestStream = new( new byte[] { 0x01, 0x01, 0x00, 0x02, 0x00, 0x00, 0x00, 0x7B, 0x01, 0x47, 0x00, 0x12, 0x61, 0x74, 0x74, 0x72, 0x69, 0x62, 0x75, 0x74, 0x65, 0x73, 0x2D, 0x63, 0x68, 0x61, 0x72, 0x73, 0x65, 0x74, 0x00, 0x05, 0x75, 0x74, 0x66, 0x2D, 0x38, 0x03 } );
 
@@ -1681,7 +1794,7 @@ public class IppProtocolTests
     public async Task ReadIppResponseAsync_MaxMessageAttributesNull_ShouldSucceed()
     {
         // Arrange
-        var protocol = new IppProtocol { MaxMessageAttributes = null };
+        var protocol = new IppProtocol { MaxMessageAttributesCount = null, MaxMessageAttributesBytes = null };
         using MemoryStream requestStream = new( new byte[] {
             0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7B,
             0x01, // operation-attributes-tag
@@ -1694,5 +1807,471 @@ public class IppProtocolTests
 
         // Assert
         result.OperationAttributes.Should().HaveCount( 1 );
+    }
+
+    [TestMethod]
+    public async Task ReadIppRequestAsync_MaxMessageAttributesBytesExceeded_ThrowsIppRequestException()
+    {
+        // Arrange
+        var protocol = new IppProtocol { MaxMessageAttributesBytes = 10 };
+        // Request bytes are ~38 bytes
+        using MemoryStream requestStream = new( new byte[] { 0x01, 0x01, 0x00, 0x02, 0x00, 0x00, 0x00, 0x7B, 0x01, 0x47, 0x00, 0x12, 0x61, 0x74, 0x74, 0x72, 0x69, 0x62, 0x75, 0x74, 0x65, 0x73, 0x2D, 0x63, 0x68, 0x61, 0x72, 0x73, 0x65, 0x74, 0x00, 0x05, 0x75, 0x74, 0x66, 0x2D, 0x38, 0x03 } );
+        
+        // Act
+        Func<Task> act = async () => await protocol.ReadIppRequestAsync( requestStream );
+        
+        // Assert
+        var ex = await act.Should().ThrowAsync<IppRequestException>();
+        ex.Which.StatusCode.Should().Be(IppStatusCode.ClientErrorRequestEntityTooLarge);
+        ex.Which.Message.Should().Contain("Maximum attribute bytes limit of 10 exceeded.");
+    }
+
+    [TestMethod]
+    public async Task ReadIppResponseAsync_MaxMessageAttributesBytesExceeded_ThrowsIppResponseException()
+    {
+        // Arrange
+        var protocol = new IppProtocol { MaxMessageAttributesBytes = 10 };
+        using MemoryStream requestStream = new( new byte[] {
+            0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7B,
+            0x01, // operation-attributes-tag
+            0x47, 0x00, 0x12, 0x61, 0x74, 0x74, 0x72, 0x69, 0x62, 0x75, 0x74, 0x65, 0x73, 0x2D, 0x63, 0x68, 0x61, 0x72, 0x73, 0x65, 0x74, 0x00, 0x05, 0x75, 0x74, 0x66, 0x2D, 0x38,
+            0x03 // EndOfAttributesTag
+        } );
+        
+        // Act
+        Func<Task> act = async () => await protocol.ReadIppResponseAsync( requestStream );
+        
+        // Assert
+        var ex = await act.Should().ThrowAsync<IppResponseException>();
+        ex.Which.InnerException.Should().BeOfType<ArgumentException>()
+            .Which.Message.Should().Contain("Maximum attribute bytes limit of 10 exceeded.");
+    }
+
+    [TestMethod]
+    public void ReadSections_WithNonCountingStream_Response_ShouldNotThrow()
+    {
+        // Arrange
+        var protocol = new IppProtocol { MaxMessageAttributesBytes = 100 };
+        // Empty operation attributes section (0x01, 0x03)
+        using var ms = new MemoryStream(new byte[] { 0x01, 0x03 });
+        using var reader = new BinaryReader(ms);
+        var response = new IppResponseMessage();
+
+        // Act
+        var method = typeof(IppProtocol).GetMethod("ReadSections", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance,
+            null,
+            new[] { typeof(BinaryReader), typeof(IIppResponseMessage) },
+            null);
+        
+        Action act = () => method!.Invoke(protocol, new object[] { reader, response });
+
+        // Assert
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void ReadSections_WithNonCountingStream_Request_ShouldNotThrow()
+    {
+        // Arrange
+        var protocol = new IppProtocol { MaxMessageAttributesBytes = 100 };
+        // Empty operation attributes section (0x01, 0x03)
+        using var ms = new MemoryStream(new byte[] { 0x01, 0x03 });
+        using var reader = new BinaryReader(ms);
+        var request = new IppRequestMessage();
+
+        // Act
+        var method = typeof(IppProtocol).GetMethod("ReadSections", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance,
+            null,
+            new[] { typeof(BinaryReader), typeof(IIppRequestMessage) },
+            null);
+        
+        Action act = () => method!.Invoke(protocol, new object[] { reader, request });
+
+        // Assert
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public async Task ReadIppRequestAsync_NonSeekableStream_ShouldSucceed()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        byte[] bytes = new byte[] {
+            0x01, 0x01, // version
+            0x00, 0x02, // Print-Job operation
+            0x00, 0x00, 0x00, 0x01, // request-id
+            0x01, // operation-attributes-tag
+            0x47, 0x00, 0x12, 0x61, 0x74, 0x74, 0x72, 0x69, 0x62, 0x75, 0x74, 0x65, 0x73, 0x2D, 0x63, 0x68, 0x61, 0x72, 0x73, 0x65, 0x74, 0x00, 0x05, 0x75, 0x74, 0x66, 0x2D, 0x38, // attributes-charset = utf-8
+            0x12, 0x00, 0x0C, 0x6d, 0x79, 0x2d, 0x61, 0x74, 0x74, 0x72, 0x69, 0x62, 0x75, 0x74, 0x65, 0x00, 0x00, // Tag.Unknown, name: "my-attribute", value len: 0
+            0x7F, 0x00, 0x0B, 0x6d, 0x79, 0x2d, 0x65, 0x78, 0x74, 0x65, 0x6e, 0x64, 0x65, 0x64, 0x00, 0x05, 0x00, 0x00, 0x00, 0x01, 0x00, // Tag.Extended, name: "my-extended", value len: 5, extendedTag: 1, raw: [0]
+            0x03 // EndOfAttributesTag
+        };
+        using var memoryStream = new MemoryStream(bytes);
+        using var nonSeekableStream = new NonSeekableStream(memoryStream);
+
+        // Act
+        var result = await protocol.ReadIppRequestAsync(nonSeekableStream);
+
+        // Assert
+        result.OperationAttributes.Should().HaveCount(3);
+        result.OperationAttributes[0].Tag.Should().Be(Tag.Charset);
+        result.OperationAttributes[1].Tag.Should().Be(Tag.NoValue);
+        result.OperationAttributes[2].Tag.Should().Be(Tag.Extended);
+    }
+
+    [TestMethod]
+    public async Task ReadIppRequestAsync_NegativeNameLength_ThrowsIppRequestException()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        byte[] bytes = new byte[] {
+            0x01, 0x01,
+            0x00, 0x02,
+            0x00, 0x00, 0x00, 0x01,
+            0x01,
+            0x47, 0xFF, 0xFF // name length -1
+        };
+        using var memoryStream = new MemoryStream(bytes);
+
+        // Act
+        Func<Task> act = async () => await protocol.ReadIppRequestAsync(memoryStream);
+
+        // Assert
+        var ex = await act.Should().ThrowAsync<IppRequestException>();
+        ex.Which.StatusCode.Should().Be(IppStatusCode.ClientErrorBadRequest);
+        ex.Which.InnerException.Should().BeOfType<ArgumentException>()
+            .Which.Message.Should().Contain("Attribute name length cannot be negative");
+    }
+
+    [TestMethod]
+    public async Task ReadIppRequestAsync_PrematureEndOfStream_ThrowsIppRequestException()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        byte[] bytes = new byte[] {
+            0x01, 0x01,
+            0x00, 0x02,
+            0x00, 0x00, 0x00, 0x01,
+            0x01,
+            0x47, 0x00, 0x12, 0x61, 0x74 // name length 18, but only 2 bytes provided
+        };
+        using var memoryStream = new MemoryStream(bytes);
+
+        // Act
+        Func<Task> act = async () => await protocol.ReadIppRequestAsync(memoryStream);
+
+        // Assert
+        var ex = await act.Should().ThrowAsync<IppRequestException>();
+        ex.Which.StatusCode.Should().Be(IppStatusCode.ClientErrorBadRequest);
+        ex.Which.InnerException.Should().BeOfType<EndOfStreamException>();
+    }
+
+    [TestMethod]
+    public async Task ReadIppRequestAsync_NegativeOctetStringLength_ThrowsIppRequestException()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        byte[] bytes = new byte[] {
+            0x01, 0x01,
+            0x00, 0x02,
+            0x00, 0x00, 0x00, 0x01,
+            0x01,
+            0x47, 0x00, 0x12, 0x61, 0x74, 0x74, 0x72, 0x69, 0x62, 0x75, 0x74, 0x65, 0x73, 0x2D, 0x63, 0x68, 0x61, 0x72, 0x73, 0x65, 0x74, 0x00, 0x05, 0x75, 0x74, 0x66, 0x2D, 0x38,
+            0x30, 0x00, 0x06, 0x6d, 0x79, 0x2d, 0x6f, 0x63, 0x74, 0xFF, 0xFF // Tag.OctetString, name "my-oct", value length -1
+        };
+        using var memoryStream = new MemoryStream(bytes);
+
+        // Act
+        Func<Task> act = async () => await protocol.ReadIppRequestAsync(memoryStream);
+
+        // Assert
+        var ex = await act.Should().ThrowAsync<IppRequestException>();
+        ex.Which.InnerException.Should().BeOfType<ArgumentException>()
+            .Which.Message.Should().Contain("OctetString length cannot be negative");
+    }
+
+    [TestMethod]
+    public async Task ReadIppRequestAsync_PrematureEOFOctetString_ThrowsIppRequestException()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        byte[] bytes = new byte[] {
+            0x01, 0x01,
+            0x00, 0x02,
+            0x00, 0x00, 0x00, 0x01,
+            0x01,
+            0x47, 0x00, 0x12, 0x61, 0x74, 0x74, 0x72, 0x69, 0x62, 0x75, 0x74, 0x65, 0x73, 0x2D, 0x63, 0x68, 0x61, 0x72, 0x73, 0x65, 0x74, 0x00, 0x05, 0x75, 0x74, 0x66, 0x2D, 0x38,
+            0x30, 0x00, 0x06, 0x6d, 0x79, 0x2d, 0x6f, 0x63, 0x74, 0x00, 0x05, 0x01, 0x02 // Tag.OctetString, value length 5, but only 2 bytes provided
+        };
+        using var memoryStream = new MemoryStream(bytes);
+
+        // Act
+        Func<Task> act = async () => await protocol.ReadIppRequestAsync(memoryStream);
+
+        // Assert
+        var ex = await act.Should().ThrowAsync<IppRequestException>();
+        ex.Which.InnerException.Should().BeOfType<EndOfStreamException>();
+    }
+
+    [TestMethod]
+    public async Task ReadIppRequestAsync_NegativeUnknownLength_ThrowsIppRequestException()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        byte[] bytes = new byte[] {
+            0x01, 0x01,
+            0x00, 0x02,
+            0x00, 0x00, 0x00, 0x01,
+            0x01,
+            0x47, 0x00, 0x12, 0x61, 0x74, 0x74, 0x72, 0x69, 0x62, 0x75, 0x74, 0x65, 0x73, 0x2D, 0x63, 0x68, 0x61, 0x72, 0x73, 0x65, 0x74, 0x00, 0x05, 0x75, 0x74, 0x66, 0x2D, 0x38,
+            0x60, 0x00, 0x06, 0x6d, 0x79, 0x2d, 0x75, 0x6e, 0x6b, 0xFF, 0xFF // Tag.Unknown (unrecognized tag 0x60), name "my-unk", value length -1
+        };
+        using var memoryStream = new MemoryStream(bytes);
+
+        // Act
+        Func<Task> act = async () => await protocol.ReadIppRequestAsync(memoryStream);
+
+        // Assert
+        var ex = await act.Should().ThrowAsync<IppRequestException>();
+        ex.Which.InnerException.Should().BeOfType<ArgumentException>()
+            .Which.Message.Should().Contain("Invalid unknown value payload");
+    }
+
+    [TestMethod]
+    public async Task ReadIppRequestAsync_ExtendedLengthLessThanFour_ThrowsIppRequestException()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        byte[] bytes = new byte[] {
+            0x01, 0x01,
+            0x00, 0x02,
+            0x00, 0x00, 0x00, 0x01,
+            0x01,
+            0x47, 0x00, 0x12, 0x61, 0x74, 0x74, 0x72, 0x69, 0x62, 0x75, 0x74, 0x65, 0x73, 0x2D, 0x63, 0x68, 0x61, 0x72, 0x73, 0x65, 0x74, 0x00, 0x05, 0x75, 0x74, 0x66, 0x2D, 0x38,
+            0x7F, 0x00, 0x06, 0x6d, 0x79, 0x2d, 0x65, 0x78, 0x74, 0x00, 0x02, 0x00, 0x01 // Tag.Extended, name "my-ext", value length 2 (invalid, < 4)
+        };
+        using var memoryStream = new MemoryStream(bytes);
+
+        // Act
+        Func<Task> act = async () => await protocol.ReadIppRequestAsync(memoryStream);
+
+        // Assert
+        var ex = await act.Should().ThrowAsync<IppRequestException>();
+        ex.Which.InnerException.Should().BeOfType<ArgumentException>()
+            .Which.Message.Should().Contain("Expected extended value length >= 4");
+    }
+
+    [TestMethod]
+    public async Task ReadIppRequestAsync_NegativeStringLength_ThrowsIppRequestException()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        byte[] bytes = new byte[] {
+            0x01, 0x01,
+            0x00, 0x02,
+            0x00, 0x00, 0x00, 0x01,
+            0x01,
+            0x47, 0x00, 0x12, 0x61, 0x74, 0x74, 0x72, 0x69, 0x62, 0x75, 0x74, 0x65, 0x73, 0x2D, 0x63, 0x68, 0x61, 0x72, 0x73, 0x65, 0x74, 0x00, 0x05, 0x75, 0x74, 0x66, 0x2D, 0x38,
+            0x44, 0x00, 0x06, 0x6d, 0x79, 0x2d, 0x6b, 0x65, 0x79, 0xFF, 0xFF // Tag.Keyword, name "my-key", value length -1
+        };
+        using var memoryStream = new MemoryStream(bytes);
+
+        // Act
+        Func<Task> act = async () => await protocol.ReadIppRequestAsync(memoryStream);
+
+        // Assert
+        var ex = await act.Should().ThrowAsync<IppRequestException>();
+        ex.Which.InnerException.Should().BeOfType<ArgumentException>()
+            .Which.Message.Should().Contain("String length cannot be negative");
+    }
+
+    [TestMethod]
+    public async Task ReadIppRequestAsync_TooShortInitialMessage_ThrowsIppRequestException()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        byte[] bytes = new byte[] { 0x01, 0x01, 0x00 };
+        using var memoryStream = new MemoryStream(bytes);
+
+        // Act
+        Func<Task> act = async () => await protocol.ReadIppRequestAsync(memoryStream);
+
+        // Assert
+        var ex = await act.Should().ThrowAsync<IppRequestException>();
+        ex.Which.Message.Should().Be("Failed to parse initial ipp request message.");
+        ex.Which.StatusCode.Should().Be(IppStatusCode.ClientErrorBadRequest);
+        ex.Which.InnerException.Should().BeOfType<EndOfStreamException>();
+    }
+
+    [TestMethod]
+    [DataRow( Tag.TextWithoutLanguage )]
+    [DataRow( Tag.NameWithoutLanguage )]
+    [DataRow( Tag.Keyword )]
+    [DataRow( Tag.Uri )]
+    public void ReadValue_IncompleteString_ThrowsEndOfStreamException( Tag tag )
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        // Length prefix is 5, but we only provide 3 bytes of payload
+        using MemoryStream memoryStream = new( new byte[] { 0x00, 0x05, 0x41, 0x41, 0x41 } );
+        using BinaryReader binaryReader = new( memoryStream );
+        // Act
+        Action act = () => protocol.ReadValue( binaryReader, tag );
+        // Assert
+        act.Should().Throw<EndOfStreamException>().WithMessage( "*Unexpected end of stream while reading string*" );
+    }
+
+    [TestMethod]
+    public async Task ReadIppRequestAsync_ValidCollection_ShouldSucceed()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        // Payload:
+        // Version: 1.1
+        // Operation: PrintJob (0x0002)
+        // Request ID: 123 (0x0000007B)
+        // SectionTag: OperationAttributesTag (0x01)
+        // Tag: BegCollection (0x34)
+        //   Name: "media-col" (length 9) -> 0x6D, 0x65, 0x64, 0x69, 0x61, 0x2D, 0x63, 0x6F, 0x6C
+        //   Value: 0 length
+        // Tag: EndCollection (0x37)
+        //   Name: 0 length
+        //   Value: 0 length
+        // SectionTag: EndOfAttributesTag (0x03)
+        byte[] bytes = new byte[] {
+            0x01, 0x01,
+            0x00, 0x02,
+            0x00, 0x00, 0x00, 0x7B,
+            0x01,
+            0x34, 0x00, 0x09, 0x6D, 0x65, 0x64, 0x69, 0x61, 0x2D, 0x63, 0x6F, 0x6C, 0x00, 0x00,
+            0x37, 0x00, 0x00, 0x00, 0x00,
+            0x03
+        };
+        using MemoryStream requestStream = new( bytes );
+
+        // Act
+        var result = await protocol.ReadIppRequestAsync( requestStream );
+
+        // Assert
+        result.OperationAttributes.Should().HaveCount( 2 );
+        result.OperationAttributes[ 0 ].Tag.Should().Be( Tag.BegCollection );
+        result.OperationAttributes[ 0 ].Name.Should().Be( "media-col" );
+        result.OperationAttributes[ 1 ].Tag.Should().Be( Tag.EndCollection );
+        result.OperationAttributes[ 1 ].Name.Should().Be( string.Empty );
+    }
+
+    private class NonSeekableStream : Stream
+    {
+        private readonly Stream _underlying;
+
+        public NonSeekableStream(Stream underlying)
+        {
+            _underlying = underlying;
+        }
+
+        public override bool CanRead => _underlying.CanRead;
+        public override bool CanSeek => false;
+        public override bool CanWrite => _underlying.CanWrite;
+        public override long Length => throw new NotSupportedException();
+        public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
+
+        public override void Flush() => _underlying.Flush();
+        public override int Read(byte[] buffer, int offset, int count) => _underlying.Read(buffer, offset, count);
+        public override Task<int> ReadAsync(byte[] buffer, int offset, int count, System.Threading.CancellationToken cancellationToken) =>
+            _underlying.ReadAsync(buffer, offset, count, cancellationToken);
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+        public override void SetLength(long value) => throw new NotSupportedException();
+        public override void Write(byte[] buffer, int offset, int count) => _underlying.Write(buffer, offset, count);
+    }
+
+    private class ThrowingStream : Stream
+    {
+        private readonly MemoryStream _underlying;
+        private bool _shouldThrow;
+
+        public ThrowingStream(byte[] headerBytes)
+        {
+            _underlying = new MemoryStream(headerBytes);
+        }
+
+        public override bool CanRead => true;
+        public override bool CanSeek => false;
+        public override bool CanWrite => false;
+        public override long Length => throw new NotSupportedException();
+        public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
+
+        public override void Flush() {}
+
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            if (_shouldThrow)
+            {
+                throw new IOException("Simulated stream read failure");
+            }
+            int read = _underlying.Read(buffer, offset, count);
+            if (_underlying.Position >= _underlying.Length)
+            {
+                _shouldThrow = true;
+            }
+            return read;
+        }
+
+        public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, System.Threading.CancellationToken cancellationToken)
+        {
+            if (_shouldThrow)
+            {
+                throw new IOException("Simulated stream read failure");
+            }
+            int read = await _underlying.ReadAsync(buffer, offset, count, cancellationToken);
+            if (_underlying.Position >= _underlying.Length)
+            {
+                _shouldThrow = true;
+            }
+            return read;
+        }
+
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+        public override void SetLength(long value) => throw new NotSupportedException();
+        public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+    }
+
+    private class CustomExceptionStream : Stream
+    {
+        private readonly MemoryStream _underlying;
+        private readonly int _throwAfterBytes;
+        private int _bytesRead;
+        private readonly Exception _exceptionToThrow;
+
+        public CustomExceptionStream(byte[] data, int throwAfterBytes, Exception exceptionToThrow)
+        {
+            _underlying = new MemoryStream(data);
+            _throwAfterBytes = throwAfterBytes;
+            _exceptionToThrow = exceptionToThrow;
+        }
+
+        public override bool CanRead => true;
+        public override bool CanSeek => false;
+        public override bool CanWrite => false;
+        public override long Length => throw new NotSupportedException();
+        public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
+
+        public override void Flush() => _underlying.Flush();
+
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            if (_bytesRead >= _throwAfterBytes)
+            {
+                throw _exceptionToThrow;
+            }
+            int read = _underlying.Read(buffer, offset, count);
+            _bytesRead += read;
+            return read;
+        }
+
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+        public override void SetLength(long value) => throw new NotSupportedException();
+        public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
     }
 }

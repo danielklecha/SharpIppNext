@@ -35,7 +35,10 @@ namespace SharpIpp.Protocol
         public long? MaxDocumentStreamBytes { get; set; } = 128L * 1024 * 1024;
 
         /// <inheritdoc />
-        public int? MaxMessageAttributes { get; set; } = 100_000;
+        public int? MaxMessageAttributesCount { get; set; } = 5000;
+
+        /// <inheritdoc />
+        public long? MaxMessageAttributesBytes { get; set; } = 10L * 1024 * 1024;
 
         /// <inheritdoc />
         public async Task WriteIppRequestAsync(IIppRequestMessage ippRequestMessage, Stream stream, CancellationToken cancellationToken = default)
@@ -60,7 +63,8 @@ namespace SharpIpp.Protocol
         {
             if (stream is null)
                 throw new ArgumentNullException( nameof( stream ) );
-            using var reader = new BinaryReader( stream, Encoding.ASCII, true );
+            var countingStream = new CountingStream( stream );
+            using var reader = new BinaryReader( countingStream, Encoding.ASCII, true );
             return await ReadIppRequestAsync( reader, cancellationToken );
         }
 
@@ -72,7 +76,8 @@ namespace SharpIpp.Protocol
             var res = new IppResponseMessage();
             try
             {
-                using var reader = new BinaryReader(stream, Encoding.ASCII, true);
+                var countingStream = new CountingStream( stream );
+                using var reader = new BinaryReader(countingStream, Encoding.ASCII, true);
                 res.Version = new IppVersion( reader.ReadInt16BigEndian() );
                 res.StatusCode = (IppStatusCode)reader.ReadInt16BigEndian();
                 res.RequestId = reader.ReadInt32BigEndian();
@@ -97,9 +102,13 @@ namespace SharpIpp.Protocol
             do
             {
                 parsedAttributesCount++;
-                if (MaxMessageAttributes.HasValue && parsedAttributesCount > MaxMessageAttributes.Value)
+                if (MaxMessageAttributesCount.HasValue && parsedAttributesCount > MaxMessageAttributesCount.Value)
                 {
-                    throw new ArgumentException($"Maximum attribute limit of {MaxMessageAttributes.Value} exceeded.");
+                    throw new ArgumentException($"Maximum attribute limit of {MaxMessageAttributesCount.Value} exceeded.");
+                }
+                if (MaxMessageAttributesBytes.HasValue && reader.BaseStream is CountingStream countingStream && countingStream.BytesRead > MaxMessageAttributesBytes.Value)
+                {
+                    throw new ArgumentException($"Maximum attribute bytes limit of {MaxMessageAttributesBytes.Value} exceeded.");
                 }
                 var data = reader.ReadByte();
                 var sectionTag = (SectionTag)data;
@@ -169,9 +178,13 @@ namespace SharpIpp.Protocol
             do
             {
                 parsedAttributesCount++;
-                if (MaxMessageAttributes.HasValue && parsedAttributesCount > MaxMessageAttributes.Value)
+                if (MaxMessageAttributesCount.HasValue && parsedAttributesCount > MaxMessageAttributesCount.Value)
                 {
-                    throw new IppRequestException($"Maximum attribute limit of {MaxMessageAttributes.Value} exceeded.", res, IppStatusCode.ClientErrorRequestEntityTooLarge);
+                    throw new IppRequestException($"Maximum attribute limit of {MaxMessageAttributesCount.Value} exceeded.", res, IppStatusCode.ClientErrorRequestEntityTooLarge);
+                }
+                if (MaxMessageAttributesBytes.HasValue && reader.BaseStream is CountingStream countingStream && countingStream.BytesRead > MaxMessageAttributesBytes.Value)
+                {
+                    throw new IppRequestException($"Maximum attribute bytes limit of {MaxMessageAttributesBytes.Value} exceeded.", res, IppStatusCode.ClientErrorRequestEntityTooLarge);
                 }
                 var data = reader.ReadByte();
                 var sectionTag = (SectionTag)data;
@@ -440,7 +453,16 @@ namespace SharpIpp.Protocol
             if (stream is null)
                 throw new ArgumentNullException( nameof( stream ) );
             var len = stream.ReadInt16BigEndian();
-            var name = Encoding.ASCII.GetString(stream.ReadBytes(len));
+            if (len < 0)
+            {
+                throw new ArgumentException("Attribute name length cannot be negative");
+            }
+            var nameBytes = stream.ReadBytes(len);
+            if (nameBytes.Length < len)
+            {
+                throw new EndOfStreamException("Unexpected end of stream while reading attribute name");
+            }
+            var name = Encoding.ASCII.GetString(nameBytes);
             var normalizedName = GetNormalizedName(tag, name, prevAttribute, prevBegCollectionAttribute);
             var value = ReadValue(stream, tag, encoding);
             var attribute = new IppAttribute(tag, normalizedName, value);
@@ -478,19 +500,56 @@ namespace SharpIpp.Protocol
 
         private async Task<IIppRequestMessage> ReadIppRequestAsync( BinaryReader reader, CancellationToken cancellationToken = default )
         {
-            IppRequestMessage message = new IppRequestMessage
+            IppRequestMessage message;
+            try
             {
-                Version = new IppVersion( reader.ReadInt16BigEndian() ),
-                IppOperation = (IppOperation)reader.ReadInt16BigEndian(),
-                RequestId = reader.ReadInt32BigEndian()
-            };
-            ReadSections( reader, message );
+                message = new IppRequestMessage
+                {
+                    Version = new IppVersion( reader.ReadInt16BigEndian() ),
+                    IppOperation = (IppOperation)reader.ReadInt16BigEndian(),
+                    RequestId = reader.ReadInt32BigEndian()
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new IppRequestException("Failed to parse initial ipp request message.", ex, new IppRequestMessage(), IppStatusCode.ClientErrorBadRequest);
+            }
+
+            try
+            {
+                ReadSections( reader, message );
+            }
+            catch (IppRequestException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw new IppRequestException("Failed to parse ipp request sections.", ex, message, IppStatusCode.ClientErrorBadRequest);
+            }
+
             if (ReadDocumentStream)
             {
-                message.Document = new MemoryStream();
-                await CopyDocumentStreamAsync(reader.BaseStream, message.Document,
-                    message, cancellationToken).ConfigureAwait(false);
-                message.Document.Seek(0, SeekOrigin.Begin);
+                var docStream = new MemoryStream();
+                message.Document = docStream;
+                try
+                {
+                    await CopyDocumentStreamAsync(reader.BaseStream, docStream,
+                        message, cancellationToken).ConfigureAwait(false);
+                }
+                catch (IppRequestException)
+                {
+                    docStream.Dispose();
+                    message.Document = null;
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    docStream.Dispose();
+                    message.Document = null;
+                    throw new IppRequestException("Failed to copy document stream.", ex, message, IppStatusCode.ClientErrorBadRequest);
+                }
+                docStream.Seek(0, SeekOrigin.Begin);
             }
             else
             {
