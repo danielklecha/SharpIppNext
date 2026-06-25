@@ -5,6 +5,8 @@ using SharpIpp.Protocol.Models;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace SharpIpp.Tests.Unit.Protocol;
 
@@ -12,12 +14,12 @@ namespace SharpIpp.Tests.Unit.Protocol;
 [ExcludeFromCodeCoverage]
 public class IppProtocolWriteValueTests
 {
-    private byte[] GetBytes(object value)
+    private async Task<byte[]> GetBytesAsync(object value)
     {
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new();
-        using BinaryWriter binaryWriter = new(memoryStream, Encoding.ASCII, true);
-        protocol.WriteValue(value, binaryWriter, Encoding.ASCII);
+        using IppBinaryWriter binaryWriter = new(memoryStream);
+        await protocol.WriteValueAsync(value, binaryWriter, Encoding.ASCII);
         return memoryStream.ToArray();
     }
 
@@ -32,16 +34,16 @@ public class IppProtocolWriteValueTests
     [DataRow(ResolutionUnit.DotsPerInch, new byte[] { 0x00, 0x04, 0x00, 0x00, 0x00, 0x03 })]
     [DataRow(PrinterType.PrinterClass, new byte[] { 0x00, 0x04, 0x00, 0x00, 0x00, 0x01 })]
     [DataRow(Orientation.Portrait, new byte[] { 0x00, 0x04, 0x00, 0x00, 0x00, 0x03 })]
-    public void WriteValue_IntegerBasedEnums_ShouldBeWrittenAsInt32(object value, byte[] expected)
+    public async Task WriteValue_IntegerBasedEnums_ShouldBeWrittenAsInt32(object value, byte[] expected)
     {
-        GetBytes(value).Should().Equal(expected);
+        (await GetBytesAsync(value)).Should().Equal(expected);
     }
 
     [TestMethod]
     [DynamicData(nameof(GetKebabCaseEnumsData))]
-    public void WriteValue_KebabCaseEnums_ShouldBeWrittenAsKebabCaseStrings(object value, byte[] expected)
+    public async Task WriteValue_KebabCaseEnums_ShouldBeWrittenAsKebabCaseStrings(object value, byte[] expected)
     {
-        GetBytes(value).Should().Equal(expected);
+        (await GetBytesAsync(value)).Should().Equal(expected);
     }
 
     public static IEnumerable<object[]> GetKebabCaseEnumsData()
@@ -67,9 +69,9 @@ public class IppProtocolWriteValueTests
 
     [TestMethod]
     [DynamicData(nameof(GetMoreKebabCaseEnumsData))]
-    public void WriteValue_MoreKebabCaseEnums_ShouldBeWrittenAsKebabCaseStrings(object value, byte[] expected)
+    public async Task WriteValue_MoreKebabCaseEnums_ShouldBeWrittenAsKebabCaseStrings(object value, byte[] expected)
     {
-        GetBytes(value).Should().Equal(expected);
+        (await GetBytesAsync(value)).Should().Equal(expected);
     }
 
     public static IEnumerable<object[]> GetMoreKebabCaseEnumsData()

@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
+using Moq;
 
 namespace SharpIpp.Tests.Unit.Protocol;
 
@@ -21,24 +22,24 @@ namespace SharpIpp.Tests.Unit.Protocol;
 public class IppProtocolTests
 {
     [TestMethod()]
-    public void WriteValue_NoValue_ShouldBeWritten()
+    public async Task WriteValue_NoValue_ShouldBeWritten()
     {
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new();
-        using BinaryWriter binaryWriter = new( memoryStream );
-        protocol.WriteValue( NoValue.Instance, binaryWriter );
+        using IppBinaryWriter binaryWriter = new( memoryStream );
+        await protocol.WriteValueAsync(NoValue.Instance, binaryWriter);
         memoryStream.ToArray().Should().Equal( 0x00, 0x00 );
     }
 
     [TestMethod]
     [DataRow( true, new byte[] { 0x00, 0x01, 0x01 } )]
     [DataRow( false, new byte[] { 0x00, 0x01, 0x00 } )]
-    public void WriteValue_Boolean_ShouldBeWritten( bool value, byte[] expected )
+    public async Task WriteValue_Boolean_ShouldBeWritten( bool value, byte[] expected )
     {
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new();
-        using BinaryWriter binaryWriter = new( memoryStream );
-        protocol.WriteValue( value, binaryWriter );
+        using IppBinaryWriter binaryWriter = new( memoryStream );
+        await protocol.WriteValueAsync(value, binaryWriter);
         memoryStream.ToArray().Should().Equal( expected );
     }
 
@@ -46,14 +47,14 @@ public class IppProtocolTests
     [DataRow( "12/31/1999 23:59:59 +02:30", new byte[] { 0x00, 0x0B, 0x07, 0xCF, 0x0C, 0x1F, 0x17, 0x3B, 0x3B, 0x00, 0x2B, 0x02, 0x1E } )]
     [DataRow( "12/31/1999 23:59:59 -02:30", new byte[] { 0x00, 0x0B, 0x07, 0xCF, 0x0C, 0x1F, 0x17, 0x3B, 0x3B, 0x00, 0x2D, 0x02, 0x1E } )]
     [DataRow( "01/01/0001 01:01:01 +00:00", new byte[] { 0x00, 0x0B, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x2D, 0x00, 0x00 } )]
-    public void WriteValue_DateTimeOffset_ShouldBeWritten( string value, byte[] expected )
+    public async Task WriteValue_DateTimeOffset_ShouldBeWritten( string value, byte[] expected )
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new();
-        using BinaryWriter binaryWriter = new( memoryStream );
+        using IppBinaryWriter binaryWriter = new( memoryStream );
         // Act
-        protocol.WriteValue( DateTimeOffset.Parse( value, CultureInfo.InvariantCulture ), binaryWriter );
+        await protocol.WriteValueAsync(DateTimeOffset.Parse( value, CultureInfo.InvariantCulture ), binaryWriter);
         // Assert
         memoryStream.ToArray().Should().Equal( expected );
     }
@@ -62,14 +63,14 @@ public class IppProtocolTests
     [DataRow( int.MinValue, new byte[] { 0x00, 0x04, 0x80, 0x00, 0x00, 0x00 } )]
     [DataRow( 0, new byte[] { 0x00, 0x04, 0x00, 0x00, 0x00, 0x00 } )]
     [DataRow( int.MaxValue, new byte[] { 0x00, 0x04, 0x7F, 0xFF, 0xFF, 0xFF } )]
-    public void WriteValue_Int32_ShouldBeWritten( int value, byte[] expected )
+    public async Task WriteValue_Int32_ShouldBeWritten( int value, byte[] expected )
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new();
-        using BinaryWriter binaryWriter = new( memoryStream );
+        using IppBinaryWriter binaryWriter = new( memoryStream );
         // Act
-        protocol.WriteValue( value, binaryWriter );
+        await protocol.WriteValueAsync(value, binaryWriter);
         // Assert
         memoryStream.ToArray().Should().Equal( expected );
     }
@@ -78,14 +79,14 @@ public class IppProtocolTests
     [DataRow( int.MinValue, int.MinValue, new byte[] { 0x00, 0x08, 0x80, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00, 0x00 } )]
     [DataRow( int.MinValue, int.MaxValue, new byte[] { 0x00, 0x08, 0x80, 0x00, 0x00, 0x00, 0x7F, 0xFF, 0xFF, 0xFF } )]
     [DataRow( int.MaxValue, int.MaxValue, new byte[] { 0x00, 0x08, 0x7F, 0xFF, 0xFF, 0xFF, 0x7F, 0xFF, 0xFF, 0xFF } )]
-    public void WriteValue_Range_ShouldBeWritten( int lower, int upper, byte[] expected )
+    public async Task WriteValue_Range_ShouldBeWritten( int lower, int upper, byte[] expected )
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new();
-        using BinaryWriter binaryWriter = new( memoryStream );
+        using IppBinaryWriter binaryWriter = new( memoryStream );
         // Act
-        protocol.WriteValue( new SharpIpp.Protocol.Models.Range( lower, upper ), binaryWriter );
+        await protocol.WriteValueAsync(new SharpIpp.Protocol.Models.Range( lower, upper ), binaryWriter);
         // Assert
         memoryStream.ToArray().Should().Equal( expected );
     }
@@ -95,28 +96,28 @@ public class IppProtocolTests
     [DataRow( 0, int.MaxValue, ResolutionUnit.DotsPerInch, new byte[] { 0x00, 0x09, 0x00, 0x00, 0x00, 0x00, 0x7F, 0xFF, 0xFF, 0xFF, 0x03 } )]
     [DataRow( int.MaxValue, int.MaxValue, ResolutionUnit.DotsPerCm, new byte[] { 0x00, 0x09, 0x7F, 0xFF, 0xFF, 0xFF, 0x7F, 0xFF, 0xFF, 0xFF, 0x04 } )]
     [DataRow( int.MaxValue, int.MaxValue, ResolutionUnit.DotsPerInch, new byte[] { 0x00, 0x09, 0x7F, 0xFF, 0xFF, 0xFF, 0x7F, 0xFF, 0xFF, 0xFF, 0x03 } )]
-    public void WriteValue_Resolution_ShouldBeWritten( int width, int height, ResolutionUnit unit, byte[] expected )
+    public async Task WriteValue_Resolution_ShouldBeWritten( int width, int height, ResolutionUnit unit, byte[] expected )
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new();
-        using BinaryWriter binaryWriter = new( memoryStream );
+        using IppBinaryWriter binaryWriter = new( memoryStream );
         // Act
-        protocol.WriteValue( new Resolution( width, height, unit ), binaryWriter );
+        await protocol.WriteValueAsync(new Resolution( width, height, unit ), binaryWriter);
         // Assert
         memoryStream.ToArray().Should().Equal( expected );
     }
 
     [TestMethod]
-    public void WriteValue_ResourceState_ShouldBeWritten()
+    public async Task WriteValue_ResourceState_ShouldBeWritten()
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new();
-        using BinaryWriter binaryWriter = new( memoryStream );
+        using IppBinaryWriter binaryWriter = new( memoryStream );
 
         // Act
-        protocol.WriteValue( ResourceState.Available, binaryWriter );
+        await protocol.WriteValueAsync(ResourceState.Available, binaryWriter);
 
         // Assert
         memoryStream.ToArray().Should().Equal( 0x00, 0x04, 0x00, 0x00, 0x00, 0x04 );
@@ -124,80 +125,80 @@ public class IppProtocolTests
 
     [TestMethod]
     [DataRow( "en-us", "Lorem", new byte[] { 0x00, 0x0E, 0x00, 0x05, 0x65, 0x6E, 0x2D, 0x75, 0x73, 0x00, 0x05, 0x4C, 0x6F, 0x72, 0x65, 0x6D } )]
-    public void Write_StringWithLanguage_ShouldBeWritten( string language, string text, byte[] expected )
+    public async Task Write_StringWithLanguage_ShouldBeWritten( string language, string text, byte[] expected )
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new();
-        using BinaryWriter binaryWriter = new( memoryStream );
+        using IppBinaryWriter binaryWriter = new( memoryStream );
         // Act
-        protocol.WriteValue( new StringWithLanguage( language, text ), binaryWriter );
+        await protocol.WriteValueAsync(new StringWithLanguage( language, text ), binaryWriter);
         // Assert
         memoryStream.ToArray().Should().Equal( expected );
     }
 
     [TestMethod]
-    public void Write_String_ShouldBeWritten()
+    public async Task Write_String_ShouldBeWritten()
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new();
-        using BinaryWriter binaryWriter = new( memoryStream );
+        using IppBinaryWriter binaryWriter = new( memoryStream );
         // Act
-        protocol.WriteValue( "Lorem", binaryWriter );
+        await protocol.WriteValueAsync("Lorem", binaryWriter);
         // Assert
         memoryStream.ToArray().Should().Equal( 0x00, 0x05, 0x4C, 0x6F, 0x72, 0x65, 0x6D );
     }
 
     [TestMethod]
-    public void WriteValue_BytesArray_ShouldBeWritten()
+    public async Task WriteValue_BytesArray_ShouldBeWritten()
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new();
-        using BinaryWriter binaryWriter = new( memoryStream );
+        using IppBinaryWriter binaryWriter = new( memoryStream );
         var value = new byte[] { 0xDE, 0xAD, 0xBE, 0xEF };
         // Act
-        protocol.WriteValue( value, binaryWriter );
+        await protocol.WriteValueAsync(value, binaryWriter);
         // Assert
         memoryStream.ToArray().Should().Equal( 0x00, 0x04, 0xDE, 0xAD, 0xBE, 0xEF );
     }
 
     [TestMethod]
-    public void WriteValue_ExtendedValue_ShouldBeWritten()
+    public async Task WriteValue_ExtendedValue_ShouldBeWritten()
     {
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new();
-        using BinaryWriter binaryWriter = new(memoryStream);
+        using IppBinaryWriter binaryWriter = new(memoryStream);
 
-        protocol.WriteValue(new ExtendedValue(0x01020304, new byte[] { 0xAA, 0xBB }), binaryWriter);
+        await protocol.WriteValueAsync(new ExtendedValue(0x01020304, new byte[] { 0xAA, 0xBB }), binaryWriter);
 
         memoryStream.ToArray().Should().Equal(0x00, 0x06, 0x01, 0x02, 0x03, 0x04, 0xAA, 0xBB);
     }
 
     [TestMethod]
-    public void WriteValue_UnknownValue_ShouldBeWritten()
+    public async Task WriteValue_UnknownValue_ShouldBeWritten()
     {
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new();
-        using BinaryWriter binaryWriter = new(memoryStream);
+        using IppBinaryWriter binaryWriter = new(memoryStream);
 
-        protocol.WriteValue(new UnknownValue((Tag)0x60, new byte[] { 0xDE, 0xAD }), binaryWriter);
+        await protocol.WriteValueAsync(new UnknownValue((Tag)0x60, new byte[] { 0xDE, 0xAD }), binaryWriter);
 
         memoryStream.ToArray().Should().Equal(0x00, 0x02, 0xDE, 0xAD);
     }
 
     [TestMethod]
-    public void WriteValue_UnsupportedType_ThrowsArgumentException()
+    public async Task WriteValue_UnsupportedType_ThrowsArgumentException()
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new();
-        using BinaryWriter binaryWriter = new( memoryStream );
+        using IppBinaryWriter binaryWriter = new( memoryStream );
         // Act
-        Action act = () => protocol.WriteValue( 123L, binaryWriter );
+        Func<Task> act = async () => await protocol.WriteValueAsync(123L, binaryWriter);
         // Assert
-        act.Should().Throw<ArgumentException>();
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
     [TestMethod]
@@ -404,58 +405,58 @@ public class IppProtocolTests
     }
 
     [TestMethod()]
-    public void WriteSection_EmptyListOfAttributes_ShouldNotWriteAnything()
+    public async Task WriteSection_EmptyListOfAttributes_ShouldNotWriteAnything()
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new();
-        using BinaryWriter binaryWriter = new( memoryStream );
+        using IppBinaryWriter binaryWriter = new( memoryStream );
         // Act
-        protocol.WriteSection( SectionTag.OperationAttributesTag, new List<IppAttribute>(), binaryWriter, Encoding.ASCII );
+        await protocol.WriteSectionAsync(SectionTag.OperationAttributesTag, new List<IppAttribute>(), binaryWriter, Encoding.ASCII );
         // Assert
         memoryStream.Length.Should().Be( 0 );
     }
 
     [TestMethod()]
-    public void WriteSection_ListIsNull_ShouldNotWriteAnything()
+    public async Task WriteSection_ListIsNull_ShouldNotWriteAnything()
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new();
-        using BinaryWriter binaryWriter = new( memoryStream );
+        using IppBinaryWriter binaryWriter = new( memoryStream );
         // Act
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-        Action act = () => protocol.WriteSection( SectionTag.OperationAttributesTag, null, binaryWriter, Encoding.ASCII );
+        Func<Task> act = async () => await protocol.WriteSectionAsync(SectionTag.OperationAttributesTag, null, binaryWriter, Encoding.ASCII);
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
         // Assert
-        act.Should().Throw<ArgumentNullException>();
+        await act.Should().ThrowAsync<ArgumentNullException>();
     }
 
     [TestMethod()]
-    public void WriteSection_StreamIsNull_ShouldNotWriteAnything()
+    public async Task WriteSection_StreamIsNull_ShouldNotWriteAnything()
     {
         // Arrange
         var protocol = new IppProtocol();
         // Act
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-        Action act = () => protocol.WriteSection( SectionTag.OperationAttributesTag, new List<IppAttribute>
+        Func<Task> act = async () => await protocol.WriteSectionAsync( SectionTag.OperationAttributesTag, new List<IppAttribute>
         {
             new( Tag.Keyword, IppAttributeNames.IppVersionsSupported, new IppVersion(1,0).ToString() )
         }, null, Encoding.ASCII );
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
         // Assert
-        act.Should().Throw<ArgumentNullException>();
+        await act.Should().ThrowAsync<ArgumentNullException>();
     }
 
     [TestMethod()]
-    public void WriteSection_OneAttribute_ShouldBeWritten()
+    public async Task WriteSection_OneAttribute_ShouldBeWritten()
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new();
-        using BinaryWriter binaryWriter = new( memoryStream );
+        using IppBinaryWriter binaryWriter = new( memoryStream );
         // Act
-        protocol.WriteSection( SectionTag.OperationAttributesTag, new List<IppAttribute>
+        await protocol.WriteSectionAsync( SectionTag.OperationAttributesTag, new List<IppAttribute>
         {
             new IppAttribute( Tag.Keyword, IppAttributeNames.IppVersionsSupported, new IppVersion(1,0).ToString() )
         }, binaryWriter, Encoding.ASCII );
@@ -465,16 +466,14 @@ public class IppProtocolTests
     }
 
     [TestMethod]
-    public void WriteAttribute_BegCollection_ShouldBeWritten()
+    public async Task WriteAttribute_BegCollection_ShouldBeWritten()
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new();
-        using BinaryWriter binaryWriter = new(memoryStream);
+        using IppBinaryWriter binaryWriter = new(memoryStream);
         // Act
-        protocol.WriteAttribute(
-            binaryWriter,
-            new IppAttribute(Tag.BegCollection, IppAttributeNames.MediaColDefault, NoValue.Instance),
+        await protocol.WriteAttributeAsync(binaryWriter, new IppAttribute(Tag.BegCollection, IppAttributeNames.MediaColDefault, NoValue.Instance),
             null,
             Encoding.ASCII);
         // Assert
@@ -483,16 +482,14 @@ public class IppProtocolTests
     }
 
     [TestMethod()]
-    public void WriteAttribute_OneAttribute_ShouldBeWritten()
+    public async Task WriteAttribute_OneAttribute_ShouldBeWritten()
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new();
-        using BinaryWriter binaryWriter = new( memoryStream );
+        using IppBinaryWriter binaryWriter = new( memoryStream );
         // Act
-        protocol.WriteAttribute(
-            binaryWriter,
-            new IppAttribute( Tag.Keyword, IppAttributeNames.IppVersionsSupported, new IppVersion( 1, 1 ).ToString() ),
+        await protocol.WriteAttributeAsync(binaryWriter, new IppAttribute( Tag.Keyword, IppAttributeNames.IppVersionsSupported, new IppVersion( 1, 1 ).ToString() ),
             null,
             Encoding.ASCII);
         // Assert
@@ -501,16 +498,14 @@ public class IppProtocolTests
     }
 
     [TestMethod()]
-    public void WriteAttribute_SecondSimilarAttribute_ShouldBeWritten()
+    public async Task WriteAttribute_SecondSimilarAttribute_ShouldBeWritten()
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new();
-        using BinaryWriter binaryWriter = new( memoryStream );
+        using IppBinaryWriter binaryWriter = new( memoryStream );
         // Act
-        protocol.WriteAttribute(
-            binaryWriter,
-            new IppAttribute( Tag.Keyword, IppAttributeNames.IppVersionsSupported, new IppVersion( 1, 1 ).ToString() ),
+        await protocol.WriteAttributeAsync(binaryWriter, new IppAttribute( Tag.Keyword, IppAttributeNames.IppVersionsSupported, new IppVersion( 1, 1 ).ToString() ),
             new IppAttribute( Tag.Keyword, IppAttributeNames.IppVersionsSupported, new IppVersion( 1, 0 ).ToString() ),
             Encoding.ASCII );
         // Assert
@@ -731,33 +726,33 @@ public class IppProtocolTests
     [TestMethod]
     [DataRow( Tag.TextWithLanguage )]
     [DataRow( Tag.NameWithLanguage )]
-    public void ReadValue_StringWithLanguage_ReturnsCorrectResult( Tag tag )
+    public async Task ReadValue_StringWithLanguage_ReturnsCorrectResult( Tag tag )
     {
         // Arrange
         var protocol = new IppProtocol();
         // 5 (lang) + 5 (value) + 4 = 14 (0x0E)
         using MemoryStream memoryStream = new( new byte[] { 0x00, 0x0E, 0x00, 0x05, 0x65, 0x6E, 0x2D, 0x75, 0x73, 0x00, 0x05, 0x4C, 0x6F, 0x72, 0x65, 0x6D } );
-        using BinaryReader binaryReader = new( memoryStream );
+        using IppBinaryReader binaryReader = new( memoryStream );
         // Act
-        Func<object> act = () => protocol.ReadValue( binaryReader, tag );
+        Func<Task<object>> act = async () => await protocol.ReadValueAsync(binaryReader, tag);
         // Assert
-        act.Should().NotThrow().Which.Should().BeEquivalentTo( new StringWithLanguage( "en-us", "Lorem" ) );
+        (await act.Should().NotThrowAsync()).Which.Should().BeEquivalentTo( new StringWithLanguage( "en-us", "Lorem" ) );
     }
 
     [TestMethod]
     [DataRow( Tag.TextWithLanguage )]
     [DataRow( Tag.NameWithLanguage )]
-    public void ReadValue_InvalidStringWithLanguage_ThrowsArgumentException( Tag tag )
+    public async Task ReadValue_InvalidStringWithLanguage_ThrowsArgumentException( Tag tag )
     {
         // Arrange
         var protocol = new IppProtocol();
         // 10 (0x0A) != 5 + 5 + 4
         using MemoryStream memoryStream = new( new byte[] { 0x00, 0x0A, 0x00, 0x05, 0x65, 0x6E, 0x2D, 0x75, 0x73, 0x00, 0x05, 0x4C, 0x6F, 0x72, 0x65, 0x6D } );
-        using BinaryReader binaryReader = new( memoryStream );
+        using IppBinaryReader binaryReader = new( memoryStream );
         // Act
-        Func<object> act = () => protocol.ReadValue( binaryReader, tag );
+        Func<Task<object>> act = async () => await protocol.ReadValueAsync(binaryReader, tag);
         // Assert
-        act.Should().Throw<ArgumentException>();
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
     [TestMethod]
@@ -793,16 +788,31 @@ public class IppProtocolTests
     [DataRow( Tag.StringUnassigned5D )]
     [DataRow( Tag.StringUnassigned5E )]
     [DataRow( Tag.StringUnassigned5F )]
-    public void ReadValue_String_ReturnsCorrectResult( Tag tag )
+    public async Task ReadValue_String_ReturnsCorrectResult( Tag tag )
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new( new byte[] { 0x00, 0x05, 0x4C, 0x6F, 0x72, 0x65, 0x6D } );
-        using BinaryReader binaryReader = new( memoryStream );
+        using IppBinaryReader binaryReader = new( memoryStream );
         // Act
-        Func<object> act = () => protocol.ReadValue( binaryReader, tag );
+        Func<Task<object>> act = async () => await protocol.ReadValueAsync(binaryReader, tag);
         // Assert
-        act.Should().NotThrow().Which.Should().BeEquivalentTo( "Lorem" );
+        (await act.Should().NotThrowAsync()).Which.Should().BeEquivalentTo( "Lorem" );
+    }
+
+    [TestMethod]
+    public async Task ReadValue_String_FewerBytesReturned_ThrowsEndOfStreamException()
+    {
+        var protocol = new IppProtocol();
+        var mockStream = new MemoryStream(new byte[] { 0x00, 0x05 });
+        var mockReader = new Mock<IppBinaryReader>(mockStream) { CallBase = true };
+        mockReader.Setup(x => x.ReadBytesAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+                  .ReturnsAsync(new byte[] { 0x01, 0x02 });
+        
+        Func<Task> act = async () => await protocol.ReadValueAsync(mockReader.Object, Tag.Charset);
+        
+        await act.Should().ThrowAsync<EndOfStreamException>()
+                 .WithMessage("Unexpected end of stream while reading string");
     }
 
     [TestMethod]
@@ -815,26 +825,41 @@ public class IppProtocolTests
     [DataRow( Tag.OctetStringUnassigned3D )]
     [DataRow( Tag.OctetStringUnassigned3E )]
     [DataRow( Tag.OctetStringUnassigned3F )]
-    public void ReadValue_OctetStrings_ReturnsOctetString( Tag tag )
+    public async Task ReadValue_OctetStrings_ReturnsOctetString( Tag tag )
     {
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new( new byte[] { 0x00, 0x05, 0x4C, 0x6F, 0x72, 0x65, 0x6D } );
-        using BinaryReader binaryReader = new( memoryStream );
+        using IppBinaryReader binaryReader = new( memoryStream );
 
-        var result = protocol.ReadValue(binaryReader, tag);
+        var result = await protocol.ReadValueAsync(binaryReader, tag);
 
         result.Should().BeOfType<OctetString>();
         ((OctetString)result).Value.Should().BeEquivalentTo(new byte[] { 0x4C, 0x6F, 0x72, 0x65, 0x6D });
     }
 
     [TestMethod]
-    public void ReadValue_ExtendedTag_ReturnsExtendedValue()
+    public async Task ReadValue_OctetString_FewerBytesReturned_ThrowsEndOfStreamException()
+    {
+        var protocol = new IppProtocol();
+        var mockStream = new MemoryStream(new byte[] { 0x00, 0x05 });
+        var mockReader = new Mock<IppBinaryReader>(mockStream) { CallBase = true };
+        mockReader.Setup(x => x.ReadBytesAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+                  .ReturnsAsync(new byte[] { 0x01, 0x02 });
+        
+        Func<Task> act = async () => await protocol.ReadValueAsync(mockReader.Object, Tag.OctetStringWithAnUnspecifiedFormat);
+        
+        await act.Should().ThrowAsync<EndOfStreamException>()
+                 .WithMessage("Unexpected end of stream while reading octet string");
+    }
+
+    [TestMethod]
+    public async Task ReadValue_ExtendedTag_ReturnsExtendedValue()
     {
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new(new byte[] { 0x00, 0x06, 0x00, 0x00, 0x01, 0x02, 0xAA, 0xBB });
-        using BinaryReader binaryReader = new(memoryStream);
+        using IppBinaryReader binaryReader = new(memoryStream);
 
-        var result = protocol.ReadValue(binaryReader, Tag.Extended);
+        var result = await protocol.ReadValueAsync(binaryReader, Tag.Extended);
 
         result.Should().BeEquivalentTo(new ExtendedValue(0x00000102, new byte[] { 0xAA, 0xBB }));
     }
@@ -842,27 +867,27 @@ public class IppProtocolTests
     [TestMethod]
     [DataRow(false)]
     [DataRow(true)]
-    public void ReadValue_ExtendedTag_WithPayloadShorterThanLengthPrefix_ThrowsArgumentException(bool useDisposedStream)
+    public async Task ReadValue_ExtendedTag_WithPayloadShorterThanLengthPrefix_ThrowsArgumentException(bool useDisposedStream)
     {
         var protocol = new IppProtocol();
-        BinaryReader binaryReader;
+        IppBinaryReader binaryReader;
         if (useDisposedStream)
         {
             var ms = new MemoryStream();
-            binaryReader = new BinaryReader(ms);
-            binaryReader.Dispose();
+            ms.Dispose();
+            binaryReader = new IppBinaryReader(ms);
         }
         else
         {
             var ms = new MemoryStream(new byte[] { 0x00 });
-            binaryReader = new BinaryReader(ms);
+            binaryReader = new IppBinaryReader(ms);
         }
 
-        Action act = () =>
+        Func<Task> act = async () =>
         {
             try
             {
-                protocol.ReadValue(binaryReader, Tag.Extended);
+                await protocol.ReadValueAsync(binaryReader, Tag.Extended);
             }
             finally
             {
@@ -870,46 +895,45 @@ public class IppProtocolTests
             }
         };
 
-        act.Should().Throw<ArgumentException>()
-           .WithMessage("Invalid extended value payload*")
+        (await act.Should().ThrowAsync<ArgumentException>()).WithMessage("Invalid extended value payload*")
            .Which.InnerException.Should().Match(ex => ex is EndOfStreamException || ex is ObjectDisposedException);
     }
 
     [TestMethod]
-    public void ReadValue_ExtendedTag_LengthLessThan4_ThrowsArgumentException()
+    public async Task ReadValue_ExtendedTag_LengthLessThan4_ThrowsArgumentException()
     {
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new(new byte[] { 0x00, 0x03, 0xAA, 0xBB, 0xCC });
-        using BinaryReader binaryReader = new(memoryStream);
+        using IppBinaryReader binaryReader = new(memoryStream);
 
-        Action act = () => protocol.ReadValue(binaryReader, Tag.Extended);
+        Func<Task> act = async () => await protocol.ReadValueAsync(binaryReader, Tag.Extended);
 
-        act.Should().Throw<ArgumentException>().WithMessage("Expected extended value length >= 4, actual: 3*");
+        (await act.Should().ThrowAsync<ArgumentException>()).WithMessage("Expected extended value length >= 4, actual: 3*");
     }
 
     [TestMethod]
     [DataRow(false)]
     [DataRow(true)]
-    public void ReadValue_ExtendedTag_InvalidPayloadLength_ThrowsArgumentException(bool useDisposedStream)
+    public async Task ReadValue_ExtendedTag_InvalidPayloadLength_ThrowsArgumentException(bool useDisposedStream)
     {
         var protocol = new IppProtocol();
-        BinaryReader binaryReader;
+        IppBinaryReader binaryReader;
         if (useDisposedStream)
         {
             var ms = new CustomExceptionStream(new byte[] { 0x00, 0x05, 0x00, 0x00, 0x01, 0x02 }, 2, new ObjectDisposedException("Stream"));
-            binaryReader = new BinaryReader(ms);
+            binaryReader = new IppBinaryReader(ms);
         }
         else
         {
             var ms = new MemoryStream(new byte[] { 0x00, 0x05, 0x00, 0x00, 0x01, 0x02 });
-            binaryReader = new BinaryReader(ms);
+            binaryReader = new IppBinaryReader(ms);
         }
 
-        Action act = () =>
+        Func<Task> act = async () =>
         {
             try
             {
-                protocol.ReadValue(binaryReader, Tag.Extended);
+                await protocol.ReadValueAsync(binaryReader, Tag.Extended);
             }
             finally
             {
@@ -917,25 +941,39 @@ public class IppProtocolTests
             }
         };
 
-        act.Should().Throw<ArgumentException>()
-           .WithMessage("Invalid extended value payload*")
+        (await act.Should().ThrowAsync<ArgumentException>()).WithMessage("Invalid extended value payload*")
            .Which.InnerException.Should().Match(ex => ex is EndOfStreamException || ex is ObjectDisposedException);
     }
 
     [TestMethod]
-    public void ReadWriteValue_ExtendedValue_RoundTrips()
-    {
+    public async Task ReadWriteValue_ExtendedValue_RoundTrips() {
         var protocol = new IppProtocol();
         var inputValue = new ExtendedValue(0x0A0B0C0D, new byte[] { 0xA1, 0xB2 });
 
         using MemoryStream writeStream = new();
-        using BinaryWriter binaryWriter = new(writeStream);
-        protocol.WriteValue(inputValue, binaryWriter);
+        using IppBinaryWriter binaryWriter = new(writeStream);
+        await protocol.WriteValueAsync(inputValue, binaryWriter);
 
-        using BinaryReader binaryReader = new(new MemoryStream(writeStream.ToArray()));
-        var result = protocol.ReadValue(binaryReader, Tag.Extended);
+        using IppBinaryReader binaryReader = new(new MemoryStream(writeStream.ToArray()));
+        var result = await protocol.ReadValueAsync(binaryReader, Tag.Extended);
 
         result.Should().BeEquivalentTo(inputValue);
+    }
+
+    [TestMethod]
+    public async Task ReadValue_ExtendedTag_FewerBytesReturned_ThrowsArgumentException()
+    {
+        var protocol = new IppProtocol();
+        var mockStream = new MemoryStream(new byte[] { 0x00, 0x06, 0x00, 0x00, 0x00, 0x01 });
+        var mockReader = new Mock<IppBinaryReader>(mockStream) { CallBase = true };
+        mockReader.Setup(x => x.ReadBytesAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+                  .ReturnsAsync(new byte[] { 0xAA });
+        
+        Func<Task> act = async () => await protocol.ReadValueAsync(mockReader.Object, Tag.Extended);
+        
+        var exception = await act.Should().ThrowAsync<ArgumentException>()
+                 .WithMessage("Invalid extended value payload*");
+        exception.Which.InnerException.Should().BeOfType<EndOfStreamException>();
     }
 
     [TestMethod]
@@ -971,43 +1009,59 @@ public class IppProtocolTests
     }
 
     [TestMethod]
-    public void ReadValue_UnknownTag_ReturnsUnknownValue()
+    public async Task ReadValue_UnknownTag_ReturnsUnknownValue()
     {
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new(new byte[] { 0x00, 0x02, 0xDE, 0xAD });
-        using BinaryReader binaryReader = new(memoryStream);
+        using IppBinaryReader binaryReader = new(memoryStream);
 
         var tag = (Tag)0x60;
-        var result = protocol.ReadValue(binaryReader, tag);
+        var result = await protocol.ReadValueAsync(binaryReader, tag);
 
         result.Should().BeEquivalentTo(new UnknownValue(tag, new byte[] { 0xDE, 0xAD }));
     }
 
     [TestMethod]
-    [DataRow(false)]
-    [DataRow(true)]
-    public void ReadValue_UnknownTag_WithPayloadShorterThanLengthPrefix_ThrowsArgumentException(bool useDisposedStream)
+    public async Task ReadValue_UnknownTag_FewerBytesReturned_ThrowsArgumentException()
     {
         var protocol = new IppProtocol();
-        BinaryReader binaryReader;
+        var mockStream = new MemoryStream(new byte[] { 0x00, 0x05 });
+        var mockReader = new Mock<IppBinaryReader>(mockStream) { CallBase = true };
+        mockReader.Setup(x => x.ReadBytesAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+                  .ReturnsAsync(new byte[] { 0x01, 0x02 });
+        
+        Func<Task> act = async () => await protocol.ReadValueAsync(mockReader.Object, (Tag)0x60);
+        
+        var exception = await act.Should().ThrowAsync<ArgumentException>()
+                 .WithMessage("Invalid unknown value payload*");
+        exception.Which.InnerException.Should().BeOfType<EndOfStreamException>();
+    }
+
+    [TestMethod]
+    [DataRow(false)]
+    [DataRow(true)]
+    public async Task ReadValue_UnknownTag_WithPayloadShorterThanLengthPrefix_ThrowsArgumentException(bool useDisposedStream)
+    {
+        var protocol = new IppProtocol();
+        IppBinaryReader binaryReader;
         if (useDisposedStream)
         {
             var ms = new MemoryStream();
-            binaryReader = new BinaryReader(ms);
-            binaryReader.Dispose();
+            ms.Dispose();
+            binaryReader = new IppBinaryReader(ms);
         }
         else
         {
             var ms = new MemoryStream(new byte[] { 0x00 });
-            binaryReader = new BinaryReader(ms);
+            binaryReader = new IppBinaryReader(ms);
         }
 
         var tag = (Tag)0x60;
-        Action act = () =>
+        Func<Task> act = async () =>
         {
             try
             {
-                protocol.ReadValue(binaryReader, tag);
+                await protocol.ReadValueAsync(binaryReader, tag);
             }
             finally
             {
@@ -1015,35 +1069,34 @@ public class IppProtocolTests
             }
         };
 
-        act.Should().Throw<ArgumentException>()
-           .WithMessage("Invalid unknown value payload*")
+        (await act.Should().ThrowAsync<ArgumentException>()).WithMessage("Invalid unknown value payload*")
            .Which.InnerException.Should().Match(ex => ex is EndOfStreamException || ex is ObjectDisposedException);
     }
 
     [TestMethod]
     [DataRow(false)]
     [DataRow(true)]
-    public void ReadValue_UnknownTag_WithDeclaredLengthGreaterThanPayload_ThrowsArgumentException(bool useDisposedStream)
+    public async Task ReadValue_UnknownTag_WithDeclaredLengthGreaterThanPayload_ThrowsArgumentException(bool useDisposedStream)
     {
         var protocol = new IppProtocol();
-        BinaryReader binaryReader;
+        IppBinaryReader binaryReader;
         if (useDisposedStream)
         {
             var ms = new CustomExceptionStream(new byte[] { 0x00, 0x02, 0xDE }, 2, new ObjectDisposedException("Stream"));
-            binaryReader = new BinaryReader(ms);
+            binaryReader = new IppBinaryReader(ms);
         }
         else
         {
             var ms = new MemoryStream(new byte[] { 0x00, 0x02, 0xDE });
-            binaryReader = new BinaryReader(ms);
+            binaryReader = new IppBinaryReader(ms);
         }
 
         var tag = (Tag)0x60;
-        Action act = () =>
+        Func<Task> act = async () =>
         {
             try
             {
-                protocol.ReadValue(binaryReader, tag);
+                await protocol.ReadValueAsync(binaryReader, tag);
             }
             finally
             {
@@ -1051,36 +1104,34 @@ public class IppProtocolTests
             }
         };
 
-        act.Should().Throw<ArgumentException>()
-           .WithMessage("Invalid unknown value payload*")
+        (await act.Should().ThrowAsync<ArgumentException>()).WithMessage("Invalid unknown value payload*")
            .Which.InnerException.Should().Match(ex => ex is EndOfStreamException || ex is ObjectDisposedException);
     }
 
     [TestMethod]
-    public void ReadValue_UnknownTag_WithNegativeDeclaredLength_ThrowsArgumentException()
+    public async Task ReadValue_UnknownTag_WithNegativeDeclaredLength_ThrowsArgumentException()
     {
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new(new byte[] { 0xFF, 0xFF });
-        using BinaryReader binaryReader = new(memoryStream);
+        using IppBinaryReader binaryReader = new(memoryStream);
 
         var tag = (Tag)0x60;
-        Action act = () => protocol.ReadValue(binaryReader, tag);
+        Func<Task> act = async () => await protocol.ReadValueAsync(binaryReader, tag);
 
-        act.Should().Throw<ArgumentException>().WithMessage("Invalid unknown value payload*");
+        (await act.Should().ThrowAsync<ArgumentException>()).WithMessage("Invalid unknown value payload*");
     }
 
     [TestMethod]
-    public void ReadWriteValue_UnknownValue_RoundTrips()
-    {
+    public async Task ReadWriteValue_UnknownValue_RoundTrips() {
         var protocol = new IppProtocol();
         var inputValue = new UnknownValue((Tag)0x60, new byte[] { 0xDE, 0xAD, 0xBE, 0xEF });
 
         using MemoryStream writeStream = new();
-        using BinaryWriter binaryWriter = new(writeStream);
-        protocol.WriteValue(inputValue, binaryWriter);
+        using IppBinaryWriter binaryWriter = new(writeStream);
+        await protocol.WriteValueAsync(inputValue, binaryWriter);
 
-        using BinaryReader binaryReader = new(new MemoryStream(writeStream.ToArray()));
-        var result = protocol.ReadValue(binaryReader, inputValue.Tag);
+        using IppBinaryReader binaryReader = new(new MemoryStream(writeStream.ToArray()));
+        var result = await protocol.ReadValueAsync(binaryReader, inputValue.Tag);
 
         result.Should().BeEquivalentTo(inputValue);
     }
@@ -1123,29 +1174,29 @@ public class IppProtocolTests
     [DataRow( Tag.NoValue )]
     [DataRow( Tag.BegCollection )]
     [DataRow( Tag.EndCollection )]
-    public void ReadValue_NoValue_ReturnsCorrectResult( Tag tag )
+    public async Task ReadValue_NoValue_ReturnsCorrectResult( Tag tag )
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new( new byte[] { 0x00, 0x00 } );
-        using BinaryReader binaryReader = new( memoryStream );
+        using IppBinaryReader binaryReader = new( memoryStream );
         // Act
-        Func<object> act = () => protocol.ReadValue( binaryReader, tag );
+        Func<Task<object>> act = async () => await protocol.ReadValueAsync(binaryReader, tag);
         // Assert
-        act.Should().NotThrow().Which.Should().BeEquivalentTo( NoValue.Instance );
+        (await act.Should().NotThrowAsync()).Which.Should().BeEquivalentTo( NoValue.Instance );
     }
 
     [TestMethod]
-    public void ReadValue_BrokenNoValue_ThrowsArgumentException()
+    public async Task ReadValue_BrokenNoValue_ThrowsArgumentException()
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new( new byte[] { 0x01, 0x00 } );
-        using BinaryReader binaryReader = new( memoryStream );
+        using IppBinaryReader binaryReader = new( memoryStream );
         // Act
-        Func<object> act = () => protocol.ReadValue( binaryReader, Tag.NoValue );
+        Func<Task<object>> act = async () => await protocol.ReadValueAsync(binaryReader, Tag.NoValue);
         // Assert
-        act.Should().Throw<ArgumentException>();
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
 
@@ -1165,124 +1216,124 @@ public class IppProtocolTests
     [DataRow( Tag.IntegerUnassigned2D )]
     [DataRow( Tag.IntegerUnassigned2E )]
     [DataRow( Tag.IntegerUnassigned2F )]
-    public void ReadValue_Int_ReturnsCorrectResult( Tag tag )
+    public async Task ReadValue_Int_ReturnsCorrectResult( Tag tag )
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new( new byte[] { 0x00, 0x04, 0x00, 0x00, 0x00, 0x10 } );
-        using BinaryReader binaryReader = new( memoryStream );
+        using IppBinaryReader binaryReader = new( memoryStream );
         // Act
-        Func<object> act = () => protocol.ReadValue( binaryReader, tag );
+        Func<Task<object>> act = async () => await protocol.ReadValueAsync(binaryReader, tag);
         // Assert
-        act.Should().NotThrow().Which.Should().BeEquivalentTo( 16 );
+        (await act.Should().NotThrowAsync()).Which.Should().BeEquivalentTo( 16 );
     }
 
     [TestMethod()]
     [DataRow( new byte[] { 0x00, 0x00, 0x7F, 0xFF, 0xFF, 0xFF }, DisplayName = "Invalid second byte" )]
-    public void ReadValue_Int_ThrowsArgumentException( byte[] value )
+    public async Task ReadValue_Int_ThrowsArgumentException( byte[] value )
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new( value, 0, value.Length );
-        using BinaryReader binaryReader = new( memoryStream );
+        using IppBinaryReader binaryReader = new( memoryStream );
         // Act
-        Func<object> act = () => protocol.ReadValue( binaryReader, Tag.Integer );
+        Func<Task<object>> act = async () => await protocol.ReadValueAsync(binaryReader, Tag.Integer);
         // Assert
-        act.Should().Throw<ArgumentException>();
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
     [TestMethod()]
     [DataRow( new byte[] { 0x00, 0x01, 0x00 }, false )]
     [DataRow( new byte[] { 0x00, 0x01, 0x01 }, true )]
-    public void ReadValue_Bool_ReturnsCorrectResult( byte[] value, bool expected )
+    public async Task ReadValue_Bool_ReturnsCorrectResult( byte[] value, bool expected )
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new( value, 0, value.Length );
-        using BinaryReader binaryReader = new( memoryStream );
+        using IppBinaryReader binaryReader = new( memoryStream );
         // Act
-        Func<object> act = () => protocol.ReadValue( binaryReader, Tag.Boolean );
+        Func<Task<object>> act = async () => await protocol.ReadValueAsync(binaryReader, Tag.Boolean);
         // Assert
-        act.Should().NotThrow().Which.Should().Be( expected );
+        (await act.Should().NotThrowAsync()).Which.Should().Be( expected );
     }
 
     [TestMethod()]
     [DataRow( new byte[] { 0x00, 0x01, 0x02 } )]
     [DataRow( new byte[] { 0x00, 0x00, 0x00 } )]
-    public void ReadValue_InvalidBool_ThrowsArgumentException( byte[] value )
+    public async Task ReadValue_InvalidBool_ThrowsArgumentException( byte[] value )
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new( value, 0, value.Length );
-        using BinaryReader binaryReader = new( memoryStream );
+        using IppBinaryReader binaryReader = new( memoryStream );
         // Act
-        Func<object> act = () => protocol.ReadValue( binaryReader, Tag.Boolean );
+        Func<Task<object>> act = async () => await protocol.ReadValueAsync(binaryReader, Tag.Boolean);
         // Assert
-        act.Should().Throw<ArgumentException>();
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
     [TestMethod()]
     [DataRow( new byte[] { 0x00, 0x0B, 0x07, 0xCF, 0x0C, 0x1F, 0x17, 0x3B, 0x3B, 0x00, 0x2B, 0x02, 0x1E }, "12/31/1999 23:59:59 +02:30", DisplayName = "Time with negative offset" )]
     [DataRow( new byte[] { 0x00, 0x0B, 0x07, 0xCF, 0x0C, 0x1F, 0x17, 0x3B, 0x3B, 0x00, 0x2D, 0x02, 0x1E }, "12/31/1999 23:59:59 -02:30", DisplayName = "Time with positive offset" )]
     [DataRow( new byte[] { 0x00, 0x0B, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x2D, 0x00, 0x00 }, "01/01/0001 01:01:01 +00:00", DisplayName = "Minimal DateTime" )]
-    public void ReadValue_DateTimeOffset_ReturnsCorrectResult( byte[] value, string expected )
+    public async Task ReadValue_DateTimeOffset_ReturnsCorrectResult( byte[] value, string expected )
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new( value, 0, value.Length );
-        using BinaryReader binaryReader = new( memoryStream );
+        using IppBinaryReader binaryReader = new( memoryStream );
         // Act
-        Func<object> act = () => protocol.ReadValue( binaryReader, Tag.DateTime );
+        Func<Task<object>> act = async () => await protocol.ReadValueAsync(binaryReader, Tag.DateTime);
         // Assert
-        act.Should().NotThrow().Which.Should().Be( DateTimeOffset.Parse( expected, CultureInfo.InvariantCulture ) );
+        (await act.Should().NotThrowAsync()).Which.Should().Be( DateTimeOffset.Parse( expected, CultureInfo.InvariantCulture ) );
     }
 
     [TestMethod()]
     [DataRow( new byte[] { 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x2D, 0x00, 0x00 }, DisplayName = "Invalid second byte" )]
     [DataRow( new byte[] { 0x00, 0x0B, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00 }, DisplayName = "Invalid offset sign" )]
     [DataRow( new byte[] { 0x00, 0x0B, 0x00, 0x01, 0x0F, 0x01, 0x01, 0x01, 0x01, 0x00, 0x2D, 0x00, 0x00 }, DisplayName = "Invalid month" )]
-    public void ReadValue_InvalidDateTimeOffset_ThrowsArgumentException( byte[] value )
+    public async Task ReadValue_InvalidDateTimeOffset_ThrowsArgumentException( byte[] value )
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new( value );
-        using BinaryReader binaryReader = new( memoryStream );
+        using IppBinaryReader binaryReader = new( memoryStream );
         // Act
-        Func<object> act = () => protocol.ReadValue( binaryReader, Tag.DateTime );
+        Func<Task<object>> act = async () => await protocol.ReadValueAsync(binaryReader, Tag.DateTime);
         // Assert
-        act.Should().Throw<ArgumentException>();
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
     [TestMethod()]
     [DataRow( new byte[] { 0x00, 0x08, 0x80, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00, 0x00 }, int.MinValue, int.MinValue )]
     [DataRow( new byte[] { 0x00, 0x08, 0x80, 0x00, 0x00, 0x00, 0x7F, 0xFF, 0xFF, 0xFF }, int.MinValue, int.MaxValue )]
     [DataRow( new byte[] { 0x00, 0x08, 0x7F, 0xFF, 0xFF, 0xFF, 0x7F, 0xFF, 0xFF, 0xFF }, int.MaxValue, int.MaxValue )]
-    public void ReadValue_Range_ReturnsCorrectResult( byte[] value, int lower, int upper )
+    public async Task ReadValue_Range_ReturnsCorrectResult( byte[] value, int lower, int upper )
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new( value, 0, value.Length );
-        using BinaryReader binaryReader = new( memoryStream );
+        using IppBinaryReader binaryReader = new( memoryStream );
         // Act
-        Func<object> act = () => protocol.ReadValue( binaryReader, Tag.RangeOfInteger );
+        Func<Task<object>> act = async () => await protocol.ReadValueAsync(binaryReader, Tag.RangeOfInteger);
         // Assert
-        act.Should().NotThrow().Which.Should().BeEquivalentTo( new SharpIpp.Protocol.Models.Range( lower, upper ) );
+        (await act.Should().NotThrowAsync()).Which.Should().BeEquivalentTo( new SharpIpp.Protocol.Models.Range( lower, upper ) );
     }
 
 
     [TestMethod()]
     [DataRow( new byte[] { 0x01, 0x08, 0x7F, 0xFF, 0xFF, 0xFF, 0x7F, 0xFF, 0xFF, 0xFF }, DisplayName = "Invalid first byte" )]
     [DataRow( new byte[] { 0x00, 0x00, 0x7F, 0xFF, 0xFF, 0xFF, 0x7F, 0xFF, 0xFF, 0xFF }, DisplayName = "Invalid second byte" )]
-    public void ReadValue_InvalidRange_ShouldThrowArgumentException( byte[] value )
+    public async Task ReadValue_InvalidRange_ShouldThrowArgumentException( byte[] value )
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new( value );
-        using BinaryReader binaryReader = new( memoryStream );
+        using IppBinaryReader binaryReader = new( memoryStream );
         // Act
-        Func<object> act = () => protocol.ReadValue( binaryReader, Tag.RangeOfInteger );
+        Func<Task<object>> act = async () => await protocol.ReadValueAsync(binaryReader, Tag.RangeOfInteger);
         // Assert
-        act.Should().Throw<ArgumentException>();
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
     [TestMethod()]
@@ -1290,103 +1341,103 @@ public class IppProtocolTests
     [DataRow( new byte[] { 0x00, 0x09, 0x00, 0x00, 0x00, 0x00, 0x7F, 0xFF, 0xFF, 0xFF, 0x03 }, 0, int.MaxValue, ResolutionUnit.DotsPerInch )]
     [DataRow( new byte[] { 0x00, 0x09, 0x7F, 0xFF, 0xFF, 0xFF, 0x7F, 0xFF, 0xFF, 0xFF, 0x04 }, int.MaxValue, int.MaxValue, ResolutionUnit.DotsPerCm )]
     [DataRow( new byte[] { 0x00, 0x09, 0x7F, 0xFF, 0xFF, 0xFF, 0x7F, 0xFF, 0xFF, 0xFF, 0x03 }, int.MaxValue, int.MaxValue, ResolutionUnit.DotsPerInch )]
-    public void ReadValue_Resolution_ReturnsCorrectResult( byte[] bytes, int width, int height, ResolutionUnit unit )
+    public async Task ReadValue_Resolution_ReturnsCorrectResult( byte[] bytes, int width, int height, ResolutionUnit unit )
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new( bytes, 0, bytes.Length );
-        using BinaryReader binaryReader = new( memoryStream );
+        using IppBinaryReader binaryReader = new( memoryStream );
         // Act
-        Func<object> act = () => protocol.ReadValue( binaryReader, Tag.Resolution );
+        Func<Task<object>> act = async () => await protocol.ReadValueAsync(binaryReader, Tag.Resolution);
         // Assert
-        act.Should().NotThrow().Which.Should().BeEquivalentTo( new Resolution( width, height, unit ) );
+        (await act.Should().NotThrowAsync()).Which.Should().BeEquivalentTo( new Resolution( width, height, unit ) );
     }
 
     [TestMethod()]
     [DataRow( new byte[] { 0x01, 0x09, 0x00, 0x00, 0x00, 0x00, 0x7F, 0xFF, 0xFF, 0xFF, 0x04 }, DisplayName = "Invalid first byte" )]
     [DataRow( new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7F, 0xFF, 0xFF, 0xFF, 0x04 }, DisplayName = "Invalid second byte" )]
-    public void ReadValue_InvalidResolution_ThrowsArgumentException( byte[] bytes )
+    public async Task ReadValue_InvalidResolution_ThrowsArgumentException( byte[] bytes )
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new( bytes, 0, bytes.Length );
-        using BinaryReader binaryReader = new( memoryStream );
+        using IppBinaryReader binaryReader = new( memoryStream );
         // Act
-        Func<object> act = () => protocol.ReadValue( binaryReader, Tag.Resolution );
+        Func<Task<object>> act = async () => await protocol.ReadValueAsync(binaryReader, Tag.Resolution);
         // Assert
-        act.Should().Throw<ArgumentException>();
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
     [TestMethod]
-    public void ReadValue_InvalidTag_ThrowsArgumentException()
+    public async Task ReadValue_InvalidTag_ThrowsArgumentException()
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new();
-        using BinaryReader binaryReader = new( memoryStream );
+        using IppBinaryReader binaryReader = new( memoryStream );
         // Act
-        Func<object> act = () => protocol.ReadValue( binaryReader, (Tag)0x01 );
+        Func<Task<object>> act = async () => await protocol.ReadValueAsync(binaryReader, (Tag)0x01 );
         // Assert
-        act.Should().Throw<ArgumentException>();
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
     [TestMethod]
-    public void ReadAttribute_OneAttribute_ReturnsCorrectResult()
+    public async Task ReadAttribute_OneAttribute_ReturnsCorrectResult()
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new( new byte[] { 0x00, 0x16, 0x69, 0x70, 0x70, 0x2D, 0x76, 0x65, 0x72, 0x73, 0x69,
             0x6F, 0x6E, 0x73, 0x2D, 0x73, 0x75, 0x70, 0x70, 0x6F, 0x72, 0x74, 0x65, 0x64, 0x00, 0x03, 0x31, 0x2E, 0x31 } );
-        using BinaryReader binaryReader = new( memoryStream );
+        using IppBinaryReader binaryReader = new( memoryStream );
         // Act
-        Func<IppAttribute> act = () => protocol.ReadAttribute( Tag.Keyword, binaryReader, null, null, Encoding.ASCII );
+        Func<Task<IppAttribute>> act = async () => await protocol.ReadAttributeAsync( Tag.Keyword, binaryReader, null, null, Encoding.ASCII );
         // Assert
-        act.Should().NotThrow().Which.Should().BeEquivalentTo( new IppAttribute( Tag.Keyword, IppAttributeNames.IppVersionsSupported, new IppVersion( 1, 1 ).ToString() ) );
+        (await act.Should().NotThrowAsync()).Which.Should().BeEquivalentTo( new IppAttribute( Tag.Keyword, IppAttributeNames.IppVersionsSupported, new IppVersion( 1, 1 ).ToString() ) );
     }
 
     [TestMethod]
-    public void ReadAttribute_BegCollection_ReturnsCorrectResult()
+    public async Task ReadAttribute_BegCollection_ReturnsCorrectResult()
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new(new byte[] { 0x00, 0x11, 0x6D, 0x65, 0x64, 0x69, 0x61, 0x2D, 0x63, 0x6F, 0x6C,
             0x2D, 0x64, 0x65, 0x66, 0x61, 0x75, 0x6C, 0x74, 0x00, 0x00 });
-        using BinaryReader binaryReader = new(memoryStream);
+        using IppBinaryReader binaryReader = new(memoryStream);
         // Act
-        Func<IppAttribute> act = () => protocol.ReadAttribute(Tag.BegCollection, binaryReader, null, null, Encoding.ASCII);
+        Func<Task<IppAttribute>> act = async () => await protocol.ReadAttributeAsync(Tag.BegCollection, binaryReader, null, null, Encoding.ASCII);
         // Assert
-        act.Should().NotThrow().Which.Should().BeEquivalentTo(new IppAttribute(Tag.BegCollection, IppAttributeNames.MediaColDefault, NoValue.Instance));
+        (await act.Should().NotThrowAsync()).Which.Should().BeEquivalentTo(new IppAttribute(Tag.BegCollection, IppAttributeNames.MediaColDefault, NoValue.Instance));
     }
 
     [TestMethod]
-    public void ReadAttribute_SecondSimilarAttribute_ReturnsCorrectResult()
+    public async Task ReadAttribute_SecondSimilarAttribute_ReturnsCorrectResult()
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new( new byte[] { 0x00, 0x00, 0x00, 0x03, 0x31, 0x2E, 0x31 } );
-        using BinaryReader binaryReader = new( memoryStream );
+        using IppBinaryReader binaryReader = new( memoryStream );
         var previousAttribute = new IppAttribute( Tag.Keyword, IppAttributeNames.IppVersionsSupported, new IppVersion( 1, 0 ).ToString() );
         // Act
-        Func<IppAttribute> act = () => protocol.ReadAttribute( Tag.Keyword, binaryReader, previousAttribute, null, Encoding.ASCII);
+        Func<Task<IppAttribute>> act = async () => await protocol.ReadAttributeAsync( Tag.Keyword, binaryReader, previousAttribute, null, Encoding.ASCII);
         // Assert
-        act.Should().NotThrow().Which.Should().BeEquivalentTo( new IppAttribute( Tag.Keyword, IppAttributeNames.IppVersionsSupported, new IppVersion( 1, 1 ).ToString() ) );
+        (await act.Should().NotThrowAsync()).Which.Should().BeEquivalentTo( new IppAttribute( Tag.Keyword, IppAttributeNames.IppVersionsSupported, new IppVersion( 1, 1 ).ToString() ) );
     }
 
     [TestMethod]
-    public void ReadAttribute_AttributeWithoutName_ReturnsCorrectResult()
+    public async Task ReadAttribute_AttributeWithoutName_ReturnsCorrectResult()
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new( new byte[] { 0x00, 0x00, 0x00, 0x03, 0x31, 0x2E, 0x31 } );
-        using BinaryReader binaryReader = new( memoryStream );
+        using IppBinaryReader binaryReader = new( memoryStream );
         // Act
-        Func<IppAttribute> act = () => protocol.ReadAttribute( Tag.Keyword, binaryReader, null, null, Encoding.ASCII);
+        Func<Task<IppAttribute>> act = async () => await protocol.ReadAttributeAsync( Tag.Keyword, binaryReader, null, null, Encoding.ASCII);
         // Assert
-        act.Should().Throw<ArgumentException>();
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
     [TestMethod()]
-    public void ReadIppResponseAsync_StreamIsNull_ShouldThrowException()
+    public async Task ReadIppResponseAsync_StreamIsNull_ShouldThrowException()
     {
         // Arrange
         var protocol = new IppProtocol();
@@ -1395,33 +1446,51 @@ public class IppProtocolTests
         Func<Task<IIppResponseMessage>> act = async () => await protocol.ReadIppResponseAsync( null );
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
         // Assert
-        act.Should().ThrowAsync<ArgumentNullException>();
+        await act.Should().ThrowAsync<ArgumentNullException>();
     }
 
     [TestMethod()]
-    public void ReadValue_StreamIsNull_ShouldThrowException()
+    public async Task ReadValue_StreamIsNull_ShouldThrowException()
     {
         // Arrange
         var protocol = new IppProtocol();
         // Act
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-        Func<object> act = () => protocol.ReadValue( null, Tag.Charset );
+        Func<Task<object>> act = async () => await protocol.ReadValueAsync( null, Tag.Charset );
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
         // Assert
-        act.Should().Throw<ArgumentNullException>();
+        await act.Should().ThrowAsync<ArgumentNullException>();
     }
 
     [TestMethod()]
-    public void ReadAttribute_StreamIsNull_ShouldThrowException()
+    public async Task ReadAttribute_StreamIsNull_ShouldThrowException()
     {
         // Arrange
         var protocol = new IppProtocol();
         // Act
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-        Func<IppAttribute> act = () => protocol.ReadAttribute( Tag.Keyword, null, null, null, Encoding.ASCII );
+        Func<Task<IppAttribute>> act = async () => await protocol.ReadAttributeAsync( Tag.Keyword, null, null, null, Encoding.ASCII );
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
         // Assert
-        act.Should().Throw<ArgumentNullException>();
+        await act.Should().ThrowAsync<ArgumentNullException>();
+    }
+
+    [TestMethod]
+    public async Task ReadAttribute_AttributeNameTooShort_ShouldThrowEndOfStreamException()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        using var stream = new MemoryStream(new byte[] { 0x00, 0x02 });
+        var mockReader = new Mock<IppBinaryReader>(stream) { CallBase = true };
+        mockReader.Setup(r => r.ReadBytesAsync(2, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new byte[1]);
+
+        // Act
+        Func<Task<IppAttribute>> act = async () => await protocol.ReadAttributeAsync(Tag.Keyword, mockReader.Object, null, null, Encoding.ASCII);
+
+        // Assert
+        var exceptionAssertion = await act.Should().ThrowAsync<EndOfStreamException>();
+        exceptionAssertion.Which.Message.Should().Be("Unexpected end of stream while reading attribute name");
     }
 
     [TestMethod()]
@@ -1584,7 +1653,7 @@ public class IppProtocolTests
     }
 
     [TestMethod]
-    public void GetNormalizedName_PrevBegCollection_ShouldReturnPrevName()
+    public async Task GetNormalizedName_PrevBegCollection_ShouldReturnPrevName()
     {
         // Case for verifying 1setOf Collection support (formerly line 418 break)
         var prevAttribute = new IppAttribute(Tag.BegCollection, "test-collection", NoValue.Instance);
@@ -1594,44 +1663,44 @@ public class IppProtocolTests
     }
 
     [TestMethod]
-    public void GetNormalizedName_PrevEndCollection_NoPrevBegCollection_ShouldThrow()
+    public async Task GetNormalizedName_PrevEndCollection_NoPrevBegCollection_ShouldThrow()
     {
         // Case for Line 422 (break) coverage
         var prevAttribute = new IppAttribute(Tag.EndCollection, "", NoValue.Instance);
 
-        Action act = () => IppProtocol.GetNormalizedName(Tag.Integer, "", prevAttribute, null);
+        Func<Task> act = async () => IppProtocol.GetNormalizedName(Tag.Integer, "", prevAttribute, null);
 
-        act.Should().Throw<ArgumentException>().WithMessage("0 length attribute name found not in a 1setOf");
+        (await act.Should().ThrowAsync<ArgumentException>()).WithMessage("0 length attribute name found not in a 1setOf");
     }
 
     [TestMethod]
-    public void GetNormalizedName_PrevEndCollection_PrevBegCollectionNoName_ShouldThrow()
+    public async Task GetNormalizedName_PrevEndCollection_PrevBegCollectionNoName_ShouldThrow()
     {
         // Case for Line 422/420 (condition false) coverage
         var prevAttribute = new IppAttribute(Tag.EndCollection, "", NoValue.Instance);
         var prevBeg = new IppAttribute(Tag.BegCollection, "", NoValue.Instance); // Empty name
 
-        Action act = () => IppProtocol.GetNormalizedName(Tag.Integer, "", prevAttribute, prevBeg);
+        Func<Task> act = async () => IppProtocol.GetNormalizedName(Tag.Integer, "", prevAttribute, prevBeg);
 
-        act.Should().Throw<ArgumentException>().WithMessage("0 length attribute name found not in a 1setOf");
+        (await act.Should().ThrowAsync<ArgumentException>()).WithMessage("0 length attribute name found not in a 1setOf");
     }
 
     [TestMethod]
-    public void GetNormalizedName_Default_PrevNameEmpty_ShouldThrow()
+    public async Task GetNormalizedName_Default_PrevNameEmpty_ShouldThrow()
     {
         // Case for Line 428 (break) coverage
         // Use a tag that hits default (e.g. Integer) but has empty name
         var prevAttribute = new IppAttribute(Tag.Integer, "", 1);
 
-        Action act = () => IppProtocol.GetNormalizedName(Tag.Integer, "", prevAttribute, null);
+        Func<Task> act = async () => IppProtocol.GetNormalizedName(Tag.Integer, "", prevAttribute, null);
 
-        act.Should().Throw<ArgumentException>().WithMessage("0 length attribute name found not in a 1setOf");
+        (await act.Should().ThrowAsync<ArgumentException>()).WithMessage("0 length attribute name found not in a 1setOf");
     }
 
     /// <summary>
     /// Guards against a regression where encoding is incorrectly reset to ASCII when entering a new section.
-    /// Per RFC 8011 §4.1.4, attributes-charset applies to the entire message, not just the operation section.
-    /// A non-ASCII text attribute (e.g. job-name "Ä") in the job-attributes section must be decoded
+    /// Per RFC 8011 Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€žĂ„ÄľĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ˘â‚¬Â¦Ă„â€šĂ˘â‚¬Ä…Ä‚ËĂ˘â€šÂ¬Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬Ă‚Â¦Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ˘â‚¬Â¦Ă„â€šĂ˘â‚¬Ä…Ä‚ËĂ˘â€šÂ¬Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â§4.1.4, attributes-charset applies to the entire message, not just the operation section.
+    /// A non-ASCII text attribute (e.g. job-name "Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ˘â‚¬Â¦Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬Ă‚Â¦Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€žĂ˘â‚¬Â¦Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ˘â‚¬Â¦Ă„â€šĂ˘â‚¬Ä…Ä‚ËĂ˘â€šÂ¬Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€šĂ‚Â¦Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ˘â‚¬ĹľÄ‚â€žĂ„Äľ") in the job-attributes section must be decoded
     /// using the charset negotiated in operation-attributes, not ASCII.
     /// </summary>
     [TestMethod]
@@ -1642,8 +1711,8 @@ public class IppProtocolTests
         //   operation-attributes-tag (0x01)
         //     attributes-charset = "utf-8"   (Tag.Charset = 0x47)
         //   job-attributes-tag (0x02)
-        //     job-name = "Ä" in UTF-8         (Tag.NameWithoutLanguage = 0x42)
-        //       "Ä" = 0xC3 0x84 in UTF-8
+        //     job-name = "Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ˘â‚¬Â¦Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬Ă‚Â¦Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€žĂ˘â‚¬Â¦Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ˘â‚¬Â¦Ă„â€šĂ˘â‚¬Ä…Ä‚ËĂ˘â€šÂ¬Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€šĂ‚Â¦Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ˘â‚¬ĹľÄ‚â€žĂ„Äľ" in UTF-8         (Tag.NameWithoutLanguage = 0x42)
+        //       "Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ˘â‚¬Â¦Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬Ă‚Â¦Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€žĂ˘â‚¬Â¦Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ˘â‚¬Â¦Ă„â€šĂ˘â‚¬Ä…Ä‚ËĂ˘â€šÂ¬Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€šĂ‚Â¦Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ˘â‚¬ĹľÄ‚â€žĂ„Äľ" = 0xC3 0x84 in UTF-8
         //   end-of-attributes-tag (0x03)
         var bytes = new byte[]
         {
@@ -1661,7 +1730,7 @@ public class IppProtocolTests
             0x00, 0x08,                                       // name length: 8
             0x6A, 0x6F, 0x62, 0x2D, 0x6E, 0x61, 0x6D, 0x65, // "job-name"
             0x00, 0x02,                                       // value length: 2
-            0xC3, 0x84,                                       // "Ä" in UTF-8
+            0xC3, 0x84,                                       // "Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ˘â‚¬Â¦Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬Ă‚Â¦Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€žĂ˘â‚¬Â¦Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ˘â‚¬Â¦Ă„â€šĂ˘â‚¬Ä…Ä‚ËĂ˘â€šÂ¬Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€šĂ‚Â¦Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ˘â‚¬ĹľÄ‚â€žĂ„Äľ" in UTF-8
             0x03                                              // end-of-attributes-tag
         };
         var protocol = new IppProtocol();
@@ -1673,13 +1742,13 @@ public class IppProtocolTests
         // Assert
         result.JobAttributes.Should().HaveCount(1);
         result.JobAttributes[0].Name.Should().Be(IppAttributeNames.JobName);
-        result.JobAttributes[0].Value.Should().Be("\u00C4"); // "Ä"
+        result.JobAttributes[0].Value.Should().Be("\u00C4"); // "Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ˘â‚¬Â¦Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬Ă‚Â¦Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€žĂ˘â‚¬Â¦Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ˘â‚¬Â¦Ă„â€šĂ˘â‚¬Ä…Ä‚ËĂ˘â€šÂ¬Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€šĂ‚Â¦Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ˘â‚¬ĹľÄ‚â€žĂ„Äľ"
     }
 
     /// <summary>
     /// Guards against a regression where encoding is incorrectly reset to ASCII when entering a new section.
-    /// Per RFC 8011 §4.1.4, attributes-charset applies to the entire message, not just the operation section.
-    /// A non-ASCII text attribute (e.g. job-name "Ä") in the job-attributes section must be decoded
+    /// Per RFC 8011 Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€žĂ„ÄľĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ˘â‚¬Â¦Ă„â€šĂ˘â‚¬Ä…Ä‚ËĂ˘â€šÂ¬Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬Ă‚Â¦Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ˘â‚¬Â¦Ă„â€šĂ˘â‚¬Ä…Ä‚ËĂ˘â€šÂ¬Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â§4.1.4, attributes-charset applies to the entire message, not just the operation section.
+    /// A non-ASCII text attribute (e.g. job-name "Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ˘â‚¬Â¦Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬Ă‚Â¦Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€žĂ˘â‚¬Â¦Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ˘â‚¬Â¦Ă„â€šĂ˘â‚¬Ä…Ä‚ËĂ˘â€šÂ¬Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€šĂ‚Â¦Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ˘â‚¬ĹľÄ‚â€žĂ„Äľ") in the job-attributes section must be decoded
     /// using the charset negotiated in operation-attributes, not ASCII.
     /// </summary>
     [TestMethod]
@@ -1690,8 +1759,8 @@ public class IppProtocolTests
         //   operation-attributes-tag (0x01)
         //     attributes-charset = "utf-8"   (Tag.Charset = 0x47)
         //   job-attributes-tag (0x02)
-        //     job-name = "Ä" in UTF-8         (Tag.NameWithoutLanguage = 0x42)
-        //       "Ä" = 0xC3 0x84 in UTF-8
+        //     job-name = "Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ˘â‚¬Â¦Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬Ă‚Â¦Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€žĂ˘â‚¬Â¦Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ˘â‚¬Â¦Ă„â€šĂ˘â‚¬Ä…Ä‚ËĂ˘â€šÂ¬Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€šĂ‚Â¦Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ˘â‚¬ĹľÄ‚â€žĂ„Äľ" in UTF-8         (Tag.NameWithoutLanguage = 0x42)
+        //       "Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ˘â‚¬Â¦Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬Ă‚Â¦Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€žĂ˘â‚¬Â¦Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ˘â‚¬Â¦Ă„â€šĂ˘â‚¬Ä…Ä‚ËĂ˘â€šÂ¬Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€šĂ‚Â¦Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ˘â‚¬ĹľÄ‚â€žĂ„Äľ" = 0xC3 0x84 in UTF-8
         //   end-of-attributes-tag (0x03)
         var bytes = new byte[]
         {
@@ -1709,7 +1778,7 @@ public class IppProtocolTests
             0x00, 0x08,                                       // name length: 8
             0x6A, 0x6F, 0x62, 0x2D, 0x6E, 0x61, 0x6D, 0x65, // "job-name"
             0x00, 0x02,                                       // value length: 2
-            0xC3, 0x84,                                       // "Ä" in UTF-8
+            0xC3, 0x84,                                       // "Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ˘â‚¬Â¦Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬Ă‚Â¦Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€žĂ˘â‚¬Â¦Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ˘â‚¬Â¦Ă„â€šĂ˘â‚¬Ä…Ä‚ËĂ˘â€šÂ¬Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€šĂ‚Â¦Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ˘â‚¬ĹľÄ‚â€žĂ„Äľ" in UTF-8
             0x03                                              // end-of-attributes-tag
         };
         var protocol = new IppProtocol();
@@ -1722,11 +1791,11 @@ public class IppProtocolTests
         result.JobAttributes.Should().HaveCount(1);
         result.JobAttributes[0].Should().ContainSingle();
         result.JobAttributes[0][0].Name.Should().Be(IppAttributeNames.JobName);
-        result.JobAttributes[0][0].Value.Should().Be("\u00C4"); // "Ä"
+        result.JobAttributes[0][0].Value.Should().Be("\u00C4"); // "Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ˘â‚¬Â¦Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬Ă‚Â¦Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ä‚â€žĂ„â€¦Ä‚â€ąĂ˘â‚¬Ë‡Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€žĂ˘â‚¬Â¦Ä‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬Ă„â€¦Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚ÂĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚â€žĂ˘â‚¬Â¦Ă„â€šĂ˘â‚¬Ä…Ä‚ËĂ˘â€šÂ¬Ă‹â€ˇĂ„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬ĹˇÄ‚â€šĂ‚Â¬Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ä‚â€šĂ‚Â¦Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă„ÄľÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ˘â‚¬ĹľÄ‚â€žĂ„Äľ"
     }
 
     [TestMethod]
-    public void GetNormalizedName_PrevMember_NameIsValue()
+    public async Task GetNormalizedName_PrevMember_NameIsValue()
     {
         var prevAttribute = new IppAttribute(Tag.MemberAttrName, "", "member-name");
         var name = IppProtocol.GetNormalizedName(Tag.Integer, "", prevAttribute, null);
@@ -1734,7 +1803,7 @@ public class IppProtocolTests
     }
 
     [TestMethod]
-    public void GetNormalizedName_EndCollection_TakesPrevBegCollectionName()
+    public async Task GetNormalizedName_EndCollection_TakesPrevBegCollectionName()
     {
         var prevAttribute = new IppAttribute(Tag.EndCollection, "", NoValue.Instance);
         var prevBeg = new IppAttribute(Tag.BegCollection, "collection-name", NoValue.Instance);
@@ -1848,49 +1917,49 @@ public class IppProtocolTests
     }
 
     [TestMethod]
-    public void ReadSections_WithNonCountingStream_Response_ShouldNotThrow()
+    public async Task ReadSections_WithNonCountingStream_Response_ShouldNotThrow()
     {
         // Arrange
         var protocol = new IppProtocol { MaxMessageAttributesBytes = 100 };
         // Empty operation attributes section (0x01, 0x03)
         using var ms = new MemoryStream(new byte[] { 0x01, 0x03 });
-        using var reader = new BinaryReader(ms);
+        using var reader = new IppBinaryReader(ms);
         var response = new IppResponseMessage();
 
         // Act
-        var method = typeof(IppProtocol).GetMethod("ReadSections", 
+        var method = typeof(IppProtocol).GetMethod("ReadSectionsAsync", 
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance,
             null,
-            new[] { typeof(BinaryReader), typeof(IIppResponseMessage) },
+            new[] { typeof(IppBinaryReader), typeof(IIppResponseMessage), typeof(System.Threading.CancellationToken) },
             null);
         
-        Action act = () => method!.Invoke(protocol, new object[] { reader, response });
+        Func<Task> act = async () => await (Task)method!.Invoke(protocol, new object[] { reader, response, System.Threading.CancellationToken.None })!;
 
         // Assert
-        act.Should().NotThrow();
+        await act.Should().NotThrowAsync();
     }
 
     [TestMethod]
-    public void ReadSections_WithNonCountingStream_Request_ShouldNotThrow()
+    public async Task ReadSections_WithNonCountingStream_Request_ShouldNotThrow()
     {
         // Arrange
         var protocol = new IppProtocol { MaxMessageAttributesBytes = 100 };
         // Empty operation attributes section (0x01, 0x03)
         using var ms = new MemoryStream(new byte[] { 0x01, 0x03 });
-        using var reader = new BinaryReader(ms);
+        using var reader = new IppBinaryReader(ms);
         var request = new IppRequestMessage();
 
         // Act
-        var method = typeof(IppProtocol).GetMethod("ReadSections", 
+        var method = typeof(IppProtocol).GetMethod("ReadSectionsAsync", 
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance,
             null,
-            new[] { typeof(BinaryReader), typeof(IIppRequestMessage) },
+            new[] { typeof(IppBinaryReader), typeof(IIppRequestMessage), typeof(System.Threading.CancellationToken) },
             null);
         
-        Action act = () => method!.Invoke(protocol, new object[] { reader, request });
+        Func<Task> act = async () => await (Task)method!.Invoke(protocol, new object[] { reader, request, System.Threading.CancellationToken.None })!;
 
         // Assert
-        act.Should().NotThrow();
+        await act.Should().NotThrowAsync();
     }
 
     [TestMethod]
@@ -2110,17 +2179,17 @@ public class IppProtocolTests
     [DataRow( Tag.NameWithoutLanguage )]
     [DataRow( Tag.Keyword )]
     [DataRow( Tag.Uri )]
-    public void ReadValue_IncompleteString_ThrowsEndOfStreamException( Tag tag )
+    public async Task ReadValue_IncompleteString_ThrowsEndOfStreamException( Tag tag )
     {
         // Arrange
         var protocol = new IppProtocol();
         // Length prefix is 5, but we only provide 3 bytes of payload
         using MemoryStream memoryStream = new( new byte[] { 0x00, 0x05, 0x41, 0x41, 0x41 } );
-        using BinaryReader binaryReader = new( memoryStream );
+        using IppBinaryReader binaryReader = new( memoryStream );
         // Act
-        Action act = () => protocol.ReadValue( binaryReader, tag );
+        Func<Task> act = async () => await protocol.ReadValueAsync(binaryReader, tag);
         // Assert
-        act.Should().Throw<EndOfStreamException>().WithMessage( "*Unexpected end of stream while reading string*" );
+        (await act.Should().ThrowAsync<EndOfStreamException>()).WithMessage( "*Attempted to read past the end of the stream*" );
     }
 
     [TestMethod]
