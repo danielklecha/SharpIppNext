@@ -1,4 +1,4 @@
-# SharpIppNext Operations
+﻿# SharpIppNext Operations
 
 The `ISharpIppClient` interface currently exposes the following operation methods. Each operation below links to a dedicated example page.
 
@@ -19,8 +19,10 @@ For the PWG 5101.2 (`repertoire-supported`), PWG 5102.4 (`pwg-raster-document-re
 | Acknowledge-Document | `AcknowledgeDocumentAsync` | [AcknowledgeDocument.md](AcknowledgeDocument.md) |
 | Acknowledge-Identify-Printer | `AcknowledgeIdentifyPrinterAsync` | [AcknowledgeIdentifyPrinter.md](AcknowledgeIdentifyPrinter.md) |
 | Acknowledge-Job | `AcknowledgeJobAsync` | [AcknowledgeJob.md](AcknowledgeJob.md) |
+| Activate-Printer | `ActivatePrinterAsync` | [ActivatePrinter.md](ActivatePrinter.md) |
 | Add-Document-Images | `AddDocumentImagesAsync` | [AddDocumentImages.md](AddDocumentImages.md) |
 | Allocate-Printer-Resources | `AllocatePrinterResourcesAsync` | [AllocatePrinterResources.md](AllocatePrinterResources.md) |
+| Cancel-Current-Job | `CancelCurrentJobAsync` | [CancelCurrentJob.md](CancelCurrentJob.md) |
 | Cancel-Document | `CancelDocumentAsync` | [CancelDocument.md](CancelDocument.md) |
 | Cancel-Job | `CancelJobAsync` | [CancelJob.md](CancelJob.md) |
 | Cancel-Jobs | `CancelJobsAsync` | [CancelJobs.md](CancelJobs.md) |
@@ -29,17 +31,22 @@ For the PWG 5101.2 (`repertoire-supported`), PWG 5102.4 (`pwg-raster-document-re
 | Cancel-Subscription | `CancelSubscriptionAsync` | [CancelSubscription.md](CancelSubscription.md) |
 | Close-Job | `CloseJobAsync` | [CloseJob.md](CloseJob.md) |
 | Create-Job | `CreateJobAsync` | [CreateJob.md](CreateJob.md) |
+| Create-Job-Subscriptions | `CreateJobSubscriptionsAsync` | [CreateJobSubscriptions.md](CreateJobSubscriptions.md) |
 | Create-Printer | `CreatePrinterAsync` | [CreatePrinter.md](CreatePrinter.md) |
+| Create-Printer-Subscriptions | `CreatePrinterSubscriptionsAsync` | [CreatePrinterSubscriptions.md](CreatePrinterSubscriptions.md) |
 | Create-Resource | `CreateResourceAsync` | [CreateResource.md](CreateResource.md) |
 | Create-Resource-Subscriptions | `CreateResourceSubscriptionsAsync` | [CreateResourceSubscriptions.md](CreateResourceSubscriptions.md) |
 | Create-System-Subscriptions | `CreateSystemSubscriptionsAsync` | [CreateSystemSubscriptions.md](CreateSystemSubscriptions.md) |
 | CUPS-Get-Printers | `GetCUPSPrintersAsync` | [CUPSGetPrinters.md](CUPSGetPrinters.md) |
+| Deactivate-Printer | `DeactivatePrinterAsync` | [DeactivatePrinter.md](DeactivatePrinter.md) |
 | Deallocate-Printer-Resources | `DeallocatePrinterResourcesAsync` | [DeallocatePrinterResources.md](DeallocatePrinterResources.md) |
 | Delete-Document | `DeleteDocumentAsync` | [DeleteDocument.md](DeleteDocument.md) |
 | Delete-Printer | `DeletePrinterAsync` | [DeletePrinter.md](DeletePrinter.md) |
-| Disable-All-Printers | `DisableAllPrintersAsync` | [DisableAllPrinters.md](DisableAllPrinters.md) |
 | Deregister-Output-Device | `DeregisterOutputDeviceAsync` | [DeregisterOutputDevice.md](DeregisterOutputDevice.md) |
+| Disable-All-Printers | `DisableAllPrintersAsync` | [DisableAllPrinters.md](DisableAllPrinters.md) |
+| Disable-Printer | `DisablePrinterAsync` | [DisablePrinter.md](DisablePrinter.md) |
 | Enable-All-Printers | `EnableAllPrintersAsync` | [EnableAllPrinters.md](EnableAllPrinters.md) |
+| Enable-Printer | `EnablePrinterAsync` | [EnablePrinter.md](EnablePrinter.md) |
 | Fetch-Document | `FetchDocumentAsync` | [FetchDocument.md](FetchDocument.md) |
 | Fetch-Job | `FetchJobAsync` | [FetchJob.md](FetchJob.md) |
 | Get-Document-Attributes | `GetDocumentAttributesAsync` | [GetDocumentAttributes.md](GetDocumentAttributes.md) |
@@ -52,6 +59,7 @@ For the PWG 5101.2 (`repertoire-supported`), PWG 5102.4 (`pwg-raster-document-re
 | Get-Printer-Attributes | `GetPrinterAttributesAsync` | [GetPrinterAttributes.md](GetPrinterAttributes.md) |
 | Get-Printer-Resources | `GetPrinterResourcesAsync` | [GetPrinterResources.md](GetPrinterResources.md) |
 | Get-Printers | `GetPrintersAsync` | [GetPrinters.md](GetPrinters.md) |
+| Get-Printer-Supported-Values | `GetPrinterSupportedValuesAsync` | [GetPrinterSupportedValues.md](GetPrinterSupportedValues.md) |
 | Get-Resource-Attributes | `GetResourceAttributesAsync` | [GetResourceAttributes.md](GetResourceAttributes.md) |
 | Get-Resources | `GetResourcesAsync` | [GetResources.md](GetResources.md) |
 | Get-Subscription-Attributes | `GetSubscriptionAttributesAsync` | [GetSubscriptionAttributes.md](GetSubscriptionAttributes.md) |
@@ -60,23 +68,30 @@ For the PWG 5101.2 (`repertoire-supported`), PWG 5102.4 (`pwg-raster-document-re
 | Get-System-Supported-Values | `GetSystemSupportedValuesAsync` | [GetSystemSupportedValues.md](GetSystemSupportedValues.md) |
 | Get-User-Printer-Attributes | `GetUserPrinterAttributesAsync` | [GetUserPrinterAttributes.md](GetUserPrinterAttributes.md) |
 | Hold-Job | `HoldJobAsync` | [HoldJob.md](HoldJob.md) |
+| Hold-New-Jobs | `HoldNewJobsAsync` | [HoldNewJobs.md](HoldNewJobs.md) |
 | Identify-Printer | `IdentifyPrinterAsync` | [IdentifyPrinter.md](IdentifyPrinter.md) |
 | Install-Resource | `InstallResourceAsync` | [InstallResource.md](InstallResource.md) |
 | Pause-All-Printers | `PauseAllPrintersAsync` | [PauseAllPrinters.md](PauseAllPrinters.md) |
 | Pause-All-Printers-After-Current-Job | `PauseAllPrintersAfterCurrentJobAsync` | [PauseAllPrintersAfterCurrentJob.md](PauseAllPrintersAfterCurrentJob.md) |
 | Pause-Printer | `PausePrinterAsync` | [PausePrinter.md](PausePrinter.md) |
+| Pause-Printer-After-Current-Job | `PausePrinterAfterCurrentJobAsync` | [PausePrinterAfterCurrentJob.md](PausePrinterAfterCurrentJob.md) |
 | Print-Job | `PrintJobAsync` | [PrintJob.md](PrintJob.md) |
 | Print-URI | `PrintUriAsync` | [PrintUri.md](PrintUri.md) |
+| Promote-Job | `PromoteJobAsync` | [PromoteJob.md](PromoteJob.md) |
 | Purge-Jobs | `PurgeJobsAsync` | [PurgeJobs.md](PurgeJobs.md) |
 | Register-Output-Device | `RegisterOutputDeviceAsync` | [RegisterOutputDevice.md](RegisterOutputDevice.md) |
+| Release-Held-New-Jobs | `ReleaseHeldNewJobsAsync` | [ReleaseHeldNewJobs.md](ReleaseHeldNewJobs.md) |
 | Release-Job | `ReleaseJobAsync` | [ReleaseJob.md](ReleaseJob.md) |
 | Renew-Subscription | `RenewSubscriptionAsync` | [RenewSubscription.md](RenewSubscription.md) |
 | Restart-Job | `RestartJobAsync` | [RestartJob.md](RestartJob.md) |
 | Restart-One-Printer | `RestartOnePrinterAsync` | [RestartOnePrinter.md](RestartOnePrinter.md) |
+| Restart-Printer | `RestartPrinterAsync` | [RestartPrinter.md](RestartPrinter.md) |
 | Restart-System | `RestartSystemAsync` | [RestartSystem.md](RestartSystem.md) |
 | Resubmit-Job | `ResubmitJobAsync` | [ResubmitJob.md](ResubmitJob.md) |
 | Resume-All-Printers | `ResumeAllPrintersAsync` | [ResumeAllPrinters.md](ResumeAllPrinters.md) |
+| Resume-Job | `ResumeJobAsync` | [ResumeJob.md](ResumeJob.md) |
 | Resume-Printer | `ResumePrinterAsync` | [ResumePrinter.md](ResumePrinter.md) |
+| Schedule-Job-After | `ScheduleJobAfterAsync` | [ScheduleJobAfter.md](ScheduleJobAfter.md) |
 | Send-Document | `SendDocumentAsync` | [SendDocument.md](SendDocument.md) |
 | Send-Resource-Data | `SendResourceDataAsync` | [SendResourceData.md](SendResourceData.md) |
 | Send-URI | `SendUriAsync` | [SendUri.md](SendUri.md) |
@@ -87,8 +102,11 @@ For the PWG 5101.2 (`repertoire-supported`), PWG 5102.4 (`pwg-raster-document-re
 | Set-System-Attributes | `SetSystemAttributesAsync` | [SetSystemAttributes.md](SetSystemAttributes.md) |
 | Shutdown-All-Printers | `ShutdownAllPrintersAsync` | [ShutdownAllPrinters.md](ShutdownAllPrinters.md) |
 | Shutdown-One-Printer | `ShutdownOnePrinterAsync` | [ShutdownOnePrinter.md](ShutdownOnePrinter.md) |
+| Shutdown-Printer | `ShutdownPrinterAsync` | [ShutdownPrinter.md](ShutdownPrinter.md) |
 | Startup-All-Printers | `StartupAllPrintersAsync` | [StartupAllPrinters.md](StartupAllPrinters.md) |
 | Startup-One-Printer | `StartupOnePrinterAsync` | [StartupOnePrinter.md](StartupOnePrinter.md) |
+| Startup-Printer | `StartupPrinterAsync` | [StartupPrinter.md](StartupPrinter.md) |
+| Suspend-Current-Job | `SuspendCurrentJobAsync` | [SuspendCurrentJob.md](SuspendCurrentJob.md) |
 | Update-Active-Jobs | `UpdateActiveJobsAsync` | [UpdateActiveJobs.md](UpdateActiveJobs.md) |
 | Update-Document-Status | `UpdateDocumentStatusAsync` | [UpdateDocumentStatus.md](UpdateDocumentStatus.md) |
 | Update-Job-Status | `UpdateJobStatusAsync` | [UpdateJobStatus.md](UpdateJobStatus.md) |
