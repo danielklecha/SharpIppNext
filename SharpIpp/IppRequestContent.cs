@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -18,6 +19,7 @@ internal class IppRequestContent : HttpContent
     private readonly IIppRequestMessage _request;
     private readonly IIppProtocol _protocol;
     private readonly CancellationToken _cancellationToken;
+    private long? _length;
 
     public IppRequestContent(IIppRequestMessage request, IIppProtocol protocol, CancellationToken cancellationToken)
     {
@@ -34,7 +36,49 @@ internal class IppRequestContent : HttpContent
 
     protected override bool TryComputeLength(out long length)
     {
-        length = -1;
-        return false;
+        if (_length.HasValue)
+        {
+            length = _length.Value;
+            return true;
+        }
+
+        long documentLength = 0;
+        var originalDocument = _request.Document;
+        if (originalDocument != null)
+        {
+            if (!originalDocument.CanSeek)
+            {
+                length = -1;
+                return false;
+            }
+
+            try
+            {
+                documentLength = originalDocument.Length;
+            }
+            catch
+            {
+                length = -1;
+                return false;
+            }
+        }
+
+        try
+        {
+            using var ms = new MemoryStream();
+            var wrappedRequest = new IppRequestMessageFilter(_request);
+            wrappedRequest.ClearProperty(x => x.Document);
+            _protocol.WriteIppRequestAsync(wrappedRequest, ms, CancellationToken.None).GetAwaiter().GetResult();
+            _length = ms.Length + documentLength;
+        }
+        catch
+        {
+            length = -1;
+            return false;
+        }
+
+        length = _length.Value;
+        return true;
     }
+
 }
