@@ -15,5 +15,5 @@ public readonly record struct SystemMandatoryPrinterAttribute(string Value, bool
 
     public override string ToString() => Value;
     public static implicit operator string(SystemMandatoryPrinterAttribute value) => value.Value;
-    public static implicit operator SystemMandatoryPrinterAttribute(string value) => new(value);
+    public static implicit operator SystemMandatoryPrinterAttribute(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

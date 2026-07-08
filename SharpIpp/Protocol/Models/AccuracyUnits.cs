@@ -7,7 +7,7 @@ namespace SharpIpp.Protocol.Models;
 public readonly record struct AccuracyUnits(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
 {
     /// <summary>
-    /// Accuracy measured in micrometers (µm).
+    /// Accuracy measured in micrometers (Âµm).
     /// See: PWG 5100.21-2019 Section 8.1.6.1
     /// </summary>
     public static readonly AccuracyUnits Micrometers = new("um");
@@ -26,5 +26,5 @@ public readonly record struct AccuracyUnits(string Value, bool IsMarked = true, 
 
     public override string ToString() => Value;
     public static implicit operator string(AccuracyUnits value) => value.Value;
-    public static implicit operator AccuracyUnits(string value) => new(value);
+    public static implicit operator AccuracyUnits(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

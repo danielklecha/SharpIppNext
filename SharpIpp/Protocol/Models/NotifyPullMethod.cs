@@ -14,5 +14,5 @@ public readonly record struct NotifyPullMethod(string Value, bool IsMarked = tru
 
     public override string ToString() => Value;
     public static implicit operator string(NotifyPullMethod value) => value.Value;
-    public static implicit operator NotifyPullMethod(string value) => new(value);
+    public static implicit operator NotifyPullMethod(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

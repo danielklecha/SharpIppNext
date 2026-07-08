@@ -8,7 +8,7 @@ namespace SharpIpp.Protocol.Models;
 /// assigned by local administrators.
 /// <para>
 /// Use <see cref="IsMarked"/> to distinguish keyword values (standard) from name values (locally assigned):
-/// <c>IsMarked = true</c> → keyword; <c>IsMarked = false</c> → nameWithoutLanguage.
+/// <c>IsMarked = true</c> â†’ keyword; <c>IsMarked = false</c> â†’ nameWithoutLanguage.
 /// </para>
 /// See: PWG 5100.2-2001 Section 2.1
 /// </summary>
@@ -161,7 +161,7 @@ public readonly record struct OutputBin(string Value, bool IsMarked = true, bool
 
     public override string ToString() => Value;
     public static implicit operator string(OutputBin bin) => bin.Value;
-    public static implicit operator OutputBin(string value) => new(value);
+    public static implicit operator OutputBin(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 
     private static int ValidatePositive(int value, string parameterName)
     {

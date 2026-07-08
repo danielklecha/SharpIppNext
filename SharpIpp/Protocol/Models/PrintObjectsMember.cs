@@ -15,5 +15,5 @@ public readonly record struct PrintObjectsMember(string Value, bool IsMarked = t
 
     public override string ToString() => Value;
     public static implicit operator string(PrintObjectsMember value) => value.Value;
-    public static implicit operator PrintObjectsMember(string value) => new(value);
+    public static implicit operator PrintObjectsMember(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

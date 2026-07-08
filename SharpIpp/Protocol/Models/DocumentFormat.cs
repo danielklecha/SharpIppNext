@@ -42,5 +42,5 @@ public readonly record struct DocumentFormat(string Value, bool IsValue = true) 
 
     public override string ToString() => Value;
     public static implicit operator string(DocumentFormat bin) => bin.Value;
-    public static implicit operator DocumentFormat(string value) => new(value);
+    public static implicit operator DocumentFormat(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

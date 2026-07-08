@@ -26,5 +26,5 @@ public readonly record struct MultipleOperationTimeOutAction(string Value, bool 
 
     public override string ToString() => Value;
     public static implicit operator string(MultipleOperationTimeOutAction value) => value.Value;
-    public static implicit operator MultipleOperationTimeOutAction(string value) => new(value);
+    public static implicit operator MultipleOperationTimeOutAction(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

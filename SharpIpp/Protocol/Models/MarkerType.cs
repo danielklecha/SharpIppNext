@@ -22,5 +22,5 @@ public readonly record struct MarkerType(string Value, bool IsValue = true) : IS
 
     public override string ToString() => Value;
     public static implicit operator string(MarkerType bin) => bin.Value;
-    public static implicit operator MarkerType(string value) => new(value);
+    public static implicit operator MarkerType(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

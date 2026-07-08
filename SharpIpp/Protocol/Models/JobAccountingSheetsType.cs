@@ -13,5 +13,5 @@ public readonly record struct JobAccountingSheetsType(string Value, bool IsValue
 
     public override string ToString() => Value;
     public static implicit operator string(JobAccountingSheetsType v) => v.Value;
-    public static implicit operator JobAccountingSheetsType(string value) => new(value);
+    public static implicit operator JobAccountingSheetsType(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

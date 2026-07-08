@@ -32,5 +32,5 @@ public readonly record struct PwgRasterDocumentSheetBack(string Value, bool IsMa
 
     public override string ToString() => Value;
     public static implicit operator string(PwgRasterDocumentSheetBack value) => value.Value;
-    public static implicit operator PwgRasterDocumentSheetBack(string value) => new(value);
+    public static implicit operator PwgRasterDocumentSheetBack(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

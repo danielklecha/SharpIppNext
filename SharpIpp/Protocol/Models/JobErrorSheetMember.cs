@@ -17,5 +17,5 @@ public readonly record struct JobErrorSheetMember(string Value, bool IsValue = t
 
     public override string ToString() => Value;
     public static implicit operator string(JobErrorSheetMember value) => value.Value;
-    public static implicit operator JobErrorSheetMember(string value) => new(value);
+    public static implicit operator JobErrorSheetMember(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

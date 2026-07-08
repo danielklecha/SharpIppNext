@@ -53,5 +53,5 @@ public readonly record struct MediaColMember(string Value, bool IsValue = true) 
 
     public override string ToString() => Value;
     public static implicit operator string(MediaColMember value) => value.Value;
-    public static implicit operator MediaColMember(string value) => new(value);
+    public static implicit operator MediaColMember(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

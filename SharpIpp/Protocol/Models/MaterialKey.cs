@@ -8,5 +8,5 @@ public readonly record struct MaterialKey(string Value, bool IsMarked = true, bo
 {
     public override string ToString() => Value;
     public static implicit operator string(MaterialKey value) => value.Value;
-    public static implicit operator MaterialKey(string value) => new(value);
+    public static implicit operator MaterialKey(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

@@ -50,5 +50,5 @@ public readonly record struct JobSheetsType(string Value, bool IsValue = true) :
 
     public override string ToString() => Value;
     public static implicit operator string(JobSheetsType bin) => bin.Value;
-    public static implicit operator JobSheetsType(string value) => new(value);
+    public static implicit operator JobSheetsType(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

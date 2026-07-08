@@ -13,5 +13,5 @@ public readonly record struct PresentOnOff(string Value, bool IsValue = true) : 
 
     public override string ToString() => Value;
     public static implicit operator string(PresentOnOff bin) => bin.Value;
-    public static implicit operator PresentOnOff(string value) => new(value);
+    public static implicit operator PresentOnOff(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

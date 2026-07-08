@@ -13,5 +13,5 @@ public readonly record struct JobErrorSheetType(string Value, bool IsValue = tru
 
     public override string ToString() => Value;
     public static implicit operator string(JobErrorSheetType v) => v.Value;
-    public static implicit operator JobErrorSheetType(string value) => new(value);
+    public static implicit operator JobErrorSheetType(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

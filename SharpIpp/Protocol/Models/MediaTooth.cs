@@ -72,5 +72,5 @@ public readonly record struct MediaTooth(string Value, bool IsValue = true) : IS
 
     public override string ToString() => Value;
     public static implicit operator string(MediaTooth bin) => bin.Value;
-    public static implicit operator MediaTooth(string value) => new(value);
+    public static implicit operator MediaTooth(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

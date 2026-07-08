@@ -38,5 +38,5 @@ public readonly record struct InputSource(string Value, bool IsMarked = true, bo
 
     public override string ToString() => Value;
     public static implicit operator string(InputSource value) => value.Value;
-    public static implicit operator InputSource(string value) => new(value);
+    public static implicit operator InputSource(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

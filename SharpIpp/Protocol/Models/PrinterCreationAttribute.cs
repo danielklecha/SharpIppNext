@@ -15,5 +15,5 @@ public readonly record struct PrinterCreationAttribute(string Value, bool IsMark
 
     public override string ToString() => Value;
     public static implicit operator string(PrinterCreationAttribute value) => value.Value;
-    public static implicit operator PrinterCreationAttribute(string value) => new(value);
+    public static implicit operator PrinterCreationAttribute(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

@@ -23,5 +23,5 @@ public readonly record struct MaterialAmountUnits(string Value, bool IsMarked = 
 
     public override string ToString() => Value;
     public static implicit operator string(MaterialAmountUnits value) => value.Value;
-    public static implicit operator MaterialAmountUnits(string value) => new(value);
+    public static implicit operator MaterialAmountUnits(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

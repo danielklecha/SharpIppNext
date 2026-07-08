@@ -21,5 +21,5 @@ public readonly record struct OutputTrayType(string Value, bool IsValue = true) 
 
     public override string ToString() => Value;
     public static implicit operator string(OutputTrayType bin) => bin.Value;
-    public static implicit operator OutputTrayType(string value) => new(value);
+    public static implicit operator OutputTrayType(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

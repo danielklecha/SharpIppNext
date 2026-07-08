@@ -56,7 +56,7 @@ namespace SharpIpp.Protocol.Models
         public static readonly JobStateReason JobHoldUntilSpecified = new("job-hold-until-specified");
 
         /// <summary>
-        /// RFC 2911 º4.3.8 original value, renamed to <see cref="ResourcesAreNotSupported"/> in RFC 8011 º5.3.8.
+        /// RFC 2911 Âş4.3.8 original value, renamed to <see cref="ResourcesAreNotSupported"/> in RFC 8011 Âş5.3.8.
         /// See: RFC 2911 Section 4.3.8
         /// </summary>
         public static readonly JobStateReason ResourcesAreNotReady = new("resources-are-not-ready");
@@ -497,6 +497,6 @@ namespace SharpIpp.Protocol.Models
 
         public override string ToString() => Value;
         public static implicit operator string(JobStateReason bin) => bin.Value;
-        public static implicit operator JobStateReason(string value) => new(value);
+        public static implicit operator JobStateReason(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
     }
 }

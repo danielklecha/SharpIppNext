@@ -71,5 +71,5 @@ public readonly record struct MaterialType(string Value, bool IsMarked = true, b
 
     public override string ToString() => Value;
     public static implicit operator string(MaterialType value) => value.Value;
-    public static implicit operator MaterialType(string value) => new(value);
+    public static implicit operator MaterialType(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

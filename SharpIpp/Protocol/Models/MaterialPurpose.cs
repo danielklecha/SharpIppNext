@@ -23,5 +23,5 @@ public readonly record struct MaterialPurpose(string Value, bool IsMarked = true
 
     public override string ToString() => Value;
     public static implicit operator string(MaterialPurpose value) => value.Value;
-    public static implicit operator MaterialPurpose(string value) => new(value);
+    public static implicit operator MaterialPurpose(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

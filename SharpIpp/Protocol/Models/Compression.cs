@@ -34,5 +34,5 @@ public readonly record struct Compression(string Value, bool IsValue = true) : I
 
     public override string ToString() => Value;
     public static implicit operator string(Compression bin) => bin.Value;
-    public static implicit operator Compression(string value) => new(value);
+    public static implicit operator Compression(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

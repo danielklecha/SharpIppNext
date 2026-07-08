@@ -15,5 +15,5 @@ public readonly record struct SystemTimeSourceConfigured(string Value, bool IsMa
 
     public override string ToString() => Value;
     public static implicit operator string(SystemTimeSourceConfigured value) => value.Value;
-    public static implicit operator SystemTimeSourceConfigured(string value) => new(value);
+    public static implicit operator SystemTimeSourceConfigured(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

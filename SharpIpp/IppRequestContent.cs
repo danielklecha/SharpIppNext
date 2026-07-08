@@ -19,6 +19,7 @@ internal class IppRequestContent : HttpContent
     private readonly IIppRequestMessage _request;
     private readonly IIppProtocol _protocol;
     private readonly CancellationToken _cancellationToken;
+    private readonly long _originalDocumentPosition;
     private long? _length;
 
     public IppRequestContent(IIppRequestMessage request, IIppProtocol protocol, CancellationToken cancellationToken)
@@ -27,10 +28,32 @@ internal class IppRequestContent : HttpContent
         _protocol = protocol;
         _cancellationToken = cancellationToken;
         Headers.ContentType = new MediaTypeHeaderValue("application/ipp");
+        if (_request.Document != null && _request.Document.CanSeek)
+        {
+            try
+            {
+                _originalDocumentPosition = _request.Document.Position;
+            }
+            catch
+            {
+                _originalDocumentPosition = 0;
+            }
+        }
     }
 
     protected override Task SerializeToStreamAsync(Stream stream, TransportContext? context)
     {
+        if (_request.Document != null && _request.Document.CanSeek)
+        {
+            try
+            {
+                _request.Document.Position = _originalDocumentPosition;
+            }
+            catch
+            {
+                // ignore
+            }
+        }
         return _protocol.WriteIppRequestAsync(_request, stream, _cancellationToken);
     }
 
@@ -54,7 +77,7 @@ internal class IppRequestContent : HttpContent
 
             try
             {
-                documentLength = originalDocument.Length;
+                documentLength = System.Math.Max(0L, originalDocument.Length - _originalDocumentPosition);
             }
             catch
             {

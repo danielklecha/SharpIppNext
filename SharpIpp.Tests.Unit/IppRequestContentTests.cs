@@ -184,4 +184,66 @@ public class IppRequestContentTests
         // Assert
         Assert.IsNull(contentLength);
     }
+
+    [TestMethod]
+    public void Constructor_WhenDocumentPositionThrows_FallsBackToZero()
+    {
+        // Arrange
+        var requestMock = new Mock<IIppRequestMessage>();
+        var streamMock = new Mock<Stream>();
+        streamMock.SetupGet(x => x.CanSeek).Returns(true);
+        streamMock.SetupGet(x => x.Position).Throws(new System.Exception("Simulated Position exception"));
+        requestMock.SetupGet(x => x.Document).Returns(streamMock.Object);
+
+        var protocolMock = new Mock<IIppProtocol>();
+        protocolMock
+            .Setup(x => x.WriteIppRequestAsync(It.IsAny<IIppRequestMessage>(), It.IsAny<Stream>(), It.IsAny<CancellationToken>()))
+            .Returns((IIppRequestMessage req, Stream stream, CancellationToken token) =>
+            {
+                stream.Write(new byte[15], 0, 15);
+                return Task.CompletedTask;
+            });
+
+        // Act
+        streamMock.SetupGet(x => x.Length).Returns(50);
+        using var content = new IppRequestContent(requestMock.Object, protocolMock.Object, CancellationToken.None);
+        var contentLength = content.Headers.ContentLength;
+
+        // Assert
+        Assert.IsNotNull(contentLength);
+        Assert.AreEqual(65, contentLength.Value);
+    }
+
+    [TestMethod]
+    public async Task SerializeToStreamAsync_WhenDocumentPositionSetThrows_StillSucceedsSerialization()
+    {
+        // Arrange
+        var requestMock = new Mock<IIppRequestMessage>();
+        var streamMock = new Mock<Stream>();
+        streamMock.SetupGet(x => x.CanSeek).Returns(true);
+        streamMock.SetupGet(x => x.Position).Returns(0);
+        streamMock.SetupSet(x => x.Position = It.IsAny<long>()).Throws(new System.Exception("Simulated Position set exception"));
+        requestMock.SetupGet(x => x.Document).Returns(streamMock.Object);
+
+        var protocolMock = new Mock<IIppProtocol>();
+        var writeCalled = false;
+        protocolMock
+            .Setup(x => x.WriteIppRequestAsync(It.IsAny<IIppRequestMessage>(), It.IsAny<Stream>(), It.IsAny<CancellationToken>()))
+            .Returns((IIppRequestMessage req, Stream stream, CancellationToken token) =>
+            {
+                writeCalled = true;
+                stream.Write(new byte[10], 0, 10);
+                return Task.CompletedTask;
+            });
+
+        using var content = new IppRequestContent(requestMock.Object, protocolMock.Object, CancellationToken.None);
+
+        // Act
+        using var ms = new MemoryStream();
+        await content.CopyToAsync(ms);
+
+        // Assert
+        Assert.IsTrue(writeCalled);
+        Assert.AreEqual(10, ms.Length);
+    }
 }

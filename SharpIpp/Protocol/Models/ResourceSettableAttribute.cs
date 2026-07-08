@@ -13,5 +13,5 @@ public readonly record struct ResourceSettableAttribute(string Value, bool IsMar
 
     public override string ToString() => Value;
     public static implicit operator string(ResourceSettableAttribute value) => value.Value;
-    public static implicit operator ResourceSettableAttribute(string value) => new(value);
+    public static implicit operator ResourceSettableAttribute(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

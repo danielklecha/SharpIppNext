@@ -29,5 +29,5 @@ public readonly record struct FinishingsColMember(string Value, bool IsValue = t
 
     public override string ToString() => Value;
     public static implicit operator string(FinishingsColMember value) => value.Value;
-    public static implicit operator FinishingsColMember(string value) => new(value);
+    public static implicit operator FinishingsColMember(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

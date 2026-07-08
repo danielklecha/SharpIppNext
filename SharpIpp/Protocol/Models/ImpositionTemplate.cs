@@ -101,30 +101,30 @@ public readonly record struct ImpositionTemplate(string Value, bool IsMarked = t
     // See: PWG 5100.3-2023 Section 5.2.4 / 11.3
 
     /// <summary>
-    /// Same-up 2-up on 2×3.5 in media.
+    /// Same-up 2-up on 2Ă—3.5 in media.
     /// See: PWG 5100.3-2023 Section 11.3
     /// </summary>
     public static readonly ImpositionTemplate SameUp2x2_3_5x5in = new("same-up_2_2_3.5x5in");
 
     /// <summary>
-    /// Same-up 2-up on 104×148 mm media.
+    /// Same-up 2-up on 104Ă—148 mm media.
     /// See: PWG 5100.3-2023 Section 11.3
     /// </summary>
     public static readonly ImpositionTemplate SameUp2x2_104x148mm = new("same-up_2_2_104x148mm");
 
     /// <summary>
-    /// Same-up 2-up on 105×148 mm media.
+    /// Same-up 2-up on 105Ă—148 mm media.
     /// See: PWG 5100.3-2023 Section 11.3
     /// </summary>
     public static readonly ImpositionTemplate SameUp2x2_105x148mm = new("same-up_2_2_105x148mm");
 
     /// <summary>
-    /// Same-up 4-up on 2×3.5 in media.
+    /// Same-up 4-up on 2Ă—3.5 in media.
     /// See: PWG 5100.3-2023 Section 11.3
     /// </summary>
     public static readonly ImpositionTemplate SameUp4x3_2x3_5in = new("same-up_4_3_2x3.5in");
 
     public override string ToString() => Value;
     public static implicit operator string(ImpositionTemplate bin) => bin.Value;
-    public static implicit operator ImpositionTemplate(string value) => new(value);
+    public static implicit operator ImpositionTemplate(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

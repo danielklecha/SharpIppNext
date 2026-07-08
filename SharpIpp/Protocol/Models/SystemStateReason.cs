@@ -26,5 +26,5 @@ public readonly record struct SystemStateReason(string Value, bool IsMarked = tr
 
     public override string ToString() => Value;
     public static implicit operator string(SystemStateReason value) => value.Value;
-    public static implicit operator SystemStateReason(string value) => new(value);
+    public static implicit operator SystemStateReason(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

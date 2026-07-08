@@ -26,5 +26,5 @@ public readonly record struct CoatingSides(string Value, bool IsValue = true) : 
 
     public override string ToString() => Value;
     public static implicit operator string(CoatingSides bin) => bin.Value;
-    public static implicit operator CoatingSides(string value) => new(value);
+    public static implicit operator CoatingSides(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

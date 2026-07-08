@@ -13,5 +13,5 @@ public readonly record struct FinisherSupplyClass(string Value, bool IsValue = t
 
     public override string ToString() => Value;
     public static implicit operator string(FinisherSupplyClass bin) => bin.Value;
-    public static implicit operator FinisherSupplyClass(string value) => new(value);
+    public static implicit operator FinisherSupplyClass(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

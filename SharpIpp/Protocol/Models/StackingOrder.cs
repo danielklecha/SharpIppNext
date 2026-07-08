@@ -11,5 +11,5 @@ public readonly record struct StackingOrder(string Value, bool IsValue = true) :
 
     public override string ToString() => Value;
     public static implicit operator string(StackingOrder bin) => bin.Value;
-    public static implicit operator StackingOrder(string value) => new(value);
+    public static implicit operator StackingOrder(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

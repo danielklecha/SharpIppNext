@@ -10,5 +10,5 @@ public readonly record struct OutputDevice(string Value, bool IsValue = true) : 
 {
     public override string ToString() => Value;
     public static implicit operator string(OutputDevice device) => device.Value;
-    public static implicit operator OutputDevice(string value) => new(value);
+    public static implicit operator OutputDevice(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

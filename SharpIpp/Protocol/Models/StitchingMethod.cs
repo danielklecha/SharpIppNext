@@ -26,5 +26,5 @@ public readonly record struct StitchingMethod(string Value, bool IsValue = true)
 
     public override string ToString() => Value;
     public static implicit operator string(StitchingMethod bin) => bin.Value;
-    public static implicit operator StitchingMethod(string value) => new(value);
+    public static implicit operator StitchingMethod(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

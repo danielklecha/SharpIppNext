@@ -42,5 +42,5 @@ public readonly record struct NaturalLanguage(string Value, bool IsValue = true)
 
     public override string ToString() => Value;
     public static implicit operator string(NaturalLanguage bin) => bin.Value;
-    public static implicit operator NaturalLanguage(string value) => new(value);
+    public static implicit operator NaturalLanguage(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

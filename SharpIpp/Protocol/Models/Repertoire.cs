@@ -23,5 +23,5 @@ public readonly record struct Repertoire(string Value, bool IsMarked = true, boo
 
     public override string ToString() => Value;
     public static implicit operator string(Repertoire val) => val.Value;
-    public static implicit operator Repertoire(string value) => new(value);
+    public static implicit operator Repertoire(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

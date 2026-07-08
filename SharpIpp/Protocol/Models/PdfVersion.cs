@@ -49,5 +49,5 @@ public readonly record struct PdfVersion(string Value, bool IsValue = true) : IS
 
     public override string ToString() => Value;
     public static implicit operator string(PdfVersion value) => value.Value;
-    public static implicit operator PdfVersion(string value) => new(value);
+    public static implicit operator PdfVersion(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

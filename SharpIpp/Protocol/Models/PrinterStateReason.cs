@@ -3712,5 +3712,5 @@ public readonly record struct PrinterStateReason(string Value, bool IsValue = tr
 
     public override string ToString() => Value;
     public static implicit operator string(PrinterStateReason bin) => bin.Value;
-    public static implicit operator PrinterStateReason(string value) => new(value);
+    public static implicit operator PrinterStateReason(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

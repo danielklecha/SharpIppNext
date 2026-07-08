@@ -15,5 +15,5 @@ public readonly record struct JobSheetsColMember(string Value, bool IsValue = tr
 
     public override string ToString() => Value;
     public static implicit operator string(JobSheetsColMember value) => value.Value;
-    public static implicit operator JobSheetsColMember(string value) => new(value);
+    public static implicit operator JobSheetsColMember(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

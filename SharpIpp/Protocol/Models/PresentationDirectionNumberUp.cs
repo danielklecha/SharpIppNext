@@ -56,5 +56,5 @@ public readonly record struct PresentationDirectionNumberUp(string Value, bool I
 
     public override string ToString() => Value;
     public static implicit operator string(PresentationDirectionNumberUp bin) => bin.Value;
-    public static implicit operator PresentationDirectionNumberUp(string value) => new(value);
+    public static implicit operator PresentationDirectionNumberUp(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

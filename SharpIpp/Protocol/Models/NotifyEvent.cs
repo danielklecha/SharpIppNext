@@ -193,5 +193,5 @@ public readonly record struct NotifyEvent(string Value, bool IsMarked = true, bo
 
     public override string ToString() => Value;
     public static implicit operator string(NotifyEvent value) => value.Value;
-    public static implicit operator NotifyEvent(string value) => new(value);
+    public static implicit operator NotifyEvent(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

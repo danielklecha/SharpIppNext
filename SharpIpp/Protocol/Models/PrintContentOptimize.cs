@@ -38,5 +38,5 @@ public readonly record struct PrintContentOptimize(string Value, bool IsValue = 
 
     public override string ToString() => Value;
     public static implicit operator string(PrintContentOptimize bin) => bin.Value;
-    public static implicit operator PrintContentOptimize(string value) => new(value);
+    public static implicit operator PrintContentOptimize(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

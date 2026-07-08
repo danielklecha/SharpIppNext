@@ -327,5 +327,5 @@ public readonly record struct FinishingTemplate(string Value, bool IsMarked = tr
 
     public override string ToString() => Value;
     public static implicit operator string(FinishingTemplate bin) => bin.Value;
-    public static implicit operator FinishingTemplate(string value) => new(value);
+    public static implicit operator FinishingTemplate(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

@@ -34,5 +34,5 @@ public readonly record struct PrinterSupplyType(string Value, bool IsValue = tru
 
     public override string ToString() => Value;
     public static implicit operator string(PrinterSupplyType bin) => bin.Value;
-    public static implicit operator PrinterSupplyType(string value) => new(value);
+    public static implicit operator PrinterSupplyType(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

@@ -26,5 +26,5 @@ public readonly record struct CoverMember(string Value, bool IsValue = true) : I
 
     public override string ToString() => Value;
     public static implicit operator string(CoverMember value) => value.Value;
-    public static implicit operator CoverMember(string value) => new(value);
+    public static implicit operator CoverMember(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

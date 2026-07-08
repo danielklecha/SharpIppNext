@@ -17,5 +17,5 @@ public readonly record struct InsertSheetMember(string Value, bool IsValue = tru
 
     public override string ToString() => Value;
     public static implicit operator string(InsertSheetMember value) => value.Value;
-    public static implicit operator InsertSheetMember(string value) => new(value);
+    public static implicit operator InsertSheetMember(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

@@ -18,5 +18,5 @@ public readonly record struct DocumentDigitalSignature(string Value, bool IsValu
 
     public override string ToString() => Value;
     public static implicit operator string(DocumentDigitalSignature value) => value.Value;
-    public static implicit operator DocumentDigitalSignature(string value) => new(value);
+    public static implicit operator DocumentDigitalSignature(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

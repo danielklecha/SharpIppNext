@@ -60,6 +60,6 @@ namespace SharpIpp.Protocol.Models
 
         public override string ToString() => Value;
         public static implicit operator string(UriScheme bin) => bin.Value;
-        public static implicit operator UriScheme(string value) => new(value);
+        public static implicit operator UriScheme(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
     }
 }

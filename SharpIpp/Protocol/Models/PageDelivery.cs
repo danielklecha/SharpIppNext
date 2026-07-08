@@ -38,5 +38,5 @@ public readonly record struct PageDelivery(string Value, bool IsValue = true) : 
 
     public override string ToString() => Value;
     public static implicit operator string(PageDelivery bin) => bin.Value;
-    public static implicit operator PageDelivery(string value) => new(value);
+    public static implicit operator PageDelivery(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

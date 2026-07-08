@@ -38,5 +38,5 @@ public readonly record struct CoverSheetInfoMember(string Value, bool IsMarked =
 
     public override string ToString() => Value;
     public static implicit operator string(CoverSheetInfoMember value) => value.Value;
-    public static implicit operator CoverSheetInfoMember(string value) => new(value);
+    public static implicit operator CoverSheetInfoMember(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

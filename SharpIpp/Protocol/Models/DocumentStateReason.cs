@@ -182,6 +182,6 @@ namespace SharpIpp.Protocol.Models
 
         public override string ToString() => Value;
         public static implicit operator string(DocumentStateReason bin) => bin.Value;
-        public static implicit operator DocumentStateReason(string value) => new(value);
+        public static implicit operator DocumentStateReason(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
     }
 }

@@ -11,5 +11,5 @@ public readonly record struct FeedOrientation(string Value, bool IsValue = true)
 
     public override string ToString() => Value;
     public static implicit operator string(FeedOrientation bin) => bin.Value;
-    public static implicit operator FeedOrientation(string value) => new(value);
+    public static implicit operator FeedOrientation(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

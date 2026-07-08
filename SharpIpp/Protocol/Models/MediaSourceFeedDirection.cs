@@ -20,5 +20,5 @@ public readonly record struct MediaSourceFeedDirection(string Value, bool IsValu
 
     public override string ToString() => Value;
     public static implicit operator string(MediaSourceFeedDirection bin) => bin.Value;
-    public static implicit operator MediaSourceFeedDirection(string value) => new(value);
+    public static implicit operator MediaSourceFeedDirection(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

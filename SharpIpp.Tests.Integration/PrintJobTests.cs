@@ -8,6 +8,12 @@ using SharpIpp.Protocol.Models;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text;
+using Moq;
+using Moq.Protected;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using FluentAssertions;
 
 namespace SharpIpp.Tests.Integration;
 
@@ -326,4 +332,41 @@ public class PrintJobTests : SharpIppIntegrationTestBase
         _ = await client.PrintJobAsync(clientRequest);
         serverRequest.As<PrintJobRequest>().Document.Should().BeSameAs(Stream.Null);
     }
+
+    [TestMethod]
+    public async Task PrintJobAsync_WithRedirect_SuccessfullySendsDocumentOnRedirectedRequest()
+    {
+        var printerUri = new Uri("http://127.0.0.1:631/ipp");
+        byte[] documentData = [1, 2, 3, 4, 5];
+        using var documentStream = new MemoryStream(documentData);
+        
+        var request = new PrintJobRequest
+        {
+            OperationAttributes = new PrintJobOperationAttributes
+            {
+                PrinterUri = printerUri,
+            },
+            Document = documentStream
+        };
+
+        var client = new SharpIppClient();
+        var ippRequest = client.CreateRawRequest(request);
+        
+        var content = new IppRequestContent(ippRequest, new IppProtocol(), CancellationToken.None);
+        
+        var hasLength = content.Headers.ContentLength.HasValue;
+        hasLength.Should().BeTrue();
+        var expectedLength = content.Headers.ContentLength!.Value;
+
+        using var ms1 = new MemoryStream();
+        await content.CopyToAsync(ms1);
+        ms1.Length.Should().Be(expectedLength);
+
+        using var ms2 = new MemoryStream();
+        await content.CopyToAsync(ms2);
+        
+        ms2.Length.Should().Be(expectedLength);
+        ms2.ToArray().Should().Equal(ms1.ToArray());
+    }
 }
+

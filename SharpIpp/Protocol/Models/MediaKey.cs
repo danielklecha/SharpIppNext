@@ -8,5 +8,5 @@ public readonly record struct MediaKey(string Value, bool IsMarked = true, bool 
 {
     public override string ToString() => Value;
     public static implicit operator string(MediaKey bin) => bin.Value;
-    public static implicit operator MediaKey(string value) => new(value);
+    public static implicit operator MediaKey(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

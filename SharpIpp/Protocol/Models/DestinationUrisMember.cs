@@ -32,5 +32,5 @@ public readonly record struct DestinationUrisMember(string Value, bool IsMarked 
 
     public override string ToString() => Value;
     public static implicit operator string(DestinationUrisMember value) => value.Value;
-    public static implicit operator DestinationUrisMember(string value) => new(value);
+    public static implicit operator DestinationUrisMember(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }

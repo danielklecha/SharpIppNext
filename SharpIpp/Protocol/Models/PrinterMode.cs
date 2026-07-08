@@ -32,5 +32,5 @@ public readonly record struct PrinterMode(string Value, bool IsMarked = true, bo
 
     public override string ToString() => Value;
     public static implicit operator string(PrinterMode value) => value.Value;
-    public static implicit operator PrinterMode(string value) => new(value);
+    public static implicit operator PrinterMode(string value) => value is null ? throw new System.ArgumentNullException(nameof(value)) : new(value);
 }
