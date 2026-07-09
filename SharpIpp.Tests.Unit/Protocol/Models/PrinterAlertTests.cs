@@ -54,6 +54,17 @@ public class PrinterAlertTests : MapperTestBase
     }
 
     [TestMethod]
+    public void Parse_WhitespaceAndEmptyValues_ShouldBeSkipped()
+    {
+        var raw = "code=jam;  ;  =val;key=  ; ;";
+
+        var parsed = _mapper.Map<string, PrinterAlert>(raw);
+
+        parsed.Code.Should().Be("jam");
+        parsed.Extensions.Should().BeNull();
+    }
+
+    [TestMethod]
     public void Parse_InvalidInts_ShouldStoreInDictionaryButReturnNullFromTypedProperty()
     {
         var raw = "code=jam;index=abc;groupindex=def;location=ghi;time=jkl";
@@ -74,11 +85,29 @@ public class PrinterAlertTests : MapperTestBase
     }
 
     [TestMethod]
-    public void Parse_MissingCode_ShouldThrow()
+    public void Parse_MissingCode_ShouldNotThrow()
     {
         var raw = "severity=critical";
-        Action act = () => _mapper.Map<string, PrinterAlert>(raw);
-        act.Should().Throw<Exception>();
+        var parsed = _mapper.Map<string, PrinterAlert>(raw);
+        parsed.Code.Should().BeNull();
+        parsed.Severity.Should().Be("critical");
+    }
+
+    [TestMethod]
+    public void Parse_RawCodeWithoutEquals_ShouldParseAsCode()
+    {
+        var raw = "other";
+        var parsed = _mapper.Map<string, PrinterAlert>(raw);
+        parsed.Code.Should().Be("other");
+    }
+
+    [TestMethod]
+    public void Parse_RawCodeWithoutEqualsAndAdditionalElements_ShouldParseCorrectly()
+    {
+        var raw = "other;severity=critical";
+        var parsed = _mapper.Map<string, PrinterAlert>(raw);
+        parsed.Code.Should().Be("other");
+        parsed.Severity.Should().Be("critical");
     }
 
     [TestMethod]
@@ -110,11 +139,11 @@ public class PrinterAlertTests : MapperTestBase
     }
 
     [TestMethod]
-    public void Serialize_MissingCode_ShouldThrow()
+    public void Serialize_MissingCode_ShouldNotThrow()
     {
         var alert = new PrinterAlert { Severity = "critical" };
-        Action act = () => _mapper.Map<PrinterAlert, string>(alert);
-        act.Should().Throw<Exception>();
+        var raw = _mapper.Map<PrinterAlert, string>(alert);
+        raw.Should().Be("severity=critical");
     }
 
     [TestMethod]

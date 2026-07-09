@@ -27,20 +27,30 @@ internal class PrinterAlertProfile : IProfile
 
         var alert = new PrinterAlert();
 
-        var query = value.Split([';'], StringSplitOptions.RemoveEmptyEntries)
-            .Select(x => x.Split(['='], 2))
-            .Where(x => x.Length == 2)
-            .Select(x => new { Key = x[0].Trim(), Value = x[1].Trim() })
-            .Where(x => !string.IsNullOrWhiteSpace(x.Key) && !string.IsNullOrWhiteSpace(x.Value));
-
-        foreach (var row in query)
+        var parts = value.Split([';'], StringSplitOptions.RemoveEmptyEntries);
+        for (int i = 0; i < parts.Length; i++)
         {
-            alert.Dictionary[row.Key] = row.Value;
-        }
+            var part = parts[i].Trim();
+            if (string.IsNullOrWhiteSpace(part))
+                continue;
 
-        if (string.IsNullOrWhiteSpace(alert.Code))
-        {
-            throw new FormatException("The 'code' element is required for printer-alert.");
+            var eqIndex = part.IndexOf('=');
+            if (eqIndex > 0)
+            {
+                var key = part.Substring(0, eqIndex).Trim();
+                var val = part.Substring(eqIndex + 1).Trim();
+                if (!string.IsNullOrWhiteSpace(val))
+                {
+                    alert.Dictionary[key] = val;
+                }
+            }
+            else
+            {
+                if (i == 0 && string.IsNullOrWhiteSpace(alert.Code))
+                {
+                    alert.Code = part;
+                }
+            }
         }
 
         return alert;
@@ -48,11 +58,6 @@ internal class PrinterAlertProfile : IProfile
 
     private static string Serialize(PrinterAlert alert)
     {
-        if (string.IsNullOrWhiteSpace(alert.Code))
-        {
-            throw new FormatException("The 'code' element is required for printer-alert serialization.");
-        }
-
         var sb = new StringBuilder();
         void append(string key, string? value)
         {
@@ -63,7 +68,10 @@ internal class PrinterAlertProfile : IProfile
             sb.Append(key).Append('=').Append(value);
         }
 
-        append("code", alert.Code);
+        if (!string.IsNullOrWhiteSpace(alert.Code))
+        {
+            append("code", alert.Code);
+        }
 
         // Serialize standard keys in a defined order for backward compatibility / cleanliness
         foreach (var key in alert.StandardKeys)
