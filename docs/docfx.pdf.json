@@ -1,0 +1,55 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "src": "../SharpIpp",
+          "files": [
+            "*.csproj"
+          ]
+        }
+      ],
+      "dest": "api"
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "**/*.{md,yml}"
+        ],
+        "exclude": [
+          "_site/**",
+          "filterConfig.yml"
+        ]
+      },
+      {
+        "files": [
+          "CONTRIBUTING.md"
+        ],
+        "src": ".."
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "LICENSE.txt",
+          "THIRD-PARTY-NOTICES.txt"
+        ],
+        "src": ".."
+      }
+    ],
+    "output": "_site",
+    "template": [
+      "default",
+      "modern"
+    ],
+    "globalMetadata": {
+      "_appTitle": "SharpIppNext",
+      "_appFooter": "© Copyright Daniel Klecha",
+      "_enableSearch": true,
+      "pdf": true,
+      "_disableContribution": true
+    }
+  }
+}

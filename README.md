@@ -85,3 +85,5 @@ Contributions are welcome! Please refer to the [CONTRIBUTING.md](CONTRIBUTING.md
 ## License
 
 `SharpIppNext` is provided as-is under the [MIT license](LICENSE.txt).
+
+For details on third-party dependencies and their licenses, see [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt).
