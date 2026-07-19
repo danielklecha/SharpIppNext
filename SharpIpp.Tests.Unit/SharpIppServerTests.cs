@@ -386,6 +386,89 @@ public class SharpIppServerTests
         (await act.Should().NotThrowAsync()).Which.Should().BeEquivalentTo(rawMessage);
     }
 
+    [TestMethod()]
+    public async Task CreateRawResponseAsync_CloseJobResponse_ShouldBeMapped()
+    {
+        // Arrange
+        Mock<IIppProtocol> ippProtocol = new();
+        SharpIppServer server = new(ippProtocol.Object);
+        var message = new CloseJobResponse
+        {
+            RequestId = 123,
+            StatusCode = IppStatusCode.SuccessfulOk,
+            JobAttributes = new()
+            {
+                JobId = 234,
+                JobState = JobState.Pending,
+                JobStateReasons = [JobStateReason.None]
+            }
+        };
+        var rawMessage = new IppResponseMessage
+        {
+            RequestId = 123
+        };
+        var operationAttrs = new List<IppAttribute>
+        {
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en")
+        };
+        rawMessage.OperationAttributes.Add(operationAttrs);
+        var jobAttrs = new List<IppAttribute>
+        {
+            new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 234),
+            new IppAttribute(Tag.Enum, IppAttributeNames.JobState, (int)JobState.Pending),
+            new IppAttribute(Tag.Keyword, IppAttributeNames.JobStateReasons, "none")
+        };
+        rawMessage.JobAttributes.Add(jobAttrs);
+        // Act
+        Func<Task<IIppResponseMessage>> act = () => server.CreateRawResponseAsync(message);
+        // Assert
+        (await act.Should().NotThrowAsync()).Which.Should().BeEquivalentTo(rawMessage);
+    }
+
+    [TestMethod()]
+    public async Task CreateRawResponseAsync_ResubmitJobResponse_ShouldBeMapped()
+    {
+        // Arrange
+        Mock<IIppProtocol> ippProtocol = new();
+        SharpIppServer server = new(ippProtocol.Object);
+        var message = new ResubmitJobResponse
+        {
+            RequestId = 123,
+            StatusCode = IppStatusCode.SuccessfulOk,
+            JobAttributes = new()
+            {
+                JobId = 234,
+                JobUri = new Uri("ipp://127.0.0.1:631/234"),
+                JobState = JobState.Pending,
+                JobStateReasons = [JobStateReason.None]
+            }
+        };
+        var rawMessage = new IppResponseMessage
+        {
+            RequestId = 123
+        };
+        var operationAttrs = new List<IppAttribute>
+        {
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en")
+        };
+        rawMessage.OperationAttributes.Add(operationAttrs);
+        var jobAttrs = new List<IppAttribute>
+        {
+            new IppAttribute(Tag.Uri, IppAttributeNames.JobUri, "ipp://127.0.0.1:631/234"),
+            new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 234),
+            new IppAttribute(Tag.Enum, IppAttributeNames.JobState, (int)JobState.Pending),
+            new IppAttribute(Tag.Keyword, IppAttributeNames.JobStateReasons, "none")
+        };
+        rawMessage.JobAttributes.Add(jobAttrs);
+        // Act
+        Func<Task<IIppResponseMessage>> act = () => server.CreateRawResponseAsync(message);
+        // Assert
+        (await act.Should().NotThrowAsync()).Which.Should().BeEquivalentTo(rawMessage);
+    }
+
+
     public static IEnumerable<object[]> ReceiveRequestData
     {
         get

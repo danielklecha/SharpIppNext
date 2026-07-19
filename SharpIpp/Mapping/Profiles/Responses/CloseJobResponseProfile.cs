@@ -12,14 +12,14 @@ internal class CloseJobResponseProfile : IProfile
         mapper.CreateMap<IppResponseMessage, CloseJobResponse>((src, map) =>
         {
             var dst = new CloseJobResponse();
-            map.Map<IppResponseMessage, IIppResponse>(src, dst);
+            map.Map<IppResponseMessage, IIppJobResponse>(src, dst);
             return dst;
         });
 
         mapper.CreateMap<CloseJobResponse, IppResponseMessage>((src, map) =>
         {
             var dst = new IppResponseMessage();
-            map.Map<IIppResponse, IppResponseMessage>(src, dst);
+            map.Map<IIppJobResponse, IppResponseMessage>(src, dst);
             return dst;
         });
     }
