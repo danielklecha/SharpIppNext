@@ -11,8 +11,14 @@ public class GetPrinterResourcesResponse : IppResponse<OperationAttributes> { }
 public class ShutdownOnePrinterResponse : IppResponse<OperationAttributes> { }
 public class StartupOnePrinterResponse : IppResponse<OperationAttributes> { }
 public class RestartOnePrinterResponse : IppResponse<OperationAttributes> { }
-public class CreateResourceSubscriptionsResponse : IppResponse<OperationAttributes> { }
-public class CreateSystemSubscriptionsResponse : IppResponse<OperationAttributes> { }
+public class CreateResourceSubscriptionsResponse : IppResponse<OperationAttributes>
+{
+    public SubscriptionDescriptionAttributes[]? SubscriptionsAttributes { get; set; }
+}
+public class CreateSystemSubscriptionsResponse : IppResponse<OperationAttributes>
+{
+    public SubscriptionDescriptionAttributes[]? SubscriptionsAttributes { get; set; }
+}
 public class DisableAllPrintersResponse : IppResponse<OperationAttributes> { }
 public class EnableAllPrintersResponse : IppResponse<OperationAttributes> { }
 public class PauseAllPrintersResponse : IppResponse<OperationAttributes> { }
@@ -26,8 +32,14 @@ public class StartupAllPrintersResponse : IppResponse<OperationAttributes> { }
 public class CancelResourceResponse : IppResponse<OperationAttributes> { }
 public class CancelSubscriptionResponse : IppResponse<OperationAttributes> { }
 public class GetNotificationsResponse : IppResponse<OperationAttributes> { }
-public class GetSubscriptionAttributesResponse : IppResponse<OperationAttributes> { }
-public class GetSubscriptionsResponse : IppResponse<OperationAttributes> { }
+public class GetSubscriptionAttributesResponse : IppResponse<OperationAttributes>
+{
+    public SubscriptionDescriptionAttributes? SubscriptionAttributes { get; set; }
+}
+public class GetSubscriptionsResponse : IppResponse<OperationAttributes>
+{
+    public SubscriptionDescriptionAttributes[]? SubscriptionsAttributes { get; set; }
+}
 public class RenewSubscriptionResponse : IppResponse<OperationAttributes> { }public class CreateResourceResponse : IppResponse<OperationAttributes> { }
 public class InstallResourceResponse : IppResponse<OperationAttributes> { }
 public class SendResourceDataResponse : IppResponse<OperationAttributes> { }

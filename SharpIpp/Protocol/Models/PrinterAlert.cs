@@ -8,6 +8,12 @@ namespace SharpIpp.Protocol.Models;
 /// <summary>
 /// Structured model for the PWG 5100.9 "printer-alert" octet-string value.
 /// See: PWG 5100.9-2009 Section 5.2.2
+/// <para>
+/// Parsing is intentionally lenient to handle real-world printers that deviate from the
+/// strict ABNF grammar: a bare keyword as the first token (e.g. <c>other;severity=critical</c>)
+/// is accepted and treated as the <c>code</c> value. A missing <c>code</c> element is also
+/// tolerated rather than treated as a hard error.
+/// </para>
 /// </summary>
 public sealed class PrinterAlert : IppStructuredString
 {
@@ -16,7 +22,11 @@ public sealed class PrinterAlert : IppStructuredString
     }
 
     /// <summary>
-    /// Mapped from "code" (required by ABNF in strict mode).
+    /// Mapped from "code".
+    /// This element is REQUIRED by the PWG 5100.9-2009 Section 5.2.1 (Table 5-3) specification.
+    /// The parser accepts a bare keyword as the first token (e.g. <c>coverOpen;severity=critical</c>)
+    /// in addition to the strict <c>code=coverOpen;severity=critical</c> form, to remain robust
+    /// against real-world printers that omit the key name.
     /// </summary>
     public string? Code
     {

@@ -46,7 +46,13 @@ public class GetSubscriptionAttributesTests : SharpIppIntegrationTestBase
             {
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
-                StatusCode = IppStatusCode.SuccessfulOk
+                StatusCode = IppStatusCode.SuccessfulOk,
+                SubscriptionAttributes = new SubscriptionDescriptionAttributes
+                {
+                    NotifySubscriptionId = 1,
+                    NotifyPullMethod = NotifyPullMethod.IppGet,
+                    NotifyEvents = new[] { NotifyEvent.JobCreated }
+                }
             };
             var ms = new MemoryStream();
             await server.SendResponseAsync(serverResponse, ms, c);

@@ -9,7 +9,7 @@ namespace SharpIpp.Models.Requests;
 public class GetPrinterSupportedValuesOperationAttributes : OperationAttributes
 {
     /// <summary>
-    /// The client OPTIONALLY supplies this attribute. The Printer object MUST support this attribute. It is a set of Printer attribute names and/or attribute groups names in whose values the requester is interested
+     /// The client OPTIONALLY supplies this attribute. The Printer object MUST support this attribute. It is a set of Printer attribute names and/or attribute groups names in whose values the requester is interested
     /// See: RFC 8011 Section 3.2.5.1
     /// </summary>
     /// <code>requested-attributes</code>

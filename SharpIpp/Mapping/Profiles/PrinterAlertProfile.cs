@@ -20,6 +20,17 @@ internal class PrinterAlertProfile : IProfile
         mapper.CreateIppMap<PrinterAlert, OctetString>((src, map) => new OctetString(map.Map<byte[]>(src)));
     }
 
+    /// <summary>
+    /// Parses a printer-alert octet-string value into a <see cref="PrinterAlert"/>.
+    /// Parsing is intentionally lenient in two ways that go beyond the strict PWG 5100.9-2009 §5.2.2 ABNF:
+    /// <list type="bullet">
+    ///   <item>A bare keyword as the first token (e.g. <c>coverOpen;severity=critical</c>) is accepted
+    ///   and treated as the <c>code</c> value, to accommodate real-world printers that omit the key name.</item>
+    ///   <item>A missing <c>code</c> element is tolerated rather than treated as a parse error.
+    ///   Per the spec, <c>code</c> is REQUIRED (Table 5-3); callers that need strict validation should
+    ///   check <see cref="PrinterAlert.Code"/> for <see langword="null"/> after parsing.</item>
+    /// </list>
+    /// </summary>
     private static PrinterAlert Parse(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
@@ -46,6 +57,9 @@ internal class PrinterAlertProfile : IProfile
             }
             else
             {
+                // Lenient: accept a bare keyword (no '=') as the first token and treat it as the
+                // 'code' value. Per PWG 5100.9-2009 §5.2.2 the strict ABNF requires "code=<value>",
+                // but some real-world printers emit the code value without the key name.
                 if (i == 0 && string.IsNullOrWhiteSpace(alert.Code))
                 {
                     alert.Code = part;

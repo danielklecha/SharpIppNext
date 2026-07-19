@@ -228,7 +228,16 @@ public class CreateJobSubscriptionsTests : SharpIppIntegrationTestBase
             {
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
-                StatusCode = IppStatusCode.SuccessfulOk
+                StatusCode = IppStatusCode.SuccessfulOk,
+                SubscriptionsAttributes = new[]
+                {
+                    new SubscriptionDescriptionAttributes
+                    {
+                        NotifySubscriptionId = 321,
+                        NotifyPullMethod = NotifyPullMethod.IppGet,
+                        NotifyEvents = new[] { NotifyEvent.JobStateChanged }
+                    }
+                }
             };
             var ms = new MemoryStream();
             await server.SendResponseAsync(serverResponse, ms, c);
@@ -252,5 +261,9 @@ public class CreateJobSubscriptionsTests : SharpIppIntegrationTestBase
         clientResponse.StatusCode.Should().Be(IppStatusCode.SuccessfulOk);
         clientResponse.RequestId.Should().Be(clientRequest.RequestId);
         clientResponse.Version.Should().Be(clientRequest.Version);
+        clientResponse.SubscriptionsAttributes.Should().NotBeNull();
+        clientResponse.SubscriptionsAttributes![0].NotifySubscriptionId.Should().Be(321);
+        clientResponse.SubscriptionsAttributes![0].NotifyPullMethod.Should().Be(NotifyPullMethod.IppGet);
+        clientResponse.SubscriptionsAttributes![0].NotifyEvents.Should().ContainSingle(x => x == NotifyEvent.JobStateChanged);
     }
 }

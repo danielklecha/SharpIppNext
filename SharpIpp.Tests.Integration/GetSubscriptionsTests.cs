@@ -50,6 +50,15 @@ public class GetSubscriptionsTests : SharpIppIntegrationTestBase
                 OperationAttributes = new SharpIpp.Models.Responses.OperationAttributes {
                     AttributesCharset = Charset.Utf8,
                     AttributesNaturalLanguage = NaturalLanguage.En
+                },
+                SubscriptionsAttributes = new[]
+                {
+                    new SubscriptionDescriptionAttributes
+                    {
+                        NotifySubscriptionId = 77,
+                        NotifyPullMethod = NotifyPullMethod.IppGet,
+                        NotifyEvents = new[] { NotifyEvent.SystemConfigChanged }
+                    }
                 }
             };
             var ms = new MemoryStream();
@@ -65,5 +74,9 @@ public class GetSubscriptionsTests : SharpIppIntegrationTestBase
         clientResponse.Version.Should().Be(serverResponse!.Version);
         clientResponse.RequestId.Should().Be(serverResponse.RequestId);
         clientResponse.StatusCode.Should().Be(serverResponse.StatusCode);
+        clientResponse.SubscriptionsAttributes.Should().NotBeNull();
+        clientResponse.SubscriptionsAttributes![0].NotifySubscriptionId.Should().Be(77);
+        clientResponse.SubscriptionsAttributes![0].NotifyPullMethod.Should().Be(NotifyPullMethod.IppGet);
+        clientResponse.SubscriptionsAttributes![0].NotifyEvents.Should().ContainSingle(x => x == NotifyEvent.SystemConfigChanged);
     }
 }

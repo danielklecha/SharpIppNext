@@ -2080,6 +2080,48 @@ namespace SharpIpp.Protocol.Models
         public const string NotifyEventsSupported = "notify-events-supported";
 
         /// <summary>
+        /// notify-events
+        /// See: RFC 3995 Section 5.3.3
+        /// </summary>
+        public const string NotifyEvents = "notify-events";
+
+        /// <summary>
+        /// notify-lease-duration
+        /// See: RFC 3995 Section 5.3.6
+        /// </summary>
+        public const string NotifyLeaseDuration = "notify-lease-duration";
+
+        /// <summary>
+        /// notify-recipient-uri
+        /// See: RFC 3995 Section 5.3.1
+        /// </summary>
+        public const string NotifyRecipientUri = "notify-recipient-uri";
+
+        /// <summary>
+        /// notify-user-data
+        /// See: RFC 3995 Section 5.3.5
+        /// </summary>
+        public const string NotifyUserData = "notify-user-data";
+
+        /// <summary>
+        /// notify-subscriber-user-name
+        /// See: RFC 3995 Section 5.4.6
+        /// </summary>
+        public const string NotifySubscriberUserName = "notify-subscriber-user-name";
+
+        /// <summary>
+        /// notify-charset
+        /// See: RFC 3995 Section 5.3.7
+        /// </summary>
+        public const string NotifyCharset = "notify-charset";
+
+        /// <summary>
+        /// notify-natural-language
+        /// See: RFC 3995 Section 5.3.8
+        /// </summary>
+        public const string NotifyNaturalLanguage = "notify-natural-language";
+
+        /// <summary>
         /// notify-lease-duration-default
         /// See: PWG 5100.22-2025 Section 7.2.13
         /// </summary>
