@@ -14,6 +14,35 @@ public class PrinterAlertProfileTests : MapperTestBase
 {
 
     [TestMethod]
+    public void Map_PrinterAlert_ToString_MapsCorrectly()
+    {
+        // Arrange
+        var alert = new PrinterAlert { Code = "jam", Severity = "critical" };
+        var expectedString = "code=jam;severity=critical";
+
+        // Act
+        var result = _mapper.Map<PrinterAlert, string>(alert);
+
+        // Assert
+        result.Should().Be(expectedString);
+    }
+
+    [TestMethod]
+    public void Map_String_ToPrinterAlert_MapsCorrectly()
+    {
+        // Arrange
+        var alertString = "code=jam;severity=critical";
+
+        // Act
+        var result = _mapper.Map<string, PrinterAlert>(alertString);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Code.Should().Be("jam");
+        result.Severity.Should().Be("critical");
+    }
+
+    [TestMethod]
     public void Map_PrinterAlert_ToByteArray_MapsCorrectly()
     {
         // Arrange

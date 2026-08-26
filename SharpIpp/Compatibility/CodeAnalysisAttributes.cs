@@ -23,6 +23,17 @@ namespace System.Diagnostics.CodeAnalysis
         public DynamicallyAccessedMemberTypes Types { get; }
     }
 
+    [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
+    internal sealed class NotNullWhenAttribute : Attribute
+    {
+        public NotNullWhenAttribute(bool returnValue)
+        {
+            ReturnValue = returnValue;
+        }
+
+        public bool ReturnValue { get; }
+    }
+
     [Flags]
     internal enum DynamicallyAccessedMemberTypes
     {

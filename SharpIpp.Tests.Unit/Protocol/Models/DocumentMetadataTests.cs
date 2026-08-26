@@ -326,4 +326,104 @@ public class DocumentMetadataTests
         metadata.Extensions.Should().BeNull();
         metadata.Title.Should().Be("New Title");
     }
+
+    [TestMethod]
+    public void Parse_FromEnumerable_ShouldParseCorrectly()
+    {
+        var items = new[] { "title=Sample", "creator=Jane", "x-vendor=val" };
+
+        var parsed = DocumentMetadata.Parse(items);
+
+        parsed.Title.Should().Be("Sample");
+        parsed.Creator.Should().Be("Jane");
+        parsed["x-vendor"].Should().Be("val");
+    }
+
+    [TestMethod]
+    public void Parse_FromString_ShouldParseCorrectly()
+    {
+        var raw = "title=Sample;creator=Jane;x-vendor=val";
+
+        var parsed = DocumentMetadata.Parse(raw);
+
+        parsed.Title.Should().Be("Sample");
+        parsed.Creator.Should().Be("Jane");
+        parsed["x-vendor"].Should().Be("val");
+    }
+
+    [TestMethod]
+    public void Parse_Null_ShouldThrow()
+    {
+        Action act1 = () => DocumentMetadata.Parse((IEnumerable<string>)null!);
+        act1.Should().Throw<ArgumentNullException>();
+
+        Action act2 = () => DocumentMetadata.Parse((string)null!);
+        act2.Should().Throw<ArgumentNullException>();
+
+        Action act3 = () => DocumentMetadata.Parse("");
+        act3.Should().Throw<FormatException>();
+    }
+
+    [TestMethod]
+    public void TryParse_ValidInput_ShouldReturnTrue()
+    {
+        DocumentMetadata.TryParse(new[] { "title=Test" }, out var r1).Should().BeTrue();
+        r1.Should().NotBeNull();
+        r1!.Title.Should().Be("Test");
+
+        DocumentMetadata.TryParse("title=Test;creator=Jane", out var r2).Should().BeTrue();
+        r2.Should().NotBeNull();
+        r2!.Title.Should().Be("Test");
+        r2.Creator.Should().Be("Jane");
+    }
+
+    [TestMethod]
+    public void TryParse_NullOrEmpty_ShouldReturnFalse()
+    {
+        DocumentMetadata.TryParse((IEnumerable<string>?)null, out var r1).Should().BeFalse();
+        r1.Should().BeNull();
+
+        DocumentMetadata.TryParse((string?)null, out var r2).Should().BeFalse();
+        r2.Should().BeNull();
+
+        DocumentMetadata.TryParse("", out var r3).Should().BeFalse();
+        r3.Should().BeNull();
+
+        DocumentMetadata.TryParse("   ", out var r4).Should().BeFalse();
+        r4.Should().BeNull();
+    }
+
+    [TestMethod]
+    public void TryParse_WhenExceptionThrown_ShouldReturnFalse()
+    {
+        static IEnumerable<string> ThrowingEnumerable()
+        {
+            yield return "title=Test";
+            throw new InvalidOperationException("Simulated error during enumeration");
+        }
+
+        DocumentMetadata.TryParse(ThrowingEnumerable(), out var r1).Should().BeFalse();
+        r1.Should().BeNull();
+
+        DocumentMetadata.TryParse("   ", out var r2).Should().BeFalse();
+        r2.Should().BeNull();
+
+        DocumentMetadata.TryParse("", out var r3).Should().BeFalse();
+        r3.Should().BeNull();
+    }
+
+    [TestMethod]
+    public void ToString_ShouldJoinKeyValuesWithSemicolon()
+    {
+        var metadata = new DocumentMetadata
+        {
+            Title = "Sample",
+            Creator = "Jane"
+        };
+
+        var str = metadata.ToString();
+
+        str.Should().Contain("title=Sample");
+        str.Should().Contain("creator=Jane");
+    }
 }

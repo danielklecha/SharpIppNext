@@ -150,4 +150,86 @@ public class DocumentMetadata : IppStructuredString
 
         return false;
     }
+
+    /// <summary>
+    /// Parses an enumeration of metadata keyword=value strings into a <see cref="DocumentMetadata"/>.
+    /// </summary>
+    public static DocumentMetadata Parse(IEnumerable<string> values)
+    {
+        if (values == null)
+            throw new ArgumentNullException(nameof(values));
+
+        var metadata = new DocumentMetadata();
+        foreach (var item in values)
+        {
+            if (string.IsNullOrEmpty(item))
+                continue;
+
+            var eqIndex = item.IndexOf('=');
+            if (eqIndex > 0)
+            {
+                var keyword = item.Substring(0, eqIndex);
+                var val = item.Substring(eqIndex + 1);
+                metadata[keyword] = val;
+            }
+        }
+        return metadata;
+    }
+
+    /// <summary>
+    /// Parses a single metadata keyword=value string (or semicolon/newline separated strings) into a <see cref="DocumentMetadata"/>.
+    /// </summary>
+    public static DocumentMetadata Parse(string value)
+    {
+        if (value == null)
+            throw new ArgumentNullException(nameof(value));
+        if (string.IsNullOrWhiteSpace(value))
+            throw new FormatException("Invalid document metadata value: empty string");
+
+        var entries = value.Split([';', '\r', '\n'], StringSplitOptions.RemoveEmptyEntries);
+        return Parse(entries);
+    }
+
+    /// <summary>
+    /// Attempts to parse an enumeration of metadata keyword=value strings into a <see cref="DocumentMetadata"/>.
+    /// </summary>
+    public static bool TryParse(IEnumerable<string>? values, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out DocumentMetadata? result)
+    {
+        result = null;
+        if (values == null)
+            return false;
+
+        try
+        {
+            result = Parse(values);
+            return true;
+        }
+        catch
+        {
+            result = null;
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Attempts to parse a metadata string into a <see cref="DocumentMetadata"/>.
+    /// </summary>
+    public static bool TryParse(string? value, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out DocumentMetadata? result)
+    {
+        result = null;
+        if (value == null)
+            return false;
+
+        try
+        {
+            result = Parse(value);
+            return true;
+        }
+        catch
+        {
+            result = null;
+            return false;
+        }
+    }
+
 }

@@ -26,7 +26,7 @@ public class IppStructuredStringTests
         {
         }
 
-        public override HashSet<string> StandardKeys => new(StringComparer.Ordinal);
+        public override HashSet<string> StandardKeys => new(StringComparer.Ordinal) { "standardKey" };
 
         public string? GetValue(string key) => Get(key);
         public void SetValue(string key, string? val) => Set(key, val);
@@ -119,6 +119,17 @@ public class IppStructuredStringTests
     }
 
     [TestMethod]
+    public void SetDateTimeOffset_WhenValueIsNull_ShouldRemoveKey()
+    {
+        var metadata = new TestMetadata();
+        metadata.SetDateTimeOffsetValue("date", DateTimeOffset.UtcNow);
+        metadata.GetValue("date").Should().NotBeNull();
+
+        metadata.SetDateTimeOffsetValue("date", null);
+        metadata.GetValue("date").Should().BeNull();
+    }
+
+    [TestMethod]
     public void GetUri_WhenUriIsInvalid_ShouldReturnNull()
     {
         // Line 72 coverage: Uri.TryCreate returns false, returns null
@@ -127,6 +138,17 @@ public class IppStructuredStringTests
 
         var result = metadata.GetUriValue("uri");
         result.Should().BeNull();
+    }
+
+    [TestMethod]
+    public void SetUri_WhenValueIsNull_ShouldRemoveKey()
+    {
+        var metadata = new TestMetadata();
+        metadata.SetUriValue("uri", new Uri("http://localhost"));
+        metadata.GetValue("uri").Should().NotBeNull();
+
+        metadata.SetUriValue("uri", null);
+        metadata.GetValue("uri").Should().BeNull();
     }
 
     [TestMethod]
@@ -322,6 +344,19 @@ public class IppStructuredStringTests
     }
 
     [TestMethod]
+    public void GetSmartEnum_WhenTypeIsNotIMarkedSmartEnum_ShouldUseSingleExtraBoolConstructor()
+    {
+        var metadata = new TestMetadata();
+        metadata.SetValue("charset", "utf-8");
+
+        var result = metadata.GetSmartEnumValue<Charset>("charset");
+
+        result.Should().NotBeNull();
+        result!.Value.Value.Should().Be("utf-8");
+        result.Value.IsValue.Should().BeTrue();
+    }
+
+    [TestMethod]
     public void SetSmartEnum_WhenValueIsNull_ShouldRemoveKey()
     {
         // Line 140: null val branch — Dictionary.Remove(key)
@@ -331,5 +366,50 @@ public class IppStructuredStringTests
 
         metadata.SetSmartEnumValue<Charset>("charset", null);
         metadata.GetValue("charset").Should().BeNull();
+    }
+
+    [TestMethod]
+    public void ToString_ShouldReturnSemicolonSeparatedEntries()
+    {
+        var metadata = new TestMetadata();
+        metadata.Add("key1", "val1");
+        metadata.Add("key2", "val2");
+
+        metadata.ToString().Should().Be("key1=val1;key2=val2");
+    }
+
+    [TestMethod]
+    public void Extensions_GetAndSet_ShouldFilterAndManageNonStandardKeys()
+    {
+        var metadata = new TestMetadata();
+        metadata.Extensions.Should().BeNull();
+
+        metadata.SetValue("standardKey", "stdVal");
+        metadata.Extensions.Should().BeNull();
+
+        metadata.SetValue("customKey1", "ext1");
+        metadata.Extensions.Should().NotBeNull();
+        metadata.Extensions!.Should().ContainKey("customKey1").WhoseValue.Should().Be("ext1");
+        metadata.Extensions!.Should().NotContainKey("standardKey");
+
+        metadata.Extensions = new Dictionary<string, string> { { "customKey2", "ext2" } };
+        metadata.Extensions.Should().NotBeNull();
+        metadata.Extensions!.Should().NotContainKey("customKey1");
+        metadata.Extensions!.Should().ContainKey("customKey2").WhoseValue.Should().Be("ext2");
+        metadata.GetValue("standardKey").Should().Be("stdVal");
+
+        metadata.Extensions = null;
+        metadata.Extensions.Should().BeNull();
+        metadata.GetValue("standardKey").Should().Be("stdVal");
+    }
+
+    [TestMethod]
+    public void NoValue_Properties_ShouldBehaveCorrectly()
+    {
+        var metadata = new TestMetadata();
+        ((INoValue)metadata).IsValue.Should().BeTrue();
+
+        ((INoValueWritable)metadata).IsValue = false;
+        ((INoValue)metadata).IsValue.Should().BeFalse();
     }
 }

@@ -169,6 +169,15 @@ public abstract class IppStructuredString : IEnumerable<string>, IIppStructuredS
 
     public abstract HashSet<string> StandardKeys { get; }
 
+    /// <summary>
+    /// Returns the semicolon-separated string representation of key-value pairs.
+    /// Derived classes may override this to implement spec-specific ordering and formatting.
+    /// </summary>
+    public override string ToString()
+    {
+        return string.Join(";", this);
+    }
+
     public IDictionary<string, string>? Extensions
     {
         get
