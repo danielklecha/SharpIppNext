@@ -91,7 +91,12 @@ public partial class SharpIppClient : ISharpIppClient
         var httpRequest = GetHttpRequestMessage( printerUri );
 
         httpRequest.Content = new IppRequestContent(ippRequest, _ippProtocol, cancellationToken);
-        using HttpResponseMessage response = await _httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
+        if (httpRequest.Content.Headers.ContentLength == null)
+        {
+            httpRequest.Headers.TransferEncodingChunked = true;
+        }
+
+        using HttpResponseMessage response = await _httpClient.SendAsync(httpRequest, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
 
         Exception? httpException = null;
 

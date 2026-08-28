@@ -1023,6 +1023,116 @@ public class SharpIppClientTests
         result.Subject.RequestId.Should().Be(123);
     }
 
+    [TestMethod]
+    public async Task SendAsync_NonSeekableDocument_ShouldSetTransferEncodingChunked()
+    {
+        // Arrange
+        HttpRequestMessage? capturedRequest = null;
+        Mock<HttpMessageHandler> handlerMock = new(MockBehavior.Strict);
+        handlerMock
+           .Protected()
+           .Setup<Task<HttpResponseMessage>>(
+              "SendAsync",
+              ItExpr.IsAny<HttpRequestMessage>(),
+              ItExpr.IsAny<CancellationToken>()
+           )
+           .Returns((HttpRequestMessage req, CancellationToken token) =>
+           {
+               capturedRequest = req;
+               return Task.FromResult(new HttpResponseMessage
+               {
+                   StatusCode = HttpStatusCode.OK,
+                   Content = new ByteArrayContent(Array.Empty<byte>()),
+               });
+           })
+           .Verifiable();
+
+        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
+        using SharpIppClient client = new(new HttpClient(handlerMock.Object), protocol.Object);
+
+        using var nonSeekableStream = new NonSeekableStream(new MemoryStream([1, 2, 3, 4]));
+        var request = new PrintJobRequest
+        {
+            RequestId = 123,
+            OperationAttributes = new PrintJobOperationAttributes
+            {
+                PrinterUri = new Uri("ipp://127.0.0.1:631/printers/printer1")
+            },
+            Document = nonSeekableStream
+        };
+
+        // Act
+        await client.PrintJobAsync(request);
+
+        // Assert
+        capturedRequest.Should().NotBeNull();
+        capturedRequest!.Headers.TransferEncodingChunked.Should().BeTrue();
+        capturedRequest.Content!.Headers.ContentLength.Should().BeNull();
+    }
+
+    [TestMethod]
+    public async Task SendAsync_SeekableDocument_ShouldNotSetTransferEncodingChunked()
+    {
+        // Arrange
+        HttpRequestMessage? capturedRequest = null;
+        Mock<HttpMessageHandler> handlerMock = new(MockBehavior.Strict);
+        handlerMock
+           .Protected()
+           .Setup<Task<HttpResponseMessage>>(
+              "SendAsync",
+              ItExpr.IsAny<HttpRequestMessage>(),
+              ItExpr.IsAny<CancellationToken>()
+           )
+           .Returns((HttpRequestMessage req, CancellationToken token) =>
+           {
+               capturedRequest = req;
+               return Task.FromResult(new HttpResponseMessage
+               {
+                   StatusCode = HttpStatusCode.OK,
+                   Content = new ByteArrayContent(Array.Empty<byte>()),
+               });
+           })
+           .Verifiable();
+
+        Mock<IIppProtocol> protocol = GetMockOfIppProtocol();
+        using SharpIppClient client = new(new HttpClient(handlerMock.Object), protocol.Object);
+
+        using var seekableStream = new MemoryStream([1, 2, 3, 4]);
+        var request = new PrintJobRequest
+        {
+            RequestId = 123,
+            OperationAttributes = new PrintJobOperationAttributes
+            {
+                PrinterUri = new Uri("ipp://127.0.0.1:631/printers/printer1")
+            },
+            Document = seekableStream
+        };
+
+        // Act
+        await client.PrintJobAsync(request);
+
+        // Assert
+        capturedRequest.Should().NotBeNull();
+        capturedRequest!.Headers.TransferEncodingChunked.Should().BeNull();
+        capturedRequest.Content!.Headers.ContentLength.Should().NotBeNull();
+    }
+
+    private sealed class NonSeekableStream : Stream
+    {
+        private readonly Stream _inner;
+        public NonSeekableStream(Stream inner) => _inner = inner;
+        public override bool CanRead => _inner.CanRead;
+        public override bool CanSeek => false;
+        public override bool CanWrite => _inner.CanWrite;
+        public override long Length => throw new NotSupportedException();
+        public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
+        public override void Flush() => _inner.Flush();
+        public override int Read(byte[] buffer, int offset, int count) => _inner.Read(buffer, offset, count);
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+        public override void SetLength(long value) => throw new NotSupportedException();
+        public override void Write(byte[] buffer, int offset, int count) => _inner.Write(buffer, offset, count);
+    }
+
     private sealed class TestSharpIppClient : SharpIppClient
     {
         public TestSharpIppClient(HttpClient httpClient, IIppProtocol ippProtocol)
