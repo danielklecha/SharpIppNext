@@ -848,7 +848,7 @@ internal class PrinterDescriptionAttributesProfile : IProfile
             if (src.WhichJobsSupported != null)
                 dic.Add(IppAttributeNames.WhichJobsSupported, src.WhichJobsSupported.Select(x => new IppAttribute(Tag.Keyword, IppAttributeNames.WhichJobsSupported, map.Map<string>(x))).ToArray());
             if (src.PrinterUUID != null)
-                dic.Add(IppAttributeNames.PrinterUUID, new IppAttribute[] { new IppAttribute(Tag.Keyword, IppAttributeNames.PrinterUUID, src.PrinterUUID) });
+                dic.Add(IppAttributeNames.PrinterUUID, new IppAttribute[] { new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUUID, src.PrinterUUID) });
             if (src.PdfVersionsSupported != null)
                 dic.Add(IppAttributeNames.PdfVersionsSupported, src.PdfVersionsSupported.Select(x => new IppAttribute(Tag.Keyword, IppAttributeNames.PdfVersionsSupported, map.Map<string>(x))).ToArray());
             if (src.IppFeaturesSupported != null)
