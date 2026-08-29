@@ -686,5 +686,26 @@ public class PrinterDescriptionAttributesProfileTests
 
         dst.PageRangesSupported.Should().BeTrue();
     }
+
+    [TestMethod]
+    public void Map_PrinterDescriptionAttributes_PrinterUUID_SerializesWithUriTag()
+    {
+        var src = new PrinterDescriptionAttributes
+        {
+            PrinterUUID = "urn:uuid:12345678-1234-1234-1234-123456789abc"
+        };
+
+        var dst = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
+
+        dst.Should().ContainKey(IppAttributeNames.PrinterUUID);
+        dst[IppAttributeNames.PrinterUUID].Should().ContainSingle();
+        dst[IppAttributeNames.PrinterUUID][0].Tag.Should().Be(Tag.Uri);
+        dst[IppAttributeNames.PrinterUUID][0].Value.Should().Be("urn:uuid:12345678-1234-1234-1234-123456789abc");
+
+        var roundTripped = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(dst);
+        roundTripped.PrinterUUID.Should().Be(src.PrinterUUID);
+    }
 }
+
+
 

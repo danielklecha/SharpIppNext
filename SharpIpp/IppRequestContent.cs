@@ -57,6 +57,37 @@ internal class IppRequestContent : HttpContent
         return _protocol.WriteIppRequestAsync(_request, stream, _cancellationToken);
     }
 
+    protected override async Task<Stream> CreateContentReadStreamAsync()
+    {
+        // Serialize only the IPP header/attributes (without the document) into a MemoryStream.
+        var headerStream = new MemoryStream();
+        var wrappedRequest = new IppRequestMessageFilter(_request);
+        wrappedRequest.ClearProperty(x => x.Document);
+        await _protocol.WriteIppRequestAsync(wrappedRequest, headerStream, _cancellationToken).ConfigureAwait(false);
+        headerStream.Position = 0;
+
+        if (_request.Document == null)
+        {
+            return headerStream;
+        }
+
+        if (_request.Document.CanSeek)
+        {
+            try
+            {
+                _request.Document.Position = _originalDocumentPosition;
+            }
+            catch
+            {
+                // ignore
+            }
+        }
+
+        // Return a composite stream that reads the header first, then the document.
+        // Dispose headerStream when done (leaveOpen: false), but leave _request.Document open (leaveOpen: true).
+        return new ConcatenatedReadStream((headerStream, false), (_request.Document, true));
+    }
+
     protected override bool TryComputeLength(out long length)
     {
         if (_length.HasValue)

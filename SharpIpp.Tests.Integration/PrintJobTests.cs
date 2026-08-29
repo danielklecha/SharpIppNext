@@ -368,5 +368,157 @@ public class PrintJobTests : SharpIppIntegrationTestBase
         ms2.Length.Should().Be(expectedLength);
         ms2.ToArray().Should().Equal(ms1.ToArray());
     }
+
+    [TestMethod]
+    public async Task PrintJobAsync_WhenSendingNonSeekableStream_ServerReceivesSameRequestAndReturnsExpectedResponse()
+    {
+        byte[] documentData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        using var nonSeekableStream = new NonSeekableStream(new MemoryStream(documentData));
+        SharpIppServer server = new();
+        PrintJobRequest clientRequest = new()
+        {
+            RequestId = 123,
+            Version = new IppVersion(2, 0),
+            Document = nonSeekableStream,
+            OperationAttributes = new()
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631"),
+                ResourceIds = [33, 34],
+                DocumentName = "test-doc.pdf",
+                DocumentFormat = (SharpIpp.Protocol.Models.DocumentFormat)"application/pdf",
+                AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
+                AttributesNaturalLanguage = "en-us",
+                RequestingUserName = "test-user",
+                JobName = "Test Job",
+                IppAttributeFidelity = true,
+                JobKOctets = 12,
+                JobImpressions = 5,
+                JobMediaSheets = 2,
+                Compression = Compression.None,
+                DocumentNaturalLanguage = "en",
+                DocumentCharset = "utf-8",
+                DocumentMetadata = GetTestDocumentMetadata(),
+            },
+            JobTemplateAttributes = new() { Copies = 1, JobPriority = 1 }
+        };
+        IIppRequest? serverRequest = null;
+        PrintJobResponse? serverResponse = null;
+        HttpStatusCode statusCode = HttpStatusCode.OK;
+        async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
+        {
+            serverRequest = await server.ReceiveRequestAsync(s, c);
+            serverResponse = new PrintJobResponse
+            {
+                RequestId = serverRequest.RequestId,
+                Version = serverRequest.Version,
+                StatusCode = IppStatusCode.SuccessfulOk,
+                OperationAttributes = new() { StatusMessage = "successful-ok", DetailedStatusMessage = "detail1", DocumentAccessError = "none" },
+                JobAttributes = new() { JobId = 456 },
+                DocumentAttributes = new()
+                {
+                    DocumentNumber = 1,
+                    DocumentMetadata = GetTestDocumentMetadata()
+                }
+            };
+            var ms = new MemoryStream();
+            await server.SendResponseAsync(serverResponse, ms, c);
+            ms.Seek(0, SeekOrigin.Begin);
+            return new HttpResponseMessage { StatusCode = statusCode, Content = new StreamContent(ms) };
+        }
+        SharpIppClient client = new(new(GetMockOfHttpMessageHandler(func).Object));
+        PrintJobResponse? clientResponse = await client.PrintJobAsync(clientRequest);
+
+        serverRequest.Should().NotBeNull();
+        var serverPrintJobRequest = (PrintJobRequest)serverRequest!;
+        serverPrintJobRequest.Document.Should().NotBeNull();
+        using var receivedDoc = new MemoryStream();
+        await serverPrintJobRequest.Document!.CopyToAsync(receivedDoc);
+        receivedDoc.ToArray().Should().Equal(documentData);
+
+        clientRequest.Should().BeEquivalentTo(serverPrintJobRequest, options => options.Excluding(x => x.Document));
+        clientResponse.Should().BeEquivalentTo(serverResponse);
+    }
+
+    [TestMethod]
+    public async Task PrintJobAsync_LongWayWhenSendingNonSeekableStream_ServerReceivesSameRequestAndReturnsExpectedResponse()
+    {
+        byte[] documentData = [10, 20, 30, 40, 50];
+        using var nonSeekableStream = new NonSeekableStream(new MemoryStream(documentData));
+        SharpIppServer server = new();
+        PrintJobRequest clientRequest = new()
+        {
+            RequestId = 123,
+            Version = new IppVersion(2, 0),
+            Document = nonSeekableStream,
+            OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631") },
+            JobTemplateAttributes = new() { Copies = 1 }
+        };
+        IIppRequest? serverRequest = null;
+        PrintJobResponse? serverResponse = null;
+        HttpStatusCode statusCode = HttpStatusCode.OK;
+        async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
+        {
+            serverRequest = await server.ReceiveRequestAsync(s, c);
+            serverResponse = new PrintJobResponse
+            {
+                RequestId = serverRequest.RequestId,
+                Version = serverRequest.Version,
+                StatusCode = IppStatusCode.SuccessfulOk
+            };
+            var ms = new MemoryStream();
+            await server.SendResponseAsync(serverResponse, ms, c);
+            ms.Seek(0, SeekOrigin.Begin);
+            return new HttpResponseMessage { StatusCode = statusCode, Content = new StreamContent(ms) };
+        }
+        SharpIppClient client = new(new(GetMockOfHttpMessageHandler(func).Object));
+        var clientRawRequest = client.CreateRawRequest(clientRequest);
+        var clientRawResponse = await client.SendAsync(clientRequest.OperationAttributes.PrinterUri, clientRawRequest).ConfigureAwait(false);
+        var clientResponse = client.CreateResponse<PrintJobResponse>(clientRawResponse);
+
+        serverRequest.Should().NotBeNull();
+        var serverPrintJobRequest = (PrintJobRequest)serverRequest!;
+        serverPrintJobRequest.Document.Should().NotBeNull();
+        using var receivedDoc = new MemoryStream();
+        await serverPrintJobRequest.Document!.CopyToAsync(receivedDoc);
+        receivedDoc.ToArray().Should().Equal(documentData);
+
+        clientRequest.Should().BeEquivalentTo(serverPrintJobRequest, options => options.Excluding(x => x.Document));
+        clientResponse.Should().BeEquivalentTo(serverResponse);
+    }
+
+    [TestMethod]
+    public async Task PrintJobAsync_NonSeekableStream_HttpContentCopyToAsync_SerializesDocumentCorrectly()
+    {
+        byte[] documentData = [0xDE, 0xAD, 0xBE, 0xEF];
+        using var nonSeekableStream = new NonSeekableStream(new MemoryStream(documentData));
+        var request = new PrintJobRequest
+        {
+            OperationAttributes = new PrintJobOperationAttributes
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631/ipp"),
+            },
+            Document = nonSeekableStream
+        };
+
+        var client = new SharpIppClient();
+        var ippRequest = client.CreateRawRequest(request);
+
+        var content = new IppRequestContent(ippRequest, new IppProtocol(), CancellationToken.None);
+
+        content.Headers.ContentLength.Should().BeNull();
+
+        using var ms = new MemoryStream();
+        await content.CopyToAsync(ms);
+        ms.Position = 0;
+
+        var server = new SharpIppServer();
+        var serverRequest = await server.ReceiveRequestAsync(ms);
+        var serverPrintJobRequest = (PrintJobRequest)serverRequest;
+        serverPrintJobRequest.Document.Should().NotBeNull();
+
+        using var receivedDoc = new MemoryStream();
+        await serverPrintJobRequest.Document!.CopyToAsync(receivedDoc);
+        receivedDoc.ToArray().Should().Equal(documentData);
+    }
 }
 

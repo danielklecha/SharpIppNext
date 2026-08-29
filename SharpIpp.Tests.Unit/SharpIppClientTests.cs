@@ -556,7 +556,7 @@ public class SharpIppClientTests
             rawRequestMessage.OperationAttributes.AddRange(additionalAttributes);
         }
         protocol.Verify(x => x.WriteIppRequestAsync(
-            It.Is<IppRequestMessage>(x => x.VerifyAssertionScope(_ => x.Should().BeEquivalentTo(rawRequestMessage, options => options.Excluding((IMemberInfo m) => m.Path == "Document.ReadTimeout" || m.Path == "Document.WriteTimeout"), ""))),
+            It.Is<IIppRequestMessage>(x => x.VerifyAssertionScope(_ => x.Should().BeEquivalentTo(rawRequestMessage, options => options.Excluding((IMemberInfo m) => m.Path == "Document" || m.Path == "Document.ReadTimeout" || m.Path == "Document.WriteTimeout"), ""))),
             It.IsAny<Stream>(),
             It.IsAny<CancellationToken>()));
     }
@@ -1024,7 +1024,7 @@ public class SharpIppClientTests
     }
 
     [TestMethod]
-    public async Task SendAsync_NonSeekableDocument_ShouldSetTransferEncodingChunked()
+    public async Task SendAsync_NonSeekableDocument_ShouldHaveNullContentLength()
     {
         // Arrange
         HttpRequestMessage? capturedRequest = null;
@@ -1066,12 +1066,11 @@ public class SharpIppClientTests
 
         // Assert
         capturedRequest.Should().NotBeNull();
-        capturedRequest!.Headers.TransferEncodingChunked.Should().BeTrue();
-        capturedRequest.Content!.Headers.ContentLength.Should().BeNull();
+        capturedRequest!.Content!.Headers.ContentLength.Should().BeNull();
     }
 
     [TestMethod]
-    public async Task SendAsync_SeekableDocument_ShouldNotSetTransferEncodingChunked()
+    public async Task SendAsync_SeekableDocument_ShouldHaveContentLength()
     {
         // Arrange
         HttpRequestMessage? capturedRequest = null;
@@ -1113,24 +1112,7 @@ public class SharpIppClientTests
 
         // Assert
         capturedRequest.Should().NotBeNull();
-        capturedRequest!.Headers.TransferEncodingChunked.Should().BeNull();
-        capturedRequest.Content!.Headers.ContentLength.Should().NotBeNull();
-    }
-
-    private sealed class NonSeekableStream : Stream
-    {
-        private readonly Stream _inner;
-        public NonSeekableStream(Stream inner) => _inner = inner;
-        public override bool CanRead => _inner.CanRead;
-        public override bool CanSeek => false;
-        public override bool CanWrite => _inner.CanWrite;
-        public override long Length => throw new NotSupportedException();
-        public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
-        public override void Flush() => _inner.Flush();
-        public override int Read(byte[] buffer, int offset, int count) => _inner.Read(buffer, offset, count);
-        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
-        public override void SetLength(long value) => throw new NotSupportedException();
-        public override void Write(byte[] buffer, int offset, int count) => _inner.Write(buffer, offset, count);
+        capturedRequest!.Content!.Headers.ContentLength.Should().NotBeNull();
     }
 
     private sealed class TestSharpIppClient : SharpIppClient

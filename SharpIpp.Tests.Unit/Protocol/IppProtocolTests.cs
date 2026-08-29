@@ -2231,30 +2231,6 @@ public class IppProtocolTests
         result.OperationAttributes[ 1 ].Name.Should().Be( string.Empty );
     }
 
-    private class NonSeekableStream : Stream
-    {
-        private readonly Stream _underlying;
-
-        public NonSeekableStream(Stream underlying)
-        {
-            _underlying = underlying;
-        }
-
-        public override bool CanRead => _underlying.CanRead;
-        public override bool CanSeek => false;
-        public override bool CanWrite => _underlying.CanWrite;
-        public override long Length => throw new NotSupportedException();
-        public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
-
-        public override void Flush() => _underlying.Flush();
-        public override int Read(byte[] buffer, int offset, int count) => _underlying.Read(buffer, offset, count);
-        public override Task<int> ReadAsync(byte[] buffer, int offset, int count, System.Threading.CancellationToken cancellationToken) =>
-            _underlying.ReadAsync(buffer, offset, count, cancellationToken);
-        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
-        public override void SetLength(long value) => throw new NotSupportedException();
-        public override void Write(byte[] buffer, int offset, int count) => _underlying.Write(buffer, offset, count);
-    }
-
     private class ThrowingStream : Stream
     {
         private readonly MemoryStream _underlying;
