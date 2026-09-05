@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using SharpIpp.Validation;
 using System.Text;
 
 namespace SharpIpp.Protocol.Models;
@@ -103,9 +103,9 @@ public class DocumentMetadata : IppStructuredString
     /// <summary>
     /// Validates that all keywords in the metadata are either standard Dublin Core keywords
     /// or custom keywords starting with "x-", and that all values contain no control characters.
-    /// Throws <see cref="ValidationException"/> if validation fails.
+    /// Returns <c>true</c> if valid; otherwise, <c>false</c> with an error message.
     /// </summary>
-    public override void Validate()
+    public override bool TryValidate([System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out string? errorMessage)
     {
         foreach (var kvp in Dictionary)
         {
@@ -114,19 +114,38 @@ public class DocumentMetadata : IppStructuredString
 
             if (string.IsNullOrEmpty(key))
             {
-                throw new ValidationException("has an empty keyword.");
+                errorMessage = "has an empty keyword.";
+                return false;
             }
 
             if (!IsValidDocumentMetadataKeyword(key))
             {
-                throw new ValidationException($"has invalid keyword '{key}'.");
+                errorMessage = $"has invalid keyword '{key}'.";
+                return false;
             }
 
             var entry = $"{key}={val}";
             if (!IsValidUtf8String(entry))
             {
-                throw new ValidationException($"has invalid value for keyword '{key}': must be valid UTF-8 and contain no control characters.");
+                errorMessage = $"has invalid value for keyword '{key}': must be valid UTF-8 and contain no control characters.";
+                return false;
             }
+        }
+
+        errorMessage = null;
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that all keywords in the metadata are either standard Dublin Core keywords
+    /// or custom keywords starting with "x-", and that all values contain no control characters.
+    /// Throws <see cref="ValidationException"/> if validation fails.
+    /// </summary>
+    public override void Validate()
+    {
+        if (!TryValidate(out var error))
+        {
+            throw new ValidationException(error);
         }
     }
 

@@ -1,6 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Validation;
-using System.ComponentModel.DataAnnotations;
 using Moq.Protected;
 using Moq;
 using SharpIpp;
@@ -886,7 +885,7 @@ public class SharpIppClientTests
             }
         });
 
-        await act.Should().ThrowAsync<System.ComponentModel.DataAnnotations.ValidationException>().WithMessage("*DocumentNumber*");
+        await act.Should().ThrowAsync<ValidationException>().WithMessage("*DocumentNumber*");
     }
 
     [TestMethod]

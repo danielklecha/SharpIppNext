@@ -1,7 +1,6 @@
 using System;
 using SharpIpp.Protocol.Models;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using SharpIpp.Validation;
 
 namespace SharpIpp.Models.Responses;
@@ -98,7 +97,7 @@ public class JobAttributes
     /// See: PWG 5100.21-2019 Section 8.2.6
     /// </summary>
     /// <code>platform-temperature-actual</code>
-    [ItemRange(-273, int.MaxValue)]
+    [Range(-273, int.MaxValue)]
     public int[]? PlatformTemperatureActual { get; set; }
 
     /// <summary>
@@ -106,7 +105,7 @@ public class JobAttributes
     /// See: PWG 5100.21-2019 Section 8.2.1
     /// </summary>
     /// <code>chamber-humidity-actual</code>
-    [ItemRange(0, 100)]
+    [Range(0, 100)]
     public int[]? ChamberHumidityActual { get; set; }
 
     /// <summary>
@@ -114,7 +113,7 @@ public class JobAttributes
     /// See: PWG 5100.21-2019 Section 8.2.2
     /// </summary>
     /// <code>chamber-temperature-actual</code>
-    [ItemRange(-273, int.MaxValue)]
+    [Range(-273, int.MaxValue)]
     public int[]? ChamberTemperatureActual { get; set; }
 
     /// <summary>

@@ -1,4 +1,5 @@
 using SharpIpp.Protocol.Models;
+using SharpIpp.Validation;
 
 namespace SharpIpp.Models.Requests;
 
@@ -9,7 +10,7 @@ namespace SharpIpp.Models.Requests;
 public class GetPrinterSupportedValuesOperationAttributes : OperationAttributes
 {
     /// <summary>
-     /// The client OPTIONALLY supplies this attribute. The Printer object MUST support this attribute. It is a set of Printer attribute names and/or attribute groups names in whose values the requester is interested
+    /// The client OPTIONALLY supplies this attribute. The Printer object MUST support this attribute. It is a set of Printer attribute names and/or attribute groups names in whose values the requester is interested
     /// See: RFC 8011 Section 3.2.5.1
     /// </summary>
     /// <code>requested-attributes</code>
@@ -28,7 +29,7 @@ public class GetPrinterSupportedValuesOperationAttributes : OperationAttributes
     /// See: PWG 5100.13-2023 Section 6.1.3
     /// </summary>
     /// <code>first-index</code>
-    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public int? FirstIndex { get; set; }
 
     /// <summary>
@@ -36,6 +37,6 @@ public class GetPrinterSupportedValuesOperationAttributes : OperationAttributes
     /// See: PWG 5100.13-2023 Section 6.1.4
     /// </summary>
     /// <code>limit</code>
-    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public int? Limit { get; set; }
 }

@@ -4,7 +4,6 @@ using SharpIpp.Models.Requests;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
@@ -340,7 +339,7 @@ public class IppRequestValidatorTests
     }
 
     [TestMethod]
-    public void Validate_MultiRangeAttribute_WithValidValues_DoesNotThrow()
+    public void Validate_WhenRangeAttributeHasMultipleRanges_WithValidValues_DoesNotThrow()
     {
         var validator = IppRequestValidator.Default;
         var request = new TestMultiRangeModel { Value = null };
@@ -361,7 +360,7 @@ public class IppRequestValidatorTests
     }
 
     [TestMethod]
-    public void Validate_MultiRangeAttribute_WithInvalidValues_ThrowsValidationException()
+    public void Validate_WhenRangeAttributeHasMultipleRanges_WithInvalidValues_ThrowsValidationException()
     {
         var validator = IppRequestValidator.Default;
         var request = new TestMultiRangeModel { Value = 50 };
@@ -468,7 +467,7 @@ public class IppRequestValidatorTests
 
     private class TestMultiRangeModel : IIppRequest
     {
-        [MultiRange(0, 0, 100, 255)]
+        [Range(0, 0, 100, 255)]
         public int? Value { get; set; }
         public IppVersion Version { get; set; }
         public int RequestId { get; set; }
@@ -641,106 +640,216 @@ public class IppRequestValidatorTests
     }
 
     [TestMethod]
-    public void Validate_WhenByteMultiRangeAttributeIsValid_DoesNotThrow()
+    public void Validate_WhenByteRangeAttributeWithMultipleRangesIsValid_DoesNotThrow()
     {
         var validator = IppRequestValidator.Default;
-        var request = new TestByteMultiRangeModel
+        var request = new TestByteRangeModel
         {
             Version = new IppVersion(2, 0),
             RequestId = 123,
             OperationAttributes = new OperationAttributes { AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8" },
-            StringValue = "ab" // 2 bytes, falls in [1, 3]
+            MultiRangeStringValue = "ab" // 2 bytes, falls in [1, 3]
         };
 
         Action act = () => validator.Validate(request);
         act.Should().NotThrow();
 
-        request.StringValue = "abcdefgh"; // 8 bytes, falls in [7, 10]
+        request.MultiRangeStringValue = "abcdefgh"; // 8 bytes, falls in [7, 10]
         act.Should().NotThrow();
     }
 
     [TestMethod]
-    public void Validate_WhenByteMultiRangeAttributeIsInvalid_ThrowsValidationException()
+    public void Validate_WhenByteRangeAttributeWithMultipleRangesIsInvalid_ThrowsValidationException()
     {
         var validator = IppRequestValidator.Default;
-        var request = new TestByteMultiRangeModel
+        var request = new TestByteRangeModel
         {
             Version = new IppVersion(2, 0),
             RequestId = 123,
             OperationAttributes = new OperationAttributes { AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8" },
-            StringValue = "abcde" // 5 bytes, outside [1, 3] and [7, 10]
+            MultiRangeStringValue = "abcde" // 5 bytes, outside [1, 3] and [7, 10]
         };
 
         Action act = () => validator.Validate(request);
-        act.Should().Throw<ValidationException>().WithMessage("*StringValue*");
+        act.Should().Throw<ValidationException>().WithMessage("*MultiRangeStringValue*");
     }
 
     [TestMethod]
-    public void ByteMultiRangeAttribute_Constructor_WhenRangesIsNull_ThrowsArgumentNullException()
+    public void ByteRangeAttribute_Constructor_SetsMinimumAndMaximum()
     {
-        Action act = () => new ByteMultiRangeAttribute(null!);
+        var attribute = new ByteRangeAttribute(1, 10);
+        attribute.Minimum.Should().Be(1);
+        attribute.Maximum.Should().Be(10);
+    }
+
+    [TestMethod]
+    public void ByteRangeAttribute_Constructor_WhenRangesIsNull_ThrowsArgumentNullException()
+    {
+        Action act = () => new ByteRangeAttribute(null!);
         act.Should().Throw<ArgumentNullException>();
     }
 
     [TestMethod]
-    public void ByteMultiRangeAttribute_Constructor_WhenRangesHasOddLength_ThrowsArgumentException()
+    public void ByteRangeAttribute_Constructor_WhenRangesIsEmpty_ThrowsArgumentException()
     {
-        Action act = () => new ByteMultiRangeAttribute(1, 2, 3);
+        Action act = () => new ByteRangeAttribute(Array.Empty<int>());
         act.Should().Throw<ArgumentException>().WithMessage("*even number*");
     }
 
     [TestMethod]
-    public void ByteMultiRangeAttribute_IsValid_WhenEncodingNotInContext_UsesDefaultEncoding()
+    public void ByteRangeAttribute_Constructor_WhenRangesHasOddLength_ThrowsArgumentException()
     {
-        var attribute = new ByteMultiRangeAttribute(1, 5);
-        var context = new ValidationContext(new object());
-        var result = attribute.GetValidationResult("abc", context);
+        Action act = () => new ByteRangeAttribute(1, 2, 3);
+        act.Should().Throw<ArgumentException>().WithMessage("*even number*");
+    }
+
+    [TestMethod]
+    public void ByteRangeAttribute_IsValid_WhenValueIsNull_ReturnsSuccess()
+    {
+        var attribute = new ByteRangeAttribute(1, 10);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        var result = attribute.IsValid(null, context);
         result.Should().Be(ValidationResult.Success);
     }
 
     [TestMethod]
-    public void ByteMultiRangeAttribute_IsValid_WhenEncodingInContextIsInvalidType_UsesDefaultEncoding()
+    public void ByteRangeAttribute_IsValid_WhenSingleRangeValid_ReturnsSuccess()
     {
-        var attribute = new ByteMultiRangeAttribute(1, 5);
-        var context = new ValidationContext(new object(), null, new Dictionary<object, object?> { { "Encoding", "invalid-type" } });
-        var result = attribute.GetValidationResult("abc", context);
+        var attribute = new ByteRangeAttribute(1, 5);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        var result = attribute.IsValid("abc", context);
         result.Should().Be(ValidationResult.Success);
     }
 
     [TestMethod]
-    public void ByteMultiRangeAttribute_GetByteLengths_WhenValueIsNull_YieldsBreak()
+    public void ByteRangeAttribute_IsValid_WhenOutOfSingleRange_ReturnsErrorMessage()
     {
-        var lengths = TestByteMultiRangeAttributeExposer.CallGetByteLengths(null, Encoding.UTF8).ToList();
+        var attribute = new ByteRangeAttribute(1, 5);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        var result = attribute.IsValid("abcdef", context);
+        result.Should().NotBeNull();
+        result!.IsSuccess.Should().BeFalse();
+        result.ErrorMessage.Should().Be("The field TestField must be between 1 and 5 bytes.");
+    }
+
+    [TestMethod]
+    public void ByteRangeAttribute_IsValid_WhenCustomErrorMessageSet_UsesCustomErrorMessage()
+    {
+        var attribute = new ByteRangeAttribute(1, 5) { ErrorMessage = "Custom error" };
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        var result = attribute.IsValid("abcdef", context);
+        result.Should().NotBeNull();
+        result!.IsSuccess.Should().BeFalse();
+        result.ErrorMessage.Should().Be("Custom error");
+    }
+
+    [TestMethod]
+    public void ByteRangeAttribute_IsValid_WhenEnumerableContainsNullItem_SkipsNullAndReturnsSuccess()
+    {
+        var attribute = new ByteRangeAttribute(1, 5);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        var collection = new string?[] { "abc", null, "de" };
+        var result = attribute.IsValid(collection, context);
+        result.Should().Be(ValidationResult.Success);
+    }
+
+    [TestMethod]
+    public void ByteRangeAttribute_IsValid_WhenEnumerableContainsInvalidItem_ReturnsValidationError()
+    {
+        var attribute = new ByteRangeAttribute(1, 5);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        var collection = new string?[] { "abc", "abcdef" };
+        var result = attribute.IsValid(collection, context);
+        result.Should().NotBeNull();
+        result!.IsSuccess.Should().BeFalse();
+        result.ErrorMessage.Should().Be("The field TestField must be between 1 and 5 bytes.");
+    }
+
+    [TestMethod]
+    public void ByteRangeAttribute_IsValid_WhenValueIsUnsupportedType_ReturnsValidationError()
+    {
+        var attribute = new ByteRangeAttribute(1, 5);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        var result = attribute.IsValid(123, context);
+        result.Should().NotBeNull();
+        result!.IsSuccess.Should().BeFalse();
+        result.ErrorMessage.Should().Be("Unsupported type for byte length validation: System.Int32");
+    }
+
+    [TestMethod]
+    public void ByteRangeAttribute_WhenMultiRange_ValidatesCorrectly()
+    {
+        var attribute = new ByteRangeAttribute(1, 3, 7, 10);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+
+        attribute.IsValid("ab", context).Should().Be(ValidationResult.Success);
+        attribute.IsValid("abcdefgh", context).Should().Be(ValidationResult.Success);
+
+        var result = attribute.IsValid("abcde", context);
+        result.Should().NotBeNull();
+        result!.IsSuccess.Should().BeFalse();
+        result.ErrorMessage.Should().Be("The field TestField must be within one of the following ranges: 1-3, 7-10 bytes.");
+    }
+
+    [TestMethod]
+    public void ByteRangeAttribute_GetByteLengths_WhenValueIsNull_YieldsBreak()
+    {
+        var lengths = TestByteRangeAttributeExposer.CallGetByteLengths(null, Encoding.UTF8).ToList();
         lengths.Should().BeEmpty();
     }
 
     [TestMethod]
-    public void ByteMultiRangeAttribute_GetByteLengths_WhenStringWithLanguageLanguageIsNull_CoalescesToEmptyString()
+    public void ByteRangeAttribute_GetByteLengths_WhenValueIsStringOrByteArray_YieldsCorrectLength()
+    {
+        var strLengths = TestByteRangeAttributeExposer.CallGetByteLengths("test", Encoding.UTF8).ToList();
+        strLengths.Should().ContainSingle().Which.Should().Be(4);
+
+        var byteLengths = TestByteRangeAttributeExposer.CallGetByteLengths(new byte[] { 1, 2, 3 }, Encoding.UTF8).ToList();
+        byteLengths.Should().ContainSingle().Which.Should().Be(3);
+    }
+
+    [TestMethod]
+    public void ByteRangeAttribute_GetByteLengths_WhenStringWithLanguageLanguageIsNull_CoalescesToEmptyString()
     {
         var swl = new StringWithLanguage(null!, "test");
-        var lengths = TestByteMultiRangeAttributeExposer.CallGetByteLengths(swl, Encoding.UTF8).ToList();
+        var lengths = TestByteRangeAttributeExposer.CallGetByteLengths(swl, Encoding.UTF8).ToList();
         lengths.Should().ContainSingle().Which.Should().Be(0 + 4 + 4);
     }
 
     [TestMethod]
-    public void ByteMultiRangeAttribute_GetByteLengths_WhenStringWithLanguageValueIsNull_CoalescesToEmptyString()
+    public void ByteRangeAttribute_GetByteLengths_WhenStringWithLanguageValueIsNull_CoalescesToEmptyString()
     {
         var swl = new StringWithLanguage("en", null!);
-        var lengths = TestByteMultiRangeAttributeExposer.CallGetByteLengths(swl, Encoding.UTF8).ToList();
+        var lengths = TestByteRangeAttributeExposer.CallGetByteLengths(swl, Encoding.UTF8).ToList();
         lengths.Should().ContainSingle().Which.Should().Be(2 + 0 + 4);
     }
 
     [TestMethod]
-    public void ByteMultiRangeAttribute_GetByteLengths_WhenOctetStringValueIsNull_CoalescesToZero()
+    public void ByteRangeAttribute_GetByteLengths_WhenOctetStringValueIsNull_CoalescesToZero()
     {
         var os = new OctetString((byte[])null!);
-        var lengths = TestByteMultiRangeAttributeExposer.CallGetByteLengths(os, Encoding.UTF8).ToList();
+        var lengths = TestByteRangeAttributeExposer.CallGetByteLengths(os, Encoding.UTF8).ToList();
         lengths.Should().ContainSingle().Which.Should().Be(0);
     }
 
-    private class TestByteMultiRangeAttributeExposer : ByteMultiRangeAttribute
+    [TestMethod]
+    public void ByteRangeAttribute_GetByteLengths_WhenValueIsEnumerable_YieldsLengthsForNonNullItems()
     {
-        public TestByteMultiRangeAttributeExposer() : base(0, 10) { }
+        var items = new object?[] { "hello", null, new object?[] { "world", null } };
+        var lengths = TestByteRangeAttributeExposer.CallGetByteLengths(items, Encoding.UTF8).ToList();
+        lengths.Should().Equal(5, 5);
+    }
+
+    [TestMethod]
+    public void ByteRangeAttribute_GetByteLengths_WhenValueIsUnsupportedType_ThrowsArgumentException()
+    {
+        Action act = () => TestByteRangeAttributeExposer.CallGetByteLengths(123, Encoding.UTF8).ToList();
+        act.Should().Throw<ArgumentException>().WithMessage("*Unsupported type for byte length validation*");
+    }
+
+    private class TestByteRangeAttributeExposer : ByteRangeAttribute
+    {
+        public TestByteRangeAttributeExposer() : base(0, 10) { }
 
         public static IEnumerable<int> CallGetByteLengths(object? value, Encoding encoding)
         {
@@ -852,6 +961,9 @@ public class IppRequestValidatorTests
         [ByteRange(1, 10)]
         public string? StringValue { get; set; }
 
+        [ByteRange(1, 3, 7, 10)]
+        public string? MultiRangeStringValue { get; set; }
+
         [ByteRange(1, 15)]
         public StringWithLanguage? StringWithLanguageValue { get; set; }
 
@@ -866,15 +978,5 @@ public class IppRequestValidatorTests
 
         [ByteRange(1, 10)]
         public int? UnsupportedValue { get; set; }
-    }
-
-    private class TestByteMultiRangeModel : IIppRequest
-    {
-        public IppVersion Version { get; set; }
-        public int RequestId { get; set; }
-        public OperationAttributes? OperationAttributes { get; set; }
-
-        [ByteMultiRange(1, 3, 7, 10)]
-        public string? StringValue { get; set; }
     }
 }

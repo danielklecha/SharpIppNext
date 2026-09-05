@@ -1,6 +1,7 @@
 using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Models;
+using SharpIpp.Validation;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,7 +18,7 @@ public class GetPrinterAttributesOperationAttributes : OperationAttributes
     /// See: PWG 5100.13-2023 Section 6.1.4
     /// </summary>
     /// <code>limit</code>
-    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public int? Limit { get; set; }
 
     /// <summary>
@@ -25,7 +26,7 @@ public class GetPrinterAttributesOperationAttributes : OperationAttributes
     /// See: PWG 5100.22-2025 Section 7.1.5
     /// </summary>
     /// <code>printer-id</code>
-    [System.ComponentModel.DataAnnotations.Range(1, 65535)]
+    [Range(1, 65535)]
     public int? PrinterId { get; set; }
 
     /// <summary>
@@ -33,7 +34,7 @@ public class GetPrinterAttributesOperationAttributes : OperationAttributes
     /// See: PWG 5100.13-2023 Section 6.1.3 and Section 8.2
     /// </summary>
     /// <code>first-index</code>
-    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public int? FirstIndex { get; set; }
 
     /// <summary>

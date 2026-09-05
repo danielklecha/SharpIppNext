@@ -6,7 +6,6 @@ using SharpIpp.Protocol;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
 namespace SharpIpp.Tests.Unit.Validation;
@@ -336,5 +335,124 @@ public class IppModelValidationTests
 
         Action act = () => validator.Validate(request);
         act.Should().Throw<ValidationException>().WithMessage("*JobId*");
+    }
+
+    [TestMethod]
+    public void GeneratedModelValidator_TryValidate_WhenValidModel_ReturnsTrueAndNoErrors()
+    {
+        var request = new PrintJobRequest
+        {
+            RequestId = 1,
+            OperationAttributes = new PrintJobOperationAttributes
+            {
+                PrinterUri = new Uri("ipp://127.0.0.1:631/"),
+                JobName = "Test"
+            },
+            JobTemplateAttributes = new JobTemplateAttributes
+            {
+                Copies = 2
+            }
+        };
+
+        var results = new System.Collections.Generic.List<string>();
+        var visited = new System.Collections.Generic.HashSet<object>();
+        var handled = GeneratedModelValidator.TryValidate(request, System.Text.Encoding.UTF8, results, visited);
+
+        handled.Should().BeTrue();
+        results.Should().BeEmpty();
+    }
+
+    [TestMethod]
+    public void GeneratedModelValidator_TryValidate_WhenInvalidNestedModel_ReturnsTrueAndCollectsErrors()
+    {
+        var request = new PrintJobRequest
+        {
+            RequestId = 0, // Invalid [1, int.MaxValue]
+            OperationAttributes = new PrintJobOperationAttributes
+            {
+                PrinterUri = new Uri("ipp://127.0.0.1:631/"),
+                JobImpressions = -1 // Invalid [0, int.MaxValue]
+            },
+            JobTemplateAttributes = new JobTemplateAttributes
+            {
+                Copies = 0 // Invalid [1, int.MaxValue]
+            }
+        };
+
+        var results = new System.Collections.Generic.List<string>();
+        var visited = new System.Collections.Generic.HashSet<object>();
+        var handled = GeneratedModelValidator.TryValidate(request, System.Text.Encoding.UTF8, results, visited);
+
+        handled.Should().BeTrue();
+        results.Should().HaveCount(3);
+        results.Should().Contain(r => r.Contains("RequestId"));
+        results.Should().Contain(r => r.Contains("JobImpressions"));
+        results.Should().Contain(r => r.Contains("Copies"));
+    }
+
+    [TestMethod]
+    public void GeneratedModelValidator_TryValidate_WhenUnknownType_ReturnsFalse()
+    {
+        var unknownObj = new { Name = "Unknown" };
+        var results = new System.Collections.Generic.List<string>();
+        var visited = new System.Collections.Generic.HashSet<object>();
+
+        var handled = GeneratedModelValidator.TryValidate(unknownObj, System.Text.Encoding.UTF8, results, visited);
+        handled.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void IppModelValidator_Validate_WhenNull_ReturnsImmediately()
+    {
+        Action act = () => IppModelValidator.Validate(null!, System.Text.Encoding.UTF8);
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void IppModelValidator_ValidateRecursiveFallback_WhenAlreadyVisited_ReturnsImmediately()
+    {
+        var obj = new object();
+        var visited = new System.Collections.Generic.HashSet<object> { obj };
+        var results = new System.Collections.Generic.List<string>();
+
+        IppModelValidator.ValidateRecursiveFallback(obj, System.Text.Encoding.UTF8, results, visited);
+
+        results.Should().BeEmpty();
+    }
+
+    private class FallbackEnumerableContainer
+    {
+        public System.Collections.Generic.List<object?> Items { get; set; } = new();
+    }
+
+    [TestMethod]
+    public void IppModelValidator_Validate_WhenFallbackObjectContainsEnumerableWithSharpIppType_RecurseFallback()
+    {
+        var container = new FallbackEnumerableContainer
+        {
+            Items = new System.Collections.Generic.List<object?>
+            {
+                null,
+                new object(),
+                new ExtendedValue(1, Array.Empty<byte>())
+            }
+        };
+
+        Action act = () => IppModelValidator.Validate(container, System.Text.Encoding.UTF8);
+        act.Should().NotThrow();
+    }
+
+    private class FallbackObjectWithValidation
+    {
+        [ByteRange(1, 10)]
+        public string? Value { get; set; }
+    }
+
+    [TestMethod]
+    public void IppModelValidator_Validate_WhenFallbackObjectFailsValidation_ThrowsValidationException()
+    {
+        var obj = new FallbackObjectWithValidation { Value = "Toolongstringvalue" };
+        Action act = () => IppModelValidator.Validate(obj, System.Text.Encoding.UTF8);
+        act.Should().Throw<ValidationException>().WithMessage("*Value*");
     }
 }

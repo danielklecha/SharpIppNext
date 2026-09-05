@@ -1,5 +1,5 @@
 using System;
-using System.ComponentModel.DataAnnotations;
+using SharpIpp.Validation;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Requests;

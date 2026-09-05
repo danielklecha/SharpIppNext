@@ -10,12 +10,12 @@ public class MediaSize : IIppCollection
     /// <summary>
     /// integer(1:MAX) | rangeOfInteger(1:MAX)
     /// </summary>
-    [IppRange(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public Range? XDimension { get; set; }
 
     /// <summary>
     /// integer(0:MAX) | rangeOfInteger(0:MAX)
     /// </summary>
-    [IppRange(0, int.MaxValue)]
+    [Range(0, int.MaxValue)]
     public Range? YDimension { get; set; }
 }

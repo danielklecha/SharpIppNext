@@ -26,6 +26,6 @@ public class UpdateActiveJobsOperationAttributes : OperationAttributes
     /// The <c>job-ids</c> operation attribute.
     /// See: PWG 5100.18-2025 Section 5.7.1
     /// </summary>
-    [ItemRange(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public int[]? JobIds { get; set; }
 }

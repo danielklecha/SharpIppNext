@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using SharpIpp.Validation;
 
 namespace SharpIpp.Protocol.Models;
@@ -40,7 +39,7 @@ public class JobTemplateAttributes
     /// necessary at job processing time).
     /// See: RFC 8011 Section 5.2.1
     /// </summary>
-    [System.ComponentModel.DataAnnotations.Range(1, 100)]
+    [Range(1, 100)]
     public int? JobPriority { get; set; }
 
     /// <summary>
@@ -78,7 +77,7 @@ public class JobTemplateAttributes
     /// supported.
     /// See: RFC 8011 Section 5.2.5
     /// </summary>
-    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public int? Copies { get; set; }
 
     /// <summary>
@@ -165,7 +164,7 @@ public class JobTemplateAttributes
     /// rotation of print-stream pages.
     /// See: RFC 8011 Section 5.2.9
     /// </summary>
-    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public int? NumberUp { get; set; }
 
     /// <summary>
@@ -385,7 +384,7 @@ public class JobTemplateAttributes
     /// The <c>force-front-side</c> Job Template attribute.
     /// See: PWG 5100.3-2023 Section 5.2.2
     /// </summary>
-    [ItemRange(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public int[]? ForceFrontSide { get; set; }
 
     /// <summary>
@@ -544,7 +543,7 @@ public class JobTemplateAttributes
     /// The <c>retry-interval</c> Job Template attribute.
     /// See: PWG 5100.15-2013 Section 7.2.5
     /// </summary>
-    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public int? RetryInterval { get; set; }
 
     /// <summary>
@@ -557,14 +556,14 @@ public class JobTemplateAttributes
     /// The <c>chamber-humidity</c> Job Template attribute.
     /// See: PWG 5100.21-2019 Section 8.1.1
     /// </summary>
-    [System.ComponentModel.DataAnnotations.Range(0, 100)]
+    [Range(0, 100)]
     public int? ChamberHumidity { get; set; }
 
     /// <summary>
     /// The <c>chamber-temperature</c> Job Template attribute.
     /// See: PWG 5100.21-2019 Section 8.1.2
     /// </summary>
-    [System.ComponentModel.DataAnnotations.Range(-273, int.MaxValue)]
+    [Range(-273, int.MaxValue)]
     public int? ChamberTemperature { get; set; }
 
     /// <summary>
@@ -583,7 +582,7 @@ public class JobTemplateAttributes
     /// The <c>platform-temperature</c> Job Template attribute.
     /// See: PWG 5100.21-2019 Section 8.1.5
     /// </summary>
-    [System.ComponentModel.DataAnnotations.Range(-273, int.MaxValue)]
+    [Range(-273, int.MaxValue)]
     public int? PlatformTemperature { get; set; }
 
     /// <summary>
@@ -687,7 +686,7 @@ public class JobTemplateAttributes
     /// See: PWG 5100.8-2003 Section 3
     /// </summary>
     [Obsolete("The 'pages-per-subset' attribute is obsolete. See PWG 5100.13-2023 Section 7.1.")]
-    [ItemRange(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public int[]? PagesPerSubset { get; set; }
 
     /// <summary>
@@ -738,7 +737,7 @@ public class JobTemplateAttributes
     /// this Job (e.g., for job chaining or dependency tracking).
     /// See: PWG 5100.7-2023 Section 6.1
     /// </summary>
-    [ItemRange(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public int[]? JobIds { get; set; }
 
     /// <summary>

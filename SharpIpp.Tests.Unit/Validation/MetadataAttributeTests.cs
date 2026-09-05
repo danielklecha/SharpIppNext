@@ -4,9 +4,8 @@ using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
+using System.Text;
 
 namespace SharpIpp.Tests.Unit.Validation;
 
@@ -31,125 +30,116 @@ public class MetadataAttributeTests
     public void IsValid_WhenValueIsNull_ReturnsSuccess()
     {
         var attribute = new MetadataAttribute();
-        var context = new ValidationContext(new object()) { DisplayName = "TestField" };
-        var results = new List<ValidationResult>();
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
 
-        var isValid = Validator.TryValidateValue(null!, context, results, new[] { attribute });
+        var result = attribute.IsValid(null, context);
 
-        isValid.Should().BeTrue();
-        results.Should().BeEmpty();
+        result.Should().Be(ValidationResult.Success);
     }
 
     [TestMethod]
     public void IsValid_WhenValueIsNotIppStructuredString_ReturnsValidationError()
     {
         var attribute = new MetadataAttribute();
-        var context = new ValidationContext(new object()) { DisplayName = "TestField" };
-        var results = new List<ValidationResult>();
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
 
-        var isValid = Validator.TryValidateValue("not-metadata", context, results, new[] { attribute });
+        var result = attribute.IsValid("not-metadata", context);
 
-        isValid.Should().BeFalse();
-        results.Should().ContainSingle();
-        results.Single().ErrorMessage.Should().Be("The field TestField must derive from IppStructuredString.");
+        result.Should().NotBeNull();
+        result!.IsSuccess.Should().BeFalse();
+        result.ErrorMessage.Should().Be("The field TestField must derive from IppStructuredString.");
     }
 
     [TestMethod]
     public void IsValid_WhenKeywordIsEmpty_ReturnsValidationError()
     {
         var attribute = new MetadataAttribute();
-        var context = new ValidationContext(new object()) { DisplayName = "TestField" };
-        var results = new List<ValidationResult>();
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
         var metadata = new DocumentMetadata
         {
             { "", "some-value" }
         };
 
-        var isValid = Validator.TryValidateValue(metadata, context, results, new[] { attribute });
+        var result = attribute.IsValid(metadata, context);
 
-        isValid.Should().BeFalse();
-        results.Should().ContainSingle();
-        results.Single().ErrorMessage.Should().Be("The field TestField has an empty keyword.");
+        result.Should().NotBeNull();
+        result!.IsSuccess.Should().BeFalse();
+        result.ErrorMessage.Should().Be("The field TestField has an empty keyword.");
     }
 
     [TestMethod]
     public void IsValid_WhenKeywordIsInvalid_ReturnsValidationError()
     {
         var attribute = new MetadataAttribute();
-        var context = new ValidationContext(new object()) { DisplayName = "TestField" };
-        var results = new List<ValidationResult>();
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
         var metadata = new DocumentMetadata
         {
             { "invalidKeyword", "some-value" }
         };
 
-        var isValid = Validator.TryValidateValue(metadata, context, results, new[] { attribute });
+        var result = attribute.IsValid(metadata, context);
 
-        isValid.Should().BeFalse();
-        results.Should().ContainSingle();
-        results.Single().ErrorMessage.Should().Be("The field TestField has invalid keyword 'invalidKeyword'.");
+        result.Should().NotBeNull();
+        result!.IsSuccess.Should().BeFalse();
+        result.ErrorMessage.Should().Be("The field TestField has invalid keyword 'invalidKeyword'.");
     }
 
     [TestMethod]
     public void IsValid_WhenVendorKeywordIsMissingSuffix_ReturnsValidationError()
     {
         var attribute = new MetadataAttribute();
-        var context = new ValidationContext(new object()) { DisplayName = "TestField" };
-        var results = new List<ValidationResult>();
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
         var metadata = new DocumentMetadata
         {
             { "x-", "some-value" }
         };
 
-        var isValid = Validator.TryValidateValue(metadata, context, results, new[] { attribute });
+        var result = attribute.IsValid(metadata, context);
 
-        isValid.Should().BeFalse();
-        results.Should().ContainSingle();
-        results.Single().ErrorMessage.Should().Be("The field TestField has invalid keyword 'x-'.");
+        result.Should().NotBeNull();
+        result!.IsSuccess.Should().BeFalse();
+        result.ErrorMessage.Should().Be("The field TestField has invalid keyword 'x-'.");
     }
 
     [TestMethod]
     public void IsValid_WhenVendorKeywordHasInvalidCharacters_ReturnsValidationError()
     {
         var attribute = new MetadataAttribute();
-        var context = new ValidationContext(new object()) { DisplayName = "TestField" };
-        var results = new List<ValidationResult>();
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
         var metadata = new DocumentMetadata
         {
             { "x-invalid*char", "some-value" }
         };
 
-        var isValid = Validator.TryValidateValue(metadata, context, results, new[] { attribute });
+        var result = attribute.IsValid(metadata, context);
 
-        isValid.Should().BeFalse();
-        results.Should().ContainSingle();
-        results.Single().ErrorMessage.Should().Be("The field TestField has invalid keyword 'x-invalid*char'.");
+        result.Should().NotBeNull();
+        result!.IsSuccess.Should().BeFalse();
+        result.ErrorMessage.Should().Be("The field TestField has invalid keyword 'x-invalid*char'.");
     }
 
     [TestMethod]
     public void IsValid_WhenValueContainsControlCharacters_ReturnsValidationError()
     {
         var attribute = new MetadataAttribute();
-        var context = new ValidationContext(new object()) { DisplayName = "TestField" };
-        var results = new List<ValidationResult>();
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
         var metadata = new DocumentMetadata
         {
             { "title", "some\nvalue" }
         };
 
-        var isValid = Validator.TryValidateValue(metadata, context, results, new[] { attribute });
+        var result = attribute.IsValid(metadata, context);
 
-        isValid.Should().BeFalse();
-        results.Should().ContainSingle();
-        results.Single().ErrorMessage.Should().Be("The field TestField has invalid value for keyword 'title': must be valid UTF-8 and contain no control characters.");
+        result.Should().NotBeNull();
+        result!.IsSuccess.Should().BeFalse();
+        result.ErrorMessage.Should().Be("The field TestField has invalid value for keyword 'title': must be valid UTF-8 and contain no control characters.");
     }
 
     [TestMethod]
     public void IsValid_WhenValidDublinCoreKeywords_ReturnsSuccess()
     {
         var attribute = new MetadataAttribute();
-        var context = new ValidationContext(new object()) { DisplayName = "TestField" };
-        var results = new List<ValidationResult>();
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
         var metadata = new DocumentMetadata
         {
             { "title", "My Document" },
@@ -157,18 +147,16 @@ public class MetadataAttributeTests
             { "abstract", "An abstract description" }
         };
 
-        var isValid = Validator.TryValidateValue(metadata, context, results, new[] { attribute });
+        var result = attribute.IsValid(metadata, context);
 
-        isValid.Should().BeTrue();
-        results.Should().BeEmpty();
+        result.Should().Be(ValidationResult.Success);
     }
 
     [TestMethod]
     public void IsValid_WhenValidVendorKeywords_ReturnsSuccess()
     {
         var attribute = new MetadataAttribute();
-        var context = new ValidationContext(new object()) { DisplayName = "TestField" };
-        var results = new List<ValidationResult>();
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
         var metadata = new DocumentMetadata
         {
             { "x-company-id", "12345" },
@@ -176,40 +164,118 @@ public class MetadataAttributeTests
             { "x-another_prop", "Val" }
         };
 
-        var isValid = Validator.TryValidateValue(metadata, context, results, new[] { attribute });
+        var result = attribute.IsValid(metadata, context);
 
-        isValid.Should().BeTrue();
-        results.Should().BeEmpty();
+        result.Should().Be(ValidationResult.Success);
     }
 
     [TestMethod]
     public void IsValid_WithCustomIppStructuredStringSubclass_ReturnsValidationErrorIfInvalid()
     {
         var attribute = new MetadataAttribute();
-        var context = new ValidationContext(new object()) { DisplayName = "TestField" };
-        var results = new List<ValidationResult>();
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
         var metadata = new TestMetadata();
         metadata.Add("invalid", "value");
 
-        var isValid = Validator.TryValidateValue(metadata, context, results, new[] { attribute });
+        var result = attribute.IsValid(metadata, context);
 
-        isValid.Should().BeFalse();
-        results.Should().ContainSingle();
-        results.Single().ErrorMessage.Should().Be("The field TestField has invalid entry.");
+        result.Should().NotBeNull();
+        result!.IsSuccess.Should().BeFalse();
+        result.ErrorMessage.Should().Be("The field TestField has invalid entry.");
     }
 
     [TestMethod]
     public void IsValid_WithCustomIppStructuredStringSubclass_ReturnsSuccessIfValid()
     {
         var attribute = new MetadataAttribute();
-        var context = new ValidationContext(new object()) { DisplayName = "TestField" };
-        var results = new List<ValidationResult>();
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
         var metadata = new TestMetadata();
         metadata.Add("testkey", "value");
 
-        var isValid = Validator.TryValidateValue(metadata, context, results, new[] { attribute });
+        var result = attribute.IsValid(metadata, context);
 
-        isValid.Should().BeTrue();
-        results.Should().BeEmpty();
+        result.Should().Be(ValidationResult.Success);
+    }
+
+    [TestMethod]
+    public void IsValid_WhenCollectionContainsValidItems_ReturnsSuccess()
+    {
+        var attribute = new MetadataAttribute();
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        var collection = new[]
+        {
+            new DocumentMetadata { { "title", "Doc 1" } },
+            new DocumentMetadata { { "title", "Doc 2" } }
+        };
+
+        var result = attribute.IsValid(collection, context);
+
+        result.Should().Be(ValidationResult.Success);
+    }
+
+    [TestMethod]
+    public void IsValid_WhenCollectionContainsNullItems_SkipsNullAndReturnsSuccess()
+    {
+        var attribute = new MetadataAttribute();
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        var collection = new DocumentMetadata?[]
+        {
+            new DocumentMetadata { { "title", "Doc 1" } },
+            null,
+            new DocumentMetadata { { "title", "Doc 2" } }
+        };
+
+        var result = attribute.IsValid(collection, context);
+
+        result.Should().Be(ValidationResult.Success);
+    }
+
+    [TestMethod]
+    public void IsValid_WhenCollectionContainsInvalidItem_ReturnsValidationError()
+    {
+        var attribute = new MetadataAttribute();
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        var collection = new[]
+        {
+            new DocumentMetadata { { "title", "Doc 1" } },
+            new DocumentMetadata { { "invalidKeyword", "value" } }
+        };
+
+        var result = attribute.IsValid(collection, context);
+
+        result.Should().NotBeNull();
+        result!.IsSuccess.Should().BeFalse();
+        result.ErrorMessage.Should().Be("The field TestField has invalid keyword 'invalidKeyword'.");
+    }
+
+    [TestMethod]
+    public void IsValid_WhenCollectionContainsNonIppStructuredStringItem_ReturnsValidationError()
+    {
+        var attribute = new MetadataAttribute();
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        var collection = new object[]
+        {
+            new DocumentMetadata { { "title", "Doc 1" } },
+            "not-metadata"
+        };
+
+        var result = attribute.IsValid(collection, context);
+
+        result.Should().NotBeNull();
+        result!.IsSuccess.Should().BeFalse();
+        result.ErrorMessage.Should().Be("The field TestField must derive from IppStructuredString.");
+    }
+
+    [TestMethod]
+    public void IsValid_WhenValueIsNonEnumerableInvalidType_ReturnsValidationError()
+    {
+        var attribute = new MetadataAttribute();
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+
+        var result = attribute.IsValid(123, context);
+
+        result.Should().NotBeNull();
+        result!.IsSuccess.Should().BeFalse();
+        result.ErrorMessage.Should().Be("The field TestField must derive from IppStructuredString.");
     }
 }

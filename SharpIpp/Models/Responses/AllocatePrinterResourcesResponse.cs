@@ -13,6 +13,6 @@ public class AllocatePrinterResourcesResponse : IppResponse<OperationAttributes>
     /// The complete list of resource IDs currently allocated to this Printer.
     /// See: PWG 5100.22-2025 Section 6.1.1.2 (Group 3: Printer Attributes)
     /// </summary>
-    [ItemRange(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public int[]? PrinterResourceIds { get; set; }
 }

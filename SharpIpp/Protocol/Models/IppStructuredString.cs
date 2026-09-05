@@ -167,6 +167,24 @@ public abstract class IppStructuredString : IEnumerable<string>, IIppStructuredS
     {
     }
 
+    /// <summary>
+    /// Validates the metadata values without throwing an exception.
+    /// </summary>
+    public virtual bool TryValidate([System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out string? errorMessage)
+    {
+        try
+        {
+            Validate();
+            errorMessage = null;
+            return true;
+        }
+        catch (Validation.ValidationException ex)
+        {
+            errorMessage = ex.Message;
+            return false;
+        }
+    }
+
     public abstract HashSet<string> StandardKeys { get; }
 
     /// <summary>

@@ -1,4 +1,5 @@
 using SharpIpp.Protocol.Models;
+using SharpIpp.Validation;
 
 namespace SharpIpp.Models.Requests;
 /// <summary>
@@ -11,6 +12,6 @@ public class SetDocumentAttributesOperationAttributes : JobOperationAttributes
     /// See: PWG 5100.5-2024 Section 6.2.4
     /// </summary>
     /// <code>document-number</code>
-    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public int DocumentNumber { get; set; }
 }

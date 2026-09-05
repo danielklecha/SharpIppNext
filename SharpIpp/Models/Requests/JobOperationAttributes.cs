@@ -1,6 +1,7 @@
 using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Models;
+using SharpIpp.Validation;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -29,7 +30,7 @@ public class JobOperationAttributes : OperationAttributes
     /// See: PWG 5100.5-2024 Section 5.2.1.1 (Get-Documents)
     /// </summary>
     /// <code>job-id</code>
-    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public int? JobId { get; set; }
 
 }

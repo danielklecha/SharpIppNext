@@ -2,7 +2,7 @@ using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Protocol.Models;
 using System;
-using System.ComponentModel.DataAnnotations;
+using SharpIpp.Validation;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 

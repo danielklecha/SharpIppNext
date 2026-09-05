@@ -5,7 +5,6 @@ using SharpIpp.Protocol;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
 namespace SharpIpp.Tests.Unit.Validation;

@@ -1,4 +1,5 @@
 using SharpIpp.Protocol.Models;
+using SharpIpp.Validation;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,7 +19,7 @@ public class IppRequest<TOperationAttributes> : IIppRequest where TOperationAttr
     /// See: pwg5100.18 - IPP Shared Infrastructure Extensions v1.1 Section 5.10
     /// </summary>
     /// <code>request-id</code>
-    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public int RequestId { get; set; } = 1;
     /// <summary>
     /// The operation-attributes IPP attribute.

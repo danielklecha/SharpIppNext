@@ -1,4 +1,5 @@
 using SharpIpp.Protocol.Models;
+using SharpIpp.Validation;
 
 namespace SharpIpp.Models.Requests;
 /// <summary>
@@ -14,7 +15,7 @@ public class CancelDocumentOperationAttributes : JobOperationAttributes
     /// See: PWG 5100.18-2025 Section 4.6
     /// </summary>
     /// <code>document-number</code>
-    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public int DocumentNumber { get; set; }
     /// <summary>
     /// The document-message IPP attribute.

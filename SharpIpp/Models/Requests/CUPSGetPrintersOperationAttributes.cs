@@ -1,6 +1,7 @@
 using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Models;
+using SharpIpp.Validation;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,14 +21,14 @@ public class CUPSGetPrintersOperationAttributes : OperationAttributes
     /// See: RFC 8011 Section 4.2.6.1
     /// </summary>
     /// <code>limit</code>
-    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public int? Limit { get; set; }
     /// <summary>
     /// The client OPTIONALLY supplies this attribute to select which printer is returned
     /// See: PWG 5100.22-2025 Section 7.1.5
     /// </summary>
     /// <code>printer-id</code>
-    [System.ComponentModel.DataAnnotations.Range(1, 65535)]
+    [Range(1, 65535)]
     public int? PrinterId { get; set; }
     /// <summary>
     /// The client OPTIONALLY supplies this attribute to select which printers are returned

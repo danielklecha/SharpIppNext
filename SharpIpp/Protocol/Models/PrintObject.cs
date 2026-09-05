@@ -12,6 +12,6 @@ public class PrintObject : IIppCollection
     bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
     public int? DocumentNumber { get; set; }
     public System.Uri? PrintObjectsSource { get; set; }
-    [ItemRange(int.MinValue, int.MaxValue)]
+    [Range(int.MinValue, int.MaxValue)]
     public int[]? TransformationMatrix { get; set; }
 }

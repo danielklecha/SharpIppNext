@@ -16,7 +16,7 @@ public class Trimming : IIppCollection
     /// 1setOf integer(0:MAX) in hundredths of millimeters (1/2540th of an inch)
     /// See: PWG 5100.1-2022 Section 5.2.10.1
     /// </summary>
-    [ItemRange(0, int.MaxValue)]
+    [Range(0, int.MaxValue)]
     public int[]? TrimmingOffset { get; set; }
 
     /// <summary>

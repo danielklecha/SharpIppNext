@@ -14,7 +14,7 @@ public class GetJobsOperationAttributes : OperationAttributes
     /// See: PWG 5100.13-2023 Section 6.1.3 and Section 8.4
     /// </summary>
     /// <code>first-index</code>
-    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public int? FirstIndex { get; set; }
 
     /// <summary>
@@ -22,7 +22,7 @@ public class GetJobsOperationAttributes : OperationAttributes
     /// See: PWG 5100.7-2023 Section 6.1.4
     /// </summary>
     /// <code>job-ids</code>
-    [ItemRange(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public int[]? JobIds { get; set; }
 
     /// <summary>
@@ -46,7 +46,7 @@ public class GetJobsOperationAttributes : OperationAttributes
     /// See: RFC 8011 Section 4.2.6.1
     /// </summary>
     /// <code>limit</code>
-    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public int? Limit { get; set; }
     /// <summary>
     /// The client OPTIONALLY supplies this attribute. The Printer object MUST support this attribute. It indicates whether jobs from all users or just the jobs submitted by the requesting user of this request MUST be considered as candidate jobs to be returned by the Printer object. If the client does not supply this attribute, the Printer object MUST respond as if the client had supplied the attribute with a value of 'false', i.e., jobs from all users. The means for authenticating the requesting user and matching the jobs is described in section

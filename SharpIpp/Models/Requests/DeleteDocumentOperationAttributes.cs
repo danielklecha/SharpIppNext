@@ -1,4 +1,5 @@
 using System;
+using SharpIpp.Validation;
 
 namespace SharpIpp.Models.Requests;
 
@@ -14,6 +15,6 @@ public class DeleteDocumentOperationAttributes : JobOperationAttributes
     /// The document number within the job.
     /// See: PWG 5100.5-2024 Section 5.1
     /// </summary>
-    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public int? DocumentNumber { get; set; }
 }

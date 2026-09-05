@@ -22,28 +22,28 @@ public class SystemOperationAttributes : OperationAttributes
     /// See: PWG 5100.22-2025 Section 7.1.5
     /// </summary>
     /// <code>printer-id</code>
-    [System.ComponentModel.DataAnnotations.Range(1, 65535)]
+    [Range(1, 65535)]
     public int? PrinterId { get; set; }
 
     /// <summary>
     /// notify-printer-ids
     /// See: PWG 5100.22-2025 Section 7.1.1
     /// </summary>
-    [ItemRange(1, 65535)]
+    [Range(1, 65535)]
     public int[]? NotifyPrinterIds { get; set; }
 
     /// <summary>
     /// notify-resource-id
     /// See: PWG 5100.22-2025 Section 7.1.2
     /// </summary>
-    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public int? NotifyResourceId { get; set; }
 
     /// <summary>
     /// restart-get-interval
     /// See: PWG 5100.22-2025 Section 7.1.25
     /// </summary>
-    [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
+    [Range(0, int.MaxValue)]
     public int? RestartGetInterval { get; set; }
 
     /// <summary>
@@ -56,7 +56,7 @@ public class SystemOperationAttributes : OperationAttributes
     /// notify-system-up-time
     /// See: PWG 5100.22-2025 Section 7.11.2
     /// </summary>
-    [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
+    [Range(0, int.MaxValue)]
     public int? NotifySystemUpTime { get; set; }
 
     /// <summary>
@@ -69,7 +69,7 @@ public class SystemOperationAttributes : OperationAttributes
     /// notify-subscription-id — the subscription identifier for subscription-targeted operations.
     /// See: RFC 3995 Section 5.1
     /// </summary>
-    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public int? NotifySubscriptionId { get; set; }
 
     /// <summary>

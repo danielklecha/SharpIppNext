@@ -2,7 +2,7 @@
 
 SharpIpp implements two tiers of validation to ensure that IPP requests are correct before being transmitted or processed:
 
-1. **High-level model validation** (`IppRequestValidator`): Validates request properties recursively using standard .NET DataAnnotations validation.
+1. **High-level model validation** (`IppRequestValidator`): Validates request properties recursively using a lightweight, built-in validation engine.
 2. **Low-level message validation** (`IppRequestMessageValidator`): Validates structural constraints and protocol rules directly on the mapped `IIppRequestMessage` representation.
 
 ---
@@ -12,10 +12,10 @@ SharpIpp implements two tiers of validation to ensure that IPP requests are corr
 The `IppRequestValidator` processes your high-level request objects (e.g., `PrintJobRequest`) recursively before they are mapped into low-level messages. 
 
 It checks:
-* Standard data annotations:
-  * `[Range]`: Enforces standard integer ranges defined by the IPP specifications (e.g., `JobPriority` is restricted to `1..100`, `Copies` $\ge 1$, `NumberUp` $\ge 1$, and 3D printing attributes such as `MaterialFillDensity` or `ChamberHumidity` in the range `0..100`).
+* Model validation attributes:
+  * `[Range]`: Enforces standard integer ranges or `Range` constraints defined by the IPP specifications for single values, IPP `Range` structs, and collections thereof. Supports both single ranges (`[Range(min, max)]`) and disjoint multiple ranges (`[Range(min1, max1, min2, max2, ...)]`).
 * Custom validation attributes:
-  * `[ByteRange]`: Verifies that string or binary properties do not exceed specific byte size limits when encoded (e.g., `DocumentPassword` is validated to be $\le 1023$ bytes).
+  * `[ByteRange]`: Verifies that string or binary properties (single items or collections) do not exceed specific byte size limits when encoded under the request charset (e.g., `DocumentPassword` is validated to be $\le 1023$ bytes). Supports single and multi-range limits.
   * `[Metadata]`: Verifies that `document-metadata` is properly structured.
 
 ---

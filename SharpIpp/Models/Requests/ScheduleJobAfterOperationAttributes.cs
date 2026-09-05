@@ -1,3 +1,5 @@
+using SharpIpp.Validation;
+
 namespace SharpIpp.Models.Requests;
 
 /// <summary>
@@ -18,6 +20,6 @@ public class ScheduleJobAfterOperationAttributes : JobOperationAttributes
     /// See: RFC 3998 Section 3.2.6.1
     /// </summary>
     /// <code>predecessor-job-id</code>
-    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public int? PredecessorJobId { get; set; }
 }

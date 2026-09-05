@@ -1,5 +1,6 @@
 using System;
 using SharpIpp.Protocol.Models;
+using SharpIpp.Validation;
 
 namespace SharpIpp.Models.Requests;
 
@@ -29,7 +30,7 @@ public class IdentifyPrinterOperationAttributes : OperationAttributes
     /// See: RFC 8011 Section 5.3.1
     /// </summary>
     /// <code>job-id</code>
-    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public int? JobId { get; set; }
 
     /// <summary>

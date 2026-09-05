@@ -8,6 +8,8 @@
     <PackageVersion Include="coverlet.collector" Version="8.0.0" />
     <PackageVersion Include="coverlet.msbuild" Version="8.0.0" />
     <PackageVersion Include="FluentAssertions" Version="8.8.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
     <PackageVersion Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="5.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
@@ -19,6 +21,5 @@
     <PackageVersion Include="NUnit3TestAdapter" Version="3.17.0" />
     <PackageVersion Include="Quartz.Extensions.Hosting" Version="3.8.1" />
     <PackageVersion Include="Snapper" Version="2.3.0" />
-    <PackageVersion Include="System.ComponentModel.Annotations" Version="5.0.0" />
   </ItemGroup>
 </Project>

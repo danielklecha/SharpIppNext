@@ -16,9 +16,7 @@ A .NET Standard library for building Internet Printing Protocol (IPP) clients an
 - **Client & Server SDK**: Strongly-typed interfaces to build both client applications (`ISharpIppClient`) and print servers (`ISharpIppServer`).
 - **Over 70 Supported Operations**: Out-of-the-box methods for standard IPP operations, plus support for sending custom/extended requests via raw message mapping.
 - **System Service Support**: Broad support for IPP System Service operations defined in PWG 5100.22-2025, including system and printer resource management, power policies, and subscription operations.
-- **CUPS Compatibility**: Full client-side support for CUPS-specific operations (e.g., `CUPS-Get-Printers`).
-- **Two-Tier Validation**: Recursive model-level checks using standard .NET DataAnnotations alongside strict low-level RFC 8011 attribute and octet-limit validation.
-- **Native AOT Compatible**: Optimized and verified for Ahead-of-Time compilation with zero reflection overhead (AOT sample projects included).
+- **Two-Tier Validation**: Recursive model-level validation via a built-in zero-dependency validation engine alongside strict low-level RFC 8011 attribute and octet-limit validation.
 - **Strong-Named Assembly**: Available in both standard and strong-named NuGet packages.
 
 ## Installation

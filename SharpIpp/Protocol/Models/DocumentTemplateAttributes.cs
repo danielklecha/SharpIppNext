@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel.DataAnnotations;
 using SharpIpp.Validation;
 
 namespace SharpIpp.Protocol.Models;
@@ -26,7 +25,7 @@ public class DocumentTemplateAttributes : IIppCollection
     /// The <c>copies</c> Document Template attribute.
     /// See: RFC 8011 Section 5.2.5
     /// </summary>
-    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public int? Copies { get; set; }
 
     /// <summary>
@@ -59,7 +58,7 @@ public class DocumentTemplateAttributes : IIppCollection
     /// The <c>force-front-side</c> Document Template attribute.
     /// See: PWG 5100.3-2023 Section 5.2.2
     /// </summary>
-    [ItemRange(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public int[]? ForceFrontSide { get; set; }
 
     /// <summary>
@@ -91,7 +90,7 @@ public class DocumentTemplateAttributes : IIppCollection
     /// The <c>number-up</c> Document Template attribute.
     /// See: RFC 8011 Section 5.2.9
     /// </summary>
-    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public int? NumberUp { get; set; }
 
     /// <summary>
@@ -239,7 +238,7 @@ public class DocumentTemplateAttributes : IIppCollection
     /// The <c>input-contrast</c> input attribute.
     /// See: PWG 5100.15-2013 Section 7.1.1.7
     /// </summary>
-    [System.ComponentModel.DataAnnotations.Range(-100, 100)]
+    [Range(-100, 100)]
     public int? InputContrast { get; set; }
 
     /// <summary>
@@ -282,21 +281,21 @@ public class DocumentTemplateAttributes : IIppCollection
     /// The <c>input-scaling-height</c> input attribute.
     /// See: PWG 5100.15-2013 Section 7.1.1.14
     /// </summary>
-    [System.ComponentModel.DataAnnotations.Range(1, 1000)]
+    [Range(1, 1000)]
     public int? InputScalingHeight { get; set; }
 
     /// <summary>
     /// The <c>input-scaling-width</c> input attribute.
     /// See: PWG 5100.15-2013 Section 7.1.1.15
     /// </summary>
-    [System.ComponentModel.DataAnnotations.Range(1, 1000)]
+    [Range(1, 1000)]
     public int? InputScalingWidth { get; set; }
 
     /// <summary>
     /// The <c>input-sharpness</c> input attribute.
     /// See: PWG 5100.15-2013 Section 7.1.1.17
     /// </summary>
-    [System.ComponentModel.DataAnnotations.Range(-100, 100)]
+    [Range(-100, 100)]
     public int? InputSharpness { get; set; }
 
     /// <summary>
@@ -394,14 +393,14 @@ public class DocumentTemplateAttributes : IIppCollection
     /// The <c>chamber-humidity</c> Document Template attribute.
     /// See: PWG 5100.21-2019 Section 8.1.1
     /// </summary>
-    [System.ComponentModel.DataAnnotations.Range(0, 100)]
+    [Range(0, 100)]
     public int? ChamberHumidity { get; set; }
 
     /// <summary>
     /// The <c>chamber-temperature</c> Document Template attribute.
     /// See: PWG 5100.21-2019 Section 8.1.2
     /// </summary>
-    [System.ComponentModel.DataAnnotations.Range(-273, int.MaxValue)]
+    [Range(-273, int.MaxValue)]
     public int? ChamberTemperature { get; set; }
 
     /// <summary>
@@ -420,7 +419,7 @@ public class DocumentTemplateAttributes : IIppCollection
     /// The <c>platform-temperature</c> Document Template attribute.
     /// See: PWG 5100.21-2019 Section 8.1.5
     /// </summary>
-    [System.ComponentModel.DataAnnotations.Range(-273, int.MaxValue)]
+    [Range(-273, int.MaxValue)]
     public int? PlatformTemperature { get; set; }
 
     /// <summary>

@@ -36,12 +36,13 @@
     </None>
     <EmbeddedResource Include="ILLink.Descriptors.xml" LogicalName="ILLink.Descriptors.xml" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="System.ComponentModel.Annotations" />
-  </ItemGroup>
   
   <ItemGroup Condition="'$(SignAssembly)' != 'true'">
     <InternalsVisibleTo Include="SharpIpp.Tests.Unit" />
     <InternalsVisibleTo Include="SharpIpp.Tests.Integration" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SharpIpp.Generators\SharpIpp.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 </Project>

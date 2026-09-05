@@ -12,7 +12,7 @@ public class GetResourcesOperationAttributes : SystemOperationAttributes
     /// Filter by a set of Resource IDs.
     /// See: PWG 5100.22-2025 Section 7.1.15
     /// </summary>
-    [ItemRange(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public int[]? ResourceIds { get; set; }
 
     /// <summary>
