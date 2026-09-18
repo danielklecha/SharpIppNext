@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Responses;
@@ -6,6 +7,7 @@ namespace SharpIpp.Models.Responses;
 /// Add-Document-Images response.
 /// See: PWG 5100.15-2013 Section 6.1.2
 /// </summary>
+[IppResponse]
 public class AddDocumentImagesResponse : IppResponse<OperationAttributes>
 {
 }

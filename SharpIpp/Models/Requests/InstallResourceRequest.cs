@@ -1,9 +1,12 @@
+using SharpIpp.Protocol.Models;
+using SharpIpp.Mapping;
 namespace SharpIpp.Models.Requests;
 
 /// <summary>
 /// Install-Resource operation.
 /// See: PWG 5100.22-2025 Section 6.2.4
 /// </summary>
+[IppRequest(IppOperation.InstallResource)]
 public class InstallResourceRequest : IppRequest<InstallResourceOperationAttributes>, IIppSystemRequest
 {
 }

@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using System;
 using System.Collections.Generic;
 using SharpIpp.Protocol.Models;
@@ -16,7 +17,8 @@ namespace SharpIpp.Models.Requests
     /// respectively, and the device(s) resume processing jobs.
     /// See: RFC 2911 Section 3.2.8
     /// </summary>
-    public class ResumePrinterRequest : IppRequest<ResumePrinterOperationAttributes>, IIppPrinterRequest
+    [IppRequest(IppOperation.ResumePrinter)]
+public class ResumePrinterRequest : IppRequest<ResumePrinterOperationAttributes>, IIppPrinterRequest
     {
         
     }

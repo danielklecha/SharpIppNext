@@ -205,5 +205,82 @@ public class PrinterFinisherSupplyTests
         supply.Index.Should().BeNull();
         supply.DeviceIndex.Should().BeNull();
     }
+
+    [TestMethod]
+    public void ExplicitOperator_String_NonNullAndNull()
+    {
+        var supply = new PrinterFinisherSupply { Class = FinisherSupplyClass.Consumed, Type = FinisherSupplyType.Staples };
+        var str = (string)supply;
+        str.Should().Be("class=consumed; type=staples;");
+
+        var nullStr = (string)(PrinterFinisherSupply)null!;
+        nullStr.Should().BeNull();
+    }
+
+    [TestMethod]
+    public void ExplicitOperator_FromString_ValidAndInvalid()
+    {
+        var raw = "class=consumed; type=staples;";
+        var supply = (PrinterFinisherSupply)raw;
+        supply.Class.Should().Be(FinisherSupplyClass.Consumed);
+        supply.Type.Should().Be(FinisherSupplyType.Staples);
+
+        Action actNull = () => { var _ = (PrinterFinisherSupply)(string)null!; };
+        actNull.Should().Throw<ArgumentNullException>();
+
+        Action actEmpty = () => { var _ = (PrinterFinisherSupply)""; };
+        actEmpty.Should().Throw<FormatException>();
+    }
+
+    [TestMethod]
+    public void ExplicitOperator_ByteArray_NonNullAndNull()
+    {
+        var supply = new PrinterFinisherSupply { Class = FinisherSupplyClass.Consumed, Type = FinisherSupplyType.Staples };
+        var bytes = (byte[])supply;
+        bytes.Should().Equal(System.Text.Encoding.UTF8.GetBytes("class=consumed; type=staples;"));
+
+        var nullBytes = (byte[])(PrinterFinisherSupply)null!;
+        nullBytes.Should().Equal(Array.Empty<byte>());
+    }
+
+    [TestMethod]
+    public void ExplicitOperator_FromByteArray_ValidAndInvalid()
+    {
+        var raw = "class=consumed; type=staples;";
+        var bytes = System.Text.Encoding.UTF8.GetBytes(raw);
+        var supply = (PrinterFinisherSupply)bytes;
+        supply.Class.Should().Be(FinisherSupplyClass.Consumed);
+        supply.Type.Should().Be(FinisherSupplyType.Staples);
+
+        Action actNull = () => { var _ = (PrinterFinisherSupply)(byte[])null!; };
+        actNull.Should().Throw<ArgumentNullException>();
+
+        Action actEmpty = () => { var _ = (PrinterFinisherSupply)Array.Empty<byte>(); };
+        actEmpty.Should().Throw<FormatException>();
+    }
+
+    [TestMethod]
+    public void ExplicitOperator_OctetString_NonNullAndNull()
+    {
+        var supply = new PrinterFinisherSupply { Class = FinisherSupplyClass.Consumed, Type = FinisherSupplyType.Staples };
+        var octet = (OctetString)supply;
+        octet.ToString().Should().Be("class=consumed; type=staples;");
+
+        var nullOctet = (OctetString)(PrinterFinisherSupply)null!;
+        nullOctet.ToString().Should().Be(string.Empty);
+    }
+
+    [TestMethod]
+    public void ExplicitOperator_FromOctetString_ValidAndInvalid()
+    {
+        var raw = "class=consumed; type=staples;";
+        var octet = new OctetString(raw);
+        var supply = (PrinterFinisherSupply)octet;
+        supply.Class.Should().Be(FinisherSupplyClass.Consumed);
+        supply.Type.Should().Be(FinisherSupplyType.Staples);
+
+        Action actDefault = () => { var _ = (PrinterFinisherSupply)default(OctetString); };
+        actDefault.Should().Throw<FormatException>();
+    }
 }
 

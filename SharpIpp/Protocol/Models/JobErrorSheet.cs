@@ -1,4 +1,5 @@
 using System;
+using SharpIpp.Mapping;
 
 namespace SharpIpp.Protocol.Models;
 
@@ -6,6 +7,7 @@ namespace SharpIpp.Protocol.Models;
 /// Represents the <c>job-error-sheet</c> collection.
 /// See: PWG 5100.3-2023 Section 5.2.9
 /// </summary>
+[IppAttribute(IppAttributeNames.JobErrorSheet)]
 public class JobErrorSheet : IIppCollection
 {
     /// <inheritdoc />

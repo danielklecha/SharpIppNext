@@ -1,4 +1,5 @@
 using System;
+using SharpIpp.Mapping;
 
 namespace SharpIpp.Protocol.Models;
 
@@ -7,6 +8,7 @@ namespace SharpIpp.Protocol.Models;
 /// See: PWG 5100.3-2023 Section 5.2.1
 /// </summary>
 [Obsolete("See PWG 5100.3-2023 Section 5.2.1.")]
+[IppAttribute("cover")]
 public class Cover : IIppCollection
 {
     /// <inheritdoc />

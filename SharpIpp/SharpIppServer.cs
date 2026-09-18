@@ -2,7 +2,6 @@ using SharpIpp.Exceptions;
 using SharpIpp.Validation;
 using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
-using SharpIpp.Mapping.Profiles;
 using SharpIpp.Models.Requests;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Extensions;
@@ -226,12 +225,10 @@ public partial class SharpIppServer : ISharpIppServer
         return Task.FromResult<IIppResponseMessage>(ippResponse);
     }
 
-    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "Mapping profiles are preserved via ILLink.Descriptors.xml")]
     private static IMapper MapperFactory()
     {
         var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(TypesProfile));
-        mapper.FillFromAssembly(assembly!);
+        mapper.RegisterGeneratedProfiles();
         return mapper;
     }
 }

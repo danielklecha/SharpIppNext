@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Requests;
@@ -6,4 +7,5 @@ namespace SharpIpp.Models.Requests;
 /// Get-Printer-Supported-Values Operation.
 /// See: RFC 3380 Section 4.3
 /// </summary>
+[IppRequest(IppOperation.GetPrinterSupportedValues)]
 public class GetPrinterSupportedValuesRequest : IppRequest<GetPrinterSupportedValuesOperationAttributes>, IIppPrinterRequest { }

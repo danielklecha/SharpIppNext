@@ -1,9 +1,12 @@
+using SharpIpp.Protocol.Models;
+using SharpIpp.Mapping;
 namespace SharpIpp.Models.Requests;
 
 /// <summary>
 /// Get-Output-Device-Attributes operation.
 /// See: PWG 5100.18-2025 Section 6.1
 /// </summary>
+[IppRequest(IppOperation.GetOutputDeviceAttributes)]
 public class GetOutputDeviceAttributesRequest : IppRequest<GetOutputDeviceAttributesOperationAttributes>, IIppPrinterRequest
 {
 }

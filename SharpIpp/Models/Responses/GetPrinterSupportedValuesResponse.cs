@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Responses;
@@ -6,6 +7,7 @@ namespace SharpIpp.Models.Responses;
 /// Get-Printer-Supported-Values Response.
 /// See: RFC 3380 Section 4.3
 /// </summary>
+[IppResponse]
 public class GetPrinterSupportedValuesResponse : IppResponse<OperationAttributes>
 {
     /// <summary>

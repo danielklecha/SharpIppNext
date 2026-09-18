@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using System;
 using System.Collections.Generic;
 using SharpIpp.Protocol.Models;
@@ -21,7 +22,8 @@ namespace SharpIpp.Models.Requests
     /// See: RFC 2911 Section 3.2.2
     /// </summary>
     [Obsolete("The 'Print-URI' operation is deprecated.")]
-    public class PrintUriRequest : IppRequest<PrintUriOperationAttributes>, IIppPrinterRequest
+    [IppRequest(IppOperation.PrintUri)]
+public class PrintUriRequest : IppRequest<PrintUriOperationAttributes>, IIppPrinterRequest
     {
         /// <summary>
         /// The job-template-attributes IPP attribute.

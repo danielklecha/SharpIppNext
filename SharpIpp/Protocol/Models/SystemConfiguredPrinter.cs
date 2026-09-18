@@ -1,9 +1,12 @@
+using SharpIpp.Mapping;
+
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Member attributes for configured printer entries in System status.
 /// See: PWG 5100.22-2025 Section 7.3.9
 /// </summary>
+[IppAttribute(IppAttributeNames.SystemConfiguredPrinters)]
 public class SystemConfiguredPrinter : IIppCollection
 {
     bool INoValueWritable.IsValue { get; set; } = true;
@@ -15,7 +18,10 @@ public class SystemConfiguredPrinter : IIppCollection
     /// See: PWG 5100.22-2025 Section 7.1.5
     /// </summary>
     public int? PrinterId { get; set; }
+
+    [IppAttribute(IppAttributeNames.PrinterInfo, Tag = Tag.TextWithoutLanguage)]
     public string? PrinterInfo { get; set; }
+
     public bool? PrinterIsAcceptingJobs { get; set; }
     public string? PrinterName { get; set; }
     public PrinterServiceType? PrinterServiceType { get; set; }

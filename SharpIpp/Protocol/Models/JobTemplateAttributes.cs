@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using SharpIpp.Mapping;
+using SharpIpp.Protocol;
 using SharpIpp.Validation;
 
 namespace SharpIpp.Protocol.Models;
@@ -17,6 +19,8 @@ namespace SharpIpp.Protocol.Models;
 /// See: PWG 5100.15-2013
 /// See: PWG 5100.21-2019
 /// </summary>
+[IppAttribute]
+[IppSection(SectionTag.JobAttributesTag)]
 public class JobTemplateAttributes
 {
     /// <summary>
@@ -40,6 +44,7 @@ public class JobTemplateAttributes
     /// See: RFC 8011 Section 5.2.1
     /// </summary>
     [Range(1, 100)]
+    [IppAttribute(IppAttributeNames.JobPriority, Tag.Integer)]
     public int? JobPriority { get; set; }
 
     /// <summary>
@@ -47,6 +52,7 @@ public class JobTemplateAttributes
     /// MUST become a candidate for printing.
     /// See: RFC 8011 Section 5.2.2
     /// </summary>
+    [IppAttribute(IppAttributeNames.JobHoldUntil)]
     public JobHoldUntil? JobHoldUntil { get; set; }
 
     /// <summary>
@@ -54,6 +60,7 @@ public class JobTemplateAttributes
     /// within a Job.
     /// See: RFC 8011 Section 5.2.4
     /// </summary>
+    [IppAttribute(IppAttributeNames.MultipleDocumentHandling)]
     public MultipleDocumentHandling? MultipleDocumentHandling { get; set; }
 
     /// <summary>
@@ -61,12 +68,14 @@ public class JobTemplateAttributes
     /// uses for the Job.
     /// See: RFC 8011 Section 5.2.3
     /// </summary>
+    [IppAttribute(IppAttributeNames.JobSheets)]
     public JobSheets? JobSheets { get; set; }
 
     /// <summary>
     /// This attribute augments the "job-sheets" Job Template attribute and allows a Client to specify distinct media.
     /// See: PWG 5100.7-2023 Section 6.8.11
     /// </summary>
+    [IppAttribute(IppAttributeNames.JobSheetsCol)]
     public JobSheetsCol? JobSheetsCol { get; set; }
 
     /// <summary>
@@ -78,6 +87,7 @@ public class JobTemplateAttributes
     /// See: RFC 8011 Section 5.2.5
     /// </summary>
     [Range(1, int.MaxValue)]
+    [IppAttribute(IppAttributeNames.Copies, Tag.Integer)]
     public int? Copies { get; set; }
 
     /// <summary>
@@ -87,6 +97,7 @@ public class JobTemplateAttributes
     /// determines what constitutes a "copy" for purposes of finishing.
     /// See: RFC 8011 Section 5.2.6
     /// </summary>
+    [IppAttribute(IppAttributeNames.Finishings, Tag.Enum)]
     public Finishings[]? Finishings { get; set; }
 
     /// <summary>
@@ -94,6 +105,7 @@ public class JobTemplateAttributes
     /// be expressed by the "finishings" Job Template attribute.
     /// See: PWG 5100.1-2022 Section 5.2
     /// </summary>
+    [IppAttribute(IppAttributeNames.FinishingsCol)]
     public FinishingsCol[]? FinishingsCol { get; set; }
 
     /// <summary>
@@ -137,6 +149,7 @@ public class JobTemplateAttributes
     /// printed.
     /// See: RFC 8011 Section 5.2.7
     /// </summary>
+    [IppAttribute(IppAttributeNames.PageRanges, Tag.RangeOfInteger)]
     public Range[]? PageRanges { get; set; }
 
     /// <summary>
@@ -145,6 +158,7 @@ public class JobTemplateAttributes
     /// impression.
     /// See: RFC 8011 Section 5.2.8
     /// </summary>
+    [IppAttribute(IppAttributeNames.Sides)]
     public Sides? Sides { get; set; }
 
     /// <summary>
@@ -165,6 +179,7 @@ public class JobTemplateAttributes
     /// See: RFC 8011 Section 5.2.9
     /// </summary>
     [Range(1, int.MaxValue)]
+    [IppAttribute(IppAttributeNames.NumberUp, Tag.Integer)]
     public int? NumberUp { get; set; }
 
     /// <summary>
@@ -190,6 +205,7 @@ public class JobTemplateAttributes
     /// subset of the supported document formats.
     /// See: RFC 8011 Section 5.2.10
     /// </summary>
+    [IppAttribute(IppAttributeNames.OrientationRequested, Tag.Enum)]
     public Orientation? OrientationRequested { get; set; }
 
     /// <summary>
@@ -214,6 +230,7 @@ public class JobTemplateAttributes
     /// with the document data as its prints each page.
     /// See: RFC 8011 Section 5.2.11
     /// </summary>
+    [IppAttribute(IppAttributeNames.Media)]
     public Media? Media { get; set; }
 
     /// <summary>
@@ -221,6 +238,7 @@ public class JobTemplateAttributes
     /// Job.
     /// See: RFC 8011 Section 5.2.12
     /// </summary>
+    [IppAttribute(IppAttributeNames.PrinterResolution, Tag.Resolution)]
     public Resolution? PrinterResolution { get; set; }
 
     /// <summary>
@@ -228,30 +246,35 @@ public class JobTemplateAttributes
     /// the Job.
     /// See: RFC 8011 Section 5.2.13
     /// </summary>
+    [IppAttribute(IppAttributeNames.PrintQuality, Tag.Enum)]
     public PrintQuality? PrintQuality { get; set; }
 
     /// <summary>
     /// This attribute specifies how the Printer scales the content.
     /// See: PWG 5100.13-2023 Section 6.2.5
     /// </summary>
+    [IppAttribute(IppAttributeNames.PrintScaling)]
     public PrintScaling? PrintScaling { get; set; }
 
     /// <summary>
     /// This attribute specifies the color mode for the Job.
     /// See: PWG 5100.13-2023 Section 6.2.3
     /// </summary>
+    [IppAttribute(IppAttributeNames.PrintColorMode)]
     public PrintColorMode? PrintColorMode { get; set; }
 
     /// <summary>
     /// This attribute specifies the rendering intent for color conversion.
     /// See: PWG 5100.13-2023 Section 6.2.4
     /// </summary>
+    [IppAttribute(IppAttributeNames.PrintRenderingIntent)]
     public PrintRenderingIntent? PrintRenderingIntent { get; set; }
 
     /// <summary>
     /// This attribute specifies the action to take when the Printer encounters a Job processing error.
     /// See: PWG 5100.13-2023 Section 6.2.6
     /// </summary>
+    [IppAttribute(IppAttributeNames.JobErrorAction)]
     public JobErrorAction? JobErrorAction { get; set; }
 
     /// <summary>
@@ -259,6 +282,7 @@ public class JobTemplateAttributes
     /// for the Job using a collection.
     /// See: PWG 5100.7-2023
     /// </summary>
+    [IppAttribute(IppAttributeNames.MediaCol)]
     public MediaCol? MediaCol { get; set; }
 
     /// <summary>
@@ -268,18 +292,21 @@ public class JobTemplateAttributes
     /// attribute syntax is 'name'.
     /// See: PWG 5100.2-2001 Section 2.1
     /// </summary>
+    [IppAttribute(IppAttributeNames.OutputBin)]
     public OutputBin? OutputBin { get; set; }
 
     /// <summary>
     /// This attribute specifies the account associated with the Job.
     /// See: PWG 5100.7-2023 Section 6.8.1
     /// </summary>
+    [IppAttribute(IppAttributeNames.JobAccountId, Tag.NameWithoutLanguage)]
     public string? JobAccountId { get; set; }
 
     /// <summary>
     /// This attribute specifies the type of value in <c>job-account-id</c>.
     /// See: PWG 5100.11-2024 Section 5.3.5
     /// </summary>
+    [IppAttribute(IppAttributeNames.JobAccountType)]
     public JobAccountType? JobAccountType { get; set; }
 
     /// <summary>
@@ -287,6 +314,7 @@ public class JobTemplateAttributes
     /// specified by the "job-account-id" attribute.
     /// See: PWG 5100.7-2023 Section 6.8.2
     /// </summary>
+    [IppAttribute(IppAttributeNames.JobAccountingUserId, Tag.NameWithoutLanguage)]
     public string? JobAccountingUserId { get; set; }
 
     /// <summary>
@@ -294,6 +322,7 @@ public class JobTemplateAttributes
     /// for processing a Job.
     /// See: PWG 5100.7-2023 Section 6.8.3
     /// </summary>
+    [IppAttribute(IppAttributeNames.JobCancelAfter, Tag.Integer)]
     public int? JobCancelAfter { get; set; }
 
     /// <summary>
@@ -301,6 +330,7 @@ public class JobTemplateAttributes
     /// Printer will produce the output for the Job.
     /// See: PWG 5100.7-2023 Section 6.8.4
     /// </summary>
+    [IppAttribute(IppAttributeNames.JobDelayOutputUntil)]
     public JobHoldUntil? JobDelayOutputUntil { get; set; }
 
     /// <summary>
@@ -308,6 +338,7 @@ public class JobTemplateAttributes
     /// produce the output for the Job.
     /// See: PWG 5100.7-2023 Section 6.8.5
     /// </summary>
+    [IppAttribute(IppAttributeNames.JobDelayOutputUntilTime)]
     public DateTimeOffset? JobDelayOutputUntilTime { get; set; }
 
     /// <summary>
@@ -315,6 +346,7 @@ public class JobTemplateAttributes
     /// MUST become a candidate for processing.
     /// See: PWG 5100.7-2023 Section 6.8.6
     /// </summary>
+    [IppAttribute(IppAttributeNames.JobHoldUntilTime)]
     public DateTimeOffset? JobHoldUntilTime { get; set; }
 
     /// <summary>
@@ -322,6 +354,7 @@ public class JobTemplateAttributes
     /// Retention phase of a Job's life cycle.
     /// See: PWG 5100.7-2023 Section 6.8.7
     /// </summary>
+    [IppAttribute(IppAttributeNames.JobRetainUntil)]
     public JobHoldUntil? JobRetainUntil { get; set; }
 
     /// <summary>
@@ -329,6 +362,7 @@ public class JobTemplateAttributes
     /// in the Job Retention phase of a Job's life cycle.
     /// See: PWG 5100.7-2023 Section 6.8.8
     /// </summary>
+    [IppAttribute(IppAttributeNames.JobRetainUntilInterval, Tag.Integer)]
     public int? JobRetainUntilInterval { get; set; }
 
     /// <summary>
@@ -336,18 +370,21 @@ public class JobTemplateAttributes
     /// leave the Job Retention phase of a Job's life cycle.
     /// See: PWG 5100.7-2023 Section 6.8.9
     /// </summary>
+    [IppAttribute(IppAttributeNames.JobRetainUntilTime)]
     public DateTimeOffset? JobRetainUntilTime { get; set; }
 
     /// <summary>
     /// This attribute specifies a message that is printed on the Job Sheet.
     /// See: PWG 5100.7-2023 Section 6.8.10
     /// </summary>
+    [IppAttribute(IppAttributeNames.JobSheetMessage, Tag.TextWithoutLanguage)]
     public string? JobSheetMessage { get; set; }
 
     /// <summary>
     /// This attribute specifies the output device requested for the Job.
     /// See: PWG 5100.7-2023 Section 6.3.2
     /// </summary>
+    [IppAttribute(IppAttributeNames.OutputDevice, Tag.NameWithoutLanguage)]
     public string? OutputDevice { get; set; }
 
     /// <summary>
@@ -355,6 +392,7 @@ public class JobTemplateAttributes
     /// content of the document for the output device.
     /// See: PWG 5100.7-2023 Section 6.3.3
     /// </summary>
+    [IppAttribute(IppAttributeNames.PrintContentOptimize)]
     public PrintContentOptimize? PrintContentOptimize { get; set; }
 
     /// <summary>
@@ -362,6 +400,7 @@ public class JobTemplateAttributes
     /// for finishing operations.
     /// See: PWG 5100.1-2022 Section 5.3
     /// </summary>
+    [IppAttribute(IppAttributeNames.JobPagesPerSet, Tag.Integer)]
     public int? JobPagesPerSet { get; set; }
 
     /// <summary>
@@ -370,6 +409,7 @@ public class JobTemplateAttributes
     /// Deprecated in: PWG 5100.3-2023 Section 5.2.1
     /// </summary>
     [Obsolete("The 'cover-back' attribute is deprecated. See PWG 5100.3-2023 Section 5.2.1.")]
+    [IppAttribute(IppAttributeNames.CoverBack)]
     public Cover? CoverBack { get; set; }
 
     /// <summary>
@@ -378,6 +418,7 @@ public class JobTemplateAttributes
     /// Deprecated in: PWG 5100.3-2023 Section 5.2.1
     /// </summary>
     [Obsolete("The 'cover-front' attribute is deprecated. See PWG 5100.3-2023 Section 5.2.1.")]
+    [IppAttribute(IppAttributeNames.CoverFront)]
     public Cover? CoverFront { get; set; }
 
     /// <summary>
@@ -385,18 +426,21 @@ public class JobTemplateAttributes
     /// See: PWG 5100.3-2023 Section 5.2.2
     /// </summary>
     [Range(1, int.MaxValue)]
+    [IppAttribute(IppAttributeNames.ForceFrontSide, Tag.Integer)]
     public int[]? ForceFrontSide { get; set; }
 
     /// <summary>
     /// The <c>image-orientation</c> Job Template attribute.
     /// See: PWG 5100.3-2023 Section 5.2.3
     /// </summary>
+    [IppAttribute(IppAttributeNames.ImageOrientation, Tag.Enum)]
     public Orientation? ImageOrientation { get; set; }
 
     /// <summary>
     /// The <c>imposition-template</c> Job Template attribute.
     /// See: PWG 5100.3-2023 Section 5.2.4
     /// </summary>
+    [IppAttribute(IppAttributeNames.ImpositionTemplate)]
     public ImpositionTemplate? ImpositionTemplate { get; set; }
 
     /// <summary>
@@ -405,6 +449,7 @@ public class JobTemplateAttributes
     /// Deprecated in: PWG 5100.3-2023 Section 5.2.5
     /// </summary>
     [Obsolete("The 'insert-sheet' attribute is deprecated. See PWG 5100.3-2023 Section 5.2.5.")]
+    [IppAttribute(IppAttributeNames.InsertSheet)]
     public InsertSheet[]? InsertSheet { get; set; }
 
     /// <summary>
@@ -413,42 +458,49 @@ public class JobTemplateAttributes
     /// Deprecated in: PWG 5100.3-2023 Section 5.2.6
     /// </summary>
     [Obsolete("The 'job-accounting-sheets' attribute is deprecated. See PWG 5100.3-2023 Section 5.2.6.")]
+    [IppAttribute(IppAttributeNames.JobAccountingSheets)]
     public JobAccountingSheets? JobAccountingSheets { get; set; }
 
     /// <summary>
     /// The <c>job-complete-before</c> Job Template attribute.
     /// See: PWG 5100.3-2023 Section 5.2.7
     /// </summary>
+    [IppAttribute(IppAttributeNames.JobCompleteBefore)]
     public JobCompleteBefore? JobCompleteBefore { get; set; }
 
     /// <summary>
     /// The <c>job-complete-before-time</c> Job Template attribute.
     /// See: PWG 5100.3-2023 Section 5.2.8
     /// </summary>
+    [IppAttribute(IppAttributeNames.JobCompleteBeforeTime)]
     public DateTimeOffset? JobCompleteBeforeTime { get; set; }
 
     /// <summary>
     /// The <c>job-error-sheet</c> Job Template attribute.
     /// See: PWG 5100.3-2023 Section 5.2.9
     /// </summary>
+    [IppAttribute(IppAttributeNames.JobErrorSheet)]
     public JobErrorSheet? JobErrorSheet { get; set; }
 
     /// <summary>
     /// The <c>job-message-to-operator</c> Job Template attribute.
     /// See: PWG 5100.3-2023 Section 5.2.10
     /// </summary>
+    [IppAttribute(IppAttributeNames.JobMessageToOperator, Tag.TextWithoutLanguage)]
     public string? JobMessageToOperator { get; set; }
 
     /// <summary>
     /// The <c>job-phone-number</c> Job Template attribute.
     /// See: PWG 5100.3-2023 Section 5.2.11
     /// </summary>
+    [IppAttribute(IppAttributeNames.JobPhoneNumber, Tag.Uri)]
     public string? JobPhoneNumber { get; set; }
 
     /// <summary>
     /// The <c>job-recipient-name</c> Job Template attribute.
     /// See: PWG 5100.3-2023 Section 5.2.12
     /// </summary>
+    [IppAttribute(IppAttributeNames.JobRecipientName, Tag.NameWithoutLanguage)]
     public string? JobRecipientName { get; set; }
 
     /// <summary>
@@ -457,12 +509,14 @@ public class JobTemplateAttributes
     /// Deprecated in: PWG 5100.3-2023 Section 5.2.13
     /// </summary>
     [Obsolete("The 'media-input-tray-check' attribute is deprecated. See PWG 5100.3-2023 Section 5.2.13.")]
+    [IppAttribute(IppAttributeNames.MediaInputTrayCheck)]
     public MediaInputTrayCheck? MediaInputTrayCheck { get; set; }
 
     /// <summary>
     /// The <c>page-delivery</c> Job Template attribute.
     /// See: PWG 5100.3-2023 Section 5.2.14
     /// </summary>
+    [IppAttribute(IppAttributeNames.PageDelivery)]
     public PageDelivery? PageDelivery { get; set; }
 
     /// <summary>
@@ -471,72 +525,84 @@ public class JobTemplateAttributes
     /// Deprecated in: PWG 5100.3-2023 Section 5.2.15
     /// </summary>
     [Obsolete("The 'presentation-direction-number-up' attribute is deprecated. See PWG 5100.3-2023 Section 5.2.15.")]
+    [IppAttribute(IppAttributeNames.PresentationDirectionNumberUp)]
     public PresentationDirectionNumberUp? PresentationDirectionNumberUp { get; set; }
 
     /// <summary>
     /// The <c>separator-sheets</c> Job Template attribute.
     /// See: PWG 5100.3-2023 Section 5.2.16
     /// </summary>
+    [IppAttribute(IppAttributeNames.SeparatorSheets)]
     public SeparatorSheets? SeparatorSheets { get; set; }
 
     /// <summary>
     /// The <c>x-image-position</c> Job Template attribute.
     /// See: PWG 5100.3-2023 Section 5.2.17
     /// </summary>
+    [IppAttribute(IppAttributeNames.XImagePosition)]
     public XImagePosition? XImagePosition { get; set; }
 
     /// <summary>
     /// The <c>x-image-shift</c> Job Template attribute.
     /// See: PWG 5100.3-2023 Section 5.2.18
     /// </summary>
+    [IppAttribute(IppAttributeNames.XImageShift, Tag.Integer)]
     public int? XImageShift { get; set; }
 
     /// <summary>
     /// The <c>x-side1-image-shift</c> Job Template attribute.
     /// See: PWG 5100.3-2023 Section 5.2.19
     /// </summary>
+    [IppAttribute(IppAttributeNames.XSide1ImageShift, Tag.Integer)]
     public int? XSide1ImageShift { get; set; }
 
     /// <summary>
     /// The <c>x-side2-image-shift</c> Job Template attribute.
     /// See: PWG 5100.3-2023 Section 5.2.20
     /// </summary>
+    [IppAttribute(IppAttributeNames.XSide2ImageShift, Tag.Integer)]
     public int? XSide2ImageShift { get; set; }
 
     /// <summary>
     /// The <c>y-image-position</c> Job Template attribute.
     /// See: PWG 5100.3-2023 Section 5.2.21
     /// </summary>
+    [IppAttribute(IppAttributeNames.YImagePosition)]
     public YImagePosition? YImagePosition { get; set; }
 
     /// <summary>
     /// The <c>y-image-shift</c> Job Template attribute.
     /// See: PWG 5100.3-2023 Section 5.2.22
     /// </summary>
+    [IppAttribute(IppAttributeNames.YImageShift, Tag.Integer)]
     public int? YImageShift { get; set; }
 
     /// <summary>
     /// The <c>y-side1-image-shift</c> Job Template attribute.
     /// See: PWG 5100.3-2023 Section 5.2.23
     /// </summary>
+    [IppAttribute(IppAttributeNames.YSide1ImageShift, Tag.Integer)]
     public int? YSide1ImageShift { get; set; }
 
     /// <summary>
     /// The <c>y-side2-image-shift</c> Job Template attribute.
     /// See: PWG 5100.3-2023 Section 5.2.24
     /// </summary>
+    [IppAttribute(IppAttributeNames.YSide2ImageShift, Tag.Integer)]
     public int? YSide2ImageShift { get; set; }
 
     /// <summary>
     /// The <c>confirmation-sheet-print</c> Job Template attribute.
     /// See: PWG 5100.15-2013 Section 7.4.7
     /// </summary>
+    [IppAttribute(IppAttributeNames.ConfirmationSheetPrint, Tag.Boolean)]
     public bool? ConfirmationSheetPrint { get; set; }
 
     /// <summary>
     /// The <c>number-of-retries</c> Job Template attribute.
     /// See: PWG 5100.15-2013 Section 7.4.20
     /// </summary>
+    [IppAttribute(IppAttributeNames.NumberOfRetries, Tag.Integer)]
     public int? NumberOfRetries { get; set; }
 
     /// <summary>
@@ -544,12 +610,14 @@ public class JobTemplateAttributes
     /// See: PWG 5100.15-2013 Section 7.2.5
     /// </summary>
     [Range(1, int.MaxValue)]
+    [IppAttribute(IppAttributeNames.RetryInterval, Tag.Integer)]
     public int? RetryInterval { get; set; }
 
     /// <summary>
     /// The <c>retry-time-out</c> Job Template attribute.
     /// See: PWG 5100.15-2013 Section 7.2.6
     /// </summary>
+    [IppAttribute(IppAttributeNames.RetryTimeOut, Tag.Integer)]
     public int? RetryTimeOut { get; set; }
 
     /// <summary>
@@ -557,6 +625,7 @@ public class JobTemplateAttributes
     /// See: PWG 5100.21-2019 Section 8.1.1
     /// </summary>
     [Range(0, 100)]
+    [IppAttribute(IppAttributeNames.ChamberHumidity, Tag.Integer)]
     public int? ChamberHumidity { get; set; }
 
     /// <summary>
@@ -564,18 +633,21 @@ public class JobTemplateAttributes
     /// See: PWG 5100.21-2019 Section 8.1.2
     /// </summary>
     [Range(-273, int.MaxValue)]
+    [IppAttribute(IppAttributeNames.ChamberTemperature, Tag.Integer)]
     public int? ChamberTemperature { get; set; }
 
     /// <summary>
     /// The <c>materials-col</c> Job Template attribute.
     /// See: PWG 5100.21-2019 Section 8.1.3
     /// </summary>
+    [IppAttribute(IppAttributeNames.MaterialsCol)]
     public Material[]? MaterialsCol { get; set; }
 
     /// <summary>
     /// The <c>multiple-object-handling</c> Job Template attribute.
     /// See: PWG 5100.21-2019 Section 8.1.4
     /// </summary>
+    [IppAttribute(IppAttributeNames.MultipleObjectHandling)]
     public MultipleObjectHandling? MultipleObjectHandling { get; set; }
 
     /// <summary>
@@ -583,36 +655,42 @@ public class JobTemplateAttributes
     /// See: PWG 5100.21-2019 Section 8.1.5
     /// </summary>
     [Range(-273, int.MaxValue)]
+    [IppAttribute(IppAttributeNames.PlatformTemperature, Tag.Integer)]
     public int? PlatformTemperature { get; set; }
 
     /// <summary>
     /// The <c>print-accuracy</c> Job Template attribute.
     /// See: PWG 5100.21-2019 Section 8.1.6
     /// </summary>
+    [IppAttribute(IppAttributeNames.PrintAccuracy)]
     public PrintAccuracy? PrintAccuracy { get; set; }
 
     /// <summary>
     /// The <c>print-base</c> Job Template attribute.
     /// See: PWG 5100.21-2019 Section 8.1.7
     /// </summary>
+    [IppAttribute(IppAttributeNames.PrintBase)]
     public PrintBase? PrintBase { get; set; }
 
     /// <summary>
     /// The <c>print-objects</c> Job Template attribute.
     /// See: PWG 5100.21-2019 Section 8.1.8
     /// </summary>
+    [IppAttribute(IppAttributeNames.PrintObjects)]
     public PrintObject[]? PrintObjects { get; set; }
 
     /// <summary>
     /// The <c>print-supports</c> Job Template attribute.
     /// See: PWG 5100.21-2019 Section 8.1.9
     /// </summary>
+    [IppAttribute(IppAttributeNames.PrintSupports)]
     public PrintSupports? PrintSupports { get; set; }
 
     /// <summary>
     /// The <c>overrides</c> Job Template attribute.
     /// See: PWG 5100.6-2003 Section 4.1
     /// </summary>
+    [IppAttribute(IppAttributeNames.Overrides)]
     public OverrideInstruction[]? Overrides { get; set; }
 
     /// <summary>
@@ -620,6 +698,7 @@ public class JobTemplateAttributes
     /// overriding the document-level "copies" attribute.
     /// See: PWG 5100.7-2023 Section 10.4
     /// </summary>
+    [IppAttribute(IppAttributeNames.JobCopies, Tag.Integer)]
     public int? JobCopies { get; set; }
 
     /// <summary>
@@ -627,6 +706,7 @@ public class JobTemplateAttributes
     /// of the Job, overriding the document-level "cover-back" attribute.
     /// See: PWG 5100.7-2023 Section 10.4
     /// </summary>
+    [IppAttribute(IppAttributeNames.JobCoverBack)]
     public Cover? JobCoverBack { get; set; }
 
     /// <summary>
@@ -634,6 +714,7 @@ public class JobTemplateAttributes
     /// of the Job, overriding the document-level "cover-front" attribute.
     /// See: PWG 5100.7-2023 Section 10.4
     /// </summary>
+    [IppAttribute(IppAttributeNames.JobCoverFront)]
     public Cover? JobCoverFront { get; set; }
 
     /// <summary>
@@ -642,6 +723,7 @@ public class JobTemplateAttributes
     /// attribute.
     /// See: PWG 5100.7-2023 Section 10.4
     /// </summary>
+    [IppAttribute(IppAttributeNames.JobFinishings, Tag.Enum)]
     public Finishings[]? JobFinishings { get; set; }
 
     /// <summary>
@@ -649,6 +731,7 @@ public class JobTemplateAttributes
     /// the document-level "finishings-col" attribute.
     /// See: PWG 5100.7-2023 Section 10.4
     /// </summary>
+    [IppAttribute(IppAttributeNames.JobFinishingsCol)]
     public FinishingsCol[]? JobFinishingsCol { get; set; }
 
     /// <summary>
@@ -657,6 +740,7 @@ public class JobTemplateAttributes
     /// specified by "job-password-encryption".
     /// See: PWG 5100.11-2024 Section 5.3.7
     /// </summary>
+    [IppAttribute(IppAttributeNames.JobPassword, Tag.OctetStringWithAnUnspecifiedFormat)]
     public OctetString? JobPassword { get; set; }
 
     /// <summary>
@@ -664,6 +748,7 @@ public class JobTemplateAttributes
     /// attribute value.
     /// See: PWG 5100.11-2024 Section 5.3.7
     /// </summary>
+    [IppAttribute(IppAttributeNames.JobPasswordEncryption)]
     public JobPasswordEncryption? JobPasswordEncryption { get; set; }
 
     /// <summary>
@@ -671,6 +756,7 @@ public class JobTemplateAttributes
     /// multiple copies of a document.
     /// See: PWG 5100.8-2003 Section 3
     /// </summary>
+    [IppAttribute(IppAttributeNames.SheetCollate, Tag.Keyword)]
     public SheetCollate? SheetCollate { get; set; }
 
     /// <summary>
@@ -678,6 +764,7 @@ public class JobTemplateAttributes
     /// within the Job.
     /// See: PWG 5100.8-2003 Section 3
     /// </summary>
+    [IppAttribute(IppAttributeNames.PageOverrides)]
     public OverrideInstruction[]? PageOverrides { get; set; }
 
     /// <summary>
@@ -687,6 +774,7 @@ public class JobTemplateAttributes
     /// </summary>
     [Obsolete("The 'pages-per-subset' attribute is obsolete. See PWG 5100.13-2023 Section 7.1.")]
     [Range(1, int.MaxValue)]
+    [IppAttribute(IppAttributeNames.PagesPerSubset, Tag.Integer)]
     public int[]? PagesPerSubset { get; set; }
 
     /// <summary>
@@ -694,6 +782,7 @@ public class JobTemplateAttributes
     /// documents within the Job.
     /// See: PWG 5100.8-2003 Section 3
     /// </summary>
+    [IppAttribute(IppAttributeNames.DocumentOverrides)]
     public OverrideInstruction[]? DocumentOverrides { get; set; }
 
     /// <summary>
@@ -701,6 +790,7 @@ public class JobTemplateAttributes
     /// for the Job.
     /// See: PWG 5100.7-2023 Section 15.2
     /// </summary>
+    [IppAttribute(IppAttributeNames.MediaSource)]
     public MediaSource? MediaSource { get; set; }
 
     /// <summary>
@@ -708,6 +798,7 @@ public class JobTemplateAttributes
     /// into the Printer.
     /// See: PWG 5100.7-2023 Section 15.2
     /// </summary>
+    [IppAttribute(IppAttributeNames.MediaSourceFeedDirection)]
     public MediaSourceFeedDirection? MediaSourceFeedDirection { get; set; }
 
     /// <summary>
@@ -715,6 +806,7 @@ public class JobTemplateAttributes
     /// media source into the Printer.
     /// See: PWG 5100.7-2023 Section 15.3
     /// </summary>
+    [IppAttribute(IppAttributeNames.MediaSourceFeedOrientation, Tag.Enum)]
     public Orientation? MediaSourceFeedOrientation { get; set; }
 
     /// <summary>
@@ -722,6 +814,7 @@ public class JobTemplateAttributes
     /// uses for authentication and authorization purposes.
     /// See: PWG 5100.7-2023 Section 5.1.1
     /// </summary>
+    [IppAttribute(IppAttributeNames.RequestingUserUri, Tag.Uri)]
     public Uri? RequestingUserUri { get; set; }
 
     /// <summary>
@@ -730,6 +823,7 @@ public class JobTemplateAttributes
     /// listed attributes, it MUST reject the Job.
     /// See: PWG 5100.7-2023 Section 6.1
     /// </summary>
+    [IppAttribute(IppAttributeNames.JobMandatoryAttributes, Tag.Keyword)]
     public string[]? JobMandatoryAttributes { get; set; }
 
     /// <summary>
@@ -738,6 +832,7 @@ public class JobTemplateAttributes
     /// See: PWG 5100.7-2023 Section 6.1
     /// </summary>
     [Range(1, int.MaxValue)]
+    [IppAttribute(IppAttributeNames.JobIds, Tag.Integer)]
     public int[]? JobIds { get; set; }
 
     /// <summary>
@@ -745,6 +840,7 @@ public class JobTemplateAttributes
     /// See: PWG 5100.11 (obsolete)
     /// </summary>
     [Obsolete("The 'job-save-disposition' attribute is obsolete. See PWG 5100.11-2024 Section 9.1.")]
+    [IppAttribute(IppAttributeNames.JobSaveDisposition)]
     public JobSaveDisposition? JobSaveDisposition { get; set; }
 
     /// <summary>
@@ -752,6 +848,7 @@ public class JobTemplateAttributes
     /// See: PWG 5100.11 (obsolete)
     /// </summary>
     [Obsolete("The 'pdl-init-file' attribute is obsolete. See PWG 5100.11-2024 Section 9.1.")]
+    [IppAttribute(IppAttributeNames.PdlInitFile)]
     public PdlInitFile? PdlInitFile { get; set; }
 
 }

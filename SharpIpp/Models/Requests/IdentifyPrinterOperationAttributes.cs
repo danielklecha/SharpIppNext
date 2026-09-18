@@ -1,4 +1,5 @@
 using System;
+using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
 
@@ -8,6 +9,7 @@ namespace SharpIpp.Models.Requests;
 /// Identify-Printer operation attributes.
 /// See: PWG 5100.13-2023 Section 5.1.1
 /// </summary>
+[IppAttribute]
 public class IdentifyPrinterOperationAttributes : OperationAttributes
 {
     /// <summary>
@@ -15,6 +17,7 @@ public class IdentifyPrinterOperationAttributes : OperationAttributes
     /// See: PWG 5100.13-2023 Section 6.1.4
     /// </summary>
     /// <code>identify-actions</code>
+    [IppAttribute(IppAttributeNames.IdentifyActions, Tag = Tag.Keyword)]
     public IdentifyAction[]? IdentifyActions { get; set; }
 
     /// <summary>
@@ -22,6 +25,7 @@ public class IdentifyPrinterOperationAttributes : OperationAttributes
     /// See: PWG 5100.18-2025 Section 7.1.8
     /// </summary>
     /// <code>output-device-uuid</code>
+    [IppAttribute(IppAttributeNames.OutputDeviceUuid, Tag = Tag.Uri)]
     public Uri? OutputDeviceUuid { get; set; }
 
     /// <summary>
@@ -31,6 +35,7 @@ public class IdentifyPrinterOperationAttributes : OperationAttributes
     /// </summary>
     /// <code>job-id</code>
     [Range(1, int.MaxValue)]
+    [IppAttribute(IppAttributeNames.JobId, Tag = Tag.Integer)]
     public int? JobId { get; set; }
 
     /// <summary>
@@ -39,5 +44,6 @@ public class IdentifyPrinterOperationAttributes : OperationAttributes
     /// See: PWG 5100.13-2023 Section 5.1.1
     /// </summary>
     /// <code>message</code>
+    [IppAttribute(IppAttributeNames.Message, Tag = Tag.TextWithoutLanguage)]
     public string? Message { get; set; }
 }

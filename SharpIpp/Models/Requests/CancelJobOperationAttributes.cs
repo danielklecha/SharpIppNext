@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace SharpIpp.Models.Requests;
+[IppAttribute]
 public class CancelJobOperationAttributes : JobOperationAttributes
 {
     /// <summary>
@@ -14,6 +15,7 @@ public class CancelJobOperationAttributes : JobOperationAttributes
     /// See: RFC 2911 Section 3.3.3.1
     /// </summary>
     /// <code>message</code>
+    [IppAttribute(IppAttributeNames.Message, Tag = Tag.TextWithoutLanguage)]
     public string? Message { get; set; }
 
 }

@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Responses;
@@ -7,6 +8,7 @@ namespace SharpIpp.Models.Responses;
 /// See: RFC 3995 Section 5.1
 /// See: PWG 5100.15-2013 Section 4.2
 /// </summary>
+[IppResponse]
 public class CreatePrinterSubscriptionsResponse : IppResponse<OperationAttributes>
 {
     /// <summary>

@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
 
@@ -7,6 +8,7 @@ namespace SharpIpp.Models.Responses;
 /// Allocate-Printer-Resources response.
 /// See: PWG 5100.22-2025 Section 6.1.1
 /// </summary>
+[IppResponse]
 public class AllocatePrinterResourcesResponse : IppResponse<OperationAttributes>
 {
     /// <summary>

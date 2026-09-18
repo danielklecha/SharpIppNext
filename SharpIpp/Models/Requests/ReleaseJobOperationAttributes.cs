@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using SharpIpp.Mapping;
+using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Requests;
+[IppAttribute]
 public class ReleaseJobOperationAttributes : CancelJobOperationAttributes
 {
     /// <summary>
@@ -11,5 +14,6 @@ public class ReleaseJobOperationAttributes : CancelJobOperationAttributes
     /// See: PWG 5100.18-2025 Section 8.6
     /// </summary>
     /// <code>output-device-uuid</code>
+    [IppAttribute(IppAttributeNames.OutputDeviceUuid, Tag = Tag.Uri)]
     public Uri? OutputDeviceUuid { get; set; }
 }

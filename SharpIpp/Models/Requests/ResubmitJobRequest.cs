@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Requests;
@@ -6,6 +7,7 @@ namespace SharpIpp.Models.Requests;
 /// Resubmit-Job Operation.
 /// See: PWG 5100.7-2023 Section 5.3
 /// </summary>
+[IppRequest(IppOperation.ResubmitJob)]
 public class ResubmitJobRequest : IppRequest<ResubmitJobOperationAttributes>, IIppPrinterRequest
 {
     /// <summary>

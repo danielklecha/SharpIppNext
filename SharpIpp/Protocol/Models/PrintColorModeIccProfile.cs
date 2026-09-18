@@ -1,4 +1,5 @@
 using System;
+using SharpIpp.Mapping;
 
 namespace SharpIpp.Protocol.Models;
 
@@ -7,6 +8,7 @@ namespace SharpIpp.Protocol.Models;
 /// Each element associates a print-color-mode keyword with an ICC profile resource.
 /// See: PWG 5100.13-2023 Section 6.5.24
 /// </summary>
+[IppAttribute(IppAttributeNames.PrintColorModeIccProfiles)]
 public class PrintColorModeIccProfile : IIppCollection
 {
     /// <inheritdoc />

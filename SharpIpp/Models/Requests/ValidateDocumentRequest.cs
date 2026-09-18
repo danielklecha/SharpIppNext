@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using System;
 using SharpIpp.Protocol.Models;
 
@@ -6,6 +7,7 @@ namespace SharpIpp.Models.Requests;
 /// <summary>
 /// Validate-Document Operation.
 /// </summary>
+[IppRequest(IppOperation.ValidateDocument)]
 public class ValidateDocumentRequest : IppRequest<ValidateDocumentOperationAttributes>, IIppPrinterRequest
 {
     /// <summary>

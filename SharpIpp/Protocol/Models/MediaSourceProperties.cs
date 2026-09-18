@@ -1,4 +1,8 @@
+using SharpIpp.Mapping;
+
 namespace SharpIpp.Protocol.Models;
+
+[IppAttribute("media-source-properties")]
 public class MediaSourceProperties : IIppCollection
 {
     /// <inheritdoc />

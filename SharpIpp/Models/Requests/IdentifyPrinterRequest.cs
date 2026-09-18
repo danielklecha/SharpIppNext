@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Requests;
@@ -6,6 +7,7 @@ namespace SharpIpp.Models.Requests;
 /// Identify-Printer Operation.
 /// See: PWG 5100.13-2023 Section 5.1
 /// </summary>
+[IppRequest(IppOperation.IdentifyPrinter)]
 public class IdentifyPrinterRequest : IppRequest<IdentifyPrinterOperationAttributes>, IIppPrinterRequest
 {
 }

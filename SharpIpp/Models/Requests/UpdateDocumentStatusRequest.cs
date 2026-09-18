@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Requests;
@@ -6,6 +7,7 @@ namespace SharpIpp.Models.Requests;
 /// Update-Document-Status operation.
 /// See: PWG 5100.18-2025 Section 5.8
 /// </summary>
+[IppRequest(IppOperation.UpdateDocumentStatus)]
 public class UpdateDocumentStatusRequest : IppRequest<UpdateDocumentStatusOperationAttributes>, IIppJobRequest
 {
     /// <summary>

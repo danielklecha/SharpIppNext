@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,7 +13,8 @@ namespace SharpIpp.Models.Requests
     /// reference to the data).
     /// See: RFC 2911 Section 3.2.1
     /// </summary>
-    public class PrintJobRequest : IppRequest<PrintJobOperationAttributes>, IIppPrinterRequest
+    [IppRequest(IppOperation.PrintJob)]
+public class PrintJobRequest : IppRequest<PrintJobOperationAttributes>, IIppPrinterRequest
     {
         /// <summary>
         /// The document data.

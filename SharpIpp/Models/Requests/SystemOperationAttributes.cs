@@ -1,4 +1,5 @@
 using System;
+using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
 
@@ -8,6 +9,7 @@ namespace SharpIpp.Models.Requests;
 /// Operation attributes for IPP System Service requests that target a System object.
 /// See: PWG 5100.22-2025
 /// </summary>
+[IppAttribute]
 public class SystemOperationAttributes : OperationAttributes
 {
     /// <summary>
@@ -15,6 +17,7 @@ public class SystemOperationAttributes : OperationAttributes
     /// See: PWG 5100.22-2025 Section 7.1.26
     /// </summary>
     /// <code>system-uri</code>
+    [IppAttribute(IppAttributeNames.SystemUri, Tag = Tag.Uri)]
     public Uri? SystemUri { get; set; }
 
     /// <summary>
@@ -23,6 +26,7 @@ public class SystemOperationAttributes : OperationAttributes
     /// </summary>
     /// <code>printer-id</code>
     [Range(1, 65535)]
+    [IppAttribute(IppAttributeNames.PrinterId, Tag = Tag.Integer)]
     public int? PrinterId { get; set; }
 
     /// <summary>
@@ -30,6 +34,7 @@ public class SystemOperationAttributes : OperationAttributes
     /// See: PWG 5100.22-2025 Section 7.1.1
     /// </summary>
     [Range(1, 65535)]
+    [IppAttribute(IppAttributeNames.NotifyPrinterIds, Tag = Tag.Integer)]
     public int[]? NotifyPrinterIds { get; set; }
 
     /// <summary>
@@ -37,6 +42,7 @@ public class SystemOperationAttributes : OperationAttributes
     /// See: PWG 5100.22-2025 Section 7.1.2
     /// </summary>
     [Range(1, int.MaxValue)]
+    [IppAttribute(IppAttributeNames.NotifyResourceId, Tag = Tag.Integer)]
     public int? NotifyResourceId { get; set; }
 
     /// <summary>
@@ -44,12 +50,14 @@ public class SystemOperationAttributes : OperationAttributes
     /// See: PWG 5100.22-2025 Section 7.1.25
     /// </summary>
     [Range(0, int.MaxValue)]
+    [IppAttribute(IppAttributeNames.RestartGetInterval, Tag = Tag.Integer)]
     public int? RestartGetInterval { get; set; }
 
     /// <summary>
     /// which-printers
     /// See: PWG 5100.22-2025 Section 7.1.27
     /// </summary>
+    [IppAttribute(IppAttributeNames.WhichPrinters, Tag = Tag.Keyword)]
     public WhichPrinters? WhichPrinters { get; set; }
 
     /// <summary>
@@ -57,12 +65,14 @@ public class SystemOperationAttributes : OperationAttributes
     /// See: PWG 5100.22-2025 Section 7.11.2
     /// </summary>
     [Range(0, int.MaxValue)]
+    [IppAttribute(IppAttributeNames.NotifySystemUpTime, Tag = Tag.Integer)]
     public int? NotifySystemUpTime { get; set; }
 
     /// <summary>
     /// notify-system-uri
     /// See: PWG 5100.22-2025 Sections 7.10.2 and 7.11.3
     /// </summary>
+    [IppAttribute(IppAttributeNames.NotifySystemUri, Tag = Tag.Uri)]
     public Uri? NotifySystemUri { get; set; }
 
     /// <summary>
@@ -70,11 +80,13 @@ public class SystemOperationAttributes : OperationAttributes
     /// See: RFC 3995 Section 5.1
     /// </summary>
     [Range(1, int.MaxValue)]
+    [IppAttribute(IppAttributeNames.NotifySubscriptionId, Tag = Tag.Integer)]
     public int? NotifySubscriptionId { get; set; }
 
     /// <summary>
     /// notify-pull-method — the pull method for Get-Notifications; must be "ippget".
     /// See: RFC 3996 Section 5.1
     /// </summary>
+    [IppAttribute(IppAttributeNames.NotifyPullMethod, Tag = Tag.Keyword)]
     public NotifyPullMethod? NotifyPullMethod { get; set; }
 }

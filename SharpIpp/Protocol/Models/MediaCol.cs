@@ -1,4 +1,8 @@
+using SharpIpp.Mapping;
+
 namespace SharpIpp.Protocol.Models;
+
+[IppAttribute(IppAttributeNames.MediaCol)]
 public class MediaCol : IIppCollection
 {
     /// <inheritdoc />
@@ -39,6 +43,7 @@ public class MediaCol : IIppCollection
     /// <summary>
     /// text(255)
     /// </summary>
+    [IppAttribute("media-info", Tag = Tag.TextWithoutLanguage)]
     public string? MediaInfo { get; set; }
 
     /// <summary>

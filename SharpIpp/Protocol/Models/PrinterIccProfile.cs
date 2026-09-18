@@ -1,4 +1,5 @@
 using System;
+using SharpIpp.Mapping;
 
 namespace SharpIpp.Protocol.Models;
 
@@ -7,6 +8,7 @@ namespace SharpIpp.Protocol.Models;
 /// Each element describes an ICC profile available on the printer.
 /// See: PWG 5100.13-2023 Section 6.5.34
 /// </summary>
+[IppAttribute(IppAttributeNames.PrinterIccProfiles)]
 public class PrinterIccProfile : IIppCollection
 {
     /// <inheritdoc />

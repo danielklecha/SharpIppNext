@@ -1,3 +1,5 @@
+using SharpIpp.Mapping;
+using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
 
 namespace SharpIpp.Models.Requests;
@@ -6,6 +8,7 @@ namespace SharpIpp.Models.Requests;
 /// Allocate-Printer-Resources operation attributes.
 /// See: PWG 5100.22-2025 Section 6.1.1
 /// </summary>
+[IppAttribute]
 public class AllocatePrinterResourcesOperationAttributes : SystemOperationAttributes
 {
     /// <summary>
@@ -13,5 +16,6 @@ public class AllocatePrinterResourcesOperationAttributes : SystemOperationAttrib
     /// See: PWG 5100.22-2025 Section 7.1.15
     /// </summary>
     [Range(1, int.MaxValue)]
+    [IppAttribute(IppAttributeNames.ResourceIds, Tag = Tag.Integer)]
     public int[]? ResourceIds { get; set; }
 }

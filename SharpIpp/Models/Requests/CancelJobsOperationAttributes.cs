@@ -9,6 +9,7 @@ namespace SharpIpp.Models.Requests;
 /// Cancel-Jobs Operation Attributes.
 /// See: PWG 5100.7-2023 Section 5.1.1
 /// </summary>
+[IppAttribute]
 public class CancelJobsOperationAttributes : OperationAttributes
 {
     /// <summary>
@@ -16,6 +17,7 @@ public class CancelJobsOperationAttributes : OperationAttributes
     /// See: PWG 5100.7-2023 Section 5.1.1
     /// </summary>
     /// <code>job-ids</code>
+    [IppAttribute(IppAttributeNames.JobIds, Tag = Tag.Integer)]
     [Range(1, int.MaxValue)]
     public int[]? JobIds { get; set; }
 
@@ -24,5 +26,6 @@ public class CancelJobsOperationAttributes : OperationAttributes
     /// See: PWG 5100.7-2023 Section 5.1.1
     /// </summary>
     /// <code>message</code>
+    [IppAttribute(IppAttributeNames.Message, Tag = Tag.TextWithoutLanguage)]
     public string? Message { get; set; }
 }

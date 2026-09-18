@@ -1,9 +1,12 @@
+using SharpIpp.Mapping;
+
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Job Counter member attributes for the "job-*-col" attributes.
 /// See: PWG 5100.7-2023 Section 6.6.1 / Table 9.
 /// </summary>
+[IppAttribute("job-counter")]
 public class JobCounter : IIppCollection
 {
     /// <inheritdoc />

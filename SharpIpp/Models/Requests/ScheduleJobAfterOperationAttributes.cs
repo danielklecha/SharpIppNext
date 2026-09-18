@@ -1,3 +1,5 @@
+using SharpIpp.Mapping;
+using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
 
 namespace SharpIpp.Models.Requests;
@@ -6,6 +8,7 @@ namespace SharpIpp.Models.Requests;
 /// Schedule-Job-After Operation Attributes.
 /// See: RFC 3998 Section 3.2.6
 /// </summary>
+[IppAttribute]
 public class ScheduleJobAfterOperationAttributes : JobOperationAttributes
 {
     /// <summary>
@@ -13,6 +16,7 @@ public class ScheduleJobAfterOperationAttributes : JobOperationAttributes
     /// See: RFC 3998 Section 6
     /// </summary>
     /// <code>job-message-from-operator</code>
+    [IppAttribute(IppAttributeNames.JobMessageFromOperator, Tag = Tag.TextWithoutLanguage)]
     public string? JobMessageFromOperator { get; set; }
 
     /// <summary>
@@ -21,5 +25,6 @@ public class ScheduleJobAfterOperationAttributes : JobOperationAttributes
     /// </summary>
     /// <code>predecessor-job-id</code>
     [Range(1, int.MaxValue)]
+    [IppAttribute(IppAttributeNames.PredecessorJobId, Tag = Tag.Integer)]
     public int? PredecessorJobId { get; set; }
 }

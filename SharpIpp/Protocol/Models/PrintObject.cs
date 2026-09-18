@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using SharpIpp.Validation;
 
 namespace SharpIpp.Protocol.Models;
@@ -6,6 +7,7 @@ namespace SharpIpp.Protocol.Models;
 /// The <c>print-objects</c> member collection.
 /// See: PWG 5100.21-2019 Section 8.1.8
 /// </summary>
+[IppAttribute(IppAttributeNames.PrintObjects)]
 public class PrintObject : IIppCollection
 {
     bool INoValueWritable.IsValue { get; set; } = true;

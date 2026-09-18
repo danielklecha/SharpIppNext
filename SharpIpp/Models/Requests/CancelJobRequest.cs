@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using System;
 using System.Collections.Generic;
 using SharpIpp.Protocol.Models;
@@ -13,7 +14,8 @@ namespace SharpIpp.Models.Requests
     /// before the job is actually terminated.
     /// See: RFC 2911 Section 3.3.3
     /// </summary>
-    public class CancelJobRequest : IppRequest<CancelJobOperationAttributes>, IIppJobRequest
+    [IppRequest(IppOperation.CancelJob)]
+public class CancelJobRequest : IppRequest<CancelJobOperationAttributes>, IIppJobRequest
     {
 
     }

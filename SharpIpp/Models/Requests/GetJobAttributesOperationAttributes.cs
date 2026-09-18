@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace SharpIpp.Models.Requests;
+[IppAttribute]
 public class GetJobAttributesOperationAttributes : JobOperationAttributes
 {
     /// <summary>
@@ -15,5 +16,6 @@ public class GetJobAttributesOperationAttributes : JobOperationAttributes
     /// See: RFC 8011 Section 4.2.6.1
     /// </summary>
     /// <code>requested-attributes</code>
+    [IppAttribute(IppAttributeNames.RequestedAttributes, Tag = Tag.Keyword)]
     public string[]? RequestedAttributes { get; set; }
 }

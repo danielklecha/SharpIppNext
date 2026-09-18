@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 
 namespace SharpIpp.Models.Requests;
+[IppAttribute]
 public class OperationAttributes
 {
     /// <summary>
@@ -14,6 +15,7 @@ public class OperationAttributes
     /// See: RFC 8011 Section 5.3.19
     /// </summary>
     /// <code>attributes-charset</code>
+    [IppAttribute(IppAttributeNames.AttributesCharset, Tag = Tag.Charset, Order = 0, DefaultValue = "utf-8")]
     public Charset? AttributesCharset { get; set; } = Protocol.Models.Charset.Utf8;
 
     /// <summary>
@@ -21,6 +23,7 @@ public class OperationAttributes
     /// See: RFC 8011 Section 5.3.20
     /// </summary>
     /// <code>attributes-natural-language</code>
+    [IppAttribute(IppAttributeNames.AttributesNaturalLanguage, Tag = Tag.NaturalLanguage, Order = 1, DefaultValue = "en")]
     public NaturalLanguage? AttributesNaturalLanguage { get; set; } = Protocol.Models.NaturalLanguage.En;
 
     /// <summary>
@@ -28,6 +31,7 @@ public class OperationAttributes
     /// See: RFC 8011
     /// </summary>
     /// <code>printer-uri</code>
+    [IppAttribute(IppAttributeNames.PrinterUri, Tag = Tag.Uri)]
     public Uri? PrinterUri { get; set; }
 
     /// <summary>
@@ -35,6 +39,7 @@ public class OperationAttributes
     /// See: pwg5100.11 - IPP Enterprise Printing Extensions v2.0 Section 9.3
     /// </summary>
     /// <code>requesting-user-name</code>
+    [IppAttribute(IppAttributeNames.RequestingUserName, Tag = Tag.NameWithoutLanguage)]
     public string? RequestingUserName { get; set; }
 
     /// <summary>
@@ -42,6 +47,7 @@ public class OperationAttributes
     /// See: PWG 5100.7-2023 Section 5.1.1 and 5.2.1
     /// </summary>
     /// <code>requesting-user-uri</code>
+    [IppAttribute(IppAttributeNames.RequestingUserUri, Tag = Tag.Uri)]
     public Uri? RequestingUserUri { get; set; }
 
     /// <summary>
@@ -49,6 +55,7 @@ public class OperationAttributes
     /// See: PWG 5100.7-2023 Section 6.1.1
     /// </summary>
     /// <code>client-info</code>
+    [IppAttribute(IppAttributeNames.ClientInfo)]
     public ClientInfo[]? ClientInfo { get; set; }
 
     /// <summary>
@@ -56,5 +63,6 @@ public class OperationAttributes
     /// See: PWG 5100.7-2023 Section 6.1.3
     /// </summary>
     /// <code>job-hold-until-time</code>
+    [IppAttribute(IppAttributeNames.JobHoldUntilTime, Tag = Tag.DateTime)]
     public DateTimeOffset? JobHoldUntilTime { get; set; }
 }

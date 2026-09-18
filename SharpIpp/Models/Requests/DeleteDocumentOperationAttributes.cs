@@ -1,4 +1,6 @@
 using System;
+using SharpIpp.Mapping;
+using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
 
 namespace SharpIpp.Models.Requests;
@@ -9,6 +11,7 @@ namespace SharpIpp.Models.Requests;
 /// See: PWG 5100.5-2024 and PWG 5100.18-2025
 /// </summary>
 [Obsolete("The 'Delete-Document' operation is obsolete. See PWG 5100.5-2024 and PWG 5100.18-2025.")]
+[IppAttribute]
 public class DeleteDocumentOperationAttributes : JobOperationAttributes
 {
     /// <summary>
@@ -16,5 +19,6 @@ public class DeleteDocumentOperationAttributes : JobOperationAttributes
     /// See: PWG 5100.5-2024 Section 5.1
     /// </summary>
     [Range(1, int.MaxValue)]
+    [IppAttribute(IppAttributeNames.DocumentNumber, Tag = Tag.Integer)]
     public int? DocumentNumber { get; set; }
 }

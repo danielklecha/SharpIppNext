@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using System;
 using System.Collections.Generic;
 using SharpIpp.Protocol;
@@ -5,6 +6,7 @@ using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Responses;
 
+[IppResponse]
 public class GetPrinterAttributesResponse : IppResponse<OperationAttributes>
 {
     /// <summary>

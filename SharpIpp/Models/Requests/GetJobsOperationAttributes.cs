@@ -7,21 +7,37 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace SharpIpp.Models.Requests;
+[IppAttribute]
 public class GetJobsOperationAttributes : OperationAttributes
 {
     /// <summary>
     /// The first-index IPP attribute.
     /// See: PWG 5100.13-2023 Section 6.1.3 and Section 8.4
+    /// <summary>
+    /// The first-index IPP attribute.
+    /// See: PWG 5100.13-2023 Section 6.1.3 and Section 8.4
     /// </summary>
     /// <code>first-index</code>
+    [IppAttribute(IppAttributeNames.FirstIndex, Tag = Tag.Integer)]
     [Range(1, int.MaxValue)]
     public int? FirstIndex { get; set; }
+
+    /// <summary>
+    /// The client OPTIONALLY supplies this attribute. The Printer object MUST support this attribute. It is an integer value that determines the maximum number of jobs that a client will receive from the Printer even if "which-jobs" or "my-jobs" constrain which jobs are returned. The limit is a "stateless limit" in that if the value supplied by the client is 'N', then only the first 'N' jobs are returned in the Get-Jobs Response. There is no mechanism to allow for the next 'M' jobs after the first 'N' jobs. If the client does not supply this attribute, the Printer object responds with all applicable jobs
+    /// See: PWG 5100.13-2023 Section 6.1.4
+    /// See: RFC 8011 Section 4.2.6.1
+    /// </summary>
+    /// <code>limit</code>
+    [IppAttribute(IppAttributeNames.Limit, Tag = Tag.Integer)]
+    [Range(1, int.MaxValue)]
+    public int? Limit { get; set; }
 
     /// <summary>
     /// This REQUIRED attribute specifies a list of "job-id" values for the Cancel-Jobs, Cancel-My-Jobs, and Get-Jobs operations.
     /// See: PWG 5100.7-2023 Section 6.1.4
     /// </summary>
     /// <code>job-ids</code>
+    [IppAttribute(IppAttributeNames.JobIds, Tag = Tag.Integer)]
     [Range(1, int.MaxValue)]
     public int[]? JobIds { get; set; }
 
@@ -32,6 +48,7 @@ public class GetJobsOperationAttributes : OperationAttributes
     /// See: RFC 8011 Section 4.3.4.1
     /// </summary>
     /// <code>requested-attributes</code>
+    [IppAttribute(IppAttributeNames.RequestedAttributes, Tag = Tag.Keyword)]
     public string[]? RequestedAttributes { get; set; }
 
     /// <summary>
@@ -39,20 +56,15 @@ public class GetJobsOperationAttributes : OperationAttributes
     /// See: pwg5100.11 - IPP Enterprise Printing Extensions v2.0 Section 8.4
     /// </summary>
     /// <code>which-jobs</code>
+    [IppAttribute(IppAttributeNames.WhichJobs, Tag = Tag.Keyword)]
     public WhichJobs? WhichJobs { get; set; }
-    /// <summary>
-    /// The client OPTIONALLY supplies this attribute. The Printer object MUST support this attribute. It is an integer value that determines the maximum number of jobs that a client will receive from the Printer even if "which-jobs" or "my-jobs" constrain which jobs are returned. The limit is a "stateless limit" in that if the value supplied by the client is 'N', then only the first 'N' jobs are returned in the Get-Jobs Response. There is no mechanism to allow for the next 'M' jobs after the first 'N' jobs. If the client does not supply this attribute, the Printer object responds with all applicable jobs
-    /// See: PWG 5100.13-2023 Section 6.1.4
-    /// See: RFC 8011 Section 4.2.6.1
-    /// </summary>
-    /// <code>limit</code>
-    [Range(1, int.MaxValue)]
-    public int? Limit { get; set; }
+
     /// <summary>
     /// The client OPTIONALLY supplies this attribute. The Printer object MUST support this attribute. It indicates whether jobs from all users or just the jobs submitted by the requesting user of this request MUST be considered as candidate jobs to be returned by the Printer object. If the client does not supply this attribute, the Printer object MUST respond as if the client had supplied the attribute with a value of 'false', i.e., jobs from all users. The means for authenticating the requesting user and matching the jobs is described in section
     /// See: RFC 8011 Section 4.2.6.1
     /// </summary>
     /// <code>my-jobs</code>
+    [IppAttribute(IppAttributeNames.MyJobs, Tag = Tag.Boolean)]
     public bool? MyJobs { get; set; }
 
     /// <summary>
@@ -61,5 +73,6 @@ public class GetJobsOperationAttributes : OperationAttributes
     /// See: PWG 5100.18-2025 Section 8.2
     /// </summary>
     /// <code>output-device-uuid</code>
+    [IppAttribute(IppAttributeNames.OutputDeviceUuid, Tag = Tag.Uri)]
     public Uri? OutputDeviceUuid { get; set; }
 }

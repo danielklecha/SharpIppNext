@@ -8,6 +8,7 @@ namespace SharpIpp.Models.Requests;
 /// Close-Job Operation Attributes.
 /// See: PWG 5100.7-2023 Section 5.4.1
 /// </summary>
+[IppAttribute]
 public class CloseJobOperationAttributes : JobOperationAttributes
 {
 }

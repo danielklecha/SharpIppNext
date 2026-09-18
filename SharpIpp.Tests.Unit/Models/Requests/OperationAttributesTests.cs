@@ -10,8 +10,6 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using SharpIpp.Mapping.Profiles;
-using SharpIpp.Mapping.Profiles.Requests;
 
 namespace SharpIpp.Tests.Unit.Models;
 
@@ -30,8 +28,7 @@ public class OperationAttributesTests
             PrinterUri = new Uri("ipp://printer")
         };
         var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
+        mapper.RegisterGeneratedProfiles();
 
         // Act
         var attributes = mapper.Map<OperationAttributes, List<IppAttribute>>(operationAttributes);
@@ -51,8 +48,7 @@ public class OperationAttributesTests
             PrinterUri = new Uri("ipp://printer")
         };
         var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
+        mapper.RegisterGeneratedProfiles();
 
         // Act
         var attributes = mapper.Map<OperationAttributes, List<IppAttribute>>(operationAttributes);
@@ -73,8 +69,7 @@ public class OperationAttributesTests
             RequestingUserName = "user"
         };
         var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
+        mapper.RegisterGeneratedProfiles();
 
         // Act
         var attributes = mapper.Map<OperationAttributes, List<IppAttribute>>(operationAttributes);
@@ -98,8 +93,7 @@ public class OperationAttributesTests
             { IppAttributeNames.RequestingUserName, new[] { new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.RequestingUserName, "user") } }
         };
         var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
+        mapper.RegisterGeneratedProfiles();
 
         // Act
         var attributes = mapper.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(dict);
@@ -120,8 +114,7 @@ public class OperationAttributesTests
             { IppAttributeNames.PrinterUri, new[] { new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://printer") } }
         };
         var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
+        mapper.RegisterGeneratedProfiles();
 
         // Act
         var attributes = mapper.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(dict);
@@ -141,8 +134,7 @@ public class OperationAttributesTests
             { IppAttributeNames.RequestingUserUri, new[] { new IppAttribute(Tag.Uri, IppAttributeNames.RequestingUserUri, "urn:uuid:00000000-0000-0000-0000-000000000000") } }
         };
         var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
+        mapper.RegisterGeneratedProfiles();
 
         // Act
         var attributes = mapper.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(dict);
@@ -162,8 +154,7 @@ public class OperationAttributesTests
             { IppAttributeNames.PrinterUri, new[] { new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, invalidUri) } }
         };
         var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
+        mapper.RegisterGeneratedProfiles();
 
         // Act
         var attributes = mapper.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(dict);
@@ -178,8 +169,7 @@ public class OperationAttributesTests
         // Arrange
         var dict = new Dictionary<string, IppAttribute[]>();
         var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
+        mapper.RegisterGeneratedProfiles();
 
         // Act
         var attributes = mapper.Map<IDictionary<string, IppAttribute[]>, OperationAttributes>(dict);
@@ -197,8 +187,7 @@ public class OperationAttributesTests
             { IppAttributeNames.JobId, new[] { new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 123) } }
         };
         var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
+        mapper.RegisterGeneratedProfiles();
 
         // Act - dst is null
         var result1 = mapper.Map<IDictionary<string, IppAttribute[]>, JobOperationAttributes>(dict);
@@ -227,8 +216,7 @@ public class OperationAttributesTests
             JobId = 456
         };
         var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
+        mapper.RegisterGeneratedProfiles();
 
         // Act - dst is null
         var result1 = mapper.Map<JobOperationAttributes, List<IppAttribute>>(src);
@@ -255,8 +243,7 @@ public class OperationAttributesTests
             { IppAttributeNames.MyJobs, new[] { new IppAttribute(Tag.Boolean, IppAttributeNames.MyJobs, true) } }
         };
         var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
+        mapper.RegisterGeneratedProfiles();
 
         // Act
         var result = mapper.Map<IDictionary<string, IppAttribute[]>, GetJobsOperationAttributes>(dict);
@@ -274,8 +261,7 @@ public class OperationAttributesTests
             { IppAttributeNames.JobIds, new[] { new IppAttribute(Tag.Integer, IppAttributeNames.JobIds, 123), new IppAttribute(Tag.Integer, IppAttributeNames.JobIds, 456) } }
         };
         var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
+        mapper.RegisterGeneratedProfiles();
 
         // Act
         var result = mapper.Map<IDictionary<string, IppAttribute[]>, GetJobsOperationAttributes>(dict);
@@ -324,8 +310,7 @@ public class OperationAttributesTests
             }
         };
         var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
+        mapper.RegisterGeneratedProfiles();
 
         // Act
         var result = mapper.Map<IDictionary<string, IppAttribute[]>, CreateJobOperationAttributes>(dict);
@@ -353,8 +338,7 @@ public class OperationAttributesTests
             Message = "test"
         };
         var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
+        mapper.RegisterGeneratedProfiles();
 
         // Act
         var result = mapper.Map<CancelJobsOperationAttributes, List<IppAttribute>>(src);
@@ -379,8 +363,7 @@ public class OperationAttributesTests
             JobMandatoryAttributes = new[] { "copies" }
         };
         var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
+        mapper.RegisterGeneratedProfiles();
 
         // Act
         var result = mapper.Map<ResubmitJobOperationAttributes, List<IppAttribute>>(src);
@@ -418,8 +401,7 @@ public class OperationAttributesTests
             },
         };
         var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
+        mapper.RegisterGeneratedProfiles();
 
         // Act
         var result = mapper.Map<ValidateJobOperationAttributes, List<IppAttribute>>(src);
@@ -477,8 +459,7 @@ public class OperationAttributesTests
             }
         };
         var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
+        mapper.RegisterGeneratedProfiles();
 
         // Act
         var result = mapper.Map<IDictionary<string, IppAttribute[]>, ValidateJobOperationAttributes>(dict);
@@ -503,8 +484,7 @@ public class OperationAttributesTests
             { IppAttributeNames.DocumentUri, new[] { new IppAttribute(Tag.Uri, IppAttributeNames.DocumentUri, invalidUri) } }
         };
         var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
+        mapper.RegisterGeneratedProfiles();
 
         // Act
         var attributes = mapper.Map<IDictionary<string, IppAttribute[]>, PrintUriOperationAttributes>(dict);
@@ -519,8 +499,7 @@ public class OperationAttributesTests
         // Arrange
         var dict = new Dictionary<string, IppAttribute[]>();
         var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(SimpleMapper));
-        mapper.FillFromAssembly(assembly!);
+        mapper.RegisterGeneratedProfiles();
 
         // Act
         var attributes = mapper.Map<IDictionary<string, IppAttribute[]>, PrintUriOperationAttributes>(dict);

@@ -1,4 +1,5 @@
 using System;
+using SharpIpp.Mapping;
 
 namespace SharpIpp.Protocol.Models;
 
@@ -6,6 +7,7 @@ namespace SharpIpp.Protocol.Models;
 /// The <c>destination-statuses</c> member collection.
 /// See: PWG 5100.15-2013 Section 7.3.1.
 /// </summary>
+[IppAttribute(IppAttributeNames.DestinationStatuses)]
 public class DestinationStatus : IIppCollection
 {
     bool INoValueWritable.IsValue { get; set; } = true;

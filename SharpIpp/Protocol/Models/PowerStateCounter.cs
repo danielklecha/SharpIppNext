@@ -1,9 +1,12 @@
+using SharpIpp.Mapping;
+
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Member attributes for <c>power-state-counters-col</c>.
 /// See: PWG 5100.22-2025 Section 7.3.3
 /// </summary>
+[IppAttribute(IppAttributeNames.PowerStateCountersCol)]
 public class PowerStateCounter : IIppCollection
 {
     bool INoValueWritable.IsValue { get; set; } = true;

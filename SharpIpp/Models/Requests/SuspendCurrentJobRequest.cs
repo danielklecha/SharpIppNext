@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Requests;
@@ -6,4 +7,5 @@ namespace SharpIpp.Models.Requests;
 /// Suspend-Current-Job Operation.
 /// See: RFC 3998 Section 3.2.3
 /// </summary>
+[IppRequest(IppOperation.SuspendCurrentJob)]
 public class SuspendCurrentJobRequest : IppRequest<SuspendCurrentJobOperationAttributes>, IIppPrinterRequest { }

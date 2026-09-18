@@ -1,10 +1,12 @@
 using System;
 using SharpIpp.Protocol.Models;
 using System.Collections.Generic;
+using SharpIpp.Mapping;
 using SharpIpp.Validation;
 
 namespace SharpIpp.Models.Responses;
 
+[IppAttribute]
 public class JobAttributes
 {
     /// <summary>
@@ -13,6 +15,7 @@ public class JobAttributes
     /// </summary>
     /// <code>job-uri</code>
     [Obsolete("The 'job-uri' attribute is deprecated. See RFC 8011 Section 4.1.2.1.")]
+    [IppAttribute(IppAttributeNames.JobUri, Tag.Uri)]
     public Uri? JobUri { get; set; }
     /// <summary>
     /// The job-id IPP attribute.
@@ -21,24 +24,28 @@ public class JobAttributes
     /// </summary>
     /// <code>job-id</code>
     [Range(1, int.MaxValue)]
+    [IppAttribute(IppAttributeNames.JobId, Tag.Integer)]
     public int JobId { get; set; }
     /// <summary>
     /// The job-state IPP attribute.
     /// See: RFC 8011 Section 5.3.7
     /// </summary>
     /// <code>job-state</code>
+    [IppAttribute(IppAttributeNames.JobState, Tag.Enum)]
     public JobState JobState { get; set; }
     /// <summary>
     /// The job-state-reasons IPP attribute.
     /// See: RFC 8011 Section 5.3.8
     /// </summary>
     /// <code>job-state-reasons</code>
+    [IppAttribute(IppAttributeNames.JobStateReasons, Tag.Keyword)]
     public JobStateReason[]? JobStateReasons { get; set; }
     /// <summary>
     /// The job-state-message IPP attribute.
     /// See: pwg5100.15 - IPP FaxOut Service Section 7.4.18
     /// </summary>
     /// <code>job-state-message</code>
+    [IppAttribute(IppAttributeNames.JobStateMessage, Tag.TextWithoutLanguage)]
     public string? JobStateMessage { get; set; }
     /// <summary>
     /// The number-of-intervening-jobs IPP attribute.
@@ -46,6 +53,7 @@ public class JobAttributes
     /// </summary>
     /// <code>number-of-intervening-jobs</code>
     [Range(0, int.MaxValue)]
+    [IppAttribute(IppAttributeNames.NumberOfInterveningJobs, Tag.Integer)]
     public int? NumberOfInterveningJobs { get; set; }
 
     /// <summary>
@@ -53,6 +61,7 @@ public class JobAttributes
     /// See: PWG 5100.7-2023 Section 6.7.1
     /// </summary>
     /// <code>client-info</code>
+    [IppAttribute(IppAttributeNames.ClientInfo)]
     public IReadOnlyCollection<ClientInfo>? ClientInfo { get; set; }
 
     /// <summary>
@@ -60,6 +69,7 @@ public class JobAttributes
     /// See: PWG 5100.7-2023 Section 6.7.2
     /// </summary>
     /// <code>job-impressions-completed-col</code>
+    [IppAttribute(IppAttributeNames.JobImpressionsCompletedCol)]
     public JobCounter? JobImpressionsCompletedCol { get; set; }
 
     /// <summary>
@@ -67,6 +77,7 @@ public class JobAttributes
     /// See: PWG 5100.7-2023 Section 6.7.3
     /// </summary>
     /// <code>job-media-sheets-completed-col</code>
+    [IppAttribute(IppAttributeNames.JobMediaSheetsCompletedCol)]
     public JobCounter? JobMediaSheetsCompletedCol { get; set; }
 
     /// <summary>
@@ -75,6 +86,7 @@ public class JobAttributes
     /// </summary>
     /// <code>job-pages-completed</code>
     [Range(0, int.MaxValue)]
+    [IppAttribute(IppAttributeNames.JobPagesCompleted, Tag.Integer)]
     public int? JobPagesCompleted { get; set; }
 
     /// <summary>
@@ -82,6 +94,7 @@ public class JobAttributes
     /// See: PWG 5100.7-2023 Section 6.7.5
     /// </summary>
     /// <code>job-pages-completed-col</code>
+    [IppAttribute(IppAttributeNames.JobPagesCompletedCol)]
     public JobCounter? JobPagesCompletedCol { get; set; }
 
     /// <summary>
@@ -90,6 +103,7 @@ public class JobAttributes
     /// </summary>
     /// <code>job-processing-time</code>
     [Range(0, int.MaxValue)]
+    [IppAttribute(IppAttributeNames.JobProcessingTime, Tag.Integer)]
     public int? JobProcessingTime { get; set; }
 
     /// <summary>
@@ -98,6 +112,7 @@ public class JobAttributes
     /// </summary>
     /// <code>platform-temperature-actual</code>
     [Range(-273, int.MaxValue)]
+    [IppAttribute(IppAttributeNames.PlatformTemperatureActual, Tag.Integer)]
     public int[]? PlatformTemperatureActual { get; set; }
 
     /// <summary>
@@ -106,6 +121,7 @@ public class JobAttributes
     /// </summary>
     /// <code>chamber-humidity-actual</code>
     [Range(0, 100)]
+    [IppAttribute(IppAttributeNames.ChamberHumidityActual, Tag.Integer)]
     public int[]? ChamberHumidityActual { get; set; }
 
     /// <summary>
@@ -114,6 +130,7 @@ public class JobAttributes
     /// </summary>
     /// <code>chamber-temperature-actual</code>
     [Range(-273, int.MaxValue)]
+    [IppAttribute(IppAttributeNames.ChamberTemperatureActual, Tag.Integer)]
     public int[]? ChamberTemperatureActual { get; set; }
 
     /// <summary>
@@ -121,6 +138,7 @@ public class JobAttributes
     /// See: PWG 5100.21-2019 Section 8.4.1
     /// </summary>
     /// <code>chamber-humidity-current</code>
+    [IppAttribute(IppAttributeNames.ChamberHumidityCurrent, Tag.Integer)]
     public int? ChamberHumidityCurrent { get; set; }
 
     /// <summary>
@@ -128,5 +146,6 @@ public class JobAttributes
     /// See: PWG 5100.21-2019 Section 8.4.2
     /// </summary>
     /// <code>chamber-temperature-current</code>
+    [IppAttribute(IppAttributeNames.ChamberTemperatureCurrent, Tag.Integer)]
     public int? ChamberTemperatureCurrent { get; set; }
 }

@@ -11,6 +11,7 @@ namespace SharpIpp.Models.Requests;
 /// See: RFC 2911 Section 3.3.7.1
 /// </summary>
 [Obsolete("See RFC 8011 Section 4.3.7.")]
+[IppAttribute]
 public class RestartJobOperationAttributes :  CancelJobOperationAttributes
 {
     /// <summary>
@@ -18,6 +19,7 @@ public class RestartJobOperationAttributes :  CancelJobOperationAttributes
     /// See: pwg5100.13 - IPP Driver Replacement Extensions v2.0 Section 6.1.5
     /// </summary>
     /// <code>job-hold-until</code>
+    [IppAttribute(IppAttributeNames.JobHoldUntil, Tag = Tag.Keyword)]
     public JobHoldUntil? JobHoldUntil { get; set; }
 
 }

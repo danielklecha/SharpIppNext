@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using SharpIpp.Validation;
 
 namespace SharpIpp.Protocol.Models;
@@ -6,6 +7,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies where to cut, perforate, or score the Media Sheets.
 /// See: PWG 5100.1-2022 Section 5.2.10
 /// </summary>
+[IppAttribute("trimming")]
 public class Trimming : IIppCollection
 {
     /// <inheritdoc />

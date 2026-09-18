@@ -27,7 +27,67 @@ public struct NoValue : IEquatable<NoValue>
         return 0;
     }
 
+    public static bool operator ==(NoValue left, NoValue right) => true;
+    public static bool operator !=(NoValue left, NoValue right) => false;
+
     public static NoValue Instance = new();
+
+    public static NoValue GetNoValue() => Instance;
+
+    public static implicit operator int(NoValue _) => int.MinValue;
+    public static implicit operator string(NoValue _) => NoValueString;
+    public static implicit operator DateTimeOffset(NoValue _) => DateTimeOffset.MinValue;
+    public static implicit operator DateTime(NoValue _) => DateTime.MinValue;
+    public static implicit operator Range(NoValue _) => new();
+    public static implicit operator Resolution(NoValue _) => new();
+    public static implicit operator OctetString(NoValue _) => new();
+    public static implicit operator StringWithLanguage(NoValue _) => new();
+    public static implicit operator IppVersion(NoValue _) => default;
+
+    public static bool operator ==(int left, NoValue right) => left == int.MinValue;
+    public static bool operator !=(int left, NoValue right) => left != int.MinValue;
+    public static bool operator ==(NoValue left, int right) => right == int.MinValue;
+    public static bool operator !=(NoValue left, int right) => right != int.MinValue;
+
+    public static bool operator ==(string? left, NoValue right) => left == NoValueString;
+    public static bool operator !=(string? left, NoValue right) => left != NoValueString;
+    public static bool operator ==(NoValue left, string? right) => right == NoValueString;
+    public static bool operator !=(NoValue left, string? right) => right != NoValueString;
+
+    public static bool operator ==(DateTime left, NoValue right) => left == DateTime.MinValue;
+    public static bool operator !=(DateTime left, NoValue right) => left != DateTime.MinValue;
+    public static bool operator ==(NoValue left, DateTime right) => right == DateTime.MinValue;
+    public static bool operator !=(NoValue left, DateTime right) => right != DateTime.MinValue;
+
+    public static bool operator ==(DateTimeOffset left, NoValue right) => left == DateTimeOffset.MinValue;
+    public static bool operator !=(DateTimeOffset left, NoValue right) => left != DateTimeOffset.MinValue;
+    public static bool operator ==(NoValue left, DateTimeOffset right) => right == DateTimeOffset.MinValue;
+    public static bool operator !=(NoValue left, DateTimeOffset right) => right != DateTimeOffset.MinValue;
+
+    public static bool operator ==(Range left, NoValue right) => !left.IsValue;
+    public static bool operator !=(Range left, NoValue right) => left.IsValue;
+    public static bool operator ==(NoValue left, Range right) => !right.IsValue;
+    public static bool operator !=(NoValue left, Range right) => right.IsValue;
+
+    public static bool operator ==(Resolution left, NoValue right) => !left.IsValue;
+    public static bool operator !=(Resolution left, NoValue right) => left.IsValue;
+    public static bool operator ==(NoValue left, Resolution right) => !right.IsValue;
+    public static bool operator !=(NoValue left, Resolution right) => right.IsValue;
+
+    public static bool operator ==(OctetString left, NoValue right) => !left.IsValue;
+    public static bool operator !=(OctetString left, NoValue right) => left.IsValue;
+    public static bool operator ==(NoValue left, OctetString right) => !right.IsValue;
+    public static bool operator !=(NoValue left, OctetString right) => right.IsValue;
+
+    public static bool operator ==(StringWithLanguage left, NoValue right) => !left.IsValue;
+    public static bool operator !=(StringWithLanguage left, NoValue right) => left.IsValue;
+    public static bool operator ==(NoValue left, StringWithLanguage right) => !right.IsValue;
+    public static bool operator !=(NoValue left, StringWithLanguage right) => right.IsValue;
+
+    public static bool operator ==(IppVersion left, NoValue right) => !left.IsValue;
+    public static bool operator !=(IppVersion left, NoValue right) => left.IsValue;
+    public static bool operator ==(NoValue left, IppVersion right) => !right.IsValue;
+    public static bool operator !=(NoValue left, IppVersion right) => right.IsValue;
 
     public static bool IsNoValue(object value, Tag tag = Tag.Unknown)
     {
@@ -40,6 +100,7 @@ public struct NoValue : IEquatable<NoValue>
             DateTime dateTime when dateTime == default => true,
             string stringValue when stringValue == string.Empty && tag == Tag.Keyword => true,
             string stringValue when stringValue == NoValueString => true,
+            Array array when array.Length == 1 && array.GetValue(0) is NoValue => true,
             INoValue noValueModel when !noValueModel.IsValue => true,
             NoValue => true,
             _ => false
@@ -73,6 +134,7 @@ public struct NoValue : IEquatable<NoValue>
         if (underlyingType == typeof(Resolution)) return new Resolution();
         if (underlyingType == typeof(StringWithLanguage)) return new StringWithLanguage();
         if (underlyingType == typeof(OctetString)) return new OctetString();
+        if (underlyingType == typeof(IppVersion)) return default(IppVersion);
 
         if (typeof(INoValueWritable).IsAssignableFrom(underlyingType) && Activator.CreateInstance(underlyingType) is INoValueWritable writable)
         {

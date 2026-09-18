@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
 
@@ -7,6 +8,7 @@ namespace SharpIpp.Models.Requests;
 /// Get-Printer-Supported-Values Operation Attributes.
 /// See: RFC 3380 Section 4.3
 /// </summary>
+[IppAttribute]
 public class GetPrinterSupportedValuesOperationAttributes : OperationAttributes
 {
     /// <summary>
@@ -14,6 +16,7 @@ public class GetPrinterSupportedValuesOperationAttributes : OperationAttributes
     /// See: RFC 8011 Section 3.2.5.1
     /// </summary>
     /// <code>requested-attributes</code>
+    [IppAttribute(IppAttributeNames.RequestedAttributes, Tag = Tag.Keyword)]
     public string[]? RequestedAttributes { get; set; }
 
     /// <summary>
@@ -22,6 +25,7 @@ public class GetPrinterSupportedValuesOperationAttributes : OperationAttributes
     /// </summary>
     /// <code>document-format</code>
     /// <example>application/octet-stream</example>
+    [IppAttribute(IppAttributeNames.DocumentFormat, Tag = Tag.MimeMediaType)]
     public DocumentFormat? DocumentFormat { get; set; }
 
     /// <summary>
@@ -30,6 +34,7 @@ public class GetPrinterSupportedValuesOperationAttributes : OperationAttributes
     /// </summary>
     /// <code>first-index</code>
     [Range(1, int.MaxValue)]
+    [IppAttribute(IppAttributeNames.FirstIndex, Tag = Tag.Integer)]
     public int? FirstIndex { get; set; }
 
     /// <summary>
@@ -38,5 +43,6 @@ public class GetPrinterSupportedValuesOperationAttributes : OperationAttributes
     /// </summary>
     /// <code>limit</code>
     [Range(1, int.MaxValue)]
+    [IppAttribute(IppAttributeNames.Limit, Tag = Tag.Integer)]
     public int? Limit { get; set; }
 }

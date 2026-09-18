@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using System;
 using System.Collections.Generic;
 using SharpIpp.Protocol.Models;
@@ -18,7 +19,8 @@ namespace SharpIpp.Models.Requests
     /// multi-document Job object.
     /// See: RFC 2911 Section 3.2.4
     /// </summary>
-    public class CreateJobRequest : IppRequest<CreateJobOperationAttributes>, IIppPrinterRequest
+    [IppRequest(IppOperation.CreateJob)]
+public class CreateJobRequest : IppRequest<CreateJobOperationAttributes>, IIppPrinterRequest
     {
         /// <summary>
         /// The job-template-attributes IPP attribute.

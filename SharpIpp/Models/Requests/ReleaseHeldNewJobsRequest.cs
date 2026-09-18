@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Requests;
@@ -6,4 +7,5 @@ namespace SharpIpp.Models.Requests;
 /// Release-Held-New-Jobs Operation.
 /// See: RFC 3998 Section 3.2.1
 /// </summary>
+[IppRequest(IppOperation.ReleaseHeldNewJobs)]
 public class ReleaseHeldNewJobsRequest : IppRequest<ReleaseHeldNewJobsOperationAttributes>, IIppPrinterRequest { }

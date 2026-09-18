@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using System;
 using System.Collections.Generic;
 using SharpIpp.Protocol.Models;
@@ -16,7 +17,8 @@ namespace SharpIpp.Models.Requests
     /// prevent any jobs from entering the 'processing' state.
     /// See: RFC 2911 Section 3.2.7
     /// </summary>
-    public class PausePrinterRequest : IppRequest<PausePrinterOperationAttributes>, IIppPrinterRequest
+    [IppRequest(IppOperation.PausePrinter)]
+public class PausePrinterRequest : IppRequest<PausePrinterOperationAttributes>, IIppPrinterRequest
     {
 
     }

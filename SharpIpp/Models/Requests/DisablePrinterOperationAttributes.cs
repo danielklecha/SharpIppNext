@@ -1,9 +1,13 @@
+using SharpIpp.Mapping;
+using SharpIpp.Protocol.Models;
+
 namespace SharpIpp.Models.Requests;
 
 /// <summary>
 /// Disable-Printer Operation Attributes.
 /// See: RFC 3998 Section 3.1.1.1
 /// </summary>
+[IppAttribute]
 public class DisablePrinterOperationAttributes : OperationAttributes
 {
     /// <summary>
@@ -11,5 +15,6 @@ public class DisablePrinterOperationAttributes : OperationAttributes
     /// See: RFC 3998 Section 3.1.1.1 and RFC 2911 Section 3.2.7.1
     /// </summary>
     /// <code>printer-message-from-operator</code>
+    [IppAttribute(IppAttributeNames.PrinterMessageFromOperator, Tag = Tag.TextWithoutLanguage)]
     public string? PrinterMessageFromOperator { get; set; }
 }

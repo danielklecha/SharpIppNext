@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using System;
 
 namespace SharpIpp.Protocol.Models;
@@ -6,6 +7,7 @@ namespace SharpIpp.Protocol.Models;
 /// Attributes describing the status of a Resource object.
 /// See: PWG 5100.22-2025 Section 6.2
 /// </summary>
+[IppAttribute]
 public class ResourceStatusAttributes
 {
     /// <summary>
@@ -13,6 +15,7 @@ public class ResourceStatusAttributes
     /// See: PWG 5100.22-2025 Section 6.2.1
     /// </summary>
     /// <code>resource-id</code>
+    [IppAttribute(IppAttributeNames.ResourceId, Tag = Tag.Integer)]
     public int? ResourceId { get; set; }
 
     /// <summary>
@@ -27,6 +30,7 @@ public class ResourceStatusAttributes
     /// See: PWG 5100.22-2025 Section 6.2.9
     /// </summary>
     /// <code>resource-state-reasons</code>
+    [IppAttribute(IppAttributeNames.ResourceStateReasons)]
     public ResourceStateReason[]? ResourceStateReasons { get; set; }
 
     /// <summary>
@@ -34,6 +38,7 @@ public class ResourceStatusAttributes
     /// See: PWG 5100.22-2025 Section 6.2.10
     /// </summary>
     /// <code>resource-state-message</code>
+    [IppAttribute(IppAttributeNames.ResourceStateMessage, Tag = Tag.TextWithoutLanguage)]
     public string? ResourceStateMessage { get; set; }
 
     /// <summary>
@@ -41,6 +46,7 @@ public class ResourceStatusAttributes
     /// See: PWG 5100.22-2025 Section 6.2.11
     /// </summary>
     /// <code>resource-k-octets</code>
+    [IppAttribute(IppAttributeNames.ResourceKOctets, Tag = Tag.Integer)]
     public int? ResourceKOctets { get; set; }
 
     /// <summary>
@@ -48,6 +54,7 @@ public class ResourceStatusAttributes
     /// See: PWG 5100.22-2025 Section 6.2.12
     /// </summary>
     /// <code>resource-data-uri</code>
+    [IppAttribute(IppAttributeNames.ResourceDataUri, Tag = Tag.Uri)]
     public Uri? ResourceDataUri { get; set; }
 
     /// <summary>
@@ -55,6 +62,7 @@ public class ResourceStatusAttributes
     /// See: PWG 5100.22-2025 Section 6.2.13
     /// </summary>
     /// <code>resource-use-count</code>
+    [IppAttribute(IppAttributeNames.ResourceUseCount, Tag = Tag.Integer)]
     public int? ResourceUseCount { get; set; }
 
     /// <summary>
@@ -62,6 +70,7 @@ public class ResourceStatusAttributes
     /// See: PWG 5100.22-2025 Section 6.2.14
     /// </summary>
     /// <code>resource-uuid</code>
+    [IppAttribute(IppAttributeNames.ResourceUuid, Tag = Tag.OctetStringWithAnUnspecifiedFormat)]
     public OctetString? ResourceUuid { get; set; }
 
     /// <summary>
@@ -69,6 +78,7 @@ public class ResourceStatusAttributes
     /// See: PWG 5100.22-2025 Section 6.2.15
     /// </summary>
     /// <code>date-time-at-creation</code>
+    [IppAttribute(IppAttributeNames.ResourceDateTimeAtCreation, Tag = Tag.DateTime)]
     public DateTimeOffset? DateTimeAtCreation { get; set; }
 
     /// <summary>
@@ -76,6 +86,7 @@ public class ResourceStatusAttributes
     /// See: PWG 5100.22-2025 Section 6.2.16
     /// </summary>
     /// <code>date-time-at-installed</code>
+    [IppAttribute(IppAttributeNames.ResourceDateTimeAtInstalled, Tag = Tag.DateTime)]
     public DateTimeOffset? DateTimeAtInstalled { get; set; }
 
     /// <summary>
@@ -83,6 +94,7 @@ public class ResourceStatusAttributes
     /// See: PWG 5100.22-2025 Section 6.2.17
     /// </summary>
     /// <code>date-time-at-canceled</code>
+    [IppAttribute(IppAttributeNames.ResourceDateTimeAtCanceled, Tag = Tag.DateTime)]
     public DateTimeOffset? DateTimeAtCanceled { get; set; }
 
     /// <summary>
@@ -90,6 +102,7 @@ public class ResourceStatusAttributes
     /// See: PWG 5100.22-2025 Section 6.2.18
     /// </summary>
     /// <code>time-at-creation</code>
+    [IppAttribute(IppAttributeNames.ResourceTimeAtCreation, Tag = Tag.Integer)]
     public int? TimeAtCreation { get; set; }
 
     /// <summary>
@@ -97,6 +110,7 @@ public class ResourceStatusAttributes
     /// See: PWG 5100.22-2025 Section 6.2.19
     /// </summary>
     /// <code>time-at-installed</code>
+    [IppAttribute(IppAttributeNames.ResourceTimeAtInstalled, Tag = Tag.Integer)]
     public int? TimeAtInstalled { get; set; }
 
     /// <summary>
@@ -104,6 +118,7 @@ public class ResourceStatusAttributes
     /// See: PWG 5100.22-2025 Section 6.2.20
     /// </summary>
     /// <code>time-at-canceled</code>
+    [IppAttribute(IppAttributeNames.ResourceTimeAtCanceled, Tag = Tag.Integer)]
     public int? TimeAtCanceled { get; set; }
 
     /// <summary>
@@ -111,6 +126,7 @@ public class ResourceStatusAttributes
     /// See: PWG 5100.22-2025 Section 6.2.21
     /// </summary>
     /// <code>resource-natural-language</code>
+    [IppAttribute(IppAttributeNames.ResourceNaturalLanguage, Tag = Tag.NaturalLanguage)]
     public string? ResourceNaturalLanguage { get; set; }
 
     /// <summary>
@@ -118,6 +134,7 @@ public class ResourceStatusAttributes
     /// See: PWG 5100.22-2025 Section 6.2.22
     /// </summary>
     /// <code>resource-patches</code>
+    [IppAttribute(IppAttributeNames.ResourcePatches, Tag = Tag.TextWithoutLanguage)]
     public string? ResourcePatches { get; set; }
 
     /// <summary>
@@ -125,6 +142,7 @@ public class ResourceStatusAttributes
     /// See: PWG 5100.22-2025 Section 6.2.23
     /// </summary>
     /// <code>resource-signature</code>
+    [IppAttribute(IppAttributeNames.ResourceSignature, Tag = Tag.OctetStringWithAnUnspecifiedFormat)]
     public OctetString[]? ResourceSignature { get; set; }
 
     /// <summary>
@@ -132,6 +150,7 @@ public class ResourceStatusAttributes
     /// See: PWG 5100.22-2025 Section 6.2.24
     /// </summary>
     /// <code>resource-string-version</code>
+    [IppAttribute(IppAttributeNames.ResourceStringVersion, Tag = Tag.TextWithoutLanguage)]
     public string? ResourceStringVersion { get; set; }
 
     /// <summary>
@@ -146,6 +165,7 @@ public class ResourceStatusAttributes
     /// See: PWG 5100.22-2025 Section 6.2.3
     /// </summary>
     /// <code>resource-formats</code>
+    [IppAttribute(IppAttributeNames.ResourceFormats, Tag = Tag.MimeMediaType)]
     public ResourceFormat[]? ResourceFormats { get; set; }
 
     /// <summary>
@@ -153,6 +173,7 @@ public class ResourceStatusAttributes
     /// See: PWG 5100.22-2025 Section 6.2.4
     /// </summary>
     /// <code>resource-name</code>
+    [IppAttribute(IppAttributeNames.ResourceName, Tag = Tag.NameWithoutLanguage)]
     public string? ResourceName { get; set; }
 
     /// <summary>
@@ -160,6 +181,7 @@ public class ResourceStatusAttributes
     /// See: PWG 5100.22-2025 Section 6.2.5
     /// </summary>
     /// <code>resource-info</code>
+    [IppAttribute(IppAttributeNames.ResourceInfo, Tag = Tag.TextWithoutLanguage)]
     public string? ResourceInfo { get; set; }
 
     /// <summary>
@@ -167,6 +189,7 @@ public class ResourceStatusAttributes
     /// See: PWG 5100.22-2025 Section 6.2.6
     /// </summary>
     /// <code>resource-type</code>
+    [IppAttribute(IppAttributeNames.ResourceType, Tag = Tag.Keyword)]
     public ResourceType? ResourceType { get; set; }
 
     /// <summary>
@@ -174,5 +197,6 @@ public class ResourceStatusAttributes
     /// See: PWG 5100.22-2025 Section 6.2.7
     /// </summary>
     /// <code>resource-version</code>
+    [IppAttribute(IppAttributeNames.ResourceVersion, Tag = Tag.TextWithoutLanguage)]
     public string? ResourceVersion { get; set; }
 }

@@ -43,4 +43,7 @@ public readonly struct StringWithLanguage(string language, string value, bool is
     {
         return !left.Equals(right);
     }
+
+    public static explicit operator string(StringWithLanguage stringWithLanguage) => stringWithLanguage.Value;
+    public static explicit operator StringWithLanguage(string value) => new("en", value);
 }

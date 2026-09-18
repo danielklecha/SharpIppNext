@@ -1,7 +1,9 @@
 using System;
+using SharpIpp.Mapping;
 
 namespace SharpIpp.Protocol.Models;
 
+[IppAttribute(IppAttributeNames.SystemContactCol)]
 public class SystemContact : IIppCollection
 {
     bool INoValueWritable.IsValue { get; set; } = true;
@@ -20,5 +22,6 @@ public class SystemContact : IIppCollection
     /// <summary>
     /// contact-vcard (1setOf text(MAX))
     /// </summary>
+    [IppAttribute("contact-vcard", Tag = Tag.TextWithoutLanguage)]
     public string[]? ContactVcard { get; set; }
 }

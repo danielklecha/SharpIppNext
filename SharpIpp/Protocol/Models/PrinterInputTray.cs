@@ -1,3 +1,5 @@
+using SharpIpp.Mapping;
+
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
@@ -5,6 +7,7 @@ namespace SharpIpp.Protocol.Models;
 /// Each element describes one input tray installed in the printer.
 /// See: PWG 5100.13-2023 Section 6.6.9
 /// </summary>
+[IppAttribute(IppAttributeNames.PrinterInputTray)]
 public class PrinterInputTray : IIppCollection
 {
     /// <inheritdoc />
@@ -27,6 +30,7 @@ public class PrinterInputTray : IIppCollection
     /// status — current status of the tray (keyword).
     /// See: PWG 5100.13-2023 Section 6.6.9
     /// </summary>
+    [IppAttribute("status", Tag = Tag.Keyword)]
     public string? Status { get; set; }
 
     /// <summary>
@@ -51,6 +55,7 @@ public class PrinterInputTray : IIppCollection
     /// media-info — human-readable description of the media in the tray (text).
     /// See: PWG 5100.13-2023 Section 6.6.9
     /// </summary>
+    [IppAttribute("media-info", Tag = Tag.TextWithoutLanguage)]
     public string? MediaInfo { get; set; }
 
     /// <summary>

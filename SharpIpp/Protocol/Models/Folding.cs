@@ -1,9 +1,12 @@
+using SharpIpp.Mapping;
+
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the location and direction of a fold.
 /// See: PWG 5100.1-2022 Section 5.2.6
 /// </summary>
+[IppAttribute("folding")]
 public class Folding : IIppCollection
 {
     /// <inheritdoc />

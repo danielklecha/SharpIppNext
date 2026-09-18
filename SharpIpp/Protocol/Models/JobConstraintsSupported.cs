@@ -1,3 +1,5 @@
+using SharpIpp.Mapping;
+
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
@@ -5,6 +7,7 @@ namespace SharpIpp.Protocol.Models;
 /// Each element describes a constraint between two or more Job Template attributes.
 /// See: PWG 5100.13-2023 Section 6.5.5
 /// </summary>
+[IppAttribute(IppAttributeNames.JobConstraintsSupported)]
 public class JobConstraintsSupported : IIppCollection
 {
     /// <inheritdoc />

@@ -1,3 +1,5 @@
+using SharpIpp.Mapping;
+
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
@@ -5,6 +7,7 @@ namespace SharpIpp.Protocol.Models;
 /// Each element describes one supply (ink, toner, paper, etc.) installed in the printer.
 /// See: PWG 5100.13-2023 Section 6.6.11
 /// </summary>
+[IppAttribute(IppAttributeNames.PrinterSupply)]
 public class PrinterSupply : IIppCollection
 {
     /// <inheritdoc />
@@ -33,12 +36,14 @@ public class PrinterSupply : IIppCollection
     /// color-name — color of the supply (keyword | name).
     /// See: PWG 5100.13-2023 Section 6.6.11
     /// </summary>
+    [IppAttribute("color-name", Tag = Tag.Keyword)]
     public string? ColorName { get; set; }
 
     /// <summary>
     /// marker-name — human-readable name of the supply (text).
     /// See: PWG 5100.13-2023 Section 6.6.11
     /// </summary>
+    [IppAttribute("marker-name", Tag = Tag.TextWithoutLanguage)]
     public string? MarkerName { get; set; }
 
     /// <summary>

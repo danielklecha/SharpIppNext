@@ -15,7 +15,7 @@ For a full list of these special values, see the [Advanced NoValue in Client](..
 // NoValue tags into the corresponding special values in the request model.
 var request = (GetJobsRequest)await sharpIppServer.ReceiveRequestAsync(stream);
 
-if (request.OperationAttributes.Limit == NoValue.GetNoValue<int>())
+if (request.OperationAttributes.Limit == NoValue.Instance) // or NoValue.GetNoValue<int>()
 {
     Console.WriteLine("The client sent a 'no-value' tag for the limit attribute.");
 }
@@ -56,7 +56,7 @@ public Task<GetPrinterAttributesResponse> GetPrinterAttributesAsync(GetPrinterAt
     {
         PrinterAttributes = new PrinterDescriptionAttributes
         {
-            QueuedJobCount = NoValue.GetNoValue<int>() // This will be sent as Tag.NoValue
+            QueuedJobCount = NoValue.Instance // This will be sent as Tag.NoValue (or NoValue.GetNoValue<int>())
         }
     });
 }

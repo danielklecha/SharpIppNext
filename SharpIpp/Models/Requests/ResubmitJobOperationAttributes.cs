@@ -9,6 +9,7 @@ namespace SharpIpp.Models.Requests;
 /// Resubmit-Job Operation Attributes.
 /// See: PWG 5100.7-2023 Section 5.3.1
 /// </summary>
+[IppAttribute]
 public class ResubmitJobOperationAttributes : JobOperationAttributes
 {
     /// <summary>
@@ -17,6 +18,7 @@ public class ResubmitJobOperationAttributes : JobOperationAttributes
     /// </summary>
     /// <code>document-format-details</code>
     [Obsolete("The 'document-format-details' attribute is deprecated. See PWG 5100.7-2023 Section 6.2.1.")]
+    [IppAttribute(IppAttributeNames.DocumentFormatDetails)]
     public DocumentFormatDetails? DocumentFormatDetails { get; set; }
 
     /// <summary>
@@ -24,6 +26,7 @@ public class ResubmitJobOperationAttributes : JobOperationAttributes
     /// See: PWG 5100.7-2023 Section 6.1.5
     /// </summary>
     /// <code>job-mandatory-attributes</code>
+    [IppAttribute(IppAttributeNames.JobMandatoryAttributes, Tag = Tag.Keyword)]
     public string[]? JobMandatoryAttributes { get; set; }
 
     /// <summary>
@@ -31,5 +34,6 @@ public class ResubmitJobOperationAttributes : JobOperationAttributes
     /// See: RFC 8011 Section 5.4.18
     /// </summary>
     /// <code>ipp-attribute-fidelity</code>
+    [IppAttribute(IppAttributeNames.IppAttributeFidelity, Tag = Tag.Boolean)]
     public bool? IppAttributeFidelity { get; set; }
 }

@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Requests;
@@ -6,4 +7,5 @@ namespace SharpIpp.Models.Requests;
 /// Enable-Printer Operation.
 /// See: RFC 3998 Section 3.1.1
 /// </summary>
+[IppRequest(IppOperation.EnablePrinter)]
 public class EnablePrinterRequest : IppRequest<EnablePrinterOperationAttributes>, IIppPrinterRequest { }

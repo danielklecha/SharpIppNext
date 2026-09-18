@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using System;
 using System.Collections.Generic;
 using SharpIpp.Protocol.Models;
@@ -16,7 +17,8 @@ namespace SharpIpp.Models.Requests
     /// than one object.
     /// See: RFC 2911 Section 3.2.6
     /// </summary>
-    public class GetJobsRequest : IppRequest<GetJobsOperationAttributes>, IIppPrinterRequest
+    [IppRequest(IppOperation.GetJobs)]
+public class GetJobsRequest : IppRequest<GetJobsOperationAttributes>, IIppPrinterRequest
     {
 
     }

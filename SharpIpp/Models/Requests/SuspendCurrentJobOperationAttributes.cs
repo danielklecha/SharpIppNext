@@ -1,9 +1,13 @@
+using SharpIpp.Mapping;
+using SharpIpp.Protocol.Models;
+
 namespace SharpIpp.Models.Requests;
 
 /// <summary>
 /// Suspend-Current-Job Operation Attributes.
 /// See: RFC 3998 Section 3.2.1.1
 /// </summary>
+[IppAttribute]
 public class SuspendCurrentJobOperationAttributes : JobOperationAttributes
 {
     /// <summary>
@@ -11,5 +15,6 @@ public class SuspendCurrentJobOperationAttributes : JobOperationAttributes
     /// See: RFC 3998 Section 6
     /// </summary>
     /// <code>job-message-from-operator</code>
+    [IppAttribute(IppAttributeNames.JobMessageFromOperator, Tag = Tag.TextWithoutLanguage)]
     public string? JobMessageFromOperator { get; set; }
 }

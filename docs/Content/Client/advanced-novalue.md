@@ -25,7 +25,7 @@ When you set a property in a request model to one of the following special value
 var request = new SendDocumentRequest
 {
     // ... other properties
-    JobId = NoValue.GetNoValue<int>() // This will be sent as a NoValue attribute
+    JobId = NoValue.Instance // Implicit conversion sends this as a NoValue attribute (or NoValue.GetNoValue<int>())
 };
 ```
 
@@ -89,4 +89,4 @@ if (attribute?.Tag == Tag.NoValue)
 ```
 
 > [!TIP]
-> You can use `NoValue.GetNoValue<T>()` to programmatically retrieve the special value for a given type `T`.
+> You can assign `NoValue.Instance` directly to supported primitive fields (`int`, `string`, `DateTime`, `DateTimeOffset`, `Range`, `Resolution`, `OctetString`, `StringWithLanguage`, `IppVersion`), or compare properties directly (e.g. `jobId == NoValue.Instance`). For other types (like enums and collections), use `NoValue.GetNoValue<T>()` and `NoValue.IsNoValue(...)`.

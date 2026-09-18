@@ -1,4 +1,5 @@
 using System;
+using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
 
@@ -10,6 +11,7 @@ namespace SharpIpp.Models.Requests;
 /// See: PWG 5100.18-2025 Section 5.1.1
 /// See: PWG 5100.18-2025 Section 14.4
 /// </summary>
+[IppAttribute]
 public class AcknowledgeDocumentOperationAttributes : JobOperationAttributes
 {
     /// <summary>
@@ -18,6 +20,7 @@ public class AcknowledgeDocumentOperationAttributes : JobOperationAttributes
     /// See: PWG 5100.5-2024 Section 5.1.2
     /// </summary>
     [Range(1, int.MaxValue)]
+    [IppAttribute(IppAttributeNames.DocumentNumber, Tag = Tag.Integer)]
     public int DocumentNumber { get; set; }
 
     /// <summary>
@@ -27,6 +30,7 @@ public class AcknowledgeDocumentOperationAttributes : JobOperationAttributes
     /// See: PWG 5100.18-2025 Section 7.1.8
     /// See: PWG 5100.18-2025 Section 14.1
     /// </summary>
+    [IppAttribute(IppAttributeNames.OutputDeviceUuid, Tag = Tag.Uri)]
     public Uri? OutputDeviceUuid { get; set; }
 
     /// <summary>
@@ -37,6 +41,7 @@ public class AcknowledgeDocumentOperationAttributes : JobOperationAttributes
     /// See: PWG 5100.18-2025 Section 7.1.5
     /// See: PWG 5100.18-2025 Section 14.3
     /// </summary>
+    [IppAttribute(IppAttributeNames.FetchStatusCode, Tag = Tag.Enum)]
     public IppStatusCode? FetchStatusCode { get; set; }
 
     /// <summary>
@@ -46,5 +51,6 @@ public class AcknowledgeDocumentOperationAttributes : JobOperationAttributes
     /// See: PWG 5100.18-2025 Section 7.1.6
     /// See: PWG 5100.18-2025 Section 14.1
     /// </summary>
+    [IppAttribute(IppAttributeNames.FetchStatusMessage, Tag = Tag.TextWithoutLanguage)]
     public string? FetchStatusMessage { get; set; }
 }

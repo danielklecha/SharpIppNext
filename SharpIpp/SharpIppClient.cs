@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using SharpIpp.Exceptions;
 using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
-using SharpIpp.Mapping.Profiles;
 using SharpIpp.Models.Requests;
 using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
@@ -154,7 +153,6 @@ public partial class SharpIppClient : ISharpIppClient
         where TOut : IIppResponse
     {
         RequestValidator?.Validate(data);
-        var ippRequest = CreateRawRequest(data);
         if (data.OperationAttributes == null)
             throw new Exception("OperationAttributes is not set");
 
@@ -174,6 +172,7 @@ public partial class SharpIppClient : ISharpIppClient
         if (targetUri == null)
             throw new Exception("PrinterUri or SystemUri is not set");
 
+        var ippRequest = CreateRawRequest(data);
         var ippResponse = await SendAsync(targetUri, ippRequest, cancellationToken).ConfigureAwait(false);
         var res = CreateResponse<TOut>(ippResponse);
         ResponseValidator?.Validate(res);
@@ -230,12 +229,10 @@ public partial class SharpIppClient : ISharpIppClient
         return new HttpRequestMessage( HttpMethod.Post, uriBuilder.Uri );
     }
 
-    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "Mapping profiles are preserved via ILLink.Descriptors.xml")]
     private static IMapper MapperFactory()
     {
         var mapper = new SimpleMapper();
-        var assembly = Assembly.GetAssembly(typeof(TypesProfile));
-        mapper.FillFromAssembly(assembly!);
+        mapper.RegisterGeneratedProfiles();
         return mapper;
     }
 

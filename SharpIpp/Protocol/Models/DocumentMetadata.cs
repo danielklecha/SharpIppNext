@@ -251,4 +251,6 @@ public class DocumentMetadata : IppStructuredString
         }
     }
 
+    public static explicit operator string(DocumentMetadata metadata) => metadata?.ToString()!;
+    public static explicit operator DocumentMetadata(string value) => Parse(value);
 }

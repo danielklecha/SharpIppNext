@@ -1,9 +1,13 @@
+using SharpIpp.Mapping;
+using SharpIpp.Protocol.Models;
+
 namespace SharpIpp.Models.Requests;
 
 /// <summary>
 /// Get-User-Printer-Attributes operation attributes.
 /// See: PWG 5100.11-2024 Section 5.1.1
 /// </summary>
+[IppAttribute]
 public class GetUserPrinterAttributesOperationAttributes : GetPrinterAttributesOperationAttributes
 {
     /// <summary>
@@ -13,5 +17,6 @@ public class GetUserPrinterAttributesOperationAttributes : GetPrinterAttributesO
     /// See: PWG 5100.22-2025 Section 7.1.6
     /// </summary>
     /// <code>requesting-user-vcard</code>
+    [IppAttribute(IppAttributeNames.RequestingUserVcard, Tag = Tag.TextWithoutLanguage)]
     public string[]? RequestingUserVcard { get; set; }
 }

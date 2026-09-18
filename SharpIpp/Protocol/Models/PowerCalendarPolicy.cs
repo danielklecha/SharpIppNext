@@ -1,9 +1,12 @@
+using SharpIpp.Mapping;
+
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Member attributes for <c>power-calendar-policy-col</c>.
 /// See: PWG 5100.22-2025 Section 7.2.20
 /// </summary>
+[IppAttribute(IppAttributeNames.PowerCalendarPolicyCol)]
 public class PowerCalendarPolicy : IIppCollection
 {
     bool INoValueWritable.IsValue { get; set; } = true;

@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
 
@@ -5,6 +6,7 @@ namespace SharpIpp.Models.Requests;
 /// <summary>
 /// PWG 5100.5-2024 Section 5.1.1.1
 /// </summary>
+[IppAttribute]
 public class CancelDocumentOperationAttributes : JobOperationAttributes
 {
     /// <summary>
@@ -16,6 +18,7 @@ public class CancelDocumentOperationAttributes : JobOperationAttributes
     /// </summary>
     /// <code>document-number</code>
     [Range(1, int.MaxValue)]
+    [IppAttribute(IppAttributeNames.DocumentNumber, Tag = Tag.Integer)]
     public int DocumentNumber { get; set; }
     /// <summary>
     /// The document-message IPP attribute.
@@ -23,5 +26,6 @@ public class CancelDocumentOperationAttributes : JobOperationAttributes
     /// See: PWG 5100.5-2024 Section 6.2.3
     /// </summary>
     /// <code>document-message</code>
+    [IppAttribute(IppAttributeNames.DocumentMessage, Tag = Tag.TextWithoutLanguage)]
     public string? DocumentMessage { get; set; }
 }

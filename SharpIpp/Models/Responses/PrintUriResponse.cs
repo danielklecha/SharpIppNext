@@ -1,9 +1,11 @@
+using SharpIpp.Mapping;
 using System;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Responses;
 
 [Obsolete("The 'Print-URI' operation is deprecated.")]
+[IppResponse]
 public class PrintUriResponse : IppResponse<OperationAttributes>, IIppJobResponse
 {
     /// <summary>

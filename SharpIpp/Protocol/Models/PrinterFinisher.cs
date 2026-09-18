@@ -178,4 +178,11 @@ public class PrinterFinisher : IppStructuredString
 
         return builder.ToString();
     }
+
+    public static explicit operator string(PrinterFinisher finisher) => finisher?.ToString()!;
+    public static explicit operator PrinterFinisher(string value) => Parse(value);
+    public static explicit operator byte[](PrinterFinisher finisher) => Encoding.UTF8.GetBytes(finisher?.ToString() ?? string.Empty);
+    public static explicit operator PrinterFinisher(byte[] bytes) => Parse(Encoding.UTF8.GetString(bytes));
+    public static explicit operator OctetString(PrinterFinisher finisher) => new(finisher?.ToString() ?? string.Empty);
+    public static explicit operator PrinterFinisher(OctetString octet) => Parse(octet.ToString());
 }

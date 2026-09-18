@@ -1,9 +1,12 @@
+using SharpIpp.Mapping;
+
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the type of baling to apply to a collection of Media Sheets.
 /// See: PWG 5100.1-2022 Section 5.2.1
 /// </summary>
+[IppAttribute("baling")]
 public class Baling : IIppCollection
 {
     /// <inheritdoc />

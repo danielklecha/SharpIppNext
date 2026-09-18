@@ -44,6 +44,11 @@ public readonly struct OctetString(byte[] value, bool isValue = true) : IEquatab
     public static implicit operator byte[]?(OctetString octetString) => octetString.Value;
 
     /// <summary>
+    /// Explicitly converts an <see cref="OctetString"/> to a string using UTF-8 encoding.
+    /// </summary>
+    public static explicit operator string(OctetString octetString) => octetString.ToString();
+
+    /// <summary>
     /// Converts the octetString to a string using UTF-8 encoding.
     /// </summary>
     public override string ToString()

@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using SharpIpp.Validation;
 using System;
 
@@ -7,6 +8,7 @@ namespace SharpIpp.Protocol.Models;
 /// The <c>save-info</c> collection.
 /// See: PWG 5100.11
 /// </summary>
+[IppAttribute(IppAttributeNames.SaveInfo)]
 public class SaveInfo : IIppCollection
 {
     bool INoValueWritable.IsValue { get; set; } = true;
@@ -17,5 +19,6 @@ public class SaveInfo : IIppCollection
     public string? SaveName { get; set; }
 
     [ByteRange(1, 255)]
+    [IppAttribute(IppAttributeNames.SaveDocumentFormat, Tag = Tag.MimeMediaType)]
     public string? SaveDocumentFormat { get; set; }
 }

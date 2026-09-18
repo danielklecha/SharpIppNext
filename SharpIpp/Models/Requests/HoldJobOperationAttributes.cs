@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace SharpIpp.Models.Requests;
+[IppAttribute]
 public class HoldJobOperationAttributes : CancelJobOperationAttributes
 {
     /// <summary>
@@ -13,6 +14,7 @@ public class HoldJobOperationAttributes : CancelJobOperationAttributes
     /// See: pwg5100.13 - IPP Driver Replacement Extensions v2.0 Section 6.1.5
     /// </summary>
     /// <code>job-hold-until</code>
+    [IppAttribute(IppAttributeNames.JobHoldUntil, Tag = Tag.Keyword)]
     public JobHoldUntil? JobHoldUntil { get; set; }
 
 }

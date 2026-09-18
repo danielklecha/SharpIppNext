@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using System;
 using System.Collections.Generic;
 using SharpIpp.Protocol.Models;
@@ -9,7 +10,8 @@ namespace SharpIpp.Models.Requests
     /// <seealso href="http://www.cups.org/doc/spec-ipp.html#CUPS_GET_PRINTERS" />
     /// See: http://www.cups.org/doc/spec-ipp.html#CUPS_GET_PRINTERS"
     /// </summary>
-    public class CUPSGetPrintersRequest : IppRequest<CUPSGetPrintersOperationAttributes>, IIppPrinterRequest
+    [IppRequest(IppOperation.GetCUPSPrinters)]
+public class CUPSGetPrintersRequest : IppRequest<CUPSGetPrintersOperationAttributes>, IIppPrinterRequest
     {
 
     }

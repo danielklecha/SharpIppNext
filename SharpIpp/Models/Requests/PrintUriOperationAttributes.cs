@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 
 namespace SharpIpp.Models.Requests;
+[IppAttribute]
 public class PrintUriOperationAttributes : PrintJobOperationAttributes
 {
     /// <summary>
@@ -14,6 +15,7 @@ public class PrintUriOperationAttributes : PrintJobOperationAttributes
     /// See: RFC 8011 Section 3.2.2
     /// </summary>
     /// <code>document-uri</code>
+    [IppAttribute(IppAttributeNames.DocumentUri, Tag = Tag.Uri)]
     public Uri? DocumentUri { get; set; }
 
     /// <summary>
@@ -21,6 +23,7 @@ public class PrintUriOperationAttributes : PrintJobOperationAttributes
     /// DEPRECATED.
     /// See: PWG 5100.18-2025 Section 7.1.5
     /// </summary>
+    [IppAttribute(IppAttributeNames.DocumentAccess)]
     [Obsolete("The 'document-access' attribute is deprecated in favor of URI authentication. See PWG 5100.18-2025 Section 7.1.5.")]
     public DocumentAccess? DocumentAccess { get; set; }
 

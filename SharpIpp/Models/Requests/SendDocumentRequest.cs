@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,7 +18,8 @@ namespace SharpIpp.Models.Requests
     /// document.
     /// See: RFC 2911 Section 3.3.1
     /// </summary>
-    public class SendDocumentRequest : IppRequest<SendDocumentOperationAttributes>, IIppJobRequest
+    [IppRequest(IppOperation.SendDocument)]
+public class SendDocumentRequest : IppRequest<SendDocumentOperationAttributes>, IIppJobRequest
     {
     /// <summary>
     /// The document data.

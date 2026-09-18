@@ -1,9 +1,12 @@
+using SharpIpp.Mapping;
+
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// The <c>print-accuracy</c> collection.
 /// See: PWG 5100.21-2019 Section 8.1.6
 /// </summary>
+[IppAttribute(IppAttributeNames.PrintAccuracy)]
 public class PrintAccuracy : IIppCollection
 {
     bool INoValueWritable.IsValue { get; set; } = true;

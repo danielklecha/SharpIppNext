@@ -1,7 +1,9 @@
+using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Responses;
 
+[IppResponse]
 public class PrintJobResponse : IppResponse<OperationAttributes>, IIppJobResponse
 {
     /// <summary>

@@ -1,8 +1,10 @@
+using SharpIpp.Mapping;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Responses;
 
+[IppResponse]
 public class CUPSGetPrintersResponse : IppResponse<OperationAttributes>
 {
     public CUPSGetPrintersResponse()

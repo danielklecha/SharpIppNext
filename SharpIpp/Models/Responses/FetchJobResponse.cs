@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Responses;
@@ -6,6 +7,7 @@ namespace SharpIpp.Models.Responses;
 /// Fetch-Job response.
 /// See: PWG 5100.18-2025 Section 5.6.2
 /// </summary>
+[IppResponse]
 public class FetchJobResponse : IppResponse<OperationAttributes>
 {
     /// <summary>

@@ -1,3 +1,5 @@
+using SharpIpp.Mapping;
+
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
@@ -5,6 +7,7 @@ namespace SharpIpp.Protocol.Models;
 /// Each element describes one output tray installed in the printer.
 /// See: PWG 5100.13-2023 Section 6.6.10
 /// </summary>
+[IppAttribute(IppAttributeNames.PrinterOutputTray)]
 public class PrinterOutputTray : IIppCollection
 {
     /// <inheritdoc />
@@ -27,6 +30,7 @@ public class PrinterOutputTray : IIppCollection
     /// status — current status of the output tray (keyword).
     /// See: PWG 5100.13-2023 Section 6.6.10
     /// </summary>
+    [IppAttribute("status", Tag = Tag.Keyword)]
     public string? Status { get; set; }
 
     /// <summary>
@@ -39,11 +43,13 @@ public class PrinterOutputTray : IIppCollection
     /// stackingorder — stacking order of output (keyword).
     /// See: PWG 5100.13-2023 Section 6.6.10
     /// </summary>
+    [IppAttribute("stackingorder")]
     public StackingOrder? StackingOrder { get; set; }
 
     /// <summary>
     /// pagedelivery — page delivery orientation (keyword).
     /// See: PWG 5100.13-2023 Section 6.6.10
     /// </summary>
+    [IppAttribute("pagedelivery")]
     public PageDelivery? PageDelivery { get; set; }
 }

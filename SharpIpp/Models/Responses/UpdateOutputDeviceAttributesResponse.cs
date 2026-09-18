@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Responses;
@@ -6,6 +7,7 @@ namespace SharpIpp.Models.Responses;
 /// Update-Output-Device-Attributes response.
 /// See: PWG 5100.18-2025 Section 5.10.2
 /// </summary>
+[IppResponse]
 public class UpdateOutputDeviceAttributesResponse : IppResponse<OperationAttributes>
 {
 }

@@ -1,3 +1,5 @@
+using SharpIpp.Protocol.Models;
+using SharpIpp.Mapping;
 namespace SharpIpp.Models.Requests
 {
     /// <summary>
@@ -10,7 +12,8 @@ namespace SharpIpp.Models.Requests
     /// indefinitely or until a specified time period, if supported.
     /// See: RFC 2911 Section 3.3.5
     /// </summary>
-    public class HoldJobRequest : IppRequest<HoldJobOperationAttributes>, IIppJobRequest
+    [IppRequest(IppOperation.HoldJob)]
+public class HoldJobRequest : IppRequest<HoldJobOperationAttributes>, IIppJobRequest
     {
 
     }

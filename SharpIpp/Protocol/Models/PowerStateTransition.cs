@@ -1,9 +1,12 @@
+using SharpIpp.Mapping;
+
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Member attributes for <c>power-state-transitions-col</c>.
 /// See: PWG 5100.22-2025 Section 7.3.5
 /// </summary>
+[IppAttribute(IppAttributeNames.PowerStateTransitionsCol)]
 public class PowerStateTransition : IIppCollection
 {
     bool INoValueWritable.IsValue { get; set; } = true;

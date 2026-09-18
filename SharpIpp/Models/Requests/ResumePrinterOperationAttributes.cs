@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace SharpIpp.Models.Requests;
+[IppAttribute]
 public class ResumePrinterOperationAttributes : OperationAttributes
 {
 

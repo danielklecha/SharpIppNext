@@ -1,6 +1,9 @@
+using SharpIpp.Mapping;
 using SharpIpp.Validation;
 
 namespace SharpIpp.Protocol.Models;
+
+[IppAttribute("media-size")]
 public class MediaSize : IIppCollection
 {
     /// <inheritdoc />

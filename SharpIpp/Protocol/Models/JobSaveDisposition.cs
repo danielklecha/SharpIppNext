@@ -1,4 +1,5 @@
 using System;
+using SharpIpp.Mapping;
 
 namespace SharpIpp.Protocol.Models;
 
@@ -6,6 +7,7 @@ namespace SharpIpp.Protocol.Models;
 /// The <c>job-save-disposition</c> collection.
 /// See: PWG 5100.11
 /// </summary>
+[IppAttribute(IppAttributeNames.JobSaveDisposition)]
 public class JobSaveDisposition : IIppCollection
 {
     bool INoValueWritable.IsValue { get; set; } = true;

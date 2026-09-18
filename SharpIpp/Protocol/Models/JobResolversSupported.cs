@@ -1,3 +1,5 @@
+using SharpIpp.Mapping;
+
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
@@ -5,6 +7,7 @@ namespace SharpIpp.Protocol.Models;
 /// Each element describes a resolver that can resolve job constraint conflicts.
 /// See: PWG 5100.13-2023 Section 6.5.9
 /// </summary>
+[IppAttribute(IppAttributeNames.JobResolversSupported)]
 public class JobResolversSupported : IIppCollection
 {
     /// <inheritdoc />

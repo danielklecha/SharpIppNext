@@ -1,9 +1,12 @@
+using SharpIpp.Mapping;
+
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the location and type of binding to apply.
 /// See: PWG 5100.1-2022 Section 5.2.2
 /// </summary>
+[IppAttribute("binding")]
 public class Binding : IIppCollection
 {
     /// <inheritdoc />

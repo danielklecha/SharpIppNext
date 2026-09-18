@@ -1,3 +1,5 @@
+using SharpIpp.Mapping;
+
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
@@ -5,6 +7,7 @@ namespace SharpIpp.Protocol.Models;
 /// Each element describes a trigger that can cause a job constraint to be evaluated.
 /// See: PWG 5100.13-2023 Section 6.5.10
 /// </summary>
+[IppAttribute(IppAttributeNames.JobTriggersSupported)]
 public class JobTriggersSupported : IIppCollection
 {
     /// <inheritdoc />

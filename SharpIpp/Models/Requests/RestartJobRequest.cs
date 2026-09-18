@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using System;
 using System.Collections.Generic;
 using SharpIpp.Protocol.Models;
@@ -22,7 +23,8 @@ namespace SharpIpp.Models.Requests
     /// See: RFC 2911 Section 3.3.7
     /// </summary>
     [Obsolete("See RFC 8011 Section 4.3.7.")]
-    public class RestartJobRequest : IppRequest<RestartJobOperationAttributes>, IIppJobRequest
+    [IppRequest(IppOperation.RestartJob)]
+public class RestartJobRequest : IppRequest<RestartJobOperationAttributes>, IIppJobRequest
     {
 
     }

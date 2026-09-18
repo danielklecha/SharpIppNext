@@ -1,3 +1,5 @@
+using SharpIpp.Mapping;
+
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
@@ -5,6 +7,7 @@ namespace SharpIpp.Protocol.Models;
 /// by the "finishings" Job Template attribute.
 /// See: PWG 5100.1-2022 Section 5.2
 /// </summary>
+[IppAttribute(IppAttributeNames.FinishingsCol)]
 public class FinishingsCol : IIppCollection
 {
     /// <inheritdoc />
@@ -81,6 +84,7 @@ public class FinishingsCol : IIppCollection
     /// rangeOfInteger(1:MAX)
     /// See: PWG 5100.1-2022 Section 6.9.2
     /// </summary>
+    [IppAttribute("media-sheets-supported", Tag = Tag.RangeOfInteger)]
     public Range? MediaSheetsSupported { get; set; }
 
     /// <summary>

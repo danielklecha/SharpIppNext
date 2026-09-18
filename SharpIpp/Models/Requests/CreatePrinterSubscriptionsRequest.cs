@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Requests;
@@ -7,4 +8,5 @@ namespace SharpIpp.Models.Requests;
 /// See: RFC 3995 Section 5.1
 /// See: RFC 3995 Section 11.1.1
 /// </summary>
+[IppRequest(IppOperation.CreatePrinterSubscriptions)]
 public class CreatePrinterSubscriptionsRequest : IppRequest<CreatePrinterSubscriptionsOperationAttributes>, IIppPrinterRequest { }

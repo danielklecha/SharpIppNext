@@ -1,7 +1,9 @@
 using System;
+using SharpIpp.Mapping;
 
 namespace SharpIpp.Protocol.Models;
 
+[IppAttribute(IppAttributeNames.SystemXriSupported)]
 public class SystemXri : IIppCollection
 {
     bool INoValueWritable.IsValue { get; set; } = true;

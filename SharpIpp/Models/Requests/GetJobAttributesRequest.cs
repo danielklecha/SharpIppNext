@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using System;
 using System.Collections.Generic;
 using SharpIpp.Protocol.Models;
@@ -16,7 +17,8 @@ namespace SharpIpp.Models.Requests
     /// object attributes.
     /// See: RFC 2911 Section 3.3.4
     /// </summary>
-    public class GetJobAttributesRequest : IppRequest<GetJobAttributesOperationAttributes>, IIppJobRequest
+    [IppRequest(IppOperation.GetJobAttributes)]
+public class GetJobAttributesRequest : IppRequest<GetJobAttributesOperationAttributes>, IIppJobRequest
     {
 
     }

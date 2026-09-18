@@ -1,3 +1,5 @@
+using SharpIpp.Mapping;
+
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
@@ -5,6 +7,7 @@ namespace SharpIpp.Protocol.Models;
 /// Each element describes a named preset of Job Template attribute values.
 /// See: PWG 5100.13-2023 Section 6.5.8
 /// </summary>
+[IppAttribute(IppAttributeNames.JobPresetsSupported)]
 public class JobPresetsSupported : IIppCollection
 {
     /// <inheritdoc />

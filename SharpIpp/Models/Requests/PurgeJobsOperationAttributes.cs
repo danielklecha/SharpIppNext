@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using SharpIpp.Mapping;
 
 namespace SharpIpp.Models.Requests;
 /// <summary>
@@ -10,6 +11,7 @@ namespace SharpIpp.Models.Requests;
 /// See: RFC 2911 Section 3.2.9
 /// </summary>
 [Obsolete("See RFC 8011 Section 4.2.9.")]
+[IppAttribute]
 public class PurgeJobsOperationAttributes : PausePrinterOperationAttributes
 {
 

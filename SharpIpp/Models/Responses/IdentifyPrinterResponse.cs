@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Responses;
@@ -6,6 +7,7 @@ namespace SharpIpp.Models.Responses;
 /// Identify-Printer Response.
 /// See: PWG 5100.13-2023 Section 5.1.2
 /// </summary>
+[IppResponse]
 public class IdentifyPrinterResponse : IppResponse<OperationAttributes>
 {
 }

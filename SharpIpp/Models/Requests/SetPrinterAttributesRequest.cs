@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Requests;
@@ -6,6 +7,7 @@ namespace SharpIpp.Models.Requests;
 /// Set-Printer-Attributes operation request.
 /// See: RFC 3380 Section 4.1
 /// </summary>
+[IppRequest(IppOperation.SetPrinterAttributes)]
 public class SetPrinterAttributesRequest : IppRequest<SetPrinterAttributesOperationAttributes>, IIppPrinterRequest
 {
     /// <summary>

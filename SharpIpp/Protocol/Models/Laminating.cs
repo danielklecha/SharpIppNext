@@ -1,9 +1,12 @@
+using SharpIpp.Mapping;
+
 namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies which material to apply to the hardcopy output.
 /// See: PWG 5100.1-2022 Section 5.2.7
 /// </summary>
+[IppAttribute("laminating")]
 public class Laminating : IIppCollection
 {
     /// <inheritdoc />

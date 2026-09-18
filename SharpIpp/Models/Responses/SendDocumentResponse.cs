@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Responses;
@@ -5,6 +6,7 @@ namespace SharpIpp.Models.Responses;
 /// Send-Document Response
 /// See: RFC 2911 Section 3.3.1.2
 /// </summary>
+[IppResponse]
 public class SendDocumentResponse : IppResponse<OperationAttributes>, IIppJobResponse
 {
     /// <summary>

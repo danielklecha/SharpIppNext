@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using SharpIpp.Validation;
 
 namespace SharpIpp.Protocol.Models;
@@ -6,6 +7,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the locations of stitches, staples, or crimps.
 /// See: PWG 5100.1-2022 Section 5.2.9
 /// </summary>
+[IppAttribute("stitching")]
 public class Stitching : IIppCollection
 {
     /// <inheritdoc />

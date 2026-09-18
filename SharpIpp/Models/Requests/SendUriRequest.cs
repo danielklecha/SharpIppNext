@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using System;
 using System.Collections.Generic;
 using SharpIpp.Protocol.Models;
@@ -21,7 +22,8 @@ namespace SharpIpp.Models.Requests
     /// See: RFC 2911 Section 3.3.2
     /// </summary>
     [Obsolete("The 'Send-URI' operation is deprecated.")]
-    public class SendUriRequest : IppRequest<SendUriOperationAttributes>, IIppJobRequest
+    [IppRequest(IppOperation.SendUri)]
+public class SendUriRequest : IppRequest<SendUriOperationAttributes>, IIppJobRequest
     {
         /// <summary>
         /// The document-template-attributes IPP attribute.

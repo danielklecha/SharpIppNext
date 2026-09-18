@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
 
@@ -5,6 +6,7 @@ namespace SharpIpp.Models.Requests;
 /// <summary>
 /// PWG 5100.5-2024 Section 5.2.1.1
 /// </summary>
+[IppAttribute]
 public class GetDocumentsOperationAttributes : JobOperationAttributes
 {
     /// <summary>
@@ -13,6 +15,7 @@ public class GetDocumentsOperationAttributes : JobOperationAttributes
     /// </summary>
     /// <code>first-index</code>
     [Range(1, int.MaxValue)]
+    [IppAttribute(IppAttributeNames.FirstIndex, Tag = Tag.Integer)]
     public int? FirstIndex { get; set; }
 
     /// <summary>
@@ -23,11 +26,13 @@ public class GetDocumentsOperationAttributes : JobOperationAttributes
     /// </summary>
     /// <code>limit</code>
     [Range(1, int.MaxValue)]
+    [IppAttribute(IppAttributeNames.Limit, Tag = Tag.Integer)]
     public int? Limit { get; set; }
     /// <summary>
     /// The requested-attributes IPP attribute.
     /// See: RFC 8011 Section 5.4.1
     /// </summary>
     /// <code>requested-attributes</code>
+    [IppAttribute(IppAttributeNames.RequestedAttributes, Tag = Tag.Keyword)]
     public string[]? RequestedAttributes { get; set; }
 }

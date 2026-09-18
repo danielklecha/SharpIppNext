@@ -5,6 +5,7 @@ using SharpIpp.Models.Responses;
 using SharpIpp.Protocol.Models;
 using System.Diagnostics.CodeAnalysis;
 using SharpIpp.Tests.Unit.Mapping;
+using Range = SharpIpp.Protocol.Models.Range;
 
 namespace SharpIpp.Tests.Unit.Protocol.Models;
 
@@ -209,6 +210,29 @@ public class NoValueTests : MapperTestBase
     }
 
     [TestMethod]
+    public void GetNoValue_WithIppVersion_ShouldReturnDefault()
+    {
+        var result = NoValue.GetNoValue<IppVersion>();
+        result.Should().Be(default(IppVersion));
+        result.IsValue.Should().BeFalse();
+        NoValue.IsNoValue(result).Should().BeTrue();
+    }
+
+    [TestMethod]
+    public void IsNoValue_WithDefaultIppVersion_ShouldReturnTrue()
+    {
+        NoValue.IsNoValue(default(IppVersion)).Should().BeTrue();
+    }
+
+    [TestMethod]
+    public void IsNoValue_WithConstructedIppVersion_ShouldReturnFalse()
+    {
+        NoValue.IsNoValue(new IppVersion()).Should().BeFalse();
+        NoValue.IsNoValue(new IppVersion(1, 1)).Should().BeFalse();
+        NoValue.IsNoValue(new IppVersion("1.1")).Should().BeFalse();
+    }
+
+    [TestMethod]
     public void IsNoValue_WithCollectionNoValue_ShouldReturnTrue()
     {
         var mediaCol = NoValue.GetNoValue<MediaCol>();
@@ -271,4 +295,340 @@ public class NoValueTests : MapperTestBase
         result.IsValue.Should().BeFalse();
         NoValue.IsNoValue(result).Should().BeTrue();
     }
+
+    [TestMethod]
+    public void GetNoValue_WithUnsupportedType_ShouldThrowArgumentException()
+    {
+        var action = () => NoValue.GetNoValue(typeof(object));
+        action.Should().Throw<ArgumentException>()
+            .WithMessage($"Type {typeof(object)} is not supported for NoValue mapping and has no non-null default value");
+    }
+
+    [TestMethod]
+    public void GetNoValue_GenericWithUnsupportedType_ShouldThrowArgumentException()
+    {
+        var action = () => NoValue.GetNoValue<double>();
+        action.Should().Throw<ArgumentException>()
+            .WithMessage($"Type {typeof(double)} is not supported for NoValue mapping and has no non-null default value");
+    }
+
+    [TestMethod]
+    public void GetNoValue_WithUnsupportedNullableType_ShouldThrowArgumentException()
+    {
+        var action = () => NoValue.GetNoValue(typeof(double?));
+        action.Should().Throw<ArgumentException>()
+            .WithMessage($"Type {typeof(double?)} is not supported for NoValue mapping and has no non-null default value");
+    }
+
+    [TestMethod]
+    public void GetNoValue_WithInt_ShouldReturnIntMinValue()
+    {
+        var result = NoValue.GetNoValue<int>();
+        result.Should().Be(int.MinValue);
+    }
+
+    [TestMethod]
+    public void GetNoValue_WithNullableInt_ShouldReturnIntMinValue()
+    {
+        var result = NoValue.GetNoValue(typeof(int?));
+        result.Should().Be(int.MinValue);
+    }
+
+    [TestMethod]
+    public void GetNoValue_WithShortEnum_ShouldReturnShortMinValue()
+    {
+        var result = NoValue.GetNoValue<TestShortEnum>();
+        result.Should().Be((TestShortEnum)short.MinValue);
+    }
+
+    [TestMethod]
+    public void GetNoValue_WithIntEnum_ShouldReturnIntMinValue()
+    {
+        var result = NoValue.GetNoValue<TestIntEnum>();
+        result.Should().Be((TestIntEnum)int.MinValue);
+    }
+
+    [TestMethod]
+    public void GetNoValue_WithDateTime_ShouldReturnDateTimeMinValue()
+    {
+        var result = NoValue.GetNoValue<DateTime>();
+        result.Should().Be(DateTime.MinValue);
+    }
+
+    [TestMethod]
+    public void GetNoValue_WithDateTimeOffset_ShouldReturnDateTimeOffsetMinValue()
+    {
+        var result = NoValue.GetNoValue<DateTimeOffset>();
+        result.Should().Be(DateTimeOffset.MinValue);
+    }
+
+    [TestMethod]
+    public void GetNoValue_WithBool_ShouldReturnFalse()
+    {
+        var result = NoValue.GetNoValue<bool>();
+        result.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void GetNoValue_WithRange_ShouldReturnNoValueRange()
+    {
+        var result = NoValue.GetNoValue<Range>();
+        result.IsValue.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void GetNoValue_WithResolution_ShouldReturnNoValueResolution()
+    {
+        var result = NoValue.GetNoValue<Resolution>();
+        result.IsValue.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void GetNoValue_WithOctetString_ShouldReturnNoValueOctetString()
+    {
+        var result = NoValue.GetNoValue<OctetString>();
+        result.IsValue.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void IsNoValue_WithSingleNoValueArray_ShouldReturnTrue()
+    {
+        NoValue.IsNoValue(new object[] { NoValue.Instance }).Should().BeTrue();
+        NoValue.IsNoValue(new NoValue[] { NoValue.Instance }).Should().BeTrue();
+    }
+
+    [TestMethod]
+    public void IsNoValue_WithNonNoValueArray_ShouldReturnFalse()
+    {
+        NoValue.IsNoValue(new object[] { "test" }).Should().BeFalse();
+        NoValue.IsNoValue(new object[] { NoValue.Instance, NoValue.Instance }).Should().BeFalse();
+        NoValue.IsNoValue(Array.Empty<object>()).Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void Operator_EqualityAndInequality_BetweenNoValues_ShouldWork()
+    {
+        var a = NoValue.Instance;
+        var b = new NoValue();
+        (a == b).Should().BeTrue();
+        (a != b).Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void GetNoValue_Parameterless_ShouldReturnInstance()
+    {
+        var result = NoValue.GetNoValue();
+        result.Should().Be(NoValue.Instance);
+    }
+
+    [TestMethod]
+    public void ImplicitConversion_ToInt_ShouldReturnIntMinValue()
+    {
+        int value = NoValue.Instance;
+        value.Should().Be(int.MinValue);
+
+        int fromGetNoValue = NoValue.GetNoValue();
+        fromGetNoValue.Should().Be(int.MinValue);
+
+        (value == NoValue.Instance).Should().BeTrue();
+        (NoValue.Instance == value).Should().BeTrue();
+        (value != NoValue.Instance).Should().BeFalse();
+        (NoValue.Instance != value).Should().BeFalse();
+
+        (5 == NoValue.Instance).Should().BeFalse();
+        (NoValue.Instance == 5).Should().BeFalse();
+        (5 != NoValue.Instance).Should().BeTrue();
+        (NoValue.Instance != 5).Should().BeTrue();
+
+        int? nullableVal = NoValue.Instance;
+        nullableVal.Should().Be(int.MinValue);
+        (nullableVal == NoValue.Instance).Should().BeTrue();
+        (NoValue.Instance == nullableVal).Should().BeTrue();
+        (nullableVal != NoValue.Instance).Should().BeFalse();
+        (NoValue.Instance != nullableVal).Should().BeFalse();
+
+        int? nullVal = null;
+        (nullVal == NoValue.Instance).Should().BeFalse();
+        (NoValue.Instance == nullVal).Should().BeFalse();
+        (nullVal != NoValue.Instance).Should().BeTrue();
+        (NoValue.Instance != nullVal).Should().BeTrue();
+    }
+
+    [TestMethod]
+    public void ImplicitConversion_ToString_ShouldReturnNoValueString()
+    {
+        string value = NoValue.Instance;
+        value.Should().Be(NoValue.NoValueString);
+
+        (value == NoValue.Instance).Should().BeTrue();
+        (NoValue.Instance == value).Should().BeTrue();
+        (value != NoValue.Instance).Should().BeFalse();
+        (NoValue.Instance != value).Should().BeFalse();
+
+        ("test" == NoValue.Instance).Should().BeFalse();
+        (NoValue.Instance == "test").Should().BeFalse();
+        ("test" != NoValue.Instance).Should().BeTrue();
+        (NoValue.Instance != "test").Should().BeTrue();
+
+        string? nullStr = null;
+        (nullStr == NoValue.Instance).Should().BeFalse();
+        (NoValue.Instance == nullStr).Should().BeFalse();
+        (nullStr != NoValue.Instance).Should().BeTrue();
+        (NoValue.Instance != nullStr).Should().BeTrue();
+    }
+
+    [TestMethod]
+    public void ImplicitConversion_ToDateTime_ShouldReturnDateTimeMinValue()
+    {
+        DateTime value = NoValue.Instance;
+        value.Should().Be(DateTime.MinValue);
+
+        (value == NoValue.Instance).Should().BeTrue();
+        (NoValue.Instance == value).Should().BeTrue();
+        (value != NoValue.Instance).Should().BeFalse();
+        (NoValue.Instance != value).Should().BeFalse();
+
+        (DateTime.Now == NoValue.Instance).Should().BeFalse();
+        (NoValue.Instance == DateTime.Now).Should().BeFalse();
+        (DateTime.Now != NoValue.Instance).Should().BeTrue();
+        (NoValue.Instance != DateTime.Now).Should().BeTrue();
+
+        DateTime? nullableVal = NoValue.Instance;
+        (nullableVal == NoValue.Instance).Should().BeTrue();
+        (NoValue.Instance == nullableVal).Should().BeTrue();
+        (nullableVal != NoValue.Instance).Should().BeFalse();
+        (NoValue.Instance != nullableVal).Should().BeFalse();
+
+        DateTime? nullVal = null;
+        (nullVal == NoValue.Instance).Should().BeFalse();
+        (NoValue.Instance == nullVal).Should().BeFalse();
+        (nullVal != NoValue.Instance).Should().BeTrue();
+        (NoValue.Instance != nullVal).Should().BeTrue();
+    }
+
+    [TestMethod]
+    public void ImplicitConversion_ToDateTimeOffset_ShouldReturnDateTimeOffsetMinValue()
+    {
+        DateTimeOffset value = NoValue.Instance;
+        value.Should().Be(DateTimeOffset.MinValue);
+
+        (value == NoValue.Instance).Should().BeTrue();
+        (NoValue.Instance == value).Should().BeTrue();
+        (value != NoValue.Instance).Should().BeFalse();
+        (NoValue.Instance != value).Should().BeFalse();
+
+        (DateTimeOffset.Now == NoValue.Instance).Should().BeFalse();
+        (NoValue.Instance == DateTimeOffset.Now).Should().BeFalse();
+        (DateTimeOffset.Now != NoValue.Instance).Should().BeTrue();
+        (NoValue.Instance != DateTimeOffset.Now).Should().BeTrue();
+
+        DateTimeOffset? nullableVal = NoValue.Instance;
+        (nullableVal == NoValue.Instance).Should().BeTrue();
+        (NoValue.Instance == nullableVal).Should().BeTrue();
+        (nullableVal != NoValue.Instance).Should().BeFalse();
+        (NoValue.Instance != nullableVal).Should().BeFalse();
+
+        DateTimeOffset? nullVal = null;
+        (nullVal == NoValue.Instance).Should().BeFalse();
+        (NoValue.Instance == nullVal).Should().BeFalse();
+        (nullVal != NoValue.Instance).Should().BeTrue();
+        (NoValue.Instance != nullVal).Should().BeTrue();
+    }
+
+    [TestMethod]
+    public void ImplicitConversion_ToRange_ShouldReturnNoValueRange()
+    {
+        Range value = NoValue.Instance;
+        value.IsValue.Should().BeFalse();
+
+        (value == NoValue.Instance).Should().BeTrue();
+        (NoValue.Instance == value).Should().BeTrue();
+        (value != NoValue.Instance).Should().BeFalse();
+        (NoValue.Instance != value).Should().BeFalse();
+
+        var normalRange = new Range(1, 10);
+        (normalRange == NoValue.Instance).Should().BeFalse();
+        (NoValue.Instance == normalRange).Should().BeFalse();
+        (normalRange != NoValue.Instance).Should().BeTrue();
+        (NoValue.Instance != normalRange).Should().BeTrue();
+
+        // Edge case: Range(0, 0) has same Lower and Upper as new Range(), but has IsValue = true
+        var zeroRange = new Range(0, 0);
+        zeroRange.IsValue.Should().BeTrue();
+        (zeroRange == NoValue.Instance).Should().BeFalse();
+        (NoValue.Instance == zeroRange).Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void ImplicitConversion_ToResolution_ShouldReturnNoValueResolution()
+    {
+        Resolution value = NoValue.Instance;
+        value.IsValue.Should().BeFalse();
+
+        (value == NoValue.Instance).Should().BeTrue();
+        (NoValue.Instance == value).Should().BeTrue();
+        (value != NoValue.Instance).Should().BeFalse();
+        (NoValue.Instance != value).Should().BeFalse();
+
+        var normalRes = new Resolution(300, 300, ResolutionUnit.DotsPerInch);
+        (normalRes == NoValue.Instance).Should().BeFalse();
+        (NoValue.Instance == normalRes).Should().BeFalse();
+        (normalRes != NoValue.Instance).Should().BeTrue();
+        (NoValue.Instance != normalRes).Should().BeTrue();
+    }
+
+    [TestMethod]
+    public void ImplicitConversion_ToOctetString_ShouldReturnNoValueOctetString()
+    {
+        OctetString value = NoValue.Instance;
+        value.IsValue.Should().BeFalse();
+
+        (value == NoValue.Instance).Should().BeTrue();
+        (NoValue.Instance == value).Should().BeTrue();
+        (value != NoValue.Instance).Should().BeFalse();
+        (NoValue.Instance != value).Should().BeFalse();
+
+        var normal = new OctetString("hello");
+        (normal == NoValue.Instance).Should().BeFalse();
+        (NoValue.Instance == normal).Should().BeFalse();
+        (normal != NoValue.Instance).Should().BeTrue();
+        (NoValue.Instance != normal).Should().BeTrue();
+    }
+
+    [TestMethod]
+    public void ImplicitConversion_ToStringWithLanguage_ShouldReturnNoValueStringWithLanguage()
+    {
+        StringWithLanguage value = NoValue.Instance;
+        value.IsValue.Should().BeFalse();
+
+        (value == NoValue.Instance).Should().BeTrue();
+        (NoValue.Instance == value).Should().BeTrue();
+        (value != NoValue.Instance).Should().BeFalse();
+        (NoValue.Instance != value).Should().BeFalse();
+
+        var normal = new StringWithLanguage("en", "hello");
+        (normal == NoValue.Instance).Should().BeFalse();
+        (NoValue.Instance == normal).Should().BeFalse();
+        (normal != NoValue.Instance).Should().BeTrue();
+        (NoValue.Instance != normal).Should().BeTrue();
+    }
+
+    [TestMethod]
+    public void ImplicitConversion_ToIppVersion_ShouldReturnNoValueIppVersion()
+    {
+        IppVersion value = NoValue.Instance;
+        value.IsValue.Should().BeFalse();
+
+        (value == NoValue.Instance).Should().BeTrue();
+        (NoValue.Instance == value).Should().BeTrue();
+        (value != NoValue.Instance).Should().BeFalse();
+        (NoValue.Instance != value).Should().BeFalse();
+
+        var normal = new IppVersion(1, 1);
+        (normal == NoValue.Instance).Should().BeFalse();
+        (NoValue.Instance == normal).Should().BeFalse();
+        (normal != NoValue.Instance).Should().BeTrue();
+        (NoValue.Instance != normal).Should().BeTrue();
+    }
 }
+

@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using System;
 using System.Collections.Generic;
 using SharpIpp.Protocol.Models;
@@ -18,7 +19,8 @@ namespace SharpIpp.Models.Requests
     /// present.
     /// See: RFC 2911 Section 3.3.6
     /// </summary>
-    public class ReleaseJobRequest : IppRequest<ReleaseJobOperationAttributes>, IIppJobRequest
+    [IppRequest(IppOperation.ReleaseJob)]
+public class ReleaseJobRequest : IppRequest<ReleaseJobOperationAttributes>, IIppJobRequest
     {
         
     }

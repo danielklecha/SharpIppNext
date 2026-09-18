@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Responses;
@@ -6,6 +7,7 @@ namespace SharpIpp.Models.Responses;
 /// Get-Resources response.
 /// See: PWG 5100.22-2025 Section 6.3.7
 /// </summary>
+[IppResponse]
 public class GetResourcesResponse : IppResponse<OperationAttributes>
 {
     /// <summary>

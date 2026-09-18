@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using SharpIpp.Validation;
 
 namespace SharpIpp.Protocol.Models;
@@ -6,6 +7,7 @@ namespace SharpIpp.Protocol.Models;
 /// The <c>output-attributes</c> collection.
 /// See: PWG 5100.17-2014 Section 6.2.8
 /// </summary>
+[IppAttribute(IppAttributeNames.OutputAttributes)]
 public class OutputAttributes : IIppCollection
 {
     bool INoValueWritable.IsValue { get; set; } = true;

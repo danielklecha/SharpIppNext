@@ -1,4 +1,5 @@
 using System;
+using SharpIpp.Mapping;
 
 namespace SharpIpp.Protocol.Models;
 
@@ -8,6 +9,7 @@ namespace SharpIpp.Protocol.Models;
 /// Deprecated in: PWG 5100.3-2023 Section 5.2.5
 /// </summary>
 [Obsolete("See PWG 5100.3-2023 Section 5.2.5.")]
+[IppAttribute("insert-sheet")]
 public class InsertSheet : IIppCollection
 {
     /// <inheritdoc />

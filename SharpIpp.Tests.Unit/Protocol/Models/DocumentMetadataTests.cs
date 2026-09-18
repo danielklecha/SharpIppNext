@@ -426,4 +426,40 @@ public class DocumentMetadataTests
         str.Should().Contain("title=Sample");
         str.Should().Contain("creator=Jane");
     }
+
+    [TestMethod]
+    public void ExplicitOperator_ToString_ShouldConvertCorrectly()
+    {
+        var metadata = new DocumentMetadata
+        {
+            Title = "Sample",
+            Creator = "Jane"
+        };
+
+        var str = (string)metadata;
+        str.Should().Contain("title=Sample");
+        str.Should().Contain("creator=Jane");
+
+        DocumentMetadata? nullMetadata = null;
+        var nullStr = (string)nullMetadata!;
+        nullStr.Should().BeNull();
+    }
+
+    [TestMethod]
+    public void ExplicitOperator_FromValue_ShouldParseCorrectly()
+    {
+        var raw = "title=Sample;creator=Jane";
+        var metadata = (DocumentMetadata)raw;
+
+        metadata.Should().NotBeNull();
+        metadata.Title.Should().Be("Sample");
+        metadata.Creator.Should().Be("Jane");
+
+        Action actNull = () => _ = (DocumentMetadata)(string)null!;
+        actNull.Should().Throw<ArgumentNullException>();
+
+        Action actInvalid = () => _ = (DocumentMetadata)"";
+        actInvalid.Should().Throw<FormatException>();
+    }
 }
+

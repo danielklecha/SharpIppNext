@@ -1,3 +1,4 @@
+using SharpIpp.Mapping;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,7 +22,8 @@ namespace SharpIpp.Models.Requests
     /// Print-Job operation.
     /// See: RFC 2911 Section 3.2.3
     /// </summary>
-    public class ValidateJobRequest : IppRequest<ValidateJobOperationAttributes>, IIppPrinterRequest
+    [IppRequest(IppOperation.ValidateJob)]
+public class ValidateJobRequest : IppRequest<ValidateJobOperationAttributes>, IIppPrinterRequest
     {
     /// <summary>
     /// The job-template-attributes IPP attribute.
