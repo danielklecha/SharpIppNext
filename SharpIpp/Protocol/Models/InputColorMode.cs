@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the <c>input-color-mode</c> member attribute.
 /// See: PWG 5100.15-2013 Section 7.1.1.5
 /// </summary>
-public readonly record struct InputColorMode(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
+public readonly record struct InputColorMode(string Value, bool IsMarked = true) : IMarkedSmartEnum
 {
     /// <summary>
     /// The scanner automatically selects the color mode.

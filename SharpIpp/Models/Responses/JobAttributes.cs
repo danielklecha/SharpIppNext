@@ -16,7 +16,7 @@ public class JobAttributes
     /// <code>job-uri</code>
     [Obsolete("The 'job-uri' attribute is deprecated. See RFC 8011 Section 4.1.2.1.")]
     [IppAttribute(IppAttributeNames.JobUri, Tag.Uri)]
-    public Uri? JobUri { get; set; }
+    public IppValue<Uri>? JobUri { get; set; }
     /// <summary>
     /// The job-id IPP attribute.
     /// Type: integer(1:MAX)
@@ -39,14 +39,14 @@ public class JobAttributes
     /// </summary>
     /// <code>job-state-reasons</code>
     [IppAttribute(IppAttributeNames.JobStateReasons, Tag.Keyword)]
-    public JobStateReason[]? JobStateReasons { get; set; }
+    public IppValue<JobStateReason[]>? JobStateReasons { get; set; }
     /// <summary>
     /// The job-state-message IPP attribute.
     /// See: pwg5100.15 - IPP FaxOut Service Section 7.4.18
     /// </summary>
     /// <code>job-state-message</code>
     [IppAttribute(IppAttributeNames.JobStateMessage, Tag.TextWithoutLanguage)]
-    public string? JobStateMessage { get; set; }
+    public IppValue<string>? JobStateMessage { get; set; }
     /// <summary>
     /// The number-of-intervening-jobs IPP attribute.
     /// See: pwg5100.7-2023 Section 6.1.1
@@ -54,7 +54,7 @@ public class JobAttributes
     /// <code>number-of-intervening-jobs</code>
     [Range(0, int.MaxValue)]
     [IppAttribute(IppAttributeNames.NumberOfInterveningJobs, Tag.Integer)]
-    public int? NumberOfInterveningJobs { get; set; }
+    public IppValue<int>? NumberOfInterveningJobs { get; set; }
 
     /// <summary>
     /// The client-info IPP attribute.
@@ -70,7 +70,7 @@ public class JobAttributes
     /// </summary>
     /// <code>job-impressions-completed-col</code>
     [IppAttribute(IppAttributeNames.JobImpressionsCompletedCol)]
-    public JobCounter? JobImpressionsCompletedCol { get; set; }
+    public IppValue<JobCounter>? JobImpressionsCompletedCol { get; set; }
 
     /// <summary>
     /// The job-media-sheets-completed-col IPP attribute.
@@ -78,7 +78,7 @@ public class JobAttributes
     /// </summary>
     /// <code>job-media-sheets-completed-col</code>
     [IppAttribute(IppAttributeNames.JobMediaSheetsCompletedCol)]
-    public JobCounter? JobMediaSheetsCompletedCol { get; set; }
+    public IppValue<JobCounter>? JobMediaSheetsCompletedCol { get; set; }
 
     /// <summary>
     /// The job-pages-completed IPP attribute.
@@ -87,7 +87,7 @@ public class JobAttributes
     /// <code>job-pages-completed</code>
     [Range(0, int.MaxValue)]
     [IppAttribute(IppAttributeNames.JobPagesCompleted, Tag.Integer)]
-    public int? JobPagesCompleted { get; set; }
+    public IppValue<int>? JobPagesCompleted { get; set; }
 
     /// <summary>
     /// The job-pages-completed-col IPP attribute.
@@ -95,7 +95,7 @@ public class JobAttributes
     /// </summary>
     /// <code>job-pages-completed-col</code>
     [IppAttribute(IppAttributeNames.JobPagesCompletedCol)]
-    public JobCounter? JobPagesCompletedCol { get; set; }
+    public IppValue<JobCounter>? JobPagesCompletedCol { get; set; }
 
     /// <summary>
     /// The job-processing-time IPP attribute.
@@ -104,7 +104,7 @@ public class JobAttributes
     /// <code>job-processing-time</code>
     [Range(0, int.MaxValue)]
     [IppAttribute(IppAttributeNames.JobProcessingTime, Tag.Integer)]
-    public int? JobProcessingTime { get; set; }
+    public IppValue<int>? JobProcessingTime { get; set; }
 
     /// <summary>
     /// The platform-temperature-actual IPP attribute.
@@ -113,7 +113,7 @@ public class JobAttributes
     /// <code>platform-temperature-actual</code>
     [Range(-273, int.MaxValue)]
     [IppAttribute(IppAttributeNames.PlatformTemperatureActual, Tag.Integer)]
-    public int[]? PlatformTemperatureActual { get; set; }
+    public IppValue<int[]>? PlatformTemperatureActual { get; set; }
 
     /// <summary>
     /// The chamber-humidity-actual IPP attribute.
@@ -122,7 +122,7 @@ public class JobAttributes
     /// <code>chamber-humidity-actual</code>
     [Range(0, 100)]
     [IppAttribute(IppAttributeNames.ChamberHumidityActual, Tag.Integer)]
-    public int[]? ChamberHumidityActual { get; set; }
+    public IppValue<int[]>? ChamberHumidityActual { get; set; }
 
     /// <summary>
     /// The chamber-temperature-actual IPP attribute.
@@ -131,7 +131,7 @@ public class JobAttributes
     /// <code>chamber-temperature-actual</code>
     [Range(-273, int.MaxValue)]
     [IppAttribute(IppAttributeNames.ChamberTemperatureActual, Tag.Integer)]
-    public int[]? ChamberTemperatureActual { get; set; }
+    public IppValue<int[]>? ChamberTemperatureActual { get; set; }
 
     /// <summary>
     /// The chamber-humidity-current IPP attribute.
@@ -139,7 +139,7 @@ public class JobAttributes
     /// </summary>
     /// <code>chamber-humidity-current</code>
     [IppAttribute(IppAttributeNames.ChamberHumidityCurrent, Tag.Integer)]
-    public int? ChamberHumidityCurrent { get; set; }
+    public IppValue<int>? ChamberHumidityCurrent { get; set; }
 
     /// <summary>
     /// The chamber-temperature-current IPP attribute.
@@ -147,5 +147,5 @@ public class JobAttributes
     /// </summary>
     /// <code>chamber-temperature-current</code>
     [IppAttribute(IppAttributeNames.ChamberTemperatureCurrent, Tag.Integer)]
-    public int? ChamberTemperatureCurrent { get; set; }
+    public IppValue<int>? ChamberTemperatureCurrent { get; set; }
 }

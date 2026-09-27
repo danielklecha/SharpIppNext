@@ -5,23 +5,41 @@ using SharpIpp.Protocol.Models;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 
+using FluentAssertions;
+
 namespace SharpIpp.Tests.Integration;
 
 [ExcludeFromCodeCoverage]
 public abstract class SharpIppIntegrationTestBase
 {
+    static SharpIppIntegrationTestBase()
+    {
+        AssertionConfiguration.Current.Equivalency.Modify(options => options
+            .Using<IIppValue>(ctx =>
+            {
+                if (ctx.Subject == null && ctx.Expectation == null) return;
+                ctx.Subject.Should().NotBeNull();
+                ctx.Expectation.Should().NotBeNull();
+                ctx.Subject!.IsValue.Should().Be(ctx.Expectation!.IsValue);
+                if (ctx.Expectation.IsValue)
+                {
+                    ctx.Subject.ValueAsObject.Should().BeEquivalentTo(ctx.Expectation.ValueAsObject);
+                }
+            })
+            .When(info => typeof(IIppValue).IsAssignableFrom(info.RuntimeType)));
+    }
     protected static T GetSystemOperationAttributes<T>() where T : SystemOperationAttributes, new()
     {
         return new T
         {
             AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
-            AttributesNaturalLanguage = "en",
+            AttributesNaturalLanguage = (NaturalLanguage)"en",
             PrinterUri = new Uri("ipp://127.0.0.1:8631/printer"),
             RequestingUserName = "integration-user",
             RequestingUserUri = new Uri("mailto:integration-user@example.com"),
             SystemUri = new Uri("ipp://127.0.0.1:8631/system"),
             PrinterId = 77,
-            NotifyPrinterIds = [77, 78],
+            NotifyPrinterIds = new[] { 77, 78 },
             NotifyResourceId = 1001,
             RestartGetInterval = 5,
             WhichPrinters = WhichPrinters.All,

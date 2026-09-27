@@ -11,12 +11,10 @@ namespace SharpIpp.Protocol.Models;
 public class JobConstraintsSupported : IIppCollection
 {
     /// <inheritdoc />
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     /// <summary>
     /// resolver-name — name of the resolver that resolves this constraint (name).
     /// See: PWG 5100.13-2023 Section 6.5.5
     /// </summary>
-    public string? ResolverName { get; set; }
+    public IppValue<string>? ResolverName { get; set; }
 }

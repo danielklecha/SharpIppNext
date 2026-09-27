@@ -9,10 +9,8 @@ namespace SharpIpp.Protocol.Models;
 [IppAttribute(IppAttributeNames.PrintAccuracy)]
 public class PrintAccuracy : IIppCollection
 {
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
-    public AccuracyUnits? AccuracyUnits { get; set; }
-    public int? XAccuracy { get; set; }
-    public int? YAccuracy { get; set; }
-    public int? ZAccuracy { get; set; }
+    public IppValue<AccuracyUnits>? AccuracyUnits { get; set; }
+    public IppValue<int>? XAccuracy { get; set; }
+    public IppValue<int>? YAccuracy { get; set; }
+    public IppValue<int>? ZAccuracy { get; set; }
 }

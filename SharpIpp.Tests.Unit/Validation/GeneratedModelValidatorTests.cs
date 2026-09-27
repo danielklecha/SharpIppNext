@@ -159,7 +159,7 @@ public class GeneratedModelValidatorTests
 
         var printObject = new PrintObject
         {
-            TransformationMatrix = [int.MinValue, 0, int.MaxValue]
+            TransformationMatrix = new[] { int.MinValue, 0, int.MaxValue }
         };
 
         var handled = GeneratedModelValidator.TryValidate(printObject, Encoding.UTF8, results, visited);
@@ -169,8 +169,8 @@ public class GeneratedModelValidatorTests
 
         var jobDescription = new JobDescriptionAttributes
         {
-            XImageShiftActual = [int.MinValue, int.MaxValue],
-            YImageShiftActual = [0]
+            XImageShiftActual = new[] { int.MinValue, int.MaxValue },
+            YImageShiftActual = new[] { 0 }
         };
 
         results.Clear();

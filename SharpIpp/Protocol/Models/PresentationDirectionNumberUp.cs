@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the <c>presentation-direction-number-up</c> values.
 /// See: PWG 5100.3-2023 Section 5.2.15
 /// </summary>
-public readonly record struct PresentationDirectionNumberUp(string Value, bool IsValue = true) : ISmartEnum 
+public readonly record struct PresentationDirectionNumberUp(string Value) : ISmartEnum 
 {
     /// <summary>
     /// Pages are arranged left-to-right, then top-to-bottom.

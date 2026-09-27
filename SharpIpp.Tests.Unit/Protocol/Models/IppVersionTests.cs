@@ -25,31 +25,6 @@ public class IppVersionTests
         var version = new IppVersion(1, 1);
         version.Major.Should().Be(1);
         version.Minor.Should().Be(1);
-        version.IsValue.Should().BeTrue();
-    }
-
-    [TestMethod]
-    public void Constructor_MajorMinorIsValue_SetsPropertiesCorrectly()
-    {
-        var version = new IppVersion(2, 1, false);
-        version.Major.Should().Be(2);
-        version.Minor.Should().Be(1);
-        version.IsValue.Should().BeFalse();
-    }
-
-    [TestMethod]
-    public void IsValue_Default_ReturnsFalse()
-    {
-        default(IppVersion).IsValue.Should().BeFalse();
-    }
-
-    [TestMethod]
-    public void IsValue_Constructed_ReturnsTrue()
-    {
-        new IppVersion().IsValue.Should().BeTrue();
-        new IppVersion(1, 1).IsValue.Should().BeTrue();
-        new IppVersion("1.1").IsValue.Should().BeTrue();
-        new IppVersion(0x0101).IsValue.Should().BeTrue();
     }
 
     [TestMethod]

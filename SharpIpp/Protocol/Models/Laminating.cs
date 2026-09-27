@@ -10,18 +10,16 @@ namespace SharpIpp.Protocol.Models;
 public class Laminating : IIppCollection
 {
     /// <inheritdoc />
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     /// <summary>
     /// type2 keyword
     /// See: PWG 5100.1-2022 Section 5.2.7.1
     /// </summary>
-    public CoatingSides? LaminatingSides { get; set; }
+    public IppValue<CoatingSides>? LaminatingSides { get; set; }
 
     /// <summary>
     /// type2 keyword | name(MAX)
     /// See: PWG 5100.1-2022 Section 5.2.7.2
     /// </summary>
-    public LaminatingType? LaminatingType { get; set; }
+    public IppValue<LaminatingType>? LaminatingType { get; set; }
 }

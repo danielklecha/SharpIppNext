@@ -1,4 +1,4 @@
-using SharpIpp;
+﻿using SharpIpp;
 using SharpIpp.Models.Requests;
 using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
@@ -37,7 +37,7 @@ public class GetPrintersTests : SharpIppIntegrationTestBase
                         ClientName = "MyClient",
                         ClientType = Protocol.Models.ClientType.Application,
                         ClientStringVersion = "1.2.3",
-                        ClientVersion = "1.2.3",
+                        ClientVersion = (OctetString)"1.2.3",
                         ClientPatches = "patch-1"
                     }
                 }
@@ -79,7 +79,7 @@ public class GetPrintersTests : SharpIppIntegrationTestBase
                         ClientName = "MyClient",
                         ClientType = Protocol.Models.ClientType.Application,
                         ClientStringVersion = "1.2.3",
-                        ClientVersion = "1.2.3",
+                        ClientVersion = (OctetString)"1.2.3",
                         ClientPatches = "patch-1"
                     }
                 }

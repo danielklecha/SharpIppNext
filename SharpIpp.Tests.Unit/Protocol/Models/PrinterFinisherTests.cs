@@ -120,4 +120,142 @@ public class PrinterFinisherTests
         finisher.Extensions.Should().BeNull();
         finisher.Type.Should().Be(FinisherType.Folder);
     }
+
+    [TestMethod]
+    public void Equals_WithSameValues_ShouldReturnTrue()
+    {
+        var finisher1 = new PrinterFinisher
+        {
+            Type = FinisherType.Stitcher,
+            Unit = CapacityUnit.Items,
+            MaxCapacity = 500,
+            Index = 1,
+            PresentOnOff = PresentOnOff.On,
+            Status = 0,
+            Capacity = 250,
+            Extensions = new Dictionary<string, string> { { "vendor", "x" } }
+        };
+        var finisher2 = new PrinterFinisher
+        {
+            Type = FinisherType.Stitcher,
+            Unit = CapacityUnit.Items,
+            MaxCapacity = 500,
+            Index = 1,
+            PresentOnOff = PresentOnOff.On,
+            Status = 0,
+            Capacity = 250,
+            Extensions = new Dictionary<string, string> { { "vendor", "x" } }
+        };
+
+        finisher1.Equals(finisher2).Should().BeTrue();
+        finisher1.Equals((object)finisher2).Should().BeTrue();
+        finisher1.Equals(finisher1).Should().BeTrue();
+        ((IEquatable<PrinterFinisher>)finisher1).Equals(finisher2).Should().BeTrue();
+        finisher1.GetHashCode().Should().Be(finisher2.GetHashCode());
+    }
+
+    [TestMethod]
+    public void Equals_WithDifferentValues_ShouldReturnFalse()
+    {
+        var finisher1 = new PrinterFinisher
+        {
+            Type = FinisherType.Stitcher
+        };
+        var finisher2 = new PrinterFinisher
+        {
+            Type = FinisherType.Folder
+        };
+
+        finisher1.Equals(finisher2).Should().BeFalse();
+        finisher1.Equals((object)finisher2).Should().BeFalse();
+        ((IEquatable<PrinterFinisher>)finisher1).Equals(finisher2).Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void Equals_WithNullOrDifferentType_ShouldReturnFalse()
+    {
+        var finisher = new PrinterFinisher
+        {
+            Type = FinisherType.Stitcher
+        };
+
+        finisher!.Equals((PrinterFinisher?)null).Should().BeFalse();
+        finisher!.Equals((object?)null).Should().BeFalse();
+        finisher!.Equals(new object()).Should().BeFalse();
+        ((IEquatable<PrinterFinisher>)finisher!).Equals(null).Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void ExplicitOperator_String_NonNullAndNull()
+    {
+        var finisher = new PrinterFinisher { Type = FinisherType.Stitcher };
+        var str = (string)finisher;
+        str.Should().Be("type=stitcher;");
+
+        var nullStr = (string)(PrinterFinisher)null!;
+        nullStr.Should().BeNull();
+    }
+
+    [TestMethod]
+    public void ExplicitOperator_FromString_ValidAndInvalid()
+    {
+        var raw = "type=stitcher;";
+        var finisher = (PrinterFinisher)raw;
+        finisher.Type.Should().Be(FinisherType.Stitcher);
+
+        Action actNull = () => { var _ = (PrinterFinisher)(string)null!; };
+        actNull.Should().Throw<ArgumentNullException>();
+
+        Action actEmpty = () => { var _ = (PrinterFinisher)""; };
+        actEmpty.Should().Throw<FormatException>();
+    }
+
+    [TestMethod]
+    public void ExplicitOperator_ByteArray_NonNullAndNull()
+    {
+        var finisher = new PrinterFinisher { Type = FinisherType.Stitcher };
+        var bytes = (byte[])finisher;
+        bytes.Should().Equal(System.Text.Encoding.UTF8.GetBytes("type=stitcher;"));
+
+        var nullBytes = (byte[])(PrinterFinisher)null!;
+        nullBytes.Should().Equal(Array.Empty<byte>());
+    }
+
+    [TestMethod]
+    public void ExplicitOperator_FromByteArray_ValidAndInvalid()
+    {
+        var raw = "type=stitcher;";
+        var bytes = System.Text.Encoding.UTF8.GetBytes(raw);
+        var finisher = (PrinterFinisher)bytes;
+        finisher.Type.Should().Be(FinisherType.Stitcher);
+
+        Action actNull = () => { var _ = (PrinterFinisher)(byte[])null!; };
+        actNull.Should().Throw<ArgumentNullException>();
+
+        Action actEmpty = () => { var _ = (PrinterFinisher)Array.Empty<byte>(); };
+        actEmpty.Should().Throw<FormatException>();
+    }
+
+    [TestMethod]
+    public void ExplicitOperator_OctetString_NonNullAndNull()
+    {
+        var finisher = new PrinterFinisher { Type = FinisherType.Stitcher };
+        var octet = (OctetString)finisher;
+        octet.ToString().Should().Be("type=stitcher;");
+
+        var nullOctet = (OctetString)(PrinterFinisher)null!;
+        nullOctet.ToString().Should().Be(string.Empty);
+    }
+
+    [TestMethod]
+    public void ExplicitOperator_FromOctetString_ValidAndInvalid()
+    {
+        var raw = "type=stitcher;";
+        var octet = new OctetString(raw);
+        var finisher = (PrinterFinisher)octet;
+        finisher.Type.Should().Be(FinisherType.Stitcher);
+
+        Action actDefault = () => { var _ = (PrinterFinisher)default(OctetString); };
+        actDefault.Should().Throw<FormatException>();
+    }
 }

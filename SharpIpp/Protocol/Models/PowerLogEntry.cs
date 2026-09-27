@@ -10,13 +10,11 @@ namespace SharpIpp.Protocol.Models;
 [IppAttribute(IppAttributeNames.PowerLogCol)]
 public class PowerLogEntry : IIppCollection
 {
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
-    public int? LogId { get; set; }
-    public PowerState? PowerState { get; set; }
-    public DateTimeOffset? PowerStateDateTime { get; set; }
+    public IppValue<int>? LogId { get; set; }
+    public IppValue<PowerState>? PowerState { get; set; }
+    public IppValue<DateTimeOffset>? PowerStateDateTime { get; set; }
 
     [IppAttribute("power-state-message", Tag = Tag.TextWithoutLanguage)]
-    public string? PowerStateMessage { get; set; }
+    public IppValue<string>? PowerStateMessage { get; set; }
 }

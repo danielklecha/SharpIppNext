@@ -17,19 +17,19 @@ public class CreatePrinterOperationAttributes : SystemOperationAttributes
     /// </summary>
     [Range(1, int.MaxValue)]
     [IppAttribute(IppAttributeNames.ResourceIds, Tag = Tag.Integer)]
-    public int[]? ResourceIds { get; set; }
+    public IppValue<int[]>? ResourceIds { get; set; }
 
     /// <summary>
     /// The <c>printer-service-type</c> operation attribute specifying the type(s) of print service.
     /// See: PWG 5100.22-2025 Section 7.1.9
     /// </summary>
     [IppAttribute(IppAttributeNames.PrinterServiceType, Tag = Tag.Keyword)]
-    public PrinterServiceType[]? PrinterServiceType { get; set; }
+    public IppValue<PrinterServiceType[]>? PrinterServiceType { get; set; }
 
     /// <summary>
     /// The <c>printer-xri-requested</c> operation attribute.
     /// See: PWG 5100.22-2025 Section 7.1.10
     /// </summary>
     [IppAttribute(IppAttributeNames.PrinterXriRequested)]
-    public SystemXri[]? PrinterXriRequested { get; set; }
+    public IppValue<SystemXri[]>? PrinterXriRequested { get; set; }
 }

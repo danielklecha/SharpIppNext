@@ -461,5 +461,58 @@ public class DocumentMetadataTests
         Action actInvalid = () => _ = (DocumentMetadata)"";
         actInvalid.Should().Throw<FormatException>();
     }
-}
 
+    [TestMethod]
+    public void Equals_WithSameValues_ShouldReturnTrue()
+    {
+        var metadata1 = new DocumentMetadata
+        {
+            Title = "Sample",
+            Creator = "Jane",
+            Extensions = new Dictionary<string, string> { { "x-custom", "value" } }
+        };
+        var metadata2 = new DocumentMetadata
+        {
+            Title = "Sample",
+            Creator = "Jane",
+            Extensions = new Dictionary<string, string> { { "x-custom", "value" } }
+        };
+
+        metadata1.Equals(metadata2).Should().BeTrue();
+        metadata1.Equals((object)metadata2).Should().BeTrue();
+        metadata1.Equals(metadata1).Should().BeTrue();
+        ((IEquatable<DocumentMetadata>)metadata1).Equals(metadata2).Should().BeTrue();
+        metadata1.GetHashCode().Should().Be(metadata2.GetHashCode());
+    }
+
+    [TestMethod]
+    public void Equals_WithDifferentValues_ShouldReturnFalse()
+    {
+        var metadata1 = new DocumentMetadata
+        {
+            Title = "Sample"
+        };
+        var metadata2 = new DocumentMetadata
+        {
+            Title = "Other"
+        };
+
+        metadata1.Equals(metadata2).Should().BeFalse();
+        metadata1.Equals((object)metadata2).Should().BeFalse();
+        ((IEquatable<DocumentMetadata>)metadata1).Equals(metadata2).Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void Equals_WithNullOrDifferentType_ShouldReturnFalse()
+    {
+        var metadata = new DocumentMetadata
+        {
+            Title = "Sample"
+        };
+
+        metadata!.Equals((DocumentMetadata?)null).Should().BeFalse();
+        metadata!.Equals((object?)null).Should().BeFalse();
+        metadata!.Equals(new object()).Should().BeFalse();
+        ((IEquatable<DocumentMetadata>)metadata!).Equals(null).Should().BeFalse();
+    }
+}

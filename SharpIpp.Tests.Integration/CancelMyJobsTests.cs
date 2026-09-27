@@ -1,4 +1,4 @@
-using SharpIpp;
+﻿using SharpIpp;
 using SharpIpp.Models.Requests;
 using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
@@ -23,7 +23,7 @@ public class CancelMyJobsTests : SharpIppIntegrationTestBase
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
-                JobIds = [5, 6],
+                JobIds = new[] { 5, 6 },
                 Message = "cancel my jobs test"
             }
         };

@@ -6,6 +6,7 @@ using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Text;
 
 namespace SharpIpp.Tests.Unit.Validation;
 
@@ -123,23 +124,41 @@ public class IppResponseValidatorTests
     }
 
     [TestMethod]
-    public void Validate_WhenByteRangeAttributeCharsetIsInvalid_FallsBackToUtf8()
+    public void Validate_WhenAttributesCharsetIsInvalid_FallsBackToUtf8()
     {
         var validator = IppResponseValidator.Default;
-        var response = new TestByteRangeResponseModel
+        var response = new GetPrinterAttributesResponse
         {
             Version = new IppVersion(2, 0),
             RequestId = 123,
             StatusCode = IppStatusCode.SuccessfulOk,
-            OperationAttributes = new OperationAttributes { AttributesCharset = (SharpIpp.Protocol.Models.Charset)"invalid-charset-name" },
-            StringValue = "abcdef"
+            OperationAttributes = new OperationAttributes
+            {
+                AttributesCharset = (Charset)"invalid-charset-name"
+            }
         };
 
         Action act = () => validator.Validate(response);
         act.Should().NotThrow();
+    }
 
-        response.StringValue = "abcdefghijk"; // 11 bytes in UTF-8, exceeds 10 bytes limit
-        act.Should().Throw<ValidationException>().WithMessage("*StringValue*");
+    [TestMethod]
+    public void ByteRangeAttribute_WhenCharsetIsInvalid_FallsBackToUtf8()
+    {
+        var attr = new ByteRangeAttribute(1, 10);
+        Encoding encoding;
+        try
+        {
+            encoding = Encoding.GetEncoding("invalid-charset-name");
+        }
+        catch
+        {
+            encoding = Encoding.UTF8;
+        }
+        var ctx = new ValidationContext(encoding, "StringValue");
+
+        attr.IsValid("abcdef", ctx).Should().Be(ValidationResult.Success);
+        attr.IsValid("abcdefghijk", ctx)!.ErrorMessage.Should().Contain("StringValue");
     }
 
     private class TestCircularResponseModel : IIppResponse
@@ -171,16 +190,5 @@ public class IppResponseValidatorTests
             get => "test";
             set { }
         }
-    }
-
-    private class TestByteRangeResponseModel : IIppResponse
-    {
-        public IppVersion Version { get; set; }
-        public IppStatusCode StatusCode { get; set; }
-        public int RequestId { get; set; }
-        public OperationAttributes? OperationAttributes { get; set; }
-
-        [ByteRange(1, 10)]
-        public string? StringValue { get; set; }
     }
 }

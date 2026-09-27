@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the presence or on/off state of a device or subunit.
 /// See: PWG 5100.13-2023 Section 7.1
 /// </summary>
-public readonly record struct PresentOnOff(string Value, bool IsValue = true) : ISmartEnum
+public readonly record struct PresentOnOff(string Value) : ISmartEnum
 {
     public static readonly PresentOnOff Other = new("other");
     public static readonly PresentOnOff On = new("on");

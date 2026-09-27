@@ -37,7 +37,7 @@ public class SmartEnumMappingTests : MapperTestBase
 
     [TestMethod]
     [DynamicData(nameof(KeywordSmartEnumTypeData))]
-    public void Map_StringToKeywordSmartEnum_ShouldSetKeywordAndValueFlags(Type smartEnumType)
+    public void Map_StringToKeywordSmartEnum_ShouldSetKeywordFlag(Type smartEnumType)
     {
         const string value = "mapped-value";
 
@@ -47,12 +47,11 @@ public class SmartEnumMappingTests : MapperTestBase
         var keywordSmartEnum = (IMarkedSmartEnum)mapped;
         keywordSmartEnum.Value.Should().Be(value);
         keywordSmartEnum.IsMarked.Should().BeTrue();
-        keywordSmartEnum.IsValue.Should().BeTrue();
     }
 
     [TestMethod]
     [DynamicData(nameof(NonKeywordSmartEnumTypeData))]
-    public void Map_StringToNonKeywordSmartEnum_ShouldSetValueFlag(Type smartEnumType)
+    public void Map_StringToNonKeywordSmartEnum_ShouldSetValue(Type smartEnumType)
     {
         const string value = "mapped-value";
 
@@ -62,7 +61,6 @@ public class SmartEnumMappingTests : MapperTestBase
         mapped.Should().NotBeAssignableTo<IMarkedSmartEnum>();
         var smartEnum = (ISmartEnum)mapped;
         smartEnum.Value.Should().Be(value);
-        smartEnum.IsValue.Should().BeTrue();
     }
 
     private void AssertMapFromAttributes(Tag tag, bool expectedIsMarked)
@@ -134,11 +132,12 @@ public class SmartEnumMappingTests : MapperTestBase
         AssertFlag(jobAccountingSheets.JobAccountingOutputBin, customValue, expectedIsMarked);
     }
 
-    private static void AssertFlag<T>(T? value, string expectedValue, bool expectedIsMarked)
+    private static void AssertFlag<T>(IppValue<T>? value, string expectedValue, bool expectedIsMarked)
         where T : struct, IMarkedSmartEnum
     {
-        value.HasValue.Should().BeTrue();
-        var smartEnum = value.GetValueOrDefault();
+        value.Should().NotBeNull();
+        value!.Value.IsValue.Should().BeTrue();
+        var smartEnum = value.Value.Value;
         smartEnum.Value.Should().Be(expectedValue);
         smartEnum.IsMarked.Should().Be(expectedIsMarked);
     }

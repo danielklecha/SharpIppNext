@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies member attribute names supported by <code>finishings-col-supported</code>.
 /// See: PWG 5100.1-2022 Section 6.12
 /// </summary>
-public readonly record struct FinishingsColMember(string Value, bool IsValue = true) : ISmartEnum 
+public readonly record struct FinishingsColMember(string Value) : ISmartEnum 
 {
     /// <summary>The finishing-template member attribute. See: PWG 5100.1-2022 Section 6.12</summary>
     public static readonly FinishingsColMember FinishingTemplate = new("finishing-template");

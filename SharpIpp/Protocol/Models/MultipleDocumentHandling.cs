@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models
     /// Specifies the multiple-document-handling attribute, which controls how multiple documents in a job are handled.
     /// See: RFC 8011 Section 5.2.4
     /// </summary>
-    public readonly record struct MultipleDocumentHandling(string Value, bool IsValue = true) : ISmartEnum
+    public readonly record struct MultipleDocumentHandling(string Value) : ISmartEnum
     {
         /// <summary>
         /// All documents in the job are treated as a single document for finishing and output.

@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the stacking order of output.
 /// See: PWG 5100.13-2023 Section 6.6.10
 /// </summary>
-public readonly record struct StackingOrder(string Value, bool IsValue = true) : ISmartEnum
+public readonly record struct StackingOrder(string Value) : ISmartEnum
 {
     public static readonly StackingOrder FirstToLast = new("firstToLast");
     public static readonly StackingOrder LastToFirst = new("lastToFirst");

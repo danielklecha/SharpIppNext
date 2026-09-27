@@ -9,15 +9,13 @@ namespace SharpIpp.Protocol.Models;
 [IppAttribute(IppAttributeNames.PowerTimeoutPolicyCol)]
 public class PowerTimeoutPolicy : IIppCollection
 {
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
-    public PowerState? RequestPowerState { get; set; }
-    public PowerState? StartPowerState { get; set; }
-    public int? TimeoutId { get; set; }
+    public IppValue<PowerState>? RequestPowerState { get; set; }
+    public IppValue<PowerState>? StartPowerState { get; set; }
+    public IppValue<int>? TimeoutId { get; set; }
 
     [IppAttribute("timeout-predicate", Tag = Tag.TextWithoutLanguage)]
-    public string? TimeoutPredicate { get; set; }
+    public IppValue<string>? TimeoutPredicate { get; set; }
 
-    public int? TimeoutSeconds { get; set; }
+    public IppValue<int>? TimeoutSeconds { get; set; }
 }

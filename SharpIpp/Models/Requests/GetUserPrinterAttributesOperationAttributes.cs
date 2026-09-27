@@ -1,4 +1,4 @@
-using SharpIpp.Mapping;
+﻿using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Requests;
@@ -18,5 +18,5 @@ public class GetUserPrinterAttributesOperationAttributes : GetPrinterAttributesO
     /// </summary>
     /// <code>requesting-user-vcard</code>
     [IppAttribute(IppAttributeNames.RequestingUserVcard, Tag = Tag.TextWithoutLanguage)]
-    public string[]? RequestingUserVcard { get; set; }
+    public IppValue<string[]>? RequestingUserVcard { get; set; }
 }

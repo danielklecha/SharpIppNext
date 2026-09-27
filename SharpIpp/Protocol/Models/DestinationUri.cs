@@ -10,17 +10,15 @@ namespace SharpIpp.Protocol.Models;
 [IppAttribute(IppAttributeNames.DestinationUris)]
 public class DestinationUri : IIppCollection
 {
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     [IppAttribute("destination-uri")]
-    public Uri? DestinationUriValue { get; set; }
+    public IppValue<Uri>? DestinationUriValue { get; set; }
 
     [IppAttribute("post-dial-string", Tag = Tag.TextWithoutLanguage)]
-    public string? PostDialString { get; set; }
+    public IppValue<string>? PostDialString { get; set; }
 
     [IppAttribute("pre-dial-string", Tag = Tag.TextWithoutLanguage)]
-    public string? PreDialString { get; set; }
+    public IppValue<string>? PreDialString { get; set; }
 
-    public int? T33Subaddress { get; set; }
+    public IppValue<int>? T33Subaddress { get; set; }
 }

@@ -6,7 +6,7 @@ namespace SharpIpp.Protocol.Models;
 ///
 /// PWG defines this as name(127), so there is no global fixed value set.
 /// </summary>
-public readonly record struct OutputDevice(string Value, bool IsValue = true) : ISmartEnum 
+public readonly record struct OutputDevice(string Value) : ISmartEnum 
 {
     public override string ToString() => Value;
     public static implicit operator string(OutputDevice device) => device.Value;

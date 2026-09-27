@@ -27,7 +27,7 @@ public class MediaColProfileTests : MapperTestBase
                 },
                 new Action<MediaCol>(result =>
                 {
-                    result.MediaBottomMargin.Should().Be(100);
+                    result.MediaBottomMargin?.Value.Should().Be(100);
                     result.MediaLeftMargin.Should().BeNull();
                 }),
                 "Count 1, Length 1, Not OutOfBand"
@@ -46,7 +46,7 @@ public class MediaColProfileTests : MapperTestBase
                 },
                 new Action<MediaCol>(result =>
                 {
-                    result.MediaBottomMargin.Should().Be(10);
+                    result.MediaBottomMargin?.Value.Should().Be(10);
                     result.MediaLeftMargin.Should().BeNull();
                 }),
                 "Count 1, Length 2"
@@ -61,8 +61,8 @@ public class MediaColProfileTests : MapperTestBase
                 },
                 new Action<MediaCol>(result =>
                 {
-                    result.MediaBottomMargin.Should().Be(100);
-                    result.MediaLeftMargin.Should().Be(200);
+                    result.MediaBottomMargin?.Value.Should().Be(100);
+                    result.MediaLeftMargin?.Value.Should().Be(200);
                 }),
                 "Count > 1"
             };
@@ -85,12 +85,12 @@ public class MediaColProfileTests : MapperTestBase
             {
                 new Dictionary<string, IppAttribute[]>
                 {
-                    { "media-col", new[] { new IppAttribute(Tag.NoValue, "media-col", NoValue.Instance) } }
+                    { "media-bottom-margin", new[] { new IppAttribute(Tag.NoValue, "media-bottom-margin", NoValue.Instance) } }
                 },
                 new Action<MediaCol>(result =>
                 {
-                    ((IIppCollection)result).IsValue.Should().BeFalse();
-                    result.MediaBottomMargin.Should().BeNull();
+                    result.MediaBottomMargin.Should().NotBeNull();
+                    result.MediaBottomMargin!.Value.IsValue.Should().BeFalse();
                     result.MediaLeftMargin.Should().BeNull();
                 }),
                 "Count 1, Length 1, IsOutOfBand"

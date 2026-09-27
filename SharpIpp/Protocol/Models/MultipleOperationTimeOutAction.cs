@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// The <c>multiple-operation-time-out-action</c> keyword values.
 /// See: PWG 5100.13-2023 Section 6.5.19
 /// </summary>
-public readonly record struct MultipleOperationTimeOutAction(string Value, bool IsValue = true) : ISmartEnum 
+public readonly record struct MultipleOperationTimeOutAction(string Value) : ISmartEnum 
 {
     /// <summary>
     /// Abort the job.

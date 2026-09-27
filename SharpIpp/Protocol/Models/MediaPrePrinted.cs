@@ -8,7 +8,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the media-pre-printed member attribute of the media-col collection, indicating whether the media has pre-printed content.
 /// See: PWG 5101.1
 /// </summary>
-public readonly record struct MediaPrePrinted(string Value, bool IsValue = true) : ISmartEnum 
+public readonly record struct MediaPrePrinted(string Value) : ISmartEnum 
 {
     /// <summary>
     /// The media has no pre-printed content.

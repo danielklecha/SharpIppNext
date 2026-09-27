@@ -32,16 +32,16 @@ public class UpdateActiveJobsOperationAttributesProfileTests
         {
             PrinterUri = new Uri("ipp://127.0.0.1/printer"),
             OutputDeviceUuid = new Uri("uuid:123"),
-            OutputDeviceJobStates = [JobState.Processing, JobState.Pending],
-            JobIds = [1, 2]
+            OutputDeviceJobStates = new[] { JobState.Processing, JobState.Pending },
+            JobIds = new[] { 1, 2 }
         };
 
         var result = mapper.Map<UpdateActiveJobsOperationAttributes, List<IppAttribute>>(src);
 
         result.Should().Contain(x => x.Name == IppAttributeNames.PrinterUri && x.Value.ToString() == src.PrinterUri.ToString());
         result.Should().Contain(x => x.Name == IppAttributeNames.OutputDeviceUuid && x.Value.ToString() == src.OutputDeviceUuid.ToString());
-        result.Where(x => x.Name == IppAttributeNames.OutputDeviceJobStates).Select(x => (JobState)x.Value).Should().BeEquivalentTo(src.OutputDeviceJobStates);
-        result.Where(x => x.Name == IppAttributeNames.JobIds).Select(x => (int)x.Value).Should().BeEquivalentTo(src.JobIds);
+        result.Where(x => x.Name == IppAttributeNames.OutputDeviceJobStates).Select(x => (JobState)x.Value).Should().BeEquivalentTo(src.OutputDeviceJobStates!.Value.Value);
+        result.Where(x => x.Name == IppAttributeNames.JobIds).Select(x => (int)x.Value).Should().BeEquivalentTo(src.JobIds!.Value.Value);
     }
 
     [TestMethod]
@@ -68,7 +68,7 @@ public class UpdateActiveJobsOperationAttributesProfileTests
 
         result.PrinterUri!.ToString().Should().Be("ipp://127.0.0.1/printer");
         result.OutputDeviceUuid!.ToString().Should().Be("uuid:123");
-        result.OutputDeviceJobStates.Should().BeEquivalentTo(new[] { JobState.Processing, JobState.Pending });
-        result.JobIds.Should().BeEquivalentTo(new[] { 1, 2 });
+        ((JobState[])result.OutputDeviceJobStates!).Should().BeEquivalentTo(new[] { JobState.Processing, JobState.Pending });
+        ((int[])result.JobIds!).Should().BeEquivalentTo(new[] { 1, 2 });
     }
 }

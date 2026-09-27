@@ -1,4 +1,4 @@
-using SharpIpp;
+﻿using SharpIpp;
 using SharpIpp.Models.Requests;
 using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
@@ -22,7 +22,7 @@ public class GetPrinterSupportedValuesTests : SharpIppIntegrationTestBase
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("ipp://127.0.0.1:631/"),
-                RequestedAttributes = ["media-supported", "copies-supported"],
+                RequestedAttributes = new[] { "media-supported", "copies-supported" },
                 DocumentFormat = DocumentFormat.ApplicationPdf,
                 FirstIndex = 1,
                 Limit = 10

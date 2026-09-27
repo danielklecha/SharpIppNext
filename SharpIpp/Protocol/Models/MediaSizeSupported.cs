@@ -10,16 +10,14 @@ namespace SharpIpp.Protocol.Models;
 public class MediaSizeSupported : IIppCollection
 {
     /// <inheritdoc />
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     /// <summary>
     /// integer(1:MAX) | rangeOfInteger(1:MAX)
     /// </summary>
-    public Range? XDimension { get; set; }
+    public IppValue<Range>? XDimension { get; set; }
 
     /// <summary>
     /// integer(1:MAX) | rangeOfInteger(1:MAX)
     /// </summary>
-    public Range? YDimension { get; set; }
+    public IppValue<Range>? YDimension { get; set; }
 }

@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies when a job should be held.
 /// See: RFC 8011 Section 5.2.2
 /// </summary>
-public readonly record struct JobHoldUntil(string Value, bool IsValue = true) : ISmartEnum 
+public readonly record struct JobHoldUntil(string Value) : ISmartEnum 
 {
     /// <summary>
     /// 'no-hold': immediately, if there are not other reasons to hold the job.

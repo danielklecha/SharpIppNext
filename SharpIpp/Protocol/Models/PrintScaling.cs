@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models
     /// Specifies how the Printer scales the document to fit the selected media.
     /// See: PWG 5100.13-2023 Section 6.2.28
     /// </summary>
-    public readonly record struct PrintScaling(string Value, bool IsValue = true) : ISmartEnum
+    public readonly record struct PrintScaling(string Value) : ISmartEnum
     {
         /// <summary>
         /// The Printer automatically selects the scaling method based on the document content and media.

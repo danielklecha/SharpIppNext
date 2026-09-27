@@ -1,4 +1,4 @@
-using SharpIpp;
+﻿using SharpIpp;
 using SharpIpp.Models.Requests;
 using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
@@ -24,7 +24,7 @@ public class PurgeJobsTests : SharpIppIntegrationTestBase
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
                 AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
-                AttributesNaturalLanguage = "en-us",
+                AttributesNaturalLanguage = (NaturalLanguage)"en-us",
                 RequestingUserName = "test-user",
             },
         };

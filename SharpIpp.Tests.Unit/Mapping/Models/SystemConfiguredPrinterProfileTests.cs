@@ -38,14 +38,14 @@ public class SystemConfiguredPrinterProfileTests : MapperTestBase
         var result = _mapper.Map<SystemConfiguredPrinter>(dict);
 
         // Assert
-        result.PrinterId.Should().Be(42);
-        result.PrinterInfo.Should().Be("Test Printer");
-        result.PrinterIsAcceptingJobs.Should().BeTrue();
-        result.PrinterName.Should().Be("Printer ABC");
-        result.PrinterServiceType.Should().Be(PrinterServiceType.Print);
-        result.PrinterState.Should().Be(PrinterState.Idle);
-        result.PrinterStateReasons.Should().Contain(PrinterStateReason.None);
-        result.PrinterXriSupported.Should().NotBeNull();
+        result.PrinterId?.Value.Should().Be(42);
+        result.PrinterInfo?.Value.Should().Be("Test Printer");
+        result.PrinterIsAcceptingJobs?.Value.Should().BeTrue();
+        result.PrinterName?.Value.Should().Be("Printer ABC");
+        result.PrinterServiceType?.Value.Should().Be(PrinterServiceType.Print);
+        result.PrinterState?.Value.Should().Be(PrinterState.Idle);
+        result.PrinterStateReasons?.Value.Should().Contain(PrinterStateReason.None);
+        result.PrinterXriSupported?.Value.Should().NotBeNull();
     }
 
 [TestMethod]

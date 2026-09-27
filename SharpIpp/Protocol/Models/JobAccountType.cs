@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// The <c>job-account-type</c> keyword values.
 /// See: PWG 5100.11-2024 Section 5.3.5
 /// </summary>
-public readonly record struct JobAccountType(string Value, bool IsValue = true) : ISmartEnum 
+public readonly record struct JobAccountType(string Value) : ISmartEnum 
 {
     /// <summary>
     /// A general-purpose account type.

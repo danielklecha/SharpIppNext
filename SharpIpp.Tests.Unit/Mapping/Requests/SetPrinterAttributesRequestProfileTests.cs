@@ -70,6 +70,6 @@ public class SetPrinterAttributesRequestProfileTests
         request.PrinterAttributes!.PrinterInfo.Should().Be("Main floor");
         request.OperationAttributes.Should().NotBeNull();
         request.OperationAttributes!.PrinterUri.Should().Be(new Uri("ipp://printer/example"));
-        ((string?)request.OperationAttributes!.DocumentFormat).Should().Be("application/pdf");
+        request.OperationAttributes!.DocumentFormat?.Value.ToString().Should().Be("application/pdf");
     }
 }

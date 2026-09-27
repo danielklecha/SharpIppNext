@@ -1,4 +1,4 @@
-using SharpIpp.Mapping;
+﻿using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
 
@@ -16,7 +16,7 @@ public class GetDocumentsOperationAttributes : JobOperationAttributes
     /// <code>first-index</code>
     [Range(1, int.MaxValue)]
     [IppAttribute(IppAttributeNames.FirstIndex, Tag = Tag.Integer)]
-    public int? FirstIndex { get; set; }
+    public IppValue<int>? FirstIndex { get; set; }
 
     /// <summary>
     /// The limit IPP attribute.
@@ -27,12 +27,12 @@ public class GetDocumentsOperationAttributes : JobOperationAttributes
     /// <code>limit</code>
     [Range(1, int.MaxValue)]
     [IppAttribute(IppAttributeNames.Limit, Tag = Tag.Integer)]
-    public int? Limit { get; set; }
+    public IppValue<int>? Limit { get; set; }
     /// <summary>
     /// The requested-attributes IPP attribute.
     /// See: RFC 8011 Section 5.4.1
     /// </summary>
     /// <code>requested-attributes</code>
     [IppAttribute(IppAttributeNames.RequestedAttributes, Tag = Tag.Keyword)]
-    public string[]? RequestedAttributes { get; set; }
+    public IppValue<string[]>? RequestedAttributes { get; set; }
 }

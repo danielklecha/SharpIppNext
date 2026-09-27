@@ -8,7 +8,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the media-tooth member attribute of the media-col collection, indicating the surface texture of the media.
 /// See: PWG 5101.1
 /// </summary>
-public readonly record struct MediaTooth(string Value, bool IsValue = true) : ISmartEnum 
+public readonly record struct MediaTooth(string Value) : ISmartEnum 
 {
     /// <summary>
     /// Antique surface texture.

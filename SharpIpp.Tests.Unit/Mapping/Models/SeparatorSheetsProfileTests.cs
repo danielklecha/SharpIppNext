@@ -33,8 +33,8 @@ public class SeparatorSheetsProfileTests : MapperTestBase
         var result = _mapper.Map<SeparatorSheets>(dict);
 
         // Assert
-        if (h1) result.Media.Should().Be((Media)"iso_a4_210x297mm"); else result.Media.Should().BeNull();
-        if (h2) result.SeparatorSheetsType.Should().Contain(SeparatorSheetsType.SlipSheets); else result.SeparatorSheetsType.Should().BeNull();
+        if (h1) result.Media?.Value.Should().Be((Media)"iso_a4_210x297mm"); else result.Media.Should().BeNull();
+        if (h2) result.SeparatorSheetsType?.Value.Should().Contain(SeparatorSheetsType.SlipSheets); else result.SeparatorSheetsType.Should().BeNull();
         if (h3) result.MediaCol.Should().NotBeNull(); else result.MediaCol.Should().BeNull();
     }
 
@@ -46,9 +46,9 @@ public class SeparatorSheetsProfileTests : MapperTestBase
         // Arrange
         var sheets = new SeparatorSheets
         {
-            Media = h1 ? (Media?)"iso_a4_210x297mm" : null,
+            Media = h1 ? (IppValue<Media>)(Media)"iso_a4_210x297mm" : null,
             SeparatorSheetsType = h2 ? new[] { SeparatorSheetsType.SlipSheets } : null,
-            MediaCol = h3 ? new MediaCol { MediaColor = (MediaColor?)"blue" } : null
+            MediaCol = h3 ? new MediaCol { MediaColor = (MediaColor)"blue" } : null
         };
 
         // Act

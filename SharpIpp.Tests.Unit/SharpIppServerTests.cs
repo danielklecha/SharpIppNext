@@ -307,7 +307,7 @@ public class SharpIppServerTests
                 JobState = JobState.Pending,
                 JobStateMessage = "custom state",
                 NumberOfInterveningJobs = 0,
-                JobStateReasons = [JobStateReason.None]
+                JobStateReasons = new[] { JobStateReason.None }
             }
         };
         var rawMessage = new IppResponseMessage
@@ -356,7 +356,7 @@ public class SharpIppServerTests
                 JobState = JobState.Pending,
                 JobStateMessage = "custom state",
                 NumberOfInterveningJobs = 0,
-                JobStateReasons = [JobStateReason.None]
+                JobStateReasons = new[] { JobStateReason.None }
             }
         };
         var rawMessage = new IppResponseMessage
@@ -399,7 +399,7 @@ public class SharpIppServerTests
             {
                 JobId = 234,
                 JobState = JobState.Pending,
-                JobStateReasons = [JobStateReason.None]
+                JobStateReasons = new[] { JobStateReason.None }
             }
         };
         var rawMessage = new IppResponseMessage
@@ -440,7 +440,7 @@ public class SharpIppServerTests
                 JobId = 234,
                 JobUri = new Uri("ipp://127.0.0.1:631/234"),
                 JobState = JobState.Pending,
-                JobStateReasons = [JobStateReason.None]
+                JobStateReasons = new[] { JobStateReason.None }
             }
         };
         var rawMessage = new IppResponseMessage

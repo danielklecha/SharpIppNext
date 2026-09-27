@@ -1,4 +1,4 @@
-using SharpIpp;
+﻿using SharpIpp;
 using SharpIpp.Models.Requests;
 using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
@@ -24,13 +24,13 @@ public class GetDocumentsTests : SharpIppIntegrationTestBase
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
                 AttributesCharset = Charset.Utf8,
-                AttributesNaturalLanguage = "en-us",
+                AttributesNaturalLanguage = (NaturalLanguage)"en-us",
                 RequestingUserName = "test-user",
                 JobId = 1,
                 FirstIndex = 1,
                 JobUri = new Uri("http://127.0.0.1:631/jobs/1"),
                 Limit = 10,
-                RequestedAttributes = ["document-name", "document-state"]
+                RequestedAttributes = new[] { "document-name", "document-state" }
             },
         };
         IIppRequest? serverRequest = null;
@@ -83,11 +83,11 @@ public class GetDocumentsTests : SharpIppIntegrationTestBase
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
                 AttributesCharset = Charset.Utf8,
-                AttributesNaturalLanguage = "en-us",
+                AttributesNaturalLanguage = (NaturalLanguage)"en-us",
                 RequestingUserName = "test-user",
                 JobId = 1,
                 FirstIndex = 1,
-                RequestedAttributes = ["document-number", "document-state", "document-name"],
+                RequestedAttributes = new[] { "document-number", "document-state", "document-name" },
                 Limit = 10,
             },
         };
@@ -113,8 +113,8 @@ public class GetDocumentsTests : SharpIppIntegrationTestBase
                         DocumentJobId = 1,
                         DocumentPrinterUri = new Uri("http://127.0.0.1:631"),
                         AttributesCharset = Charset.Utf8,
-                        AttributesNaturalLanguage = "en-us",
-                        DocumentStateReasons = [DocumentStateReason.None],
+                        AttributesNaturalLanguage = (NaturalLanguage)"en-us",
+                        DocumentStateReasons = new[] { DocumentStateReason.None },
                         DocumentStateMessage = "completed",
                         DocumentDigitalSignature = DocumentDigitalSignature.XmlDsig,
                         DocumentFormatVersion = "1.2",
@@ -130,8 +130,8 @@ public class GetDocumentsTests : SharpIppIntegrationTestBase
                         DocumentJobId = 1,
                         DocumentPrinterUri = new Uri("http://127.0.0.1:631"),
                         AttributesCharset = Charset.Utf8,
-                        AttributesNaturalLanguage = "en-us",
-                        DocumentStateReasons = [DocumentStateReason.None],
+                        AttributesNaturalLanguage = (NaturalLanguage)"en-us",
+                        DocumentStateReasons = new[] { DocumentStateReason.None },
                         DocumentStateMessage = "processing",
                     }
                 ],
@@ -167,7 +167,7 @@ public class GetDocumentsTests : SharpIppIntegrationTestBase
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
                 JobId = 1,
-                RequestedAttributes = ["document-number", "print-content-optimize", "print-content-optimize-actual"],
+                RequestedAttributes = new[] { "document-number", "print-content-optimize", "print-content-optimize-actual" },
                 Limit = 2
             }
         };
@@ -188,7 +188,7 @@ public class GetDocumentsTests : SharpIppIntegrationTestBase
                     {
                         DocumentNumber = 1,
                         PrintContentOptimize = PrintContentOptimize.Text,
-                        PrintContentOptimizeActual = [PrintContentOptimize.Text]
+                        PrintContentOptimizeActual = new[] { PrintContentOptimize.Text }
                     }
                 ],
                 OperationAttributes = new()

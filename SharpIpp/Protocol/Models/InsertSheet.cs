@@ -13,26 +13,24 @@ namespace SharpIpp.Protocol.Models;
 public class InsertSheet : IIppCollection
 {
     /// <inheritdoc />
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     /// <summary>
     /// integer(0:MAX)
     /// </summary>
-    public int? InsertAfterPageNumber { get; set; }
+    public IppValue<int>? InsertAfterPageNumber { get; set; }
 
     /// <summary>
     /// integer(0:MAX)
     /// </summary>
-    public int? InsertCount { get; set; }
+    public IppValue<int>? InsertCount { get; set; }
 
     /// <summary>
     /// keyword | name(MAX)
     /// </summary>
-    public Media? Media { get; set; }
+    public IppValue<Media>? Media { get; set; }
 
     /// <summary>
     /// collection
     /// </summary>
-    public MediaCol? MediaCol { get; set; }
+    public IppValue<MediaCol>? MediaCol { get; set; }
 }

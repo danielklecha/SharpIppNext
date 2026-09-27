@@ -11,8 +11,6 @@ namespace SharpIpp.Protocol.Models;
 [IppAttribute(IppAttributeNames.DestinationUriReady)]
 public class DestinationUriReady : IIppCollection
 {
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     /// <summary>
     /// The <c>destination-attributes</c> member attribute (1setOf collection).
@@ -22,29 +20,29 @@ public class DestinationUriReady : IIppCollection
     public IDictionary<string, IppAttribute[]>[]? DestinationAttributes { get; set; }
 
     [IppAttribute("destination-attributes-supported", Tag = Tag.Keyword)]
-    public string[]? DestinationAttributesSupported { get; set; }
+    public IppValue<string[]>? DestinationAttributesSupported { get; set; }
 
     [IppAttribute("destination-info", Tag = Tag.TextWithoutLanguage)]
-    public string? DestinationInfo { get; set; }
+    public IppValue<string>? DestinationInfo { get; set; }
 
     [IppAttribute("destination-is-directory")]
-    public bool? DestinationIsDirectory { get; set; }
+    public IppValue<bool>? DestinationIsDirectory { get; set; }
 
     [IppAttribute("destination-mandatory-access-attributes", Tag = Tag.Keyword)]
-    public string[]? DestinationMandatoryAccessAttributes { get; set; }
+    public IppValue<string[]>? DestinationMandatoryAccessAttributes { get; set; }
 
     [IppAttribute("destination-name", Tag = Tag.NameWithoutLanguage)]
-    public string? DestinationName { get; set; }
+    public IppValue<string>? DestinationName { get; set; }
 
     [IppAttribute("destination-oauth-scope")]
-    public OctetString[]? DestinationOAuthScope { get; set; }
+    public IppValue<OctetString[]>? DestinationOAuthScope { get; set; }
 
     [IppAttribute("destination-oauth-token")]
-    public OctetString[]? DestinationOAuthToken { get; set; }
+    public IppValue<OctetString[]>? DestinationOAuthToken { get; set; }
 
     [IppAttribute("destination-oauth-uri")]
-    public Uri? DestinationOAuthUri { get; set; }
+    public IppValue<Uri>? DestinationOAuthUri { get; set; }
 
     [IppAttribute("destination-uri")]
-    public Uri? DestinationUri { get; set; }
+    public IppValue<Uri>? DestinationUri { get; set; }
 }

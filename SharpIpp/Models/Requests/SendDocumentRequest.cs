@@ -31,6 +31,6 @@ public class SendDocumentRequest : IppRequest<SendDocumentOperationAttributes>, 
     /// See: IPP
     /// </summary>
         /// <code>document-template-attributes</code>
-        public DocumentTemplateAttributes? DocumentTemplateAttributes { get; set; }
+        public IppValue<DocumentTemplateAttributes>? DocumentTemplateAttributes { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-using SharpIpp;
+﻿using SharpIpp;
 using SharpIpp.Models.Requests;
 using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
@@ -24,7 +24,7 @@ public class GetResourcesTests : SharpIppIntegrationTestBase
                 PrinterUri = new Uri("http://127.0.0.1:631"),
                 SystemUri = new Uri("ipp://127.0.0.1:8631/system"),
                 RequestedAttributes = new[] { "resource-id", "resource-name" },
-                ResourceIds = [1, 2, 3]
+                ResourceIds = new[] { 1, 2, 3 }
             }
         };
 
@@ -45,7 +45,7 @@ public class GetResourcesTests : SharpIppIntegrationTestBase
                     new ResourceDescriptionAttributes {
                         ResourceId = 100,
                         ResourceName = "Firmware",
-                        ResourceFormat = "application/octet-stream",
+                        ResourceFormat = (ResourceFormat)"application/octet-stream",
                         ResourceFormats = new ResourceFormat[] { "application/octet-stream", "application/zip" },
                         ResourceInfo = "Firmware image for device",
                         ResourceStates = new[] { ResourceState.Pending },
@@ -97,7 +97,7 @@ public class GetResourcesTests : SharpIppIntegrationTestBase
                     {
                         ResourceId = 200,
                         ResourceName = "ICC Profile",
-                        ResourceFormat = "application/vnd.iccprofile",
+                        ResourceFormat = (ResourceFormat)"application/vnd.iccprofile",
                         ResourceFormats = new ResourceFormat[] { "application/vnd.iccprofile" },
                         ResourceInfo = "sRGB color profile",
                         ResourceType = (ResourceType)"icc-profile",

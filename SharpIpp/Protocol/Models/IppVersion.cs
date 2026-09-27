@@ -3,31 +3,27 @@ using System.Linq;
 
 namespace SharpIpp.Protocol.Models;
 
-public readonly struct IppVersion : IEquatable<IppVersion>, IComparable<IppVersion>, INoValue
+public readonly struct IppVersion : IEquatable<IppVersion>, IComparable<IppVersion>
 {
     public byte Major { get; }
     public byte Minor { get; }
-    public bool IsValue { get; }
 
     public IppVersion()
     {
         Major = 1;
         Minor = 1;
-        IsValue = true;
     }
 
     public IppVersion( short int16BigEndian )
     {
         Major = (byte)(int16BigEndian >> 8);
         Minor = (byte)(int16BigEndian & 0xFF);
-        IsValue = true;
     }
 
-    public IppVersion( byte major, byte minor, bool isValue = true )
+    public IppVersion( byte major, byte minor )
     {
         Major = major;
         Minor = minor;
-        IsValue = isValue;
     }
 
     public IppVersion( string version )
@@ -40,7 +36,6 @@ public readonly struct IppVersion : IEquatable<IppVersion>, IComparable<IppVersi
         var parts = version.Split( '.' ).Select( byte.Parse ).ToList();
         Major = parts.FirstOrDefault();
         Minor = parts.Skip( 1 ).FirstOrDefault();
-        IsValue = true;
     }
 
     public static IppVersion CUPS10 { get; } = new( 1, 2 );

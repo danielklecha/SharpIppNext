@@ -20,8 +20,8 @@ public class MediaSizeProfileTests : MapperTestBase
         // Arrange
         var mediaSize = new MediaSize
         {
-            XDimension = 21000,
-            YDimension = 29700
+            XDimension = (Range)21000,
+            YDimension = (Range)29700
         };
 
         // Act
@@ -64,8 +64,8 @@ public class MediaSizeProfileTests : MapperTestBase
         var result = _mapper.Map<MediaSize>(dict);
 
         // Assert
-        result.XDimension.Should().Be(new Range(21000, 21000));
-        result.YDimension.Should().Be(new Range(29700, 29700));
+        result.XDimension?.Value.Should().Be(new Range(21000, 21000));
+        result.YDimension?.Value.Should().Be(new Range(29700, 29700));
     }
 
     [TestMethod]
@@ -82,7 +82,7 @@ public class MediaSizeProfileTests : MapperTestBase
         var result = _mapper.Map<MediaSize>(dict);
 
         // Assert
-        result.XDimension.Should().Be(new Range(100, 200));
-        result.YDimension.Should().Be(new Range(300, 400));
+        result.XDimension?.Value.Should().Be(new Range(100, 200));
+        result.YDimension?.Value.Should().Be(new Range(300, 400));
     }
 }

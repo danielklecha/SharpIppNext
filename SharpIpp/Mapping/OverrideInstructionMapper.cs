@@ -14,12 +14,9 @@ internal static class OverrideInstructionMapper
     {
         mapper.CreateMap<IDictionary<string, IppAttribute[]>, OverrideInstruction>((src, map) =>
         {
-            if (src.IsOutOfBandNoValue())
-                return NoValue.GetNoValue<OverrideInstruction>();
-
-            var pageRanges = map.MapFromDicSetNullable<SharpIpp.Protocol.Models.Range[]?>(src, "pages");
-            var documentNumberRanges = map.MapFromDicSetNullable<SharpIpp.Protocol.Models.Range[]?>(src, "document-numbers");
-            var documentCopyRanges = map.MapFromDicSetNullable<SharpIpp.Protocol.Models.Range[]?>(src, "document-copies");
+            var pageRanges = map.MapFromDicNullable<IppValue<Range[]>?>(src, "pages");
+            var documentNumberRanges = map.MapFromDicNullable<IppValue<Range[]>?>(src, "document-numbers");
+            var documentCopyRanges = map.MapFromDicNullable<IppValue<Range[]>?>(src, "document-copies");
 
             var overrideTemplateMembers = src
                 .Where(x => x.Key != "pages" && x.Key != "document-numbers" && x.Key != "document-copies")
@@ -42,20 +39,31 @@ internal static class OverrideInstructionMapper
 
         mapper.CreateMap<OverrideInstruction, IEnumerable<IppAttribute>>((src, map) =>
         {
-            if (NoValue.IsNoValue(src))
-                return new[] { new IppAttribute(Tag.NoValue, IppAttributeNames.Overrides, NoValue.Instance) };
-
-            var pageRanges = src.PageRanges;
-            var documentNumberRanges = src.DocumentNumberRanges;
-            var documentCopyRanges = src.DocumentCopyRanges;
-
             var attributes = new List<IppAttribute>();
-            if (pageRanges != null)
-                attributes.AddRange(pageRanges.Select(x => new IppAttribute(Tag.RangeOfInteger, "pages", x)));
-            if (documentNumberRanges != null)
-                attributes.AddRange(documentNumberRanges.Select(x => new IppAttribute(Tag.RangeOfInteger, "document-numbers", x)));
-            if (documentCopyRanges != null)
-                attributes.AddRange(documentCopyRanges.Select(x => new IppAttribute(Tag.RangeOfInteger, "document-copies", x)));
+
+            if (src.PageRanges.HasValue)
+            {
+                if (!src.PageRanges.Value.IsValue)
+                    attributes.Add(new IppAttribute(Tag.NoValue, "pages", NoValue.Instance));
+                else if (src.PageRanges.Value.Value != null)
+                    attributes.AddRange(src.PageRanges.Value.Value.Select(x => new IppAttribute(Tag.RangeOfInteger, "pages", x)));
+            }
+
+            if (src.DocumentNumberRanges.HasValue)
+            {
+                if (!src.DocumentNumberRanges.Value.IsValue)
+                    attributes.Add(new IppAttribute(Tag.NoValue, "document-numbers", NoValue.Instance));
+                else if (src.DocumentNumberRanges.Value.Value != null)
+                    attributes.AddRange(src.DocumentNumberRanges.Value.Value.Select(x => new IppAttribute(Tag.RangeOfInteger, "document-numbers", x)));
+            }
+
+            if (src.DocumentCopyRanges.HasValue)
+            {
+                if (!src.DocumentCopyRanges.Value.IsValue)
+                    attributes.Add(new IppAttribute(Tag.NoValue, "document-copies", NoValue.Instance));
+                else if (src.DocumentCopyRanges.Value.Value != null)
+                    attributes.AddRange(src.DocumentCopyRanges.Value.Value.Select(x => new IppAttribute(Tag.RangeOfInteger, "document-copies", x)));
+            }
 
             if (src.JobTemplateAttributes != null)
             {
@@ -68,7 +76,9 @@ internal static class OverrideInstructionMapper
             return attributes;
         });
 
-        mapper.CreateMap<NoValue, OverrideInstruction>((_, _) => NoValue.GetNoValue<OverrideInstruction>());
+
         mapper.CreateMap<OverrideInstruction, List<IppAttribute>>((src, map) => map.Map<IEnumerable<IppAttribute>>(src).ToList());
+        mapper.CreateMap<OverrideInstruction, IDictionary<string, IppAttribute[]>>((src, map) => map.Map<List<IppAttribute>>(src).ToIppDictionary());
+        mapper.CreateMap<OverrideInstruction, Dictionary<string, IppAttribute[]>>((src, map) => map.Map<List<IppAttribute>>(src).ToIppDictionary());
     }
 }

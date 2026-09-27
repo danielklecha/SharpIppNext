@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the member names for <code>materials-col</code>.
 /// See: PWG 5100.21-2019 Section 8.1.18
 /// </summary>
-public readonly record struct MaterialsColMember(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
+public readonly record struct MaterialsColMember(string Value, bool IsMarked = true) : IMarkedSmartEnum
 {
     /// <summary>
     /// The material-amount member attribute.

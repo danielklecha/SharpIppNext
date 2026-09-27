@@ -1,14 +1,16 @@
-using System;
-using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Testing;
 using Microsoft.CodeAnalysis.Testing;
 using Microsoft.CodeAnalysis.Testing.Verifiers;
 using SharpIpp.Generators;
+using System;
+using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 
-namespace SharpIpp.Tests.Unit.Generators;
+namespace SharpIpp.Generators.Tests.Unit;
 
+[ExcludeFromCodeCoverage]
 public static class CSharpSourceGeneratorVerifier<TSourceGenerator>
     where TSourceGenerator : IIncrementalGenerator, new()
 {

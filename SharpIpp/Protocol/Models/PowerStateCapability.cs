@@ -9,12 +9,10 @@ namespace SharpIpp.Protocol.Models;
 [IppAttribute(IppAttributeNames.PowerStateCapabilitiesCol)]
 public class PowerStateCapability : IIppCollection
 {
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
-    public bool? CanAcceptJobs { get; set; }
-    public bool? CanProcessJobs { get; set; }
-    public int? PowerActiveWatts { get; set; }
-    public int? PowerInactiveWatts { get; set; }
-    public PowerState? PowerState { get; set; }
+    public IppValue<bool>? CanAcceptJobs { get; set; }
+    public IppValue<bool>? CanProcessJobs { get; set; }
+    public IppValue<int>? PowerActiveWatts { get; set; }
+    public IppValue<int>? PowerInactiveWatts { get; set; }
+    public IppValue<PowerState>? PowerState { get; set; }
 }

@@ -29,19 +29,19 @@ public class CreateJobSubscriptionsTests : SharpIppIntegrationTestBase
             OperationAttributes = new CreateJobSubscriptionsOperationAttributes
             {
                 AttributesCharset = Charset.Utf8,
-                AttributesNaturalLanguage = "en",
+                AttributesNaturalLanguage = (NaturalLanguage)"en",
                 PrinterUri = new Uri("ipp://127.0.0.1:631/printer"),
                 JobId = 42,
                 RequestingUserName = "test-user",
                 RequestingUserUri = new Uri("mailto:test-user@example.com"),
-                ClientInfo =
-                [
+                ClientInfo = new[]
+                {
                     new ClientInfo
                     {
                         ClientName = "test-client",
-                        ClientVersion = "1.0"
+                        ClientVersion = (OctetString)"1.0"
                     }
-                ],
+                },
                 JobHoldUntilTime = new DateTimeOffset(2026, 1, 1, 0, 0, 0, TimeSpan.Zero)
             }
         };
@@ -143,7 +143,7 @@ public class CreateJobSubscriptionsTests : SharpIppIntegrationTestBase
             OperationAttributes = new CreateJobSubscriptionsOperationAttributes
             {
                 AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
-                AttributesNaturalLanguage = "en",
+                AttributesNaturalLanguage = (NaturalLanguage)"en",
                 PrinterUri = new Uri("ipp://127.0.0.1:631/printer"),
                 JobUri = new Uri("ipp://127.0.0.1:631/jobs/7"),
                 RequestingUserName = "test-user"
@@ -198,19 +198,19 @@ public class CreateJobSubscriptionsTests : SharpIppIntegrationTestBase
             OperationAttributes = new CreateJobSubscriptionsOperationAttributes
             {
                 AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
-                AttributesNaturalLanguage = "en",
+                AttributesNaturalLanguage = (NaturalLanguage)"en",
                 PrinterUri = new Uri("ipp://127.0.0.1:631/printer"),
                 JobId = 99,
                 RequestingUserName = "test-user",
                 RequestingUserUri = new Uri("mailto:test-user@example.com"),
-                ClientInfo =
-                [
+                ClientInfo = new[]
+                {
                     new ClientInfo
                     {
                         ClientName = "test-client",
-                        ClientVersion = "1.0"
+                        ClientVersion = (OctetString)"1.0"
                     }
-                ],
+                },
                 JobHoldUntilTime = new DateTimeOffset(2026, 1, 1, 0, 0, 0, TimeSpan.Zero)
             }
         };

@@ -64,6 +64,16 @@ public interface IIppProtocol
     Task WriteIppRequestAsync(IIppRequestMessage ippRequestMessage, Stream stream, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Writes and serializes an IPP request to the specified stream.
+    /// </summary>
+    /// <param name="ippRequestMessage">The IPP request message to serialize.</param>
+    /// <param name="stream">The output stream to write the serialized IPP request to.</param>
+    /// <param name="writeDocument">Whether to copy the document stream to the output stream. Defaults to true.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous write operation.</returns>
+    Task WriteIppRequestAsync(IIppRequestMessage ippRequestMessage, Stream stream, bool writeDocument, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Writes and serializes an IPP response to the specified stream.
     /// </summary>
     /// <param name="message">The IPP response message to serialize.</param>

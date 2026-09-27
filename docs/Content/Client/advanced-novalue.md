@@ -1,92 +1,124 @@
 # Advanced NoValue in Client
 
-In IPP, the `no-value` out-of-band tag (0x13) is used to indicate that an attribute is supported but currently has no value. SharpIppNext allows you to include this tag in your requests by using specific "special" values in your request models.
+In IPP, the `no-value` out-of-band tag (`0x13`) indicates that an attribute is supported by the printer or client but currently has no value. SharpIppNext represents this state using the generic wrapper `IppValue<T>`.
 
-## Automatic NoValue Mapping
+## Understanding Attribute States
 
-When you set a property in a request model to one of the following special values, SharpIppNext automatically maps it to an `IppAttribute` with the `Tag.NoValue` tag.
+Every IPP attribute mapped via `IppValue<T>?` can be in one of three distinct states:
 
-| Type                      | Special Value to trigger `NoValue`        |
-| :------------------------ | :---------------------------------------- |
-| `int`                     | `int.MinValue`                            |
-| `Enum` (short underlying) | `short.MinValue`                          |
-| `Enum` (int underlying)   | `int.MinValue`                            |
-| `DateTime`                | `DateTime.MinValue`                       |
-| `DateTimeOffset`          | `DateTimeOffset.MinValue`                 |
-| `string`                  | `NoValue.NoValueString` ("###NOVALUE###") |
-| `string` (Keyword)        | `string.Empty`                            |
-| `Range`                   | `default(Range)`                          |
-| `Resolution`              | `default(Resolution)`                     |
-| `StringWithLanguage`      | `default(StringWithLanguage)`             |
+| State | C# Representation | Meaning in IPP |
+| :--- | :--- | :--- |
+| **Missing / Omitted** | `null` | The attribute was not sent or is not requested. |
+| **NoValue** | `NoValue.Instance` (or `default(IppValue<T>)`) | The attribute was explicitly sent with `Tag.NoValue` (`0x13`). |
+| **Concrete Value** | `new IppValue<T>(value)` (or implicitly `value`) | The attribute contains a concrete value of type `T`. |
 
-### Example: Sending NoValue for an Integer
+> [!NOTE]
+> Unlike previous versions that used sentinel values (such as `int.MinValue` or `"###NOVALUE###"`), `IppValue<T>` works natively for all types, including `bool`, numbers, strings, dates, enums, custom structs (`Range`, `Resolution`, `OctetString`), and multi-valued arrays (`IppValue<T[]>?`).
+
+## Setting Values in Requests
+
+You can assign values or `NoValue` directly using implicit conversions.
+
+### 1. Assigning Concrete Values
 
 ```csharp
-var request = new SendDocumentRequest
+var request = new PrintJobRequest
 {
-    // ... other properties
-    JobId = NoValue.Instance // Implicit conversion sends this as a NoValue attribute (or NoValue.GetNoValue<int>())
+    OperationAttributes = new PrintJobOperationAttributes
+    {
+        JobName = "My Document",          // Implicitly converted to IppValue<string>
+        IppAttributeFidelity = true,      // Implicitly converted to IppValue<bool>
+        Copies = 2                        // Implicitly converted to IppValue<int>
+    }
 };
 ```
 
-## The Boolean Exception
+### 2. Sending `NoValue`
 
-For `bool` properties, it is **not possible** to use automatic mapping. This is because both `true` and `false` are valid IPP boolean values, and there is no "special" third state for a standard `bool` type that could represent `NoValue`.
-
-If you need to send a `NoValue` tag for a boolean attribute, you must manually replace the attribute in the raw request message.
-
-### Example: Manually adding NoValue for a boolean attribute
+To send the out-of-band `Tag.NoValue` for any attribute, assign `NoValue.Instance`:
 
 ```csharp
-// 1. Initialize your request as usual
-var request = new GetJobsRequest
+var request = new ValidateJobRequest
 {
-    OperationAttributes = new GetJobsOperationAttributes
+    OperationAttributes = new ValidateJobOperationAttributes
     {
-        MyJobs = false // This will be mapped as a normal boolean false
+        JobPassword = NoValue.Instance,    // Sends Tag.NoValue for job-password
+        DocumentCharset = NoValue.Instance // Sends Tag.NoValue for document-charset
     }
 };
-
-// 2. Create the raw request message
-IIppRequestMessage rawRequest = client.CreateRawRequest(request);
-
-// 3. Find and replace the attribute manually
-for (var i = 0; i < rawRequest.JobAttributes.Count; i++)
-{
-    var attribute = rawRequest.JobAttributes[i];
-    if (attribute.Name == JobAttribute.MyJobs)
-    {
-        rawRequest.JobAttributes[i] = new IppAttribute(
-            Tag.NoValue, 
-            attribute.Name, 
-            NoValue.Instance);
-        break;
-    }
-}
-
-// 4. Send the modified raw request
-await client.SendAsync(printerUri, rawRequest);
 ```
 
-## Detecting NoValue in Responses
+### 3. Multi-Valued Attributes (Arrays)
 
-Just like in requests, `bool` properties in response models **cannot** represent a `NoValue` state automatically. IPP boolean attributes are always mapped to either `true` or `false`.
-
-If you need to detect if a boolean attribute in a response was actually a `NoValue` tag, you must inspect the raw `IIppResponseMessage`:
+Multi-valued attributes use `IppValue<T[]>?`:
 
 ```csharp
-IIppResponseMessage rawResponse = await client.SendAsync(printerUri, rawRequest);
+// Sending a list of values
+request.OperationAttributes.RequestedAttributes = new[] { "job-id", "job-state" };
 
-// Manually look for the attribute in the raw message
-// PrinterAttributes is a List<List<IppAttribute>>, so we use SelectMany to flatten it
-var attribute = rawResponse.PrinterAttributes
-    .SelectMany(x => x)
-    .FirstOrDefault(a => a.Name == PrinterAttribute.ColorSupported);
-if (attribute?.Tag == Tag.NoValue)
+// Sending NoValue for the entire array attribute
+request.OperationAttributes.RequestedAttributes = NoValue.Instance;
+```
+
+## Reading Values from Responses
+
+`IppValue<T>` provides multiple convenient ways to check for and read values:
+
+### Direct Equality Comparison
+
+```csharp
+if (response.JobAttributes.JobImpressions == NoValue.Instance)
 {
-    // This attribute was sent as NoValue
+    Console.WriteLine("The printer reported NoValue for JobImpressions.");
 }
 ```
 
-> [!TIP]
-> You can assign `NoValue.Instance` directly to supported primitive fields (`int`, `string`, `DateTime`, `DateTimeOffset`, `Range`, `Resolution`, `OctetString`, `StringWithLanguage`, `IppVersion`), or compare properties directly (e.g. `jobId == NoValue.Instance`). For other types (like enums and collections), use `NoValue.GetNoValue<T>()` and `NoValue.IsNoValue(...)`.
+### Inspecting `IsValue` / `HasValue`
+
+```csharp
+if (response.PrinterAttributes.ColorSupported is { } colorSupported)
+{
+    if (colorSupported.IsValue)
+    {
+        Console.WriteLine($"Color supported: {colorSupported.Value}");
+    }
+    else
+    {
+        Console.WriteLine("ColorSupported attribute was present, but set to NoValue.");
+    }
+}
+else
+{
+    Console.WriteLine("ColorSupported attribute was omitted.");
+}
+```
+
+### Safe Fallback (`GetValueOrDefault`)
+
+```csharp
+// Returns the value if present, or fallback default (e.g. false) if NoValue or omitted
+bool isColor = response.PrinterAttributes.ColorSupported?.GetValueOrDefault(false) ?? false;
+```
+
+### Deconstruction
+
+```csharp
+if (response.JobAttributes.JobKOctets is { } jobKOctets)
+{
+    var (isValue, octets) = jobKOctets;
+    if (isValue)
+    {
+        Console.WriteLine($"Octets: {octets}");
+    }
+}
+```
+
+### Pattern Matching and `TryGetValue`
+
+```csharp
+if (response.JobAttributes.JobName?.TryGetValue(out var name) == true)
+{
+    Console.WriteLine($"Job name: {name}");
+}
+```
+

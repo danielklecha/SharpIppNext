@@ -5,6 +5,9 @@ using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Mapping;
 
+/// <summary>
+/// Configures mappings for standard BCL / .NET core types (e.g., DateTime, Uri, byte[], string).
+/// </summary>
 [MapperConfiguration(0)]
 internal static class CoreTypeMappers
 {
@@ -22,8 +25,6 @@ internal static class CoreTypeMappers
         var unixStartTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified);
         mapper.CreateIppMap<int, DateTime>((src, map) => unixStartTime.AddSeconds(src));
         mapper.CreateIppMap<DateTime, int>((src, map) => (src - unixStartTime).Seconds);
-
-        mapper.CreateIppMap<NoValue, bool>((src, map) => NoValue.GetNoValue<bool>());
     }
 
     private static void ConfigureUri(IMapperConstructor mapper)
@@ -37,7 +38,7 @@ internal static class CoreTypeMappers
             return null;
         });
 
-        mapper.CreateMap<Uri, string>((src, dst, map) => src.ToString());
         mapper.CreateMap<NoValue, Uri?>((src, dst, map) => null);
+        mapper.CreateMap<Uri, string>((src, dst, map) => src.ToString());
     }
 }

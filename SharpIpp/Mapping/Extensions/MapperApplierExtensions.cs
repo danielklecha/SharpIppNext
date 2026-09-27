@@ -14,11 +14,9 @@ public static class MapperApplierExtensions
         IDictionary<string, IppAttribute[]> src,
         string key) where TDestination : IEnumerable?
     {
-        if (!src.ContainsKey(key))
+        if (!src.TryGetValue(key, out IppAttribute[]? attributes) || attributes.Length == 0)
             return mapper.Map<TDestination>(null);
-        var values = src[key].Select(x => x.Value).ToArray();
-        if (values.Length == 0)
-            return mapper.Map<TDestination>(null);
+        var values = attributes.Select(x => x.Value).ToArray();
         return mapper.Map<TDestination>(values);
     }
 
@@ -27,11 +25,9 @@ public static class MapperApplierExtensions
         IDictionary<string, IppAttribute[]> src,
         string key) where TDestination : IEnumerable?
     {
-        if (!src.ContainsKey(key))
+        if (!src.TryGetValue(key, out IppAttribute[]? attributes) || attributes.Length == 0)
             return mapper.MapNullable<TDestination>(null);
-        var values = src[key].Select(x => x.Value).ToArray();
-        if (values.Length == 0)
-            return mapper.MapNullable<TDestination>(null);
+        var values = attributes.Select(x => x.Value).ToArray();
         return mapper.MapNullable<TDestination>(values);
     }
 
@@ -56,6 +52,20 @@ public static class MapperApplierExtensions
             return mapper.MapNullable<TDestination>(null);
         if (values.Length == 0)
             return mapper.MapNullable<TDestination>(null);
+        if (values.Length == 1 && values[0].Tag == Tag.NoValue)
+            return mapper.MapNullable<TDestination>(values[0].Value);
+
+        var targetType = Nullable.GetUnderlyingType(typeof(TDestination)) ?? typeof(TDestination);
+        if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(IppValue<>))
+        {
+            var innerType = targetType.GetGenericArguments()[0];
+            if (innerType.IsArray || typeof(IEnumerable).IsAssignableFrom(innerType) && innerType != typeof(string))
+            {
+                var rawValues = values.Select(x => x.Value).ToArray();
+                return mapper.MapNullable<TDestination>(rawValues);
+            }
+        }
+
         return mapper.MapNullable<TDestination>(values[0].Value);
     }
 

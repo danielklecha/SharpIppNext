@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies attribute names for <code>system-mandatory-printer-attributes</code>.
 /// See: PWG 5100.22-2025 Section 7.2.36
 /// </summary>
-public readonly record struct SystemMandatoryPrinterAttribute(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
+public readonly record struct SystemMandatoryPrinterAttribute(string Value, bool IsMarked = true) : IMarkedSmartEnum
 {
     /// <summary>The printer-name attribute. See: PWG 5100.22-2025 Section 7.2.36</summary>
     public static readonly SystemMandatoryPrinterAttribute PrinterName = new("printer-name");

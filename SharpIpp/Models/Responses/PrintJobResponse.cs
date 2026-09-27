@@ -17,5 +17,5 @@ public class PrintJobResponse : IppResponse<OperationAttributes>, IIppJobRespons
     /// See: pwg5100.18 - IPP Shared Infrastructure Extensions v1.1
     /// </summary>
     /// <code>document-attributes</code>
-    public DocumentAttributes? DocumentAttributes { get; set; }
+    public IppValue<DocumentAttributes>? DocumentAttributes { get; set; }
 }

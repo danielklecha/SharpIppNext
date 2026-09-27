@@ -21,7 +21,7 @@ public class DocumentTemplateAttributesProfileTests : MapperTestBase
     {
         var src = new DocumentTemplateAttributes
         {
-            FinishingsCol = new[] { NoValue.GetNoValue<FinishingsCol>() }
+            FinishingsCol = IppValue<FinishingsCol[]>.NoValue
         };
 
         var attributes = _mapper.Map<System.Collections.Generic.List<IppAttribute>>(src);
@@ -192,7 +192,7 @@ public class DocumentTemplateAttributesProfileTests : MapperTestBase
     {
         var src = new DocumentTemplateAttributes
         {
-            MaterialsCol = [new Material { MaterialName = "pla" }],
+            MaterialsCol = new[] { new Material { MaterialName = "pla" } },
             MultipleObjectHandling = (MultipleObjectHandling?)"abort-job",
             PlatformTemperature = 75,
             PrintAccuracy = new PrintAccuracy
@@ -203,7 +203,7 @@ public class DocumentTemplateAttributesProfileTests : MapperTestBase
                 ZAccuracy = 50
             },
             PrintBase = (PrintBase?)"raft",
-            PrintObjects = [new PrintObject { DocumentNumber = 1, PrintObjectsSource = new Uri("ipp://example/doc/1") }],
+            PrintObjects = new[] { new PrintObject { DocumentNumber = 1, PrintObjectsSource = new Uri("ipp://example/doc/1") } },
             PrintSupports = (PrintSupports?)"generated-supports",
             ChamberHumidity = 45,
             ChamberTemperature = 60
@@ -240,14 +240,14 @@ public class DocumentTemplateAttributesProfileTests : MapperTestBase
         var dst = _mapper.Map<DocumentTemplateAttributes>(attributes);
 
         dst.MaterialsCol.Should().NotBeNull();
-        dst.MaterialsCol![0].MaterialName.Should().Be("pla");
+        dst.MaterialsCol!.Value.Value[0].MaterialName?.Value.Should().Be("pla");
         dst.MultipleObjectHandling.Should().Be((MultipleObjectHandling?)"abort-job");
         dst.PlatformTemperature.Should().Be(75);
         dst.PrintAccuracy.Should().NotBeNull();
-        dst.PrintAccuracy!.AccuracyUnits.Should().Be((AccuracyUnits?)"mm");
+        dst.PrintAccuracy!.Value.Value.AccuracyUnits?.Value.Should().Be((AccuracyUnits)"mm");
         dst.PrintBase.Should().Be((PrintBase?)"raft");
         dst.PrintObjects.Should().NotBeNull();
-        dst.PrintObjects![0].DocumentNumber.Should().Be(1);
+        dst.PrintObjects!.Value.Value[0].DocumentNumber?.Value.Should().Be(1);
         dst.PrintSupports.Should().Be((PrintSupports?)"generated-supports");
         dst.ChamberHumidity.Should().Be(45);
         dst.ChamberTemperature.Should().Be(60);

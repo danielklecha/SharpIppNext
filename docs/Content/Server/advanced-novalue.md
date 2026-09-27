@@ -1,63 +1,60 @@
 # Advanced NoValue in Server
 
-In IPP requests and responses, the `no-value` out-of-band tag (0x13) indicates that an attribute is supported but currently has no value. SharpIppNext automatically maps these tags into standard C# types in your models.
+In IPP requests and responses, the `no-value` out-of-band tag (`0x13`) indicates that an attribute is supported but currently has no value. SharpIppNext uses `IppValue<T>` to seamlessly handle `Tag.NoValue` on the server side.
 
-## Automatic NoValue Mapping
+## Server-Side Receiving: Inspecting `NoValue` in Requests
 
-When SharpIppNext receives an attribute with the `Tag.NoValue` tag, it maps it to the same "strict" special values used in requests. This allows you to check for "no value" by comparing the property to its type's special value (e.g., `int.MinValue`, `DateTime.MinValue`, etc.).
-
-For a full list of these special values, see the [Advanced NoValue in Client](../Client/advanced-novalue.md) documentation.
-
-### Example: Checking for NoValue in a Request
+When SharpIppNext receives an attribute with `Tag.NoValue`, it sets the corresponding property to an `IppValue<T>` where `IsValue == false`.
 
 ```csharp
-// When your server receives a request, SharpIppNext automatically maps
-// NoValue tags into the corresponding special values in the request model.
 var request = (GetJobsRequest)await sharpIppServer.ReceiveRequestAsync(stream);
 
-if (request.OperationAttributes.Limit == NoValue.Instance) // or NoValue.GetNoValue<int>()
+// Check if the client explicitly sent Tag.NoValue
+if (request.OperationAttributes.Limit == NoValue.Instance)
 {
-    Console.WriteLine("The client sent a 'no-value' tag for the limit attribute.");
+    Console.WriteLine("Client sent a NoValue tag for limit.");
+}
+
+// Or check via property
+if (request.OperationAttributes.MyJobs is { IsValue: false })
+{
+    Console.WriteLine("Client sent NoValue for my-jobs.");
 }
 ```
 
-## The Boolean Exception
+## Server-Side Responding: Returning `NoValue` in Responses
 
-Just like in requests, `bool` properties in response models **cannot** represent a `NoValue` state automatically. IPP boolean attributes are always mapped to either `true` or `false`.
-
-If you are implementing a server and need to return a `NoValue` tag for a boolean attribute, you must manually replace the attribute in the raw `IIppResponseMessage` before sending it:
-
-```csharp
-IIppResponseMessage rawResponse = await sharpIppServer.CreateRawResponseAsync(response);
-
-// Manually replace the attribute with NoValue
-for (var i = 0; i < rawResponse.PrinterAttributes.Count; i++)
-{
-    var attribute = rawResponse.PrinterAttributes[i];
-    if (attribute.Name == "my-boolean-attribute")
-    {
-        rawResponse.PrinterAttributes[i] = new IppAttribute(
-            Tag.NoValue, 
-            attribute.Name, 
-            NoValue.Instance);
-        break;
-    }
-}
-```
-
-## Server-Side: Returning NoValue
-
-If you are implementing an IPP Server and want to return a `NoValue` tag, simply set the property in your response model to its corresponding special value:
+To return `Tag.NoValue` for any attribute in a server response, assign `NoValue.Instance` to the response model property:
 
 ```csharp
 public Task<GetPrinterAttributesResponse> GetPrinterAttributesAsync(GetPrinterAttributesRequest request)
 {
     return Task.FromResult(new GetPrinterAttributesResponse
     {
+        StatusCode = IppStatusCode.SuccessfulOk,
         PrinterAttributes = new PrinterDescriptionAttributes
         {
-            QueuedJobCount = NoValue.Instance // This will be sent as Tag.NoValue (or NoValue.GetNoValue<int>())
+            PrinterState = PrinterState.Idle,
+            // Return NoValue for QueuedJobCount (encoded as Tag.NoValue in the IPP response)
+            QueuedJobCount = NoValue.Instance,
+
+            // Return NoValue for a boolean attribute (encoded as Tag.NoValue)
+            ColorSupported = NoValue.Instance,
+
+            // Return NoValue for an array attribute
+            PrinterStateReasons = NoValue.Instance
         }
     });
 }
 ```
+
+## Attribute Tri-State Reference
+
+Server handlers can distinguish between an attribute that was omitted and one that was sent as `NoValue`:
+
+| Property State | Wire IPP Tag | Server Behavior |
+| :--- | :--- | :--- |
+| `null` | *(Omitted)* | Do not include attribute in response / client omitted attribute. |
+| `NoValue.Instance` (`IsValue == false`) | `Tag.NoValue` (`0x13`) | Attribute is supported but has no value. |
+| `value` (`IsValue == true`) | Standard type tag (`Tag.Integer`, `Tag.Boolean`, etc.) | Normal attribute value. |
+

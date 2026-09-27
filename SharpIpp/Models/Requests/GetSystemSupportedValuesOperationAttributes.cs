@@ -1,4 +1,4 @@
-using SharpIpp.Mapping;
+﻿using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Requests;
@@ -15,5 +15,5 @@ public class GetSystemSupportedValuesOperationAttributes : SystemOperationAttrib
     /// See: PWG 5100.22-2025 Section 6.3.9.1
     /// </summary>
     [IppAttribute(IppAttributeNames.RequestedAttributes, Tag = Tag.Keyword)]
-    public string[]? RequestedAttributes { get; set; }
+    public IppValue<string[]>? RequestedAttributes { get; set; }
 }

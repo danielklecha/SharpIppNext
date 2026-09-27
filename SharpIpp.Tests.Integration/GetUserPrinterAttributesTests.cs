@@ -1,4 +1,4 @@
-using SharpIpp;
+﻿using SharpIpp;
 using SharpIpp.Models.Requests;
 using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
@@ -25,8 +25,8 @@ public class GetUserPrinterAttributesTests : SharpIppIntegrationTestBase
                 FirstIndex = 5,
                 Limit = 10,
                 DocumentFormat = DocumentFormat.ApplicationOctetStream,
-                RequestedAttributes = ["printer-name"],
-                RequestingUserVcard = ["vcard-entry-1", "vcard-entry-2"]
+                RequestedAttributes = new[] { "printer-name" },
+                RequestingUserVcard = new[] { "vcard-entry-1", "vcard-entry-2" }
             }
         };
 

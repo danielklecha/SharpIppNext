@@ -16,33 +16,33 @@ public class RegisterOutputDeviceOperationAttributes : SystemOperationAttributes
     /// See: PWG 5100.22-2025 Section 6.3.12.1
     /// </summary>
     [IppAttribute(IppAttributeNames.OutputDeviceUuid, Tag = Tag.Uri)]
-    public Uri? OutputDeviceUuid { get; set; }
+    public IppValue<Uri>? OutputDeviceUuid { get; set; }
 
     /// <summary>
     /// The <c>output-device-x509-certificate</c> operation attribute.
     /// See: PWG 5100.22-2025 Section 7.1.3
     /// </summary>
     [IppAttribute(IppAttributeNames.OutputDeviceX509Certificate, Tag = Tag.TextWithoutLanguage)]
-    public string[]? OutputDeviceX509Certificate { get; set; }
+    public IppValue<string[]>? OutputDeviceX509Certificate { get; set; }
 
     /// <summary>
     /// The <c>output-device-x509-request</c> operation attribute.
     /// See: PWG 5100.22-2025 Section 7.1.4
     /// </summary>
     [IppAttribute(IppAttributeNames.OutputDeviceX509Request, Tag = Tag.TextWithoutLanguage)]
-    public string[]? OutputDeviceX509Request { get; set; }
+    public IppValue<string[]>? OutputDeviceX509Request { get; set; }
 
     /// <summary>
     /// The <c>printer-service-type</c> operation attribute specifying the type(s) of print service.
     /// See: PWG 5100.22-2025 Section 7.1.9
     /// </summary>
     [IppAttribute(IppAttributeNames.PrinterServiceType, Tag = Tag.Keyword)]
-    public PrinterServiceType[]? PrinterServiceType { get; set; }
+    public IppValue<PrinterServiceType[]>? PrinterServiceType { get; set; }
 
     /// <summary>
     /// The <c>printer-xri-requested</c> operation attribute.
     /// See: PWG 5100.22-2025 Section 7.1.10
     /// </summary>
     [IppAttribute(IppAttributeNames.PrinterXriRequested)]
-    public SystemXri[]? PrinterXriRequested { get; set; }
+    public IppValue<SystemXri[]>? PrinterXriRequested { get; set; }
 }

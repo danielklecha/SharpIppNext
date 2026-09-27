@@ -120,32 +120,46 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         ValidateSystemAttributesGroup = true,
         UseIppAttributeFidelityForCapabilityValidation = false,
         ValidateStringLengthLimits = true,
+        EnforceMediaMutualExclusivity = false,
     };
 
+    /// <inheritdoc />
     public IppRequestValidationContext Context { get; } = new();
 
+    /// <inheritdoc />
     public bool ValidateCoreRules { get; set; } = true;
 
+    /// <inheritdoc />
     public bool ValidateOperationSpecificRules { get; set; } = true;
 
+    /// <inheritdoc />
     public bool ValidateOperationAttributesGroup { get; set; } = true;
 
+    /// <inheritdoc />
     public bool ValidateJobAttributesGroup { get; set; } = true;
 
+    /// <inheritdoc />
     public bool ValidatePrinterAttributesGroup { get; set; } = true;
 
+    /// <inheritdoc />
     public bool ValidateUnsupportedAttributesGroup { get; set; } = true;
 
+    /// <inheritdoc />
     public bool ValidateSubscriptionAttributesGroup { get; set; } = true;
 
+    /// <inheritdoc />
     public bool ValidateEventNotificationAttributesGroup { get; set; } = true;
 
+    /// <inheritdoc />
     public bool ValidateResourceAttributesGroup { get; set; } = true;
 
+    /// <inheritdoc />
     public bool ValidateDocumentAttributesGroup { get; set; } = true;
 
+    /// <inheritdoc />
     public bool ValidateSystemAttributesGroup { get; set; } = true;
 
+    /// <inheritdoc />
     public bool UseIppAttributeFidelityForCapabilityValidation { get; set; }
 
     /// <summary>
@@ -156,10 +170,10 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
     /// </summary>
     public bool ValidateStringLengthLimits { get; set; } = true;
 
-    /// <summary>
-    /// Validates the request message by executing enabled core, job, document, printer, and operation-specific rules.
-    /// Spec: RFC 8011, PWG 5100.x.
-    /// </summary>
+    /// <inheritdoc />
+    public bool EnforceMediaMutualExclusivity { get; set; } = false;
+
+    /// <inheritdoc />
     public void Validate(IIppRequestMessage? request, IppRequestValidationContext? context = null)
     {
         if (request is null)
@@ -453,6 +467,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
                 throw new IppRequestException("'job-password' and 'job-password-encryption' must be either both present or both absent", request, IppStatusCode.ClientErrorBadRequest);
         }
 
+        if (EnforceMediaMutualExclusivity)
         {
             var depth = 0;
             var hasTopLevelMedia = false;
@@ -475,7 +490,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
                 }
             }
             if (hasTopLevelMedia && hasTopLevelMediaCol)
-                throw new IppRequestException("'media' and 'media-col' are mutually exclusive at the job level", request, IppStatusCode.ClientErrorBadRequest);
+                throw new IppRequestException("'media' and 'media-col' are mutually exclusive at the job level", request, IppStatusCode.ClientErrorConflictingAttributes);
         }
 
         var pageRangeAttributes = request.JobAttributes

@@ -34,17 +34,17 @@ public class PrintJobTests : SharpIppIntegrationTestBase
             },
             JobTemplateAttributes = new()
             {
-                Overrides =
-                [
+                Overrides = new[]
+                {
                     new OverrideInstruction
                     {
-                        PageRanges = [new SharpIpp.Protocol.Models.Range(0, 1)],
+                        PageRanges = new[] { new SharpIpp.Protocol.Models.Range(0, 1) },
                         JobTemplateAttributes = new JobTemplateAttributes
                         {
                             Sides = Sides.OneSided
                         }
                     }
-                ]
+                }
             }
         };
 
@@ -72,17 +72,17 @@ public class PrintJobTests : SharpIppIntegrationTestBase
             },
             JobTemplateAttributes = new()
             {
-                Overrides =
-                [
+                Overrides = new[]
+                {
                     new OverrideInstruction
                     {
-                        PageRanges = [new SharpIpp.Protocol.Models.Range(1, 1)],
+                        PageRanges = new[] { new SharpIpp.Protocol.Models.Range(1, 1) },
                         JobTemplateAttributes = new JobTemplateAttributes
                         {
                             Copies = 2
                         }
                     }
-                ]
+                }
             }
         };
 
@@ -109,10 +109,10 @@ public class PrintJobTests : SharpIppIntegrationTestBase
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
-                ResourceIds = [31, 32],
+                ResourceIds = new[] { 31, 32 },
                 DocumentName = "???????????????????????.pdf",
                 DocumentFormat = DocumentFormat.ApplicationPdf,
-                JobPassword = "hashed-secret",
+                JobPassword = (OctetString)"hashed-secret",
                 JobPasswordEncryption = JobPasswordEncryption.Sha2256,
                 JobReleaseAction = JobReleaseAction.JobPassword,
                 JobAuthorizationUri = new Uri("https://example.local/auth/abc"),
@@ -122,7 +122,7 @@ public class PrintJobTests : SharpIppIntegrationTestBase
                 JobStorage = new JobStorage { JobStorageAccess = (JobStorageAccess?)"owner", JobStorageDisposition = (JobStorageDisposition?)"store-only", JobStorageGroup = "default" },
                 ProofPrint = new ProofPrint { ProofPrintCopies = 1, Media = (Media)"iso_a4_210x297mm" },
                 CoverSheetInfo = new CoverSheetInfo { FromName = "sender", ToName = "receiver", Subject = "subject" },
-                DestinationUris = [new DestinationUri { DestinationUriValue = new Uri("tel:+123456789"), PostDialString = "#", PreDialString = "9", T33Subaddress = 12345 }],
+                DestinationUris = new[] { new DestinationUri { DestinationUriValue = new Uri("tel:+123456789"), PostDialString = "#", PreDialString = "9", T33Subaddress = 12345 } },
                 OutputAttributes = new OutputAttributes { NoiseRemoval = 100, OutputCompressionQualityFactor = 80 },
                 DocumentMetadata = GetTestDocumentMetadata(),
             },
@@ -134,14 +134,14 @@ public class PrintJobTests : SharpIppIntegrationTestBase
                 JobAccountType = JobAccountType.General,
                 ConfirmationSheetPrint = true,
                 NumberOfRetries = 2,
-                JobFinishings = [Finishings.Staple, Finishings.Fold],
-                JobPassword = new byte[] { 0x68, 0x61, 0x73, 0x68 },
+                JobFinishings = new[] { Finishings.Staple, Finishings.Fold },
+                JobPassword = new OctetString(new byte[] { 0x68, 0x61, 0x73, 0x68 }),
                 JobPasswordEncryption = JobPasswordEncryption.Sha2256,
                 MediaSource = MediaSource.Main,
                 MediaSourceFeedDirection = MediaSourceFeedDirection.LongEdgeFirst,
                 MediaSourceFeedOrientation = Orientation.Portrait,
-                MaterialsCol =
-                [
+                MaterialsCol = new[]
+                {
                     new Material
                     {
                         MaterialAmount = 1,
@@ -150,60 +150,60 @@ public class PrintJobTests : SharpIppIntegrationTestBase
                         MaterialFillDensity = 3,
                         MaterialKey = (MaterialKey?)"pla-blue",
                         MaterialName = "PLA Blue",
-                        MaterialPurpose = [(MaterialPurpose)"model"],
+                        MaterialPurpose = new[] { (MaterialPurpose)"model" },
                         MaterialRate = 4,
                         MaterialRateUnits = (MaterialRateUnits?)"mm-per-second",
                         MaterialShellThickness = 5,
                         MaterialTemperature = 200,
                         MaterialType = (MaterialType?)"pla"
                     }
-                ],
-                PrintObjects =
-                [
+                },
+                PrintObjects = new[]
+                {
                     new PrintObject
                     {
                         DocumentNumber = 1,
                         PrintObjectsSource = new Uri("https://example.local/objects/1"),
-                        TransformationMatrix = [1, 0, 0, 0, 1, 0]
+                        TransformationMatrix = new[] { 1, 0, 0, 0, 1, 0 }
                     }
-                ],
-                Overrides =
-                [
+                },
+                Overrides = new[]
+                {
                     new OverrideInstruction
                     {
-                        PageRanges = [new SharpIpp.Protocol.Models.Range(1, 2)],
-                        DocumentNumberRanges = [new SharpIpp.Protocol.Models.Range(1, 1)],
-                        DocumentCopyRanges = [new SharpIpp.Protocol.Models.Range(1, 1)],
+                        PageRanges = new[] { new SharpIpp.Protocol.Models.Range(1, 2) },
+                        DocumentNumberRanges = new[] { new SharpIpp.Protocol.Models.Range(1, 1) },
+                        DocumentCopyRanges = new[] { new SharpIpp.Protocol.Models.Range(1, 1) },
                         JobTemplateAttributes = new JobTemplateAttributes
                         {
                             Media = (Media)"iso_a4_210x297mm",
                             Sides = Sides.OneSided
                         }
                     }
-                ],
-                PageOverrides =
-                [
+                },
+                PageOverrides = new[]
+                {
                     new OverrideInstruction
                     {
-                        PageRanges = [new SharpIpp.Protocol.Models.Range(3, 5)],
+                        PageRanges = new[] { new SharpIpp.Protocol.Models.Range(3, 5) },
                         JobTemplateAttributes = new JobTemplateAttributes
                         {
                             Sides = Sides.TwoSidedLongEdge
                         }
                     }
-                ],
-                DocumentOverrides =
-                [
+                },
+                DocumentOverrides = new[]
+                {
                     new OverrideInstruction
                     {
-                        PageRanges = [new SharpIpp.Protocol.Models.Range(1, 2)],
-                        DocumentNumberRanges = [new SharpIpp.Protocol.Models.Range(2, 2)],
+                        PageRanges = new[] { new SharpIpp.Protocol.Models.Range(1, 2) },
+                        DocumentNumberRanges = new[] { new SharpIpp.Protocol.Models.Range(2, 2) },
                         JobTemplateAttributes = new JobTemplateAttributes
                         {
                             Copies = 3
                         }
                     }
-                ]
+                }
             }
         };
         var client = new SharpIppClient();
@@ -231,7 +231,7 @@ public class PrintJobTests : SharpIppIntegrationTestBase
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
-                ResourceIds = [33, 34],
+                ResourceIds = new[] { 33, 34 },
                 DocumentName = "???????????????????????.pdf",
                 DocumentFormat = (SharpIpp.Protocol.Models.DocumentFormat)"application/pdf",
                 AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
@@ -243,8 +243,8 @@ public class PrintJobTests : SharpIppIntegrationTestBase
                 JobImpressions = 5,
                 JobMediaSheets = 2,
                 Compression = Compression.None,
-                DocumentNaturalLanguage = "en",
-                DocumentCharset = "utf-8",
+                DocumentNaturalLanguage = (NaturalLanguage)"en",
+                DocumentCharset = (Charset)"utf-8",
                 DocumentMetadata = GetTestDocumentMetadata(),
             },
             JobTemplateAttributes = new() { Copies = 1, JobPriority = 1 }
@@ -262,7 +262,7 @@ public class PrintJobTests : SharpIppIntegrationTestBase
                 StatusCode = IppStatusCode.SuccessfulOk,
                 OperationAttributes = new() { StatusMessage = "successful-ok", DetailedStatusMessage = "detail1", DocumentAccessError = "none" },
                 JobAttributes = new() { JobId = 456 },
-                DocumentAttributes = new()
+                DocumentAttributes = new DocumentAttributes
                 {
                     DocumentNumber = 1,
                     DocumentMetadata = GetTestDocumentMetadata()
@@ -304,7 +304,7 @@ public class PrintJobTests : SharpIppIntegrationTestBase
         }
         SharpIppClient client = new(new(GetMockOfHttpMessageHandler(func).Object));
         var clientRawRequest = client.CreateRawRequest(clientRequest);
-        var clientRawResponse = await client.SendAsync(clientRequest.OperationAttributes.PrinterUri, clientRawRequest).ConfigureAwait(false);
+        var clientRawResponse = await client.SendAsync((Uri)clientRequest.OperationAttributes.PrinterUri!, clientRawRequest).ConfigureAwait(false);
         var clientResponse = client.CreateResponse<PrintJobResponse>(clientRawResponse);
         clientRequest.Should().BeEquivalentTo(serverRequest);
         clientResponse.Should().BeEquivalentTo(serverResponse);
@@ -383,7 +383,7 @@ public class PrintJobTests : SharpIppIntegrationTestBase
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
-                ResourceIds = [33, 34],
+                ResourceIds = new[] { 33, 34 },
                 DocumentName = "test-doc.pdf",
                 DocumentFormat = (SharpIpp.Protocol.Models.DocumentFormat)"application/pdf",
                 AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
@@ -395,8 +395,8 @@ public class PrintJobTests : SharpIppIntegrationTestBase
                 JobImpressions = 5,
                 JobMediaSheets = 2,
                 Compression = Compression.None,
-                DocumentNaturalLanguage = "en",
-                DocumentCharset = "utf-8",
+                DocumentNaturalLanguage = (NaturalLanguage)"en",
+                DocumentCharset = (Charset)"utf-8",
                 DocumentMetadata = GetTestDocumentMetadata(),
             },
             JobTemplateAttributes = new() { Copies = 1, JobPriority = 1 }
@@ -414,7 +414,7 @@ public class PrintJobTests : SharpIppIntegrationTestBase
                 StatusCode = IppStatusCode.SuccessfulOk,
                 OperationAttributes = new() { StatusMessage = "successful-ok", DetailedStatusMessage = "detail1", DocumentAccessError = "none" },
                 JobAttributes = new() { JobId = 456 },
-                DocumentAttributes = new()
+                DocumentAttributes = new DocumentAttributes
                 {
                     DocumentNumber = 1,
                     DocumentMetadata = GetTestDocumentMetadata()
@@ -472,7 +472,7 @@ public class PrintJobTests : SharpIppIntegrationTestBase
         }
         SharpIppClient client = new(new(GetMockOfHttpMessageHandler(func).Object));
         var clientRawRequest = client.CreateRawRequest(clientRequest);
-        var clientRawResponse = await client.SendAsync(clientRequest.OperationAttributes.PrinterUri, clientRawRequest).ConfigureAwait(false);
+        var clientRawResponse = await client.SendAsync((Uri)clientRequest.OperationAttributes.PrinterUri!, clientRawRequest).ConfigureAwait(false);
         var clientResponse = client.CreateResponse<PrintJobResponse>(clientRawResponse);
 
         serverRequest.Should().NotBeNull();

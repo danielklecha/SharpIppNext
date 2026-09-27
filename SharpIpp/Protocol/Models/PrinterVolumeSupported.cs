@@ -9,9 +9,7 @@ namespace SharpIpp.Protocol.Models;
 [IppAttribute(IppAttributeNames.PrinterVolumeSupported)]
 public class PrinterVolumeSupported : IIppCollection
 {
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
-    public int? XDimension { get; set; }
-    public int? YDimension { get; set; }
-    public int? ZDimension { get; set; }
+    public IppValue<int>? XDimension { get; set; }
+    public IppValue<int>? YDimension { get; set; }
+    public IppValue<int>? ZDimension { get; set; }
 }

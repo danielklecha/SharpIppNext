@@ -7,7 +7,7 @@ namespace SharpIpp.Protocol.Models;
 /// See: RFC 8011 Section 5.4.39, PWG 5100.13-2023 Section 6.5.4,
 /// PWG 5100.11-2024 Section 8.1, and PWG 5100.22-2025 Section 9.1.
 /// </summary>
-public readonly record struct IppFeature(string Value, bool IsValue = true) : ISmartEnum 
+public readonly record struct IppFeature(string Value) : ISmartEnum 
 {
     // Core/driver-replacement feature keywords.
 

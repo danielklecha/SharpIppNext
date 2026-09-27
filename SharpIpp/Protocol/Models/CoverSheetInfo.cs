@@ -9,21 +9,19 @@ namespace SharpIpp.Protocol.Models;
 [IppAttribute(IppAttributeNames.CoverSheetInfo)]
 public class CoverSheetInfo : IIppCollection
 {
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
-    public string? FromName { get; set; }
+    public IppValue<string>? FromName { get; set; }
 
     [IppAttribute("logo", Tag = Tag.TextWithoutLanguage)]
-    public string? Logo { get; set; }
+    public IppValue<string>? Logo { get; set; }
 
     [IppAttribute("message", Tag = Tag.TextWithoutLanguage)]
-    public string? Message { get; set; }
+    public IppValue<string>? Message { get; set; }
 
     [IppAttribute("organization-name", Tag = Tag.TextWithoutLanguage)]
-    public string? OrganizationName { get; set; }
+    public IppValue<string>? OrganizationName { get; set; }
 
     [IppAttribute("subject", Tag = Tag.TextWithoutLanguage)]
-    public string? Subject { get; set; }
+    public IppValue<string>? Subject { get; set; }
 
-    public string? ToName { get; set; }
+    public IppValue<string>? ToName { get; set; }
 }

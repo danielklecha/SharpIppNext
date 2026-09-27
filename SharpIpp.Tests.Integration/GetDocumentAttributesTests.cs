@@ -24,11 +24,11 @@ public class GetDocumentAttributesTests : SharpIppIntegrationTestBase
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
                 AttributesCharset = Charset.Utf8,
-                AttributesNaturalLanguage = "en-us",
+                AttributesNaturalLanguage = (NaturalLanguage)"en-us",
                 RequestingUserName = "test-user",
                 JobId = 1,
                 DocumentNumber = 1,
-                RequestedAttributes = ["document-number", "document-state", "document-name"],
+                RequestedAttributes = new[] { "document-number", "document-state", "document-name" },
             },
         };
         IIppRequest? serverRequest = null;
@@ -50,27 +50,27 @@ public class GetDocumentAttributesTests : SharpIppIntegrationTestBase
                     DocumentJobId = 1,
                     DocumentPrinterUri = new Uri("http://127.0.0.1:631"),
                     AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
-                    AttributesNaturalLanguage = "en-us",
+                    AttributesNaturalLanguage = (NaturalLanguage)"en-us",
                     CurrentPageOrder = CurrentPageOrder.OneToNOrder,
                     DocumentFormatDetails = new DocumentFormatDetails { DocumentSourceApplicationName = "MyApp", DocumentSourceOsName = "MyOS" },
                     DocumentFormatDetailsDetected = new DocumentFormatDetails { DocumentSourceApplicationName = "DetectedApp", DocumentSourceOsName = "DetectedOS" },
                     ErrorsCount = 0,
                     WarningsCount = 1,
-                    PrintContentOptimizeActual = [PrintContentOptimize.Text],
-                    DocumentFormatReady = ["application/pdf"],
-                    OutputDeviceDocumentStateReasons = [DocumentStateReason.None],
+                    PrintContentOptimizeActual = new[] { PrintContentOptimize.Text },
+                    DocumentFormatReady = new[] { "application/pdf" },
+                    OutputDeviceDocumentStateReasons = new[] { DocumentStateReason.None },
                     InputAttributesActual = new DocumentTemplateAttributes { InputBrightness = 50 },
-                    DocumentStateReasons = [DocumentStateReason.None],
+                    DocumentStateReasons = new[] { DocumentStateReason.None },
                     DocumentStateMessage = "completed",
                     PrintContentOptimize = PrintContentOptimize.Text,
-                    DetailedStatusMessages = ["detail-message"],
-                    DocumentAccessErrors = ["access-error"],
-                    DocumentCharset = "utf-8",
+                    DetailedStatusMessages = new[] { "detail-message" },
+                    DocumentAccessErrors = new[] { "access-error" },
+                    DocumentCharset = (Charset)"utf-8",
                     DocumentFormat = (SharpIpp.Protocol.Models.DocumentFormat)"application/pdf",
-                    DocumentFormatDetected = "application/pdf",
+                    DocumentFormatDetected = (DocumentFormat)"application/pdf",
                     DocumentJobUri = new Uri("http://127.0.0.1:631/jobs/1"),
                     DocumentMessage = "document-message",
-                    DocumentNaturalLanguage = "en-us",
+                    DocumentNaturalLanguage = (NaturalLanguage)"en-us",
                     DocumentUri = new Uri("http://127.0.0.1:631/jobs/1/documents/1"),
                     Impressions = 1,
                     ImpressionsCompleted = 1,
@@ -125,7 +125,7 @@ public class GetDocumentAttributesTests : SharpIppIntegrationTestBase
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
                 AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
-                AttributesNaturalLanguage = "en-us",
+                AttributesNaturalLanguage = (NaturalLanguage)"en-us",
                 RequestingUserName = "test-user",
                 JobId = 1,
                 DocumentNumber = 1,
@@ -176,7 +176,7 @@ public class GetDocumentAttributesTests : SharpIppIntegrationTestBase
                 PrinterUri = new Uri("http://127.0.0.1:631"),
                 JobId = 1,
                 DocumentNumber = 1,
-                RequestedAttributes = ["document-number", "document-resource-ids"]
+                RequestedAttributes = new[] { "document-number", "document-resource-ids" }
             }
         };
 
@@ -209,7 +209,7 @@ public class GetDocumentAttributesTests : SharpIppIntegrationTestBase
         GetDocumentAttributesResponse? clientResponse = await client.GetDocumentAttributesAsync(clientRequest);
 
         clientRequest.Should().BeEquivalentTo(serverRequest);
-        clientResponse!.DocumentAttributes!.DocumentResourceIds.Should().BeEquivalentTo(new[] { 201, 202 });
+        clientResponse!.DocumentAttributes!.Value.Value.DocumentResourceIds!.Value.Value.Should().BeEquivalentTo(new[] { 201, 202 });
     }
 
     [TestMethod()]
@@ -225,7 +225,7 @@ public class GetDocumentAttributesTests : SharpIppIntegrationTestBase
                 PrinterUri = new Uri("http://127.0.0.1:631"),
                 JobId = 1,
                 DocumentNumber = 1,
-                RequestedAttributes = ["print-content-optimize", "print-content-optimize-actual"]
+                RequestedAttributes = new[] { "print-content-optimize", "print-content-optimize-actual" }
             }
         };
 
@@ -243,7 +243,7 @@ public class GetDocumentAttributesTests : SharpIppIntegrationTestBase
                 DocumentAttributes = new DocumentAttributes
                 {
                     PrintContentOptimize = PrintContentOptimize.Text,
-                    PrintContentOptimizeActual = [PrintContentOptimize.Text]
+                    PrintContentOptimizeActual = new[] { PrintContentOptimize.Text }
                 },
                 OperationAttributes = new()
                 {
@@ -261,7 +261,7 @@ public class GetDocumentAttributesTests : SharpIppIntegrationTestBase
         GetDocumentAttributesResponse? clientResponse = await client.GetDocumentAttributesAsync(clientRequest);
 
         clientRequest.Should().BeEquivalentTo(serverRequest);
-        clientResponse!.DocumentAttributes!.PrintContentOptimize.Should().Be(PrintContentOptimize.Text);
-        clientResponse.DocumentAttributes.PrintContentOptimizeActual.Should().BeEquivalentTo(new[] { PrintContentOptimize.Text });
+        clientResponse!.DocumentAttributes!.Value.Value.PrintContentOptimize!.Value.Value.Should().Be(PrintContentOptimize.Text);
+        clientResponse.DocumentAttributes!.Value.Value.PrintContentOptimizeActual!.Value.Value.Should().BeEquivalentTo(new[] { PrintContentOptimize.Text });
     }
 }

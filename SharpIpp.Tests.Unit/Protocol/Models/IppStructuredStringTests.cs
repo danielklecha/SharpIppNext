@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Protocol.Models;
 using System;
@@ -36,7 +36,7 @@ public class IppStructuredStringTests
         public void SetUriValue(string key, Uri? val) => SetUri(key, val);
         public int? GetIntValue(string key) => GetInt(key);
         public void SetIntValue(string key, int? val) => SetInt(key, val);
-        public T? GetSmartEnumValue<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string key) where T : struct, ISmartEnum => GetSmartEnum<T>(key);
+        public T? GetSmartEnumValue<T>(string key, Func<string, T> factory) where T : struct, ISmartEnum => GetSmartEnum(key, factory);
         public void SetSmartEnumValue<T>(string key, T? val) where T : struct, ISmartEnum => SetSmartEnum(key, val);
     }
 
@@ -329,31 +329,28 @@ public class IppStructuredStringTests
     }
 
     [TestMethod]
-    public void GetSmartEnum_WhenTypeIsIMarkedSmartEnum_ShouldUseTwoExtraBoolConstructor()
+    public void GetSmartEnum_WhenTypeIsIMarkedSmartEnum_ShouldUseFactory()
     {
-        // Line 132: IMarkedSmartEnum branch — Activator.CreateInstance(typeof(T), [str, true, true])
         var metadata = new TestMetadata();
         metadata.SetValue("media", "iso-a4");
 
-        var result = metadata.GetSmartEnumValue<Media>("media");
+        var result = metadata.GetSmartEnumValue("media", s => new Media(s, true));
 
         result.Should().NotBeNull();
         result!.Value.Value.Should().Be("iso-a4");
         result.Value.IsMarked.Should().BeTrue();
-        result.Value.IsValue.Should().BeTrue();
     }
 
     [TestMethod]
-    public void GetSmartEnum_WhenTypeIsNotIMarkedSmartEnum_ShouldUseSingleExtraBoolConstructor()
+    public void GetSmartEnum_WhenTypeIsNotIMarkedSmartEnum_ShouldUseFactory()
     {
         var metadata = new TestMetadata();
         metadata.SetValue("charset", "utf-8");
 
-        var result = metadata.GetSmartEnumValue<Charset>("charset");
+        var result = metadata.GetSmartEnumValue("charset", s => new Charset(s));
 
         result.Should().NotBeNull();
         result!.Value.Value.Should().Be("utf-8");
-        result.Value.IsValue.Should().BeTrue();
     }
 
     [TestMethod]
@@ -403,13 +400,80 @@ public class IppStructuredStringTests
         metadata.GetValue("standardKey").Should().Be("stdVal");
     }
 
-    [TestMethod]
-    public void NoValue_Properties_ShouldBehaveCorrectly()
-    {
-        var metadata = new TestMetadata();
-        ((INoValue)metadata).IsValue.Should().BeTrue();
 
-        ((INoValueWritable)metadata).IsValue = false;
-        ((INoValue)metadata).IsValue.Should().BeFalse();
+
+    [TestMethod]
+    public void Equals_WithSameValues_ShouldReturnTrue()
+    {
+        var m1 = new TestMetadata();
+        m1.Add("k1", "v1");
+        m1.Add("k2", "v2");
+
+        var m2 = new TestMetadata();
+        m2.Add("k1", "v1");
+        m2.Add("k2", "v2");
+
+        m1.Equals(m2).Should().BeTrue();
+        m1.Equals((object)m2).Should().BeTrue();
+        m1.Equals(m1).Should().BeTrue();
+        m1.GetHashCode().Should().Be(m2.GetHashCode());
+    }
+
+    [TestMethod]
+    public void Equals_WithDifferentCount_ShouldReturnFalse()
+    {
+        var m1 = new TestMetadata();
+        m1.Add("k1", "v1");
+
+        var m2 = new TestMetadata();
+        m2.Add("k1", "v1");
+        m2.Add("k2", "v2");
+
+        m1.Equals(m2).Should().BeFalse();
+        m1.Equals((object)m2).Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void Equals_WithSameCountDifferentKeys_ShouldReturnFalse()
+    {
+        var m1 = new TestMetadata();
+        m1.Add("k1", "v1");
+
+        var m2 = new TestMetadata();
+        m2.Add("k2", "v1");
+
+        m1.Equals(m2).Should().BeFalse();
+        m1.Equals((object)m2).Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void Equals_WithSameKeysDifferentValues_ShouldReturnFalse()
+    {
+        var m1 = new TestMetadata();
+        m1.Add("k1", "v1");
+
+        var m2 = new TestMetadata();
+        m2.Add("k1", "v2");
+
+        m1.Equals(m2).Should().BeFalse();
+        m1.Equals((object)m2).Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void Equals_WithNullOrDifferentType_ShouldReturnFalse()
+    {
+        var m1 = new TestMetadata();
+        m1.Add("k1", "v1");
+
+        m1!.Equals((IppStructuredString?)null).Should().BeFalse();
+        m1!.Equals((object?)null).Should().BeFalse();
+        m1!.Equals(new object()).Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void GetHashCode_Empty_ShouldReturnInitialHash()
+    {
+        var m1 = new TestMetadata();
+        m1.GetHashCode().Should().Be(17);
     }
 }

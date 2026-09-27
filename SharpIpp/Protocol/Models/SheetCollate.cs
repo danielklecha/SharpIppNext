@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// This attribute specifies whether the Printer collates output sheets when producing multiple copies of a document.
 /// See: PWG 5100.8-2003 Section 3
 /// </summary>
-public readonly record struct SheetCollate(string Value, bool IsValue = true) : ISmartEnum
+public readonly record struct SheetCollate(string Value) : ISmartEnum
 {
     public static readonly SheetCollate Collated = new("collated");
     public static readonly SheetCollate Uncollated = new("uncollated");

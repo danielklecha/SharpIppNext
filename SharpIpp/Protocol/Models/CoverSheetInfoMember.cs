@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the member names for <code>cover-sheet-info</code>.
 /// See: PWG 5100.15-2014 Section 7.2.2
 /// </summary>
-public readonly record struct CoverSheetInfoMember(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
+public readonly record struct CoverSheetInfoMember(string Value, bool IsMarked = true) : IMarkedSmartEnum
 {
     /// <summary>
     /// The name of the sender on the cover sheet.

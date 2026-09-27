@@ -409,50 +409,10 @@ public class IppModelValidationTests
     }
 
     [TestMethod]
-    public void IppModelValidator_ValidateRecursiveFallback_WhenAlreadyVisited_ReturnsImmediately()
+    public void IppModelValidator_Validate_WhenUnknownObject_DoesNotThrow()
     {
         var obj = new object();
-        var visited = new System.Collections.Generic.HashSet<object> { obj };
-        var results = new System.Collections.Generic.List<string>();
-
-        IppModelValidator.ValidateRecursiveFallback(obj, System.Text.Encoding.UTF8, results, visited);
-
-        results.Should().BeEmpty();
-    }
-
-    private class FallbackEnumerableContainer
-    {
-        public System.Collections.Generic.List<object?> Items { get; set; } = new();
-    }
-
-    [TestMethod]
-    public void IppModelValidator_Validate_WhenFallbackObjectContainsEnumerableWithSharpIppType_RecurseFallback()
-    {
-        var container = new FallbackEnumerableContainer
-        {
-            Items = new System.Collections.Generic.List<object?>
-            {
-                null,
-                new object(),
-                new ExtendedValue(1, Array.Empty<byte>())
-            }
-        };
-
-        Action act = () => IppModelValidator.Validate(container, System.Text.Encoding.UTF8);
-        act.Should().NotThrow();
-    }
-
-    private class FallbackObjectWithValidation
-    {
-        [ByteRange(1, 10)]
-        public string? Value { get; set; }
-    }
-
-    [TestMethod]
-    public void IppModelValidator_Validate_WhenFallbackObjectFailsValidation_ThrowsValidationException()
-    {
-        var obj = new FallbackObjectWithValidation { Value = "Toolongstringvalue" };
         Action act = () => IppModelValidator.Validate(obj, System.Text.Encoding.UTF8);
-        act.Should().Throw<ValidationException>().WithMessage("*Value*");
+        act.Should().NotThrow();
     }
 }

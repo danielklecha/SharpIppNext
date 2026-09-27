@@ -6,7 +6,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies attribute names for <code>job-creation-attributes-supported</code>.
 /// See: PWG 5100.7-2023 and PWG 5100.11-2024.
 /// </summary>
-public readonly record struct JobCreationAttribute(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
+public readonly record struct JobCreationAttribute(string Value, bool IsMarked = true) : IMarkedSmartEnum
 {
     // Operation Attributes (RFC 8011)
     /// <summary>The ipp-attribute-fidelity attribute. See: PWG 5100.7-2023</summary>

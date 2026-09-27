@@ -53,8 +53,8 @@ public class PrinterDescriptionAttributesProfileTests
     {
         var src = new PrinterDescriptionAttributes
         {
-            FinishingsColDefault = [NoValue.GetNoValue<FinishingsCol>()],
-            FinishingsColDatabase = [NoValue.GetNoValue<FinishingsCol>()]
+            FinishingsColDefault = default(IppValue<FinishingsCol[]>),
+            FinishingsColDatabase = default(IppValue<FinishingsCol[]>)
         };
 
         var dst = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
@@ -82,12 +82,10 @@ public class PrinterDescriptionAttributesProfileTests
         var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(src);
 
         dst.FinishingsColDefault.Should().NotBeNull();
-        dst.FinishingsColDefault!.Should().ContainSingle();
-        NoValue.IsNoValue(dst.FinishingsColDefault[0]).Should().BeTrue();
+        dst.FinishingsColDefault!.Value.IsValue.Should().BeFalse();
 
         dst.FinishingsColDatabase.Should().NotBeNull();
-        dst.FinishingsColDatabase!.Should().ContainSingle();
-        NoValue.IsNoValue(dst.FinishingsColDatabase[0]).Should().BeTrue();
+        dst.FinishingsColDatabase!.Value.IsValue.Should().BeFalse();
     }
 
     [TestMethod]
@@ -122,11 +120,11 @@ public class PrinterDescriptionAttributesProfileTests
 
         var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(src);
 
-        dst.AccuracyUnitsSupported.Should().BeEquivalentTo(new[] { (AccuracyUnits)"mm", (AccuracyUnits)"um" });
-        dst.PrinterCameraImageUri.Should().BeEquivalentTo([new Uri("https://printer.example/camera")]);
+        ((AccuracyUnits[])dst.AccuracyUnitsSupported!).Should().BeEquivalentTo(new[] { (AccuracyUnits)"mm", (AccuracyUnits)"um" });
+        ((Uri[])dst.PrinterCameraImageUri!).Should().BeEquivalentTo(new[] { new Uri("https://printer.example/camera") });
         dst.PlatformShape.Should().Be((PlatformShape?)"rectangular");
         dst.PrintBaseDefault.Should().Be((PrintBase?)"raft");
-        dst.PrintSupportsSupported.Should().BeEquivalentTo(new[] { (PrintSupports)"none", (PrintSupports)"standard" });
+        ((PrintSupports[])dst.PrintSupportsSupported!).Should().BeEquivalentTo(new[] { (PrintSupports)"none", (PrintSupports)"standard" });
     }
 
     [TestMethod]
@@ -139,7 +137,7 @@ public class PrinterDescriptionAttributesProfileTests
 
         var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(src);
 
-        dst.PrinterRequestedJobAttributes!.Select(x => x.Value).Should().BeEquivalentTo("job-account-id", "job-account-type");
+        ((PrinterRequestedJobAttribute[])dst.PrinterRequestedJobAttributes!).Select(x => x.Value).Should().BeEquivalentTo("job-account-id", "job-account-type");
     }
 
     [TestMethod]
@@ -156,11 +154,11 @@ public class PrinterDescriptionAttributesProfileTests
 
         var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(src);
 
-        dst.PdfVersionsSupported.Should().BeEquivalentTo([PdfVersion.Adobe17, PdfVersion.Iso3200022017]);
-        dst.IppFeaturesSupported.Should().BeEquivalentTo([(IppFeature)"subscription", (IppFeature)"events", IppFeature.FaxOut]);
-        dst.PrinterServiceType.Should().BeEquivalentTo([PrinterServiceType.Print, (PrinterServiceType)"fax"]);
+        ((PdfVersion[])dst.PdfVersionsSupported!).Should().BeEquivalentTo(new[] { PdfVersion.Adobe17, PdfVersion.Iso3200022017 });
+        ((IppFeature[])dst.IppFeaturesSupported!).Should().BeEquivalentTo(new[] { (IppFeature)"subscription", (IppFeature)"events", IppFeature.FaxOut });
+        ((PrinterServiceType[])dst.PrinterServiceType!).Should().BeEquivalentTo(new[] { PrinterServiceType.Print, (PrinterServiceType)"fax" });
         dst.CompressionDefault.Should().Be(Compression.Deflate);
-        dst.PrinterResourceIds.Should().BeEquivalentTo(new[] { 10, 20 });
+        ((int[])dst.PrinterResourceIds!).Should().BeEquivalentTo(new[] { 10, 20 });
     }
 
     [TestMethod]
@@ -188,13 +186,13 @@ public class PrinterDescriptionAttributesProfileTests
         dst.PrinterConfigChangeTime.Should().Be(84);
         dst.PrinterConfigChangeDateTime.Should().Be(configChange);
         dst.PrinterAlert.Should().NotBeNull();
-        dst.PrinterAlert!.Should().ContainSingle();
-        dst.PrinterAlert[0].Code.Should().Be("jam");
-        dst.PrinterAlert[0].Severity.Should().Be("critical");
-        dst.PrinterAlertDescription.Should().BeEquivalentTo("alert text");
+        ((PrinterAlert[])dst.PrinterAlert!).Should().ContainSingle();
+        ((PrinterAlert[])dst.PrinterAlert!)[0].Code.Should().Be("jam");
+        ((PrinterAlert[])dst.PrinterAlert!)[0].Severity.Should().Be("critical");
+        ((string[])dst.PrinterAlertDescription!).Should().BeEquivalentTo("alert text");
         // PrinterSupply read mapping deferred to Task 7
         dst.PrinterSupply.Should().BeNull();
-        dst.PrinterSupplyDescription.Should().BeEquivalentTo("toner status");
+        ((string[])dst.PrinterSupplyDescription!).Should().BeEquivalentTo("toner status");
     }
 
     [TestMethod]
@@ -212,7 +210,7 @@ public class PrinterDescriptionAttributesProfileTests
                 YDimension = 20000,
                 ZDimension = 18000
             },
-            PrinterCameraImageUri = [new Uri("https://printer.example/camera")]
+            PrinterCameraImageUri = new[] { new Uri("https://printer.example/camera") }
         };
 
         var dst = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
@@ -249,7 +247,7 @@ public class PrinterDescriptionAttributesProfileTests
     {
         var src = new PrinterDescriptionAttributes
         {
-            PrinterRequestedJobAttributes = [(PrinterRequestedJobAttribute)"job-account-id", (PrinterRequestedJobAttribute)"job-account-type"]
+            PrinterRequestedJobAttributes = new[] { (PrinterRequestedJobAttribute)"job-account-id", (PrinterRequestedJobAttribute)"job-account-type" }
         };
 
         var dst = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
@@ -264,11 +262,11 @@ public class PrinterDescriptionAttributesProfileTests
     {
         var src = new PrinterDescriptionAttributes
         {
-            PdfVersionsSupported = [PdfVersion.Adobe17, PdfVersion.Iso3200022017],
-            IppFeaturesSupported = [(IppFeature)"subscription", (IppFeature)"events", IppFeature.FaxOut],
-            PrinterServiceType = [PrinterServiceType.Print, (PrinterServiceType)"fax"],
+            PdfVersionsSupported = new[] { PdfVersion.Adobe17, PdfVersion.Iso3200022017 },
+            IppFeaturesSupported = new[] { (IppFeature)"subscription", (IppFeature)"events", IppFeature.FaxOut },
+            PrinterServiceType = new[] { PrinterServiceType.Print, (PrinterServiceType)"fax" },
             CompressionDefault = Compression.Deflate,
-            PrinterResourceIds = [10, 20]
+            PrinterResourceIds = new[] { 10, 20 }
         };
 
         var dst = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
@@ -306,11 +304,11 @@ public class PrinterDescriptionAttributesProfileTests
             PrinterStateChangeDateTime = stateChange,
             PrinterConfigChangeTime = 84,
             PrinterConfigChangeDateTime = configChange,
-            PrinterAlert = [new PrinterAlert { Code = "jam", Severity = "critical" }],
-            PrinterAlertDescription = ["alert text"],
+            PrinterAlert = new[] { new PrinterAlert { Code = "jam", Severity = "critical" } },
+            PrinterAlertDescription = new[] { "alert text" },
             // PrinterSupply is now PrinterSupply[]? — write mapping deferred to Task 7
-            PrinterSupplyDescription = ["toner status"],
-            NaturalLanguageConfigured = "en-us"
+            PrinterSupplyDescription = new[] { "toner status" },
+            NaturalLanguageConfigured = (NaturalLanguage)"en-us"
         };
 
         var dst = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
@@ -389,12 +387,12 @@ public class PrinterDescriptionAttributesProfileTests
 
         var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(src);
 
-        dst.DestinationAccessesSupported!.Select(x => x.Value).Should().BeEquivalentTo("access-user-name", "access-password");
+        ((DestinationAccessMember[])dst.DestinationAccessesSupported!).Select(x => x.Value).Should().BeEquivalentTo("access-user-name", "access-password");
         dst.JobDestinationSpoolingSupported.Should().Be(JobSpooling.Automatic);
         dst.OutputAttributesDefault.Should().NotBeNull();
-        dst.OutputAttributesDefault!.NoiseRemoval.Should().Be(50);
-        dst.OutputAttributesDefault.OutputCompressionQualityFactor.Should().Be(70);
-        dst.OutputAttributesSupported!.Select(x => x.Value).Should().BeEquivalentTo("noise-removal", "output-compression-quality-factor");
+        dst.OutputAttributesDefault!.Value.Value.NoiseRemoval?.Value.Should().Be(50);
+        dst.OutputAttributesDefault!.Value.Value.OutputCompressionQualityFactor?.Value.Should().Be(70);
+        ((OutputAttributesMember[])dst.OutputAttributesSupported!).Select(x => x.Value).Should().BeEquivalentTo("noise-removal", "output-compression-quality-factor");
     }
 
     [TestMethod]
@@ -402,14 +400,14 @@ public class PrinterDescriptionAttributesProfileTests
     {
         var src = new PrinterDescriptionAttributes
         {
-            DestinationAccessesSupported = [DestinationAccessMember.AccessUserName, DestinationAccessMember.AccessPassword],
+            DestinationAccessesSupported = new[] { DestinationAccessMember.AccessUserName, DestinationAccessMember.AccessPassword },
             JobDestinationSpoolingSupported = JobSpooling.Automatic,
             OutputAttributesDefault = new OutputAttributes
             {
                 NoiseRemoval = 50,
                 OutputCompressionQualityFactor = 70
             },
-            OutputAttributesSupported = [(OutputAttributesMember)"noise-removal", (OutputAttributesMember)"output-compression-quality-factor"]
+            OutputAttributesSupported = new[] { (OutputAttributesMember)"noise-removal", (OutputAttributesMember)"output-compression-quality-factor" }
         };
 
         var dst = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
@@ -459,12 +457,12 @@ public class PrinterDescriptionAttributesProfileTests
 
         var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(src);
 
-        dst.DestinationUriReady.Should().NotBeNull();
-        dst.DestinationUriReady!.Should().ContainSingle();
-        dst.DestinationUriReady[0].DestinationUri.Should().Be(new Uri("https://example.test/upload"));
-        dst.DestinationUriReady[0].DestinationName.Should().Be("Inbox");
-        dst.DestinationUriReady[0].DestinationIsDirectory.Should().BeTrue();
-        dst.DestinationUriReady[0].DestinationMandatoryAccessAttributes.Should().BeEquivalentTo("access-user-name", "access-password");
+        dst.DestinationUriReady?.Value.Should().NotBeNull();
+        dst.DestinationUriReady!.Value.Value.Should().ContainSingle();
+        dst.DestinationUriReady!.Value.Value[0].DestinationUri?.Value.Should().Be(new Uri("https://example.test/upload"));
+        dst.DestinationUriReady!.Value.Value[0].DestinationName?.Value.Should().Be("Inbox");
+        dst.DestinationUriReady!.Value.Value[0].DestinationIsDirectory?.Value.Should().BeTrue();
+        dst.DestinationUriReady!.Value.Value[0].DestinationMandatoryAccessAttributes?.Value.Should().BeEquivalentTo(new[] { "access-user-name", "access-password" });
     }
 
     [TestMethod]
@@ -472,16 +470,16 @@ public class PrinterDescriptionAttributesProfileTests
     {
         var src = new PrinterDescriptionAttributes
         {
-            DestinationUriReady =
-            [
+            DestinationUriReady = new[]
+            {
                 new DestinationUriReady
                 {
                     DestinationUri = new Uri("https://example.test/upload"),
                     DestinationName = "Inbox",
                     DestinationIsDirectory = true,
-                    DestinationMandatoryAccessAttributes = ["access-user-name", "access-password"]
+                    DestinationMandatoryAccessAttributes = new[] { "access-user-name", "access-password" }
                 }
-            ]
+            }
         };
 
         var dst = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
@@ -501,8 +499,8 @@ public class PrinterDescriptionAttributesProfileTests
     {
         var src = new PrinterDescriptionAttributes
         {
-            PrinterAlert =
-            [
+            PrinterAlert = new[]
+            {
                 new PrinterAlert
                 {
                     Code = "jam",
@@ -512,7 +510,7 @@ public class PrinterDescriptionAttributesProfileTests
                     GroupIndex = 4,
                     Location = 6
                 }
-            ]
+            }
         };
 
         var dst = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
@@ -528,7 +526,7 @@ public class PrinterDescriptionAttributesProfileTests
         var src = new PrinterDescriptionAttributes
         {
             OutputBinDefault = OutputBin.Stacker(3),
-            OutputBinSupported = [OutputBin.Stacker(3), OutputBin.Mailbox(2), new OutputBin("vendor-bin-42", true), new OutputBin("Accounting Bin", false)]
+            OutputBinSupported = new[] { OutputBin.Stacker(3), OutputBin.Mailbox(2), new OutputBin("vendor-bin-42", true), new OutputBin("Accounting Bin", false) }
         };
 
         var serialized = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
@@ -574,14 +572,14 @@ public class PrinterDescriptionAttributesProfileTests
     {
         var src = new PrinterDescriptionAttributes
         {
-            OverridesSupported =
-            [
+            OverridesSupported = new[]
+            {
                 OverrideSupported.Pages,
                 OverrideSupported.DocumentNumbers,
                 OverrideSupported.DocumentCopies,
                 OverrideSupported.Sides,
                 (OverrideSupported)"vendor-custom-override"
-            ]
+            }
         };
 
         var serialized = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
@@ -607,15 +605,15 @@ public class PrinterDescriptionAttributesProfileTests
         var ippDict = _mapper.Map<PrinterDescriptionAttributes, IDictionary<string, IppAttribute[]>>(src);
 
         ippDict.Should().ContainKey(IppAttributeNames.JpegXDimensionSupported);
-        ippDict[IppAttributeNames.JpegXDimensionSupported].Single().Value.Should().Be(src.JpegXDimensionSupported);
+        ippDict[IppAttributeNames.JpegXDimensionSupported].Single().Value.Should().Be((SharpIpp.Protocol.Models.Range)src.JpegXDimensionSupported!);
         ippDict[IppAttributeNames.JpegXDimensionSupported].Single().Tag.Should().Be(Tag.RangeOfInteger);
 
         ippDict.Should().ContainKey(IppAttributeNames.JpegYDimensionSupported);
-        ippDict[IppAttributeNames.JpegYDimensionSupported].Single().Value.Should().Be(src.JpegYDimensionSupported);
+        ippDict[IppAttributeNames.JpegYDimensionSupported].Single().Value.Should().Be((SharpIpp.Protocol.Models.Range)src.JpegYDimensionSupported!);
         ippDict[IppAttributeNames.JpegYDimensionSupported].Single().Tag.Should().Be(Tag.RangeOfInteger);
 
         ippDict.Should().ContainKey(IppAttributeNames.PdfKOctetsSupported);
-        ippDict[IppAttributeNames.PdfKOctetsSupported].Single().Value.Should().Be(src.PdfKOctetsSupported);
+        ippDict[IppAttributeNames.PdfKOctetsSupported].Single().Value.Should().Be((SharpIpp.Protocol.Models.Range)src.PdfKOctetsSupported!);
         ippDict[IppAttributeNames.PdfKOctetsSupported].Single().Tag.Should().Be(Tag.RangeOfInteger);
 
         var roundTripped = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(ippDict);
@@ -646,7 +644,7 @@ public class PrinterDescriptionAttributesProfileTests
 
         ippDict.Should().ContainKey(IppAttributeNames.PwgRasterDocumentResolutionSupported);
         ippDict[IppAttributeNames.PwgRasterDocumentResolutionSupported].Select(x => x.Tag).Should().OnlyContain(x => x == Tag.Resolution);
-        ippDict[IppAttributeNames.PwgRasterDocumentResolutionSupported].Select(x => x.Value).Should().BeEquivalentTo(src.PwgRasterDocumentResolutionSupported);
+        ippDict[IppAttributeNames.PwgRasterDocumentResolutionSupported].Select(x => x.Value).Should().BeEquivalentTo((Resolution[])src.PwgRasterDocumentResolutionSupported!);
 
         ippDict.Should().ContainKey(IppAttributeNames.PwgRasterDocumentSheetBack);
         ippDict[IppAttributeNames.PwgRasterDocumentSheetBack].Single().Tag.Should().Be(Tag.Keyword);
@@ -683,7 +681,7 @@ public class PrinterDescriptionAttributesProfileTests
 
         var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(src);
 
-        dst.PageRangesSupported.Should().BeTrue();
+        ((bool)dst.PageRangesSupported!).Should().BeTrue();
     }
 
     [TestMethod]

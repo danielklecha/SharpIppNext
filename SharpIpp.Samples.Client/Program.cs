@@ -16,7 +16,7 @@ try
             DocumentName = "Document Name",
             DocumentFormat = DocumentFormat.ApplicationOctetStream,
             Compression = Compression.None,
-            DocumentNaturalLanguage = "en",
+            DocumentNaturalLanguage = new SharpIpp.Protocol.Models.NaturalLanguage("en"),
             JobName = "Test Job",
             IppAttributeFidelity = false
         },
@@ -25,7 +25,7 @@ try
             Copies = 1,
             MultipleDocumentHandling = MultipleDocumentHandling.SeparateDocumentsCollatedCopies,
             Finishings = new[] { Finishings.None },
-            PageRanges = [new SharpIpp.Protocol.Models.Range(1, 1)],
+            PageRanges = new[] { new SharpIpp.Protocol.Models.Range(1, 1) },
             Sides = Sides.OneSided,
             NumberUp = 1,
             OrientationRequested = Orientation.Portrait,

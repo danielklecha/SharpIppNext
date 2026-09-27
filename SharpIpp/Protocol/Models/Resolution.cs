@@ -2,15 +2,13 @@ using System;
 
 namespace SharpIpp.Protocol.Models;
 
-public readonly struct Resolution(int width, int height, ResolutionUnit units, bool isValue = true) : IEquatable<Resolution>, INoValue
+public readonly struct Resolution(int width, int height, ResolutionUnit units) : IEquatable<Resolution>
 {
     public int Width { get; } = width;
 
     public int Height { get; } = height;
 
     public ResolutionUnit Units { get; } = units;
-
-    public bool IsValue { get; } = isValue;
 
     public override string ToString() =>
         $"{Width}x{Height} ({(Units == ResolutionUnit.DotsPerInch ? "dpi" : Units == ResolutionUnit.DotsPerCm ? "dpcm" : "unknown")})";

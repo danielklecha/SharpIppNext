@@ -21,6 +21,13 @@ public class StringExtensionsTests
     [DataRow("PrinterUri", "printer-uri")]
     [DataRow("JobName", "job-name")]
     [DataRow("AttributesCharset", "attributes-charset")]
+    [DataRow("IPAddress", "ip-address")]
+    [DataRow("SimpleXML", "simple-xml")]
+    [DataRow("XML", "xml")]
+    [DataRow("A", "a")]
+    [DataRow("", "")]
+    [DataRow("lowercase", "lowercase")]
+    [DataRow("Document2Pdf", "document2-pdf")]
     public void ConvertCamelCaseToKebabCase_ShouldConvertCorrectly(string input, string expected)
     {
         input.ConvertCamelCaseToKebabCase().Should().Be(expected);

@@ -1,4 +1,4 @@
-using SharpIpp;
+﻿using SharpIpp;
 using SharpIpp.Models.Requests;
 using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
@@ -23,8 +23,8 @@ public class UpdateActiveJobsTests : SharpIppIntegrationTestBase
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
                 OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174004"),
-                JobIds = [1, 2],
-                OutputDeviceJobStates = [JobState.Pending, JobState.Processing]
+                JobIds = new[] { 1, 2 },
+                OutputDeviceJobStates = new[] { JobState.Pending, JobState.Processing }
             }
         };
 

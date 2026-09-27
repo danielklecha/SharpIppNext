@@ -187,20 +187,21 @@ public class RegistryCompletenessTests : MapperTestBase
                 missingMappings.Add($"{enumType.Name} -> string: {ex.Message}");
             }
 
-            // 3. NoValue -> T
+            // 3. NoValue -> IppValue<T>
             try
             {
-                var mapped = _mapper.Map(NoValue.Instance, typeof(NoValue), enumType);
+                var ippValueType = typeof(IppValue<>).MakeGenericType(enumType);
+                var mapped = _mapper.Map(NoValue.Instance, typeof(NoValue), ippValueType);
                 mapped.Should().NotBeNull();
             }
             catch (Exception ex)
             {
-                missingMappings.Add($"NoValue -> {enumType.Name}: {ex.Message}");
+                missingMappings.Add($"NoValue -> IppValue<{enumType.Name}>: {ex.Message}");
             }
         }
 
         missingMappings.Should().BeEmpty(
-            $"all smart enums must have string <-> T and NoValue -> T maps. Failures:\n{string.Join("\n", missingMappings)}");
+            $"all smart enums must have string <-> T and NoValue -> IppValue<T> maps. Failures:\n{string.Join("\n", missingMappings)}");
     }
 
     [TestMethod]
@@ -241,15 +242,16 @@ public class RegistryCompletenessTests : MapperTestBase
                 missingMappings.Add($"{collType.Name} -> List<IppAttribute>: {ex.Message}");
             }
 
-            // 3. NoValue -> T
+            // 3. NoValue -> IppValue<T>
             try
             {
-                var mapped = _mapper.Map(NoValue.Instance, typeof(NoValue), collType);
+                var ippValType = typeof(IppValue<>).MakeGenericType(collType);
+                var mapped = _mapper.Map(NoValue.Instance, typeof(NoValue), ippValType);
                 mapped.Should().NotBeNull();
             }
             catch (Exception ex)
             {
-                missingMappings.Add($"NoValue -> {collType.Name}: {ex.Message}");
+                missingMappings.Add($"NoValue -> IppValue<{collType.Name}>: {ex.Message}");
             }
         }
 

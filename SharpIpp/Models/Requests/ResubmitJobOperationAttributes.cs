@@ -19,7 +19,7 @@ public class ResubmitJobOperationAttributes : JobOperationAttributes
     /// <code>document-format-details</code>
     [Obsolete("The 'document-format-details' attribute is deprecated. See PWG 5100.7-2023 Section 6.2.1.")]
     [IppAttribute(IppAttributeNames.DocumentFormatDetails)]
-    public DocumentFormatDetails? DocumentFormatDetails { get; set; }
+    public IppValue<DocumentFormatDetails>? DocumentFormatDetails { get; set; }
 
     /// <summary>
     /// This REQUIRED operation attribute identifies which Job Template attributes the Printer MUST support in order to accept the Job.
@@ -27,7 +27,7 @@ public class ResubmitJobOperationAttributes : JobOperationAttributes
     /// </summary>
     /// <code>job-mandatory-attributes</code>
     [IppAttribute(IppAttributeNames.JobMandatoryAttributes, Tag = Tag.Keyword)]
-    public string[]? JobMandatoryAttributes { get; set; }
+    public IppValue<string[]>? JobMandatoryAttributes { get; set; }
 
     /// <summary>
     /// The client OPTIONALLY supplies this attribute. The Printer object MUST support this attribute.
@@ -35,5 +35,5 @@ public class ResubmitJobOperationAttributes : JobOperationAttributes
     /// </summary>
     /// <code>ipp-attribute-fidelity</code>
     [IppAttribute(IppAttributeNames.IppAttributeFidelity, Tag = Tag.Boolean)]
-    public bool? IppAttributeFidelity { get; set; }
+    public IppValue<bool>? IppAttributeFidelity { get; set; }
 }

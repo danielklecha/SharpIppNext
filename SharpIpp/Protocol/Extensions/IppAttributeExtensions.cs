@@ -293,7 +293,7 @@ public static class IppAttributeExtensions
     {
         foreach (var attr in attributes)
         {
-            if (string.Equals(attr.Name, name, stringComparison) && !NoValue.IsNoValue(attr.Value) && attr.Value is T typed)
+            if (string.Equals(attr.Name, name, stringComparison) && attr.Tag != Tag.NoValue && attr.Value is not INoValue { IsValue: false } && attr.Value is T typed)
             {
                 value = typed;
                 return true;

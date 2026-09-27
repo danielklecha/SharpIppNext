@@ -26,20 +26,20 @@ public class SendDocumentTests : SharpIppIntegrationTestBase
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
                 AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
-                AttributesNaturalLanguage = "en-us",
+                AttributesNaturalLanguage = (NaturalLanguage)"en-us",
                 RequestingUserName = "test-user",
                 RequestingUserUri = new Uri("mailto:test-user@example.com"),
                 JobId = 1,
                 JobUri = new Uri("http://127.0.0.1:631/jobs/1"),
-                ResourceIds = [21, 22],
-                ClientInfo =
-                [
+                ResourceIds = new[] { 21, 22 },
+                ClientInfo = new[]
+                {
                     new ClientInfo
                     {
                         ClientName = "SharpIppTests",
                         ClientType = ClientType.Application
                     }
-                ],
+                },
                 DocumentFormatDetails = new DocumentFormatDetails
                 {
                     DocumentSourceApplicationName = "SharpIppTests",
@@ -50,14 +50,14 @@ public class SendDocumentTests : SharpIppIntegrationTestBase
                 DocumentName = "test-document",
                 Compression = Compression.None,
                 DocumentFormat = (SharpIpp.Protocol.Models.DocumentFormat)"application/pdf",
-                DocumentNaturalLanguage = "en",
-                DocumentCharset = "utf-8",
+                DocumentNaturalLanguage = (NaturalLanguage)"en",
+                DocumentCharset = (Charset)"utf-8",
                 DocumentMessage = "document-message",
                 LastDocument = true,
                 DocumentMetadata = GetTestDocumentMetadata(),
-                DocumentPassword = "test-password",
+                DocumentPassword = (OctetString)"test-password",
             },
-            DocumentTemplateAttributes = new()
+            DocumentTemplateAttributes = new DocumentTemplateAttributes
             {
                 Copies = 1,
                 CoverBack = new Cover
@@ -70,20 +70,21 @@ public class SendDocumentTests : SharpIppIntegrationTestBase
                     CoverType = CoverType.PrintBoth,
                     MediaCol = new MediaCol { MediaColor = (MediaColor)"blue" }
                 },
-                FinishingsCol = [
+                FinishingsCol = new[]
+                {
                     new FinishingsCol
                     {
                         FinishingTemplate = (FinishingTemplate)"staple",
                         ImpositionTemplate = (ImpositionTemplate)"signature",
                         MediaSheetsSupported = new SharpIpp.Protocol.Models.Range(1, 10),
                         MediaSizeName = (Media)"iso_a4_210x297mm",
-                        MediaSize = new MediaSize { XDimension = 21000, YDimension = 29700 },
+                        MediaSize = new MediaSize { XDimension = new SharpIpp.Protocol.Models.Range(21000, 21000), YDimension = new SharpIpp.Protocol.Models.Range(29700, 29700) },
                         Stitching = new Stitching
                         {
                             StitchingAngle = 90,
                             StitchingMethod = StitchingMethod.Wire,
                             StitchingReferenceEdge = FinishingReferenceEdge.Left,
-                            StitchingLocations = [10, 20],
+                            StitchingLocations = new[] { 10, 20 },
                             StitchingOffset = 5
                         },
                         Binding = new Binding
@@ -92,8 +93,8 @@ public class SendDocumentTests : SharpIppIntegrationTestBase
                             BindingType = BindingType.Perfect
                         }
                     }
-                ],
-                ForceFrontSide = [1, 2],
+                },
+                ForceFrontSide = new[] { 1, 2 },
                 ImpositionTemplate = (ImpositionTemplate)"imp-template",
                 Media = (Media)"iso_a4_210x297mm",
                 MediaCol = new MediaCol
@@ -111,7 +112,7 @@ public class SendDocumentTests : SharpIppIntegrationTestBase
                     MediaPrePrinted = MediaPrePrinted.Blank,
                     MediaRecycled = MediaRecycled.None,
                     MediaRightMargin = 10,
-                    MediaSize = new MediaSize { XDimension = 21000, YDimension = 29700 },
+                    MediaSize = new MediaSize { XDimension = new SharpIpp.Protocol.Models.Range(21000, 21000), YDimension = new SharpIpp.Protocol.Models.Range(29700, 29700) },
                     MediaSizeName = (Media)"iso_a4_210x297mm",
                     MediaSource = MediaSource.Main,
                     MediaSourceProperties = new MediaSourceProperties { MediaSourceFeedDirection = MediaSourceFeedDirection.LongEdgeFirst, MediaSourceFeedOrientation = Orientation.Portrait },
@@ -127,7 +128,7 @@ public class SendDocumentTests : SharpIppIntegrationTestBase
                 OutputBin = (OutputBin)"face-down",
                 PageDelivery = PageDelivery.SameOrderFaceUp,
                 PageOrderReceived = PageOrderReceived.OneToNOrder,
-                PageRanges = [new SharpIpp.Protocol.Models.Range(1, 2)],
+                PageRanges = new[] { new SharpIpp.Protocol.Models.Range(1, 2) },
                 PresentationDirectionNumberUp = PresentationDirectionNumberUp.TobottomToleft,
                 PrintQuality = PrintQuality.Normal,
                 PrinterResolution = new Resolution(600, 600, ResolutionUnit.DotsPerInch),
@@ -158,7 +159,7 @@ public class SendDocumentTests : SharpIppIntegrationTestBase
                 InputSharpness = 25,
                 InputSides = Sides.TwoSidedLongEdge,
                 InputSource = (InputSource?)"document-feeder",
-                DocumentCharset = "utf-8",
+                DocumentCharset = (Charset)"utf-8",
                 DocumentFormat = (SharpIpp.Protocol.Models.DocumentFormat)"application/pdf",
                 DocumentFormatDetails = new DocumentFormatDetails
                 {
@@ -168,14 +169,14 @@ public class SendDocumentTests : SharpIppIntegrationTestBase
                 DocumentMessage = "scan message",
                 DocumentMetadata = GetTestDocumentMetadata(),
                 DocumentName = "scanned-document",
-                DocumentNaturalLanguage = "en-us",
-                DocumentPassword = new byte[] { 0x04, 0x05 },
+                DocumentNaturalLanguage = (NaturalLanguage)"en-us",
+                DocumentPassword = new OctetString(new byte[] {  0x04, 0x05  }),
                 DocumentUri = new Uri("http://example.com/doc.pdf"),
                 LastDocument = false,
-                JobPassword = new byte[] { 0x01, 0x02 },
+                JobPassword = new OctetString(new byte[] {  0x01, 0x02  }),
                 JobPasswordEncryption = JobPasswordEncryption.None,
-                MaterialsCol =
-                [
+                MaterialsCol = new[]
+                {
                     new Material
                     {
                         MaterialAmount = 1,
@@ -184,14 +185,14 @@ public class SendDocumentTests : SharpIppIntegrationTestBase
                         MaterialFillDensity = 3,
                         MaterialKey = (MaterialKey?)"pla-blue",
                         MaterialName = "PLA Blue",
-                        MaterialPurpose = [(MaterialPurpose)"model"],
+                        MaterialPurpose = new[] { (MaterialPurpose)"model" },
                         MaterialRate = 4,
                         MaterialRateUnits = (MaterialRateUnits?)"mm-per-second",
                         MaterialShellThickness = 5,
                         MaterialTemperature = 200,
                         MaterialType = (MaterialType?)"pla"
                     }
-                ],
+                },
                 MultipleObjectHandling = (MultipleObjectHandling?)"abort-job",
                 PlatformTemperature = 75,
                 PrintAccuracy = new PrintAccuracy
@@ -202,15 +203,15 @@ public class SendDocumentTests : SharpIppIntegrationTestBase
                     ZAccuracy = 50
                 },
                 PrintBase = (PrintBase?)"raft",
-                PrintObjects =
-                [
+                PrintObjects = new[]
+                {
                     new PrintObject
                     {
                         DocumentNumber = 1,
                         PrintObjectsSource = new Uri("https://example.local/objects/1"),
-                        TransformationMatrix = [1, 0, 0, 0, 1, 0]
+                        TransformationMatrix = new[] { 1, 0, 0, 0, 1, 0 }
                     }
-                ],
+                },
                 PrintSupports = (PrintSupports?)"generated-supports",
                 ChamberHumidity = 45,
                 ChamberTemperature = 60
@@ -236,23 +237,23 @@ public class SendDocumentTests : SharpIppIntegrationTestBase
                 JobAttributes = new()
                 {
                     JobState = JobState.Pending,
-                    JobStateReasons = [JobStateReason.None],
+                    JobStateReasons = new[] { JobStateReason.None },
                     JobStateMessage = "pending",
                     NumberOfInterveningJobs = 0,
                     JobId = 456,
                     JobUri = new Uri("http://127.0.0.1:631/456"),
-                    ClientInfo = [new ClientInfo { ClientName = "SharpIppTests", ClientType = ClientType.Application }],
+                    ClientInfo = new[] { new ClientInfo { ClientName = "SharpIppTests", ClientType = ClientType.Application } },
                     JobImpressionsCompletedCol = new JobCounter { Monochrome = 5 },
                     JobMediaSheetsCompletedCol = new JobCounter { Monochrome = 4 },
                     JobPagesCompleted = 3,
                     JobPagesCompletedCol = new JobCounter { Monochrome = 3 },
                     JobProcessingTime = 120
                 },
-                DocumentAttributes = new()
+                DocumentAttributes = new DocumentAttributes
                 {
                     DocumentNumber = 1,
                     DocumentState = DocumentState.Pending,
-                    DocumentStateReasons = [DocumentStateReason.None],
+                    DocumentStateReasons = new[] { DocumentStateReason.None },
                     DocumentStateMessage = "pending",
                     Pages = 3,
                     PagesCompleted = 2
@@ -277,6 +278,6 @@ public class SendDocumentTests : SharpIppIntegrationTestBase
         clientResponse!.JobAttributes.Should().NotBeNull();
         clientResponse.JobAttributes!.JobId.Should().Be(456);
         clientResponse.DocumentAttributes.Should().NotBeNull();
-        clientResponse.DocumentAttributes!.DocumentNumber.Should().Be(1);
+        clientResponse.DocumentAttributes!.Value.Value.DocumentNumber!.Value.Value.Should().Be(1);
     }
 }

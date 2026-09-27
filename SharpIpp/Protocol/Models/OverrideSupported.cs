@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies known keyword values for <c>overrides-supported</c>.
 /// See: PWG 5100.6-2003 Section 4.1.7
 /// </summary>
-public readonly record struct OverrideSupported(string Value, bool IsValue = true) : ISmartEnum
+public readonly record struct OverrideSupported(string Value) : ISmartEnum
 {
     // Required member attributes.
 

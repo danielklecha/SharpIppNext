@@ -8,7 +8,7 @@ namespace SharpIpp.Protocol.Models
     /// Specifies the media-coating member attribute of the media-col collection.
     /// See: PWG 5101.1
     /// </summary>
-    public readonly record struct MediaCoating(string Value, bool IsValue = true) : ISmartEnum
+    public readonly record struct MediaCoating(string Value) : ISmartEnum
     {
         /// <summary>
         /// No coating is applied to the media.

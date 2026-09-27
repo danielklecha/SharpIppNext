@@ -70,6 +70,6 @@ public class SetDocumentAttributesRequestProfileTests : MapperTestBase
         request.DocumentDescriptionAttributes.Should().NotBeNull();
         request.DocumentDescriptionAttributes!.DocumentName.Should().Be("Updated Document Name");
         request.DocumentTemplateAttributes.Should().NotBeNull();
-        request.DocumentTemplateAttributes!.Copies.Should().Be(2);
+        request.DocumentTemplateAttributes!.Value.Value.Copies?.Value.Should().Be(2);
     }
 }

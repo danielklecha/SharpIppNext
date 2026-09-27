@@ -10,50 +10,20 @@ namespace SharpIpp.Tests.Unit.Protocol.Models;
 [ExcludeFromCodeCoverage]
 public class IppAttributeTests
 {
-    [TestMethod]
-    public void Constructor_IntMinValue_SetsNoValue()
-    {
-        var attr = new IppAttribute(Tag.Integer, "test", int.MinValue);
-        attr.Tag.Should().Be(Tag.NoValue);
-        attr.Value.Should().Be(NoValue.Instance);
-    }
+
 
     [TestMethod]
-    public void Constructor_DefaultDateTimeOffset_SetsNoValue()
-    {
-        var attr = new IppAttribute(Tag.DateTime, "test", default(DateTimeOffset));
-        attr.Tag.Should().Be(Tag.NoValue);
-        attr.Value.Should().Be(NoValue.Instance);
-    }
-
-    [TestMethod]
-    public void Constructor_DefaultRange_SetsNoValue()
-    {
-        var attr = new IppAttribute(Tag.RangeOfInteger, "test", default(SharpIpp.Protocol.Models.Range));
-        attr.Tag.Should().Be(Tag.NoValue);
-        attr.Value.Should().Be(NoValue.Instance);
-    }
-
-    [TestMethod]
-    public void Constructor_DefaultResolution_SetsNoValue()
-    {
-        var attr = new IppAttribute(Tag.Resolution, "test", default(Resolution));
-        attr.Tag.Should().Be(Tag.NoValue);
-        attr.Value.Should().Be(NoValue.Instance);
-    }
-
-    [TestMethod]
-    public void Constructor_StringWithLanguage_SetsNoValue()
-    {
-        var attr = new IppAttribute(Tag.Resolution, "test", default(StringWithLanguage));
-        attr.Tag.Should().Be(Tag.NoValue);
-        attr.Value.Should().Be(NoValue.Instance);
-    }
-
-    [TestMethod]
-    public void Constructor_EmptyStringAndKeywordTag_SetsNoValue()
+    public void Constructor_EmptyStringAndKeywordTag_SetsKeyword()
     {
         var attr = new IppAttribute(Tag.Keyword, "test", string.Empty);
+        attr.Tag.Should().Be(Tag.Keyword);
+        attr.Value.Should().Be(string.Empty);
+    }
+
+    [TestMethod]
+    public void Constructor_NoValue_SetsNoValue()
+    {
+        var attr = new IppAttribute(Tag.Keyword, "test", NoValue.Instance);
         attr.Tag.Should().Be(Tag.NoValue);
         attr.Value.Should().Be(NoValue.Instance);
     }

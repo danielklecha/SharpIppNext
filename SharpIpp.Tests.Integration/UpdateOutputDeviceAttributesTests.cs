@@ -1,4 +1,4 @@
-using SharpIpp;
+﻿using SharpIpp;
 using SharpIpp.Models.Requests;
 using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
@@ -28,7 +28,7 @@ public class UpdateOutputDeviceAttributesTests : SharpIppIntegrationTestBase
             {
                 PrinterState = PrinterState.Processing,
                 PrinterStateMessage = "processing",
-                NaturalLanguageConfigured = "en-us"
+                NaturalLanguageConfigured = (NaturalLanguage)"en-us"
             }
         };
 

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq.Expressions;
 
 namespace SharpIpp.Protocol.Models;
 
@@ -19,20 +18,18 @@ public class IppRequestMessageFilter : IIppRequestMessage
     }
 
     /// <summary>
-    /// Adds a filter to clear a specific property value (it will return default/null).
+    /// Adds a filter to clear a specific property value by name (it will return default/null).
     /// </summary>
-    /// <typeparam name="T">The type of the property.</typeparam>
-    /// <param name="propertyExpression">An expression specifying the property to clear (e.g., x => x.Document).</param>
-    public void ClearProperty<T>(Expression<Func<IIppRequestMessage, T>> propertyExpression)
+    /// <param name="propertyName">The name of the property to clear.</param>
+    public void ClearProperty(string propertyName)
     {
-        if (propertyExpression.Body is MemberExpression memberExpression)
-        {
-            _clearedProperties.Add(memberExpression.Member.Name);
-        }
-        else
-        {
-            throw new ArgumentException("Expression must be a member expression", nameof(propertyExpression));
-        }
+        if (propertyName == null)
+            throw new ArgumentNullException(nameof(propertyName));
+
+        if (string.IsNullOrWhiteSpace(propertyName))
+            throw new ArgumentException("Property name cannot be empty or whitespace.", nameof(propertyName));
+
+        _clearedProperties.Add(propertyName);
     }
 
     public IppVersion Version

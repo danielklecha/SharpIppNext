@@ -26,9 +26,9 @@ public class ValidateDocumentProfileTest
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
                 DocumentFormat = (SharpIpp.Protocol.Models.DocumentFormat)"application/pdf",
-                DocumentMetadata = ["x-meta-1=val-1"],
+                DocumentMetadata = DocumentMetadata.Parse("x-meta-1=val-1"),
             },
-            DocumentTemplateAttributes = new()
+            DocumentTemplateAttributes = new DocumentTemplateAttributes
             {
                 Copies = 2,
             }

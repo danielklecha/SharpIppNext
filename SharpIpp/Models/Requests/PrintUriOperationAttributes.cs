@@ -16,7 +16,7 @@ public class PrintUriOperationAttributes : PrintJobOperationAttributes
     /// </summary>
     /// <code>document-uri</code>
     [IppAttribute(IppAttributeNames.DocumentUri, Tag = Tag.Uri)]
-    public Uri? DocumentUri { get; set; }
+    public IppValue<Uri>? DocumentUri { get; set; }
 
     /// <summary>
     /// The <c>document-access</c> operation attribute.
@@ -25,6 +25,6 @@ public class PrintUriOperationAttributes : PrintJobOperationAttributes
     /// </summary>
     [IppAttribute(IppAttributeNames.DocumentAccess)]
     [Obsolete("The 'document-access' attribute is deprecated in favor of URI authentication. See PWG 5100.18-2025 Section 7.1.5.")]
-    public DocumentAccess? DocumentAccess { get; set; }
+    public IppValue<DocumentAccess>? DocumentAccess { get; set; }
 
 }

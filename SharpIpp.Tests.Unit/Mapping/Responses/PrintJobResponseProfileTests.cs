@@ -33,7 +33,7 @@ public class PrintJobResponseProfileTests : MapperTestBase
 
         // Assert
         dst.DocumentAttributes.Should().NotBeNull();
-        dst.DocumentAttributes!.DocumentNumber.Should().Be(1);
+        dst.DocumentAttributes!.Value.Value.DocumentNumber?.Value.Should().Be(1);
     }
 
     [TestMethod]

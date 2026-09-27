@@ -198,4 +198,147 @@ public class PrinterAlertTests
         alert.Extensions.Should().BeNull();
         alert.Code.Should().Be("coverOpen");
     }
+
+    [TestMethod]
+    public void Equals_WithSameValues_ShouldReturnTrue()
+    {
+        var alert1 = new PrinterAlert
+        {
+            Code = "coverOpen",
+            Index = 23,
+            Severity = "critical",
+            Training = "fieldService",
+            Group = "cover",
+            GroupIndex = 6,
+            Location = 8,
+            Time = 42,
+            Extensions = new Dictionary<string, string> { { "vendor", "x" } }
+        };
+        var alert2 = new PrinterAlert
+        {
+            Code = "coverOpen",
+            Index = 23,
+            Severity = "critical",
+            Training = "fieldService",
+            Group = "cover",
+            GroupIndex = 6,
+            Location = 8,
+            Time = 42,
+            Extensions = new Dictionary<string, string> { { "vendor", "x" } }
+        };
+
+        alert1.Equals(alert2).Should().BeTrue();
+        alert1.Equals((object)alert2).Should().BeTrue();
+        alert1.Equals(alert1).Should().BeTrue();
+        ((IEquatable<PrinterAlert>)alert1).Equals(alert2).Should().BeTrue();
+        alert1.GetHashCode().Should().Be(alert2.GetHashCode());
+    }
+
+    [TestMethod]
+    public void Equals_WithDifferentValues_ShouldReturnFalse()
+    {
+        var alert1 = new PrinterAlert
+        {
+            Code = "coverOpen"
+        };
+        var alert2 = new PrinterAlert
+        {
+            Code = "jam"
+        };
+
+        alert1.Equals(alert2).Should().BeFalse();
+        alert1.Equals((object)alert2).Should().BeFalse();
+        ((IEquatable<PrinterAlert>)alert1).Equals(alert2).Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void Equals_WithNullOrDifferentType_ShouldReturnFalse()
+    {
+        var alert = new PrinterAlert
+        {
+            Code = "coverOpen"
+        };
+
+        alert!.Equals((PrinterAlert?)null).Should().BeFalse();
+        alert!.Equals((object?)null).Should().BeFalse();
+        alert!.Equals(new object()).Should().BeFalse();
+        ((IEquatable<PrinterAlert>)alert!).Equals(null).Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void ExplicitOperator_String_NonNullAndNull()
+    {
+        var alert = new PrinterAlert { Code = "jam", Severity = "critical" };
+        var str = (string)alert;
+        str.Should().Be("code=jam;severity=critical");
+
+        var nullStr = (string)(PrinterAlert)null!;
+        nullStr.Should().BeNull();
+    }
+
+    [TestMethod]
+    public void ExplicitOperator_FromString_ValidAndInvalid()
+    {
+        var raw = "code=jam;severity=critical";
+        var alert = (PrinterAlert)raw;
+        alert.Code.Should().Be("jam");
+        alert.Severity.Should().Be("critical");
+
+        Action actNull = () => { var _ = (PrinterAlert)(string)null!; };
+        actNull.Should().Throw<ArgumentNullException>();
+
+        Action actEmpty = () => { var _ = (PrinterAlert)""; };
+        actEmpty.Should().Throw<FormatException>();
+    }
+
+    [TestMethod]
+    public void ExplicitOperator_ByteArray_NonNullAndNull()
+    {
+        var alert = new PrinterAlert { Code = "jam", Severity = "critical" };
+        var bytes = (byte[])alert;
+        bytes.Should().Equal(System.Text.Encoding.UTF8.GetBytes("code=jam;severity=critical"));
+
+        var nullBytes = (byte[])(PrinterAlert)null!;
+        nullBytes.Should().Equal(Array.Empty<byte>());
+    }
+
+    [TestMethod]
+    public void ExplicitOperator_FromByteArray_ValidAndInvalid()
+    {
+        var raw = "code=jam;severity=critical";
+        var bytes = System.Text.Encoding.UTF8.GetBytes(raw);
+        var alert = (PrinterAlert)bytes;
+        alert.Code.Should().Be("jam");
+        alert.Severity.Should().Be("critical");
+
+        Action actNull = () => { var _ = (PrinterAlert)(byte[])null!; };
+        actNull.Should().Throw<ArgumentNullException>();
+
+        Action actEmpty = () => { var _ = (PrinterAlert)Array.Empty<byte>(); };
+        actEmpty.Should().Throw<FormatException>();
+    }
+
+    [TestMethod]
+    public void ExplicitOperator_OctetString_NonNullAndNull()
+    {
+        var alert = new PrinterAlert { Code = "jam", Severity = "critical" };
+        var octet = (OctetString)alert;
+        octet.ToString().Should().Be("code=jam;severity=critical");
+
+        var nullOctet = (OctetString)(PrinterAlert)null!;
+        nullOctet.ToString().Should().Be(string.Empty);
+    }
+
+    [TestMethod]
+    public void ExplicitOperator_FromOctetString_ValidAndInvalid()
+    {
+        var raw = "code=jam;severity=critical";
+        var octet = new OctetString(raw);
+        var alert = (PrinterAlert)octet;
+        alert.Code.Should().Be("jam");
+        alert.Severity.Should().Be("critical");
+
+        Action actDefault = () => { var _ = (PrinterAlert)default(OctetString); };
+        actDefault.Should().Throw<FormatException>();
+    }
 }

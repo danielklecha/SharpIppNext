@@ -54,7 +54,51 @@ public class GetNextDocumentDataTests : SharpIppIntegrationTestBase
         clientResponse.OperationAttributes.Should().NotBeNull();
         clientResponse.OperationAttributes!.Compression.Should().Be(Compression.Gzip);
         clientResponse.OperationAttributes.DocumentDataGetInterval.Should().Be(2);
-        clientResponse.OperationAttributes.LastDocument.Should().BeTrue();
+        clientResponse.OperationAttributes.LastDocument.Should().Be(true);
         clientResponse.OperationAttributes.DocumentNumber.Should().Be(4);
+    }
+
+    [TestMethod]
+    public async Task GetNextDocumentDataAsync_WhenServerReturnsNoValue_ClientParsesNoValueCorrectly()
+    {
+        var clientRequest = new GetNextDocumentDataRequest
+        {
+            RequestId = 813,
+            Version = new IppVersion(2, 0),
+            OperationAttributes = new() { PrinterUri = new Uri("http://127.0.0.1:631"), JobId = 22, DocumentDataWait = true }
+        };
+
+        async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
+        {
+            var server = new SharpIppServer();
+            var serverRequest = await server.ReceiveRequestAsync(s, c);
+            var serverResponse = new GetNextDocumentDataResponse
+            {
+                RequestId = serverRequest.RequestId,
+                Version = serverRequest.Version,
+                StatusCode = IppStatusCode.SuccessfulOk,
+                OperationAttributes = new GetNextDocumentDataResponseOperationAttributes
+                {
+                    Compression = NoValue.Instance,
+                    DocumentDataGetInterval = NoValue.Instance,
+                    LastDocument = true,
+                    DocumentNumber = 5
+                }
+            };
+            var ms = new MemoryStream();
+            await server.SendResponseAsync(serverResponse, ms, c);
+            ms.Seek(0, SeekOrigin.Begin);
+            return new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StreamContent(ms) };
+        }
+
+        var client = new SharpIppClient(new(GetMockOfHttpMessageHandler(func).Object));
+        var clientResponse = await client.GetNextDocumentDataAsync(clientRequest);
+        clientResponse.OperationAttributes.Should().NotBeNull();
+        clientResponse.OperationAttributes!.Compression.Should().Be(NoValue.Instance);
+        clientResponse.OperationAttributes.Compression!.Value.IsValue.Should().BeFalse();
+        clientResponse.OperationAttributes.DocumentDataGetInterval.Should().Be(NoValue.Instance);
+        clientResponse.OperationAttributes.DocumentDataGetInterval!.Value.IsValue.Should().BeFalse();
+        clientResponse.OperationAttributes.LastDocument.Should().Be(true);
+        clientResponse.OperationAttributes.DocumentNumber.Should().Be(5);
     }
 }

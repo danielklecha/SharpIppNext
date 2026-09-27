@@ -1,4 +1,4 @@
-using SharpIpp;
+﻿using SharpIpp;
 using SharpIpp.Models.Requests;
 using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
@@ -23,7 +23,7 @@ public class GetSystemSupportedValuesTests : SharpIppIntegrationTestBase
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
                 SystemUri = new Uri("ipp://127.0.0.1:8631/system"),
-                RequestedAttributes = ["system-status"]
+                RequestedAttributes = new[] { "system-status" }
             }
         };
 

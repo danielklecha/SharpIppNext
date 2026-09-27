@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the pull methods supported for notifications.
 /// See: RFC 3995 Section 10
 /// </summary>
-public readonly record struct NotifyPullMethod(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
+public readonly record struct NotifyPullMethod(string Value, bool IsMarked = true) : IMarkedSmartEnum
 {
     /// <summary>
     /// The IPP Get-Notifications pull method.

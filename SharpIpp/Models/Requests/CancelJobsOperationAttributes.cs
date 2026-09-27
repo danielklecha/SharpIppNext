@@ -1,4 +1,4 @@
-using SharpIpp.Mapping;
+﻿using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
@@ -19,7 +19,7 @@ public class CancelJobsOperationAttributes : OperationAttributes
     /// <code>job-ids</code>
     [IppAttribute(IppAttributeNames.JobIds, Tag = Tag.Integer)]
     [Range(1, int.MaxValue)]
-    public int[]? JobIds { get; set; }
+    public IppValue<int[]>? JobIds { get; set; }
 
     /// <summary>
     /// The Client MAY supply this attribute, which provides a message to the Operator.
@@ -27,5 +27,5 @@ public class CancelJobsOperationAttributes : OperationAttributes
     /// </summary>
     /// <code>message</code>
     [IppAttribute(IppAttributeNames.Message, Tag = Tag.TextWithoutLanguage)]
-    public string? Message { get; set; }
+    public IppValue<string>? Message { get; set; }
 }

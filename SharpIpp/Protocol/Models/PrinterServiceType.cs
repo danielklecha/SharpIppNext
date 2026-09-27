@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies known keyword values for <code>printer-service-type</code>.
 /// See: PWG 5100.22-2025 Section 7.7.9.
 /// </summary>
-public readonly record struct PrinterServiceType(string Value, bool IsValue = true) : ISmartEnum 
+public readonly record struct PrinterServiceType(string Value) : ISmartEnum 
 {
     /// <summary>
     /// The Printer provides copy services.

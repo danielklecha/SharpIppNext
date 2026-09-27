@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
@@ -17,14 +17,14 @@ public class UpdateActiveJobsOperationAttributes : OperationAttributes
     /// See: PWG 5100.18-2025 Section 7.1.8
     /// </summary>
     [IppAttribute(IppAttributeNames.OutputDeviceUuid, Tag = Tag.Uri)]
-    public Uri? OutputDeviceUuid { get; set; }
+    public IppValue<Uri>? OutputDeviceUuid { get; set; }
 
     /// <summary>
     /// The <c>output-device-job-states</c> operation attribute.
     /// See: PWG 5100.18-2025 Section 7.1.11
     /// </summary>
     [IppAttribute(IppAttributeNames.OutputDeviceJobStates, Tag = Tag.Enum)]
-    public JobState[]? OutputDeviceJobStates { get; set; }
+    public IppValue<JobState[]>? OutputDeviceJobStates { get; set; }
 
     /// <summary>
     /// The <c>job-ids</c> operation attribute.
@@ -32,5 +32,5 @@ public class UpdateActiveJobsOperationAttributes : OperationAttributes
     /// </summary>
     [Range(1, int.MaxValue)]
     [IppAttribute(IppAttributeNames.JobIds, Tag = Tag.Integer)]
-    public int[]? JobIds { get; set; }
+    public IppValue<int[]>? JobIds { get; set; }
 }

@@ -9,15 +9,13 @@ namespace SharpIpp.Protocol.Models;
 [IppAttribute(IppAttributeNames.PowerCalendarPolicyCol)]
 public class PowerCalendarPolicy : IIppCollection
 {
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
-    public int? CalendarId { get; set; }
-    public int? DayOfMonth { get; set; }
-    public int? DayOfWeek { get; set; }
-    public int? Hour { get; set; }
-    public int? Minute { get; set; }
-    public int? Month { get; set; }
-    public PowerState? RequestPowerState { get; set; }
-    public bool? RunOnce { get; set; }
+    public IppValue<int>? CalendarId { get; set; }
+    public IppValue<int>? DayOfMonth { get; set; }
+    public IppValue<int>? DayOfWeek { get; set; }
+    public IppValue<int>? Hour { get; set; }
+    public IppValue<int>? Minute { get; set; }
+    public IppValue<int>? Month { get; set; }
+    public IppValue<PowerState>? RequestPowerState { get; set; }
+    public IppValue<bool>? RunOnce { get; set; }
 }

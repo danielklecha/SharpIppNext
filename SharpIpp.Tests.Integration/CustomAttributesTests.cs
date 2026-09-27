@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Moq.Protected;
@@ -55,7 +55,7 @@ public class CustomAttributesTests
                 PrinterUri = new Uri("http://127.0.0.1:631"),
                 AttributesCharset = Charset.Utf8,
                 AttributesNaturalLanguage = "en-us",
-                RequestedAttributes = ["printer-uri", "printer-state", "printer-name"],
+                RequestedAttributes = new[] { "printer-uri", "printer-state", "printer-name" },
             }
         };
 
@@ -77,7 +77,7 @@ public class CustomAttributesTests
                 PrinterAttributes = new()
                 {
                     PrinterState = PrinterState.Idle,
-                    PrinterStateReasons = [PrinterStateReason.None],
+                    PrinterStateReasons = new[] { PrinterStateReason.None },
                 }
             };
             var memoryStream = new MemoryStream();
@@ -100,7 +100,7 @@ public class CustomAttributesTests
         rawRequest.OperationAttributes.Add(new IppAttribute(Tag.Keyword, "custom-op-attr", "custom-value"));
 
         // 3. Send Raw Request using SendAsync (which accepts IIppRequestMessage)
-        var response = await client.SendAsync(clientRequest.OperationAttributes.PrinterUri, rawRequest);
+        var response = await client.SendAsync((Uri)clientRequest.OperationAttributes.PrinterUri!, rawRequest);
 
         // Assert
         serverRequest.Should().NotBeNull();

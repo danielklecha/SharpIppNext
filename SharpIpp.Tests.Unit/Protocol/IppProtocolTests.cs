@@ -292,6 +292,25 @@ public class IppProtocolTests
     }
 
     [TestMethod]
+    public async Task WriteIppRequestAsync_WriteDocumentFalse_DocumentShouldNotBeWritten()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        using MemoryStream requestStream = new();
+        using MemoryStream documentStream = new( Encoding.ASCII.GetBytes( "Lorem" ) );
+        var message = new IppRequestMessage
+        {
+            IppOperation = IppOperation.PrintJob,
+            RequestId = 123,
+            Document = documentStream
+        };
+        // Act
+        await protocol.WriteIppRequestAsync( message, requestStream, writeDocument: false );
+        // Assert
+        requestStream.ToArray().Should().Equal( 0x01, 0x01, 0x00, 0x02, 0x00, 0x00, 0x00, 0x7B );
+    }
+
+    [TestMethod]
     public async Task ReadIppRequestAsync_TwoSections_ShouldMatch()
     {
         // Arrange
@@ -1986,7 +2005,7 @@ public class IppProtocolTests
         // Assert
         result.OperationAttributes.Should().HaveCount(3);
         result.OperationAttributes[0].Tag.Should().Be(Tag.Charset);
-        result.OperationAttributes[1].Tag.Should().Be(Tag.NoValue);
+        result.OperationAttributes[1].Tag.Should().Be(Tag.Unknown);
         result.OperationAttributes[2].Tag.Should().Be(Tag.Extended);
     }
 

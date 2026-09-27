@@ -12,18 +12,16 @@ namespace SharpIpp.Protocol.Models;
 public class PrinterIccProfile : IIppCollection
 {
     /// <inheritdoc />
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     /// <summary>
     /// profile-name — human-readable name of the ICC profile (name).
     /// See: PWG 5100.13-2023 Section 6.5.34
     /// </summary>
-    public string? ProfileName { get; set; }
+    public IppValue<string>? ProfileName { get; set; }
 
     /// <summary>
     /// profile-uri — reference to the ICC color profile (uri).
     /// See: PWG 5100.13-2023 Section 6.5.34
     /// </summary>
-    public Uri? ProfileUri { get; set; }
+    public IppValue<Uri>? ProfileUri { get; set; }
 }

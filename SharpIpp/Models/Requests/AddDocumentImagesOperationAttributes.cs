@@ -17,12 +17,12 @@ public class AddDocumentImagesOperationAttributes : OperationAttributes
     /// </summary>
     [Range(1, int.MaxValue)]
     [IppAttribute(IppAttributeNames.JobId, Tag = Tag.Integer)]
-    public int? JobId { get; set; }
+    public IppValue<int>? JobId { get; set; }
 
     /// <summary>
     /// The <c>input-attributes</c> operation attribute.
     /// See: PWG 5100.15-2013 Section 7.1.1
     /// </summary>
     [IppAttribute(IppAttributeNames.InputAttributes)]
-    public DocumentTemplateAttributes? InputAttributes { get; set; }
+    public IppValue<DocumentTemplateAttributes>? InputAttributes { get; set; }
 }

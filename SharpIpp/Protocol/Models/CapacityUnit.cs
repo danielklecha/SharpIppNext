@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the unit of measure for level.
 /// See: PWG 5100.13-2023 Section 6.6.9
 /// </summary>
-public readonly record struct CapacityUnit(string Value, bool IsValue = true) : ISmartEnum
+public readonly record struct CapacityUnit(string Value) : ISmartEnum
 {
     public static readonly CapacityUnit Other = new("other");
     public static readonly CapacityUnit Unknown = new("unknown");

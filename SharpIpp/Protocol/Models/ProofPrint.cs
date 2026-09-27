@@ -12,9 +12,7 @@ namespace SharpIpp.Protocol.Models;
 [IppAttribute(IppAttributeNames.ProofPrint)]
 public class ProofPrint : IIppCollection
 {
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
-    public int? ProofPrintCopies { get; set; }
-    public Media? Media { get; set; }
-    public MediaCol? MediaCol { get; set; }
+    public IppValue<int>? ProofPrintCopies { get; set; }
+    public IppValue<Media>? Media { get; set; }
+    public IppValue<MediaCol>? MediaCol { get; set; }
 }

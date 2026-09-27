@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the feed direction of the media source.
 /// See: PWG 5100.1-2022 Section 5.3.3
 /// </summary>
-public readonly record struct MediaSourceFeedDirection(string Value, bool IsValue = true) : ISmartEnum 
+public readonly record struct MediaSourceFeedDirection(string Value) : ISmartEnum 
 {
     /// <summary>
     /// Media is fed long-edge first.

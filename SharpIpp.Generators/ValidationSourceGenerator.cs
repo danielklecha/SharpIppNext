@@ -1,12 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
+using System.Text;
 
 namespace SharpIpp.Generators;
 
@@ -18,8 +17,9 @@ public class ValidationSourceGenerator : IIncrementalGenerator
         var classDeclarations = context.SyntaxProvider
             .CreateSyntaxProvider(
                 predicate: static (s, _) => s is ClassDeclarationSyntax,
-                transform: static (ctx, _) => (ClassDeclarationSyntax)ctx.Node)
-            .Where(static c => c != null);
+                transform: static (ctx, _) => ctx.SemanticModel.GetDeclaredSymbol((ClassDeclarationSyntax)ctx.Node) as INamedTypeSymbol)
+            .Where(static s => s != null)
+            .Select(static (s, _) => s!);
 
         var compilationAndClasses = context.CompilationProvider.Combine(classDeclarations.Collect());
 
@@ -29,7 +29,7 @@ public class ValidationSourceGenerator : IIncrementalGenerator
         });
     }
 
-    private static void Execute(Compilation compilation, ImmutableArray<ClassDeclarationSyntax> classes, SourceProductionContext context)
+    internal static void Execute(Compilation compilation, ImmutableArray<INamedTypeSymbol> classes, SourceProductionContext context)
     {
         var ippValidationAttrSymbol = compilation.GetTypeByMetadataName("SharpIpp.Validation.IppValidationAttribute");
         if (ippValidationAttrSymbol == null)
@@ -37,19 +37,12 @@ public class ValidationSourceGenerator : IIncrementalGenerator
 
         var targetTypes = new HashSet<INamedTypeSymbol>(SymbolEqualityComparer.Default);
 
-        foreach (var classDeclaration in classes)
+        foreach (var typeSymbol in classes)
         {
-            var model = compilation.GetSemanticModel(classDeclaration.SyntaxTree);
-            if (model.GetDeclaredSymbol(classDeclaration) is not INamedTypeSymbol typeSymbol)
-                continue;
-
             if (typeSymbol.IsAbstract || typeSymbol.IsStatic || typeSymbol.TypeKind != TypeKind.Class || typeSymbol.IsGenericType)
                 continue;
 
-            if (!SymbolEqualityComparer.Default.Equals(typeSymbol.ContainingAssembly, compilation.Assembly))
-                continue;
-
-            var ns = typeSymbol.ContainingNamespace?.ToDisplayString() ?? "";
+            var ns = (typeSymbol.ContainingNamespace == null || typeSymbol.ContainingNamespace.IsGlobalNamespace) ? "" : typeSymbol.ContainingNamespace.ToDisplayString();
             if (ns.StartsWith("SharpIpp.Exceptions") || ns.StartsWith("SharpIpp.Generators") || ns.StartsWith("SharpIpp.Validation"))
                 continue;
 
@@ -80,7 +73,7 @@ public class ValidationSourceGenerator : IIncrementalGenerator
 
         // Group types by containing namespace to emit separate partial class files
         var typesByNamespace = sortedTypes
-            .GroupBy(t => t.ContainingNamespace?.ToDisplayString() ?? "")
+            .GroupBy(t => (t.ContainingNamespace == null || t.ContainingNamespace.IsGlobalNamespace) ? "" : t.ContainingNamespace.ToDisplayString())
             .OrderBy(g => g.Key)
             .ToList();
 
@@ -141,7 +134,38 @@ public class ValidationSourceGenerator : IIncrementalGenerator
                     }
 
                     // Child object or collection recursion
-                    if (IsSharpIppModelType(prop.Type, compilation.Assembly))
+                    var unwrappedType = UnwrapNullableAndIppValue(prop.Type, out bool isIppValue);
+                    if (isIppValue)
+                    {
+                        if (IsSharpIppModelType(unwrappedType, compilation.Assembly))
+                        {
+                            nsSb.AppendLine($"            if (obj.{prop.Name} != null && obj.{prop.Name}.Value.IsValue && obj.{prop.Name}.Value.Value != null)");
+                            nsSb.AppendLine($"                TryValidate(obj.{prop.Name}.Value.Value, encoding, results, visited);");
+                        }
+                        else if (unwrappedType is IArrayTypeSymbol arrType && arrType.ElementType.TypeKind == TypeKind.Class && arrType.ElementType.SpecialType != SpecialType.System_String)
+                        {
+                            nsSb.AppendLine($"            if (obj.{prop.Name} != null && obj.{prop.Name}.Value.IsValue && obj.{prop.Name}.Value.Value != null)");
+                            nsSb.AppendLine("            {");
+                            nsSb.AppendLine($"                foreach (var item in obj.{prop.Name}.Value.Value)");
+                            nsSb.AppendLine("                {");
+                            nsSb.AppendLine("                    if (item != null)");
+                            nsSb.AppendLine("                        TryValidate(item, encoding, results, visited);");
+                            nsSb.AppendLine("                }");
+                            nsSb.AppendLine("            }");
+                        }
+                        else if (IsGenericEnumerableOfClass(unwrappedType))
+                        {
+                            nsSb.AppendLine($"            if (obj.{prop.Name} != null && obj.{prop.Name}.Value.IsValue && obj.{prop.Name}.Value.Value != null)");
+                            nsSb.AppendLine("            {");
+                            nsSb.AppendLine($"                foreach (var item in obj.{prop.Name}.Value.Value)");
+                            nsSb.AppendLine("                {");
+                            nsSb.AppendLine("                    if (item != null)");
+                            nsSb.AppendLine("                        TryValidate(item, encoding, results, visited);");
+                            nsSb.AppendLine("                }");
+                            nsSb.AppendLine("            }");
+                        }
+                    }
+                    else if (IsSharpIppModelType(prop.Type, compilation.Assembly))
                     {
                         nsSb.AppendLine($"            if (obj.{prop.Name} != null)");
                         nsSb.AppendLine($"                TryValidate(obj.{prop.Name}, encoding, results, visited);");
@@ -197,6 +221,8 @@ public class ValidationSourceGenerator : IIncrementalGenerator
         mainSb.AppendLine();
         mainSb.AppendLine("namespace SharpIpp.Validation");
         mainSb.AppendLine("{");
+        mainSb.AppendLine("    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]");
+        mainSb.AppendLine("    [global::System.CodeDom.Compiler.GeneratedCode(\"SharpIpp.Generators\", \"1.0.0.0\")]");
         mainSb.AppendLine("    internal static partial class GeneratedModelValidator");
         mainSb.AppendLine("    {");
 
@@ -221,7 +247,7 @@ public class ValidationSourceGenerator : IIncrementalGenerator
         mainSb.AppendLine("            if (obj == null)");
         mainSb.AppendLine("                return true;");
         mainSb.AppendLine();
-        mainSb.AppendLine("            if (obj is string || obj.GetType().IsPrimitive || obj.GetType().IsEnum)");
+        mainSb.AppendLine("            if (obj is string || obj is ValueType)");
         mainSb.AppendLine("                return true;");
         mainSb.AppendLine();
         mainSb.AppendLine("            if (visited.Contains(obj))");
@@ -250,14 +276,22 @@ public class ValidationSourceGenerator : IIncrementalGenerator
         context.AddSource("GeneratedModelValidator.g.cs", SourceText.From(mainSb.ToString(), Encoding.UTF8));
     }
 
-    private static int GetInheritanceDepth(INamedTypeSymbol type)
+    internal static IEnumerable<INamedTypeSymbol> GetTypeAndBaseTypes(INamedTypeSymbol? type)
     {
-        int depth = 0;
-        var curr = type.BaseType;
+        var curr = type;
         while (curr != null && curr.SpecialType != SpecialType.System_Object)
         {
-            depth++;
+            yield return curr;
             curr = curr.BaseType;
+        }
+    }
+
+    internal static int GetInheritanceDepth(INamedTypeSymbol type)
+    {
+        int depth = 0;
+        foreach (var _ in GetTypeAndBaseTypes(type.BaseType))
+        {
+            depth++;
         }
         return depth;
     }
@@ -277,9 +311,8 @@ public class ValidationSourceGenerator : IIncrementalGenerator
     {
         var properties = new List<IPropertySymbol>();
         var visitedNames = new HashSet<string>();
-        var curr = typeSymbol;
 
-        while (curr != null && curr.SpecialType != SpecialType.System_Object)
+        foreach (var curr in GetTypeAndBaseTypes(typeSymbol))
         {
             foreach (var member in curr.GetMembers())
             {
@@ -293,7 +326,6 @@ public class ValidationSourceGenerator : IIncrementalGenerator
                     properties.Add(prop);
                 }
             }
-            curr = curr.BaseType;
         }
 
         return properties;
@@ -304,7 +336,7 @@ public class ValidationSourceGenerator : IIncrementalGenerator
         var list = new List<AttributeData>();
         foreach (var attr in prop.GetAttributes())
         {
-            if (attr.AttributeClass != null && InheritsFrom(attr.AttributeClass, ippValidationAttrSymbol))
+            if (InheritsFrom(attr.AttributeClass, ippValidationAttrSymbol))
             {
                 if (IsTautologicalRange(attr, prop.Type))
                     continue;
@@ -315,7 +347,7 @@ public class ValidationSourceGenerator : IIncrementalGenerator
         return list;
     }
 
-    private static bool IsTautologicalRange(AttributeData attr, ITypeSymbol propType)
+    internal static bool IsTautologicalRange(AttributeData attr, ITypeSymbol propType)
     {
         if (!IsOrInheritsFrom(attr.AttributeClass, "RangeAttribute"))
             return false;
@@ -345,7 +377,7 @@ public class ValidationSourceGenerator : IIncrementalGenerator
         return false;
     }
 
-    private static bool IsOrInheritsFrom(ITypeSymbol? symbol, string typeName)
+    internal static bool IsOrInheritsFrom(ITypeSymbol? symbol, string typeName)
     {
         var curr = symbol;
         while (curr != null)
@@ -357,7 +389,7 @@ public class ValidationSourceGenerator : IIncrementalGenerator
         return false;
     }
 
-    private static bool IsIntegerTypeOrCollection(ITypeSymbol type)
+    internal static bool IsIntegerTypeOrCollection(ITypeSymbol type)
     {
         if (type == null)
             return false;
@@ -368,26 +400,20 @@ public class ValidationSourceGenerator : IIncrementalGenerator
         if (type is IArrayTypeSymbol arrayType)
             return IsInt32(arrayType.ElementType);
 
-        if (type is INamedTypeSymbol named && named.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T)
-            return named.TypeArguments.Length > 0 && IsInt32(named.TypeArguments[0]);
-
-        if (type is INamedTypeSymbol namedIface && namedIface.IsGenericType && namedIface.ConstructedFrom.SpecialType == SpecialType.System_Collections_Generic_IEnumerable_T)
-            return namedIface.TypeArguments.Length > 0 && IsInt32(namedIface.TypeArguments[0]);
-
-        foreach (var iface in type.AllInterfaces)
+        var ifaces = type.TypeKind == TypeKind.Interface ? type.AllInterfaces.Prepend((INamedTypeSymbol)type) : type.AllInterfaces;
+        foreach (var iface in ifaces)
         {
-            if (iface.IsGenericType && iface.ConstructedFrom.SpecialType == SpecialType.System_Collections_Generic_IEnumerable_T)
+            if (iface.ConstructedFrom.SpecialType == SpecialType.System_Collections_Generic_IEnumerable_T &&
+                IsInt32(iface.TypeArguments[0]))
             {
-                var elem = iface.TypeArguments[0];
-                if (IsInt32(elem))
-                    return true;
+                return true;
             }
         }
 
         return false;
     }
 
-    private static bool IsInt32(ITypeSymbol type)
+    internal static bool IsInt32(ITypeSymbol type)
     {
         if (type == null)
             return false;
@@ -396,13 +422,16 @@ public class ValidationSourceGenerator : IIncrementalGenerator
             return true;
 
         if (type is INamedTypeSymbol named && named.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T)
-            return named.TypeArguments.Length > 0 && named.TypeArguments[0].SpecialType == SpecialType.System_Int32;
+            return named.TypeArguments[0].SpecialType == SpecialType.System_Int32;
 
         return false;
     }
 
-    private static bool InheritsFrom(ITypeSymbol symbol, ITypeSymbol baseType)
+    internal static bool InheritsFrom(ITypeSymbol? symbol, ITypeSymbol? baseType)
     {
+        if (symbol == null || baseType == null)
+            return false;
+
         var curr = symbol;
         while (curr != null)
         {
@@ -413,7 +442,7 @@ public class ValidationSourceGenerator : IIncrementalGenerator
         return false;
     }
 
-    private static bool IsSharpIppModelType(ITypeSymbol type, IAssemblySymbol currentAssembly)
+    internal static bool IsSharpIppModelType(ITypeSymbol type, IAssemblySymbol currentAssembly)
     {
         if (type == null)
             return false;
@@ -424,16 +453,32 @@ public class ValidationSourceGenerator : IIncrementalGenerator
         if (!SymbolEqualityComparer.Default.Equals(type.ContainingAssembly, currentAssembly))
             return false;
 
-        var ns = type.ContainingNamespace?.ToDisplayString() ?? "";
+        var ns = type.ContainingNamespace.IsGlobalNamespace ? "" : type.ContainingNamespace.ToDisplayString();
         if (ns.StartsWith("SharpIpp.Exceptions") || ns.StartsWith("SharpIpp.Generators") || ns.StartsWith("SharpIpp.Validation"))
             return false;
 
         return true;
     }
 
+    private static ITypeSymbol UnwrapNullableAndIppValue(ITypeSymbol type, out bool isIppValue)
+    {
+        isIppValue = false;
+        var curr = type;
+        if (curr is INamedTypeSymbol n && n.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T && n.TypeArguments.Length > 0)
+        {
+            curr = n.TypeArguments[0];
+        }
+        if (curr is INamedTypeSymbol named && named.Name == "IppValue" && named.TypeArguments.Length == 1)
+        {
+            isIppValue = true;
+            return named.TypeArguments[0];
+        }
+        return type;
+    }
+
     private static bool IsGenericEnumerableOfClass(ITypeSymbol type)
     {
-        if (type == null || type.SpecialType == SpecialType.System_String)
+        if (type.SpecialType == SpecialType.System_String)
             return false;
 
         foreach (var iface in type.AllInterfaces)
@@ -462,21 +507,25 @@ public class ValidationSourceGenerator : IIncrementalGenerator
         return $"new {typeName}({ctorArgs}) {{ {namedArgs} }}";
     }
 
-    private static string FormatTypedConstant(TypedConstant constant)
+    internal static string FormatTypedConstant(TypedConstant constant)
     {
         if (constant.IsNull)
             return "null";
 
         if (constant.Kind == TypedConstantKind.Array)
         {
-            var elemType = (constant.Type as IArrayTypeSymbol)?.ElementType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) ?? "object";
-            var items = constant.Values.Select(FormatTypedConstant);
+            var elemType = ((IArrayTypeSymbol)constant.Type!).ElementType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+            var items = new string[constant.Values.Length];
+            for (var idx = 0; idx < constant.Values.Length; idx++)
+            {
+                items[idx] = FormatTypedConstant(constant.Values[idx]);
+            }
             return $"new {elemType}[] {{ {string.Join(", ", items)} }}";
         }
 
         if (constant.Kind == TypedConstantKind.Enum)
         {
-            return $"({constant.Type?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)})({constant.Value})";
+            return $"({constant.Type!.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)})({constant.Value})";
         }
 
         if (constant.Kind == TypedConstantKind.Type)
@@ -513,6 +562,6 @@ public class ValidationSourceGenerator : IIncrementalGenerator
             return $"{l}L";
         }
 
-        return constant.Value?.ToString() ?? "null";
+        return constant.Value!.ToString();
     }
 }

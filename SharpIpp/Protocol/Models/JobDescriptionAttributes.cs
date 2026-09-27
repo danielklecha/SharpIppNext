@@ -35,7 +35,7 @@ public class JobDescriptionAttributes
         /// <example>63</example>
         /// <code>job-id</code>
         [IppAttribute(IppAttributeNames.JobId, Tag = Tag.Integer)]
-    public int? JobId { get; set; }
+    public IppValue<int>? JobId { get; set; }
 
         /// <summary>
         /// This REQUIRED attribute contains the URI for the Job object.
@@ -43,7 +43,7 @@ public class JobDescriptionAttributes
         /// </summary>
         [Obsolete("The 'job-uri' attribute is deprecated in favor of 'job-id'. See RFC 8011 Section 5.3.2.")]
         [IppAttribute(IppAttributeNames.JobUri, Tag = Tag.Uri)]
-    public Uri? JobUri { get; set; }
+    public IppValue<Uri>? JobUri { get; set; }
 
         /// <summary>
         /// This REQUIRED attribute identifies the Printer object that created
@@ -59,7 +59,7 @@ public class JobDescriptionAttributes
         /// <example>ipp://10.30.254.250:631/ipp/print</example>
         /// <code>job-printer-uri</code>
         [IppAttribute(IppAttributeNames.JobPrinterUri, Tag = Tag.Uri)]
-    public Uri? JobPrinterUri { get; set; }
+    public IppValue<Uri>? JobPrinterUri { get; set; }
 
         /// <summary>
         /// List of resource IDs allocated to this job.
@@ -68,7 +68,7 @@ public class JobDescriptionAttributes
         /// <code>job-resource-ids</code>
         [Range(1, int.MaxValue)]
         [IppAttribute(IppAttributeNames.JobResourceIds, Tag = Tag.Integer)]
-    public int[]? JobResourceIds { get; set; }
+    public IppValue<int[]>? JobResourceIds { get; set; }
 
         /// <summary>
         /// This REQUIRED attribute is the name of the job.  It is a name that is
@@ -84,7 +84,7 @@ public class JobDescriptionAttributes
         /// <example>job63</example>
         /// <code>job-name</code>
         [IppAttribute(IppAttributeNames.JobName, Tag = Tag.NameWithoutLanguage)]
-    public string? JobName { get; set; }
+    public IppValue<string>? JobName { get; set; }
 
         /// <summary>
         /// This REQUIRED attribute contains the name of the end user that
@@ -99,7 +99,7 @@ public class JobDescriptionAttributes
         /// <example>anonymous (en)</example>
         /// <code>job-originating-user-name</code>
         [IppAttribute(IppAttributeNames.JobOriginatingUserName, Tag = Tag.NameWithoutLanguage)]
-    public string? JobOriginatingUserName { get; set; }
+    public IppValue<string>? JobOriginatingUserName { get; set; }
 
         /// <summary>
         /// This attribute specifies the total number of octets processed in K
@@ -117,7 +117,7 @@ public class JobDescriptionAttributes
         /// <example>26</example>
         /// <code>job-k-octets-processed</code>
         [IppAttribute(IppAttributeNames.JobKOctetsProcessed, Tag = Tag.Integer)]
-    public int? JobKOctetsProcessed { get; set; }
+    public IppValue<int>? JobKOctetsProcessed { get; set; }
 
         /// <summary>
         /// This attribute specifies the total size in number of impressions of
@@ -142,7 +142,7 @@ public class JobDescriptionAttributes
         /// <example>no value</example>
         /// <code>job-impressions</code>
         [IppAttribute(IppAttributeNames.JobImpressions, Tag = Tag.Integer)]
-    public int? JobImpressions { get; set; }
+    public IppValue<int>? JobImpressions { get; set; }
 
         /// <summary>
         /// This attribute specifies detailed impression counters for the Job.
@@ -150,7 +150,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>job-impressions-col</code>
         [IppAttribute(IppAttributeNames.JobImpressionsCol)]
-    public JobCounter? JobImpressionsCol { get; set; }
+    public IppValue<JobCounter>? JobImpressionsCol { get; set; }
 
         /// <summary>
         /// This job attribute specifies the number of impressions completed for
@@ -161,7 +161,7 @@ public class JobDescriptionAttributes
         /// <example>0</example>
         /// <code>job-impressions-completed</code>
         [IppAttribute(IppAttributeNames.JobImpressionsCompleted, Tag = Tag.Integer)]
-    public int? JobImpressionsCompleted { get; set; }
+    public IppValue<int>? JobImpressionsCompleted { get; set; }
 
         /// <summary>
         /// This attribute specifies the total number of media sheets to be
@@ -179,7 +179,7 @@ public class JobDescriptionAttributes
         /// <example>no value</example>
         /// <code>job-media-sheets</code>
         [IppAttribute(IppAttributeNames.JobMediaSheets, Tag = Tag.Integer)]
-    public int? JobMediaSheets { get; set; }
+    public IppValue<int>? JobMediaSheets { get; set; }
 
         /// <summary>
         /// This attribute specifies detailed media sheet counters for the Job.
@@ -187,7 +187,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>job-media-sheets-col</code>
         [IppAttribute(IppAttributeNames.JobMediaSheetsCol)]
-    public JobCounter? JobMediaSheetsCol { get; set; }
+    public IppValue<JobCounter>? JobMediaSheetsCol { get; set; }
 
         /// <summary>
         /// This attribute contains a URI used to obtain additional
@@ -195,14 +195,14 @@ public class JobDescriptionAttributes
         /// See: RFC 8011 Section 5.3.4
         /// </summary>
         [IppAttribute(IppAttributeNames.JobMoreInfo, Tag = Tag.Uri)]
-    public Uri? JobMoreInfo { get; set; }
+    public IppValue<Uri>? JobMoreInfo { get; set; }
 
         /// <summary>
         /// The <c>job-charge-info</c> Job Description attribute.
         /// See: PWG 5100.11-2024 Section 5.4.2
         /// </summary>
         [IppAttribute(IppAttributeNames.JobChargeInfo, Tag = Tag.TextWithoutLanguage)]
-    public string? JobChargeInfo { get; set; }
+    public IppValue<string>? JobChargeInfo { get; set; }
 
         /// <summary>
         /// This attribute specifies details about the source of the Document data.
@@ -212,7 +212,7 @@ public class JobDescriptionAttributes
         /// <code>document-format-details</code>
         [Obsolete("The 'document-format-details' attribute is deprecated. See PWG 5100.7-2023 Section 6.2.1.")]
         [IppAttribute(IppAttributeNames.DocumentFormatDetails)]
-    public DocumentFormatDetails? DocumentFormatDetails { get; set; }
+    public IppValue<DocumentFormatDetails>? DocumentFormatDetails { get; set; }
 
         /// <summary>
         /// This attribute specifies details about the source of the Document data as detected by the Printer.
@@ -222,14 +222,14 @@ public class JobDescriptionAttributes
         /// <code>document-format-details-detected</code>
         [Obsolete("The 'document-format-details-detected' attribute is deprecated. See PWG 5100.7-2023 Section 6.2.2.")]
         [IppAttribute(IppAttributeNames.DocumentFormatDetailsDetected)]
-    public DocumentFormatDetails? DocumentFormatDetailsDetected { get; set; }
+    public IppValue<DocumentFormatDetails>? DocumentFormatDetailsDetected { get; set; }
 
         /// <summary>
         /// This attribute indicates the number of documents in the Job.
         /// See: RFC 8011 Section 5.3.12
         /// </summary>
         [IppAttribute(IppAttributeNames.NumberOfDocuments, Tag = Tag.Integer)]
-    public int? NumberOfDocuments { get; set; }
+    public IppValue<int>? NumberOfDocuments { get; set; }
 
         /// <summary>
         /// This attribute indicates the number of jobs that are
@@ -238,7 +238,7 @@ public class JobDescriptionAttributes
         /// See: RFC 8011 Section 5.3.15
         /// </summary>
         [IppAttribute(IppAttributeNames.NumberOfInterveningJobs, Tag = Tag.Integer)]
-    public int? NumberOfInterveningJobs { get; set; }
+    public IppValue<int>? NumberOfInterveningJobs { get; set; }
 
         /// <summary>
         /// This attribute identifies the output device to which the
@@ -246,7 +246,7 @@ public class JobDescriptionAttributes
         /// See: RFC 8011 Section 5.3.13
         /// </summary>
         [IppAttribute(IppAttributeNames.OutputDeviceAssigned, Tag = Tag.NameWithoutLanguage)]
-    public string? OutputDeviceAssigned { get; set; }
+    public IppValue<string>? OutputDeviceAssigned { get; set; }
 
         /// <summary>
         /// This job attribute specifies the media-sheets completed marking and
@@ -257,7 +257,7 @@ public class JobDescriptionAttributes
         /// <example>0</example>
         /// <code>job-media-sheets-completed</code>
         [IppAttribute(IppAttributeNames.JobMediaSheetsCompleted, Tag = Tag.Integer)]
-    public int? JobMediaSheetsCompleted { get; set; }
+    public IppValue<int>? JobMediaSheetsCompleted { get; set; }
 
         /// <summary>
         /// This REQUIRED attribute identifies the current state of the job.
@@ -272,7 +272,7 @@ public class JobDescriptionAttributes
         /// <example>9</example>
         /// <code>job-state</code>
         [IppAttribute(IppAttributeNames.JobState, Tag = Tag.Enum)]
-    public JobState? JobState { get; set; }
+    public IppValue<JobState>? JobState { get; set; }
 
         /// <summary>
         /// The Printer object OPTIONALLY returns the Job object's OPTIONAL
@@ -286,7 +286,7 @@ public class JobDescriptionAttributes
         /// <example>The job completed successfully</example>
         /// <code>job-state-message</code>
         [IppAttribute(IppAttributeNames.JobStateMessage, Tag = Tag.TextWithoutLanguage)]
-    public string? JobStateMessage { get; set; }
+    public IppValue<string>? JobStateMessage { get; set; }
 
         /// <summary>
         /// The Printer object MUST return the Job object's REQUIRED "job-
@@ -296,7 +296,7 @@ public class JobDescriptionAttributes
         /// <example>job-completed-successfully</example>
         /// <code>job-state-reasons</code>
         [IppAttribute(IppAttributeNames.JobStateReasons, Tag = Tag.Keyword)]
-    public JobStateReason[]? JobStateReasons { get; set; }
+    public IppValue<JobStateReason[]>? JobStateReasons { get; set; }
 
         /// <summary>
         /// This attribute indicates the date and time at which the Job object
@@ -306,7 +306,7 @@ public class JobDescriptionAttributes
         /// <example>22.04.2021 20:13:21 +03:00</example>
         /// <code>date-time-at-creation</code>
         [IppAttribute(IppAttributeNames.DateTimeAtCreation, Tag = Tag.DateTime)]
-    public DateTimeOffset? DateTimeAtCreation { get; set; }
+    public IppValue<DateTimeOffset>? DateTimeAtCreation { get; set; }
 
         /// <summary>
         /// This attribute indicates the date and time at which the Job object
@@ -317,7 +317,7 @@ public class JobDescriptionAttributes
         /// <example>22.04.2021 20:13:22 +03:00</example>
         /// <code>date-time-at-processing</code>
         [IppAttribute(IppAttributeNames.DateTimeAtProcessing, Tag = Tag.DateTime)]
-    public DateTimeOffset? DateTimeAtProcessing { get; set; }
+    public IppValue<DateTimeOffset>? DateTimeAtProcessing { get; set; }
 
         /// <summary>
         /// This attribute indicates the date and time at which the Job object
@@ -327,7 +327,7 @@ public class JobDescriptionAttributes
         /// <example>22.04.2021 20:13:22 +03:00</example>
         /// <code>date-time-at-completed</code>
         [IppAttribute(IppAttributeNames.DateTimeAtCompleted, Tag = Tag.DateTime)]
-    public DateTimeOffset? DateTimeAtCompleted { get; set; }
+    public IppValue<DateTimeOffset>? DateTimeAtCompleted { get; set; }
 
         /// <summary>
         /// This REQUIRED attribute indicates the time at which the Job object
@@ -338,7 +338,7 @@ public class JobDescriptionAttributes
         /// <example>197753</example>
         /// <code>time-at-creation</code>
         [IppAttribute(IppAttributeNames.TimeAtCreation, Tag = Tag.Integer)]
-    public int? TimeAtCreation { get; set; }
+    public IppValue<int>? TimeAtCreation { get; set; }
 
         /// <summary>
         /// This REQUIRED attribute indicates the time at which the Job object
@@ -350,7 +350,7 @@ public class JobDescriptionAttributes
         /// <example>197754</example>
         /// <code>time-at-processing</code>
         [IppAttribute(IppAttributeNames.TimeAtProcessing, Tag = Tag.Integer)]
-    public int? TimeAtProcessing { get; set; }
+    public IppValue<int>? TimeAtProcessing { get; set; }
 
         /// <summary>
         /// This REQUIRED attribute indicates the time at which the Job object
@@ -362,7 +362,7 @@ public class JobDescriptionAttributes
         /// <example>197754</example>
         /// <code>time-at-completed</code>
         [IppAttribute(IppAttributeNames.TimeAtCompleted, Tag = Tag.Integer)]
-    public int? TimeAtCompleted { get; set; }
+    public IppValue<int>? TimeAtCompleted { get; set; }
 
         /// <summary>
         /// This REQUIRED Job Description attribute indicates the amount of time
@@ -374,7 +374,7 @@ public class JobDescriptionAttributes
         /// <example>197775</example>
         /// <code>job-printer-up-time</code>
         [IppAttribute(IppAttributeNames.JobPrinterUpTime, Tag = Tag.Integer)]
-    public int? JobPrinterUpTime { get; set; }
+    public IppValue<int>? JobPrinterUpTime { get; set; }
 
         /// <summary>
         /// This attribute specifies the total size of the document(s) in K
@@ -385,7 +385,7 @@ public class JobDescriptionAttributes
         /// See: RFC 8011 Section 5.3.17.1
         /// </summary>
         [IppAttribute(IppAttributeNames.JobKOctets, Tag = Tag.Integer)]
-    public int? JobKOctets { get; set; }
+    public IppValue<int>? JobKOctets { get; set; }
 
         /// <summary>
         /// This attribute specifies additional detailed and technical
@@ -397,7 +397,7 @@ public class JobDescriptionAttributes
         /// See: RFC 8011 Section 5.3.10
         /// </summary>
         [IppAttribute(IppAttributeNames.JobDetailedStatusMessages, Tag = Tag.NameWithoutLanguage)]
-    public string[]? JobDetailedStatusMessages { get; set; }
+    public IppValue<string[]>? JobDetailedStatusMessages { get; set; }
 
         /// <summary>
         /// This attribute provides additional information about each document
@@ -411,7 +411,7 @@ public class JobDescriptionAttributes
         /// See: RFC 8011 Section 5.3.11
         /// </summary>
         [IppAttribute(IppAttributeNames.JobDocumentAccessErrors, Tag = Tag.NameWithoutLanguage)]
-    public string[]? JobDocumentAccessErrors { get; set; }
+    public IppValue<string[]>? JobDocumentAccessErrors { get; set; }
 
         /// <summary>
         /// This attribute provides a message from an operator, system
@@ -421,14 +421,14 @@ public class JobDescriptionAttributes
         /// See: RFC 8011 Section 5.3.16
         /// </summary>
         [IppAttribute(IppAttributeNames.JobMessageFromOperator, Tag = Tag.NameWithoutLanguage)]
-    public string? JobMessageFromOperator { get; set; }
+    public IppValue<string>? JobMessageFromOperator { get; set; }
 
         /// <summary>
         /// This attribute specifies the total number of pages in the Job.
         /// See: PWG 5100.7-2023 Section 6.6.3
         /// </summary>
         [IppAttribute(IppAttributeNames.JobPages, Tag = Tag.Integer)]
-    public int? JobPages { get; set; }
+    public IppValue<int>? JobPages { get; set; }
 
         /// <summary>
         /// This attribute specifies detailed page counters for the Job.
@@ -436,7 +436,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>job-pages-col</code>
         [IppAttribute(IppAttributeNames.JobPagesCol)]
-    public JobCounter? JobPagesCol { get; set; }
+    public IppValue<JobCounter>? JobPagesCol { get; set; }
 
         /// <summary>
         /// This attribute specifies the number of pages completed for the
@@ -444,7 +444,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.7-2023 Section 6.7.4
         /// </summary>
         [IppAttribute(IppAttributeNames.JobPagesCompleted, Tag = Tag.Integer)]
-    public int? JobPagesCompleted { get; set; }
+    public IppValue<int>? JobPagesCompleted { get; set; }
 
         /// <summary>
         /// This attribute specifies detailed impression counters completed for the Job so far.
@@ -452,7 +452,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>job-impressions-completed-col</code>
         [IppAttribute(IppAttributeNames.JobImpressionsCompletedCol)]
-    public JobCounter? JobImpressionsCompletedCol { get; set; }
+    public IppValue<JobCounter>? JobImpressionsCompletedCol { get; set; }
 
         /// <summary>
         /// This attribute specifies detailed media sheet counters completed for the Job so far.
@@ -460,7 +460,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>job-media-sheets-completed-col</code>
         [IppAttribute(IppAttributeNames.JobMediaSheetsCompletedCol)]
-    public JobCounter? JobMediaSheetsCompletedCol { get; set; }
+    public IppValue<JobCounter>? JobMediaSheetsCompletedCol { get; set; }
 
         /// <summary>
         /// This attribute specifies detailed page counters completed for the Job so far.
@@ -468,7 +468,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>job-pages-completed-col</code>
         [IppAttribute(IppAttributeNames.JobPagesCompletedCol)]
-    public JobCounter? JobPagesCompletedCol { get; set; }
+    public IppValue<JobCounter>? JobPagesCompletedCol { get; set; }
 
         /// <summary>
         /// This attribute lists the name and version information for the Client that created the Job.
@@ -476,7 +476,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>client-info</code>
         [IppAttribute(IppAttributeNames.ClientInfo)]
-    public ClientInfo[]? ClientInfo { get; set; }
+    public IppValue<ClientInfo[]>? ClientInfo { get; set; }
 
         /// <summary>
         /// This attribute augments the "job-sheets" Job Template attribute and allows specifying distinct media.
@@ -484,7 +484,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>job-sheets-col</code>
         [IppAttribute(IppAttributeNames.JobSheetsCol)]
-    public JobSheetsCol? JobSheetsCol { get; set; }
+    public IppValue<JobSheetsCol>? JobSheetsCol { get; set; }
 
         /// <summary>
         /// This attribute specifies the total number of seconds that the
@@ -492,7 +492,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.7-2023 Section 6.7.6
         /// </summary>
         [IppAttribute(IppAttributeNames.JobProcessingTime, Tag = Tag.Integer)]
-    public int? JobProcessingTime { get; set; }
+    public IppValue<int>? JobProcessingTime { get; set; }
 
         /// <summary>
         /// This attribute specifies the number of errors that were detected
@@ -500,7 +500,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.7-2023 Section 6.2.1
         /// </summary>
         [IppAttribute(IppAttributeNames.ErrorsCount, Tag = Tag.Integer)]
-    public int? ErrorsCount { get; set; }
+    public IppValue<int>? ErrorsCount { get; set; }
 
         /// <summary>
         /// This attribute specifies the number of warnings that were detected
@@ -508,7 +508,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.7-2023 Section 6.2.3
         /// </summary>
         [IppAttribute(IppAttributeNames.WarningsCount, Tag = Tag.Integer)]
-    public int? WarningsCount { get; set; }
+    public IppValue<int>? WarningsCount { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual content optimization
@@ -516,7 +516,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.7-2023 Section 6.2.2
         /// </summary>
         [IppAttribute(IppAttributeNames.PrintContentOptimizeActual, Tag = Tag.Keyword)]
-    public PrintContentOptimize[]? PrintContentOptimizeActual { get; set; }
+    public IppValue<PrintContentOptimize[]>? PrintContentOptimizeActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual number of copies
@@ -525,7 +525,7 @@ public class JobDescriptionAttributes
         /// </summary>
         [Range(1, int.MaxValue)]
         [IppAttribute(IppAttributeNames.CopiesActual, Tag = Tag.Integer)]
-    public int[]? CopiesActual { get; set; }
+    public IppValue<int[]>? CopiesActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual finishing operations
@@ -533,7 +533,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         [IppAttribute(IppAttributeNames.FinishingsActual, Tag = Tag.Enum)]
-    public Finishings[]? FinishingsActual { get; set; }
+    public IppValue<Finishings[]>? FinishingsActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual cover-back
@@ -541,7 +541,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         [IppAttribute(IppAttributeNames.CoverBackActual)]
-    public Cover[]? CoverBackActual { get; set; }
+    public IppValue<Cover[]>? CoverBackActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual cover-front
@@ -549,7 +549,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         [IppAttribute(IppAttributeNames.CoverFrontActual)]
-    public Cover[]? CoverFrontActual { get; set; }
+    public IppValue<Cover[]>? CoverFrontActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual job-hold-until
@@ -557,7 +557,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         [IppAttribute(IppAttributeNames.JobHoldUntilActual, Tag = Tag.Keyword)]
-    public JobHoldUntil[]? JobHoldUntilActual { get; set; }
+    public IppValue<JobHoldUntil[]>? JobHoldUntilActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual job priority
@@ -566,7 +566,7 @@ public class JobDescriptionAttributes
         /// </summary>
         [Range(1, 100)]
         [IppAttribute(IppAttributeNames.JobPriorityActual, Tag = Tag.Integer)]
-    public int[]? JobPriorityActual { get; set; }
+    public IppValue<int[]>? JobPriorityActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual job sheets
@@ -574,7 +574,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         [IppAttribute(IppAttributeNames.JobSheetsActual, Tag = Tag.Keyword)]
-    public JobSheets[]? JobSheetsActual { get; set; }
+    public IppValue<JobSheets[]>? JobSheetsActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual media
@@ -582,7 +582,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         [IppAttribute(IppAttributeNames.MediaActual)]
-    public Media[]? MediaActual { get; set; }
+    public IppValue<Media[]>? MediaActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual imposition-template
@@ -590,7 +590,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         [IppAttribute(IppAttributeNames.ImpositionTemplateActual)]
-    public ImpositionTemplate[]? ImpositionTemplateActual { get; set; }
+    public IppValue<ImpositionTemplate[]>? ImpositionTemplateActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual insert-sheet
@@ -598,7 +598,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         [IppAttribute(IppAttributeNames.InsertSheetActual)]
-    public InsertSheet[]? InsertSheetActual { get; set; }
+    public IppValue<InsertSheet[]>? InsertSheetActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual job-account-id
@@ -606,7 +606,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         [IppAttribute(IppAttributeNames.JobAccountIdActual, Tag = Tag.NameWithoutLanguage)]
-    public string[]? JobAccountIdActual { get; set; }
+    public IppValue<string[]>? JobAccountIdActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual job-accounting-sheets
@@ -614,7 +614,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         [IppAttribute(IppAttributeNames.JobAccountingSheetsActual)]
-    public JobAccountingSheets[]? JobAccountingSheetsActual { get; set; }
+    public IppValue<JobAccountingSheets[]>? JobAccountingSheetsActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual job-accounting-user-id
@@ -622,7 +622,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         [IppAttribute(IppAttributeNames.JobAccountingUserIdActual, Tag = Tag.NameWithoutLanguage)]
-    public string[]? JobAccountingUserIdActual { get; set; }
+    public IppValue<string[]>? JobAccountingUserIdActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual job-error-sheet
@@ -630,7 +630,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         [IppAttribute(IppAttributeNames.JobErrorSheetActual)]
-    public JobErrorSheet[]? JobErrorSheetActual { get; set; }
+    public IppValue<JobErrorSheet[]>? JobErrorSheetActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual job-message-to-operator
@@ -638,7 +638,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         [IppAttribute(IppAttributeNames.JobMessageToOperatorActual, Tag = Tag.TextWithoutLanguage)]
-    public string[]? JobMessageToOperatorActual { get; set; }
+    public IppValue<string[]>? JobMessageToOperatorActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual job-sheet-message
@@ -646,7 +646,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         [IppAttribute(IppAttributeNames.JobSheetMessageActual, Tag = Tag.TextWithoutLanguage)]
-    public string[]? JobSheetMessageActual { get; set; }
+    public IppValue<string[]>? JobSheetMessageActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual media-col
@@ -654,7 +654,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         [IppAttribute(IppAttributeNames.MediaColActual)]
-    public MediaCol[]? MediaColActual { get; set; }
+    public IppValue<MediaCol[]>? MediaColActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual multiple-document-handling
@@ -662,7 +662,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         [IppAttribute(IppAttributeNames.MultipleDocumentHandlingActual, Tag = Tag.Keyword)]
-    public MultipleDocumentHandling[]? MultipleDocumentHandlingActual { get; set; }
+    public IppValue<MultipleDocumentHandling[]>? MultipleDocumentHandlingActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual number-up
@@ -671,7 +671,7 @@ public class JobDescriptionAttributes
         /// </summary>
         [Range(1, int.MaxValue)]
         [IppAttribute(IppAttributeNames.NumberUpActual, Tag = Tag.Integer)]
-    public int[]? NumberUpActual { get; set; }
+    public IppValue<int[]>? NumberUpActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual orientation
@@ -679,7 +679,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         [IppAttribute(IppAttributeNames.OrientationRequestedActual, Tag = Tag.Enum)]
-    public Orientation[]? OrientationRequestedActual { get; set; }
+    public IppValue<Orientation[]>? OrientationRequestedActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual output-bin
@@ -687,7 +687,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         [IppAttribute(IppAttributeNames.OutputBinActual)]
-    public OutputBin[]? OutputBinActual { get; set; }
+    public IppValue<OutputBin[]>? OutputBinActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual media-input-tray-check
@@ -695,7 +695,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         [IppAttribute(IppAttributeNames.MediaInputTrayCheckActual, Tag = Tag.Keyword)]
-    public MediaInputTrayCheck[]? MediaInputTrayCheckActual { get; set; }
+    public IppValue<MediaInputTrayCheck[]>? MediaInputTrayCheckActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual page-delivery
@@ -703,7 +703,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         [IppAttribute(IppAttributeNames.PageDeliveryActual, Tag = Tag.Keyword)]
-    public PageDelivery[]? PageDeliveryActual { get; set; }
+    public IppValue<PageDelivery[]>? PageDeliveryActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual page-order-received
@@ -711,7 +711,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         [IppAttribute(IppAttributeNames.PageOrderReceivedActual, Tag = Tag.Keyword)]
-    public PageOrderReceived[]? PageOrderReceivedActual { get; set; }
+    public IppValue<PageOrderReceived[]>? PageOrderReceivedActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual page-ranges
@@ -719,7 +719,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         [IppAttribute(IppAttributeNames.PageRangesActual, Tag = Tag.RangeOfInteger)]
-    public Range[]? PageRangesActual { get; set; }
+    public IppValue<Range[]>? PageRangesActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual print quality
@@ -727,7 +727,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         [IppAttribute(IppAttributeNames.PrintQualityActual, Tag = Tag.Enum)]
-    public PrintQuality[]? PrintQualityActual { get; set; }
+    public IppValue<PrintQuality[]>? PrintQualityActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual presentation-direction-number-up
@@ -735,7 +735,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         [IppAttribute(IppAttributeNames.PresentationDirectionNumberUpActual, Tag = Tag.Keyword)]
-    public PresentationDirectionNumberUp[]? PresentationDirectionNumberUpActual { get; set; }
+    public IppValue<PresentationDirectionNumberUp[]>? PresentationDirectionNumberUpActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual printer resolution
@@ -743,7 +743,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         [IppAttribute(IppAttributeNames.PrinterResolutionActual, Tag = Tag.Resolution)]
-    public Resolution[]? PrinterResolutionActual { get; set; }
+    public IppValue<Resolution[]>? PrinterResolutionActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual sides
@@ -751,7 +751,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         [IppAttribute(IppAttributeNames.SidesActual, Tag = Tag.Keyword)]
-    public Sides[]? SidesActual { get; set; }
+    public IppValue<Sides[]>? SidesActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual separator-sheets
@@ -759,7 +759,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         [IppAttribute(IppAttributeNames.SeparatorSheetsActual)]
-    public SeparatorSheets[]? SeparatorSheetsActual { get; set; }
+    public IppValue<SeparatorSheets[]>? SeparatorSheetsActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual x-image-position
@@ -767,7 +767,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         [IppAttribute(IppAttributeNames.XImagePositionActual, Tag = Tag.Keyword)]
-    public XImagePosition[]? XImagePositionActual { get; set; }
+    public IppValue<XImagePosition[]>? XImagePositionActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual x-image-shift
@@ -776,7 +776,7 @@ public class JobDescriptionAttributes
         /// </summary>
         [Range(int.MinValue, int.MaxValue)]
         [IppAttribute(IppAttributeNames.XImageShiftActual, Tag = Tag.Integer)]
-    public int[]? XImageShiftActual { get; set; }
+    public IppValue<int[]>? XImageShiftActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual x-side1-image-shift
@@ -785,7 +785,7 @@ public class JobDescriptionAttributes
         /// </summary>
         [Range(int.MinValue, int.MaxValue)]
         [IppAttribute(IppAttributeNames.XSide1ImageShiftActual, Tag = Tag.Integer)]
-    public int[]? XSide1ImageShiftActual { get; set; }
+    public IppValue<int[]>? XSide1ImageShiftActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual x-side2-image-shift
@@ -794,7 +794,7 @@ public class JobDescriptionAttributes
         /// </summary>
         [Range(int.MinValue, int.MaxValue)]
         [IppAttribute(IppAttributeNames.XSide2ImageShiftActual, Tag = Tag.Integer)]
-    public int[]? XSide2ImageShiftActual { get; set; }
+    public IppValue<int[]>? XSide2ImageShiftActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual y-image-position
@@ -802,7 +802,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.8-2003 Section 3
         /// </summary>
         [IppAttribute(IppAttributeNames.YImagePositionActual, Tag = Tag.Keyword)]
-    public YImagePosition[]? YImagePositionActual { get; set; }
+    public IppValue<YImagePosition[]>? YImagePositionActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual y-image-shift
@@ -811,7 +811,7 @@ public class JobDescriptionAttributes
         /// </summary>
         [Range(int.MinValue, int.MaxValue)]
         [IppAttribute(IppAttributeNames.YImageShiftActual, Tag = Tag.Integer)]
-    public int[]? YImageShiftActual { get; set; }
+    public IppValue<int[]>? YImageShiftActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual y-side1-image-shift
@@ -820,7 +820,7 @@ public class JobDescriptionAttributes
         /// </summary>
         [Range(int.MinValue, int.MaxValue)]
         [IppAttribute(IppAttributeNames.YSide1ImageShiftActual, Tag = Tag.Integer)]
-    public int[]? YSide1ImageShiftActual { get; set; }
+    public IppValue<int[]>? YSide1ImageShiftActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual y-side2-image-shift
@@ -829,7 +829,7 @@ public class JobDescriptionAttributes
         /// </summary>
         [Range(int.MinValue, int.MaxValue)]
         [IppAttribute(IppAttributeNames.YSide2ImageShiftActual, Tag = Tag.Integer)]
-    public int[]? YSide2ImageShiftActual { get; set; }
+    public IppValue<int[]>? YSide2ImageShiftActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual page overrides
@@ -837,7 +837,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.6-2003 Section 5.1
         /// </summary>
         [IppAttribute(IppAttributeNames.OverridesActual)]
-    public OverrideInstruction[]? OverridesActual { get; set; }
+    public IppValue<OverrideInstruction[]>? OverridesActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual finishings-col
@@ -845,31 +845,31 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.1-2022 Section 11.2
         /// </summary>
         [IppAttribute(IppAttributeNames.FinishingsColActual)]
-    public FinishingsCol[]? FinishingsColActual { get; set; }
+    public IppValue<FinishingsCol[]>? FinishingsColActual { get; set; }
 
         /// <summary>
         /// The estimated date and time at which the Job will be completed. See: PWG 5100.3-2023 Section 5.1.1
         /// </summary>
         [IppAttribute(IppAttributeNames.DateTimeAtCompletedEstimated, Tag = Tag.DateTime)]
-    public DateTimeOffset? DateTimeAtCompletedEstimated { get; set; }
+    public IppValue<DateTimeOffset>? DateTimeAtCompletedEstimated { get; set; }
 
         /// <summary>
         /// The estimated date and time at which the Job will enter the 'processing' state. See: PWG 5100.3-2023 Section 5.1.2
         /// </summary>
         [IppAttribute(IppAttributeNames.DateTimeAtProcessingEstimated, Tag = Tag.DateTime)]
-    public DateTimeOffset? DateTimeAtProcessingEstimated { get; set; }
+    public IppValue<DateTimeOffset>? DateTimeAtProcessingEstimated { get; set; }
 
         /// <summary>
         /// The estimated time (in printer up-time seconds) at which the Job will be completed. See: PWG 5100.3-2023 Section 5.1.3
         /// </summary>
         [IppAttribute(IppAttributeNames.TimeAtCompletedEstimated, Tag = Tag.Integer)]
-    public int? TimeAtCompletedEstimated { get; set; }
+    public IppValue<int>? TimeAtCompletedEstimated { get; set; }
 
         /// <summary>
         /// The estimated time (in printer up-time seconds) at which the Job will enter the 'processing' state. See: PWG 5100.3-2023 Section 5.1.4
         /// </summary>
         [IppAttribute(IppAttributeNames.TimeAtProcessingEstimated, Tag = Tag.Integer)]
-    public int? TimeAtProcessingEstimated { get; set; }
+    public IppValue<int>? TimeAtProcessingEstimated { get; set; }
 
         /// <summary>
         /// The document-format-ready attribute reports the fetchable document MIME types.
@@ -877,7 +877,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>document-format-ready</code>
         [IppAttribute(IppAttributeNames.DocumentFormatReady, Tag = Tag.MimeMediaType)]
-    public string[]? DocumentFormatReady { get; set; }
+    public IppValue<string[]>? DocumentFormatReady { get; set; }
 
         /// <summary>
         /// The output-device-job-state attribute reports the job state on the output device.
@@ -885,7 +885,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>output-device-job-state</code>
         [IppAttribute(IppAttributeNames.OutputDeviceJobState, Tag = Tag.Enum)]
-    public JobState? OutputDeviceJobState { get; set; }
+    public IppValue<JobState>? OutputDeviceJobState { get; set; }
 
         /// <summary>
         /// The output-device-job-state-message attribute reports the job state message on the output device.
@@ -893,7 +893,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>output-device-job-state-message</code>
         [IppAttribute(IppAttributeNames.OutputDeviceJobStateMessage, Tag = Tag.TextWithoutLanguage)]
-    public string? OutputDeviceJobStateMessage { get; set; }
+    public IppValue<string>? OutputDeviceJobStateMessage { get; set; }
 
         /// <summary>
         /// The output-device-job-state-reasons attribute reports job state reasons on the output device.
@@ -901,7 +901,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>output-device-job-state-reasons</code>
         [IppAttribute(IppAttributeNames.OutputDeviceJobStateReasons, Tag = Tag.Keyword)]
-    public JobStateReason[]? OutputDeviceJobStateReasons { get; set; }
+    public IppValue<JobStateReason[]>? OutputDeviceJobStateReasons { get; set; }
 
         /// <summary>
         /// The output-device-uuid-assigned attribute reports the assigned output device UUID.
@@ -909,7 +909,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>output-device-uuid-assigned</code>
         [IppAttribute(IppAttributeNames.OutputDeviceUuidAssigned, Tag = Tag.Uri)]
-    public Uri? OutputDeviceUuidAssigned { get; set; }
+    public IppValue<Uri>? OutputDeviceUuidAssigned { get; set; }
 
         /// <summary>
         /// The actual materials used to process the 3D job.
@@ -917,7 +917,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>materials-col-actual</code>
         [IppAttribute(IppAttributeNames.MaterialsColActual)]
-    public Material[]? MaterialsColActual { get; set; }
+    public IppValue<Material[]>? MaterialsColActual { get; set; }
 
         /// <summary>
         /// The actual chamber humidity values used to process the 3D job.
@@ -927,7 +927,7 @@ public class JobDescriptionAttributes
         /// <code>chamber-humidity-actual</code>
         [Range(0, 100)]
         [IppAttribute(IppAttributeNames.ChamberHumidityActual, Tag = Tag.Integer)]
-    public int[]? ChamberHumidityActual { get; set; }
+    public IppValue<int[]>? ChamberHumidityActual { get; set; }
 
         /// <summary>
         /// The actual chamber temperature values used to process the 3D job.
@@ -937,7 +937,7 @@ public class JobDescriptionAttributes
         /// <code>chamber-temperature-actual</code>
         [Range(-273, int.MaxValue)]
         [IppAttribute(IppAttributeNames.ChamberTemperatureActual, Tag = Tag.Integer)]
-    public int[]? ChamberTemperatureActual { get; set; }
+    public IppValue<int[]>? ChamberTemperatureActual { get; set; }
 
         /// <summary>
         /// The actual multiple object handling value used to process the 3D job.
@@ -945,7 +945,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>multiple-object-handling-actual</code>
         [IppAttribute(IppAttributeNames.MultipleObjectHandlingActual3d, Tag = Tag.Keyword)]
-    public MultipleObjectHandling? MultipleObjectHandlingActual3d { get; set; }
+    public IppValue<MultipleObjectHandling>? MultipleObjectHandlingActual3d { get; set; }
 
         /// <summary>
         /// The actual print accuracy used to process the 3D job.
@@ -953,7 +953,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>print-accuracy-actual</code>
         [IppAttribute(IppAttributeNames.PrintAccuracyActual3d)]
-    public PrintAccuracy? PrintAccuracyActual3d { get; set; }
+    public IppValue<PrintAccuracy>? PrintAccuracyActual3d { get; set; }
 
         /// <summary>
         /// The actual platform temperature values used to process the 3D job.
@@ -963,7 +963,7 @@ public class JobDescriptionAttributes
         /// <code>platform-temperature-actual</code>
         [Range(-273, int.MaxValue)]
         [IppAttribute(IppAttributeNames.PlatformTemperatureActual, Tag = Tag.Integer)]
-    public int[]? PlatformTemperatureActual { get; set; }
+    public IppValue<int[]>? PlatformTemperatureActual { get; set; }
 
         /// <summary>
         /// The actual print base values used to process the 3D job.
@@ -971,7 +971,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>print-base-actual</code>
         [IppAttribute(IppAttributeNames.PrintBaseActual3d, Tag = Tag.Keyword)]
-    public PrintBase[]? PrintBaseActual3d { get; set; }
+    public IppValue<PrintBase[]>? PrintBaseActual3d { get; set; }
 
         /// <summary>
         /// The actual printed object collections used to process the 3D job.
@@ -979,7 +979,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>print-objects-actual</code>
         [IppAttribute(IppAttributeNames.PrintObjectsActual3d)]
-    public PrintObject[]? PrintObjectsActual3d { get; set; }
+    public IppValue<PrintObject[]>? PrintObjectsActual3d { get; set; }
 
         /// <summary>
         /// The actual print supports values used to process the 3D job.
@@ -987,7 +987,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>print-supports-actual</code>
         [IppAttribute(IppAttributeNames.PrintSupportsActual3d, Tag = Tag.Keyword)]
-    public PrintSupports[]? PrintSupportsActual3d { get; set; }
+    public IppValue<PrintSupports[]>? PrintSupportsActual3d { get; set; }
 
         /// <summary>
         /// This attribute specifies the status of destinations.
@@ -995,7 +995,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>destination-statuses</code>
         [IppAttribute(IppAttributeNames.DestinationStatuses)]
-    public DestinationStatus[]? DestinationStatuses { get; set; }
+    public IppValue<DestinationStatus[]>? DestinationStatuses { get; set; }
 
         /// <summary>
         /// This attribute specifies the actual number of job copies produced for the Job,
@@ -1006,7 +1006,7 @@ public class JobDescriptionAttributes
         /// <code>job-copies-actual</code>
         [Range(1, int.MaxValue)]
         [IppAttribute(IppAttributeNames.JobCopiesActual, Tag = Tag.Integer)]
-    public int[]? JobCopiesActual { get; set; }
+    public IppValue<int[]>? JobCopiesActual { get; set; }
 
         /// <summary>
         /// This attribute specifies the total number of octets (in K octets, i.e., units
@@ -1015,7 +1015,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>job-k-octets-completed</code>
         [IppAttribute(IppAttributeNames.JobKOctetsCompleted, Tag = Tag.Integer)]
-    public int? JobKOctetsCompleted { get; set; }
+    public IppValue<int>? JobKOctetsCompleted { get; set; }
 
         /// <summary>
         /// This attribute specifies the password for the job, encoded as an octet string.
@@ -1024,7 +1024,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>job-password</code>
         [IppAttribute(IppAttributeNames.JobPassword, Tag = Tag.OctetStringWithAnUnspecifiedFormat)]
-    public OctetString? JobPassword { get; set; }
+    public IppValue<OctetString>? JobPassword { get; set; }
 
         /// <summary>
         /// This attribute specifies the encryption algorithm used to encode the
@@ -1033,7 +1033,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>job-password-encryption</code>
         [IppAttribute(IppAttributeNames.JobPasswordEncryption, Tag = Tag.Keyword)]
-    public JobPasswordEncryption? JobPasswordEncryption { get; set; }
+    public IppValue<JobPasswordEncryption>? JobPasswordEncryption { get; set; }
 
         /// <summary>
         /// This attribute specifies the list of Job Template attributes that the client
@@ -1043,7 +1043,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>job-mandatory-attributes</code>
         [IppAttribute(IppAttributeNames.JobMandatoryAttributes, Tag = Tag.Keyword)]
-    public string[]? JobMandatoryAttributes { get; set; }
+    public IppValue<string[]>? JobMandatoryAttributes { get; set; }
 
         /// <summary>
         /// This attribute specifies the list of job IDs associated with this job
@@ -1053,7 +1053,7 @@ public class JobDescriptionAttributes
         /// <code>job-ids</code>
         [Range(1, int.MaxValue)]
         [IppAttribute(IppAttributeNames.JobIds, Tag = Tag.Integer)]
-    public int[]? JobIds { get; set; }
+    public IppValue<int[]>? JobIds { get; set; }
 
         /// <summary>
         /// This attribute specifies the URI of the user that submitted the job.
@@ -1062,7 +1062,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>requesting-user-uri</code>
         [IppAttribute(IppAttributeNames.RequestingUserUri, Tag = Tag.Uri)]
-    public Uri? RequestingUserUri { get; set; }
+    public IppValue<Uri>? RequestingUserUri { get; set; }
 
         /// <summary>
         /// This attribute specifies a URI that identifies the charge account or
@@ -1071,7 +1071,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>job-charge-info-uri</code>
         [IppAttribute(IppAttributeNames.JobChargeInfoUri, Tag = Tag.Uri)]
-    public Uri? JobChargeInfoUri { get; set; }
+    public IppValue<Uri>? JobChargeInfoUri { get; set; }
 
         /// <summary>
         /// The job-pages-completed-current-copy attribute.
@@ -1079,7 +1079,7 @@ public class JobDescriptionAttributes
         /// </summary>
         [Obsolete("The 'job-pages-completed-current-copy' attribute is obsolete. See PWG 5100.13-2023 Section 7.1.")]
         [IppAttribute(IppAttributeNames.JobPagesCompletedCurrentCopy, Tag = Tag.Integer)]
-    public int? JobPagesCompletedCurrentCopy { get; set; }
+    public IppValue<int>? JobPagesCompletedCurrentCopy { get; set; }
 
         /// <summary>
         /// The pages-completed-current-copy attribute.
@@ -1087,7 +1087,7 @@ public class JobDescriptionAttributes
         /// </summary>
         [Obsolete("The 'pages-completed-current-copy' attribute is obsolete. See PWG 5100.13-2023 Section 7.1.")]
         [IppAttribute(IppAttributeNames.PagesCompletedCurrentCopy, Tag = Tag.Integer)]
-    public int? PagesCompletedCurrentCopy { get; set; }
+    public IppValue<int>? PagesCompletedCurrentCopy { get; set; }
 
         /// <summary>
         /// The chamber-humidity-current 3D status attribute.
@@ -1095,7 +1095,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>chamber-humidity-current</code>
         [IppAttribute(IppAttributeNames.ChamberHumidityCurrent, Tag = Tag.Integer)]
-    public int? ChamberHumidityCurrent { get; set; }
+    public IppValue<int>? ChamberHumidityCurrent { get; set; }
 
         /// <summary>
         /// The chamber-temperature-current 3D status attribute.
@@ -1103,7 +1103,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>chamber-temperature-current</code>
         [IppAttribute(IppAttributeNames.ChamberTemperatureCurrent, Tag = Tag.Integer)]
-    public int? ChamberTemperatureCurrent { get; set; }
+    public IppValue<int>? ChamberTemperatureCurrent { get; set; }
 
         /// <summary>
         /// The pages-per-subset-actual Job Description attribute.
@@ -1112,6 +1112,6 @@ public class JobDescriptionAttributes
         [Obsolete("The 'pages-per-subset-actual' attribute is obsolete. See PWG 5100.13-2023 Section 7.1.")]
         [Range(1, int.MaxValue)]
         [IppAttribute(IppAttributeNames.PagesPerSubsetActual, Tag = Tag.Integer)]
-    public int[]? PagesPerSubsetActual { get; set; }
+    public IppValue<int[]>? PagesPerSubsetActual { get; set; }
     }
 }

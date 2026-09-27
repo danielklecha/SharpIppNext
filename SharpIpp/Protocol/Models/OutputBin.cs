@@ -12,7 +12,7 @@ namespace SharpIpp.Protocol.Models;
 /// </para>
 /// See: PWG 5100.2-2001 Section 2.1
 /// </summary>
-public readonly record struct OutputBin(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum 
+public readonly record struct OutputBin(string Value, bool IsMarked = true) : IMarkedSmartEnum 
 {
     /// <summary>
     /// The output-bin that, when facing the device, is best identified as the "top" bin

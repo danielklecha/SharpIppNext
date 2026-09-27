@@ -9,10 +9,8 @@ namespace SharpIpp.Protocol.Models;
 [IppAttribute(IppAttributeNames.PowerStateTransitionsCol)]
 public class PowerStateTransition : IIppCollection
 {
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
-    public PowerState? EndPowerState { get; set; }
-    public PowerState? StartPowerState { get; set; }
-    public int? StateTransitionSeconds { get; set; }
+    public IppValue<PowerState>? EndPowerState { get; set; }
+    public IppValue<PowerState>? StartPowerState { get; set; }
+    public IppValue<int>? StateTransitionSeconds { get; set; }
 }

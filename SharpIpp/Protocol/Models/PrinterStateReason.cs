@@ -8,7 +8,7 @@ namespace SharpIpp.Protocol.Models;
 /// See: PWG 5100.18-2025 Section 9.5
 /// See: PWG 5100.22-2025 Section 9.3
 /// </summary>
-public readonly record struct PrinterStateReason(string Value, bool IsValue = true) : ISmartEnum 
+public readonly record struct PrinterStateReason(string Value) : ISmartEnum 
 {
     /// <summary>
     /// No printer state reasons apply.

@@ -11,31 +11,29 @@ namespace SharpIpp.Protocol.Models;
 public class Trimming : IIppCollection
 {
     /// <inheritdoc />
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     /// <summary>
     /// 1setOf integer(0:MAX) in hundredths of millimeters (1/2540th of an inch)
     /// See: PWG 5100.1-2022 Section 5.2.10.1
     /// </summary>
     [Range(0, int.MaxValue)]
-    public int[]? TrimmingOffset { get; set; }
+    public IppValue<int[]>? TrimmingOffset { get; set; }
 
     /// <summary>
     /// type1 keyword
     /// See: PWG 5100.1-2022 Section 5.2.10.2
     /// </summary>
-    public FinishingReferenceEdge? TrimmingReferenceEdge { get; set; }
+    public IppValue<FinishingReferenceEdge>? TrimmingReferenceEdge { get; set; }
 
     /// <summary>
     /// type2 keyword | name(MAX)
     /// See: PWG 5100.1-2022 Section 5.2.10.3
     /// </summary>
-    public TrimmingType? TrimmingType { get; set; }
+    public IppValue<TrimmingType>? TrimmingType { get; set; }
 
     /// <summary>
     /// type2 keyword
     /// See: PWG 5100.1-2022 Section 5.2.10.4
     /// </summary>
-    public TrimmingWhen? TrimmingWhen { get; set; }
+    public IppValue<TrimmingWhen>? TrimmingWhen { get; set; }
 }

@@ -282,5 +282,75 @@ public class PrinterFinisherSupplyTests
         Action actDefault = () => { var _ = (PrinterFinisherSupply)default(OctetString); };
         actDefault.Should().Throw<FormatException>();
     }
+
+    [TestMethod]
+    public void Equals_WithSameValues_ShouldReturnTrue()
+    {
+        var supply1 = new PrinterFinisherSupply
+        {
+            Class = FinisherSupplyClass.Consumed,
+            Type = FinisherSupplyType.Staples,
+            Unit = CapacityUnit.Items,
+            Max = 5000,
+            Level = 2500,
+            Color = "silver",
+            Index = 1,
+            DeviceIndex = 1,
+            Extensions = new Dictionary<string, string> { { "vendor", "x" } }
+        };
+        var supply2 = new PrinterFinisherSupply
+        {
+            Class = FinisherSupplyClass.Consumed,
+            Type = FinisherSupplyType.Staples,
+            Unit = CapacityUnit.Items,
+            Max = 5000,
+            Level = 2500,
+            Color = "silver",
+            Index = 1,
+            DeviceIndex = 1,
+            Extensions = new Dictionary<string, string> { { "vendor", "x" } }
+        };
+
+        supply1.Equals(supply2).Should().BeTrue();
+        supply1.Equals((object)supply2).Should().BeTrue();
+        supply1.Equals(supply1).Should().BeTrue();
+        ((IEquatable<PrinterFinisherSupply>)supply1).Equals(supply2).Should().BeTrue();
+        supply1.GetHashCode().Should().Be(supply2.GetHashCode());
+    }
+
+    [TestMethod]
+    public void Equals_WithDifferentValues_ShouldReturnFalse()
+    {
+        var supply1 = new PrinterFinisherSupply
+        {
+            Class = FinisherSupplyClass.Consumed,
+            Type = FinisherSupplyType.Staples
+        };
+        var supply2 = new PrinterFinisherSupply
+        {
+            Class = FinisherSupplyClass.Consumed,
+            Type = FinisherSupplyType.BandInner
+        };
+
+        supply1.Equals(supply2).Should().BeFalse();
+        supply1.Equals((object)supply2).Should().BeFalse();
+        ((IEquatable<PrinterFinisherSupply>)supply1).Equals(supply2).Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void Equals_WithNullOrDifferentType_ShouldReturnFalse()
+    {
+        var supply = new PrinterFinisherSupply
+        {
+            Class = FinisherSupplyClass.Consumed,
+            Type = FinisherSupplyType.Staples
+        };
+
+        supply!.Equals((PrinterFinisherSupply?)null).Should().BeFalse();
+        supply!.Equals((object?)null).Should().BeFalse();
+        supply!.Equals(new object()).Should().BeFalse();
+        ((IEquatable<PrinterFinisherSupply>)supply!).Equals(null).Should().BeFalse();
+    }
 }
+
 

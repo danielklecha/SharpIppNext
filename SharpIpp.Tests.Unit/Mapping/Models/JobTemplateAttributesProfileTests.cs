@@ -23,7 +23,7 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
     {
         var src = new JobTemplateAttributes
         {
-            FinishingsCol = new[] { NoValue.GetNoValue<FinishingsCol>() }
+            FinishingsCol = default(IppValue<FinishingsCol[]>)
         };
 
         var request = _mapper.Map<IppRequestMessage>(src);
@@ -183,7 +183,7 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
     {
         var src = new JobTemplateAttributes
         {
-            MediaCol = NoValue.GetNoValue<MediaCol>()
+            MediaCol = default(IppValue<MediaCol>)
         };
 
         var request = _mapper.Map<IppRequestMessage>(src);
@@ -198,7 +198,7 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
     {
         var src = new JobTemplateAttributes
         {
-            MaterialsCol = [new Material { MaterialName = "pla" }],
+            MaterialsCol = new[] { new Material { MaterialName = "pla" } },
             MultipleObjectHandling = (MultipleObjectHandling?)"abort-job",
             PlatformTemperature = 75,
             PrintAccuracy = new PrintAccuracy
@@ -209,7 +209,7 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
                 ZAccuracy = 50
             },
             PrintBase = (PrintBase?)"raft",
-            PrintObjects = [new PrintObject { DocumentNumber = 1, PrintObjectsSource = new Uri("ipp://example/doc/1") }],
+            PrintObjects = new[] { new PrintObject { DocumentNumber = 1, PrintObjectsSource = new Uri("ipp://example/doc/1") } },
             PrintSupports = (PrintSupports?)"generated-supports",
             ChamberHumidity = 45,
             ChamberTemperature = 60
@@ -259,15 +259,15 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
 
         var dst = _mapper.Map<IIppRequestMessage, JobTemplateAttributes>((IIppRequestMessage)request);
 
-        dst.MaterialsCol.Should().NotBeNull();
-        dst.MaterialsCol![0].MaterialName.Should().Be("pla");
+        dst.MaterialsCol?.Value.Should().NotBeNull();
+        dst.MaterialsCol!.Value.Value[0].MaterialName?.Value.Should().Be("pla");
         dst.MultipleObjectHandling.Should().Be((MultipleObjectHandling?)"abort-job");
         dst.PlatformTemperature.Should().Be(75);
         dst.PrintAccuracy.Should().NotBeNull();
-        dst.PrintAccuracy!.AccuracyUnits.Should().Be((AccuracyUnits?)"mm");
+        dst.PrintAccuracy!.Value.Value.AccuracyUnits?.Value.Should().Be((AccuracyUnits)"mm");
         dst.PrintBase.Should().Be((PrintBase?)"raft");
-        dst.PrintObjects.Should().NotBeNull();
-        dst.PrintObjects![0].DocumentNumber.Should().Be(1);
+        dst.PrintObjects?.Value.Should().NotBeNull();
+        dst.PrintObjects!.Value.Value[0].DocumentNumber?.Value.Should().Be(1);
         dst.PrintSupports.Should().Be((PrintSupports?)"generated-supports");
         dst.ChamberHumidity.Should().Be(45);
         dst.ChamberTemperature.Should().Be(60);
@@ -278,17 +278,17 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
     {
         var src = new JobTemplateAttributes
         {
-            Overrides =
-            [
+            Overrides = new[]
+            {
                 new OverrideInstruction
                 {
-                    PageRanges =
-                    [
+                    PageRanges = new[]
+                    {
                         new SharpIpp.Protocol.Models.Range(1, 1),
                         new SharpIpp.Protocol.Models.Range(3, 4)
-                    ],
-                    DocumentNumberRanges = [new SharpIpp.Protocol.Models.Range(1, 2147483647)],
-                    DocumentCopyRanges = [new SharpIpp.Protocol.Models.Range(2, 2)],
+                    },
+                    DocumentNumberRanges = new[] { new SharpIpp.Protocol.Models.Range(1, 2147483647) },
+                    DocumentCopyRanges = new[] { new SharpIpp.Protocol.Models.Range(2, 2) },
                     JobTemplateAttributes = new JobTemplateAttributes
                     {
                         Media = (Media)"iso_a4_210x297mm",
@@ -296,7 +296,7 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
                         NumberUp = 2
                     }
                 }
-            ]
+            }
         };
 
         var request = _mapper.Map<IppRequestMessage>(src);
@@ -306,15 +306,15 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
         request.JobAttributes.Should().Contain(a => a.Tag == Tag.RangeOfInteger && Equals(a.Value, new SharpIpp.Protocol.Models.Range(2, 2)));
 
         var roundTripped = _mapper.Map<IIppRequestMessage, JobTemplateAttributes>((IIppRequestMessage)request);
-        roundTripped.Overrides.Should().NotBeNull();
-        roundTripped.Overrides!.Should().HaveCount(1);
-        roundTripped.Overrides[0].PageRanges.Should().BeEquivalentTo(src.Overrides![0].PageRanges);
-        roundTripped.Overrides[0].DocumentNumberRanges.Should().BeEquivalentTo(src.Overrides[0].DocumentNumberRanges);
-        roundTripped.Overrides[0].DocumentCopyRanges.Should().BeEquivalentTo(src.Overrides[0].DocumentCopyRanges);
-        roundTripped.Overrides[0].JobTemplateAttributes.Should().NotBeNull();
-        roundTripped.Overrides[0].JobTemplateAttributes!.Media.Should().Be((Media)"iso_a4_210x297mm");
-        roundTripped.Overrides[0].JobTemplateAttributes!.Sides.Should().Be(Sides.OneSided);
-        roundTripped.Overrides[0].JobTemplateAttributes!.NumberUp.Should().Be(2);
+        roundTripped.Overrides?.Value.Should().NotBeNull();
+        roundTripped.Overrides!.Value.Value.Should().HaveCount(1);
+        roundTripped.Overrides!.Value.Value[0].PageRanges.Should().BeEquivalentTo(src.Overrides!.Value.Value[0].PageRanges);
+        roundTripped.Overrides!.Value.Value[0].DocumentNumberRanges.Should().BeEquivalentTo(src.Overrides!.Value.Value[0].DocumentNumberRanges);
+        roundTripped.Overrides!.Value.Value[0].DocumentCopyRanges.Should().BeEquivalentTo(src.Overrides!.Value.Value[0].DocumentCopyRanges);
+        roundTripped.Overrides!.Value.Value[0].JobTemplateAttributes.Should().NotBeNull();
+        roundTripped.Overrides!.Value.Value[0].JobTemplateAttributes!.Media.Should().Be((Media)"iso_a4_210x297mm");
+        roundTripped.Overrides!.Value.Value[0].JobTemplateAttributes!.Sides.Should().Be(Sides.OneSided);
+        roundTripped.Overrides!.Value.Value[0].JobTemplateAttributes!.NumberUp.Should().Be(2);
     }
 
     [TestMethod]
@@ -354,10 +354,10 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
             JobCoverFront = new Cover { CoverType = CoverType.PrintFront, Media = (Media)"iso_a4_210x297mm" },
             JobFinishings = new[] { Finishings.Staple },
             JobFinishingsCol = new[] { new FinishingsCol { FinishingTemplate = FinishingTemplate.Staple } },
-            SheetCollate = "collated",
-            PageOverrides = new[] { new OverrideInstruction { PageRanges = [new SharpIpp.Protocol.Models.Range(1, 1)], JobTemplateAttributes = new JobTemplateAttributes { Sides = Sides.OneSided } } },
+            SheetCollate = (SheetCollate)"collated",
+            PageOverrides = new[] { new OverrideInstruction { PageRanges = new[] { new SharpIpp.Protocol.Models.Range(1, 1) }, JobTemplateAttributes = new JobTemplateAttributes { Sides = Sides.OneSided } } },
             PagesPerSubset = new[] { 4, 8 },
-            DocumentOverrides = new[] { new OverrideInstruction { PageRanges = [new SharpIpp.Protocol.Models.Range(1, 2)], JobTemplateAttributes = new JobTemplateAttributes { Copies = 2 } } },
+            DocumentOverrides = new[] { new OverrideInstruction { PageRanges = new[] { new SharpIpp.Protocol.Models.Range(1, 2) }, JobTemplateAttributes = new JobTemplateAttributes { Copies = 2 } } },
             MediaSource = MediaSource.Main,
             MediaSourceFeedDirection = MediaSourceFeedDirection.LongEdgeFirst,
             MediaSourceFeedOrientation = Orientation.Portrait,
@@ -411,15 +411,15 @@ public class JobTemplateAttributesProfileTests : MapperTestBase
         dst.JobCopies.Should().Be(3);
         dst.JobCoverBack.Should().NotBeNull();
         dst.JobCoverFront.Should().NotBeNull();
-        dst.JobFinishings.Should().Contain(Finishings.Staple);
+        dst.JobFinishings!.Value.Value.Should().Contain(Finishings.Staple);
         dst.JobFinishingsCol.Should().NotBeNull();
         dst.SheetCollate.Should().Be(SheetCollate.Collated);
-        dst.PagesPerSubset.Should().Contain(4);
+        dst.PagesPerSubset!.Value.Value.Should().Contain(4);
         dst.MediaSource.Should().Be(MediaSource.Main);
         dst.MediaSourceFeedDirection.Should().Be(MediaSourceFeedDirection.LongEdgeFirst);
         dst.MediaSourceFeedOrientation.Should().Be(Orientation.Portrait);
         dst.RequestingUserUri.Should().Be(new Uri("mailto:user@example.com"));
-        dst.JobMandatoryAttributes.Should().Contain("copies");
-        dst.JobIds.Should().Contain(101);
+        dst.JobMandatoryAttributes!.Value.Value.Should().Contain("copies");
+        dst.JobIds!.Value.Value.Should().Contain(101);
     }
 }

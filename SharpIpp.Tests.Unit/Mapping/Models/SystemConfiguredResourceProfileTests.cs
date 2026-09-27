@@ -30,11 +30,11 @@ public class SystemConfiguredResourceProfileTests : MapperTestBase
 
         var result = _mapper.Map<SystemConfiguredResource>(dict);
 
-        result.ResourceFormat.Should().Be((ResourceFormat?)"application/pdf");
-        result.ResourceId.Should().Be(202);
-        result.ResourceState.Should().Be(ResourceState.Available);
-        result.ResourceStateReasons.Should().Contain(ResourceStateReason.None);
-        result.ResourceType.Should().Be((ResourceType)"x-vendor-resource");
+        result.ResourceFormat?.Value.Should().Be((ResourceFormat)"application/pdf");
+        result.ResourceId?.Value.Should().Be(202);
+        result.ResourceState?.Value.Should().Be(ResourceState.Available);
+        result.ResourceStateReasons?.Value.Should().Contain(ResourceStateReason.None);
+        result.ResourceType?.Value.Should().Be((ResourceType)"x-vendor-resource");
     }
 
     [TestMethod]
@@ -42,7 +42,7 @@ public class SystemConfiguredResourceProfileTests : MapperTestBase
     {
         var src = new SystemConfiguredResource
         {
-            ResourceFormat = "application/pdf",
+            ResourceFormat = (ResourceFormat)"application/pdf",
             ResourceId = 202,
             ResourceInfo = "configured-resource-info",
             ResourceName = "configured-resource",

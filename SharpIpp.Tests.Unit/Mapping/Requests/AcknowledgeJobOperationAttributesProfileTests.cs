@@ -62,7 +62,7 @@ public class AcknowledgeJobOperationAttributesProfileTests : MapperTestBase
         dst.PrinterUri.Should().Be(new Uri("ipp://127.0.0.1/printers/printer1"));
         dst.RequestingUserName.Should().Be("user");
         dst.OutputDeviceUuid.Should().Be(new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174001"));
-        dst.OutputDeviceJobStates.Should().ContainSingle().Which.Should().Be(JobState.Processing);
+        dst.OutputDeviceJobStates!.Value.Value.Should().ContainSingle().Which.Should().Be(JobState.Processing);
         dst.FetchStatusCode.Should().Be(IppStatusCode.ClientErrorDocumentAccessError);
         dst.FetchStatusMessage.Should().Be("Access denied");
     }

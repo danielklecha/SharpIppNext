@@ -10,9 +10,7 @@ namespace SharpIpp.Protocol.Models;
 [IppAttribute(IppAttributeNames.JobSaveDisposition)]
 public class JobSaveDisposition : IIppCollection
 {
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
-    public SaveDisposition? SaveDisposition { get; set; }
-    public SaveInfo[]? SaveInfo { get; set; }
-    public Uri? SaveLocation { get; set; }
+    public IppValue<SaveDisposition>? SaveDisposition { get; set; }
+    public IppValue<SaveInfo[]>? SaveInfo { get; set; }
+    public IppValue<Uri>? SaveLocation { get; set; }
 }

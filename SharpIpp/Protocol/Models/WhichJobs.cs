@@ -7,7 +7,7 @@ namespace SharpIpp.Protocol.Models
     /// See: RFC 8011 Section 4.2.6.1
     /// See: PWG 5100.7-2023 Section 5.2
     /// </summary>
-    public readonly record struct WhichJobs(string Value, bool IsValue = true) : ISmartEnum
+    public readonly record struct WhichJobs(string Value) : ISmartEnum
     {
         /// <summary>
         /// This includes any Job object whose state is

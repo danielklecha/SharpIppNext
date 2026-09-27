@@ -15,6 +15,15 @@ public class MetadataAttribute : IppValidationAttribute
     /// <returns>A ValidationResult value indicating whether validation succeeded or failed.</returns>
     public override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
+        if (value is IIppValue ippValue)
+        {
+            if (!ippValue.IsValue)
+            {
+                return ValidationResult.Success;
+            }
+            value = ippValue.ValueAsObject;
+        }
+
         if (value == null)
         {
             return ValidationResult.Success;

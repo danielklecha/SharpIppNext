@@ -12,7 +12,7 @@ namespace SharpIpp.Tests.Unit.Mapping;
 /// <summary>
 /// Property-based tests for smart enum round-trips.
 /// For each ISmartEnum type that received new values in Task 8, verifies that
-/// encoding to an IppAttribute and decoding back preserves Value, IsValue, and IsMarked.
+/// encoding to an IppAttribute and decoding back preserves Value and IsMarked.
 ///
 /// Property 5: Smart Enum Round-Trip Preserves All Fields
 /// Validates: Requirements 8.5
@@ -92,7 +92,7 @@ public class SmartEnumRoundTripTests : MapperTestBase
         // Feature: pwg5100-spec-parity, Property 5: Smart Enum Round-Trip Preserves All Fields
         foreach (var value in KnownJobStateReasonValues)
         {
-            // JobStateReason(string Value, bool IsValue = true)
+            // JobStateReason(string Value)
             var original = new JobStateReason(value);
 
             // Encode to IppAttribute
@@ -102,7 +102,6 @@ public class SmartEnumRoundTripTests : MapperTestBase
             var decoded = _mapper.Map<string, JobStateReason>((string)attr.Value!);
 
             decoded.Value.Should().Be(original.Value, $"JobStateReason '{value}': Value mismatch");
-            decoded.IsValue.Should().BeTrue($"JobStateReason '{value}': IsValue should be true for known value");
         }
     }
 
@@ -121,7 +120,6 @@ public class SmartEnumRoundTripTests : MapperTestBase
             var decoded = _mapper.Map<string, JobStateReason>((string)attr.Value!);
 
             decoded.Value.Should().Be(original.Value, $"iteration {i}: JobStateReason unrecognized value '{value}': Value mismatch");
-            decoded.IsValue.Should().BeTrue($"iteration {i}: JobStateReason unrecognized value '{value}': IsValue should be true");
         }
     }
 
@@ -133,14 +131,13 @@ public class SmartEnumRoundTripTests : MapperTestBase
         // Feature: pwg5100-spec-parity, Property 5: Smart Enum Round-Trip Preserves All Fields
         foreach (var value in KnownPrinterStateReasonValues)
         {
-            // PrinterStateReason(string Value, bool IsValue = true)
+            // PrinterStateReason(string Value)
             var original = new PrinterStateReason(value);
 
             var attr = new IppAttribute(Tag.Keyword, IppAttributeNames.PrinterStateReasons, _mapper.Map<string>(original));
             var decoded = _mapper.Map<string, PrinterStateReason>((string)attr.Value!);
 
             decoded.Value.Should().Be(original.Value, $"PrinterStateReason '{value}': Value mismatch");
-            decoded.IsValue.Should().BeTrue($"PrinterStateReason '{value}': IsValue should be true for known value");
         }
     }
 
@@ -159,7 +156,6 @@ public class SmartEnumRoundTripTests : MapperTestBase
             var decoded = _mapper.Map<string, PrinterStateReason>((string)attr.Value!);
 
             decoded.Value.Should().Be(original.Value, $"iteration {i}: PrinterStateReason unrecognized value '{value}': Value mismatch");
-            decoded.IsValue.Should().BeTrue($"iteration {i}: PrinterStateReason unrecognized value '{value}': IsValue should be true");
         }
     }
 
@@ -171,7 +167,7 @@ public class SmartEnumRoundTripTests : MapperTestBase
         // Feature: pwg5100-spec-parity, Property 5: Smart Enum Round-Trip Preserves All Fields
         foreach (var value in KnownNotifyEventValues)
         {
-            // NotifyEvent(string Value, bool IsMarked = true, bool IsValue = true)
+            // NotifyEvent(string Value, bool IsMarked = true)
             var original = new NotifyEvent(value);
 
             // Encode: use keyword tag (IsMarked = true)
@@ -181,7 +177,6 @@ public class SmartEnumRoundTripTests : MapperTestBase
             var decoded = _mapper.Map<string, NotifyEvent>((string)attr.Value!);
 
             decoded.Value.Should().Be(original.Value, $"NotifyEvent '{value}': Value mismatch");
-            decoded.IsValue.Should().BeTrue($"NotifyEvent '{value}': IsValue should be true");
             decoded.IsMarked.Should().BeTrue($"NotifyEvent '{value}': IsMarked should be true when mapped from string");
         }
     }
@@ -202,7 +197,6 @@ public class SmartEnumRoundTripTests : MapperTestBase
             var decodedKeyword = _mapper.Map<string, NotifyEvent>((string)attrKeyword.Value!);
 
             decodedKeyword.Value.Should().Be(originalKeyword.Value, $"iteration {i}: NotifyEvent keyword '{value}': Value mismatch");
-            decodedKeyword.IsValue.Should().BeTrue($"iteration {i}: NotifyEvent keyword '{value}': IsValue should be true");
             decodedKeyword.IsMarked.Should().BeTrue($"iteration {i}: NotifyEvent keyword '{value}': IsMarked should be true");
 
             // Test with IsMarked = false (name tag)
@@ -232,7 +226,6 @@ public class SmartEnumRoundTripTests : MapperTestBase
             var decoded = _mapper.Map<string, JobStateReason>(serialized);
 
             decoded.Value.Should().Be(value, $"JobStateReason '{value}': Value must be preserved through round-trip");
-            decoded.IsValue.Should().BeTrue($"JobStateReason '{value}': IsValue must be true after round-trip");
         }
     }
 
@@ -251,7 +244,6 @@ public class SmartEnumRoundTripTests : MapperTestBase
             var decoded = _mapper.Map<string, PrinterStateReason>(serialized);
 
             decoded.Value.Should().Be(value, $"PrinterStateReason '{value}': Value must be preserved through round-trip");
-            decoded.IsValue.Should().BeTrue($"PrinterStateReason '{value}': IsValue must be true after round-trip");
         }
     }
 
@@ -270,7 +262,6 @@ public class SmartEnumRoundTripTests : MapperTestBase
             var decoded = _mapper.Map<string, NotifyEvent>(serialized);
 
             decoded.Value.Should().Be(value, $"NotifyEvent '{value}': Value must be preserved through round-trip");
-            decoded.IsValue.Should().BeTrue($"NotifyEvent '{value}': IsValue must be true after round-trip");
             decoded.IsMarked.Should().BeTrue($"NotifyEvent '{value}': IsMarked must be true after round-trip from string");
         }
     }

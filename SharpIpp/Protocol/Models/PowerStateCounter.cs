@@ -9,11 +9,9 @@ namespace SharpIpp.Protocol.Models;
 [IppAttribute(IppAttributeNames.PowerStateCountersCol)]
 public class PowerStateCounter : IIppCollection
 {
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
-    public int? HibernateTransitions { get; set; }
-    public int? OnTransitions { get; set; }
-    public int? StandbyTransitions { get; set; }
-    public int? SuspendTransitions { get; set; }
+    public IppValue<int>? HibernateTransitions { get; set; }
+    public IppValue<int>? OnTransitions { get; set; }
+    public IppValue<int>? StandbyTransitions { get; set; }
+    public IppValue<int>? SuspendTransitions { get; set; }
 }

@@ -1,4 +1,4 @@
-using SharpIpp.Mapping;
+﻿using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Requests;
@@ -16,5 +16,5 @@ public class CancelCurrentJobOperationAttributes : JobOperationAttributes
     /// </summary>
     /// <code>job-message-from-operator</code>
     [IppAttribute(IppAttributeNames.JobMessageFromOperator, Tag = Tag.TextWithoutLanguage)]
-    public string? JobMessageFromOperator { get; set; }
+    public IppValue<string>? JobMessageFromOperator { get; set; }
 }

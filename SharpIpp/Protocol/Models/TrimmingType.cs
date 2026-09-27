@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the type of trimming to perform.
 /// See: PWG 5100.1-2022 Section 6.30
 /// </summary>
-public readonly record struct TrimmingType(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
+public readonly record struct TrimmingType(string Value, bool IsMarked = true) : IMarkedSmartEnum
 {
     /// <summary>
     /// Draw a line at the trim position without cutting.

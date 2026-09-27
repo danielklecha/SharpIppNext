@@ -9,18 +9,16 @@ namespace SharpIpp.Protocol.Models;
 [IppAttribute(IppAttributeNames.PowerStateMonitorCol)]
 public class PowerStateMonitor : IIppCollection
 {
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
-    public int? CurrentMonthKwh { get; set; }
-    public int? CurrentWatts { get; set; }
-    public int? LifetimeKwh { get; set; }
-    public bool? MetersAreActual { get; set; }
-    public PowerState? PowerState { get; set; }
+    public IppValue<int>? CurrentMonthKwh { get; set; }
+    public IppValue<int>? CurrentWatts { get; set; }
+    public IppValue<int>? LifetimeKwh { get; set; }
+    public IppValue<bool>? MetersAreActual { get; set; }
+    public IppValue<PowerState>? PowerState { get; set; }
 
     [IppAttribute("power-state-message", Tag = Tag.TextWithoutLanguage)]
-    public string? PowerStateMessage { get; set; }
+    public IppValue<string>? PowerStateMessage { get; set; }
 
-    public bool? PowerUsageIsRmsWatts { get; set; }
-    public PowerState[]? ValidRequestPowerStates { get; set; }
+    public IppValue<bool>? PowerUsageIsRmsWatts { get; set; }
+    public IppValue<PowerState[]>? ValidRequestPowerStates { get; set; }
 }

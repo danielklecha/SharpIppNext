@@ -10,24 +10,22 @@ namespace SharpIpp.Protocol.Models;
 public class Folding : IIppCollection
 {
     /// <inheritdoc />
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     /// <summary>
     /// type1 keyword
     /// See: PWG 5100.1-2022 Section 5.2.6.1
     /// </summary>
-    public FoldingDirection? FoldingDirection { get; set; }
+    public IppValue<FoldingDirection>? FoldingDirection { get; set; }
 
     /// <summary>
     /// integer(0:MAX) in hundredths of millimeters (1/2540th of an inch)
     /// See: PWG 5100.1-2022 Section 5.2.6.2
     /// </summary>
-    public int? FoldingOffset { get; set; }
+    public IppValue<int>? FoldingOffset { get; set; }
 
     /// <summary>
     /// type1 keyword
     /// See: PWG 5100.1-2022 Section 5.2.6.3
     /// </summary>
-    public FinishingReferenceEdge? FoldingReferenceEdge { get; set; }
+    public IppValue<FinishingReferenceEdge>? FoldingReferenceEdge { get; set; }
 }

@@ -1,4 +1,4 @@
-using SharpIpp.Mapping;
+﻿using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
 
@@ -18,12 +18,12 @@ public class GetNextDocumentDataOperationAttributes : OperationAttributes
     /// </summary>
     [Range(1, int.MaxValue)]
     [IppAttribute(IppAttributeNames.JobId, Tag = Tag.Integer)]
-    public int? JobId { get; set; }
+    public IppValue<int>? JobId { get; set; }
 
     /// <summary>
     /// The <c>document-data-wait</c> operation attribute.
     /// See: PWG 5100.17-2014 Section 6.1.1
     /// </summary>
     [IppAttribute(IppAttributeNames.DocumentDataWait, Tag = Tag.Boolean)]
-    public bool? DocumentDataWait { get; set; }
+    public IppValue<bool>? DocumentDataWait { get; set; }
 }

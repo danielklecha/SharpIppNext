@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the reason for the current state of a System object.
 /// See: PWG 5100.22-2025 Section 7.3.30
 /// </summary>
-public readonly record struct SystemStateReason(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
+public readonly record struct SystemStateReason(string Value, bool IsMarked = true) : IMarkedSmartEnum
 {
     /// <summary>
     /// No system state reasons apply.

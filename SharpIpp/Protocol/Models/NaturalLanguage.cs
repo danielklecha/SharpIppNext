@@ -3,7 +3,7 @@ namespace SharpIpp.Protocol.Models;
 /// <summary>
 /// Identifies the natural language of the supplied document data or operation attributes.
 /// </summary>
-public readonly record struct NaturalLanguage(string Value, bool IsValue = true) : ISmartEnum
+public readonly record struct NaturalLanguage(string Value) : ISmartEnum
 {
     /// <summary>
     /// en

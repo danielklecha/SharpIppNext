@@ -14,5 +14,5 @@ public class ValidateDocumentRequest : IppRequest<ValidateDocumentOperationAttri
     /// The document-template-attributes IPP attribute group.
     /// See: PWG 5100.13-2023 Section 5.2.1
     /// </summary>
-    public DocumentTemplateAttributes? DocumentTemplateAttributes { get; set; }
+    public IppValue<DocumentTemplateAttributes>? DocumentTemplateAttributes { get; set; }
 }

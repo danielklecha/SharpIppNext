@@ -24,9 +24,9 @@ public class RegisterOutputDeviceTests : SharpIppIntegrationTestBase
                 PrinterUri = new Uri("http://127.0.0.1:631"),
                 SystemUri = new Uri("ipp://127.0.0.1:8631/system"),
                 OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174999"),
-                OutputDeviceX509Certificate = ["-----BEGIN CERTIFICATE-----"],
-                PrinterServiceType = [(PrinterServiceType)"print-ws"],
-                PrinterXriRequested = [new SystemXri { XriSecurity = (UriSecurity)"xri-security" }]
+                OutputDeviceX509Certificate = new[] { "-----BEGIN CERTIFICATE-----" },
+                PrinterServiceType = new[] { (PrinterServiceType)"print-ws" },
+                PrinterXriRequested = new[] { new SystemXri { XriSecurity = (UriSecurity)"xri-security" } }
             }
         };
 
@@ -61,9 +61,9 @@ public class RegisterOutputDeviceTests : SharpIppIntegrationTestBase
                 PrinterUri = new Uri("http://127.0.0.1:631"),
                 SystemUri = new Uri("ipp://127.0.0.1:8631/system"),
                 OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174999"),
-                OutputDeviceX509Request = ["-----BEGIN CERTIFICATE REQUEST-----"],
-                PrinterServiceType = [(PrinterServiceType)"print-ws"],
-                PrinterXriRequested = [new SystemXri { XriSecurity = (UriSecurity)"xri-security" }]
+                OutputDeviceX509Request = new[] { "-----BEGIN CERTIFICATE REQUEST-----" },
+                PrinterServiceType = new[] { (PrinterServiceType)"print-ws" },
+                PrinterXriRequested = new[] { new SystemXri { XriSecurity = (UriSecurity)"xri-security" } }
             }
         };
 

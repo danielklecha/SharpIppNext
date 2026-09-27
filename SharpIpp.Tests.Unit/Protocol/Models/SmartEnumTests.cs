@@ -104,21 +104,6 @@ public class SmartEnumTests
         ((IMarkedSmartEnum)instance!).Value.Should().Be(value);
     }
 
-    [TestMethod]
-    [DynamicData(nameof(SmartEnumData))]
-    public void PropertyInitializer_SetsIsValue(Type type, string value)
-    {
-        // Arrange
-        var instance = CreatePopulatedSmartEnum(type, value);
-        var property = type.GetProperty("IsValue");
-
-        // Act
-        property?.SetValue(instance, false);
-
-        // Assert
-        property.Should().NotBeNull($"{type.Name} should expose IsValue property");
-        property?.GetValue(instance).Should().Be(false);
-    }
 
     [TestMethod]
     [DynamicData(nameof(SmartEnumData))]
@@ -152,13 +137,13 @@ public class SmartEnumTests
 
     internal static object CreatePopulatedSmartEnum(Type type, string value)
     {
-        var threeArgumentConstructor = type.GetConstructor([typeof(string), typeof(bool), typeof(bool)]);
-        if (threeArgumentConstructor != null)
-            return threeArgumentConstructor.Invoke([value, true, true]);
-
         var twoArgumentConstructor = type.GetConstructor([typeof(string), typeof(bool)]);
         if (twoArgumentConstructor != null)
             return twoArgumentConstructor.Invoke([value, true]);
+
+        var oneArgumentConstructor = type.GetConstructor([typeof(string)]);
+        if (oneArgumentConstructor != null)
+            return oneArgumentConstructor.Invoke([value]);
 
         throw new MissingMethodException($"No supported constructor found for smart enum type '{type.FullName}'.");
     }

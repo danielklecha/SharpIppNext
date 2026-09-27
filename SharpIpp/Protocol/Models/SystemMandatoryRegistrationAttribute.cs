@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies attribute names for <code>system-mandatory-registration-attributes</code>.
 /// See: PWG 5100.22-2025 Section 7.2.37
 /// </summary>
-public readonly record struct SystemMandatoryRegistrationAttribute(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
+public readonly record struct SystemMandatoryRegistrationAttribute(string Value, bool IsMarked = true) : IMarkedSmartEnum
 {
     /// <summary>The output-device-uuid attribute. See: PWG 5100.22-2025 Section 7.2.37</summary>
     public static readonly SystemMandatoryRegistrationAttribute OutputDeviceUuid = new("output-device-uuid");

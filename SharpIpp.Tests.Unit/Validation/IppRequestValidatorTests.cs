@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Models.Requests;
 using SharpIpp.Protocol.Models;
@@ -339,39 +339,20 @@ public class IppRequestValidatorTests
     }
 
     [TestMethod]
-    public void Validate_WhenRangeAttributeHasMultipleRanges_WithValidValues_DoesNotThrow()
+    public void RangeAttribute_WhenMultipleRanges_ValidatesCorrectly()
     {
-        var validator = IppRequestValidator.Default;
-        var request = new TestMultiRangeModel { Value = null };
-        Action act = () => validator.Validate(request);
-        act.Should().NotThrow();
+        var attribute = new RangeAttribute(0, 0, 100, 255);
+        var context = new ValidationContext(Encoding.UTF8, "Value");
 
-        request.Value = 0;
-        act.Should().NotThrow();
+        attribute.IsValid(null, context).Should().Be(ValidationResult.Success);
+        attribute.IsValid(0, context).Should().Be(ValidationResult.Success);
+        attribute.IsValid(100, context).Should().Be(ValidationResult.Success);
+        attribute.IsValid(200, context).Should().Be(ValidationResult.Success);
+        attribute.IsValid(255, context).Should().Be(ValidationResult.Success);
 
-        request.Value = 100;
-        act.Should().NotThrow();
-
-        request.Value = 200;
-        act.Should().NotThrow();
-
-        request.Value = 255;
-        act.Should().NotThrow();
-    }
-
-    [TestMethod]
-    public void Validate_WhenRangeAttributeHasMultipleRanges_WithInvalidValues_ThrowsValidationException()
-    {
-        var validator = IppRequestValidator.Default;
-        var request = new TestMultiRangeModel { Value = 50 };
-        Action act = () => validator.Validate(request);
-        act.Should().Throw<ValidationException>().WithMessage("*Value*");
-
-        request.Value = 256;
-        act.Should().Throw<ValidationException>().WithMessage("*Value*");
-
-        request.Value = -1;
-        act.Should().Throw<ValidationException>().WithMessage("*Value*");
+        attribute.IsValid(50, context)!.ErrorMessage.Should().Contain("Value");
+        attribute.IsValid(256, context)!.ErrorMessage.Should().Contain("Value");
+        attribute.IsValid(-1, context)!.ErrorMessage.Should().Contain("Value");
     }
 
     [TestMethod]
@@ -465,14 +446,7 @@ public class IppRequestValidatorTests
         act.Should().Throw<ValidationException>().WithMessage("*DocumentPasswordSupported*");
     }
 
-    private class TestMultiRangeModel : IIppRequest
-    {
-        [Range(0, 0, 100, 255)]
-        public int? Value { get; set; }
-        public IppVersion Version { get; set; }
-        public int RequestId { get; set; }
-        public OperationAttributes? OperationAttributes { get; }
-    }
+
 
     [TestMethod]
     public void Validate_WhenCircularReferenceExists_DoesNotRecurseInfinitely()
@@ -547,19 +521,56 @@ public class IppRequestValidatorTests
     }
 
     [TestMethod]
-    public void Validate_WhenByteRangeAttributeIsValid_DoesNotThrow()
+    public void ByteRangeAttribute_WhenValid_ReturnsSuccess()
+    {
+        var attr = new ByteRangeAttribute(1, 10);
+        var ctx = new ValidationContext(Encoding.UTF8, "TestProp");
+
+        attr.IsValid("hello", ctx).Should().Be(ValidationResult.Success);
+        attr.IsValid(new StringWithLanguage("en", "test"), ctx).Should().Be(ValidationResult.Success);
+        attr.IsValid(new OctetString("hello"), ctx).Should().Be(ValidationResult.Success);
+        attr.IsValid(new byte[] { 1, 2, 3 }, ctx).Should().Be(ValidationResult.Success);
+        attr.IsValid(new[] { "abc", "def" }, ctx).Should().Be(ValidationResult.Success);
+    }
+
+    [TestMethod]
+    public void ByteRangeAttribute_WhenInvalid_ReturnsError()
+    {
+        var attr = new ByteRangeAttribute(1, 10);
+        var ctx = new ValidationContext(Encoding.UTF8, "TestProp");
+
+        attr.IsValid("abcdefghijk", ctx)!.ErrorMessage.Should().Contain("TestProp");
+        attr.IsValid(new StringWithLanguage("en", "longertextstring"), ctx)!.ErrorMessage.Should().Contain("TestProp");
+        attr.IsValid(new OctetString("abcdefghijk"), ctx)!.ErrorMessage.Should().Contain("TestProp");
+        attr.IsValid(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 }, ctx)!.ErrorMessage.Should().Contain("TestProp");
+        attr.IsValid(new[] { "abcdefghijk" }, ctx)!.ErrorMessage.Should().Contain("TestProp");
+    }
+
+    [TestMethod]
+    public void ByteRangeAttribute_RespectsCharset()
+    {
+        var attr = new ByteRangeAttribute(1, 10);
+        var utf16Ctx = new ValidationContext(Encoding.Unicode, "StringValue");
+        var utf8Ctx = new ValidationContext(Encoding.UTF8, "StringValue");
+
+        // "abcdef" is 6 bytes in UTF-8, but 12 bytes in UTF-16
+        attr.IsValid("abcdef", utf16Ctx)!.ErrorMessage.Should().Contain("StringValue");
+        attr.IsValid("abcdef", utf8Ctx).Should().Be(ValidationResult.Success);
+    }
+
+    [TestMethod]
+    public void Validate_WhenAttributesCharsetIsInvalid_FallsBackToUtf8()
     {
         var validator = IppRequestValidator.Default;
-        var request = new TestByteRangeModel
+        var request = new PrintJobRequest
         {
             Version = new IppVersion(2, 0),
             RequestId = 123,
-            OperationAttributes = new OperationAttributes { AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8" },
-            StringValue = "hello",
-            StringWithLanguageValue = new StringWithLanguage("en", "test"),
-            OctetStringValue = new OctetString("hello"),
-            BytesValue = new byte[] { 1, 2, 3 },
-            StringArrayValue = new[] { "abc", "def" }
+            OperationAttributes = new PrintJobOperationAttributes
+            {
+                PrinterUri = new Uri("ipp://127.0.0.1:631/"),
+                AttributesCharset = (Charset)"invalid-charset-name"
+            }
         };
 
         Action act = () => validator.Validate(request);
@@ -567,111 +578,33 @@ public class IppRequestValidatorTests
     }
 
     [TestMethod]
-    public void Validate_WhenByteRangeAttributeIsInvalid_ThrowsValidationException()
+    public void ByteRangeAttribute_WhenCharsetIsInvalid_FallsBackToUtf8()
     {
-        var validator = IppRequestValidator.Default;
-        var request = new TestByteRangeModel
+        var attr = new ByteRangeAttribute(1, 10);
+        Encoding encoding;
+        try
         {
-            Version = new IppVersion(2, 0),
-            RequestId = 123,
-            OperationAttributes = new OperationAttributes { AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8" },
-            StringValue = "abcdefghijk", // 11 bytes, exceeds max 10
-        };
+            encoding = Encoding.GetEncoding("invalid-charset-name");
+        }
+        catch
+        {
+            encoding = Encoding.UTF8;
+        }
+        var ctx = new ValidationContext(encoding, "StringValue");
 
-        Action act = () => validator.Validate(request);
-        act.Should().Throw<ValidationException>().WithMessage("*StringValue*");
-
-        request.StringValue = "hello";
-        request.StringWithLanguageValue = new StringWithLanguage("en", "longertextstring"); // 2 + 16 + 4 = 22 bytes, exceeds max 15
-        act.Should().Throw<ValidationException>().WithMessage("*StringWithLanguageValue*");
-
-        request.StringWithLanguageValue = null;
-        request.OctetStringValue = new OctetString("abcdefghijk"); // 11 bytes, exceeds max 10
-        act.Should().Throw<ValidationException>().WithMessage("*OctetStringValue*");
-
-        request.OctetStringValue = null;
-        request.BytesValue = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 }; // 11 bytes, exceeds max 10
-        act.Should().Throw<ValidationException>().WithMessage("*BytesValue*");
-
-        request.BytesValue = null;
-        request.StringArrayValue = new[] { "abc", "abcdefghijk" }; // elements exceeds max 10
-        act.Should().Throw<ValidationException>().WithMessage("*StringArrayValue*");
+        attr.IsValid("abcdef", ctx).Should().Be(ValidationResult.Success);
+        attr.IsValid("abcdefghijk", ctx)!.ErrorMessage.Should().Contain("StringValue");
     }
 
     [TestMethod]
-    public void Validate_WhenByteRangeAttributeRespectsCharset_ThrowsOrDoesNotThrow()
+    public void ByteRangeAttribute_WithMultipleRanges_ValidatesCorrectly()
     {
-        var validator = IppRequestValidator.Default;
-        
-        // "abcdef" is 6 bytes in UTF-8, but 12 bytes in UTF-16.
-        // StringValue has [ByteRange(1, 10)].
-        var request = new TestByteRangeModel
-        {
-            Version = new IppVersion(2, 0),
-            RequestId = 123,
-            OperationAttributes = new OperationAttributes { AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-16" },
-            StringValue = "abcdef" // 12 bytes in UTF-16, exceeds 10 bytes limit
-        };
+        var attr = new ByteRangeAttribute(1, 3, 7, 10);
+        var ctx = new ValidationContext(Encoding.UTF8, "MultiRange");
 
-        Action act = () => validator.Validate(request);
-        act.Should().Throw<ValidationException>().WithMessage("*StringValue*");
-
-        request.OperationAttributes.AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8"; // 6 bytes in UTF-8, fits in 10 bytes limit
-        act.Should().NotThrow();
-    }
-
-    [TestMethod]
-    public void Validate_WhenByteRangeAttributeCharsetIsInvalid_FallsBackToUtf8()
-    {
-        var validator = IppRequestValidator.Default;
-        var request = new TestByteRangeModel
-        {
-            Version = new IppVersion(2, 0),
-            RequestId = 123,
-            OperationAttributes = new OperationAttributes { AttributesCharset = (SharpIpp.Protocol.Models.Charset)"invalid-charset-name" },
-            StringValue = "abcdef"
-        };
-
-        Action act = () => validator.Validate(request);
-        act.Should().NotThrow();
-
-        request.StringValue = "abcdefghijk"; // 11 bytes in UTF-8, exceeds 10 bytes limit
-        act.Should().Throw<ValidationException>().WithMessage("*StringValue*");
-    }
-
-    [TestMethod]
-    public void Validate_WhenByteRangeAttributeWithMultipleRangesIsValid_DoesNotThrow()
-    {
-        var validator = IppRequestValidator.Default;
-        var request = new TestByteRangeModel
-        {
-            Version = new IppVersion(2, 0),
-            RequestId = 123,
-            OperationAttributes = new OperationAttributes { AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8" },
-            MultiRangeStringValue = "ab" // 2 bytes, falls in [1, 3]
-        };
-
-        Action act = () => validator.Validate(request);
-        act.Should().NotThrow();
-
-        request.MultiRangeStringValue = "abcdefgh"; // 8 bytes, falls in [7, 10]
-        act.Should().NotThrow();
-    }
-
-    [TestMethod]
-    public void Validate_WhenByteRangeAttributeWithMultipleRangesIsInvalid_ThrowsValidationException()
-    {
-        var validator = IppRequestValidator.Default;
-        var request = new TestByteRangeModel
-        {
-            Version = new IppVersion(2, 0),
-            RequestId = 123,
-            OperationAttributes = new OperationAttributes { AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8" },
-            MultiRangeStringValue = "abcde" // 5 bytes, outside [1, 3] and [7, 10]
-        };
-
-        Action act = () => validator.Validate(request);
-        act.Should().Throw<ValidationException>().WithMessage("*MultiRangeStringValue*");
+        attr.IsValid("ab", ctx).Should().Be(ValidationResult.Success); // 2 bytes in [1, 3]
+        attr.IsValid("abcdefgh", ctx).Should().Be(ValidationResult.Success); // 8 bytes in [7, 10]
+        attr.IsValid("abcde", ctx)!.ErrorMessage.Should().Contain("MultiRange"); // 5 bytes outside
     }
 
     [TestMethod]
@@ -792,6 +725,165 @@ public class IppRequestValidatorTests
     }
 
     [TestMethod]
+    public void ByteRangeAttribute_IsValid_WhenValueIsIppValueNoValue_ReturnsSuccess()
+    {
+        var attribute = new ByteRangeAttribute(1, 10);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        IppValue<string> value = IppValue<string>.NoValue;
+
+        var result = attribute.IsValid(value, context);
+
+        result.Should().Be(ValidationResult.Success);
+    }
+
+    [TestMethod]
+    public void ByteRangeAttribute_IsValid_WhenValueIsIppValueWithValidValue_ReturnsSuccess()
+    {
+        var attribute = new ByteRangeAttribute(1, 10);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        IppValue<string> value = new("hello");
+
+        var result = attribute.IsValid(value, context);
+
+        result.Should().Be(ValidationResult.Success);
+    }
+
+    [TestMethod]
+    public void ByteRangeAttribute_IsValid_WhenValueIsIppValueWithInvalidValue_ReturnsValidationError()
+    {
+        var attribute = new ByteRangeAttribute(1, 3);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        IppValue<string> value = new("hello");
+
+        var result = attribute.IsValid(value, context);
+
+        result.Should().NotBeNull();
+        result!.IsSuccess.Should().BeFalse();
+        result.ErrorMessage.Should().Be("The field TestField must be between 1 and 3 bytes.");
+    }
+
+    [TestMethod]
+    public void ByteRangeAttribute_IsValid_WhenValueIsIppValueWithNull_ReturnsSuccess()
+    {
+        var attribute = new ByteRangeAttribute(1, 10);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        IppValue<string?> value = new((string?)null);
+
+        var result = attribute.IsValid(value, context);
+
+        result.Should().Be(ValidationResult.Success);
+    }
+
+    [TestMethod]
+    public void ByteRangeAttribute_IsValid_WhenCollectionContainsIppValueNoValue_ReturnsSuccess()
+    {
+        var attribute = new ByteRangeAttribute(1, 10);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        var collection = new IIppValue[]
+        {
+            IppValue<string>.NoValue,
+            new IppValue<string>("abc")
+        };
+
+        var result = attribute.IsValid(collection, context);
+
+        result.Should().Be(ValidationResult.Success);
+    }
+
+    [TestMethod]
+    public void ByteRangeAttribute_IsValid_WhenCollectionContainsIppValueWithNull_ReturnsSuccess()
+    {
+        var attribute = new ByteRangeAttribute(1, 10);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        var collection = new IIppValue[]
+        {
+            new IppValue<string?>((string?)null),
+            new IppValue<string>("abc")
+        };
+
+        var result = attribute.IsValid(collection, context);
+
+        result.Should().Be(ValidationResult.Success);
+    }
+
+    [TestMethod]
+    public void ByteRangeAttribute_IsValid_WhenCollectionContainsIppValueWithValidValue_ReturnsSuccess()
+    {
+        var attribute = new ByteRangeAttribute(1, 10);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        var collection = new IppValue<string>[]
+        {
+            new("abc"),
+            new("def")
+        };
+
+        var result = attribute.IsValid(collection, context);
+
+        result.Should().Be(ValidationResult.Success);
+    }
+
+    [TestMethod]
+    public void ByteRangeAttribute_IsValid_WhenCollectionContainsIppValueWithOutOfRangeValue_ReturnsValidationError()
+    {
+        var attribute = new ByteRangeAttribute(1, 5);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        var collection = new IppValue<string>[]
+        {
+            new("abc"),
+            new("abcdef")
+        };
+
+        var result = attribute.IsValid(collection, context);
+
+        result.Should().NotBeNull();
+        result!.IsSuccess.Should().BeFalse();
+        result.ErrorMessage.Should().Be("The field TestField must be between 1 and 5 bytes.");
+    }
+
+    [TestMethod]
+    public void ByteRangeAttribute_IsValid_WhenValueIsIppValueWithCollection_ReturnsSuccess()
+    {
+        var attribute = new ByteRangeAttribute(1, 10);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        IppValue<string[]> value = new(new[] { "abc", "def" });
+
+        var result = attribute.IsValid(value, context);
+
+        result.Should().Be(ValidationResult.Success);
+    }
+
+    [TestMethod]
+    public void ByteRangeAttribute_IsValid_WhenValueIsIppValueOctetString_ValidatesCorrectly()
+    {
+        var attribute = new ByteRangeAttribute(1, 5);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+
+        IppValue<OctetString> valid = new(new OctetString(new byte[] { 1, 2 }));
+        attribute.IsValid(valid, context).Should().Be(ValidationResult.Success);
+
+        IppValue<OctetString> invalid = new(new OctetString(new byte[10]));
+        var result = attribute.IsValid(invalid, context);
+        result.Should().NotBeNull();
+        result!.IsSuccess.Should().BeFalse();
+        result.ErrorMessage.Should().Be("The field TestField must be between 1 and 5 bytes.");
+    }
+
+    [TestMethod]
+    public void ByteRangeAttribute_IsValid_WhenValueIsIppValueStringWithLanguage_ValidatesCorrectly()
+    {
+        var attribute = new ByteRangeAttribute(1, 15);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+
+        IppValue<StringWithLanguage> valid = new(new StringWithLanguage("en", "hi"));
+        attribute.IsValid(valid, context).Should().Be(ValidationResult.Success);
+
+        IppValue<StringWithLanguage> invalid = new(new StringWithLanguage("en", "this is way too long for fifteen bytes"));
+        var result = attribute.IsValid(invalid, context);
+        result.Should().NotBeNull();
+        result!.IsSuccess.Should().BeFalse();
+    }
+
+    [TestMethod]
     public void ByteRangeAttribute_GetByteLengths_WhenValueIsNull_YieldsBreak()
     {
         var lengths = TestByteRangeAttributeExposer.CallGetByteLengths(null, Encoding.UTF8).ToList();
@@ -858,19 +950,14 @@ public class IppRequestValidatorTests
     }
 
     [TestMethod]
-    public void Validate_WhenByteRangeAttributeOnUnsupportedType_ThrowsValidationException()
+    public void ByteRangeAttribute_OnUnsupportedType_ThrowsValidationException()
     {
-        var validator = IppRequestValidator.Default;
-        var request = new TestByteRangeModel
-        {
-            Version = new IppVersion(2, 0),
-            RequestId = 123,
-            OperationAttributes = new OperationAttributes { AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8" },
-            UnsupportedValue = 123
-        };
+        var attr = new ByteRangeAttribute(1, 10);
+        var ctx = new ValidationContext(Encoding.UTF8, "UnsupportedValue");
 
-        Action act = () => validator.Validate(request);
-        act.Should().Throw<ValidationException>().WithMessage("*Unsupported type*");
+        var result = attr.IsValid(123, ctx);
+        result.Should().NotBeNull();
+        result!.ErrorMessage.Should().Contain("Unsupported type");
     }
 
     [TestMethod]
@@ -884,7 +971,7 @@ public class IppRequestValidatorTests
             OperationAttributes = new PrintJobOperationAttributes
             {
                 PrinterUri = new Uri("ipp://127.0.0.1:631/"),
-                DocumentPassword = new byte[1024] // Exceeds 1023 octets
+                DocumentPassword = new OctetString(new byte[1024]) // Exceeds 1023 octets
             }
         };
 
@@ -903,7 +990,7 @@ public class IppRequestValidatorTests
             OperationAttributes = new PrintJobOperationAttributes
             {
                 PrinterUri = new Uri("ipp://127.0.0.1:631/"),
-                DocumentPassword = new byte[1023] // Exactly 1023 octets
+                DocumentPassword = new OctetString(new byte[1023]) // Exactly 1023 octets
             }
         };
 
@@ -922,7 +1009,7 @@ public class IppRequestValidatorTests
             OperationAttributes = new SendDocumentOperationAttributes
             {
                 PrinterUri = new Uri("ipp://127.0.0.1:631/"),
-                DocumentPassword = new byte[1024] // Exceeds 1023 octets
+                DocumentPassword = new OctetString(new byte[1024]) // Exceeds 1023 octets
             }
         };
 
@@ -944,7 +1031,7 @@ public class IppRequestValidatorTests
             },
             DocumentTemplateAttributes = new DocumentTemplateAttributes
             {
-                DocumentPassword = new byte[1024] // Exceeds 1023 octets
+                DocumentPassword = new OctetString(new byte[1024]) // Exceeds 1023 octets
             }
         };
 
@@ -952,31 +1039,5 @@ public class IppRequestValidatorTests
         act.Should().Throw<ValidationException>().WithMessage("*DocumentPassword*");
     }
 
-    private class TestByteRangeModel : IIppRequest
-    {
-        public IppVersion Version { get; set; }
-        public int RequestId { get; set; }
-        public OperationAttributes? OperationAttributes { get; set; }
 
-        [ByteRange(1, 10)]
-        public string? StringValue { get; set; }
-
-        [ByteRange(1, 3, 7, 10)]
-        public string? MultiRangeStringValue { get; set; }
-
-        [ByteRange(1, 15)]
-        public StringWithLanguage? StringWithLanguageValue { get; set; }
-
-        [ByteRange(1, 10)]
-        public OctetString? OctetStringValue { get; set; }
-
-        [ByteRange(1, 10)]
-        public byte[]? BytesValue { get; set; }
-
-        [ByteRange(1, 10)]
-        public string[]? StringArrayValue { get; set; }
-
-        [ByteRange(1, 10)]
-        public int? UnsupportedValue { get; set; }
-    }
 }

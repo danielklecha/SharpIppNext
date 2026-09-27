@@ -6,119 +6,117 @@ namespace SharpIpp.Protocol.Models;
 public class MediaCol : IIppCollection
 {
     /// <inheritdoc />
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     /// <summary>
     /// type2 keyword | name(MAX)
     /// </summary>
-    public MediaCoating? MediaBackCoating { get; set; }
+    public IppValue<MediaCoating>? MediaBackCoating { get; set; }
 
     /// <summary>
     /// integer(0:MAX)
     /// </summary>
-    public int? MediaBottomMargin { get; set; }
+    public IppValue<int>? MediaBottomMargin { get; set; }
 
     /// <summary>
     /// type2 keyword | name(MAX)
     /// See: PWG Media Standardized Names v2.0 (MSN2) [PWG5101.1]
     /// </summary>
-    public MediaColor? MediaColor { get; set; }
+    public IppValue<MediaColor>? MediaColor { get; set; }
 
     /// <summary>
     /// type2 keyword | name(MAX)
     /// </summary>
-    public MediaCoating? MediaFrontCoating { get; set; }
+    public IppValue<MediaCoating>? MediaFrontCoating { get; set; }
 
     /// <summary>
     /// type2 keyword | name(MAX)
     /// </summary>
-    public MediaGrain? MediaGrain { get; set; }
+    public IppValue<MediaGrain>? MediaGrain { get; set; }
 
     /// <summary>
     /// integer(0:MAX)
     /// </summary>
-    public int? MediaHoleCount { get; set; }
+    public IppValue<int>? MediaHoleCount { get; set; }
 
     /// <summary>
     /// text(255)
     /// </summary>
     [IppAttribute("media-info", Tag = Tag.TextWithoutLanguage)]
-    public string? MediaInfo { get; set; }
+    public IppValue<string>? MediaInfo { get; set; }
 
     /// <summary>
     /// type2 keyword | name(MAX)
     /// </summary>
-    public MediaKey? MediaKey { get; set; }
+    public IppValue<MediaKey>? MediaKey { get; set; }
 
     /// <summary>
     /// integer(0:MAX)
     /// </summary>
-    public int? MediaLeftMargin { get; set; }
+    public IppValue<int>? MediaLeftMargin { get; set; }
 
     /// <summary>
     /// integer(1:MAX)
     /// </summary>
-    public int? MediaOrderCount { get; set; }
+    public IppValue<int>? MediaOrderCount { get; set; }
 
     /// <summary>
     /// type2 keyword | name(MAX)
     /// </summary>
-    public MediaPrePrinted? MediaPrePrinted { get; set; }
+    public IppValue<MediaPrePrinted>? MediaPrePrinted { get; set; }
 
     /// <summary>
     /// type2 keyword | name(MAX)
     /// </summary>
-    public MediaRecycled? MediaRecycled { get; set; }
+    public IppValue<MediaRecycled>? MediaRecycled { get; set; }
 
     /// <summary>
     /// integer(0:MAX)
     /// </summary>
-    public int? MediaRightMargin { get; set; }
+    public IppValue<int>? MediaRightMargin { get; set; }
 
     /// <summary>
     /// type2 keyword | name(MAX)
     /// </summary>
-    public MediaSize? MediaSize { get; set; }
+    public IppValue<MediaSize>? MediaSize { get; set; }
 
     /// <summary>
     /// type2 keyword | name(MAX)
     /// See: PWG media size name [PWG5101.1]
     /// </summary>
-    public Media? MediaSizeName { get; set; }
+    public IppValue<Media>? MediaSizeName { get; set; }
 
     /// <summary>
     /// type2 keyword | name(MAX)
     /// </summary>
-    public MediaSource? MediaSource { get; set; }
+    public IppValue<MediaSource>? MediaSource { get; set; }
 
     /// <summary>
     /// collection
     /// </summary>
-    public MediaSourceProperties? MediaSourceProperties { get; set; }
+    public IppValue<MediaSourceProperties>? MediaSourceProperties { get; set; }
 
     /// <summary>
     /// integer(1:MAX)
     /// </summary>
-    public int? MediaThickness { get; set; }
+    public IppValue<int>? MediaThickness { get; set; }
 
     /// <summary>
     /// type2 keyword | name(MAX)
     /// </summary>
-    public MediaTooth? MediaTooth { get; set; }
+    public IppValue<MediaTooth>? MediaTooth { get; set; }
 
     /// <summary>
     /// integer(0:MAX)
     /// </summary>
-    public int? MediaTopMargin { get; set; }
+    public IppValue<int>? MediaTopMargin { get; set; }
 
     /// <summary>
     /// type2 keyword | name(MAX)
     /// </summary>
-    public MediaType? MediaType { get; set; }
+    public IppValue<MediaType>? MediaType { get; set; }
 
     /// <summary>
     /// integer(0:MAX)
     /// </summary>
-    public int? MediaWeightMetric { get; set; }
+    public IppValue<int>? MediaWeightMetric { get; set; }
 }

@@ -1,4 +1,4 @@
-using SharpIpp.Mapping;
+﻿using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
 
@@ -17,5 +17,5 @@ public class AllocatePrinterResourcesOperationAttributes : SystemOperationAttrib
     /// </summary>
     [Range(1, int.MaxValue)]
     [IppAttribute(IppAttributeNames.ResourceIds, Tag = Tag.Integer)]
-    public int[]? ResourceIds { get; set; }
+    public IppValue<int[]>? ResourceIds { get; set; }
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
@@ -25,19 +25,19 @@ public class FetchDocumentOperationAttributes : JobOperationAttributes
     /// See: PWG 5100.18-2025 Section 7.1.8
     /// </summary>
     [IppAttribute(IppAttributeNames.OutputDeviceUuid, Tag = Tag.Uri)]
-    public Uri? OutputDeviceUuid { get; set; }
+    public IppValue<Uri>? OutputDeviceUuid { get; set; }
 
     /// <summary>
     /// The <c>compression-accepted</c> operation attribute.
     /// See: PWG 5100.18-2025 Section 7.1.3
     /// </summary>
     [IppAttribute(IppAttributeNames.CompressionAccepted, Tag = Tag.Keyword)]
-    public Compression[]? CompressionAccepted { get; set; }
+    public IppValue<Compression[]>? CompressionAccepted { get; set; }
 
     /// <summary>
     /// The <c>document-format-accepted</c> operation attribute.
     /// See: PWG 5100.18-2025 Section 7.1.4
     /// </summary>
     [IppAttribute(IppAttributeNames.DocumentFormatAccepted, Tag = Tag.MimeMediaType)]
-    public string[]? DocumentFormatAccepted { get; set; }
+    public IppValue<string[]>? DocumentFormatAccepted { get; set; }
 }

@@ -11,45 +11,43 @@ namespace SharpIpp.Protocol.Models;
 public class PrinterOutputTray : IIppCollection
 {
     /// <inheritdoc />
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     /// <summary>
     /// type — keyword describing the output tray type.
     /// See: PWG 5100.13-2023 Section 6.6.10
     /// </summary>
-    public OutputTrayType? Type { get; set; }
+    public IppValue<OutputTrayType>? Type { get; set; }
 
     /// <summary>
     /// level — current fill level of the output tray (integer, -2 = unknown, -3 = no-value).
     /// See: PWG 5100.13-2023 Section 6.6.10
     /// </summary>
-    public int? Level { get; set; }
+    public IppValue<int>? Level { get; set; }
 
     /// <summary>
     /// status — current status of the output tray (keyword).
     /// See: PWG 5100.13-2023 Section 6.6.10
     /// </summary>
     [IppAttribute("status", Tag = Tag.Keyword)]
-    public string? Status { get; set; }
+    public IppValue<string>? Status { get; set; }
 
     /// <summary>
     /// unit — unit of measure for level (keyword).
     /// See: PWG 5100.13-2023 Section 6.6.10
     /// </summary>
-    public CapacityUnit? Unit { get; set; }
+    public IppValue<CapacityUnit>? Unit { get; set; }
 
     /// <summary>
     /// stackingorder — stacking order of output (keyword).
     /// See: PWG 5100.13-2023 Section 6.6.10
     /// </summary>
     [IppAttribute("stackingorder")]
-    public StackingOrder? StackingOrder { get; set; }
+    public IppValue<StackingOrder>? StackingOrder { get; set; }
 
     /// <summary>
     /// pagedelivery — page delivery orientation (keyword).
     /// See: PWG 5100.13-2023 Section 6.6.10
     /// </summary>
     [IppAttribute("pagedelivery")]
-    public PageDelivery? PageDelivery { get; set; }
+    public IppValue<PageDelivery>? PageDelivery { get; set; }
 }

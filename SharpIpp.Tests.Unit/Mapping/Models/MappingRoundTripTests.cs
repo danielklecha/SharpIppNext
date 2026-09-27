@@ -50,41 +50,41 @@ public class MappingRoundTripTests : MapperTestBase
                 {
                     new PrinterInputTray
                     {
-                        Type = RandomString(rng),
+                        Type = (InputTrayType)RandomString(rng),
                         Level = RandomInt(rng),
                         Status = RandomString(rng),
                         MediaSizeX = RandomInt(rng),
                         MediaSizeY = RandomInt(rng),
-                        MediaColor = RandomString(rng),
+                        MediaColor = (MediaColor)RandomString(rng),
                         MediaInfo = RandomString(rng),
-                        MediaType = RandomString(rng),
-                        Unit = RandomString(rng),
-                        FeedOrientation = RandomString(rng),
+                        MediaType = (MediaType)RandomString(rng),
+                        Unit = (CapacityUnit)RandomString(rng),
+                        FeedOrientation = (FeedOrientation)RandomString(rng),
                     }
                 },
                 PrinterOutputTray = new[]
                 {
                     new PrinterOutputTray
                     {
-                        Type = RandomString(rng),
+                        Type = (OutputTrayType)RandomString(rng),
                         Level = RandomInt(rng),
                         Status = RandomString(rng),
-                        Unit = RandomString(rng),
-                        StackingOrder = RandomString(rng),
-                        PageDelivery = RandomString(rng),
+                        Unit = (CapacityUnit)RandomString(rng),
+                        StackingOrder = (StackingOrder)RandomString(rng),
+                        PageDelivery = (PageDelivery)RandomString(rng),
                     }
                 },
                 PrinterSupply = new[]
                 {
                     new PrinterSupply
                     {
-                        Type = RandomString(rng),
+                        Type = (PrinterSupplyType)RandomString(rng),
                         Level = RandomInt(rng),
                         MaxCapacity = RandomInt(rng),
                         ColorName = RandomString(rng),
                         MarkerName = RandomString(rng),
-                        MarkerType = RandomString(rng),
-                        Unit = RandomString(rng),
+                        MarkerType = (MarkerType)RandomString(rng),
+                        Unit = (CapacityUnit)RandomString(rng),
                     }
                 },
                 JobConstraintsSupported = new[]
@@ -107,7 +107,7 @@ public class MappingRoundTripTests : MapperTestBase
                 {
                     new PrintColorModeIccProfile
                     {
-                        PrintColorMode = RandomString(rng),
+                        PrintColorMode = (PrintColorMode)RandomString(rng),
                         ProfileUri = new Uri($"https://example.com/{RandomString(rng)}.icc"),
                     }
                 },
@@ -140,71 +140,71 @@ public class MappingRoundTripTests : MapperTestBase
             var roundTripped = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(dict);
 
             // Assert PrinterInputTray
-            roundTripped.PrinterInputTray.Should().NotBeNull($"iteration {i}");
-            roundTripped.PrinterInputTray!.Should().HaveCount(1, $"iteration {i}");
-            roundTripped.PrinterInputTray[0].Type.Should().Be(original.PrinterInputTray[0].Type, $"iteration {i}: PrinterInputTray.Type");
-            roundTripped.PrinterInputTray[0].Level.Should().Be(original.PrinterInputTray[0].Level, $"iteration {i}: PrinterInputTray.Level");
-            roundTripped.PrinterInputTray[0].Status.Should().Be(original.PrinterInputTray[0].Status, $"iteration {i}: PrinterInputTray.Status");
-            roundTripped.PrinterInputTray[0].MediaSizeX.Should().Be(original.PrinterInputTray[0].MediaSizeX, $"iteration {i}: PrinterInputTray.MediaSizeX");
-            roundTripped.PrinterInputTray[0].MediaSizeY.Should().Be(original.PrinterInputTray[0].MediaSizeY, $"iteration {i}: PrinterInputTray.MediaSizeY");
-            roundTripped.PrinterInputTray[0].MediaColor.Should().Be(original.PrinterInputTray[0].MediaColor, $"iteration {i}: PrinterInputTray.MediaColor");
-            roundTripped.PrinterInputTray[0].MediaInfo.Should().Be(original.PrinterInputTray[0].MediaInfo, $"iteration {i}: PrinterInputTray.MediaInfo");
-            roundTripped.PrinterInputTray[0].MediaType.Should().Be(original.PrinterInputTray[0].MediaType, $"iteration {i}: PrinterInputTray.MediaType");
-            roundTripped.PrinterInputTray[0].Unit.Should().Be(original.PrinterInputTray[0].Unit, $"iteration {i}: PrinterInputTray.Unit");
-            roundTripped.PrinterInputTray[0].FeedOrientation.Should().Be(original.PrinterInputTray[0].FeedOrientation, $"iteration {i}: PrinterInputTray.FeedOrientation");
+            roundTripped.PrinterInputTray?.Value.Should().NotBeNull($"iteration {i}");
+            roundTripped.PrinterInputTray!.Value.Value.Should().HaveCount(1, $"iteration {i}");
+            roundTripped.PrinterInputTray!.Value.Value[0].Type?.Value.Should().Be(original.PrinterInputTray!.Value.Value[0].Type?.Value, $"iteration {i}: PrinterInputTray.Type");
+            roundTripped.PrinterInputTray!.Value.Value[0].Level?.Value.Should().Be(original.PrinterInputTray!.Value.Value[0].Level?.Value, $"iteration {i}: PrinterInputTray.Level");
+            roundTripped.PrinterInputTray!.Value.Value[0].Status?.Value.Should().Be(original.PrinterInputTray!.Value.Value[0].Status?.Value, $"iteration {i}: PrinterInputTray.Status");
+            roundTripped.PrinterInputTray!.Value.Value[0].MediaSizeX?.Value.Should().Be(original.PrinterInputTray!.Value.Value[0].MediaSizeX?.Value, $"iteration {i}: PrinterInputTray.MediaSizeX");
+            roundTripped.PrinterInputTray!.Value.Value[0].MediaSizeY?.Value.Should().Be(original.PrinterInputTray!.Value.Value[0].MediaSizeY?.Value, $"iteration {i}: PrinterInputTray.MediaSizeY");
+            roundTripped.PrinterInputTray!.Value.Value[0].MediaColor?.Value.Should().Be(original.PrinterInputTray!.Value.Value[0].MediaColor?.Value, $"iteration {i}: PrinterInputTray.MediaColor");
+            roundTripped.PrinterInputTray!.Value.Value[0].MediaInfo?.Value.Should().Be(original.PrinterInputTray!.Value.Value[0].MediaInfo?.Value, $"iteration {i}: PrinterInputTray.MediaInfo");
+            roundTripped.PrinterInputTray!.Value.Value[0].MediaType?.Value.Should().Be(original.PrinterInputTray!.Value.Value[0].MediaType?.Value, $"iteration {i}: PrinterInputTray.MediaType");
+            roundTripped.PrinterInputTray!.Value.Value[0].Unit?.Value.Should().Be(original.PrinterInputTray!.Value.Value[0].Unit?.Value, $"iteration {i}: PrinterInputTray.Unit");
+            roundTripped.PrinterInputTray!.Value.Value[0].FeedOrientation?.Value.Should().Be(original.PrinterInputTray!.Value.Value[0].FeedOrientation?.Value, $"iteration {i}: PrinterInputTray.FeedOrientation");
 
             // Assert PrinterOutputTray
-            roundTripped.PrinterOutputTray.Should().NotBeNull($"iteration {i}");
-            roundTripped.PrinterOutputTray!.Should().HaveCount(1, $"iteration {i}");
-            roundTripped.PrinterOutputTray[0].Type.Should().Be(original.PrinterOutputTray[0].Type, $"iteration {i}: PrinterOutputTray.Type");
-            roundTripped.PrinterOutputTray[0].Level.Should().Be(original.PrinterOutputTray[0].Level, $"iteration {i}: PrinterOutputTray.Level");
-            roundTripped.PrinterOutputTray[0].Status.Should().Be(original.PrinterOutputTray[0].Status, $"iteration {i}: PrinterOutputTray.Status");
-            roundTripped.PrinterOutputTray[0].Unit.Should().Be(original.PrinterOutputTray[0].Unit, $"iteration {i}: PrinterOutputTray.Unit");
-            roundTripped.PrinterOutputTray[0].StackingOrder.Should().Be(original.PrinterOutputTray[0].StackingOrder, $"iteration {i}: PrinterOutputTray.StackingOrder");
-            roundTripped.PrinterOutputTray[0].PageDelivery.Should().Be(original.PrinterOutputTray[0].PageDelivery, $"iteration {i}: PrinterOutputTray.PageDelivery");
+            roundTripped.PrinterOutputTray?.Value.Should().NotBeNull($"iteration {i}");
+            roundTripped.PrinterOutputTray!.Value.Value.Should().HaveCount(1, $"iteration {i}");
+            roundTripped.PrinterOutputTray!.Value.Value[0].Type?.Value.Should().Be(original.PrinterOutputTray!.Value.Value[0].Type?.Value, $"iteration {i}: PrinterOutputTray.Type");
+            roundTripped.PrinterOutputTray!.Value.Value[0].Level?.Value.Should().Be(original.PrinterOutputTray!.Value.Value[0].Level?.Value, $"iteration {i}: PrinterOutputTray.Level");
+            roundTripped.PrinterOutputTray!.Value.Value[0].Status?.Value.Should().Be(original.PrinterOutputTray!.Value.Value[0].Status?.Value, $"iteration {i}: PrinterOutputTray.Status");
+            roundTripped.PrinterOutputTray!.Value.Value[0].Unit?.Value.Should().Be(original.PrinterOutputTray!.Value.Value[0].Unit?.Value, $"iteration {i}: PrinterOutputTray.Unit");
+            roundTripped.PrinterOutputTray!.Value.Value[0].StackingOrder?.Value.Should().Be(original.PrinterOutputTray!.Value.Value[0].StackingOrder?.Value, $"iteration {i}: PrinterOutputTray.StackingOrder");
+            roundTripped.PrinterOutputTray!.Value.Value[0].PageDelivery?.Value.Should().Be(original.PrinterOutputTray!.Value.Value[0].PageDelivery?.Value, $"iteration {i}: PrinterOutputTray.PageDelivery");
 
             // Assert PrinterSupply
-            roundTripped.PrinterSupply.Should().NotBeNull($"iteration {i}");
-            roundTripped.PrinterSupply!.Should().HaveCount(1, $"iteration {i}");
-            roundTripped.PrinterSupply[0].Type.Should().Be(original.PrinterSupply[0].Type, $"iteration {i}: PrinterSupply.Type");
-            roundTripped.PrinterSupply[0].Level.Should().Be(original.PrinterSupply[0].Level, $"iteration {i}: PrinterSupply.Level");
-            roundTripped.PrinterSupply[0].MaxCapacity.Should().Be(original.PrinterSupply[0].MaxCapacity, $"iteration {i}: PrinterSupply.MaxCapacity");
-            roundTripped.PrinterSupply[0].ColorName.Should().Be(original.PrinterSupply[0].ColorName, $"iteration {i}: PrinterSupply.ColorName");
-            roundTripped.PrinterSupply[0].MarkerName.Should().Be(original.PrinterSupply[0].MarkerName, $"iteration {i}: PrinterSupply.MarkerName");
-            roundTripped.PrinterSupply[0].MarkerType.Should().Be(original.PrinterSupply[0].MarkerType, $"iteration {i}: PrinterSupply.MarkerType");
-            roundTripped.PrinterSupply[0].Unit.Should().Be(original.PrinterSupply[0].Unit, $"iteration {i}: PrinterSupply.Unit");
+            roundTripped.PrinterSupply?.Value.Should().NotBeNull($"iteration {i}");
+            roundTripped.PrinterSupply!.Value.Value.Should().HaveCount(1, $"iteration {i}");
+            roundTripped.PrinterSupply!.Value.Value[0].Type?.Value.Should().Be(original.PrinterSupply!.Value.Value[0].Type?.Value, $"iteration {i}: PrinterSupply.Type");
+            roundTripped.PrinterSupply!.Value.Value[0].Level?.Value.Should().Be(original.PrinterSupply!.Value.Value[0].Level?.Value, $"iteration {i}: PrinterSupply.Level");
+            roundTripped.PrinterSupply!.Value.Value[0].MaxCapacity?.Value.Should().Be(original.PrinterSupply!.Value.Value[0].MaxCapacity?.Value, $"iteration {i}: PrinterSupply.MaxCapacity");
+            roundTripped.PrinterSupply!.Value.Value[0].ColorName?.Value.Should().Be(original.PrinterSupply!.Value.Value[0].ColorName?.Value, $"iteration {i}: PrinterSupply.ColorName");
+            roundTripped.PrinterSupply!.Value.Value[0].MarkerName?.Value.Should().Be(original.PrinterSupply!.Value.Value[0].MarkerName?.Value, $"iteration {i}: PrinterSupply.MarkerName");
+            roundTripped.PrinterSupply!.Value.Value[0].MarkerType?.Value.Should().Be(original.PrinterSupply!.Value.Value[0].MarkerType?.Value, $"iteration {i}: PrinterSupply.MarkerType");
+            roundTripped.PrinterSupply!.Value.Value[0].Unit?.Value.Should().Be(original.PrinterSupply!.Value.Value[0].Unit?.Value, $"iteration {i}: PrinterSupply.Unit");
 
             // Assert JobConstraintsSupported
-            roundTripped.JobConstraintsSupported.Should().NotBeNull($"iteration {i}");
-            roundTripped.JobConstraintsSupported!.Should().HaveCount(1, $"iteration {i}");
-            roundTripped.JobConstraintsSupported[0].ResolverName.Should().Be(original.JobConstraintsSupported[0].ResolverName, $"iteration {i}: JobConstraintsSupported.ResolverName");
+            roundTripped.JobConstraintsSupported?.Value.Should().NotBeNull($"iteration {i}");
+            roundTripped.JobConstraintsSupported!.Value.Value.Should().HaveCount(1, $"iteration {i}");
+            roundTripped.JobConstraintsSupported!.Value.Value[0].ResolverName?.Value.Should().Be(original.JobConstraintsSupported!.Value.Value[0].ResolverName?.Value, $"iteration {i}: JobConstraintsSupported.ResolverName");
 
             // Assert JobPresetsSupported
-            roundTripped.JobPresetsSupported.Should().NotBeNull($"iteration {i}");
-            roundTripped.JobPresetsSupported!.Should().HaveCount(1, $"iteration {i}");
-            roundTripped.JobPresetsSupported[0].PresetName.Should().Be(original.JobPresetsSupported[0].PresetName, $"iteration {i}: JobPresetsSupported.PresetName");
+            roundTripped.JobPresetsSupported?.Value.Should().NotBeNull($"iteration {i}");
+            roundTripped.JobPresetsSupported!.Value.Value.Should().HaveCount(1, $"iteration {i}");
+            roundTripped.JobPresetsSupported!.Value.Value[0].PresetName?.Value.Should().Be(original.JobPresetsSupported!.Value.Value[0].PresetName?.Value, $"iteration {i}: JobPresetsSupported.PresetName");
 
             // Assert JobResolversSupported
-            roundTripped.JobResolversSupported.Should().NotBeNull($"iteration {i}");
-            roundTripped.JobResolversSupported!.Should().HaveCount(1, $"iteration {i}");
-            roundTripped.JobResolversSupported[0].ResolverName.Should().Be(original.JobResolversSupported[0].ResolverName, $"iteration {i}: JobResolversSupported.ResolverName");
+            roundTripped.JobResolversSupported?.Value.Should().NotBeNull($"iteration {i}");
+            roundTripped.JobResolversSupported!.Value.Value.Should().HaveCount(1, $"iteration {i}");
+            roundTripped.JobResolversSupported!.Value.Value[0].ResolverName?.Value.Should().Be(original.JobResolversSupported!.Value.Value[0].ResolverName?.Value, $"iteration {i}: JobResolversSupported.ResolverName");
 
             // Assert JobTriggersSupported
-            roundTripped.JobTriggersSupported.Should().NotBeNull($"iteration {i}");
-            roundTripped.JobTriggersSupported!.Should().HaveCount(1, $"iteration {i}");
-            roundTripped.JobTriggersSupported[0].TriggerName.Should().Be(original.JobTriggersSupported[0].TriggerName, $"iteration {i}: JobTriggersSupported.TriggerName");
+            roundTripped.JobTriggersSupported?.Value.Should().NotBeNull($"iteration {i}");
+            roundTripped.JobTriggersSupported!.Value.Value.Should().HaveCount(1, $"iteration {i}");
+            roundTripped.JobTriggersSupported!.Value.Value[0].TriggerName?.Value.Should().Be(original.JobTriggersSupported!.Value.Value[0].TriggerName?.Value, $"iteration {i}: JobTriggersSupported.TriggerName");
 
             // Assert PrintColorModeIccProfile
-            roundTripped.PrintColorModeIccProfile.Should().NotBeNull($"iteration {i}");
-            roundTripped.PrintColorModeIccProfile!.Should().HaveCount(1, $"iteration {i}");
-            roundTripped.PrintColorModeIccProfile[0].PrintColorMode.Should().Be(original.PrintColorModeIccProfile[0].PrintColorMode, $"iteration {i}: PrintColorModeIccProfile.PrintColorMode");
-            roundTripped.PrintColorModeIccProfile[0].ProfileUri.Should().Be(original.PrintColorModeIccProfile[0].ProfileUri, $"iteration {i}: PrintColorModeIccProfile.ProfileUri");
+            roundTripped.PrintColorModeIccProfile?.Value.Should().NotBeNull($"iteration {i}");
+            roundTripped.PrintColorModeIccProfile!.Value.Value.Should().HaveCount(1, $"iteration {i}");
+            roundTripped.PrintColorModeIccProfile!.Value.Value[0].PrintColorMode?.Value.Should().Be(original.PrintColorModeIccProfile!.Value.Value[0].PrintColorMode?.Value, $"iteration {i}: PrintColorModeIccProfile.PrintColorMode");
+            roundTripped.PrintColorModeIccProfile!.Value.Value[0].ProfileUri?.Value.Should().Be(original.PrintColorModeIccProfile!.Value.Value[0].ProfileUri?.Value, $"iteration {i}: PrintColorModeIccProfile.ProfileUri");
 
             // Assert PrinterIccProfile
-            roundTripped.PrinterIccProfile.Should().NotBeNull($"iteration {i}");
-            roundTripped.PrinterIccProfile!.Should().HaveCount(1, $"iteration {i}");
-            roundTripped.PrinterIccProfile[0].ProfileName.Should().Be(original.PrinterIccProfile[0].ProfileName, $"iteration {i}: PrinterIccProfile.ProfileName");
-            roundTripped.PrinterIccProfile[0].ProfileUri.Should().Be(original.PrinterIccProfile[0].ProfileUri, $"iteration {i}: PrinterIccProfile.ProfileUri");
+            roundTripped.PrinterIccProfile?.Value.Should().NotBeNull($"iteration {i}");
+            roundTripped.PrinterIccProfile!.Value.Value.Should().HaveCount(1, $"iteration {i}");
+            roundTripped.PrinterIccProfile!.Value.Value[0].ProfileName?.Value.Should().Be(original.PrinterIccProfile!.Value.Value[0].ProfileName?.Value, $"iteration {i}: PrinterIccProfile.ProfileName");
+            roundTripped.PrinterIccProfile!.Value.Value[0].ProfileUri?.Value.Should().Be(original.PrinterIccProfile!.Value.Value[0].ProfileUri?.Value, $"iteration {i}: PrinterIccProfile.ProfileUri");
 
             roundTripped.XSide1ImageOffsetSupported.Should().Be(original.XSide1ImageOffsetSupported, $"iteration {i}: XSide1ImageOffsetSupported");
             roundTripped.XSide2ImageOffsetSupported.Should().Be(original.XSide2ImageOffsetSupported, $"iteration {i}: XSide2ImageOffsetSupported");
@@ -213,12 +213,12 @@ public class MappingRoundTripTests : MapperTestBase
             roundTripped.UserDefinedValuesSupported.Should().BeEquivalentTo(original.UserDefinedValuesSupported, $"iteration {i}: UserDefinedValuesSupported");
             roundTripped.PdlInitFileSupported.Should().BeEquivalentTo(original.PdlInitFileSupported, $"iteration {i}: PdlInitFileSupported");
             roundTripped.PdlInitFileDefault.Should().NotBeNull($"iteration {i}: PdlInitFileDefault");
-            roundTripped.PdlInitFileDefault!.PdlInitFileName.Should().Be(original.PdlInitFileDefault!.PdlInitFileName, $"iteration {i}: PdlInitFileDefault.PdlInitFileName");
-            roundTripped.PdlInitFileDefault!.PdlInitFileLocation.Should().Be(original.PdlInitFileDefault!.PdlInitFileLocation, $"iteration {i}: PdlInitFileDefault.PdlInitFileLocation");
+            roundTripped.PdlInitFileDefault!.Value.Value.PdlInitFileName?.Value.Should().Be(original.PdlInitFileDefault!.Value.Value.PdlInitFileName?.Value, $"iteration {i}: PdlInitFileDefault.PdlInitFileName");
+            roundTripped.PdlInitFileDefault!.Value.Value.PdlInitFileLocation?.Value.Should().Be(original.PdlInitFileDefault!.Value.Value.PdlInitFileLocation?.Value, $"iteration {i}: PdlInitFileDefault.PdlInitFileLocation");
             roundTripped.JobSaveDispositionSupported.Should().BeEquivalentTo(original.JobSaveDispositionSupported, $"iteration {i}: JobSaveDispositionSupported");
             roundTripped.JobSaveDispositionDefault.Should().NotBeNull($"iteration {i}: JobSaveDispositionDefault");
-            roundTripped.JobSaveDispositionDefault!.SaveDisposition.Should().Be(original.JobSaveDispositionDefault!.SaveDisposition, $"iteration {i}: JobSaveDispositionDefault.SaveDisposition");
-            roundTripped.JobSaveDispositionDefault!.SaveLocation.Should().Be(original.JobSaveDispositionDefault!.SaveLocation, $"iteration {i}: JobSaveDispositionDefault.SaveLocation");
+            roundTripped.JobSaveDispositionDefault!.Value.Value.SaveDisposition?.Value.Should().Be(original.JobSaveDispositionDefault!.Value.Value.SaveDisposition?.Value, $"iteration {i}: JobSaveDispositionDefault.SaveDisposition");
+            roundTripped.JobSaveDispositionDefault!.Value.Value.SaveLocation?.Value.Should().Be(original.JobSaveDispositionDefault!.Value.Value.SaveLocation?.Value, $"iteration {i}: JobSaveDispositionDefault.SaveLocation");
             roundTripped.SaveDispositionSupported.Should().BeEquivalentTo(original.SaveDispositionSupported, $"iteration {i}: SaveDispositionSupported");
             roundTripped.SaveInfoSupported.Should().BeEquivalentTo(original.SaveInfoSupported, $"iteration {i}: SaveInfoSupported");
             roundTripped.SaveLocationSupported.Should().BeEquivalentTo(original.SaveLocationSupported, $"iteration {i}: SaveLocationSupported");
@@ -289,16 +289,16 @@ public class MappingRoundTripTests : MapperTestBase
             roundTripped.Copies.Should().Be(original.Copies, $"iteration {i}: Copies");
 
             roundTripped.JobSaveDisposition.Should().NotBeNull($"iteration {i}: JobSaveDisposition");
-            roundTripped.JobSaveDisposition!.SaveDisposition.Should().Be(original.JobSaveDisposition!.SaveDisposition, $"iteration {i}: JobSaveDisposition.SaveDisposition");
-            roundTripped.JobSaveDisposition!.SaveLocation.Should().Be(original.JobSaveDisposition!.SaveLocation, $"iteration {i}: JobSaveDisposition.SaveLocation");
-            roundTripped.JobSaveDisposition!.SaveInfo.Should().HaveCount(1, $"iteration {i}: JobSaveDisposition.SaveInfo");
-            roundTripped.JobSaveDisposition!.SaveInfo![0].SaveLocation.Should().Be(original.JobSaveDisposition!.SaveInfo![0].SaveLocation, $"iteration {i}: JobSaveDisposition.SaveInfo.SaveLocation");
-            roundTripped.JobSaveDisposition!.SaveInfo![0].SaveName.Should().Be(original.JobSaveDisposition!.SaveInfo![0].SaveName, $"iteration {i}: JobSaveDisposition.SaveInfo.SaveName");
-            roundTripped.JobSaveDisposition!.SaveInfo![0].SaveDocumentFormat.Should().Be(original.JobSaveDisposition!.SaveInfo![0].SaveDocumentFormat, $"iteration {i}: JobSaveDisposition.SaveInfo.SaveDocumentFormat");
+            roundTripped.JobSaveDisposition!.Value.Value.SaveDisposition?.Value.Should().Be(original.JobSaveDisposition!.Value.Value.SaveDisposition?.Value, $"iteration {i}: JobSaveDisposition.SaveDisposition");
+            roundTripped.JobSaveDisposition!.Value.Value.SaveLocation?.Value.Should().Be(original.JobSaveDisposition!.Value.Value.SaveLocation?.Value, $"iteration {i}: JobSaveDisposition.SaveLocation");
+            roundTripped.JobSaveDisposition!.Value.Value.SaveInfo?.Value.Should().HaveCount(1, $"iteration {i}: JobSaveDisposition.SaveInfo");
+            roundTripped.JobSaveDisposition!.Value.Value.SaveInfo!.Value.Value[0].SaveLocation?.Value.Should().Be(original.JobSaveDisposition!.Value.Value.SaveInfo!.Value.Value[0].SaveLocation?.Value, $"iteration {i}: JobSaveDisposition.SaveInfo.SaveLocation");
+            roundTripped.JobSaveDisposition!.Value.Value.SaveInfo!.Value.Value[0].SaveName?.Value.Should().Be(original.JobSaveDisposition!.Value.Value.SaveInfo!.Value.Value[0].SaveName?.Value, $"iteration {i}: JobSaveDisposition.SaveInfo.SaveName");
+            roundTripped.JobSaveDisposition!.Value.Value.SaveInfo!.Value.Value[0].SaveDocumentFormat?.Value.Should().Be(original.JobSaveDisposition!.Value.Value.SaveInfo!.Value.Value[0].SaveDocumentFormat?.Value, $"iteration {i}: JobSaveDisposition.SaveInfo.SaveDocumentFormat");
 
             roundTripped.PdlInitFile.Should().NotBeNull($"iteration {i}: PdlInitFile");
-            roundTripped.PdlInitFile!.PdlInitFileName.Should().Be(original.PdlInitFile!.PdlInitFileName, $"iteration {i}: PdlInitFile.PdlInitFileName");
-            roundTripped.PdlInitFile!.PdlInitFileLocation.Should().Be(original.PdlInitFile!.PdlInitFileLocation, $"iteration {i}: PdlInitFile.PdlInitFileLocation");
+            roundTripped.PdlInitFile!.Value.Value.PdlInitFileName?.Value.Should().Be(original.PdlInitFile!.Value.Value.PdlInitFileName?.Value, $"iteration {i}: PdlInitFile.PdlInitFileName");
+            roundTripped.PdlInitFile!.Value.Value.PdlInitFileLocation?.Value.Should().Be(original.PdlInitFile!.Value.Value.PdlInitFileLocation?.Value, $"iteration {i}: PdlInitFile.PdlInitFileLocation");
         }
     }
 

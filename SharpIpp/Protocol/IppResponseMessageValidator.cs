@@ -23,24 +23,34 @@ public class IppResponseMessageValidator : IIppResponseMessageValidator
         ValidateSystemAttributesGroup = true,
     };
 
+    /// <inheritdoc />
     public bool ValidateCoreRules { get; set; } = true;
 
+    /// <inheritdoc />
     public bool ValidateOperationAttributesGroup { get; set; } = true;
 
+    /// <inheritdoc />
     public bool ValidateJobAttributesGroup { get; set; } = true;
 
+    /// <inheritdoc />
     public bool ValidatePrinterAttributesGroup { get; set; } = true;
 
+    /// <inheritdoc />
     public bool ValidateUnsupportedAttributesGroup { get; set; } = true;
 
+    /// <inheritdoc />
     public bool ValidateSubscriptionAttributesGroup { get; set; } = true;
 
+    /// <inheritdoc />
     public bool ValidateEventNotificationAttributesGroup { get; set; } = true;
 
+    /// <inheritdoc />
     public bool ValidateResourceAttributesGroup { get; set; } = true;
 
+    /// <inheritdoc />
     public bool ValidateDocumentAttributesGroup { get; set; } = true;
 
+    /// <inheritdoc />
     public bool ValidateSystemAttributesGroup { get; set; } = true;
 
     /// <summary>

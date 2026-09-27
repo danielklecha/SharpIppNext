@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies which printers should be returned.
 /// See: PWG 5100.22-2025 Section 7.1.27
 /// </summary>
-public readonly record struct WhichPrinters(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
+public readonly record struct WhichPrinters(string Value, bool IsMarked = true) : IMarkedSmartEnum
 {
     /// <summary>
     /// Return all printers regardless of state.

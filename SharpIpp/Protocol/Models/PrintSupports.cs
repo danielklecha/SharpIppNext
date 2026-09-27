@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models
     /// Specifies the <c>print-supports</c> attribute for 3D printing.
     /// See: PWG 5100.21-2019 Section 8.1.9
     /// </summary>
-    public readonly record struct PrintSupports(string Value, bool IsValue = true) : ISmartEnum
+    public readonly record struct PrintSupports(string Value) : ISmartEnum
     {
         /// <summary>
         /// No support structures are printed.

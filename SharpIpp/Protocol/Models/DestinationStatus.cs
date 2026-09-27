@@ -10,9 +10,7 @@ namespace SharpIpp.Protocol.Models;
 [IppAttribute(IppAttributeNames.DestinationStatuses)]
 public class DestinationStatus : IIppCollection
 {
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
-    public Uri? DestinationUri { get; set; }
-    public int? ImagesCompleted { get; set; }
-    public TransmissionStatus? TransmissionStatus { get; set; }
+    public IppValue<Uri>? DestinationUri { get; set; }
+    public IppValue<int>? ImagesCompleted { get; set; }
+    public IppValue<TransmissionStatus>? TransmissionStatus { get; set; }
 }

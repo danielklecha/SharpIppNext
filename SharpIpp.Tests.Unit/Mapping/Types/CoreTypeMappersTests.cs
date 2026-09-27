@@ -29,59 +29,39 @@ public class TypesProfileTest : MapperTestBase
             yield return ["hello", typeof(string), typeof(byte[]), System.Text.Encoding.UTF8.GetBytes("hello"), "String -> Byte[]"];
             yield return ["no-hold", typeof(string), typeof(JobHoldUntil), JobHoldUntil.NoHold, "String -> JobHoldUntil (valid)"];
             yield return ["invalid-value", typeof(string), typeof(JobHoldUntil), new JobHoldUntil("invalid-value"), "String -> JobHoldUntil (invalid)"];
-            yield return [NoValue.Instance, typeof(NoValue), typeof(int), int.MinValue, "NoValue -> Int"];
-            yield return [NoValue.Instance, typeof(NoValue), typeof(JobState), (JobState)int.MinValue, "NoValue -> JobState"];
-            yield return [NoValue.Instance, typeof(NoValue), typeof(DocumentState), (DocumentState)int.MinValue, "NoValue -> DocumentState"];
-            yield return [NoValue.Instance, typeof(NoValue), typeof(PrinterState), (PrinterState)int.MinValue, "NoValue -> PrinterState"];
-            yield return [NoValue.Instance, typeof(NoValue), typeof(Finishings), (Finishings)int.MinValue, "NoValue -> Finishings"];
-            yield return [NoValue.Instance, typeof(NoValue), typeof(IppStatusCode), (IppStatusCode)short.MinValue, "NoValue -> IppStatusCode"];
-            yield return [NoValue.Instance, typeof(NoValue), typeof(Orientation), (Orientation)int.MinValue, "NoValue -> Orientation"];
-            yield return [NoValue.Instance, typeof(NoValue), typeof(PrintQuality), (PrintQuality)int.MinValue, "NoValue -> PrintQuality"];
-            yield return [NoValue.Instance, typeof(NoValue), typeof(ResolutionUnit), (ResolutionUnit)int.MinValue, "NoValue -> ResolutionUnit"];
-            yield return [NoValue.Instance, typeof(NoValue), typeof(PrinterType), (PrinterType)int.MinValue, "NoValue -> PrinterType"];
-            yield return [NoValue.Instance, typeof(NoValue), typeof(TransmissionStatus), (TransmissionStatus)int.MinValue, "NoValue -> TransmissionStatus"];
-            yield return [NoValue.Instance, typeof(NoValue), typeof(IppOperation), (IppOperation)short.MinValue, "NoValue -> IppOperation"];
             yield return [NoValue.Instance, typeof(NoValue), typeof(bool), false, "NoValue -> Bool"];
-            yield return [NoValue.Instance, typeof(NoValue), typeof(DateTime), NoValue.GetNoValue<DateTime>(), "NoValue -> DateTime"];
-            yield return [NoValue.Instance, typeof(NoValue), typeof(DateTime?), NoValue.GetNoValue<DateTime?>(), "NoValue -> DateTime?"];
-            yield return [NoValue.Instance, typeof(NoValue), typeof(DateTimeOffset), NoValue.GetNoValue<DateTimeOffset>(), "NoValue -> DateTimeOffset"];
-            yield return [NoValue.Instance, typeof(NoValue), typeof(SharpIpp.Protocol.Models.Range), NoValue.GetNoValue<SharpIpp.Protocol.Models.Range>(), "NoValue -> Range"];
-            yield return [NoValue.Instance, typeof(NoValue), typeof(Resolution), NoValue.GetNoValue<Resolution>(), "NoValue -> Resolution"];
-            yield return [NoValue.Instance, typeof(NoValue), typeof(StringWithLanguage), NoValue.GetNoValue<StringWithLanguage>(), "NoValue -> StringWithLanguage"];
-            yield return [NoValue.Instance, typeof(NoValue), typeof(string), NoValue.GetNoValue<string>(), "NoValue -> String"];
-            yield return [NoValue.Instance, typeof(NoValue), typeof(string), NoValue.GetNoValue<string?>(), "NoValue -> String?"];
+            yield return [NoValue.Instance, typeof(NoValue), typeof(IppValue<Uri>), default(IppValue<Uri>), "NoValue -> IppValue<Uri>"];
             yield return ["separate-documents-uncollated-copies", typeof(string), typeof(MultipleDocumentHandling), MultipleDocumentHandling.SeparateDocumentsUncollatedCopies, "String -> MultipleDocumentHandling (valid)"];
             yield return ["invalid-value", typeof(string), typeof(MultipleDocumentHandling), new MultipleDocumentHandling("invalid-value"), "String -> MultipleDocumentHandling (invalid)"];
             yield return [MultipleDocumentHandling.SeparateDocumentsUncollatedCopies, typeof(MultipleDocumentHandling), typeof(string), "separate-documents-uncollated-copies", "MultipleDocumentHandling -> String"];
-            yield return [NoValue.Instance, typeof(NoValue), typeof(MultipleDocumentHandling), NoValue.GetNoValue<MultipleDocumentHandling>(), "NoValue -> MultipleDocumentHandling"];
+            yield return [NoValue.Instance, typeof(NoValue), typeof(IppValue<MultipleDocumentHandling>), default(IppValue<MultipleDocumentHandling>), "NoValue -> IppValue<MultipleDocumentHandling>"];
             yield return ["auto", typeof(string), typeof(PrintScaling), PrintScaling.Auto, "String -> PrintScaling (valid)"];
             yield return ["invalid", typeof(string), typeof(PrintScaling), new PrintScaling("invalid"), "String -> PrintScaling (invalid)"];
             yield return [PrintScaling.Auto, typeof(PrintScaling), typeof(string), "auto", "PrintScaling -> String"];
-            yield return [NoValue.Instance, typeof(NoValue), typeof(PrintScaling), NoValue.GetNoValue<PrintScaling>(), "NoValue -> PrintScaling"];
+            yield return [NoValue.Instance, typeof(NoValue), typeof(IppValue<PrintScaling>), default(IppValue<PrintScaling>), "NoValue -> IppValue<PrintScaling>"];
             yield return ["completed", typeof(string), typeof(WhichJobs), WhichJobs.Completed, "String -> WhichJobs (valid)"];
             yield return ["invalid", typeof(string), typeof(WhichJobs), new WhichJobs("invalid"), "String -> WhichJobs (invalid)"];
             yield return [WhichJobs.Completed, typeof(WhichJobs), typeof(string), "completed", "WhichJobs -> String"];
-            yield return [NoValue.Instance, typeof(NoValue), typeof(WhichJobs), NoValue.GetNoValue<WhichJobs>(), "NoValue -> WhichJobs"];
+            yield return [NoValue.Instance, typeof(NoValue), typeof(IppValue<WhichJobs>), default(IppValue<WhichJobs>), "NoValue -> IppValue<WhichJobs>"];
             yield return ["adobe-1.7", typeof(string), typeof(PdfVersion), PdfVersion.Adobe17, "String -> PdfVersion (valid)"];
             yield return ["invalid", typeof(string), typeof(PdfVersion), new PdfVersion("invalid"), "String -> PdfVersion (invalid)"];
             yield return [PdfVersion.Adobe17, typeof(PdfVersion), typeof(string), "adobe-1.7", "PdfVersion -> String"];
-            yield return [NoValue.Instance, typeof(NoValue), typeof(PdfVersion), NoValue.GetNoValue<PdfVersion>(), "NoValue -> PdfVersion"];
+            yield return [NoValue.Instance, typeof(NoValue), typeof(IppValue<PdfVersion>), default(IppValue<PdfVersion>), "NoValue -> IppValue<PdfVersion>"];
             yield return ["job-incoming", typeof(string), typeof(JobStateReason), JobStateReason.JobIncoming, "String -> JobStateReason (valid)"];
             yield return ["invalid", typeof(string), typeof(JobStateReason), new JobStateReason("invalid"), "String -> JobStateReason (invalid)"];
             yield return [JobStateReason.JobIncoming, typeof(JobStateReason), typeof(string), "job-incoming", "JobStateReason -> String"];
-            yield return [NoValue.Instance, typeof(NoValue), typeof(JobStateReason), NoValue.GetNoValue<JobStateReason>(), "NoValue -> JobStateReason"];
+            yield return [NoValue.Instance, typeof(NoValue), typeof(IppValue<JobStateReason>), default(IppValue<JobStateReason>), "NoValue -> IppValue<JobStateReason>"];
             yield return ["ipp", typeof(string), typeof(UriScheme), UriScheme.Ipp, "String -> UriScheme (valid)"];
             yield return ["invalid", typeof(string), typeof(UriScheme), new UriScheme("invalid"), "String -> UriScheme (invalid)"];
             yield return [UriScheme.Ipp, typeof(UriScheme), typeof(string), "ipp", "UriScheme -> String"];
-            yield return [NoValue.Instance, typeof(NoValue), typeof(UriScheme), NoValue.GetNoValue<UriScheme>(), "NoValue -> UriScheme"];
+            yield return [NoValue.Instance, typeof(NoValue), typeof(IppValue<UriScheme>), default(IppValue<UriScheme>), "NoValue -> IppValue<UriScheme>"];
             yield return [2, typeof(int), typeof(PrinterType), (PrinterType)2, "Int -> PrinterType"];
-            yield return [NoValue.Instance, typeof(NoValue), typeof(PowerState), NoValue.GetNoValue<PowerState>(), "NoValue -> PowerState"];
+            yield return [NoValue.Instance, typeof(NoValue), typeof(IppValue<PowerState>), default(IppValue<PowerState>), "NoValue -> IppValue<PowerState>"];
             yield return ["suspend", typeof(string), typeof(PowerState), PowerState.Suspend, "String -> PowerState"];
             yield return [PowerState.Suspend, typeof(PowerState), typeof(string), "suspend", "PowerState -> String"];
             yield return [5, typeof(int), typeof(SharpIpp.Protocol.Models.Range), new SharpIpp.Protocol.Models.Range(5, 5), "Int -> Range"];
             yield return ["1.1", typeof(string), typeof(IppVersion), new IppVersion(1, 1), "String -> IppVersion"];
             yield return [new IppVersion(1, 1), typeof(IppVersion), typeof(string), "1.1", "IppVersion -> String"];
-            yield return [NoValue.Instance, typeof(NoValue), typeof(IppVersion), NoValue.GetNoValue<IppVersion>(), "NoValue -> IppVersion"];
             yield return [new[] { "auto", "auto-fit" }, typeof(string[]), typeof(PrintScaling[]), new[] { PrintScaling.Auto, PrintScaling.AutoFit }, "string[] -> PrintScaling[]"];
             yield return [new object[] { "auto", "auto-fit" }, typeof(object[]), typeof(PrintScaling[]), new[] { PrintScaling.Auto, PrintScaling.AutoFit }, "object[] -> PrintScaling[]"];
         }
@@ -109,48 +89,53 @@ public class TypesProfileTest : MapperTestBase
     }
 
     [TestMethod]
-    public void Map_NoValueToBool_MapsToFalse()
+    public void Map_CoreTypeMappers_RegistersExpectedMappings()
     {
         var mockMapper = new Mock<IMapperConstructor>();
-        mockMapper.Setup(x => x.CreateMap(It.IsAny<Func<NoValue, IMapperApplier, bool>>()))
-            .Verifiable();
+        mockMapper.Setup(x => x.CreateMap(It.IsAny<Func<int, IMapperApplier, DateTime>>())).Verifiable();
+        mockMapper.Setup(x => x.CreateMap(It.IsAny<Func<DateTime, IMapperApplier, int>>())).Verifiable();
+        mockMapper.Setup(x => x.CreateMap(It.IsAny<Func<byte[], IMapperApplier, string>>())).Verifiable();
+        mockMapper.Setup(x => x.CreateMap(It.IsAny<Func<string, IMapperApplier, byte[]>>())).Verifiable();
 
         var mapperType = typeof(SimpleMapper).Assembly.GetType("SharpIpp.Mapping.CoreTypeMappers");
         var configureMethod = mapperType!.GetMethod("Configure", BindingFlags.Public | BindingFlags.Static);
         configureMethod!.Invoke(null, new object[] { mockMapper.Object });
 
-        mockMapper.Verify(x => x.CreateMap(It.IsAny<Func<NoValue, IMapperApplier, bool>>()), Times.AtLeastOnce);
-
-        // Act
-        var result = _mapper.Map<NoValue, bool>(NoValue.Instance);
-
-        // Assert
-        result.Should().BeFalse();
+        mockMapper.Verify();
     }
 
     [TestMethod]
-    public void CreateMaps_ShouldRegisterNoValueToBoolMapping()
+    public void CreateMaps_ShouldRegisterDateTimeAndByteArrayMappings()
     {
-        // Act
         var mockMapper = new Mock<IMapperConstructor>();
-        var capturedNoValueToBoolMaps = new System.Collections.Generic.List<Func<NoValue, IMapperApplier, bool>>();
+        Func<int, IMapperApplier, DateTime>? intToDateTime = null;
+        Func<DateTime, IMapperApplier, int>? dateTimeToInt = null;
+        Func<byte[], IMapperApplier, string>? bytesToString = null;
+        Func<string, IMapperApplier, byte[]>? stringToBytes = null;
 
-        mockMapper.Setup(x => x.CreateMap(It.IsAny<Func<NoValue, IMapperApplier, bool>>()))
-            .Callback<Func<NoValue, IMapperApplier, bool>>(map => capturedNoValueToBoolMaps.Add(map));
+        mockMapper.Setup(x => x.CreateMap(It.IsAny<Func<int, IMapperApplier, DateTime>>()))
+            .Callback<Func<int, IMapperApplier, DateTime>>(map => intToDateTime = map);
+        mockMapper.Setup(x => x.CreateMap(It.IsAny<Func<DateTime, IMapperApplier, int>>()))
+            .Callback<Func<DateTime, IMapperApplier, int>>(map => dateTimeToInt = map);
+        mockMapper.Setup(x => x.CreateMap(It.IsAny<Func<byte[], IMapperApplier, string>>()))
+            .Callback<Func<byte[], IMapperApplier, string>>(map => bytesToString = map);
+        mockMapper.Setup(x => x.CreateMap(It.IsAny<Func<string, IMapperApplier, byte[]>>()))
+            .Callback<Func<string, IMapperApplier, byte[]>>(map => stringToBytes = map);
 
         var mapperType = typeof(SimpleMapper).Assembly.GetType("SharpIpp.Mapping.CoreTypeMappers");
         var configureMethod = mapperType!.GetMethod("Configure", BindingFlags.Public | BindingFlags.Static);
         configureMethod!.Invoke(null, new object[] { mockMapper.Object });
 
-        mockMapper.Verify(x => x.CreateMap(It.IsAny<Func<NoValue, IMapperApplier, bool>>()), Times.AtLeastOnce);
+        intToDateTime.Should().NotBeNull();
+        intToDateTime!(10, Mock.Of<IMapperApplier>()).Should().Be(new DateTime(1970, 1, 1, 0, 0, 10, DateTimeKind.Unspecified));
 
-        // Assert
-        var resultLanguage = _mapper.MapNullable<StringWithLanguage?>(NoValue.Instance);
-        resultLanguage.Should().Be(NoValue.GetNoValue<StringWithLanguage?>());
+        dateTimeToInt.Should().NotBeNull();
+        dateTimeToInt!(new DateTime(1970, 1, 1, 0, 0, 10, DateTimeKind.Unspecified), Mock.Of<IMapperApplier>()).Should().Be(10);
 
-        // Execute the typed CreateMap<NoValue, bool> delegate to hit the lambda body in CoreTypeMappers.
-        capturedNoValueToBoolMaps.Should().NotBeEmpty();
-        var typedResultBool = capturedNoValueToBoolMaps.First()(NoValue.Instance, Mock.Of<IMapperApplier>());
-        typedResultBool.Should().BeFalse();
+        bytesToString.Should().NotBeNull();
+        bytesToString!(System.Text.Encoding.UTF8.GetBytes("hello"), Mock.Of<IMapperApplier>()).Should().Be("hello");
+
+        stringToBytes.Should().NotBeNull();
+        stringToBytes!("hello", Mock.Of<IMapperApplier>()).Should().Equal(System.Text.Encoding.UTF8.GetBytes("hello"));
     }
 }

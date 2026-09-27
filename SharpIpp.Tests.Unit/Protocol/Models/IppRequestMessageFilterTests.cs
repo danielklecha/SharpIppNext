@@ -22,13 +22,23 @@ public class IppRequestMessageFilterTests
     }
 
     [TestMethod]
-    public void ClearProperty_InvalidExpression_ThrowsArgumentException()
+    public void ClearProperty_NullPropertyName_ThrowsArgumentNullException()
     {
         var requestMock = new Mock<IIppRequestMessage>();
         var filter = new IppRequestMessageFilter(requestMock.Object);
+        Action act = () => filter.ClearProperty(null!);
+        act.Should().Throw<ArgumentNullException>();
+    }
 
-        // An expression that is not a MemberExpression (MethodCallExpression)
-        Action act = () => filter.ClearProperty(x => x.ToString());
+    [TestMethod]
+    [DataRow("")]
+    [DataRow(" ")]
+    [DataRow("   ")]
+    public void ClearProperty_EmptyOrWhitespacePropertyName_ThrowsArgumentException(string propertyName)
+    {
+        var requestMock = new Mock<IIppRequestMessage>();
+        var filter = new IppRequestMessageFilter(requestMock.Object);
+        Action act = () => filter.ClearProperty(propertyName);
         act.Should().Throw<ArgumentException>();
     }
 
@@ -94,10 +104,10 @@ public class IppRequestMessageFilterTests
         var filter = new IppRequestMessageFilter(requestMock.Object);
 
         // Act
-        filter.ClearProperty(x => x.Version);
-        filter.ClearProperty(x => x.RequestId);
-        filter.ClearProperty(x => x.IppOperation);
-        filter.ClearProperty(x => x.Document);
+        filter.ClearProperty(nameof(IIppRequestMessage.Version));
+        filter.ClearProperty(nameof(IIppRequestMessage.RequestId));
+        filter.ClearProperty(nameof(IIppRequestMessage.IppOperation));
+        filter.ClearProperty(nameof(IIppRequestMessage.Document));
 
         var version = filter.Version;
         var requestId = filter.RequestId;
@@ -128,18 +138,7 @@ public class IppRequestMessageFilterTests
         var filter = new IppRequestMessageFilter(requestMock.Object);
 
         // Act
-        switch (propertyName)
-        {
-            case nameof(IIppRequestMessage.OperationAttributes): filter.ClearProperty(x => x.OperationAttributes); break;
-            case nameof(IIppRequestMessage.JobAttributes): filter.ClearProperty(x => x.JobAttributes); break;
-            case nameof(IIppRequestMessage.PrinterAttributes): filter.ClearProperty(x => x.PrinterAttributes); break;
-            case nameof(IIppRequestMessage.UnsupportedAttributes): filter.ClearProperty(x => x.UnsupportedAttributes); break;
-            case nameof(IIppRequestMessage.SubscriptionAttributes): filter.ClearProperty(x => x.SubscriptionAttributes); break;
-            case nameof(IIppRequestMessage.EventNotificationAttributes): filter.ClearProperty(x => x.EventNotificationAttributes); break;
-            case nameof(IIppRequestMessage.ResourceAttributes): filter.ClearProperty(x => x.ResourceAttributes); break;
-            case nameof(IIppRequestMessage.DocumentAttributes): filter.ClearProperty(x => x.DocumentAttributes); break;
-            case nameof(IIppRequestMessage.SystemAttributes): filter.ClearProperty(x => x.SystemAttributes); break;
-        }
+        filter.ClearProperty(propertyName);
 
         var actualList = typeof(IppRequestMessageFilter).GetProperty(propertyName)!.GetValue(filter);
 

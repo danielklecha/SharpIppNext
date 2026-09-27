@@ -7,7 +7,7 @@ namespace SharpIpp.Protocol.Models;
 /// See: PWG 5100.18-2025 Section 9.4
 /// See: PWG 5100.22-2025 Section 9.2
 /// </summary>
-public readonly record struct NotifyEvent(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
+public readonly record struct NotifyEvent(string Value, bool IsMarked = true) : IMarkedSmartEnum
 {
     // Job events (RFC 3995)
 

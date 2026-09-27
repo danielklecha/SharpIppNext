@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the print-content-optimize attribute, which controls how the Printer optimizes output for the type of content.
 /// See: PWG 5100.1-2022 Section 6.20
 /// </summary>
-public readonly record struct PrintContentOptimize(string Value, bool IsValue = true) : ISmartEnum 
+public readonly record struct PrintContentOptimize(string Value) : ISmartEnum 
 {
     /// <summary>
     /// The Printer automatically selects the optimization based on the document content.

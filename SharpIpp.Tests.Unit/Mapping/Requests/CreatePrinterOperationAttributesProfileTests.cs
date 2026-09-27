@@ -37,9 +37,9 @@ public class CreatePrinterOperationAttributesProfileTests : MapperTestBase
         var result = _mapper.Map<CreatePrinterOperationAttributes>(dict);
 
         // Assert
-        result.PrinterXriRequested.Should().NotBeNull();
-        result.PrinterXriRequested.Should().ContainSingle();
-        result.PrinterXriRequested![0].XriUri.Should().Be(new Uri("ipp://example"));
+        result.PrinterXriRequested?.Value.Should().NotBeNull();
+        result.PrinterXriRequested!.Value.Value.Should().ContainSingle();
+        result.PrinterXriRequested!.Value.Value[0].XriUri?.Value.Should().Be(new Uri("ipp://example"));
     }
 
 [TestMethod]

@@ -249,7 +249,7 @@ public class OperationAttributesTests
         var result = mapper.Map<IDictionary<string, IppAttribute[]>, GetJobsOperationAttributes>(dict);
         
         // Assert
-        result.MyJobs.Should().BeTrue();
+        result.MyJobs!.Value.Value.Should().BeTrue();
     }
 
     [TestMethod]
@@ -267,7 +267,7 @@ public class OperationAttributesTests
         var result = mapper.Map<IDictionary<string, IppAttribute[]>, GetJobsOperationAttributes>(dict);
 
         // Assert
-        result.JobIds.Should().BeEquivalentTo(new[] { 123, 456 });
+        ((int[])result.JobIds!).Should().BeEquivalentTo(new[] { 123, 456 });
     }
 
     [TestMethod]
@@ -316,13 +316,14 @@ public class OperationAttributesTests
         var result = mapper.Map<IDictionary<string, IppAttribute[]>, CreateJobOperationAttributes>(dict);
 
         // Assert
-        result.ClientInfo.Should().NotBeNull().And.HaveCount(1);
-        result.ClientInfo![0].ClientName.Should().Be("MyClient");
-        result.ClientInfo![0].ClientType.Should().Be(ClientType.Application);
+        result.ClientInfo?.Value.Should().NotBeNull();
+        result.ClientInfo!.Value.Value.Should().HaveCount(1);
+        result.ClientInfo!.Value.Value[0].ClientName?.Value.Should().Be("MyClient");
+        result.ClientInfo!.Value.Value[0].ClientType?.Value.Should().Be(ClientType.Application);
         result.DocumentFormatDetails.Should().NotBeNull();
-        result.DocumentFormatDetails!.DocumentSourceApplicationName.Should().Be("MyApp");
-        result.DocumentFormatDetails!.DocumentSourceOsName.Should().Be("MyOS");
-        result.JobMandatoryAttributes.Should().BeEquivalentTo(new[] { "copies", "media" });
+        result.DocumentFormatDetails!.Value.Value.DocumentSourceApplicationName?.Value.Should().Be("MyApp");
+        result.DocumentFormatDetails!.Value.Value.DocumentSourceOsName?.Value.Should().Be("MyOS");
+        ((string[])result.JobMandatoryAttributes!).Should().BeEquivalentTo(new[] { "copies", "media" });
     }
 
     [TestMethod]
@@ -385,15 +386,15 @@ public class OperationAttributesTests
             DocumentName = "test.txt",
             Compression = Compression.Gzip,
             DocumentFormat = (SharpIpp.Protocol.Models.DocumentFormat)"text/plain",
-            DocumentNaturalLanguage = "en-us",
-            ClientInfo =
-            [
+            DocumentNaturalLanguage = (SharpIpp.Protocol.Models.NaturalLanguage)"en-us",
+            ClientInfo = new[]
+            {
                 new ClientInfo
                 {
                     ClientName = "MyClient",
                     ClientType = ClientType.Application,
                 },
-            ],
+            },
             DocumentFormatDetails = new DocumentFormatDetails
             {
                 DocumentSourceApplicationName = "MyApp",
@@ -465,13 +466,14 @@ public class OperationAttributesTests
         var result = mapper.Map<IDictionary<string, IppAttribute[]>, ValidateJobOperationAttributes>(dict);
 
         // Assert
-        result.ClientInfo.Should().NotBeNull().And.HaveCount(1);
-        result.ClientInfo![0].ClientName.Should().Be("MyClient");
-        result.ClientInfo![0].ClientType.Should().Be(ClientType.Application);
+        result.ClientInfo?.Value.Should().NotBeNull();
+        result.ClientInfo!.Value.Value.Should().HaveCount(1);
+        result.ClientInfo!.Value.Value[0].ClientName?.Value.Should().Be("MyClient");
+        result.ClientInfo!.Value.Value[0].ClientType?.Value.Should().Be(ClientType.Application);
         result.DocumentFormatDetails.Should().NotBeNull();
-        result.DocumentFormatDetails!.DocumentSourceApplicationName.Should().Be("MyApp");
-        result.DocumentFormatDetails!.DocumentSourceOsName.Should().Be("MyOS");
-        result.JobMandatoryAttributes.Should().BeEquivalentTo(new[] { "copies", "media" });
+        result.DocumentFormatDetails!.Value.Value.DocumentSourceApplicationName?.Value.Should().Be("MyApp");
+        result.DocumentFormatDetails!.Value.Value.DocumentSourceOsName?.Value.Should().Be("MyOS");
+        ((string[])result.JobMandatoryAttributes!).Should().BeEquivalentTo(new[] { "copies", "media" });
     }
     [TestMethod]
     public void Map_ToPrintUriOperationAttributes_ShouldNotSetDocumentUri_WhenDocumentUriIsInvalid()

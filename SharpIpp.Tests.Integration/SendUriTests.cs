@@ -24,16 +24,16 @@ public class SendUriTests : SharpIppIntegrationTestBase
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
                 AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
-                AttributesNaturalLanguage = "en-us",
+                AttributesNaturalLanguage = (NaturalLanguage)"en-us",
                 RequestingUserName = "test-user",
                 JobId = 1,
                 JobUri = new Uri("http://127.0.0.1:631/jobs/1"),
-                ResourceIds = [51, 52],
+                ResourceIds = new[] { 51, 52 },
                 DocumentName = "test-document",
                 Compression = Compression.None,
                 DocumentFormat = (SharpIpp.Protocol.Models.DocumentFormat)"application/pdf",
-                DocumentNaturalLanguage = "en",
-                DocumentCharset = "utf-8",
+                DocumentNaturalLanguage = (NaturalLanguage)"en",
+                DocumentCharset = (Charset)"utf-8",
                 LastDocument = true,
                 DocumentUri = new Uri("ftp://document.pdf"),
                 DocumentAccess = new DocumentAccess
@@ -47,7 +47,7 @@ public class SendUriTests : SharpIppIntegrationTestBase
                 },
                 DocumentMetadata = GetTestDocumentMetadata(),
             },
-            DocumentTemplateAttributes = new()
+            DocumentTemplateAttributes = new DocumentTemplateAttributes
             {
                 Copies = 1,
                 DocumentMetadata = GetTestDocumentMetadata()
@@ -66,7 +66,7 @@ public class SendUriTests : SharpIppIntegrationTestBase
                 StatusCode = IppStatusCode.SuccessfulOk,
                 OperationAttributes = new() { StatusMessage = "successful-ok", DetailedStatusMessage = "detail1", DocumentAccessError = "none" },
                 JobAttributes = new() { JobId = 456 },
-                DocumentAttributes = new()
+                DocumentAttributes = new DocumentAttributes
                 {
                     DocumentNumber = 1,
                     DocumentMetadata = GetTestDocumentMetadata()

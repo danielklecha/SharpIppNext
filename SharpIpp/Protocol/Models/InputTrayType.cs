@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the input tray type.
 /// See: PWG 5100.13-2023 Section 6.6.9
 /// </summary>
-public readonly record struct InputTrayType(string Value, bool IsValue = true) : ISmartEnum
+public readonly record struct InputTrayType(string Value) : ISmartEnum
 {
     public static readonly InputTrayType Other = new("other");
     public static readonly InputTrayType Unknown = new("unknown");

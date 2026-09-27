@@ -1,4 +1,4 @@
-using SharpIpp.Mapping;
+﻿using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
@@ -21,7 +21,7 @@ public class JobOperationAttributes : OperationAttributes
     /// <code>job-id</code>
     [IppAttribute(IppAttributeNames.JobId, Tag = Tag.Integer)]
     [Range(1, int.MaxValue)]
-    public int? JobId { get; set; }
+    public IppValue<int>? JobId { get; set; }
 
     /// <summary>
     /// The client MUST supply either (1) the "job-uri" attribute or (2) the "printer-uri" and "job-id" attributes. The Printer object MUST support both of these forms of target identification. It contains the URI of the Job object which is the target of this operation.
@@ -34,6 +34,6 @@ public class JobOperationAttributes : OperationAttributes
     /// <code>job-uri</code>
     [IppAttribute(IppAttributeNames.JobUri, Tag = Tag.Uri)]
     [Obsolete("The 'job-uri' attribute is deprecated in favor of 'job-id'. See RFC 8011 Section 5.3.2.")]
-    public Uri? JobUri { get; set; }
+    public IppValue<Uri>? JobUri { get; set; }
 
 }

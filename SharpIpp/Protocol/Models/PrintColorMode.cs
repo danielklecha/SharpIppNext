@@ -8,7 +8,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the print-color-mode attribute, which controls whether the Printer uses color or monochrome output.
 /// See: PWG 5100.13-2023 Section 6.2.27
 /// </summary>
-public readonly record struct PrintColorMode(string Value, bool IsValue = true) : ISmartEnum 
+public readonly record struct PrintColorMode(string Value) : ISmartEnum 
 {
     /// <summary>
     /// The Printer automatically selects color or monochrome output based on the document content.

@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the <c>material-amount-units</c> attribute.
 /// See: PWG 5100.21-2019 Section 8.1.3.2
 /// </summary>
-public readonly record struct MaterialAmountUnits(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
+public readonly record struct MaterialAmountUnits(string Value, bool IsMarked = true) : IMarkedSmartEnum
 {
     /// <summary>Amount measured in grams (g). See: PWG 5100.21-2019 Section 8.1.3.2</summary>
     public static readonly MaterialAmountUnits Grams = new("g");

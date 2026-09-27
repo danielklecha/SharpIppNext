@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using SharpIpp.Mapping;
@@ -15,5 +15,5 @@ public class ReleaseJobOperationAttributes : CancelJobOperationAttributes
     /// </summary>
     /// <code>output-device-uuid</code>
     [IppAttribute(IppAttributeNames.OutputDeviceUuid, Tag = Tag.Uri)]
-    public Uri? OutputDeviceUuid { get; set; }
+    public IppValue<Uri>? OutputDeviceUuid { get; set; }
 }

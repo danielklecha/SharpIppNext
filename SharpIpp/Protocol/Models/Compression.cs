@@ -5,7 +5,7 @@ namespace SharpIpp.Protocol.Models;
 /// compression algorithms for document data.
 /// See: RFC 2911 Section 4.4.32
 /// </summary>
-public readonly record struct Compression(string Value, bool IsValue = true) : ISmartEnum 
+public readonly record struct Compression(string Value) : ISmartEnum 
 {
     /// <summary>
     /// no compression is used.

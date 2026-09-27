@@ -11,10 +11,8 @@ namespace SharpIpp.Protocol.Models;
 [IppAttribute(IppAttributeNames.PdlInitFile)]
 public class PdlInitFile : IIppCollection
 {
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
-    public Uri? PdlInitFileLocation { get; set; }
+    public IppValue<Uri>? PdlInitFileLocation { get; set; }
 
     [ByteRange(1, 255)]
-    public string? PdlInitFileName { get; set; }
+    public IppValue<string>? PdlInitFileName { get; set; }
 }

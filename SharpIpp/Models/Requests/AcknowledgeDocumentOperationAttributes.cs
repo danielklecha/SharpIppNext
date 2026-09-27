@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
@@ -31,7 +31,7 @@ public class AcknowledgeDocumentOperationAttributes : JobOperationAttributes
     /// See: PWG 5100.18-2025 Section 14.1
     /// </summary>
     [IppAttribute(IppAttributeNames.OutputDeviceUuid, Tag = Tag.Uri)]
-    public Uri? OutputDeviceUuid { get; set; }
+    public IppValue<Uri>? OutputDeviceUuid { get; set; }
 
     /// <summary>
     /// The <c>fetch-status-code</c> operation attribute.
@@ -42,7 +42,7 @@ public class AcknowledgeDocumentOperationAttributes : JobOperationAttributes
     /// See: PWG 5100.18-2025 Section 14.3
     /// </summary>
     [IppAttribute(IppAttributeNames.FetchStatusCode, Tag = Tag.Enum)]
-    public IppStatusCode? FetchStatusCode { get; set; }
+    public IppValue<IppStatusCode>? FetchStatusCode { get; set; }
 
     /// <summary>
     /// The <c>fetch-status-message</c> operation attribute.
@@ -52,5 +52,5 @@ public class AcknowledgeDocumentOperationAttributes : JobOperationAttributes
     /// See: PWG 5100.18-2025 Section 14.1
     /// </summary>
     [IppAttribute(IppAttributeNames.FetchStatusMessage, Tag = Tag.TextWithoutLanguage)]
-    public string? FetchStatusMessage { get; set; }
+    public IppValue<string>? FetchStatusMessage { get; set; }
 }

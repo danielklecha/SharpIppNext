@@ -12,21 +12,19 @@ namespace SharpIpp.Protocol.Models;
 public class Cover : IIppCollection
 {
     /// <inheritdoc />
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     /// <summary>
     /// type2 keyword | name(MAX)
     /// </summary>
-    public CoverType? CoverType { get; set; }
+    public IppValue<CoverType>? CoverType { get; set; }
 
     /// <summary>
     /// keyword | name(MAX)
     /// </summary>
-    public Media? Media { get; set; }
+    public IppValue<Media>? Media { get; set; }
 
     /// <summary>
     /// collection
     /// </summary>
-    public MediaCol? MediaCol { get; set; }
+    public IppValue<MediaCol>? MediaCol { get; set; }
 }

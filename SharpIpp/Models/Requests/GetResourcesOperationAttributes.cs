@@ -1,4 +1,4 @@
-using SharpIpp.Mapping;
+﻿using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
 
@@ -17,11 +17,11 @@ public class GetResourcesOperationAttributes : SystemOperationAttributes
     /// </summary>
     [Range(1, int.MaxValue)]
     [IppAttribute(IppAttributeNames.ResourceIds, Tag = Tag.Integer)]
-    public int[]? ResourceIds { get; set; }
+    public IppValue<int[]>? ResourceIds { get; set; }
 
     /// <summary>
     /// Requested resource attributes to return.
     /// </summary>
     [IppAttribute(IppAttributeNames.RequestedAttributes, Tag = Tag.Keyword)]
-    public string[]? RequestedAttributes { get; set; }
+    public IppValue<string[]>? RequestedAttributes { get; set; }
 }

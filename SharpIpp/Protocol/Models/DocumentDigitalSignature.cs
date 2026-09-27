@@ -8,7 +8,7 @@ namespace SharpIpp.Protocol.Models;
 /// See: PWG 5100.7-2023 Section 6.2.1
 /// </summary>
 [Obsolete("The 'document-digital-signature' attribute is deprecated. See PWG 5100.7-2023 Section 6.2.1.")]
-public readonly record struct DocumentDigitalSignature(string Value, bool IsValue = true) : ISmartEnum
+public readonly record struct DocumentDigitalSignature(string Value) : ISmartEnum
 {
     public static readonly DocumentDigitalSignature None = new("none");
     public static readonly DocumentDigitalSignature Dss = new("dss");

@@ -1,4 +1,4 @@
-using SharpIpp.Mapping;
+﻿using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
@@ -20,7 +20,7 @@ public class GetJobsOperationAttributes : OperationAttributes
     /// <code>first-index</code>
     [IppAttribute(IppAttributeNames.FirstIndex, Tag = Tag.Integer)]
     [Range(1, int.MaxValue)]
-    public int? FirstIndex { get; set; }
+    public IppValue<int>? FirstIndex { get; set; }
 
     /// <summary>
     /// The client OPTIONALLY supplies this attribute. The Printer object MUST support this attribute. It is an integer value that determines the maximum number of jobs that a client will receive from the Printer even if "which-jobs" or "my-jobs" constrain which jobs are returned. The limit is a "stateless limit" in that if the value supplied by the client is 'N', then only the first 'N' jobs are returned in the Get-Jobs Response. There is no mechanism to allow for the next 'M' jobs after the first 'N' jobs. If the client does not supply this attribute, the Printer object responds with all applicable jobs
@@ -30,7 +30,7 @@ public class GetJobsOperationAttributes : OperationAttributes
     /// <code>limit</code>
     [IppAttribute(IppAttributeNames.Limit, Tag = Tag.Integer)]
     [Range(1, int.MaxValue)]
-    public int? Limit { get; set; }
+    public IppValue<int>? Limit { get; set; }
 
     /// <summary>
     /// This REQUIRED attribute specifies a list of "job-id" values for the Cancel-Jobs, Cancel-My-Jobs, and Get-Jobs operations.
@@ -39,7 +39,7 @@ public class GetJobsOperationAttributes : OperationAttributes
     /// <code>job-ids</code>
     [IppAttribute(IppAttributeNames.JobIds, Tag = Tag.Integer)]
     [Range(1, int.MaxValue)]
-    public int[]? JobIds { get; set; }
+    public IppValue<int[]>? JobIds { get; set; }
 
     /// <summary>
     /// The client OPTIONALLY supplies this attribute. The Printer object MUST support this attribute. It is a set of Job attribute names and/or attribute groups names in whose values the requester is interested. This set of attributes is returned for each Job object that is returned. The allowed attribute group names are the same as those defined in the Get-Job-Attributes operation in section 3.3.4. If the client does not supply this attribute, the Printer MUST respond as if the client had supplied this attribute with two values: 'job- uri' and 'job-id'
@@ -49,7 +49,7 @@ public class GetJobsOperationAttributes : OperationAttributes
     /// </summary>
     /// <code>requested-attributes</code>
     [IppAttribute(IppAttributeNames.RequestedAttributes, Tag = Tag.Keyword)]
-    public string[]? RequestedAttributes { get; set; }
+    public IppValue<string[]>? RequestedAttributes { get; set; }
 
     /// <summary>
     /// The client OPTIONALLY supplies this attribute. The Printer object MUST support this attribute. It indicates which Job objects MUST be returned by the Printer object. The values for this attribute are:
@@ -57,7 +57,7 @@ public class GetJobsOperationAttributes : OperationAttributes
     /// </summary>
     /// <code>which-jobs</code>
     [IppAttribute(IppAttributeNames.WhichJobs, Tag = Tag.Keyword)]
-    public WhichJobs? WhichJobs { get; set; }
+    public IppValue<WhichJobs>? WhichJobs { get; set; }
 
     /// <summary>
     /// The client OPTIONALLY supplies this attribute. The Printer object MUST support this attribute. It indicates whether jobs from all users or just the jobs submitted by the requesting user of this request MUST be considered as candidate jobs to be returned by the Printer object. If the client does not supply this attribute, the Printer object MUST respond as if the client had supplied the attribute with a value of 'false', i.e., jobs from all users. The means for authenticating the requesting user and matching the jobs is described in section
@@ -65,7 +65,7 @@ public class GetJobsOperationAttributes : OperationAttributes
     /// </summary>
     /// <code>my-jobs</code>
     [IppAttribute(IppAttributeNames.MyJobs, Tag = Tag.Boolean)]
-    public bool? MyJobs { get; set; }
+    public IppValue<bool>? MyJobs { get; set; }
 
     /// <summary>
     /// The <c>output-device-uuid</c> operation attribute.
@@ -74,5 +74,5 @@ public class GetJobsOperationAttributes : OperationAttributes
     /// </summary>
     /// <code>output-device-uuid</code>
     [IppAttribute(IppAttributeNames.OutputDeviceUuid, Tag = Tag.Uri)]
-    public Uri? OutputDeviceUuid { get; set; }
+    public IppValue<Uri>? OutputDeviceUuid { get; set; }
 }

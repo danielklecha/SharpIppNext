@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 
@@ -17,12 +17,12 @@ public class GetOutputDeviceAttributesOperationAttributes : OperationAttributes
     /// See: RFC 8011 Section 5.4.1
     /// </summary>
     [IppAttribute(IppAttributeNames.RequestedAttributes, Tag = Tag.Keyword)]
-    public string[]? RequestedAttributes { get; set; }
+    public IppValue<string[]>? RequestedAttributes { get; set; }
 
     /// <summary>
     /// The <c>output-device-uuid</c> operation attribute.
     /// See: PWG 5100.18-2025 Section 7.1.8
     /// </summary>
     [IppAttribute(IppAttributeNames.OutputDeviceUuid, Tag = Tag.Uri)]
-    public Uri? OutputDeviceUuid { get; set; }
+    public IppValue<Uri>? OutputDeviceUuid { get; set; }
 }

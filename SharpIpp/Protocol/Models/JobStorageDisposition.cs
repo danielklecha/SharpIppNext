@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the <c>job-storage-disposition</c> member attribute.
 /// See: PWG 5100.11-2024 Section 6.1.4.2
 /// </summary>
-public readonly record struct JobStorageDisposition(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
+public readonly record struct JobStorageDisposition(string Value, bool IsMarked = true) : IMarkedSmartEnum
 {
     /// <summary>
     /// The job is printed and then stored.

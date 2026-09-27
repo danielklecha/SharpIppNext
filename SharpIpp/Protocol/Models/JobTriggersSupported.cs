@@ -11,12 +11,10 @@ namespace SharpIpp.Protocol.Models;
 public class JobTriggersSupported : IIppCollection
 {
     /// <inheritdoc />
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     /// <summary>
     /// trigger-name — name of the trigger (name).
     /// See: PWG 5100.13-2023 Section 6.5.10
     /// </summary>
-    public string? TriggerName { get; set; }
+    public IppValue<string>? TriggerName { get; set; }
 }

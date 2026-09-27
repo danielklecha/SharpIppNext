@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies attribute names for <code>printer-mandatory-job-attributes</code>.
 /// See: RFC 8011 Section 5.4.42
 /// </summary>
-public readonly record struct PrinterMandatoryJobAttribute(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
+public readonly record struct PrinterMandatoryJobAttribute(string Value, bool IsMarked = true) : IMarkedSmartEnum
 {
     /// <summary>The attributes-natural-language attribute. See: RFC 8011 Section 5.4.42</summary>
     public static readonly PrinterMandatoryJobAttribute AttributesNaturalLanguage = new("attributes-natural-language");

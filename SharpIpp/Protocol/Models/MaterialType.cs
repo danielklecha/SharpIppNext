@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the <c>material-type</c> member attribute.
 /// See: PWG 5100.21-2019 Section 8.1.3.16
 /// </summary>
-public readonly record struct MaterialType(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
+public readonly record struct MaterialType(string Value, bool IsMarked = true) : IMarkedSmartEnum
 {
     /// <summary>ABS (Acrylonitrile Butadiene Styrene) filament. See: PWG 5100.21-2019 Section 8.1.3.16</summary>
     public static readonly MaterialType Abs = new("abs");

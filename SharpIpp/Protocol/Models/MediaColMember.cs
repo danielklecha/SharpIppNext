@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies member attribute names supported by <code>media-col-supported</code>.
 /// See: PWG 5100.7-2023 Section 6.9.39
 /// </summary>
-public readonly record struct MediaColMember(string Value, bool IsValue = true) : ISmartEnum 
+public readonly record struct MediaColMember(string Value) : ISmartEnum 
 {
     /// <summary>The media-back-coating member attribute. See: PWG 5101.1</summary>
     public static readonly MediaColMember MediaBackCoating = new("media-back-coating");

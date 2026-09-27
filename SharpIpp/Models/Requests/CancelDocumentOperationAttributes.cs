@@ -1,4 +1,4 @@
-using SharpIpp.Mapping;
+﻿using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
 
@@ -27,5 +27,5 @@ public class CancelDocumentOperationAttributes : JobOperationAttributes
     /// </summary>
     /// <code>document-message</code>
     [IppAttribute(IppAttributeNames.DocumentMessage, Tag = Tag.TextWithoutLanguage)]
-    public string? DocumentMessage { get; set; }
+    public IppValue<string>? DocumentMessage { get; set; }
 }

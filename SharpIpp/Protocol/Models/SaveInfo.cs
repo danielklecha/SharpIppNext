@@ -11,14 +11,12 @@ namespace SharpIpp.Protocol.Models;
 [IppAttribute(IppAttributeNames.SaveInfo)]
 public class SaveInfo : IIppCollection
 {
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
-    public Uri? SaveLocation { get; set; }
+    public IppValue<Uri>? SaveLocation { get; set; }
     
     [ByteRange(1, 255)]
-    public string? SaveName { get; set; }
+    public IppValue<string>? SaveName { get; set; }
 
     [ByteRange(1, 255)]
     [IppAttribute(IppAttributeNames.SaveDocumentFormat, Tag = Tag.MimeMediaType)]
-    public string? SaveDocumentFormat { get; set; }
+    public IppValue<string>? SaveDocumentFormat { get; set; }
 }

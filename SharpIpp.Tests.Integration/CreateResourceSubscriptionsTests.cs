@@ -1,4 +1,4 @@
-using SharpIpp;
+﻿using SharpIpp;
 using SharpIpp.Models.Requests;
 using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
@@ -26,7 +26,7 @@ public class CreateResourceSubscriptionsTests : SharpIppIntegrationTestBase
                 RequestingUserName = "test-user",
                 RequestingUserUri = new Uri("mailto:test-user@example.com"),
                 PrinterId = 99,
-                NotifyPrinterIds = [99, 100],
+                NotifyPrinterIds = new[] { 99, 100 },
                 NotifyResourceId = 42,
                 RestartGetInterval = 30,
                 WhichPrinters = WhichPrinters.All,

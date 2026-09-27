@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the <c>job-error-sheet-type</c> member attribute values.
 /// See: PWG 5100.3-2023 Section 5.2.9.1
 /// </summary>
-public readonly record struct JobErrorSheetType(string Value, bool IsValue = true) : ISmartEnum
+public readonly record struct JobErrorSheetType(string Value) : ISmartEnum
 {
     /// <summary>'none': Do not print error information.</summary>
     public static readonly JobErrorSheetType None = new("none");

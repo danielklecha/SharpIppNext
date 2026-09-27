@@ -1,6 +1,8 @@
 using System;
 using System.Numerics;
 
+using SharpIpp.Protocol.Extensions;
+
 // ReSharper disable ConditionIsAlwaysTrueOrFalse
 
 namespace SharpIpp.Protocol.Models;
@@ -21,7 +23,7 @@ public readonly struct IppAttribute : IEquatable<IppAttribute>
         if (value is null)
             throw new ArgumentNullException(nameof(value));
 
-        if (tag != Tag.BegCollection && tag != Tag.EndCollection && NoValue.IsNoValue(value, tag))
+        if (!tag.IsOutOfBand() && tag != Tag.BegCollection && tag != Tag.EndCollection && value is INoValue { IsValue: false })
         {
             tag = Tag.NoValue;
             value = NoValue.Instance;

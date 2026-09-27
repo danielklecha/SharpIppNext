@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the member names for <code>client-info</code>.
 /// See: PWG 5100.7-2023 Section 6.1.1
 /// </summary>
-public readonly record struct ClientInfoMember(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
+public readonly record struct ClientInfoMember(string Value, bool IsMarked = true) : IMarkedSmartEnum
 {
     /// <summary>
     /// The name of the client application or software.

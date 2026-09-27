@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
@@ -18,7 +18,7 @@ public class SystemOperationAttributes : OperationAttributes
     /// </summary>
     /// <code>system-uri</code>
     [IppAttribute(IppAttributeNames.SystemUri, Tag = Tag.Uri)]
-    public Uri? SystemUri { get; set; }
+    public IppValue<Uri>? SystemUri { get; set; }
 
     /// <summary>
     /// The ID of the target Printer object (for single-printer operations such as Shutdown/Startup/Restart).
@@ -27,7 +27,7 @@ public class SystemOperationAttributes : OperationAttributes
     /// <code>printer-id</code>
     [Range(1, 65535)]
     [IppAttribute(IppAttributeNames.PrinterId, Tag = Tag.Integer)]
-    public int? PrinterId { get; set; }
+    public IppValue<int>? PrinterId { get; set; }
 
     /// <summary>
     /// notify-printer-ids
@@ -35,7 +35,7 @@ public class SystemOperationAttributes : OperationAttributes
     /// </summary>
     [Range(1, 65535)]
     [IppAttribute(IppAttributeNames.NotifyPrinterIds, Tag = Tag.Integer)]
-    public int[]? NotifyPrinterIds { get; set; }
+    public IppValue<int[]>? NotifyPrinterIds { get; set; }
 
     /// <summary>
     /// notify-resource-id
@@ -43,7 +43,7 @@ public class SystemOperationAttributes : OperationAttributes
     /// </summary>
     [Range(1, int.MaxValue)]
     [IppAttribute(IppAttributeNames.NotifyResourceId, Tag = Tag.Integer)]
-    public int? NotifyResourceId { get; set; }
+    public IppValue<int>? NotifyResourceId { get; set; }
 
     /// <summary>
     /// restart-get-interval
@@ -51,14 +51,14 @@ public class SystemOperationAttributes : OperationAttributes
     /// </summary>
     [Range(0, int.MaxValue)]
     [IppAttribute(IppAttributeNames.RestartGetInterval, Tag = Tag.Integer)]
-    public int? RestartGetInterval { get; set; }
+    public IppValue<int>? RestartGetInterval { get; set; }
 
     /// <summary>
     /// which-printers
     /// See: PWG 5100.22-2025 Section 7.1.27
     /// </summary>
     [IppAttribute(IppAttributeNames.WhichPrinters, Tag = Tag.Keyword)]
-    public WhichPrinters? WhichPrinters { get; set; }
+    public IppValue<WhichPrinters>? WhichPrinters { get; set; }
 
     /// <summary>
     /// notify-system-up-time
@@ -66,14 +66,14 @@ public class SystemOperationAttributes : OperationAttributes
     /// </summary>
     [Range(0, int.MaxValue)]
     [IppAttribute(IppAttributeNames.NotifySystemUpTime, Tag = Tag.Integer)]
-    public int? NotifySystemUpTime { get; set; }
+    public IppValue<int>? NotifySystemUpTime { get; set; }
 
     /// <summary>
     /// notify-system-uri
     /// See: PWG 5100.22-2025 Sections 7.10.2 and 7.11.3
     /// </summary>
     [IppAttribute(IppAttributeNames.NotifySystemUri, Tag = Tag.Uri)]
-    public Uri? NotifySystemUri { get; set; }
+    public IppValue<Uri>? NotifySystemUri { get; set; }
 
     /// <summary>
     /// notify-subscription-id — the subscription identifier for subscription-targeted operations.
@@ -81,12 +81,12 @@ public class SystemOperationAttributes : OperationAttributes
     /// </summary>
     [Range(1, int.MaxValue)]
     [IppAttribute(IppAttributeNames.NotifySubscriptionId, Tag = Tag.Integer)]
-    public int? NotifySubscriptionId { get; set; }
+    public IppValue<int>? NotifySubscriptionId { get; set; }
 
     /// <summary>
     /// notify-pull-method — the pull method for Get-Notifications; must be "ippget".
     /// See: RFC 3996 Section 5.1
     /// </summary>
     [IppAttribute(IppAttributeNames.NotifyPullMethod, Tag = Tag.Keyword)]
-    public NotifyPullMethod? NotifyPullMethod { get; set; }
+    public IppValue<NotifyPullMethod>? NotifyPullMethod { get; set; }
 }

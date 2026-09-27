@@ -15,8 +15,9 @@ namespace SharpIpp.Protocol.Models;
 /// tolerated rather than treated as a hard error.
 /// </para>
 /// </summary>
-public sealed class PrinterAlert : IppStructuredString
+public sealed class PrinterAlert : IppStructuredString, IEquatable<PrinterAlert>
 {
+    public bool Equals(PrinterAlert? other) => base.Equals(other);
     public PrinterAlert() : base(StringComparer.OrdinalIgnoreCase)
     {
     }

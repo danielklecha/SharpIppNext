@@ -47,16 +47,16 @@ public class CollectionRoundTripTests : MapperTestBase
         {
             var original = new PrinterInputTray
             {
-                Type = RandomString(rng),
+                Type = (InputTrayType)RandomString(rng),
                 Level = RandomInt(rng),
                 Status = RandomString(rng),
                 MediaSizeX = RandomInt(rng),
                 MediaSizeY = RandomInt(rng),
-                MediaColor = RandomString(rng),
+                MediaColor = (MediaColor)RandomString(rng),
                 MediaInfo = RandomString(rng),
-                MediaType = RandomString(rng),
-                Unit = RandomString(rng),
-                FeedOrientation = RandomString(rng),
+                MediaType = (MediaType)RandomString(rng),
+                Unit = (CapacityUnit)RandomString(rng),
+                FeedOrientation = (FeedOrientation)RandomString(rng),
             };
 
             // Serialize to IEnumerable<IppAttribute>
@@ -91,12 +91,12 @@ public class CollectionRoundTripTests : MapperTestBase
         {
             var original = new PrinterOutputTray
             {
-                Type = RandomString(rng),
+                Type = (OutputTrayType)RandomString(rng),
                 Level = RandomInt(rng),
                 Status = RandomString(rng),
-                Unit = RandomString(rng),
-                StackingOrder = RandomString(rng),
-                PageDelivery = RandomString(rng),
+                Unit = (CapacityUnit)RandomString(rng),
+                StackingOrder = (StackingOrder)RandomString(rng),
+                PageDelivery = (PageDelivery)RandomString(rng),
             };
 
             var attrs = _mapper.Map<PrinterOutputTray, IEnumerable<IppAttribute>>(original).ToList();
@@ -124,13 +124,13 @@ public class CollectionRoundTripTests : MapperTestBase
         {
             var original = new PrinterSupply
             {
-                Type = RandomString(rng),
+                Type = (PrinterSupplyType)RandomString(rng),
                 Level = RandomInt(rng),
                 MaxCapacity = RandomInt(rng),
                 ColorName = RandomString(rng),
                 MarkerName = RandomString(rng),
-                MarkerType = RandomString(rng),
-                Unit = RandomString(rng),
+                MarkerType = (MarkerType)RandomString(rng),
+                Unit = (CapacityUnit)RandomString(rng),
             };
 
             var attrs = _mapper.Map<PrinterSupply, IEnumerable<IppAttribute>>(original).ToList();
@@ -251,7 +251,7 @@ public class CollectionRoundTripTests : MapperTestBase
         {
             var original = new PrintColorModeIccProfile
             {
-                PrintColorMode = RandomString(rng),
+                PrintColorMode = (PrintColorMode)RandomString(rng),
                 ProfileUri = new Uri($"https://example.com/{RandomString(rng)}.icc"),
             };
 
@@ -292,39 +292,17 @@ public class CollectionRoundTripTests : MapperTestBase
     // ── NoValue round-trip ───────────────────────────────────────────────────
 
     [TestMethod]
-    public void PrinterInputTray_NoValue_RoundTrip_PreservesNoValueState()
+    public void PrinterInputTray_NoValue_MapsToIppValueNoValue()
     {
-        // Feature: pwg5100-spec-parity, Property 3: Collection Attribute Round-Trip
-        var noValue = NoValue.GetNoValue<PrinterInputTray>();
-        var attrs = _mapper.Map<PrinterInputTray, IEnumerable<IppAttribute>>(noValue).ToList();
-
-        attrs.Should().HaveCount(1);
-        attrs[0].Tag.Should().Be(Tag.NoValue);
-
-        var dict = new Dictionary<string, IppAttribute[]>
-        {
-            [IppAttributeNames.PrinterInputTray] = attrs.ToArray()
-        };
-        var roundTripped = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterInputTray>(dict);
-        ((IIppCollection)roundTripped).IsValue.Should().BeFalse();
+        var noValue = _mapper.Map<NoValue, IppValue<PrinterInputTray>>(NoValue.Instance);
+        noValue.IsValue.Should().BeFalse();
     }
 
     [TestMethod]
-    public void PrinterSupply_NoValue_RoundTrip_PreservesNoValueState()
+    public void PrinterSupply_NoValue_MapsToIppValueNoValue()
     {
-        // Feature: pwg5100-spec-parity, Property 3: Collection Attribute Round-Trip
-        var noValue = NoValue.GetNoValue<PrinterSupply>();
-        var attrs = _mapper.Map<PrinterSupply, IEnumerable<IppAttribute>>(noValue).ToList();
-
-        attrs.Should().HaveCount(1);
-        attrs[0].Tag.Should().Be(Tag.NoValue);
-
-        var dict = new Dictionary<string, IppAttribute[]>
-        {
-            [IppAttributeNames.PrinterSupply] = attrs.ToArray()
-        };
-        var roundTripped = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterSupply>(dict);
-        ((IIppCollection)roundTripped).IsValue.Should().BeFalse();
+        var noValue = _mapper.Map<NoValue, IppValue<PrinterSupply>>(NoValue.Instance);
+        noValue.IsValue.Should().BeFalse();
     }
 }
 

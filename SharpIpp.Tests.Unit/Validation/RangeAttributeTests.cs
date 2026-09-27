@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -6,6 +6,7 @@ using System.Text;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Validation;
+using SharpIpp.Protocol.Models;
 using Range = SharpIpp.Protocol.Models.Range;
 
 namespace SharpIpp.Tests.Unit.Validation;
@@ -417,5 +418,182 @@ public class RangeAttributeTests
         result!.IsSuccess.Should().BeFalse();
         result.ErrorMessage.Should().Be("Custom error message");
     }
-}
+[TestMethod]
+    public void IsValid_WhenValueIsIppValueNoValue_ReturnsSuccess()
+    {
+        var attribute = new RangeAttribute(1, 10);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        IppValue<int> value = IppValue<int>.NoValue;
 
+        var result = attribute.IsValid(value, context);
+
+        result.Should().Be(ValidationResult.Success);
+    }
+
+    [TestMethod]
+    public void IsValid_WhenValueIsIppValueWithValidScalar_ReturnsSuccess()
+    {
+        var attribute = new RangeAttribute(1, 10);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        IppValue<int> value = new(5);
+
+        var result = attribute.IsValid(value, context);
+
+        result.Should().Be(ValidationResult.Success);
+    }
+
+    [TestMethod]
+    public void IsValid_WhenValueIsIppValueWithInvalidScalar_ReturnsValidationError()
+    {
+        var attribute = new RangeAttribute(1, 10);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        IppValue<int> value = new(15);
+
+        var result = attribute.IsValid(value, context);
+
+        result.Should().NotBeNull();
+        result!.IsSuccess.Should().BeFalse();
+        result.ErrorMessage.Should().Be("The field TestField must contain values between 1 and 10.");
+    }
+
+    [TestMethod]
+    public void IsValid_WhenValueIsIppValueWithNull_ReturnsSuccess()
+    {
+        var attribute = new RangeAttribute(1, 10);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        IppValue<Range?> value = new((Range?)null);
+
+        var result = attribute.IsValid(value, context);
+
+        result.Should().Be(ValidationResult.Success);
+    }
+
+    [TestMethod]
+    public void IsValid_WhenValueIsIppValueWithValidRange_ReturnsSuccess()
+    {
+        var attribute = new RangeAttribute(1, 10);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        IppValue<Range> value = new(new Range(2, 8));
+
+        var result = attribute.IsValid(value, context);
+
+        result.Should().Be(ValidationResult.Success);
+    }
+
+    [TestMethod]
+    public void IsValid_WhenValueIsIppValueWithInvalidRange_ReturnsValidationError()
+    {
+        var attribute = new RangeAttribute(1, 10);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        IppValue<Range> value = new(new Range(0, 15));
+
+        var result = attribute.IsValid(value, context);
+
+        result.Should().NotBeNull();
+        result!.IsSuccess.Should().BeFalse();
+        result.ErrorMessage.Should().Be("The field TestField must be within the range of 1 and 10.");
+    }
+
+    [TestMethod]
+    public void IsValid_WhenCollectionContainsIppValueNoValue_ReturnsSuccess()
+    {
+        var attribute = new RangeAttribute(1, 10);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        var collection = new IIppValue[]
+        {
+            IppValue<int>.NoValue,
+            new IppValue<int>(5)
+        };
+
+        var result = attribute.IsValid(collection, context);
+
+        result.Should().Be(ValidationResult.Success);
+    }
+
+    [TestMethod]
+    public void IsValid_WhenCollectionContainsIppValueWithNull_ReturnsSuccess()
+    {
+        var attribute = new RangeAttribute(1, 10);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        var collection = new IIppValue[]
+        {
+            new IppValue<Range?>((Range?)null),
+            new IppValue<Range>(new Range(2, 8))
+        };
+
+        var result = attribute.IsValid(collection, context);
+
+        result.Should().Be(ValidationResult.Success);
+    }
+
+    [TestMethod]
+    public void IsValid_WhenCollectionContainsIppValueWithValidValue_ReturnsSuccess()
+    {
+        var attribute = new RangeAttribute(1, 10);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        var collection = new IppValue<int>[]
+        {
+            new(3),
+            new(7)
+        };
+
+        var result = attribute.IsValid(collection, context);
+
+        result.Should().Be(ValidationResult.Success);
+    }
+
+    [TestMethod]
+    public void IsValid_WhenCollectionContainsIppValueWithOutOfRangeValue_ReturnsValidationError()
+    {
+        var attribute = new RangeAttribute(1, 10);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        var collection = new IppValue<int>[]
+        {
+            new(3),
+            new(15)
+        };
+
+        var result = attribute.IsValid(collection, context);
+
+        result.Should().NotBeNull();
+        result!.IsSuccess.Should().BeFalse();
+        result.ErrorMessage.Should().Be("The field TestField must contain values between 1 and 10.");
+    }
+
+    [TestMethod]
+    public void IsValid_WhenCollectionContainsIppValueRanges_ValidatesCorrectly()
+    {
+        var attribute = new RangeAttribute(1, 10);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        var validCollection = new IppValue<Range>[]
+        {
+            new(new Range(2, 5)),
+            IppValue<Range>.NoValue
+        };
+
+        var validResult = attribute.IsValid(validCollection, context);
+        validResult.Should().Be(ValidationResult.Success);
+
+        var invalidCollection = new IppValue<Range>[]
+        {
+            new(new Range(0, 5))
+        };
+
+        var invalidResult = attribute.IsValid(invalidCollection, context);
+        invalidResult.Should().NotBeNull();
+        invalidResult!.IsSuccess.Should().BeFalse();
+        invalidResult.ErrorMessage.Should().Be("The field TestField must be within the range of 1 and 10.");
+    }
+
+    [TestMethod]
+    public void IsValid_WhenValueIsIppValueWithCollection_ReturnsSuccess()
+    {
+        var attribute = new RangeAttribute(1, 10);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        IppValue<int[]> value = new(new[] { 2, 5, 8 });
+
+        var result = attribute.IsValid(value, context);
+
+        result.Should().Be(ValidationResult.Success);
+    }
+}

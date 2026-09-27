@@ -42,7 +42,7 @@ public class OperationAttributesRequestProfileTests
 
         // Assert
         dst.RequestedAttributes.Should().NotBeNull();
-        dst.RequestedAttributes.Should().BeEquivalentTo("attr1", "attr2");
+        ((string[])dst.RequestedAttributes!).Should().BeEquivalentTo("attr1", "attr2");
     }
 
     [TestMethod]
@@ -89,13 +89,13 @@ public class OperationAttributesRequestProfileTests
             { IppAttributeNames.AttributesCharset, [new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8")] },
             { IppAttributeNames.AttributesNaturalLanguage, [new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en")] }
         };
-        var dst = new GetDocumentAttributesOperationAttributes { RequestedAttributes = ["existing"] };
+        var dst = new GetDocumentAttributesOperationAttributes { RequestedAttributes = new[] { "existing" } };
 
         // Act
         _mapper.Map(src, dst);
 
         // Assert
-        dst.RequestedAttributes.Should().Contain("existing");
+        dst.RequestedAttributes!.Value.Value.Should().Contain("existing");
     }
 
     [TestMethod]
@@ -287,7 +287,7 @@ public class OperationAttributesRequestProfileTests
         var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, CreateJobOperationAttributes>(src);
 
         // Assert
-        dst.ResourceIds.Should().BeEquivalentTo(new[] { 101, 202 });
+        ((int[])dst.ResourceIds!).Should().BeEquivalentTo(new[] { 101, 202 });
     }
 
     [TestMethod]
@@ -298,7 +298,7 @@ public class OperationAttributesRequestProfileTests
         {
             AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
             AttributesNaturalLanguage = "en",
-            ResourceIds = [301, 302]
+            ResourceIds = new[] { 301, 302 }
         };
 
         // Act
@@ -336,10 +336,10 @@ public class OperationAttributesRequestProfileTests
         var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, CreateJobOperationAttributes>(src);
 
         // Assert
-        dst.DestinationAccesses.Should().NotBeNull();
-        dst.DestinationAccesses!.Should().ContainSingle();
-        dst.DestinationAccesses[0].AccessUserName.Should().Be("scan-user");
-        dst.DestinationAccesses[0].AccessPassword.Should().Be("secret");
+        dst.DestinationAccesses?.Value.Should().NotBeNull();
+        dst.DestinationAccesses!.Value.Value.Should().ContainSingle();
+        dst.DestinationAccesses!.Value.Value[0].AccessUserName?.Value.Should().Be("scan-user");
+        dst.DestinationAccesses!.Value.Value[0].AccessPassword?.Value.Should().Be("secret");
     }
 
     [TestMethod]
@@ -350,14 +350,14 @@ public class OperationAttributesRequestProfileTests
         {
             AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
             AttributesNaturalLanguage = "en",
-            DestinationAccesses =
-            [
+            DestinationAccesses = new[]
+            {
                 new DocumentAccess
                 {
                     AccessUserName = "scan-user",
                     AccessPassword = "secret"
                 }
-            ]
+            }
         };
 
         // Act
@@ -393,7 +393,7 @@ public class OperationAttributesRequestProfileTests
         var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, SendDocumentOperationAttributes>(src);
 
         // Assert
-        dst.ResourceIds.Should().BeEquivalentTo(new[] { 401, 402 });
+        ((int[])dst.ResourceIds!).Should().BeEquivalentTo(new[] { 401, 402 });
     }
 
     [TestMethod]
@@ -405,7 +405,7 @@ public class OperationAttributesRequestProfileTests
             AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
             AttributesNaturalLanguage = "en",
             LastDocument = true,
-            ResourceIds = [501, 502]
+            ResourceIds = new[] { 501, 502 }
         };
 
         // Act
@@ -505,7 +505,7 @@ public class OperationAttributesRequestProfileTests
         dst.PrinterUri.Should().Be(new Uri("ipp://printer"));
         dst.JobId.Should().Be(101);
         dst.InputAttributes.Should().NotBeNull();
-        ((string?)dst.InputAttributes!.DocumentFormat).Should().Be("image/tiff");
+        dst.InputAttributes!.Value.Value.DocumentFormat?.Value.ToString().Should().Be("image/tiff");
     }
 
     [TestMethod]

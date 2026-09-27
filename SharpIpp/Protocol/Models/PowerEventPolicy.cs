@@ -9,13 +9,11 @@ namespace SharpIpp.Protocol.Models;
 [IppAttribute(IppAttributeNames.PowerEventPolicyCol)]
 public class PowerEventPolicy : IIppCollection
 {
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
-    public int? EventId { get; set; }
+    public IppValue<int>? EventId { get; set; }
 
     [IppAttribute("event-name", Tag = Tag.TextWithoutLanguage)]
-    public string? EventName { get; set; }
+    public IppValue<string>? EventName { get; set; }
 
-    public PowerState? RequestPowerState { get; set; }
+    public IppValue<PowerState>? RequestPowerState { get; set; }
 }

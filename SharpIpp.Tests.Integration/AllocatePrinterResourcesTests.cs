@@ -30,7 +30,7 @@ public class AllocatePrinterResourcesTests : SharpIppIntegrationTestBase
                         ClientName = "MyClient",
                         ClientType = Protocol.Models.ClientType.Application,
                         ClientStringVersion = "1.2.3",
-                        ClientVersion = "1.2.3",
+                        ClientVersion = (OctetString)"1.2.3",
                         ClientPatches = "patch-1"
                     }
                 }
@@ -41,7 +41,6 @@ public class AllocatePrinterResourcesTests : SharpIppIntegrationTestBase
 
         var clientRawRequest = client.CreateRawRequest(clientRequest);
         var serverRequest = await server.ReceiveRequestAsync(clientRawRequest);
-
         clientRequest.Should().BeEquivalentTo(serverRequest);
     }
 
@@ -57,7 +56,7 @@ public class AllocatePrinterResourcesTests : SharpIppIntegrationTestBase
                 PrinterUri = new Uri("http://127.0.0.1:631"),
                 SystemUri = new Uri("ipp://127.0.0.1:8631/system"),
                 PrinterId = 99,
-                ResourceIds = [1, 2],
+                ResourceIds = new[] { 1, 2 },
                 ClientInfo = new[]
                 {
                     new Protocol.Models.ClientInfo
@@ -65,7 +64,7 @@ public class AllocatePrinterResourcesTests : SharpIppIntegrationTestBase
                         ClientName = "MyClient",
                         ClientType = Protocol.Models.ClientType.Application,
                         ClientStringVersion = "1.2.3",
-                        ClientVersion = "1.2.3",
+                        ClientVersion = (OctetString)"1.2.3",
                         ClientPatches = "patch-1"
                     }
                 }

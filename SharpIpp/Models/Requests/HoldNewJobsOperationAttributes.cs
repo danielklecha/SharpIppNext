@@ -1,4 +1,4 @@
-using SharpIpp.Mapping;
+﻿using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Requests;
@@ -16,5 +16,5 @@ public class HoldNewJobsOperationAttributes : OperationAttributes
     /// </summary>
     /// <code>printer-message-from-operator</code>
     [IppAttribute(IppAttributeNames.PrinterMessageFromOperator, Tag = Tag.TextWithoutLanguage)]
-    public string? PrinterMessageFromOperator { get; set; }
+    public IppValue<string>? PrinterMessageFromOperator { get; set; }
 }

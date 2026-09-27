@@ -1,4 +1,4 @@
-using SharpIpp.Mapping;
+﻿using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Models;
 using System;
@@ -20,6 +20,6 @@ public class RestartJobOperationAttributes :  CancelJobOperationAttributes
     /// </summary>
     /// <code>job-hold-until</code>
     [IppAttribute(IppAttributeNames.JobHoldUntil, Tag = Tag.Keyword)]
-    public JobHoldUntil? JobHoldUntil { get; set; }
+    public IppValue<JobHoldUntil>? JobHoldUntil { get; set; }
 
 }

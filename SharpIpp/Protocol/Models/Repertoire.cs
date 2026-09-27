@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the character repertoire.
 /// See: PWG 5101.2-2004 Section 3.1
 /// </summary>
-public readonly record struct Repertoire(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
+public readonly record struct Repertoire(string Value, bool IsMarked = true) : IMarkedSmartEnum
 {
     /// <summary>
     /// unicode_utf-8

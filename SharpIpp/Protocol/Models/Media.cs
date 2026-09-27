@@ -5,7 +5,7 @@ namespace SharpIpp.Protocol.Models;
 /// See: PWG 5101.1
 /// See: RFC 8011 Section 5.2.11
 /// </summary>
-public readonly record struct Media(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
+public readonly record struct Media(string Value, bool IsMarked = true) : IMarkedSmartEnum
 {
     /// <summary>
     /// The Printer selects the media from the available choices.

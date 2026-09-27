@@ -6,23 +6,21 @@ namespace SharpIpp.Protocol.Models;
 /// </summary>
 public class OverrideInstruction : IIppCollection
 {
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     /// <summary>
     /// The selected page ranges (member attribute <c>pages</c>).
     /// </summary>
-    public Range[]? PageRanges { get; set; }
+    public IppValue<Range[]>? PageRanges { get; set; }
 
     /// <summary>
     /// The selected document number ranges (member attribute <c>document-numbers</c>).
     /// </summary>
-    public Range[]? DocumentNumberRanges { get; set; }
+    public IppValue<Range[]>? DocumentNumberRanges { get; set; }
 
     /// <summary>
     /// The selected document copy ranges (member attribute <c>document-copies</c>).
     /// </summary>
-    public Range[]? DocumentCopyRanges { get; set; }
+    public IppValue<Range[]>? DocumentCopyRanges { get; set; }
 
     /// <summary>
     /// Job Template attributes that override the selected pages.

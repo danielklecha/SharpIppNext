@@ -32,7 +32,7 @@ public class OperationAttributes
     /// </summary>
     /// <code>printer-uri</code>
     [IppAttribute(IppAttributeNames.PrinterUri, Tag = Tag.Uri)]
-    public Uri? PrinterUri { get; set; }
+    public IppValue<Uri>? PrinterUri { get; set; }
 
     /// <summary>
     /// The client SHOULD supply this attribute. The Printer object MUST support this attribute. It contains the name of the user who submitted the request
@@ -40,7 +40,7 @@ public class OperationAttributes
     /// </summary>
     /// <code>requesting-user-name</code>
     [IppAttribute(IppAttributeNames.RequestingUserName, Tag = Tag.NameWithoutLanguage)]
-    public string? RequestingUserName { get; set; }
+    public IppValue<string>? RequestingUserName { get; set; }
 
     /// <summary>
     /// The client SHOULD supply this attribute. The Printer object MUST support this attribute. It contains the URI of the user who submitted the request.
@@ -48,7 +48,7 @@ public class OperationAttributes
     /// </summary>
     /// <code>requesting-user-uri</code>
     [IppAttribute(IppAttributeNames.RequestingUserUri, Tag = Tag.Uri)]
-    public Uri? RequestingUserUri { get; set; }
+    public IppValue<Uri>? RequestingUserUri { get; set; }
 
     /// <summary>
     /// The client MAY supply this attribute. It supplies information identifying the name and version of the Client and software packages contributing content to a Job Creation Operation.
@@ -56,7 +56,7 @@ public class OperationAttributes
     /// </summary>
     /// <code>client-info</code>
     [IppAttribute(IppAttributeNames.ClientInfo)]
-    public ClientInfo[]? ClientInfo { get; set; }
+    public IppValue<ClientInfo[]>? ClientInfo { get; set; }
 
     /// <summary>
     /// The client MAY supply this attribute. It specifies the date and time after which the Job MUST become a candidate for processing.
@@ -64,5 +64,5 @@ public class OperationAttributes
     /// </summary>
     /// <code>job-hold-until-time</code>
     [IppAttribute(IppAttributeNames.JobHoldUntilTime, Tag = Tag.DateTime)]
-    public DateTimeOffset? JobHoldUntilTime { get; set; }
+    public IppValue<DateTimeOffset>? JobHoldUntilTime { get; set; }
 }

@@ -8,7 +8,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the media-grain member attribute of the media-col collection, indicating the grain direction of the media.
 /// See: PWG 5101.1
 /// </summary>
-public readonly record struct MediaGrain(string Value, bool IsValue = true) : ISmartEnum 
+public readonly record struct MediaGrain(string Value) : ISmartEnum 
 {
     /// <summary>
     /// The grain of the media runs in the X (horizontal) direction.

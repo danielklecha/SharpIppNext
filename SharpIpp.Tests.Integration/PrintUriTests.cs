@@ -22,7 +22,7 @@ public class PrintUriTests : SharpIppIntegrationTestBase
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
-                ResourceIds = [41, 42],
+                ResourceIds = new[] { 41, 42 },
                 DocumentUri = new Uri("https://example.local/document.pdf"),
                 DocumentAccess = new DocumentAccess
                 {
@@ -38,8 +38,8 @@ public class PrintUriTests : SharpIppIntegrationTestBase
             JobTemplateAttributes = new()
             {
                 Copies = 1,
-                MaterialsCol =
-                [
+                MaterialsCol = new[]
+                {
                     new Material
                     {
                         MaterialAmount = 6,
@@ -48,23 +48,23 @@ public class PrintUriTests : SharpIppIntegrationTestBase
                         MaterialFillDensity = 8,
                         MaterialKey = (MaterialKey?)"abs-red",
                         MaterialName = "ABS Red",
-                        MaterialPurpose = [(MaterialPurpose)"support"],
+                        MaterialPurpose = new[] { (MaterialPurpose)"support" },
                         MaterialRate = 9,
                         MaterialRateUnits = (MaterialRateUnits?)"mm-per-second",
                         MaterialShellThickness = 10,
                         MaterialTemperature = 230,
                         MaterialType = (MaterialType?)"abs"
                     }
-                ],
-                PrintObjects =
-                [
+                },
+                PrintObjects = new[]
+                {
                     new PrintObject
                     {
                         DocumentNumber = 2,
                         PrintObjectsSource = new Uri("https://example.local/objects/2"),
-                        TransformationMatrix = [0, 1, 0, 1, 0, 0]
+                        TransformationMatrix = new[] { 0, 1, 0, 1, 0, 0 }
                     }
-                ]
+                }
             }
         };
         var client = new SharpIppClient();
@@ -89,7 +89,7 @@ public class PrintUriTests : SharpIppIntegrationTestBase
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
-                ResourceIds = [43, 44],
+                ResourceIds = new[] { 43, 44 },
                 DocumentUri = new Uri("ftp://document.pdf"),
                 DocumentName = "???????????????????????.pdf",
                 DocumentFormat = DocumentFormat.ApplicationPdf,
@@ -110,7 +110,7 @@ public class PrintUriTests : SharpIppIntegrationTestBase
                 StatusCode = IppStatusCode.SuccessfulOk,
                 OperationAttributes = new() { StatusMessage = "successful-ok", DetailedStatusMessage = "detail1", DocumentAccessError = "none" },
                 JobAttributes = new() { JobId = 456 },
-                DocumentAttributes = new()
+                DocumentAttributes = new DocumentAttributes
                 {
                     DocumentNumber = 1,
                     DocumentMetadata = GetTestDocumentMetadata()

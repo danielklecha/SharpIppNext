@@ -128,6 +128,7 @@ public class IppRequestMessageValidatorTests
         validator.ValidateDocumentAttributesGroup.Should().BeTrue();
         validator.ValidateSystemAttributesGroup.Should().BeTrue();
         validator.UseIppAttributeFidelityForCapabilityValidation.Should().BeFalse();
+        validator.EnforceMediaMutualExclusivity.Should().BeFalse();
     }
 
     [TestMethod]
@@ -604,7 +605,10 @@ public class IppRequestMessageValidatorTests
     [DataRow(false, false, false)]
     public void Validate_CreateJob_MediaAndMediaCol_Validation(bool hasMedia, bool hasMediaCol, bool shouldThrow)
     {
-        var validator = new IppRequestMessageValidator();
+        var validator = new IppRequestMessageValidator
+        {
+            EnforceMediaMutualExclusivity = true
+        };
         var request = CreateBasicRequest(IppOperation.CreateJob);
         if (hasMedia)
         {
@@ -621,12 +625,104 @@ public class IppRequestMessageValidatorTests
         if (shouldThrow)
         {
             act.Should().Throw<IppRequestException>()
-                .Which.StatusCode.Should().Be(IppStatusCode.ClientErrorBadRequest);
+                .Which.StatusCode.Should().Be(IppStatusCode.ClientErrorConflictingAttributes);
         }
         else
         {
             act.Should().NotThrow();
         }
+    }
+
+    [TestMethod]
+    public void Validate_CreateJob_MediaAndMediaCol_WhenEnforceMediaMutualExclusivityIsFalse_ShouldNotThrow()
+    {
+        var validator = new IppRequestMessageValidator();
+        validator.EnforceMediaMutualExclusivity.Should().BeFalse();
+
+        var request = CreateBasicRequest(IppOperation.CreateJob);
+        request.JobAttributes.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.Media, "iso_a4"));
+        request.JobAttributes.Add(new IppAttribute(Tag.BegCollection, IppAttributeNames.MediaCol, NoValue.Instance));
+        request.JobAttributes.Add(new IppAttribute(Tag.EndCollection, string.Empty, NoValue.Instance));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_CreateJob_EnforceMediaMutualExclusivity_WithNonMediaTopLevelAttributes_ShouldNotThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            EnforceMediaMutualExclusivity = true
+        };
+        var request = CreateBasicRequest(IppOperation.CreateJob);
+        request.JobAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.JobName, "test-job"));
+        request.JobAttributes.Add(new IppAttribute(Tag.BegCollection, "job-finishings-col", NoValue.Instance));
+        request.JobAttributes.Add(new IppAttribute(Tag.EndCollection, string.Empty, NoValue.Instance));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_CreateJob_EnforceMediaMutualExclusivity_WithNestedCollectionAndAttributes_ShouldNotThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            EnforceMediaMutualExclusivity = true
+        };
+        var request = CreateBasicRequest(IppOperation.CreateJob);
+        request.JobAttributes.Add(new IppAttribute(Tag.BegCollection, "job-finishings-col", NoValue.Instance));
+        request.JobAttributes.Add(new IppAttribute(Tag.BegCollection, IppAttributeNames.MediaCol, NoValue.Instance));
+        request.JobAttributes.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.Media, "iso_a4"));
+        request.JobAttributes.Add(new IppAttribute(Tag.Keyword, "other-attr", "value"));
+        request.JobAttributes.Add(new IppAttribute(Tag.EndCollection, string.Empty, NoValue.Instance));
+        request.JobAttributes.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.Media, "iso_a4"));
+        request.JobAttributes.Add(new IppAttribute(Tag.Keyword, "other-attr", "value"));
+        request.JobAttributes.Add(new IppAttribute(Tag.EndCollection, string.Empty, NoValue.Instance));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_CreateJob_EnforceMediaMutualExclusivity_TopLevelMediaWithNestedMediaCol_ShouldNotConflict()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            EnforceMediaMutualExclusivity = true
+        };
+        var request = CreateBasicRequest(IppOperation.CreateJob);
+        request.JobAttributes.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.Media, "iso_a4"));
+        request.JobAttributes.Add(new IppAttribute(Tag.BegCollection, "job-finishings-col", NoValue.Instance));
+        request.JobAttributes.Add(new IppAttribute(Tag.BegCollection, IppAttributeNames.MediaCol, NoValue.Instance));
+        request.JobAttributes.Add(new IppAttribute(Tag.Keyword, "nested-attr", "value"));
+        request.JobAttributes.Add(new IppAttribute(Tag.EndCollection, string.Empty, NoValue.Instance));
+        request.JobAttributes.Add(new IppAttribute(Tag.EndCollection, string.Empty, NoValue.Instance));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_CreateJob_EnforceMediaMutualExclusivity_TopLevelMediaColWithNestedMedia_ShouldNotConflict()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            EnforceMediaMutualExclusivity = true
+        };
+        var request = CreateBasicRequest(IppOperation.CreateJob);
+        request.JobAttributes.Add(new IppAttribute(Tag.BegCollection, IppAttributeNames.MediaCol, NoValue.Instance));
+        request.JobAttributes.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.Media, "iso_a4"));
+        request.JobAttributes.Add(new IppAttribute(Tag.EndCollection, string.Empty, NoValue.Instance));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().NotThrow();
     }
 
     [TestMethod]

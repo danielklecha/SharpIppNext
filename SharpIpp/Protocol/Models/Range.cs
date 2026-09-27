@@ -2,11 +2,10 @@ using System;
 
 namespace SharpIpp.Protocol.Models;
 
-public readonly struct Range(int lower, int upper, bool isValue = true) : IEquatable<Range>, INoValue
+public readonly struct Range(int lower, int upper) : IEquatable<Range>
 {
     public int Lower { get; } = lower;
     public int Upper { get; } = upper;
-    public bool IsValue { get; } = isValue;
 
     public override string ToString() => $"{Lower} - {Upper}";
 
@@ -33,6 +32,4 @@ public readonly struct Range(int lower, int upper, bool isValue = true) : IEquat
     public static bool operator !=(Range left, Range right) => !left.Equals(right);
 
     public static implicit operator Range(int value) => new(value, value);
-
-    public static explicit operator bool(Range range) => range.IsValue;
 }

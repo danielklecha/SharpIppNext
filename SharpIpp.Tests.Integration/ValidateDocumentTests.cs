@@ -23,9 +23,9 @@ public class ValidateDocumentTests : SharpIppIntegrationTestBase
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
-                DocumentPassword = "secret",
+                DocumentPassword = (OctetString)"secret",
             },
-            DocumentTemplateAttributes = new()
+            DocumentTemplateAttributes = new DocumentTemplateAttributes
             {
                 Copies = 1,
             }
@@ -58,7 +58,7 @@ public class ValidateDocumentTests : SharpIppIntegrationTestBase
                 DocumentName = "doc.pdf",
                 DocumentMetadata = GetTestDocumentMetadata(),
             },
-            DocumentTemplateAttributes = new()
+            DocumentTemplateAttributes = new DocumentTemplateAttributes
             {
                 Copies = 2,
                 PrintQuality = PrintQuality.High,

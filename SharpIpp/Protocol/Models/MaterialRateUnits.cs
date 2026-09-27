@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the <c>material-rate-units</c> member attribute.
 /// See: PWG 5100.21-2019 Section 8.1.3.12
 /// </summary>
-public readonly record struct MaterialRateUnits(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
+public readonly record struct MaterialRateUnits(string Value, bool IsMarked = true) : IMarkedSmartEnum
 {
     /// <summary>Rate measured in grams per minute. See: PWG 5100.21-2019 Section 8.1.3.12</summary>
     public static readonly MaterialRateUnits GramsPerMinute = new("g-per-min");

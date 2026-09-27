@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the member names for <code>destination-accesses</code>.
 /// See: PWG 5100.17-2014 Section 8.1.2
 /// </summary>
-public readonly record struct DestinationAccessMember(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
+public readonly record struct DestinationAccessMember(string Value, bool IsMarked = true) : IMarkedSmartEnum
 {
     /// <summary>
     /// The access PIN for the destination.

@@ -16,7 +16,7 @@ public class SendDocumentOperationAttributes : JobOperationAttributes
     /// </summary>
     [IppAttribute(IppAttributeNames.DocumentMetadata, Tag = Tag.OctetStringWithAnUnspecifiedFormat)]
     [Metadata]
-    public DocumentMetadata? DocumentMetadata { get; set; }
+    public IppValue<DocumentMetadata>? DocumentMetadata { get; set; }
 
     /// <summary>
     /// The <c>document-password</c> operation attribute.
@@ -25,7 +25,7 @@ public class SendDocumentOperationAttributes : JobOperationAttributes
     /// </summary>
     [IppAttribute(IppAttributeNames.DocumentPassword, Tag = Tag.OctetStringWithAnUnspecifiedFormat)]
     [ByteRange(1, 1023)]
-    public OctetString? DocumentPassword { get; set; }
+    public IppValue<OctetString>? DocumentPassword { get; set; }
 
     /// <summary>
     /// This DEPRECATED operation attribute specifies details about the source of the Document data and can be included in any Job or Document Creation request.
@@ -34,7 +34,7 @@ public class SendDocumentOperationAttributes : JobOperationAttributes
     /// <code>document-format-details</code>
     [IppAttribute(IppAttributeNames.DocumentFormatDetails)]
     [Obsolete("The 'document-format-details' attribute is deprecated. See PWG 5100.7-2023 Section 6.2.1.")]
-    public DocumentFormatDetails? DocumentFormatDetails { get; set; }
+    public IppValue<DocumentFormatDetails>? DocumentFormatDetails { get; set; }
 
     /// <summary>
     /// The client OPTIONALLY supplies this attribute.  The Printer
@@ -54,7 +54,7 @@ public class SendDocumentOperationAttributes : JobOperationAttributes
     /// <example>job63</example>
     /// <code>document-name</code>
     [IppAttribute(IppAttributeNames.DocumentName, Tag = Tag.NameWithoutLanguage)]
-    public string? DocumentName { get; set; }
+    public IppValue<string>? DocumentName { get; set; }
     /// <summary>
     /// The client OPTIONALLY supplies this attribute.  The Printer
     /// object MUST support this attribute and the "compression-
@@ -65,7 +65,7 @@ public class SendDocumentOperationAttributes : JobOperationAttributes
     /// <example>none</example>
     /// <code>compression</code>
     [IppAttribute(IppAttributeNames.Compression, Tag = Tag.Keyword)]
-    public Compression? Compression { get; set; }
+    public IppValue<Compression>? Compression { get; set; }
     /// <summary>
     /// The client OPTIONALLY supplies this attribute.  The Printer
     /// object MUST support this attribute.  The value of this
@@ -75,21 +75,21 @@ public class SendDocumentOperationAttributes : JobOperationAttributes
     /// <example>application/octet-stream</example>
     /// <code>document-format</code>
     [IppAttribute(IppAttributeNames.DocumentFormat, Tag = Tag.MimeMediaType)]
-    public DocumentFormat? DocumentFormat { get; set; }
+    public IppValue<DocumentFormat>? DocumentFormat { get; set; }
     /// <summary>
     /// The client OPTIONALLY supplies this attribute. The Printer object OPTIONALLY supports this attribute. This attribute specifies the natural language of the document for those document-formats that require a specification of the natural language in order to image the document unambiguously. There are no particular values required for the Printer object to support
     /// See: RFC 8011 Section 4.3.1
     /// </summary>
     /// <code>document-natural-language</code>
     [IppAttribute(IppAttributeNames.DocumentNaturalLanguage, Tag = Tag.NaturalLanguage)]
-    public NaturalLanguage? DocumentNaturalLanguage { get; set; }
+    public IppValue<NaturalLanguage>? DocumentNaturalLanguage { get; set; }
     /// <summary>
     /// The document-charset IPP attribute.
     /// See: PWG 5100.5-2024 Section 6.2.1
     /// </summary>
     /// <code>document-charset</code>
     [IppAttribute(IppAttributeNames.DocumentCharset, Tag = Tag.Charset)]
-    public Charset? DocumentCharset { get; set; }
+    public IppValue<Charset>? DocumentCharset { get; set; }
 
     /// <summary>
     /// The document-message IPP attribute.
@@ -98,7 +98,7 @@ public class SendDocumentOperationAttributes : JobOperationAttributes
     /// </summary>
     /// <code>document-message</code>
     [IppAttribute(IppAttributeNames.DocumentMessage, Tag = Tag.TextWithoutLanguage)]
-    public string? DocumentMessage { get; set; }
+    public IppValue<string>? DocumentMessage { get; set; }
 
     /// <summary>
     /// The <c>resource-ids</c> operation attribute.
@@ -106,7 +106,7 @@ public class SendDocumentOperationAttributes : JobOperationAttributes
     /// </summary>
     [IppAttribute(IppAttributeNames.ResourceIds, Tag = Tag.Integer)]
     [Range(1, int.MaxValue)]
-    public int[]? ResourceIds { get; set; }
+    public IppValue<int[]>? ResourceIds { get; set; }
 
     /// <summary>
     /// The client MUST supply this attribute. The Printer object MUST support this attribute. It is a boolean flag that is set to 'true' if this is the last document for the Job, 'false' otherwise

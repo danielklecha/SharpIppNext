@@ -1,4 +1,4 @@
-using SharpIpp.Mapping;
+﻿using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Requests;
@@ -18,5 +18,5 @@ public class SetPrinterAttributesOperationAttributes : OperationAttributes
     /// <example>application/octet-stream</example>
     /// <code>document-format</code>
     [IppAttribute(IppAttributeNames.DocumentFormat, Tag = Tag.MimeMediaType)]
-    public DocumentFormat? DocumentFormat { get; set; }
+    public IppValue<DocumentFormat>? DocumentFormat { get; set; }
 }

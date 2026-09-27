@@ -32,6 +32,15 @@ public class RangeAttribute : IppValidationAttribute
 
     public override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
+        if (value is IIppValue ippValue)
+        {
+            if (!ippValue.IsValue)
+            {
+                return ValidationResult.Success;
+            }
+            value = ippValue.ValueAsObject;
+        }
+
         if (value == null)
         {
             return ValidationResult.Success;
@@ -61,6 +70,19 @@ public class RangeAttribute : IppValidationAttribute
 
     private ValidationResult ValidateValue(object value, ValidationContext validationContext)
     {
+        if (value is IIppValue ippValue)
+        {
+            if (!ippValue.IsValue)
+            {
+                return ValidationResult.Success;
+            }
+            value = ippValue.ValueAsObject!;
+            if (value == null)
+            {
+                return ValidationResult.Success;
+            }
+        }
+
         if (value is SharpIpp.Protocol.Models.Range range)
         {
             if (range.Lower > range.Upper)

@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies member attribute names supported by <code>separator-sheets-supported</code>.
 /// See: PWG 5100.3-2023 Section 5.3.32
 /// </summary>
-public readonly record struct SeparatorSheetsMember(string Value, bool IsValue = true) : ISmartEnum 
+public readonly record struct SeparatorSheetsMember(string Value) : ISmartEnum 
 {
     /// <summary>The media member attribute. See: PWG 5100.3-2023 Section 5.3.32</summary>
     public static readonly SeparatorSheetsMember Media = new("media");

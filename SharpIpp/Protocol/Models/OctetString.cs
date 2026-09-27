@@ -8,7 +8,7 @@ namespace SharpIpp.Protocol.Models;
 /// Represents an IPP octetString, which is a sequence of 8-bit octets.
 /// See: RFC 8011 Section 5.1.10
 /// </summary>
-public readonly struct OctetString(byte[] value, bool isValue = true) : IEquatable<OctetString>, INoValue
+public readonly struct OctetString(byte[] value) : IEquatable<OctetString>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="OctetString"/> struct from a string, using UTF-8 encoding.
@@ -22,11 +22,6 @@ public readonly struct OctetString(byte[] value, bool isValue = true) : IEquatab
     /// Gets the raw byte array value.
     /// </summary>
     public byte[] Value { get; } = value;
-
-    /// <summary>
-    /// Gets a value indicating whether this instance represents a real value.
-    /// </summary>
-    public bool IsValue { get; } = isValue && value != null;
 
     /// <summary>
     /// Implicitly converts a byte array to an <see cref="OctetString"/>.

@@ -34,7 +34,7 @@ public class ProofPrintProfileTests : MapperTestBase
 
         // Assert
         result.MediaCol.Should().NotBeNull();
-        result.MediaCol!.MediaLeftMargin.Should().Be(5);
+        result.MediaCol!.Value.Value.MediaLeftMargin?.Value.Should().Be(5);
     }
 
 [TestMethod]

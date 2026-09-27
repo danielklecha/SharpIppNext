@@ -8,7 +8,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the media-source attribute, identifying the input tray or feed source for media.
 /// See: PWG 5100.13-2023 Section 6.2.19
 /// </summary>
-public readonly record struct MediaSource(string Value, bool IsValue = true) : ISmartEnum 
+public readonly record struct MediaSource(string Value) : ISmartEnum 
 {
     /// <summary>
     /// The Printer alternates between two input sources.

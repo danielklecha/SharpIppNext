@@ -2,13 +2,11 @@ using System;
 
 namespace SharpIpp.Protocol.Models;
 
-public readonly struct StringWithLanguage(string language, string value, bool isValue = true) : IEquatable<StringWithLanguage>, INoValue
+public readonly struct StringWithLanguage(string language, string value) : IEquatable<StringWithLanguage>
 {
     public string Language { get; } = language;
 
     public string Value { get; } = value;
-
-    public bool IsValue { get; } = isValue;
 
     public override string ToString()
     {

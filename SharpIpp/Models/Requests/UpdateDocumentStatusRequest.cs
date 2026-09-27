@@ -14,5 +14,5 @@ public class UpdateDocumentStatusRequest : IppRequest<UpdateDocumentStatusOperat
     /// Document status attributes supplied by the Proxy.
     /// See: PWG 5100.18-2025 Section 5.8.1
     /// </summary>
-    public DocumentAttributes? DocumentAttributes { get; set; }
+    public IppValue<DocumentAttributes>? DocumentAttributes { get; set; }
 }

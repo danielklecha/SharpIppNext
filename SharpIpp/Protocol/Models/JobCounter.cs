@@ -10,46 +10,44 @@ namespace SharpIpp.Protocol.Models;
 public class JobCounter : IIppCollection
 {
     /// <inheritdoc />
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     /// <summary>
     /// integer(0:MAX)
     /// </summary>
-    public int? Blank { get; set; }
+    public IppValue<int>? Blank { get; set; }
 
     /// <summary>
     /// integer(0:MAX)
     /// </summary>
-    public int? BlankTwoSided { get; set; }
+    public IppValue<int>? BlankTwoSided { get; set; }
 
     /// <summary>
     /// integer(0:MAX)
     /// </summary>
-    public int? FullColor { get; set; }
+    public IppValue<int>? FullColor { get; set; }
 
     /// <summary>
     /// integer(0:MAX)
     /// </summary>
-    public int? FullColorTwoSided { get; set; }
+    public IppValue<int>? FullColorTwoSided { get; set; }
 
     /// <summary>
     /// integer(0:MAX)
     /// </summary>
-    public int? HighlightColor { get; set; }
+    public IppValue<int>? HighlightColor { get; set; }
 
     /// <summary>
     /// integer(0:MAX)
     /// </summary>
-    public int? HighlightColorTwoSided { get; set; }
+    public IppValue<int>? HighlightColorTwoSided { get; set; }
 
     /// <summary>
     /// integer(0:MAX)
     /// </summary>
-    public int? Monochrome { get; set; }
+    public IppValue<int>? Monochrome { get; set; }
 
     /// <summary>
     /// integer(0:MAX)
     /// </summary>
-    public int? MonochromeTwoSided { get; set; }
+    public IppValue<int>? MonochromeTwoSided { get; set; }
 }

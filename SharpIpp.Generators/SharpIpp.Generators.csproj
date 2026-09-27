@@ -15,4 +15,8 @@
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" PrivateAssets="all" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="SharpIpp.Generators.Tests.Unit" />
+  </ItemGroup>
+
 </Project>

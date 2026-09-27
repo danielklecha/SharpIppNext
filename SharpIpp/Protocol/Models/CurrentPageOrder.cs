@@ -5,7 +5,7 @@ namespace SharpIpp.Protocol.Models;
 /// See: PWG 5100.5-2024 Section 6.2
 /// See: PWG 5100.3-2023 Section 5.2.13
 /// </summary>
-public readonly record struct CurrentPageOrder(string Value, bool IsValue = true) : ISmartEnum
+public readonly record struct CurrentPageOrder(string Value) : ISmartEnum
 {
     /// <summary>
     /// Pages are in 1-to-N order (first page first).

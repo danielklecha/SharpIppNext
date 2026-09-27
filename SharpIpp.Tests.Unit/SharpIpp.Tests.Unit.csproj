@@ -6,6 +6,7 @@
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <Include>[SharpIpp]*</Include>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,12 +23,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.MSTest" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SharpIpp\SharpIpp.csproj" />
-    <ProjectReference Include="..\SharpIpp.Generators\SharpIpp.Generators.csproj" />
   </ItemGroup>
 
   <ItemGroup>

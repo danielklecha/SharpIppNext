@@ -21,19 +21,19 @@ public class CreateJobTests : SharpIppIntegrationTestBase
             OperationAttributes = new()
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
-                ResourceIds = [11, 12],
+                ResourceIds = new[] { 11, 12 },
                 JobMandatoryAttributes = new[] { "copies" },
-                ClientInfo =
-                [
+                ClientInfo = new[]
+                {
                     new ClientInfo
                     {
                         ClientName = "MyClient",
                         ClientPatches = "Patch-A",
                         ClientStringVersion = "1.2.3",
-                        ClientVersion = "010203",
+                        ClientVersion = (OctetString)"010203",
                         ClientType = ClientType.Application
                     }
-                ],
+                },
                 DocumentFormatDetails = new DocumentFormatDetails
                 {
                     DocumentSourceApplicationName = "MyApp",
@@ -41,14 +41,14 @@ public class CreateJobTests : SharpIppIntegrationTestBase
                     DocumentSourceOsName = "MyOS",
                     DocumentSourceOsVersion = "12.1"
                 },
-                DestinationUris =
-                [
+                DestinationUris = new[]
+                {
                     new DestinationUri { DestinationUriValue = new Uri("https://example.test/upload") }
-                ],
-                DestinationAccesses =
-                [
+                },
+                DestinationAccesses = new[]
+                {
                     new DocumentAccess { AccessUserName = "scan-user", AccessPassword = "secret" }
-                ],
+                },
                 OutputAttributes = new OutputAttributes
                 {
                     NoiseRemoval = 60,
@@ -102,9 +102,9 @@ public class CreateJobTests : SharpIppIntegrationTestBase
                 {
                     JobId = 1,
                     JobState = JobState.Pending,
-                    PlatformTemperatureActual = [55, 60],
-                    ChamberHumidityActual = [30],
-                    ChamberTemperatureActual = [45],
+                    PlatformTemperatureActual = new[] { 55, 60 },
+                    ChamberHumidityActual = new[] { 30 },
+                    ChamberTemperatureActual = new[] { 45 },
                     ChamberHumidityCurrent = 31,
                     ChamberTemperatureCurrent = 46
                 }

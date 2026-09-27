@@ -9,23 +9,21 @@ namespace SharpIpp.Protocol.Models;
 [IppAttribute(IppAttributeNames.SystemConfiguredPrinters)]
 public class SystemConfiguredPrinter : IIppCollection
 {
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     /// <summary>
     /// The printer-id IPP attribute.
     /// Type: integer(1:65535)
     /// See: PWG 5100.22-2025 Section 7.1.5
     /// </summary>
-    public int? PrinterId { get; set; }
+    public IppValue<int>? PrinterId { get; set; }
 
     [IppAttribute(IppAttributeNames.PrinterInfo, Tag = Tag.TextWithoutLanguage)]
-    public string? PrinterInfo { get; set; }
+    public IppValue<string>? PrinterInfo { get; set; }
 
-    public bool? PrinterIsAcceptingJobs { get; set; }
-    public string? PrinterName { get; set; }
-    public PrinterServiceType? PrinterServiceType { get; set; }
-    public PrinterState? PrinterState { get; set; }
-    public PrinterStateReason[]? PrinterStateReasons { get; set; }
-    public SystemXri[]? PrinterXriSupported { get; set; }
+    public IppValue<bool>? PrinterIsAcceptingJobs { get; set; }
+    public IppValue<string>? PrinterName { get; set; }
+    public IppValue<PrinterServiceType>? PrinterServiceType { get; set; }
+    public IppValue<PrinterState>? PrinterState { get; set; }
+    public IppValue<PrinterStateReason[]>? PrinterStateReasons { get; set; }
+    public IppValue<SystemXri[]>? PrinterXriSupported { get; set; }
 }

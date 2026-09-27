@@ -18,7 +18,7 @@ public class CreateJobOperationAttributes : OperationAttributes
     /// <code>document-format-details</code>
     [IppAttribute(IppAttributeNames.DocumentFormatDetails)]
     [Obsolete("The 'document-format-details' attribute is deprecated. See PWG 5100.7-2023 Section 6.2.1.")]
-    public DocumentFormatDetails? DocumentFormatDetails { get; set; }
+    public IppValue<DocumentFormatDetails>? DocumentFormatDetails { get; set; }
 
     /// <summary>
     /// This REQUIRED operation attribute identifies which Job Template attributes the Printer MUST support in order to accept the Job.
@@ -26,7 +26,7 @@ public class CreateJobOperationAttributes : OperationAttributes
     /// </summary>
     /// <code>job-mandatory-attributes</code>
     [IppAttribute(IppAttributeNames.JobMandatoryAttributes, Tag = Tag.Keyword)]
-    public string[]? JobMandatoryAttributes { get; set; }
+    public IppValue<string[]>? JobMandatoryAttributes { get; set; }
 
     /// <summary>
     /// This REQUIRED attribute is the name of the job. It is a name that is more user friendly than the "job-uri" attribute value. It does not need to be unique between Jobs. The Job's "job-name" attribute is set to the value supplied by the client in the "job-name" operation attribute in the create request. If, however, the "job-name" operation attribute is not supplied by the client in the create request, the Printer object, on creation of the Job, MUST generate a name.
@@ -35,7 +35,7 @@ public class CreateJobOperationAttributes : OperationAttributes
     /// <code>job-name</code>
     /// <example>job63</example>
     [IppAttribute(IppAttributeNames.JobName, Tag = Tag.NameWithoutLanguage)]
-    public string? JobName { get; set; }
+    public IppValue<string>? JobName { get; set; }
     /// <summary>
     /// The client OPTIONALLY supplies this attribute. The Printer object MUST support this attribute. The value 'true' indicates that total fidelity to client supplied Job Template attributes and values is required, else the Printer object MUST reject the Print-Job request. The value 'false' indicates that a reasonable attempt to print the Job object is acceptable and the Printer object MUST accept the Print-Job request. If not supplied, the Printer object assumes the value is 'false'. All Printer objects MUST support both types of job processing. See section 15 for a full description of "ipp-attribute-fidelity" and its relationship to other attributes, especially the Printer object's "pdl-override-supported" attribute
     /// See: RFC 8011 Section 5.4.18
@@ -43,7 +43,7 @@ public class CreateJobOperationAttributes : OperationAttributes
     /// <code>ipp-attribute-fidelity</code>
     /// <example>False</example>
     [IppAttribute(IppAttributeNames.IppAttributeFidelity, Tag = Tag.Boolean)]
-    public bool? IppAttributeFidelity { get; set; }
+    public IppValue<bool>? IppAttributeFidelity { get; set; }
     /// <summary>
     /// This attribute specifies the total size in number of impressions of the document(s) being submitted. As with "job-k-octets", this value MUST NOT include the multiplicative factors contributed by the number of copies specified by the "copies" attribute, independent of whether the device can process multiple copies without making multiple passes over the job or document data and independent of whether the output is collated or not. Thus the value is independent of the implementation and reflects the size of the document(s) measured in impressions independent of the number of copies. As with "job-k-octets", this value MUST also not include the multiplicative factor due to a copies instruction embedded in the document data. If the document data actually includes replications of the document data, this value will include such replication. In other words, this value is always the number of impressions in the source document data, rather than a measure of the number of impressions to be produced by the job
     /// See: RFC 8011 Section 4.2.1.1
@@ -52,7 +52,7 @@ public class CreateJobOperationAttributes : OperationAttributes
     /// <example>no value</example>
     [IppAttribute(IppAttributeNames.JobImpressions, Tag = Tag.Integer)]
     [Range(0, int.MaxValue)]
-    public int? JobImpressions { get; set; }
+    public IppValue<int>? JobImpressions { get; set; }
     /// <summary>
     /// This attribute specifies the total number of media sheets to be produced for this job. Unlike the "job-k-octets" and the "job-impressions" attributes, this value MUST include the multiplicative factors contributed by the number of copies specified by the "copies" attribute and a 'number of copies' instruction embedded in the document data, if any. This difference allows the system administrator to control the lower and upper bounds of both (1) the size of the document(s) with "job-k- octets-supported" and "job-impressions-supported" and (2) the size of the job with "job-media-sheets-supported"
     /// See: RFC 8011 Section 5.3.17.3
@@ -61,7 +61,7 @@ public class CreateJobOperationAttributes : OperationAttributes
     /// <example>no value</example>
     [IppAttribute(IppAttributeNames.JobMediaSheets, Tag = Tag.Integer)]
     [Range(1, int.MaxValue)]
-    public int? JobMediaSheets { get; set; }
+    public IppValue<int>? JobMediaSheets { get; set; }
 
     /// <summary>
     /// The <c>resource-ids</c> operation attribute.
@@ -69,7 +69,7 @@ public class CreateJobOperationAttributes : OperationAttributes
     /// </summary>
     [IppAttribute(IppAttributeNames.ResourceIds, Tag = Tag.Integer)]
     [Range(1, int.MaxValue)]
-    public int[]? ResourceIds { get; set; }
+    public IppValue<int[]>? ResourceIds { get; set; }
 
     /// <summary>
     /// The client OPTIONALLY supplies this attribute. The Printer object MUST support this attribute. The value of this attribute identifies the total size of the document(s) in K octets, i.e., in units of 1024 octets. The value MUST be rounded up, so that a job between 1 and 1024 octets inclusive MUST be indicated as being 1, 1025 to 2048 inclusive MUST be 2, etc
@@ -79,35 +79,35 @@ public class CreateJobOperationAttributes : OperationAttributes
     /// <example>26</example>
     [IppAttribute(IppAttributeNames.JobKOctets, Tag = Tag.Integer)]
     [Range(0, int.MaxValue)]
-    public int? JobKOctets { get; set; }
+    public IppValue<int>? JobKOctets { get; set; }
 
     /// <summary>
     /// The <c>job-password</c> operation attribute.
     /// See: PWG 5100.11-2024 Section 6.1.1
     /// </summary>
     [IppAttribute(IppAttributeNames.JobPassword, Tag = Tag.OctetStringWithAnUnspecifiedFormat)]
-    public OctetString? JobPassword { get; set; }
+    public IppValue<OctetString>? JobPassword { get; set; }
 
     /// <summary>
     /// The <c>job-password-encryption</c> operation attribute.
     /// See: PWG 5100.11-2024 Section 6.1.2
     /// </summary>
     [IppAttribute(IppAttributeNames.JobPasswordEncryption, Tag = Tag.Keyword)]
-    public JobPasswordEncryption? JobPasswordEncryption { get; set; }
+    public IppValue<JobPasswordEncryption>? JobPasswordEncryption { get; set; }
 
     /// <summary>
     /// The <c>job-release-action</c> operation attribute.
     /// See: PWG 5100.11-2024 Section 6.1.3
     /// </summary>
     [IppAttribute(IppAttributeNames.JobReleaseAction, Tag = Tag.Keyword)]
-    public JobReleaseAction? JobReleaseAction { get; set; }
+    public IppValue<JobReleaseAction>? JobReleaseAction { get; set; }
 
     /// <summary>
     /// The <c>job-authorization-uri</c> operation attribute.
     /// See: PWG 5100.16-2020 Section 6.1.2
     /// </summary>
     [IppAttribute(IppAttributeNames.JobAuthorizationUri, Tag = Tag.Uri)]
-    public Uri? JobAuthorizationUri { get; set; }
+    public IppValue<Uri>? JobAuthorizationUri { get; set; }
 
     /// <summary>
     /// The <c>job-impressions-estimated</c> operation attribute.
@@ -115,14 +115,14 @@ public class CreateJobOperationAttributes : OperationAttributes
     /// </summary>
     [IppAttribute(IppAttributeNames.JobImpressionsEstimated, Tag = Tag.Integer)]
     [Range(1, int.MaxValue)]
-    public int? JobImpressionsEstimated { get; set; }
+    public IppValue<int>? JobImpressionsEstimated { get; set; }
 
     /// <summary>
     /// The <c>charge-info-message</c> operation attribute.
     /// See: PWG 5100.16-2020 Section 6.1.1
     /// </summary>
     [IppAttribute(IppAttributeNames.ChargeInfoMessage, Tag = Tag.TextWithoutLanguage)]
-    public string? ChargeInfoMessage { get; set; }
+    public IppValue<string>? ChargeInfoMessage { get; set; }
 
     /// <summary>
     /// The <c>proof-copies</c> operation attribute.
@@ -130,7 +130,7 @@ public class CreateJobOperationAttributes : OperationAttributes
     /// </summary>
     [IppAttribute(IppAttributeNames.ProofCopies, Tag = Tag.Integer)]
     [Range(1, int.MaxValue)]
-    public int? ProofCopies { get; set; }
+    public IppValue<int>? ProofCopies { get; set; }
 
     /// <summary>
     /// The <c>proof-print</c> operation attribute.
@@ -139,28 +139,28 @@ public class CreateJobOperationAttributes : OperationAttributes
     /// </summary>
     [IppAttribute(IppAttributeNames.ProofPrint)]
     [Obsolete("The 'proof-print' attribute is deprecated in favor of 'proof-print-default'. See PWG 5100.11-2024 Section 6.2.3.")]
-    public ProofPrint? ProofPrint { get; set; }
+    public IppValue<ProofPrint>? ProofPrint { get; set; }
 
     /// <summary>
     /// The <c>job-storage</c> operation attribute.
     /// See: PWG 5100.11-2024 Section 6.1.4
     /// </summary>
     [IppAttribute(IppAttributeNames.JobStorage)]
-    public JobStorage? JobStorage { get; set; }
+    public IppValue<JobStorage>? JobStorage { get; set; }
 
     /// <summary>
     /// The <c>cover-sheet-info</c> operation attribute.
     /// See: PWG 5100.15-2013 Section 7.2.2
     /// </summary>
     [IppAttribute(IppAttributeNames.CoverSheetInfo)]
-    public CoverSheetInfo? CoverSheetInfo { get; set; }
+    public IppValue<CoverSheetInfo>? CoverSheetInfo { get; set; }
 
     /// <summary>
     /// The <c>destination-uris</c> operation attribute.
     /// See: PWG 5100.15-2013 Section 7.2.3
     /// </summary>
     [IppAttribute(IppAttributeNames.DestinationUris)]
-    public DestinationUri[]? DestinationUris { get; set; }
+    public IppValue<DestinationUri[]>? DestinationUris { get; set; }
 
     /// <summary>
     /// The <c>destination-accesses</c> operation attribute.
@@ -169,13 +169,13 @@ public class CreateJobOperationAttributes : OperationAttributes
     /// </summary>
     [IppAttribute(IppAttributeNames.DestinationAccesses)]
     [Obsolete("The 'destination-accesses' attribute is deprecated. See PWG 5100.17-2014 Section 8.1.2.")]
-    public DocumentAccess[]? DestinationAccesses { get; set; }
+    public IppValue<DocumentAccess[]>? DestinationAccesses { get; set; }
 
     /// <summary>
     /// The <c>output-attributes</c> operation attribute.
     /// See: PWG 5100.17-2014 Section 8.1.7
     /// </summary>
     [IppAttribute(IppAttributeNames.OutputAttributes)]
-    public OutputAttributes? OutputAttributes { get; set; }
+    public IppValue<OutputAttributes>? OutputAttributes { get; set; }
 
 }

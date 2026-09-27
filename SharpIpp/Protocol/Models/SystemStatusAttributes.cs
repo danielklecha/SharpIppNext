@@ -18,7 +18,7 @@ public class SystemStatusAttributes
     /// </summary>
     /// <code>system-state</code>
     [IppAttribute(IppAttributeNames.SystemState)]
-    public PrinterState? SystemState { get; set; }
+    public IppValue<PrinterState>? SystemState { get; set; }
 
     /// <summary>
     /// Human readable system state message.
@@ -26,7 +26,7 @@ public class SystemStatusAttributes
     /// </summary>
     /// <code>system-state-message</code>
     [IppAttribute(IppAttributeNames.SystemStateMessage)]
-    public string? SystemStateMessage { get; set; }
+    public IppValue<string>? SystemStateMessage { get; set; }
 
     /// <summary>
     /// One or more state reasons for the System object.
@@ -34,7 +34,7 @@ public class SystemStatusAttributes
     /// </summary>
     /// <code>system-state-reasons</code>
     [IppAttribute(IppAttributeNames.SystemStateReasons)]
-    public SystemStateReason[]? SystemStateReasons { get; set; }
+    public IppValue<SystemStateReason[]>? SystemStateReasons { get; set; }
 
     /// <summary>
     /// System state change time since boot in seconds.
@@ -42,7 +42,7 @@ public class SystemStatusAttributes
     /// </summary>
     /// <code>system-state-change-time</code>
     [IppAttribute(IppAttributeNames.SystemStateChangeTime)]
-    public int? SystemStateChangeTime { get; set; }
+    public IppValue<int>? SystemStateChangeTime { get; set; }
 
     /// <summary>
     /// System state change date-time.
@@ -50,7 +50,7 @@ public class SystemStatusAttributes
     /// </summary>
     /// <code>system-state-change-date-time</code>
     [IppAttribute(IppAttributeNames.SystemStateChangeDateTime)]
-    public DateTimeOffset? SystemStateChangeDateTime { get; set; }
+    public IppValue<DateTimeOffset>? SystemStateChangeDateTime { get; set; }
 
     /// <summary>
     /// System uptime in seconds.
@@ -59,63 +59,63 @@ public class SystemStatusAttributes
     /// </summary>
     /// <code>system-up-time</code>
     [IppAttribute(IppAttributeNames.SystemUpTime)]
-    public int? SystemUpTime { get; set; }
+    public IppValue<int>? SystemUpTime { get; set; }
 
     /// <summary>
     /// System time source configured.
     /// See: PWG 5100.22-2025 Section 7.3.31
     /// </summary>
     [IppAttribute(IppAttributeNames.SystemTimeSourceConfigured)]
-    public SystemTimeSourceConfigured? SystemTimeSourceConfigured { get; set; }
+    public IppValue<SystemTimeSourceConfigured>? SystemTimeSourceConfigured { get; set; }
 
     /// <summary>
     /// Configured printers summary.
     /// See: PWG 5100.22-2025 Section 7.3.9
     /// </summary>
     [IppAttribute(IppAttributeNames.SystemConfiguredPrinters)]
-    public SystemConfiguredPrinter[]? SystemConfiguredPrinters { get; set; }
+    public IppValue<SystemConfiguredPrinter[]>? SystemConfiguredPrinters { get; set; }
 
     /// <summary>
     /// Configured resources summary.
     /// See: PWG 5100.22-2025 Section 7.3.10
     /// </summary>
     [IppAttribute(IppAttributeNames.SystemConfiguredResources)]
-    public SystemConfiguredResource[]? SystemConfiguredResources { get; set; }
+    public IppValue<SystemConfiguredResource[]>? SystemConfiguredResources { get; set; }
 
     /// <summary>
     /// Power log entries.
     /// See: PWG 5100.22-2025 Section 7.3.1
     /// </summary>
     [IppAttribute(IppAttributeNames.PowerLogCol)]
-    public PowerLogEntry[]? PowerLogCol { get; set; }
+    public IppValue<PowerLogEntry[]>? PowerLogCol { get; set; }
 
     /// <summary>
     /// Power state capabilities collection.
     /// See: PWG 5100.22-2025 Section 7.3.2
     /// </summary>
     [IppAttribute(IppAttributeNames.PowerStateCapabilitiesCol)]
-    public PowerStateCapability[]? PowerStateCapabilitiesCol { get; set; }
+    public IppValue<PowerStateCapability[]>? PowerStateCapabilitiesCol { get; set; }
 
     /// <summary>
     /// Power state counters collection.
     /// See: PWG 5100.22-2025 Section 7.3.3
     /// </summary>
     [IppAttribute(IppAttributeNames.PowerStateCountersCol)]
-    public PowerStateCounter[]? PowerStateCountersCol { get; set; }
+    public IppValue<PowerStateCounter[]>? PowerStateCountersCol { get; set; }
 
     /// <summary>
     /// Power state monitor collection.
     /// See: PWG 5100.22-2025 Section 7.3.4
     /// </summary>
     [IppAttribute(IppAttributeNames.PowerStateMonitorCol)]
-    public PowerStateMonitor[]? PowerStateMonitorCol { get; set; }
+    public IppValue<PowerStateMonitor[]>? PowerStateMonitorCol { get; set; }
 
     /// <summary>
     /// Power state transitions collection.
     /// See: PWG 5100.22-2025 Section 7.3.5
     /// </summary>
     [IppAttribute(IppAttributeNames.PowerStateTransitionsCol)]
-    public PowerStateTransition[]? PowerStateTransitionsCol { get; set; }
+    public IppValue<PowerStateTransition[]>? PowerStateTransitionsCol { get; set; }
 
     /// <summary>
     /// System unique identifier.
@@ -123,26 +123,26 @@ public class SystemStatusAttributes
     /// </summary>
     /// <code>system-uuid</code>
     [IppAttribute(IppAttributeNames.SystemUuid)]
-    public Uri? SystemUuid { get; set; }
+    public IppValue<Uri>? SystemUuid { get; set; }
 
     /// <summary>
     /// Supported XRI authentication methods.
     /// See: PWG 5100.22-2025 Section 7.3.38
     /// </summary>
     [IppAttribute(IppAttributeNames.XriAuthenticationSupported)]
-    public UriAuthentication[]? XriAuthenticationSupported { get; set; }
+    public IppValue<UriAuthentication[]>? XriAuthenticationSupported { get; set; }
 
     /// <summary>
     /// Supported XRI security methods.
     /// See: PWG 5100.22-2025 Section 7.3.39
     /// </summary>
     [IppAttribute(IppAttributeNames.XriSecuritySupported)]
-    public UriSecurity[]? XriSecuritySupported { get; set; }
+    public IppValue<UriSecurity[]>? XriSecuritySupported { get; set; }
 
     /// <summary>
     /// Supported XRI URI schemes.
     /// See: PWG 5100.22-2025 Section 7.3.40
     /// </summary>
     [IppAttribute(IppAttributeNames.XriUriSchemeSupported)]
-    public UriScheme[]? XriUriSchemeSupported { get; set; }
+    public IppValue<UriScheme[]>? XriUriSchemeSupported { get; set; }
 }

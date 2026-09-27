@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using SharpIpp.Mapping;
 using SharpIpp.Validation;
 using SharpIpp.Protocol.Models;
@@ -18,7 +18,7 @@ public class CancelResourceOperationAttributes : SystemOperationAttributes
     /// </summary>
     [Range(1, 2147483647)]
     [IppAttribute(IppAttributeNames.ResourceId, Tag = Tag.Integer)]
-    public int? ResourceId { get; set; }
+    public IppValue<int>? ResourceId { get; set; }
 }
 
 /// <summary>
@@ -33,35 +33,35 @@ public class CreateResourceOperationAttributes : SystemOperationAttributes
     /// See: PWG 5100.22-2025 Section 7.1.11
     /// </summary>
     [IppAttribute(IppAttributeNames.ResourceFormat, Tag = Tag.MimeMediaType)]
-    public ResourceFormat? ResourceFormat { get; set; }
+    public IppValue<ResourceFormat>? ResourceFormat { get; set; }
 
     /// <summary>
     /// The <c>resource-natural-language</c> operation attribute.
     /// See: PWG 5100.22-2025 Section 7.1.17
     /// </summary>
     [IppAttribute(IppAttributeNames.ResourceNaturalLanguage, Tag = Tag.NaturalLanguage)]
-    public string? ResourceNaturalLanguage { get; set; }
+    public IppValue<string>? ResourceNaturalLanguage { get; set; }
 
     /// <summary>
     /// The <c>resource-type</c> operation attribute.
     /// See: PWG 5100.22-2025 Section 7.1.22
     /// </summary>
     [IppAttribute(IppAttributeNames.ResourceType, Tag = Tag.Keyword)]
-    public ResourceType? ResourceType { get; set; }
+    public IppValue<ResourceType>? ResourceType { get; set; }
 
     /// <summary>
     /// The <c>resource-name</c> operation attribute.
     /// See: PWG 5100.22-2025 Section 7.8.2
     /// </summary>
     [IppAttribute(IppAttributeNames.ResourceName, Tag = Tag.NameWithoutLanguage)]
-    public string? ResourceName { get; set; }
+    public IppValue<string>? ResourceName { get; set; }
 
     /// <summary>
     /// The <c>resource-info</c> operation attribute.
     /// See: PWG 5100.22-2025 Section 7.8.1
     /// </summary>
     [IppAttribute(IppAttributeNames.ResourceInfo, Tag = Tag.TextWithoutLanguage)]
-    public string? ResourceInfo { get; set; }
+    public IppValue<string>? ResourceInfo { get; set; }
 }
 
 /// <summary>
@@ -77,7 +77,7 @@ public class InstallResourceOperationAttributes : SystemOperationAttributes
     /// </summary>
     [Range(1, 2147483647)]
     [IppAttribute(IppAttributeNames.ResourceId, Tag = Tag.Integer)]
-    public int? ResourceId { get; set; }
+    public IppValue<int>? ResourceId { get; set; }
 }
 
 /// <summary>
@@ -93,7 +93,7 @@ public class SendResourceDataOperationAttributes : SystemOperationAttributes
     /// </summary>
     [Range(1, 2147483647)]
     [IppAttribute(IppAttributeNames.ResourceId, Tag = Tag.Integer)]
-    public int? ResourceId { get; set; }
+    public IppValue<int>? ResourceId { get; set; }
 
     /// <summary>
     /// The <c>resource-k-octets</c> operation attribute.
@@ -101,14 +101,14 @@ public class SendResourceDataOperationAttributes : SystemOperationAttributes
     /// </summary>
     [Range(0, 2147483647)]
     [IppAttribute(IppAttributeNames.ResourceKOctets, Tag = Tag.Integer)]
-    public int? ResourceKOctets { get; set; }
+    public IppValue<int>? ResourceKOctets { get; set; }
 
     /// <summary>
     /// The <c>resource-signature</c> operation attribute.
     /// See: PWG 5100.22-2025 Section 7.1.19
     /// </summary>
     [IppAttribute(IppAttributeNames.ResourceSignature, Tag = Tag.OctetStringWithAnUnspecifiedFormat)]
-    public OctetString[]? ResourceSignature { get; set; }
+    public IppValue<OctetString[]>? ResourceSignature { get; set; }
 }
 
 /// <summary>
@@ -124,54 +124,54 @@ public class SetResourceAttributesOperationAttributes : SystemOperationAttribute
     /// </summary>
     [Range(1, 2147483647)]
     [IppAttribute(IppAttributeNames.ResourceId, Tag = Tag.Integer)]
-    public int? ResourceId { get; set; }
+    public IppValue<int>? ResourceId { get; set; }
 
     /// <summary>
     /// The <c>resource-name</c> operation attribute.
     /// See: PWG 5100.22-2025 Section 7.8.2
     /// </summary>
     [IppAttribute(IppAttributeNames.ResourceName, Tag = Tag.NameWithoutLanguage)]
-    public string? ResourceName { get; set; }
+    public IppValue<string>? ResourceName { get; set; }
 
     /// <summary>
     /// The <c>resource-info</c> operation attribute.
     /// See: PWG 5100.22-2025 Section 7.8.1
     /// </summary>
     [IppAttribute(IppAttributeNames.ResourceInfo, Tag = Tag.TextWithoutLanguage)]
-    public string? ResourceInfo { get; set; }
+    public IppValue<string>? ResourceInfo { get; set; }
 
     /// <summary>
     /// The <c>resource-natural-language</c> operation attribute.
     /// See: PWG 5100.22-2025 Section 7.1.17
     /// </summary>
     [IppAttribute(IppAttributeNames.ResourceNaturalLanguage, Tag = Tag.NaturalLanguage)]
-    public string? ResourceNaturalLanguage { get; set; }
+    public IppValue<string>? ResourceNaturalLanguage { get; set; }
 
     /// <summary>
     /// The <c>resource-patches</c> operation attribute.
     /// See: PWG 5100.22-2025 Section 7.1.18
     /// </summary>
     [IppAttribute(IppAttributeNames.ResourcePatches, Tag = Tag.TextWithoutLanguage)]
-    public string? ResourcePatches { get; set; }
+    public IppValue<string>? ResourcePatches { get; set; }
 
     /// <summary>
     /// The <c>resource-string-version</c> operation attribute.
     /// See: PWG 5100.22-2025 Section 7.1.21
     /// </summary>
     [IppAttribute(IppAttributeNames.ResourceStringVersion, Tag = Tag.TextWithoutLanguage)]
-    public string? ResourceStringVersion { get; set; }
+    public IppValue<string>? ResourceStringVersion { get; set; }
 
     /// <summary>
     /// The <c>resource-type</c> operation attribute.
     /// See: PWG 5100.22-2025 Section 7.1.22
     /// </summary>
     [IppAttribute(IppAttributeNames.ResourceType, Tag = Tag.Keyword)]
-    public ResourceType? ResourceType { get; set; }
+    public IppValue<ResourceType>? ResourceType { get; set; }
 
     /// <summary>
     /// The <c>resource-version</c> operation attribute.
     /// See: PWG 5100.22-2025 Section 7.1.24
     /// </summary>
     [IppAttribute(IppAttributeNames.ResourceVersion, Tag = Tag.TextWithoutLanguage)]
-    public string? ResourceVersion { get; set; }
+    public IppValue<string>? ResourceVersion { get; set; }
 }

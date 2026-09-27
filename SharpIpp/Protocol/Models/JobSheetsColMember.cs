@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies member attribute names supported by <code>job-sheets-col-supported</code>.
 /// See: PWG 5100.7-2023 Section 6.9.30
 /// </summary>
-public readonly record struct JobSheetsColMember(string Value, bool IsValue = true) : ISmartEnum 
+public readonly record struct JobSheetsColMember(string Value) : ISmartEnum 
 {
     /// <summary>The job-sheets member attribute. See: PWG 5100.7-2023 Section 6.9.30</summary>
     public static readonly JobSheetsColMember JobSheets = new("job-sheets");

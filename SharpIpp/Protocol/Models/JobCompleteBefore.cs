@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the <c>job-complete-before</c> Job Template attribute keyword values.
 /// See: PWG 5100.3-2023 Section 5.2.7
 /// </summary>
-public readonly record struct JobCompleteBefore(string Value, bool IsValue = true) : ISmartEnum
+public readonly record struct JobCompleteBefore(string Value) : ISmartEnum
 {
     /// <summary>'day-time': Complete the job before the beginning of the day (typically first shift or 8am).</summary>
     public static readonly JobCompleteBefore DayTime = new("day-time");

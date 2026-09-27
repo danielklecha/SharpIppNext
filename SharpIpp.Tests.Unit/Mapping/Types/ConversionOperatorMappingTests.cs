@@ -28,7 +28,7 @@ public class ConversionOperatorMappingTests : MapperTestBase
         _mapper.Map<IppVersion>("2.0").Should().Be(version);
 
         // NoValue mapping
-        var noVal = _mapper.Map<IppVersion>(NoValue.Instance);
+        var noVal = _mapper.Map<IppValue<IppVersion>>(NoValue.Instance);
         noVal.IsValue.Should().BeFalse();
 
         // Array mapping
@@ -60,7 +60,7 @@ public class ConversionOperatorMappingTests : MapperTestBase
         mapped.Value.Should().Be("hello");
 
         // NoValue mapping
-        var noVal = _mapper.Map<StringWithLanguage>(NoValue.Instance);
+        var noVal = _mapper.Map<IppValue<StringWithLanguage>>(NoValue.Instance);
         noVal.IsValue.Should().BeFalse();
     }
 
@@ -69,23 +69,18 @@ public class ConversionOperatorMappingTests : MapperTestBase
     {
         var range = new SharpIpp.Protocol.Models.Range(1, 10);
 
-        // Explicit cast bool
-        var isVal = (bool)range;
-        isVal.Should().BeTrue();
-
         // Implicit cast int -> Range
         SharpIpp.Protocol.Models.Range fromInt = 42;
         fromInt.Lower.Should().Be(42);
         fromInt.Upper.Should().Be(42);
 
         // SimpleMapper
-        _mapper.Map<bool>(range).Should().BeTrue();
         var mappedRange = _mapper.Map<SharpIpp.Protocol.Models.Range>(42);
         mappedRange.Lower.Should().Be(42);
         mappedRange.Upper.Should().Be(42);
 
         // NoValue mapping
-        var noVal = _mapper.Map<SharpIpp.Protocol.Models.Range>(NoValue.Instance);
+        var noVal = _mapper.Map<IppValue<SharpIpp.Protocol.Models.Range>>(NoValue.Instance);
         noVal.IsValue.Should().BeFalse();
     }
 
@@ -116,7 +111,7 @@ public class ConversionOperatorMappingTests : MapperTestBase
         _mapper.Map<OctetString>(bytes).Value.Should().Equal(bytes);
 
         // NoValue mapping
-        var noVal = _mapper.Map<OctetString>(NoValue.Instance);
+        var noVal = _mapper.Map<IppValue<OctetString>>(NoValue.Instance);
         noVal.IsValue.Should().BeFalse();
 
         // Array mapping
@@ -211,12 +206,12 @@ public class ConversionOperatorMappingTests : MapperTestBase
         // int <-> JobState
         _mapper.Map<JobState>(3).Should().Be(JobState.Pending);
         _mapper.Map<int>(JobState.Pending).Should().Be(3);
-        _mapper.Map<JobState>(NoValue.Instance).Should().Be((JobState)int.MinValue);
+        _mapper.Map<IppValue<JobState>>(NoValue.Instance).IsValue.Should().BeFalse();
 
         // int <-> IppStatusCode (short underlying)
         _mapper.Map<IppStatusCode>(0x0000).Should().Be(IppStatusCode.SuccessfulOk);
         _mapper.Map<int>(IppStatusCode.SuccessfulOk).Should().Be(0);
-        _mapper.Map<IppStatusCode>(NoValue.Instance).Should().Be((IppStatusCode)short.MinValue);
+        _mapper.Map<IppValue<IppStatusCode>>(NoValue.Instance).IsValue.Should().BeFalse();
 
         // int <-> IppOperation (short underlying)
         _mapper.Map<IppOperation>(0x0002).Should().Be(IppOperation.PrintJob);
@@ -225,7 +220,7 @@ public class ConversionOperatorMappingTests : MapperTestBase
         // int <-> PrinterState
         _mapper.Map<PrinterState>(3).Should().Be(PrinterState.Idle);
         _mapper.Map<int>(PrinterState.Idle).Should().Be(3);
-        _mapper.Map<PrinterState>(NoValue.Instance).Should().Be((PrinterState)int.MinValue);
+        _mapper.Map<IppValue<PrinterState>>(NoValue.Instance).IsValue.Should().BeFalse();
 
         // int <-> Finishings
         _mapper.Map<Finishings>(3).Should().Be(Finishings.None);

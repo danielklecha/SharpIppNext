@@ -62,7 +62,7 @@ internal class IppRequestContent : HttpContent
         // Serialize only the IPP header/attributes (without the document) into a MemoryStream.
         var headerStream = new MemoryStream();
         var wrappedRequest = new IppRequestMessageFilter(_request);
-        wrappedRequest.ClearProperty(x => x.Document);
+        wrappedRequest.ClearProperty(nameof(IIppRequestMessage.Document));
         await _protocol.WriteIppRequestAsync(wrappedRequest, headerStream, _cancellationToken).ConfigureAwait(false);
         headerStream.Position = 0;
 
@@ -121,7 +121,7 @@ internal class IppRequestContent : HttpContent
         {
             using var ms = new MemoryStream();
             var wrappedRequest = new IppRequestMessageFilter(_request);
-            wrappedRequest.ClearProperty(x => x.Document);
+            wrappedRequest.ClearProperty(nameof(IIppRequestMessage.Document));
             _protocol.WriteIppRequestAsync(wrappedRequest, ms, CancellationToken.None).GetAwaiter().GetResult();
             _length = ms.Length + documentLength;
         }

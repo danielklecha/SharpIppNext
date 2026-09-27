@@ -52,10 +52,9 @@ public class AllSmartEnumsRoundTripTests : MapperTestBase
 
         foreach (var type in smartEnums)
         {
-            // NoValue -> SmartEnum
-            var enumInstance = (ISmartEnum)_mapper.Map(NoValue.Instance, typeof(NoValue), type);
-            enumInstance.IsValue.Should().BeFalse($"NoValue for {type.Name} must have IsValue == false");
-            enumInstance.Value.Should().BeNull($"NoValue for {type.Name} must have Value == null");
+            var ippValueType = typeof(IppValue<>).MakeGenericType(type);
+            var ippValueInstance = (IIppValue)_mapper.Map(NoValue.Instance, typeof(NoValue), ippValueType);
+            ippValueInstance.IsValue.Should().BeFalse($"NoValue for IppValue<{type.Name}> must have IsValue == false");
         }
     }
 
@@ -90,13 +89,13 @@ public class AllSmartEnumsRoundTripTests : MapperTestBase
 
         foreach (var type in markedEnums)
         {
-            // Keyword tag test: constructor (string, isKeyword, isValue)
-            var keywordInst = (IMarkedSmartEnum)Activator.CreateInstance(type, "sample-kw", true, true)!;
+            // Keyword tag test: constructor (string, isKeyword)
+            var keywordInst = (IMarkedSmartEnum)Activator.CreateInstance(type, "sample-kw", true)!;
             keywordInst.IsMarked.Should().BeTrue();
             keywordInst.ToIppTag().Should().Be(Tag.Keyword);
 
-            // NameWithoutLanguage tag test: constructor (string, false, isValue)
-            var nameInst = (IMarkedSmartEnum)Activator.CreateInstance(type, "sample-name", false, true)!;
+            // NameWithoutLanguage tag test: constructor (string, false)
+            var nameInst = (IMarkedSmartEnum)Activator.CreateInstance(type, "sample-name", false)!;
             nameInst.IsMarked.Should().BeFalse();
             nameInst.ToIppTag().Should().Be(Tag.NameWithoutLanguage);
         }

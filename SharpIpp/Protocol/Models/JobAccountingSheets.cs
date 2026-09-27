@@ -13,26 +13,24 @@ namespace SharpIpp.Protocol.Models;
 public class JobAccountingSheets : IIppCollection
 {
     /// <inheritdoc />
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
 
     /// <summary>
     /// type2 keyword | name(MAX)
     /// </summary>
-    public OutputBin? JobAccountingOutputBin { get; set; }
+    public IppValue<OutputBin>? JobAccountingOutputBin { get; set; }
 
     /// <summary>
     /// type2 keyword | name(MAX)
     /// </summary>
-    public JobAccountingSheetsType? JobAccountingSheetsType { get; set; }
+    public IppValue<JobAccountingSheetsType>? JobAccountingSheetsType { get; set; }
 
     /// <summary>
     /// keyword | name(MAX)
     /// </summary>
-    public Media? Media { get; set; }
+    public IppValue<Media>? Media { get; set; }
 
     /// <summary>
     /// collection
     /// </summary>
-    public MediaCol? MediaCol { get; set; }
+    public IppValue<MediaCol>? MediaCol { get; set; }
 }

@@ -27,8 +27,8 @@ public class DestinationUriReadyProfileTests : MapperTestBase
             DestinationUri = new Uri("https://example.test/upload"),
             DestinationName = "Inbox",
             DestinationIsDirectory = true,
-            DestinationAttributesSupported = ["job-name"],
-            DestinationMandatoryAccessAttributes = ["access-user-name"],
+            DestinationAttributesSupported = new[] { "job-name" },
+            DestinationMandatoryAccessAttributes = new[] { "access-user-name" },
             DestinationAttributes =
             [
                 new Dictionary<string, IppAttribute[]>
@@ -47,9 +47,9 @@ public class DestinationUriReadyProfileTests : MapperTestBase
         serialized.Should().Contain(x => x.Tag == Tag.BegCollection && x.Name == "destination-attributes");
         parsed.DestinationUri.Should().Be(new Uri("https://example.test/upload"));
         parsed.DestinationName.Should().Be("Inbox");
-        parsed.DestinationIsDirectory.Should().BeTrue();
-        parsed.DestinationAttributesSupported.Should().BeEquivalentTo("job-name");
-        parsed.DestinationMandatoryAccessAttributes.Should().BeEquivalentTo("access-user-name");
+        parsed.DestinationIsDirectory!.Value.Value.Should().BeTrue();
+        parsed.DestinationAttributesSupported!.Value.Value.Should().BeEquivalentTo(new[] { "job-name" });
+        parsed.DestinationMandatoryAccessAttributes!.Value.Value.Should().BeEquivalentTo(new[] { "access-user-name" });
         parsed.DestinationAttributes.Should().NotBeNull();
         parsed.DestinationAttributes!.Should().ContainSingle();
         parsed.DestinationAttributes[0].Should().ContainKey("job-name");

@@ -3,7 +3,7 @@ namespace SharpIpp.Protocol.Models;
 /// <summary>
 /// Identifies the format of the supplied document data.
 /// </summary>
-public readonly record struct DocumentFormat(string Value, bool IsValue = true) : ISmartEnum
+public readonly record struct DocumentFormat(string Value) : ISmartEnum
 {
     /// <summary>
     /// application/octet-stream

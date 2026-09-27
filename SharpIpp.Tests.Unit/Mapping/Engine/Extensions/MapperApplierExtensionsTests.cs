@@ -36,7 +36,7 @@ public class MapperApplierExtensionsTests
     public void MapFromDicSet_ShouldReturnNoValueForMissingKey()
     {
         var mapperMock = new Mock<IMapperApplier>();
-        mapperMock.Setup(m => m.Map<int[]>(NoValue.Instance)).Returns(new int[0]);
+        mapperMock.Setup(m => m.Map<int[]>((object?)null)).Returns(new int[0]);
         var src = new Dictionary<string, IppAttribute[]>();
 
         var result = mapperMock.Object.MapFromDicSet<int[]>(src, "testKey");
@@ -47,7 +47,7 @@ public class MapperApplierExtensionsTests
     public void MapFromDicSet_Should_Return_NoValue_For_Empty_Array()
     {
         var mapperMock = new Mock<IMapperApplier>();
-        mapperMock.Setup(m => m.Map<int[]>(NoValue.Instance)).Returns(new int[0]);
+        mapperMock.Setup(m => m.Map<int[]>((object?)null)).Returns(new int[0]);
         var src = new Dictionary<string, IppAttribute[]> { { "testKey", new IppAttribute[0] } };
 
         var result = mapperMock.Object.MapFromDicSet<int[]>(src, "testKey");
@@ -120,7 +120,7 @@ public class MapperApplierExtensionsTests
     public void MapFromDic_Should_Return_NoValue_For_Missing_Key()
     {
         var mapperMock = new Mock<IMapperApplier>();
-        mapperMock.Setup(m => m.Map<int>(NoValue.Instance)).Returns(0);
+        mapperMock.Setup(m => m.Map<int>((object?)null)).Returns(0);
         var src = new Dictionary<string, IppAttribute[]>();
 
         var result = mapperMock.Object.MapFromDic<int>(src, "testKey");
@@ -131,7 +131,7 @@ public class MapperApplierExtensionsTests
     public void MapFromDic_Should_Return_NoValue_For_Empty_Array()
     {
         var mapperMock = new Mock<IMapperApplier>();
-        mapperMock.Setup(m => m.Map<int>(NoValue.Instance)).Returns(0);
+        mapperMock.Setup(m => m.Map<int>((object?)null)).Returns(0);
         var src = new Dictionary<string, IppAttribute[]> { { "testKey", new IppAttribute[0] } };
 
         var result = mapperMock.Object.MapFromDic<int>(src, "testKey");
@@ -161,7 +161,7 @@ public class MapperApplierExtensionsTests
     public void MapFromDicNullable_Should_Return_NoValue_For_Missing_Key()
     {
         var mapperMock = new Mock<IMapperApplier>();
-        mapperMock.Setup(m => m.MapNullable<int?>(NoValue.Instance)).Returns((int?)null);
+        mapperMock.Setup(m => m.MapNullable<int?>((object?)null)).Returns((int?)null);
         var src = new Dictionary<string, IppAttribute[]>();
 
         var result = mapperMock.Object.MapFromDicNullable<int?>(src, "testKey");
@@ -172,7 +172,7 @@ public class MapperApplierExtensionsTests
     public void MapFromDicNullable_Should_Return_NoValue_For_Empty_Array()
     {
         var mapperMock = new Mock<IMapperApplier>();
-        mapperMock.Setup(m => m.MapNullable<int?>(NoValue.Instance)).Returns((int?)null);
+        mapperMock.Setup(m => m.MapNullable<int?>((object?)null)).Returns((int?)null);
         var src = new Dictionary<string, IppAttribute[]> { { "testKey", new IppAttribute[0] } };
 
         var result = mapperMock.Object.MapFromDicNullable<int?>(src, "testKey");
@@ -249,6 +249,28 @@ public class MapperApplierExtensionsTests
     }
 
     [TestMethod]
+    public void MapFromDicNullable_WithFactory_Should_Return_Null_For_Missing_Key()
+    {
+        var mapperMock = new Mock<IMapperApplier>();
+        var src = new Dictionary<string, IppAttribute[]>();
+
+        mapperMock.Setup(m => m.MapNullable<string?>(null)).Returns((string?)null);
+        var factoryCalled = false;
+
+        var result = mapperMock.Object.MapFromDicNullable<int?, string?>(
+            src,
+            "testKey",
+            (_, value) =>
+            {
+                factoryCalled = true;
+                return value?.ToString();
+            });
+
+        Assert.IsNull(result);
+        Assert.IsFalse(factoryCalled);
+    }
+
+    [TestMethod]
     public void MapFromDicSetNullable_WithFactory_Should_Return_Null_When_Any_Partial_Is_Null()
     {
         var mapperMock = new Mock<IMapperApplier>();
@@ -297,6 +319,28 @@ public class MapperApplierExtensionsTests
         {
             { "testKey", new IppAttribute[0] }
         };
+
+        mapperMock.Setup(m => m.MapNullable<string[]?>(null)).Returns((string[]?)null);
+        var factoryCalled = false;
+
+        var result = mapperMock.Object.MapFromDicSetNullable<int?, string?>(
+            src,
+            "testKey",
+            (_, _) =>
+            {
+                factoryCalled = true;
+                return "never";
+            });
+
+        Assert.IsNull(result);
+        Assert.IsFalse(factoryCalled);
+    }
+
+    [TestMethod]
+    public void MapFromDicSetNullable_WithFactory_Should_Return_Null_For_Missing_Key()
+    {
+        var mapperMock = new Mock<IMapperApplier>();
+        var src = new Dictionary<string, IppAttribute[]>();
 
         mapperMock.Setup(m => m.MapNullable<string[]?>(null)).Returns((string[]?)null);
         var factoryCalled = false;

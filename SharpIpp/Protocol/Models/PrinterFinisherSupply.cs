@@ -8,27 +8,28 @@ namespace SharpIpp.Protocol.Models;
 /// <summary>
 /// Parsed representation of a single <c>printer-finisher-supplies</c> value (Section 7.3).
 /// </summary>
-public class PrinterFinisherSupply : IppStructuredString
+public class PrinterFinisherSupply : IppStructuredString, IEquatable<PrinterFinisherSupply>
 {
+    public bool Equals(PrinterFinisherSupply? other) => base.Equals(other);
     public PrinterFinisherSupply() : base(StringComparer.OrdinalIgnoreCase)
     {
     }
 
     public FinisherSupplyClass? Class
     {
-        get => GetSmartEnum<FinisherSupplyClass>("class");
+        get => GetSmartEnum("class", s => new FinisherSupplyClass(s));
         set => SetSmartEnum("class", value);
     }
 
     public FinisherSupplyType? Type
     {
-        get => GetSmartEnum<FinisherSupplyType>("type");
+        get => GetSmartEnum("type", s => new FinisherSupplyType(s));
         set => SetSmartEnum("type", value);
     }
 
     public CapacityUnit? Unit
     {
-        get => GetSmartEnum<CapacityUnit>("unit");
+        get => GetSmartEnum("unit", s => new CapacityUnit(s));
         set => SetSmartEnum("unit", value);
     }
 

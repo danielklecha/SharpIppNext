@@ -30,6 +30,6 @@ public class SendUriRequest : IppRequest<SendUriOperationAttributes>, IIppJobReq
         /// See: PWG 5100.5-2024 Section 8.5.1
         /// </summary>
         /// <code>document-template-attributes</code>
-        public DocumentTemplateAttributes? DocumentTemplateAttributes { get; set; }
+        public IppValue<DocumentTemplateAttributes>? DocumentTemplateAttributes { get; set; }
     }
 }

@@ -30,6 +30,15 @@ public class ByteRangeAttribute : IppValidationAttribute
 
     public override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
+        if (value is IIppValue ippValue)
+        {
+            if (!ippValue.IsValue)
+            {
+                return ValidationResult.Success;
+            }
+            value = ippValue.ValueAsObject;
+        }
+
         if (value == null)
         {
             return ValidationResult.Success;
@@ -41,6 +50,19 @@ public class ByteRangeAttribute : IppValidationAttribute
 
     private ValidationResult ValidateRecursive(object value, Encoding encoding, ValidationContext validationContext)
     {
+        if (value is IIppValue ippValue)
+        {
+            if (!ippValue.IsValue)
+            {
+                return ValidationResult.Success;
+            }
+            value = ippValue.ValueAsObject!;
+            if (value == null)
+            {
+                return ValidationResult.Success;
+            }
+        }
+
         if (TryGetSingleByteLength(value, encoding, out int length))
         {
             return ValidateLength(length, validationContext);

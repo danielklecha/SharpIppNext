@@ -65,30 +65,30 @@ public class ValidateJobTests : SharpIppIntegrationTestBase
             {
                 PrinterUri = new Uri("http://127.0.0.1:631"),
                 AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
-                AttributesNaturalLanguage = "en-us",
+                AttributesNaturalLanguage = (NaturalLanguage)"en-us",
                 RequestingUserName = "test-user",
-                ClientInfo =
-                [
+                ClientInfo = new[]
+                {
                     new ClientInfo
                     {
                         ClientName = "SharpIpp Tests",
                         ClientType = ClientType.Application,
                     },
-                ],
+                },
                 DocumentFormatDetails = new DocumentFormatDetails
                 {
                     DocumentSourceApplicationName = "SharpIpp",
                     DocumentSourceApplicationVersion = "1.0",
                     DocumentSourceOsName = "Windows",
                 },
-                JobMandatoryAttributes = ["copies", "media"],
+                JobMandatoryAttributes = new[] { "copies", "media" },
                 JobName = "Test Job",
                 IppAttributeFidelity = true,
                 JobImpressions = 5,
                 JobMediaSheets = 2,
                 JobKOctets = 100,
-                DocumentCharset = "utf-8",
-                JobPassword = "secret",
+                DocumentCharset = (Charset)"utf-8",
+                JobPassword = (OctetString)"secret",
                 JobPasswordEncryption = JobPasswordEncryption.Sha2256,
                 JobReleaseAction = JobReleaseAction.JobPassword,
                 JobAuthorizationUri = new Uri("urn:uuid:00000000-0000-0000-0000-000000000001"),
@@ -96,7 +96,7 @@ public class ValidateJobTests : SharpIppIntegrationTestBase
                 ChargeInfoMessage = "charge-info",
                 ProofCopies = 1,
                 DocumentMetadata = GetTestDocumentMetadata(),
-                DocumentPassword = "test-password",
+                DocumentPassword = (OctetString)"test-password",
                 DocumentMessage = "test-message",
             },
             JobTemplateAttributes = new() { Copies = 1 }

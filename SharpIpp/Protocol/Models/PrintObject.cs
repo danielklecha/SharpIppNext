@@ -10,10 +10,8 @@ namespace SharpIpp.Protocol.Models;
 [IppAttribute(IppAttributeNames.PrintObjects)]
 public class PrintObject : IIppCollection
 {
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
-    public int? DocumentNumber { get; set; }
-    public System.Uri? PrintObjectsSource { get; set; }
+    public IppValue<int>? DocumentNumber { get; set; }
+    public IppValue<System.Uri>? PrintObjectsSource { get; set; }
     [Range(int.MinValue, int.MaxValue)]
-    public int[]? TransformationMatrix { get; set; }
+    public IppValue<int[]>? TransformationMatrix { get; set; }
 }

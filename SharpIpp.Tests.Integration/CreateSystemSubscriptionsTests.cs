@@ -29,28 +29,28 @@ public class CreateSystemSubscriptionsTests : SharpIppIntegrationTestBase
             OperationAttributes = new SystemOperationAttributes
             {
                 AttributesCharset = Charset.Utf8,
-                AttributesNaturalLanguage = "en",
+                AttributesNaturalLanguage = (NaturalLanguage)"en",
                 PrinterUri = new Uri("ipp://127.0.0.1:631/printer"),
                 SystemUri = new Uri("ipp://127.0.0.1:8631/system"),
                 RequestingUserName = "test-user",
                 RequestingUserUri = new Uri("mailto:test-user@example.com"),
                 PrinterId = 99,
-                NotifyPrinterIds = [99, 100],
+                NotifyPrinterIds = new[] { 99, 100 },
                 NotifyResourceId = 42,
                 RestartGetInterval = 30,
                 WhichPrinters = WhichPrinters.All,
                 NotifySystemUpTime = 9999,
                 NotifySystemUri = new Uri("ipp://127.0.0.1:8631/system/notify"),
                 NotifySubscriptionId = 7,
-                NotifyPullMethod = "ippget",
-                ClientInfo =
-                [
+                NotifyPullMethod = (NotifyPullMethod)"ippget",
+                ClientInfo = new[]
+                {
                     new ClientInfo
                     {
                         ClientName = "test-client",
-                        ClientVersion = "1.0"
+                        ClientVersion = (OctetString)"1.0"
                     }
-                ],
+                },
                 JobHoldUntilTime = new DateTimeOffset(2026, 1, 1, 0, 0, 0, TimeSpan.Zero)
             }
         };
@@ -152,18 +152,18 @@ public class CreateSystemSubscriptionsTests : SharpIppIntegrationTestBase
             OperationAttributes = new SystemOperationAttributes
             {
                 AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
-                AttributesNaturalLanguage = "en",
+                AttributesNaturalLanguage = (NaturalLanguage)"en",
                 PrinterUri = new Uri("ipp://127.0.0.1:631/printer"),
                 SystemUri = new Uri("ipp://127.0.0.1:8631/system"),
                 RequestingUserName = "test-user",
                 RequestingUserUri = new Uri("mailto:test-user@example.com"),
                 NotifySystemUri = new Uri("ipp://127.0.0.1:8631/system/notify"),
                 NotifySystemUpTime = 12345,
-                NotifyPullMethod = "ippget",
+                NotifyPullMethod = (NotifyPullMethod)"ippget",
                 NotifySubscriptionId = 3,
                 RestartGetInterval = 60,
                 WhichPrinters = WhichPrinters.All,
-                NotifyPrinterIds = [1, 2, 3],
+                NotifyPrinterIds = new[] { 1, 2, 3 },
                 NotifyResourceId = 10,
                 PrinterId = 1
             }
@@ -217,28 +217,28 @@ public class CreateSystemSubscriptionsTests : SharpIppIntegrationTestBase
             OperationAttributes = new SystemOperationAttributes
             {
                 AttributesCharset = (SharpIpp.Protocol.Models.Charset)"utf-8",
-                AttributesNaturalLanguage = "en",
+                AttributesNaturalLanguage = (NaturalLanguage)"en",
                 PrinterUri = new Uri("ipp://127.0.0.1:631/printer"),
                 SystemUri = new Uri("ipp://127.0.0.1:8631/system"),
                 RequestingUserName = "test-user",
                 RequestingUserUri = new Uri("mailto:test-user@example.com"),
                 NotifySystemUri = new Uri("ipp://127.0.0.1:8631/system/notify"),
                 NotifySystemUpTime = 9999,
-                NotifyPullMethod = "ippget",
+                NotifyPullMethod = (NotifyPullMethod)"ippget",
                 NotifySubscriptionId = 7,
                 RestartGetInterval = 30,
                 WhichPrinters = WhichPrinters.All,
-                NotifyPrinterIds = [99, 100],
+                NotifyPrinterIds = new[] { 99, 100 },
                 NotifyResourceId = 42,
                 PrinterId = 99,
-                ClientInfo =
-                [
+                ClientInfo = new[]
+                {
                     new ClientInfo
                     {
                         ClientName = "test-client",
-                        ClientVersion = "1.0"
+                        ClientVersion = (OctetString)"1.0"
                     }
-                ],
+                },
                 JobHoldUntilTime = new DateTimeOffset(2026, 1, 1, 0, 0, 0, TimeSpan.Zero)
             }
         };

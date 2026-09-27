@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the member names for <code>input-attributes</code>.
 /// See: PWG 5100.15-2014 Section 7.1.1
 /// </summary>
-public readonly record struct InputAttributesMember(string Value, bool IsMarked = true, bool IsValue = true) : IMarkedSmartEnum
+public readonly record struct InputAttributesMember(string Value, bool IsMarked = true) : IMarkedSmartEnum
 {
     /// <summary>The input-color-mode member attribute. See: PWG 5100.15-2013 Section 7.1.1.5</summary>
     public static readonly InputAttributesMember InputColorMode = new(IppAttributeNames.InputColorMode);

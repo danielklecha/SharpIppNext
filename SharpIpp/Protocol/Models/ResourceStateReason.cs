@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the reason for the current state of a Resource.
 /// See: PWG 5100.22-2025 Section 7.9.13
 /// </summary>
-public readonly record struct ResourceStateReason(string Value, bool IsValue = true) : ISmartEnum 
+public readonly record struct ResourceStateReason(string Value) : ISmartEnum 
 {
     /// <summary>
     /// A cancel request has been received for the Resource.

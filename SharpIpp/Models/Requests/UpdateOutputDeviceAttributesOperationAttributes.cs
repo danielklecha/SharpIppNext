@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 
@@ -16,5 +16,5 @@ public class UpdateOutputDeviceAttributesOperationAttributes : OperationAttribut
     /// See: PWG 5100.18-2025 Section 7.1.8
     /// </summary>
     [IppAttribute(IppAttributeNames.OutputDeviceUuid, Tag = Tag.Uri)]
-    public Uri? OutputDeviceUuid { get; set; }
+    public IppValue<Uri>? OutputDeviceUuid { get; set; }
 }

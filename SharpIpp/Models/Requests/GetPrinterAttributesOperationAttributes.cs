@@ -1,4 +1,4 @@
-using SharpIpp.Mapping;
+﻿using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
@@ -21,7 +21,7 @@ public class GetPrinterAttributesOperationAttributes : OperationAttributes
     /// <code>first-index</code>
     [IppAttribute(IppAttributeNames.FirstIndex, Tag = Tag.Integer)]
     [Range(1, int.MaxValue)]
-    public int? FirstIndex { get; set; }
+    public IppValue<int>? FirstIndex { get; set; }
 
     /// <summary>
     /// The limit IPP attribute.
@@ -30,7 +30,7 @@ public class GetPrinterAttributesOperationAttributes : OperationAttributes
     /// <code>limit</code>
     [IppAttribute(IppAttributeNames.Limit, Tag = Tag.Integer)]
     [Range(1, int.MaxValue)]
-    public int? Limit { get; set; }
+    public IppValue<int>? Limit { get; set; }
 
     /// <summary>
     /// The ID of the target Printer object.
@@ -39,7 +39,7 @@ public class GetPrinterAttributesOperationAttributes : OperationAttributes
     /// <code>printer-id</code>
     [IppAttribute(IppAttributeNames.PrinterId, Tag = Tag.Integer)]
     [Range(1, 65535)]
-    public int? PrinterId { get; set; }
+    public IppValue<int>? PrinterId { get; set; }
 
     /// <summary>
     /// The client OPTIONALLY supplies this attribute. The Printer object MUST support this attribute. The value of this attribute identifies the format of the supplied document data
@@ -48,7 +48,7 @@ public class GetPrinterAttributesOperationAttributes : OperationAttributes
     /// <code>document-format</code>
     /// <example>application/octet-stream</example>
     [IppAttribute(IppAttributeNames.DocumentFormat, Tag = Tag.MimeMediaType)]
-    public DocumentFormat? DocumentFormat { get; set; }
+    public IppValue<DocumentFormat>? DocumentFormat { get; set; }
 
     /// <summary>
     /// The client OPTIONALLY supplies this attribute. The Printer object MUST support this attribute. It is a set of Printer attribute names and/or attribute groups names in whose values the requester is interested
@@ -58,7 +58,7 @@ public class GetPrinterAttributesOperationAttributes : OperationAttributes
     /// </summary>
     /// <code>requested-attributes</code>
     [IppAttribute(IppAttributeNames.RequestedAttributes, Tag = Tag.Keyword)]
-    public string[]? RequestedAttributes { get; set; }
+    public IppValue<string[]>? RequestedAttributes { get; set; }
 
     /// <summary>
     /// The <c>output-device-uuid</c> operation attribute.
@@ -67,5 +67,5 @@ public class GetPrinterAttributesOperationAttributes : OperationAttributes
     /// </summary>
     /// <code>output-device-uuid</code>
     [IppAttribute(IppAttributeNames.OutputDeviceUuid, Tag = Tag.Uri)]
-    public Uri? OutputDeviceUuid { get; set; }
+    public IppValue<Uri>? OutputDeviceUuid { get; set; }
 }

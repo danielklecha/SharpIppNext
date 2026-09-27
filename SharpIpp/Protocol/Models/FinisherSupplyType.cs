@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the finisher supply type.
 /// See: PWG 5100.13-2023 Section 7.3
 /// </summary>
-public readonly record struct FinisherSupplyType(string Value, bool IsValue = true) : ISmartEnum
+public readonly record struct FinisherSupplyType(string Value) : ISmartEnum
 {
     public static readonly FinisherSupplyType Other = new("other");
     public static readonly FinisherSupplyType Unknown = new("unknown");

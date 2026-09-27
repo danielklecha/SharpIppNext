@@ -527,6 +527,27 @@ public class IppAttributeExtensionsTests
     }
 
     [TestMethod]
+    [DataRow(Tag.NoValue)]
+    [DataRow(Tag.Unknown)]
+    [DataRow(Tag.Unsupported)]
+    public void FromBegCollection_WithOutOfBandAttribute_ShouldYieldAttributeDirectly(Tag outOfBandTag)
+    {
+        // Arrange
+        var attributes = new List<IppAttribute>
+        {
+            new IppAttribute(outOfBandTag, "media-col-default", NoValue.Instance)
+        };
+
+        // Act
+        var result = attributes.FromBegCollection().ToList();
+
+        // Assert
+        result.Should().HaveCount(1);
+        result[0].Tag.Should().Be(outOfBandTag);
+        result[0].Name.Should().Be("media-col-default");
+    }
+
+    [TestMethod]
     public void FromBegCollection_MemberAttrNameEmptyAtStart_ShouldThrow()
     {
          // Arrange
@@ -786,5 +807,39 @@ public class IppAttributeExtensionsTests
         // Assert
         result.Should().BeTrue();
         value.Should().Be(42);
+    }
+
+    [TestMethod]
+    public void TryGetIppValueGeneric_ShouldReturnFalse_WhenAttributeIsUnsupportedOutOfBandNoValue()
+    {
+        // Arrange
+        var attributes = new List<IppAttribute>
+        {
+            new IppAttribute(Tag.Unsupported, "my-attr", NoValue.Instance)
+        };
+
+        // Act
+        var result = attributes.TryGetIppValue<int>("my-attr", out int value);
+
+        // Assert
+        result.Should().BeFalse();
+        value.Should().Be(default);
+    }
+
+    [TestMethod]
+    public void TryGetIppValueGeneric_ShouldReturnValue_WhenAttributeIsIppValueWithRealValue()
+    {
+        // Arrange
+        var attributes = new List<IppAttribute>
+        {
+            new IppAttribute(Tag.Integer, "my-attr", (object)new IppValue<int>(42))
+        };
+
+        // Act
+        var result = attributes.TryGetIppValue<IppValue<int>>("my-attr", out var value);
+
+        // Assert
+        result.Should().BeTrue();
+        value.Should().Be(new IppValue<int>(42));
     }
 }

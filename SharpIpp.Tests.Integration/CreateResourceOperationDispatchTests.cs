@@ -1,4 +1,4 @@
-using SharpIpp;
+﻿using SharpIpp;
 using SharpIpp.Models.Requests;
 using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
@@ -16,7 +16,7 @@ public class CreateResourceOperationDispatchTests : SharpIppIntegrationTestBase
     public async Task ReceiveRequestAsync_CreateResource_ServerReceivesSameRequest()
     {
         var operationAttributes = GetSystemOperationAttributes<CreateResourceOperationAttributes>();
-        operationAttributes.ResourceFormat = "application/octet-stream";
+        operationAttributes.ResourceFormat = (ResourceFormat)"application/octet-stream";
         operationAttributes.ResourceNaturalLanguage = "en";
         operationAttributes.ResourceType = (ResourceType)"firmware";
         operationAttributes.ResourceName = "firmware-v1";

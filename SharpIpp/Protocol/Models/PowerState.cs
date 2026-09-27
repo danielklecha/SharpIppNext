@@ -5,7 +5,7 @@ namespace SharpIpp.Protocol.Models
     /// Vendor-specific states can be represented by constructing a new instance.
     /// See: PWG5100.22 Sections 7.3.2, 7.3.4, 7.3.5, 7.3.1
     /// </summary>
-    public readonly record struct PowerState(string Value, bool IsValue = true) : ISmartEnum
+    public readonly record struct PowerState(string Value) : ISmartEnum
     {
         /// <summary>
         /// The system is in hibernate (deep sleep) state with minimal power consumption.

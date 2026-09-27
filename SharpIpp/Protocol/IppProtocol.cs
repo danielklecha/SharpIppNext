@@ -40,7 +40,13 @@ public partial class IppProtocol : IIppProtocol
     public long? MaxMessageAttributesBytes { get; set; } = 10L * 1024 * 1024;
 
     /// <inheritdoc />
-    public async Task WriteIppRequestAsync(IIppRequestMessage ippRequestMessage, Stream stream, CancellationToken cancellationToken = default)
+    public Task WriteIppRequestAsync(IIppRequestMessage ippRequestMessage, Stream stream, CancellationToken cancellationToken = default)
+    {
+        return WriteIppRequestAsync(ippRequestMessage, stream, true, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task WriteIppRequestAsync(IIppRequestMessage ippRequestMessage, Stream stream, bool writeDocument, CancellationToken cancellationToken = default)
     {
         if (ippRequestMessage is null)
             throw new ArgumentNullException( nameof( ippRequestMessage ) );
@@ -51,7 +57,7 @@ public partial class IppProtocol : IIppProtocol
         await writer.WriteBigEndianAsync( (short)ippRequestMessage.IppOperation, cancellationToken ).ConfigureAwait(false);
         await writer.WriteBigEndianAsync( ippRequestMessage.RequestId, cancellationToken ).ConfigureAwait(false);
         await WriteSectionsAsync(ippRequestMessage, writer, cancellationToken).ConfigureAwait(false);
-        if (ippRequestMessage.Document != null)
+        if (writeDocument && ippRequestMessage.Document != null)
         {
             await ippRequestMessage.Document.CopyToAsync(stream, 81920, cancellationToken).ConfigureAwait(false);
         }
@@ -324,6 +330,9 @@ public partial class IppProtocol : IIppProtocol
                 break;
             case ISmartEnum v:
                 await WriteAsync(v.Value, stream, encoding, cancellationToken).ConfigureAwait(false);
+                break;
+            case IppVersion v:
+                await WriteAsync(v.ToString(), stream, encoding, cancellationToken).ConfigureAwait(false);
                 break;
             case ExtendedValue v:
                 await stream.WriteBigEndianAsync((short)(4 + v.Raw.Length), cancellationToken).ConfigureAwait(false);

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -8,11 +8,8 @@ namespace SharpIpp.Protocol.Models;
 /// <summary>
 /// Abstract base class for dictionary-backed structured string models providing strongly typed property helpers.
 /// </summary>
-public abstract class IppStructuredString : IEnumerable<string>, IIppStructuredString
+public abstract class IppStructuredString : IEnumerable<string>, IIppStructuredString, IEquatable<IppStructuredString>
 {
-    bool INoValueWritable.IsValue { get; set; } = true;
-    bool INoValue.IsValue => ((INoValueWritable)this).IsValue;
-
     public int Count => Dictionary.Count;
 
     public void Add(string entry)
@@ -122,16 +119,10 @@ public abstract class IppStructuredString : IEnumerable<string>, IIppStructuredS
             Dictionary[key] = val.OriginalString;
     }
 
-    protected T? GetSmartEnum<[System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string key) where T : struct, ISmartEnum
+    protected T? GetSmartEnum<T>(string key, Func<string, T> factory) where T : struct, ISmartEnum
     {
         var str = Get(key);
-        if (str == null)
-            return null;
-        if (typeof(IMarkedSmartEnum).IsAssignableFrom(typeof(T)))
-        {
-            return (T)Activator.CreateInstance(typeof(T), [str, true, true])!;
-        }
-        return (T)Activator.CreateInstance(typeof(T), [str, true])!;
+        return str != null ? factory(str) : null;
     }
 
     protected void SetSmartEnum<T>(string key, T? val) where T : struct, ISmartEnum
@@ -274,5 +265,30 @@ public abstract class IppStructuredString : IEnumerable<string>, IIppStructuredS
         {
             return false;
         }
+    }
+
+    public bool Equals(IppStructuredString? other)
+    {
+        if (other is null) return false;
+        if (ReferenceEquals(this, other)) return true;
+        if (Dictionary.Count != other.Dictionary.Count) return false;
+        foreach (var kvp in Dictionary)
+        {
+            if (!other.Dictionary.TryGetValue(kvp.Key, out var otherVal) || otherVal != kvp.Value)
+                return false;
+        }
+        return true;
+    }
+
+    public override bool Equals(object? obj) => obj is IppStructuredString other && Equals(other);
+
+    public override int GetHashCode()
+    {
+        int hash = 17;
+        foreach (var kvp in Dictionary)
+        {
+            hash ^= kvp.Key.GetHashCode() * 397 ^ kvp.Value.GetHashCode();
+        }
+        return hash;
     }
 }

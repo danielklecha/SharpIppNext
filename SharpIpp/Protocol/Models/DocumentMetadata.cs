@@ -10,8 +10,9 @@ namespace SharpIpp.Protocol.Models;
 /// Represents Dublin Core or vendor-specific document metadata keywords and their values.
 /// See: PWG 5100.13-2023 Section 6.1.1
 /// </summary>
-public class DocumentMetadata : IppStructuredString
+public class DocumentMetadata : IppStructuredString, IEquatable<DocumentMetadata>
 {
+    public bool Equals(DocumentMetadata? other) => base.Equals(other);
     public DocumentMetadata() : base(StringComparer.Ordinal)
     {
     }

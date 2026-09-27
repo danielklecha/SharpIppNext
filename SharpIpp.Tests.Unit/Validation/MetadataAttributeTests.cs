@@ -278,4 +278,75 @@ public class MetadataAttributeTests
         result!.IsSuccess.Should().BeFalse();
         result.ErrorMessage.Should().Be("The field TestField must derive from IppStructuredString.");
     }
+
+    [TestMethod]
+    public void IsValid_WhenValueIsIppValueNoValue_ReturnsSuccess()
+    {
+        var attribute = new MetadataAttribute();
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        IppValue<DocumentMetadata> value = IppValue<DocumentMetadata>.NoValue;
+
+        var result = attribute.IsValid(value, context);
+
+        result.Should().Be(ValidationResult.Success);
+    }
+
+    [TestMethod]
+    public void IsValid_WhenValueIsIppValueWithValidValue_ReturnsSuccess()
+    {
+        var attribute = new MetadataAttribute();
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        IppValue<DocumentMetadata> value = new DocumentMetadata
+        {
+            { "title", "Test Title" }
+        };
+
+        var result = attribute.IsValid(value, context);
+
+        result.Should().Be(ValidationResult.Success);
+    }
+
+    [TestMethod]
+    public void IsValid_WhenValueIsIppValueWithInvalidValue_ReturnsValidationError()
+    {
+        var attribute = new MetadataAttribute();
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        IppValue<DocumentMetadata> value = new DocumentMetadata
+        {
+            { "invalidKeyword", "value" }
+        };
+
+        var result = attribute.IsValid(value, context);
+
+        result.Should().NotBeNull();
+        result!.IsSuccess.Should().BeFalse();
+        result.ErrorMessage.Should().Be("The field TestField has invalid keyword 'invalidKeyword'.");
+    }
+
+    [TestMethod]
+    public void IsValid_WhenValueIsIppValueWithNull_ReturnsSuccess()
+    {
+        var attribute = new MetadataAttribute();
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        IppValue<DocumentMetadata?> value = new(null);
+
+        var result = attribute.IsValid(value, context);
+
+        result.Should().Be(ValidationResult.Success);
+    }
+
+    [TestMethod]
+    public void IsValid_WhenValueIsIppValueWithCollection_ReturnsSuccess()
+    {
+        var attribute = new MetadataAttribute();
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        IppValue<DocumentMetadata[]> value = new[]
+        {
+            new DocumentMetadata { { "title", "Doc 1" } }
+        };
+
+        var result = attribute.IsValid(value, context);
+
+        result.Should().Be(ValidationResult.Success);
+    }
 }
