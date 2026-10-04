@@ -11,8 +11,8 @@ namespace SharpIpp.Tests.Unit.Mapping;
 
 /// <summary>
 /// Property-based tests for smart enum round-trips.
-/// For each ISmartEnum type that received new values in Task 8, verifies that
-/// encoding to an IppAttribute and decoding back preserves Value and IsMarked.
+/// For each enum type that received new values in Task 8, verifies that
+/// encoding to an IppAttribute and decoding back preserves Value and IsKeyword (for IKeywordOrNameEnum).
 ///
 /// Property 5: Smart Enum Round-Trip Preserves All Fields
 /// Validates: Requirements 8.5
@@ -159,7 +159,7 @@ public class SmartEnumRoundTripTests : MapperTestBase
         }
     }
 
-    // ── NotifyEvent (IMarkedSmartEnum) ────────────────────────────────────────
+    // ── NotifyEvent (IKeywordEnum) ────────────────────────────────────────────
 
     [TestMethod]
     public void NotifyEvent_KnownValues_WithKeywordTag_RoundTrip_PreservesAllFields()
@@ -167,22 +167,21 @@ public class SmartEnumRoundTripTests : MapperTestBase
         // Feature: pwg5100-spec-parity, Property 5: Smart Enum Round-Trip Preserves All Fields
         foreach (var value in KnownNotifyEventValues)
         {
-            // NotifyEvent(string Value, bool IsMarked = true)
+            // NotifyEvent(string Value)
             var original = new NotifyEvent(value);
 
-            // Encode: use keyword tag (IsMarked = true)
+            // Encode: use keyword tag
             var attr = new IppAttribute(Tag.Keyword, "notify-events", _mapper.Map<string>(original));
 
-            // Decode: map string → NotifyEvent (IsMarked = true because mapped from string)
+            // Decode: map string → NotifyEvent
             var decoded = _mapper.Map<string, NotifyEvent>((string)attr.Value!);
 
             decoded.Value.Should().Be(original.Value, $"NotifyEvent '{value}': Value mismatch");
-            decoded.IsMarked.Should().BeTrue($"NotifyEvent '{value}': IsMarked should be true when mapped from string");
         }
     }
 
     [TestMethod]
-    public void NotifyEvent_UnrecognizedValues_RoundTrip_PreservesValueAndIsMarked()
+    public void NotifyEvent_UnrecognizedValues_RoundTrip_PreservesValue()
     {
         // Feature: pwg5100-spec-parity, Property 5: Smart Enum Round-Trip Preserves All Fields
         var rng = new Random(202);
@@ -190,22 +189,11 @@ public class SmartEnumRoundTripTests : MapperTestBase
         for (var i = 0; i < Iterations; i++)
         {
             var value = "vendor-" + RandomString(rng);
+            var original = new NotifyEvent(value);
+            var attr = new IppAttribute(Tag.Keyword, "notify-events", _mapper.Map<string>(original));
+            var decoded = _mapper.Map<string, NotifyEvent>((string)attr.Value!);
 
-            // Test with IsMarked = true (keyword tag) — default constructor
-            var originalKeyword = new NotifyEvent(value);
-            var attrKeyword = new IppAttribute(Tag.Keyword, "notify-events", _mapper.Map<string>(originalKeyword));
-            var decodedKeyword = _mapper.Map<string, NotifyEvent>((string)attrKeyword.Value!);
-
-            decodedKeyword.Value.Should().Be(originalKeyword.Value, $"iteration {i}: NotifyEvent keyword '{value}': Value mismatch");
-            decodedKeyword.IsMarked.Should().BeTrue($"iteration {i}: NotifyEvent keyword '{value}': IsMarked should be true");
-
-            // Test with IsMarked = false (name tag)
-            var originalName = new NotifyEvent(value, IsMarked: false);
-            var attrName = new IppAttribute(Tag.NameWithoutLanguage, "notify-events", _mapper.Map<string>(originalName));
-
-            // When decoded from a name tag, the Value is preserved
-            var decodedName = _mapper.Map<string, NotifyEvent>((string)attrName.Value!);
-            decodedName.Value.Should().Be(originalName.Value, $"iteration {i}: NotifyEvent name '{value}': Value mismatch");
+            decoded.Value.Should().Be(original.Value, $"iteration {i}: NotifyEvent keyword '{value}': Value mismatch");
         }
     }
 
@@ -262,7 +250,6 @@ public class SmartEnumRoundTripTests : MapperTestBase
             var decoded = _mapper.Map<string, NotifyEvent>(serialized);
 
             decoded.Value.Should().Be(value, $"NotifyEvent '{value}': Value must be preserved through round-trip");
-            decoded.IsMarked.Should().BeTrue($"NotifyEvent '{value}': IsMarked must be true after round-trip from string");
         }
     }
 }

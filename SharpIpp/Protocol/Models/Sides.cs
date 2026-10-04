@@ -1,9 +1,9 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies how pages are imposed onto media sheets.
 /// </summary>
-public readonly record struct Sides(string Value) : ISmartEnum 
+public readonly record struct Sides(string Value) : IKeywordEnum 
 {
     /// <summary>
     /// 'one-sided': imposes each consecutive print-stream page upon the

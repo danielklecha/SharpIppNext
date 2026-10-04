@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the <c>platform-shape</c> attribute.
 /// See: PWG 5100.21-2019 Section 8.3.23
 /// </summary>
-public readonly record struct PlatformShape(string Value, bool IsMarked = true) : IMarkedSmartEnum
+public readonly record struct PlatformShape(string Value) : IKeywordEnum
 {
     /// <summary>
     /// The build platform has a round shape.

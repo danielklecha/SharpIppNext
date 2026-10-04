@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies member attribute names supported by <code>cover-back-supported</code> and <code>cover-front-supported</code>.
 /// See: PWG 5100.3-2023 Sections 5.3.2 and 5.3.4
 /// </summary>
-public readonly record struct CoverMember(string Value) : ISmartEnum 
+public readonly record struct CoverMember(string Value) : IKeywordEnum 
 {
     /// <summary>
     /// The cover-type member attribute.

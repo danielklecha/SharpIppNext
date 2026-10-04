@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the orientation of media feed.
 /// See: PWG 5100.13-2023 Section 6.6.9
 /// </summary>
-public readonly record struct FeedOrientation(string Value) : ISmartEnum
+public readonly record struct FeedOrientation(string Value) : IKeywordEnum
 {
     public static readonly FeedOrientation LongEdgeFirst = new("long-edge-first");
     public static readonly FeedOrientation ShortEdgeFirst = new("short-edge-first");

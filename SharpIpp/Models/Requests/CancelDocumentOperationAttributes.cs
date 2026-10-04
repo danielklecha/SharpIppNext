@@ -27,5 +27,5 @@ public class CancelDocumentOperationAttributes : JobOperationAttributes
     /// </summary>
     /// <code>document-message</code>
     [IppAttribute(IppAttributeNames.DocumentMessage, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? DocumentMessage { get; set; }
+    public StringWithLanguage? DocumentMessage { get; set; }
 }

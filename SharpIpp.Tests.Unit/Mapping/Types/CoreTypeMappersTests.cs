@@ -85,7 +85,7 @@ public class TypesProfileTest : MapperTestBase
         var result = _mapper.MapNullable<string, StringWithLanguage?>("test");
 
         // Assert
-        result.Should().BeEquivalentTo(new StringWithLanguage("en", "test"));
+        result.Should().BeEquivalentTo(new StringWithLanguage(null, "test"));
     }
 
     [TestMethod]

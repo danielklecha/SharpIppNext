@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using SharpIpp.Protocol.Extensions;
 
 namespace SharpIpp.Protocol.Models;
 

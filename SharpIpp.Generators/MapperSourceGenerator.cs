@@ -33,8 +33,8 @@ public class MapperSourceGenerator : IIncrementalGenerator
 
     internal static void Execute(Compilation compilation, ImmutableArray<INamedTypeSymbol> types, SourceProductionContext context)
     {
-        var iMarkedSmartEnumSymbol = compilation.GetTypeByMetadataName("SharpIpp.Protocol.Models.IMarkedSmartEnum");
-        var iSmartEnumSymbol = compilation.GetTypeByMetadataName("SharpIpp.Protocol.Models.ISmartEnum");
+        var iKeywordOrNameEnumSymbol = compilation.GetTypeByMetadataName("SharpIpp.Protocol.Models.IKeywordOrNameEnum");
+        var iKeywordEnumSymbol = compilation.GetTypeByMetadataName("SharpIpp.Protocol.Models.IKeywordEnum");
         var ippAttributeNamesSymbol = compilation.GetTypeByMetadataName("SharpIpp.Protocol.Models.IppAttributeNames");
         var ippAttributeAttrSymbol = compilation.GetTypeByMetadataName("SharpIpp.Mapping.IppAttributeAttribute");
         var ippRequestAttrSymbol = compilation.GetTypeByMetadataName("SharpIpp.Mapping.IppRequestAttribute");
@@ -59,7 +59,7 @@ public class MapperSourceGenerator : IIncrementalGenerator
 
         var conversions = new HashSet<ConversionMapping>();
         var enumTypes = new HashSet<INamedTypeSymbol>(SymbolEqualityComparer.Default);
-        var smartEnumTypes = new HashSet<INamedTypeSymbol>(SymbolEqualityComparer.Default);
+        var keywordEnumTypes = new HashSet<INamedTypeSymbol>(SymbolEqualityComparer.Default);
         var annotatedModels = new HashSet<INamedTypeSymbol>(SymbolEqualityComparer.Default);
         var annotatedRequests = new HashSet<INamedTypeSymbol>(SymbolEqualityComparer.Default);
         var annotatedResponses = new HashSet<INamedTypeSymbol>(SymbolEqualityComparer.Default);
@@ -89,9 +89,9 @@ public class MapperSourceGenerator : IIncrementalGenerator
                 structuredStringTypes.Add(typeSymbol);
             }
 
-            if (typeSymbol.TypeKind == TypeKind.Struct && ImplementsOrInherits(typeSymbol, iSmartEnumSymbol))
+            if (typeSymbol.TypeKind == TypeKind.Struct && ImplementsOrInherits(typeSymbol, iKeywordEnumSymbol))
             {
-                smartEnumTypes.Add(typeSymbol);
+                keywordEnumTypes.Add(typeSymbol);
             }
 
             if (typeSymbol.TypeKind == TypeKind.Struct || typeSymbol.TypeKind == TypeKind.Class)
@@ -165,7 +165,7 @@ public class MapperSourceGenerator : IIncrementalGenerator
             .Concat(annotatedSections.Select(s => s.TypeSymbol));
         foreach (var m in allTypesWithProps)
         {
-            var props = GetAnnotatedProperties(m, annotatedModels, ippAttributeAttrSymbol, iIppCollectionSymbol, iMarkedSmartEnumSymbol, iSmartEnumSymbol, iIppStructuredStringSymbol, ippValueGenericSymbol);
+            var props = GetAnnotatedProperties(m, annotatedModels, ippAttributeAttrSymbol, iIppCollectionSymbol, iKeywordOrNameEnumSymbol, iKeywordEnumSymbol, iIppStructuredStringSymbol, ippValueGenericSymbol);
             foreach (var p in props)
             {
                 if (p.IsIppValue)
@@ -191,7 +191,7 @@ public class MapperSourceGenerator : IIncrementalGenerator
         {
             AddTypeIfValid(collectionElementTypes, e);
         }
-        foreach (var se in smartEnumTypes)
+        foreach (var se in keywordEnumTypes)
         {
             AddTypeIfValid(collectionElementTypes, se);
         }
@@ -221,7 +221,7 @@ public class MapperSourceGenerator : IIncrementalGenerator
 
         if (ippValueGenericSymbol != null)
         {
-            foreach (var se in smartEnumTypes)
+            foreach (var se in keywordEnumTypes)
             {
                 ippValueTypes.Add(ippValueGenericSymbol.Construct(se));
             }
@@ -249,11 +249,11 @@ public class MapperSourceGenerator : IIncrementalGenerator
             }
         }
 
-        GenerateTypeConverters(conversions, enumTypes, smartEnumTypes, structuredStringTypes, ippValueTypes, collectionElementTypes, iSmartEnumSymbol, iMarkedSmartEnumSymbol, iIppStructuredStringSymbol, context);
+        GenerateTypeConverters(conversions, enumTypes, keywordEnumTypes, structuredStringTypes, ippValueTypes, collectionElementTypes, iKeywordEnumSymbol, iKeywordOrNameEnumSymbol, iIppStructuredStringSymbol, context);
         GenerateMapperRegistry(annotatedModels, annotatedRequests, annotatedResponses, annotatedSections, configuredMappers, nameToConst, ippAttributeAttrSymbol, iIppCollectionSymbol, context);
         if (annotatedModels.Count > 0 || annotatedRequests.Count > 0 || annotatedResponses.Count > 0)
         {
-            GenerateModelMappers(annotatedModels, annotatedRequests, annotatedResponses, nameToConst, ippAttributeAttrSymbol, ippRequestAttrSymbol, iIppCollectionSymbol, iMarkedSmartEnumSymbol, iSmartEnumSymbol, iIppStructuredStringSymbol, ippValueGenericSymbol, context);
+            GenerateModelMappers(annotatedModels, annotatedRequests, annotatedResponses, nameToConst, ippAttributeAttrSymbol, ippRequestAttrSymbol, iIppCollectionSymbol, iKeywordOrNameEnumSymbol, iKeywordEnumSymbol, iIppStructuredStringSymbol, ippValueGenericSymbol, context);
         }
     }
 
@@ -290,12 +290,12 @@ public class MapperSourceGenerator : IIncrementalGenerator
     private static void GenerateTypeConverters(
         HashSet<ConversionMapping> conversions,
         HashSet<INamedTypeSymbol> enumTypes,
-        HashSet<INamedTypeSymbol> smartEnumTypes,
+        HashSet<INamedTypeSymbol> keywordEnumTypes,
         HashSet<INamedTypeSymbol> structuredStringTypes,
         HashSet<ITypeSymbol> ippValueTypes,
         HashSet<ITypeSymbol> collectionElementTypes,
-        INamedTypeSymbol? iSmartEnumSymbol,
-        INamedTypeSymbol? iMarkedSmartEnumSymbol,
+        INamedTypeSymbol? iKeywordEnumSymbol,
+        INamedTypeSymbol? iKeywordOrNameEnumSymbol,
         INamedTypeSymbol? iIppStructuredStringSymbol,
         SourceProductionContext context)
     {
@@ -427,7 +427,7 @@ public class MapperSourceGenerator : IIncrementalGenerator
                     sb.AppendLine($"            mapper.CreateIppMap<int, {fqn}>((src, _) => new {fqn}({intCast}));");
                     sb.AppendLine($"            mapper.CreateIppMap<string, {fqn}>((src, map) => new {fqn}(map.Map<{innerFqn}>(src)));");
                 }
-                else if (ImplementsOrInherits(inner, iSmartEnumSymbol) || ImplementsOrInherits(inner, iMarkedSmartEnumSymbol))
+                else if (ImplementsOrInherits(inner, iKeywordEnumSymbol))
                 {
                     sb.AppendLine($"            mapper.CreateIppMap<string, {fqn}>((src, map) => new {fqn}(map.Map<{innerFqn}>(src)));");
                 }
@@ -495,11 +495,11 @@ public class MapperSourceGenerator : IIncrementalGenerator
             sb.AppendLine($"            mapper.CreateMap<int[], IReadOnlyCollection<{fqn}>>((src, map) => map.Map<{fqn}[]>(src));");
         }
 
-        var sortedSmartEnums = smartEnumTypes
+        var sortedKeywordEnums = keywordEnumTypes
             .OrderBy(t => t.ToDisplayString())
             .ToList();
 
-        foreach (var type in sortedSmartEnums)
+        foreach (var type in sortedKeywordEnums)
         {
             var fqn = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
             var toStr = "src[i].ToString()!";
@@ -720,8 +720,8 @@ public class MapperSourceGenerator : IIncrementalGenerator
         INamedTypeSymbol? ippAttributeAttrSymbol,
         INamedTypeSymbol? ippRequestAttrSymbol,
         INamedTypeSymbol? iIppCollectionSymbol,
-        INamedTypeSymbol? iMarkedSmartEnumSymbol,
-        INamedTypeSymbol? iSmartEnumSymbol,
+        INamedTypeSymbol? iKeywordOrNameEnumSymbol,
+        INamedTypeSymbol? iKeywordEnumSymbol,
         INamedTypeSymbol? iIppStructuredStringSymbol,
         INamedTypeSymbol? ippValueGenericSymbol,
         SourceProductionContext context)
@@ -755,7 +755,7 @@ public class MapperSourceGenerator : IIncrementalGenerator
             bool hasAnnotatedBase = models.Contains(model.BaseType!);
             string? baseSafeMethodName = hasAnnotatedBase ? GetSafeMethodName(model.BaseType!) : null;
 
-            var properties = GetAnnotatedProperties(model, models, ippAttributeAttrSymbol, iIppCollectionSymbol, iMarkedSmartEnumSymbol, iSmartEnumSymbol, iIppStructuredStringSymbol, ippValueGenericSymbol);
+            var properties = GetAnnotatedProperties(model, models, ippAttributeAttrSymbol, iIppCollectionSymbol, iKeywordOrNameEnumSymbol, iKeywordEnumSymbol, iIppStructuredStringSymbol, ippValueGenericSymbol);
 
             // Generate Read
             sb.AppendLine($"        public static {modelFqn} Read{safeMethodName}(");
@@ -811,19 +811,19 @@ public class MapperSourceGenerator : IIncrementalGenerator
                     sb.AppendLine($"            if (a_{p.Property.Name} != null && a_{p.Property.Name}.Length > 0)");
                     sb.AppendLine($"                dst.{p.Property.Name} = a_{p.Property.Name};");
                 }
-                else if (p.IsMarkedSmartEnum)
+                else if (p.IsKeywordOrNameEnum)
                 {
                     var unwrappedFqn = p.UnwrappedType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
                     sb.AppendLine($"            dst.{p.Property.Name} = map.MapFromDicNullable<string, {readPropTypeFqn}>(src, {attrNameExpr}, (attribute, value) => new {unwrappedFqn}(value, attribute.Tag == global::SharpIpp.Protocol.Models.Tag.Keyword)) ?? dst.{p.Property.Name};");
                 }
-                else if (p.IsMarkedSmartEnumArray)
+                else if (p.IsKeywordOrNameEnumArray)
                 {
                     var elemTypeFqn = p.ElementType!.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
                     sb.AppendLine($"            var a_{p.Property.Name} = map.MapFromDicSetNullable<string, {elemTypeFqn}>(src, {attrNameExpr}, (attribute, value) => new {elemTypeFqn}(value, attribute.Tag == global::SharpIpp.Protocol.Models.Tag.Keyword));");
                     sb.AppendLine($"            if (a_{p.Property.Name} != null && a_{p.Property.Name}.Length > 0)");
                     sb.AppendLine($"                dst.{p.Property.Name} = a_{p.Property.Name};");
                 }
-                else if (p.IsIppValue && p.IppValueInnerType != null && iMarkedSmartEnumSymbol != null && ImplementsOrInherits(p.IppValueInnerType, iMarkedSmartEnumSymbol))
+                else if (p.IsIppValue && p.IppValueInnerType != null && iKeywordOrNameEnumSymbol != null && ImplementsOrInherits(p.IppValueInnerType, iKeywordOrNameEnumSymbol))
                 {
                     var innerFqn = p.IppValueInnerType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
                     var unwrappedFqn = p.UnwrappedType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
@@ -868,7 +868,7 @@ public class MapperSourceGenerator : IIncrementalGenerator
                     var elem = p.IppValueElementType!;
                     var elemTypeFqn = elem.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
                     var unwrappedFqn = p.UnwrappedType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-                    bool isElemMarkedSmartEnum = ImplementsOrInherits(elem, iMarkedSmartEnumSymbol);
+                    bool isElemKeywordOrNameEnum = ImplementsOrInherits(elem, iKeywordOrNameEnumSymbol);
                     bool isElemCollection = ImplementsOrInherits(elem, iIppCollectionSymbol);
 
                     sb.AppendLine($"            if (src.TryGetValue({attrNameExpr}, out var a_{p.Property.Name}) && a_{p.Property.Name}.Length > 0)");
@@ -877,7 +877,7 @@ public class MapperSourceGenerator : IIncrementalGenerator
                     sb.AppendLine($"                    dst.{p.Property.Name} = default({unwrappedFqn});");
                     sb.AppendLine("                else");
                     sb.AppendLine("                {");
-                    if (isElemMarkedSmartEnum)
+                    if (isElemKeywordOrNameEnum)
                     {
                         sb.AppendLine($"                    var arr_{p.Property.Name} = map.MapFromDicSetNullable<string, {elemTypeFqn}>(src, {attrNameExpr}, (attribute, value) => new {elemTypeFqn}(value, attribute.Tag == global::SharpIpp.Protocol.Models.Tag.Keyword));");
                         sb.AppendLine($"                    if (arr_{p.Property.Name} != null)");
@@ -901,6 +901,33 @@ public class MapperSourceGenerator : IIncrementalGenerator
                     sb.AppendLine($"            var a_{p.Property.Name} = map.MapFromDicSetNullable<{propTypeFqn}>(src, {attrNameExpr});");
                     sb.AppendLine($"            if (a_{p.Property.Name} != null && a_{p.Property.Name}.Length > 0)");
                     sb.AppendLine($"                dst.{p.Property.Name} = a_{p.Property.Name};");
+                }
+                else if (p.IsStringWithLanguage)
+                {
+                    // StringWithLanguage — accept both WithoutLanguage (string) and WithLanguage (StringWithLanguage) tags
+                    sb.AppendLine($"            if (src.TryGetValue({attrNameExpr}, out var a_{p.Property.Name}) && a_{p.Property.Name}.Length > 0)");
+                    sb.AppendLine("            {");
+                    sb.AppendLine($"                if (a_{p.Property.Name}[0].Tag == global::SharpIpp.Protocol.Models.Tag.NoValue)");
+                    sb.AppendLine($"                    dst.{p.Property.Name} = default(global::SharpIpp.Protocol.Models.StringWithLanguage);");
+                    sb.AppendLine($"                else if (a_{p.Property.Name}[0].Value is global::SharpIpp.Protocol.Models.StringWithLanguage swl_{p.Property.Name})");
+                    sb.AppendLine($"                    dst.{p.Property.Name} = swl_{p.Property.Name};");
+                    sb.AppendLine("                else");
+                    sb.AppendLine($"                    dst.{p.Property.Name} = new global::SharpIpp.Protocol.Models.StringWithLanguage(null, a_{p.Property.Name}[0].Value?.ToString() ?? string.Empty);");
+                    sb.AppendLine("            }");
+                }
+                else if (p.IsOctetString)
+                {
+                    sb.AppendLine($"            if (src.TryGetValue({attrNameExpr}, out var a_{p.Property.Name}) && a_{p.Property.Name}.Length > 0)");
+                    sb.AppendLine("            {");
+                    sb.AppendLine($"                if (a_{p.Property.Name}[0].Tag == global::SharpIpp.Protocol.Models.Tag.NoValue)");
+                    sb.AppendLine($"                    dst.{p.Property.Name} = default(global::SharpIpp.Protocol.Models.OctetString);");
+                    sb.AppendLine($"                else if (a_{p.Property.Name}[0].Value is global::SharpIpp.Protocol.Models.OctetString os_{p.Property.Name})");
+                    sb.AppendLine($"                    dst.{p.Property.Name} = os_{p.Property.Name};");
+                    sb.AppendLine($"                else if (a_{p.Property.Name}[0].Value is byte[] bytes_{p.Property.Name})");
+                    sb.AppendLine($"                    dst.{p.Property.Name} = new global::SharpIpp.Protocol.Models.OctetString(bytes_{p.Property.Name});");
+                    sb.AppendLine("                else");
+                    sb.AppendLine($"                    dst.{p.Property.Name} = new global::SharpIpp.Protocol.Models.OctetString(a_{p.Property.Name}[0].Value?.ToString() ?? string.Empty);");
+                    sb.AppendLine("            }");
                 }
                 else
                 {
@@ -941,8 +968,9 @@ public class MapperSourceGenerator : IIncrementalGenerator
                     var elem = p.IppValueElementType!;
                     bool isElemEnum = elem.TypeKind == TypeKind.Enum;
                     bool isElemUri = elem.Name == "Uri";
-                    bool isElemMarkedSmartEnum = ImplementsOrInherits(elem, iMarkedSmartEnumSymbol);
-                    bool isElemSmartEnum = ImplementsOrInherits(elem, iSmartEnumSymbol);
+                    bool isElemStringWithLanguage = elem.Name == "StringWithLanguage";
+                    bool isElemKeywordOrNameEnum = ImplementsOrInherits(elem, iKeywordOrNameEnumSymbol);
+                    bool isElemKeywordEnum = ImplementsOrInherits(elem, iKeywordEnumSymbol) && !isElemKeywordOrNameEnum;
                     bool isElemStructuredString = ImplementsOrInherits(elem, iIppStructuredStringSymbol);
                     bool isElemCollection = ImplementsOrInherits(elem, iIppCollectionSymbol);
 
@@ -953,11 +981,15 @@ public class MapperSourceGenerator : IIncrementalGenerator
                     sb.AppendLine($"                    dst.Add(new IppAttribute(global::SharpIpp.Protocol.Models.Tag.NoValue, {attrNameExpr}, global::SharpIpp.Protocol.Models.NoValue.Instance));");
                     sb.AppendLine($"                else if (val_{p.Property.Name}.Value != null)");
                     sb.AppendLine("                {");
-                    if (isElemMarkedSmartEnum)
+                    if (isElemKeywordOrNameEnum)
                     {
                         sb.AppendLine($"                    dst.AddRange(val_{p.Property.Name}.Value.Select(x => new IppAttribute(x.ToIppTag(), {attrNameExpr}, x.ToString()!)));");
                     }
-                    else if (isElemSmartEnum)
+                    else if (isElemStringWithLanguage)
+                    {
+                        sb.AppendLine($"                    dst.AddRange(val_{p.Property.Name}.Value.Select(x => new IppAttribute(x.ToIppTag({tagExpr}), {attrNameExpr}, x)));");
+                    }
+                    else if (isElemKeywordEnum)
                     {
                         sb.AppendLine($"                    dst.AddRange(val_{p.Property.Name}.Value.Select(x => new IppAttribute({tagExpr}, {attrNameExpr}, x.ToString()!)));");
                     }
@@ -999,8 +1031,9 @@ public class MapperSourceGenerator : IIncrementalGenerator
                     bool isInnerEnum = inner.TypeKind == TypeKind.Enum;
                     bool isInnerUri = inner.Name == "Uri";
                     bool isInnerRange = inner.Name == "Range";
-                    bool isInnerMarkedSmartEnum = ImplementsOrInherits(inner, iMarkedSmartEnumSymbol);
-                    bool isInnerSmartEnum = ImplementsOrInherits(inner, iSmartEnumSymbol);
+                    bool isInnerStringWithLanguage = inner.Name == "StringWithLanguage";
+                    bool isInnerKeywordOrNameEnum = ImplementsOrInherits(inner, iKeywordOrNameEnumSymbol);
+                    bool isInnerKeywordEnum = ImplementsOrInherits(inner, iKeywordEnumSymbol) && !isInnerKeywordOrNameEnum;
                     bool isInnerStructuredString = ImplementsOrInherits(inner, iIppStructuredStringSymbol);
                     bool isInnerCollection = ImplementsOrInherits(inner, iIppCollectionSymbol);
 
@@ -1011,7 +1044,7 @@ public class MapperSourceGenerator : IIncrementalGenerator
                     sb.AppendLine($"                    dst.Add(new IppAttribute(global::SharpIpp.Protocol.Models.Tag.NoValue, {attrNameExpr}, global::SharpIpp.Protocol.Models.NoValue.Instance));");
                     sb.AppendLine("                else");
                     sb.AppendLine("                {");
-                    if (isInnerMarkedSmartEnum)
+                    if (isInnerKeywordOrNameEnum)
                     {
                         if (isInnerValueType)
                             sb.AppendLine($"                    dst.Add(new IppAttribute(val_{p.Property.Name}.Value.ToIppTag(), {attrNameExpr}, val_{p.Property.Name}.Value.ToString()!));");
@@ -1021,7 +1054,11 @@ public class MapperSourceGenerator : IIncrementalGenerator
                             sb.AppendLine($"                        dst.Add(new IppAttribute(val_{p.Property.Name}.Value.ToIppTag(), {attrNameExpr}, val_{p.Property.Name}.Value.ToString()!));");
                         }
                     }
-                    else if (isInnerSmartEnum)
+                    else if (isInnerStringWithLanguage)
+                    {
+                        sb.AppendLine($"                    dst.Add(new IppAttribute(val_{p.Property.Name}.Value.ToIppTag({tagExpr}), {attrNameExpr}, val_{p.Property.Name}.Value));");
+                    }
+                    else if (isInnerKeywordEnum)
                     {
                         if (isInnerValueType)
                             sb.AppendLine($"                    dst.Add(new IppAttribute({tagExpr}, {attrNameExpr}, val_{p.Property.Name}.Value.ToString()!));");
@@ -1102,7 +1139,7 @@ public class MapperSourceGenerator : IIncrementalGenerator
                     sb.AppendLine($"            if (src.{p.Property.Name} != null)");
                     sb.AppendLine($"                dst.AddRange(src.{p.Property.Name}.Select(x => new IppAttribute({tagExpr}, {attrNameExpr}, new OctetString(x.ToString()))));");
                 }
-                else if (p.IsMarkedSmartEnum)
+                else if (p.IsKeywordOrNameEnum)
                 {
                     if (p.IsNullable)
                     {
@@ -1118,12 +1155,12 @@ public class MapperSourceGenerator : IIncrementalGenerator
                         sb.AppendLine($"            dst.Add(new IppAttribute(val_{p.Property.Name}.ToIppTag(), {attrNameExpr}, val_{p.Property.Name}.ToString()!));");
                     }
                 }
-                else if (p.IsMarkedSmartEnumArray)
+                else if (p.IsKeywordOrNameEnumArray)
                 {
                     sb.AppendLine($"            if (src.{p.Property.Name} != null)");
                     sb.AppendLine($"                dst.AddRange(src.{p.Property.Name}.Select(x => new IppAttribute(x.ToIppTag(), {attrNameExpr}, x.ToString()!)));");
                 }
-                else if (p.IsSmartEnum)
+                else if (p.IsKeywordEnum)
                 {
                     if (p.IsNullable)
                     {
@@ -1135,7 +1172,7 @@ public class MapperSourceGenerator : IIncrementalGenerator
                         sb.AppendLine($"            dst.Add(new IppAttribute({tagExpr}, {attrNameExpr}, src.{p.Property.Name}.ToString()!));");
                     }
                 }
-                else if (p.IsSmartEnumArray)
+                else if (p.IsKeywordEnumArray)
                 {
                     sb.AppendLine($"            if (src.{p.Property.Name} != null)");
                     sb.AppendLine($"                dst.AddRange(src.{p.Property.Name}.Select(x => new IppAttribute({tagExpr}, {attrNameExpr}, x.ToString()!)));");
@@ -1299,11 +1336,20 @@ public class MapperSourceGenerator : IIncrementalGenerator
                     if (p.IsNullable)
                     {
                         sb.AppendLine($"            if (src.{p.Property.Name}.HasValue)");
-                        sb.AppendLine($"                dst.Add(new IppAttribute({tagExpr}, {attrNameExpr}, src.{p.Property.Name}.Value));");
+                        sb.AppendLine("            {");
+                        sb.AppendLine($"                var val_{p.Property.Name} = src.{p.Property.Name}.Value;");
+                        sb.AppendLine($"                if (!val_{p.Property.Name}.IsValue)");
+                        sb.AppendLine($"                    dst.Add(new IppAttribute(global::SharpIpp.Protocol.Models.Tag.NoValue, {attrNameExpr}, global::SharpIpp.Protocol.Models.NoValue.Instance));");
+                        sb.AppendLine("                else");
+                        sb.AppendLine($"                    dst.Add(new IppAttribute({tagExpr}, {attrNameExpr}, val_{p.Property.Name}));");
+                        sb.AppendLine("            }");
                     }
                     else
                     {
-                        sb.AppendLine($"            dst.Add(new IppAttribute({tagExpr}, {attrNameExpr}, src.{p.Property.Name}));");
+                        sb.AppendLine($"            if (!src.{p.Property.Name}.IsValue)");
+                        sb.AppendLine($"                dst.Add(new IppAttribute(global::SharpIpp.Protocol.Models.Tag.NoValue, {attrNameExpr}, global::SharpIpp.Protocol.Models.NoValue.Instance));");
+                        sb.AppendLine("            else");
+                        sb.AppendLine($"                dst.Add(new IppAttribute({tagExpr}, {attrNameExpr}, src.{p.Property.Name}));");
                     }
                 }
                 else if (p.IsOctetStringArray)
@@ -1313,13 +1359,29 @@ public class MapperSourceGenerator : IIncrementalGenerator
                 }
                 else if (p.IsStringWithLanguage)
                 {
-                    sb.AppendLine($"            if (src.{p.Property.Name} != null)");
-                    sb.AppendLine($"                dst.Add(new IppAttribute({tagExpr}, {attrNameExpr}, src.{p.Property.Name}));");
+                    if (p.IsNullable)
+                    {
+                        sb.AppendLine($"            if (src.{p.Property.Name}.HasValue)");
+                        sb.AppendLine("            {");
+                        sb.AppendLine($"                var val_{p.Property.Name} = src.{p.Property.Name}.Value;");
+                        sb.AppendLine($"                if (!val_{p.Property.Name}.IsValue)");
+                        sb.AppendLine($"                    dst.Add(new IppAttribute(global::SharpIpp.Protocol.Models.Tag.NoValue, {attrNameExpr}, global::SharpIpp.Protocol.Models.NoValue.Instance));");
+                        sb.AppendLine("                else");
+                        sb.AppendLine($"                    dst.Add(new IppAttribute(val_{p.Property.Name}.ToIppTag({tagExpr}), {attrNameExpr}, val_{p.Property.Name}));");
+                        sb.AppendLine("            }");
+                    }
+                    else
+                    {
+                        sb.AppendLine($"            if (!src.{p.Property.Name}.IsValue)");
+                        sb.AppendLine($"                dst.Add(new IppAttribute(global::SharpIpp.Protocol.Models.Tag.NoValue, {attrNameExpr}, global::SharpIpp.Protocol.Models.NoValue.Instance));");
+                        sb.AppendLine("            else");
+                        sb.AppendLine($"                dst.Add(new IppAttribute(src.{p.Property.Name}.ToIppTag({tagExpr}), {attrNameExpr}, src.{p.Property.Name}));");
+                    }
                 }
                 else if (p.IsStringWithLanguageArray)
                 {
                     sb.AppendLine($"            if (src.{p.Property.Name} != null)");
-                    sb.AppendLine($"                dst.AddRange(src.{p.Property.Name}.Select(x => new IppAttribute({tagExpr}, {attrNameExpr}, x)));");
+                    sb.AppendLine($"                dst.AddRange(src.{p.Property.Name}.Select(x => new IppAttribute(x.ToIppTag({tagExpr}), {attrNameExpr}, x)));");
                 }
                 else if (p.IsArray)
                 {
@@ -1912,8 +1974,8 @@ public class MapperSourceGenerator : IIncrementalGenerator
         HashSet<INamedTypeSymbol> annotatedModels,
         INamedTypeSymbol? ippAttributeAttrSymbol,
         INamedTypeSymbol? iIppCollectionSymbol,
-        INamedTypeSymbol? iMarkedSmartEnumSymbol,
-        INamedTypeSymbol? iSmartEnumSymbol,
+        INamedTypeSymbol? iKeywordOrNameEnumSymbol,
+        INamedTypeSymbol? iKeywordEnumSymbol,
         INamedTypeSymbol? iIppStructuredStringSymbol,
         INamedTypeSymbol? ippValueGenericSymbol)
     {
@@ -2056,11 +2118,11 @@ public class MapperSourceGenerator : IIncrementalGenerator
                 bool isStructuredString = ImplementsOrInherits(unwrapped, iIppStructuredStringSymbol);
                 bool isStructuredStringArr = elemType != null && iIppStructuredStringSymbol != null && ImplementsOrInherits(elemType, iIppStructuredStringSymbol);
 
-                bool isMarkedSmartEnum = ImplementsOrInherits(unwrapped, iMarkedSmartEnumSymbol);
-                bool isMarkedSmartEnumArr = elemType != null && iMarkedSmartEnumSymbol != null && ImplementsOrInherits(elemType, iMarkedSmartEnumSymbol);
+                bool isKeywordOrNameEnum = ImplementsOrInherits(unwrapped, iKeywordOrNameEnumSymbol);
+                bool isKeywordOrNameEnumArr = elemType != null && iKeywordOrNameEnumSymbol != null && ImplementsOrInherits(elemType, iKeywordOrNameEnumSymbol);
 
-                bool isSmartEnum = ImplementsOrInherits(unwrapped, iSmartEnumSymbol);
-                bool isSmartEnumArr = elemType != null && iSmartEnumSymbol != null && ImplementsOrInherits(elemType, iSmartEnumSymbol);
+                bool isKeywordEnum = ImplementsOrInherits(unwrapped, iKeywordEnumSymbol) && !isKeywordOrNameEnum;
+                bool isKeywordEnumArr = elemType != null && iKeywordEnumSymbol != null && ImplementsOrInherits(elemType, iKeywordEnumSymbol) && !isKeywordOrNameEnumArr;
 
                 bool isEnum = unwrapped.TypeKind == TypeKind.Enum;
                 bool isEnumArr = elemType != null && elemType.TypeKind == TypeKind.Enum;
@@ -2106,10 +2168,10 @@ public class MapperSourceGenerator : IIncrementalGenerator
                     isArray = false;
                     isStructuredString = false;
                     isStructuredStringArr = false;
-                    isMarkedSmartEnum = false;
-                    isMarkedSmartEnumArr = false;
-                    isSmartEnum = false;
-                    isSmartEnumArr = false;
+                    isKeywordOrNameEnum = false;
+                    isKeywordOrNameEnumArr = false;
+                    isKeywordEnum = false;
+                    isKeywordEnumArr = false;
                     isEnum = false;
                     isEnumArr = false;
                     isString = false;
@@ -2149,10 +2211,10 @@ public class MapperSourceGenerator : IIncrementalGenerator
                     IsCollectionArray = isColArr,
                     IsStructuredString = isStructuredString,
                     IsStructuredStringArray = isStructuredStringArr,
-                    IsMarkedSmartEnum = isMarkedSmartEnum,
-                    IsMarkedSmartEnumArray = isMarkedSmartEnumArr,
-                    IsSmartEnum = isSmartEnum,
-                    IsSmartEnumArray = isSmartEnumArr,
+                    IsKeywordOrNameEnum = isKeywordOrNameEnum,
+                    IsKeywordOrNameEnumArray = isKeywordOrNameEnumArr,
+                    IsKeywordEnum = isKeywordEnum,
+                    IsKeywordEnumArray = isKeywordEnumArr,
                     IsEnum = isEnum,
                     IsEnumArray = isEnumArr,
                     IsString = isString,
@@ -2238,6 +2300,9 @@ public class MapperSourceGenerator : IIncrementalGenerator
             return ("Boolean", false, false);
 
         if (underlying.SpecialType == SpecialType.System_String)
+            return ("NameWithoutLanguage", false, false);
+
+        if (underlying.Name == "StringWithLanguage")
             return ("NameWithoutLanguage", false, false);
 
         if (underlying.Name == "DateTimeOffset")

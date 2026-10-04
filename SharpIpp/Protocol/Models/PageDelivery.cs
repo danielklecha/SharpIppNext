@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the <c>page-delivery</c> Job/Document Template attribute values.
 /// See: PWG 5100.3-2023 Section 5.2.14
 /// </summary>
-public readonly record struct PageDelivery(string Value) : ISmartEnum 
+public readonly record struct PageDelivery(string Value) : IKeywordEnum 
 {
     /// <summary>
     /// Pages are delivered in the same order as printed, face up.

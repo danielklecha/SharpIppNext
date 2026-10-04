@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the member names for <code>document-access</code>.
 /// See: PWG 5100.18-2025 Section 7.1.2
 /// </summary>
-public readonly record struct DocumentAccessMember(string Value, bool IsMarked = true) : IMarkedSmartEnum
+public readonly record struct DocumentAccessMember(string Value) : IKeywordEnum
 {
     /// <summary>
     /// The Cancel-Document operation access.

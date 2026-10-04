@@ -80,7 +80,7 @@ public class GetResourceAttributesTests : SharpIppIntegrationTestBase
         clientResponse.Should().BeEquivalentTo(serverResponse);
 
         // Additional coverage for ResourceStatusAttributes -> IppAttribute mapping branches
-        clientResponse.ResourceAttributes!.ResourceUuid!.Value.Value.Value.Should().BeEquivalentTo(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 });
+        clientResponse.ResourceAttributes!.ResourceUuid!.Value.Value.Should().BeEquivalentTo(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 });
         clientResponse.ResourceAttributes.ResourceVersion.Should().Be("1.0.0");
         clientResponse.ResourceAttributes.ResourceStringVersion.Should().Be("1.0");
     }

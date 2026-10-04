@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the name of the covering.
 /// See: PWG 5100.1-2022 Section 5.2.4.1
 /// </summary>
-public readonly record struct CoveringName(string Value, bool IsMarked = true) : IMarkedSmartEnum
+public readonly record struct CoveringName(string Value, bool IsKeyword = true) : IKeywordOrNameEnum
 {
     /// <summary>
     /// Plain (uncoated) covering material.
@@ -23,6 +23,7 @@ public readonly record struct CoveringName(string Value, bool IsMarked = true) :
     /// See: PWG 5100.1-2022 Section 5.2.4.1
     /// </summary>
     public static readonly CoveringName PrePrinted = new("pre-printed");
+
 
     public override string ToString() => Value;
     public static implicit operator string(CoveringName bin) => bin.Value;

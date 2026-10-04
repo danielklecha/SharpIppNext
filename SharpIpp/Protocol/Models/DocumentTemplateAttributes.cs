@@ -384,7 +384,7 @@ public class DocumentTemplateAttributes : IIppCollection
     /// See: PWG 5100.5-2024 Section 6.5.5
     /// </summary>
     [IppAttribute(IppAttributeNames.DocumentMessage, Tag.TextWithoutLanguage)]
-    public IppValue<string>? DocumentMessage { get; set; }
+    public StringWithLanguage? DocumentMessage { get; set; }
 
     /// <summary>
     /// The <c>document-metadata</c> Document Template attribute. Arbitrary metadata associated with the document.
@@ -399,7 +399,7 @@ public class DocumentTemplateAttributes : IIppCollection
     /// See: PWG 5100.5-2024 Section 6.5.7
     /// </summary>
     [IppAttribute(IppAttributeNames.DocumentName, Tag.NameWithoutLanguage)]
-    public IppValue<string>? DocumentName { get; set; }
+    public StringWithLanguage? DocumentName { get; set; }
 
     /// <summary>
     /// The <c>document-natural-language</c> Document Template attribute. The natural language of the document content.
@@ -414,7 +414,7 @@ public class DocumentTemplateAttributes : IIppCollection
     /// </summary>
     [ByteRange(1, 1023)]
     [IppAttribute(IppAttributeNames.DocumentPassword, Tag.OctetStringWithAnUnspecifiedFormat)]
-    public IppValue<OctetString>? DocumentPassword { get; set; }
+    public OctetString? DocumentPassword { get; set; }
 
     /// <summary>
     /// The <c>document-uri</c> Document Template attribute. A URI that references the document data.
@@ -435,7 +435,7 @@ public class DocumentTemplateAttributes : IIppCollection
     /// See: PWG 5100.5-2024 Section 6.5.13
     /// </summary>
     [IppAttribute(IppAttributeNames.JobPassword, Tag.OctetStringWithAnUnspecifiedFormat)]
-    public IppValue<OctetString>? JobPassword { get; set; }
+    public OctetString? JobPassword { get; set; }
 
     /// <summary>
     /// The <c>job-password-encryption</c> Document Template attribute. Specifies the encryption algorithm used for the job password.

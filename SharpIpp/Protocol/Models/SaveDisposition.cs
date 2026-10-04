@@ -4,11 +4,12 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the <c>save-disposition</c> member attribute.
 /// See: PWG 5100.11 (obsolete Job Save and Reprint)
 /// </summary>
-public readonly record struct SaveDisposition(string Value, bool IsMarked = true) : IMarkedSmartEnum
+public readonly record struct SaveDisposition(string Value, bool IsKeyword = true) : IKeywordOrNameEnum
 {
     public static readonly SaveDisposition None = new("none");
     public static readonly SaveDisposition SaveOnly = new("save-only");
     public static readonly SaveDisposition PrintSave = new("print-save");
+
 
     public override string ToString() => Value;
     public static implicit operator string(SaveDisposition value) => value.Value;

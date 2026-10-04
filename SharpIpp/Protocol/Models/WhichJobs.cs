@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace SharpIpp.Protocol.Models
 {
@@ -7,7 +7,7 @@ namespace SharpIpp.Protocol.Models
     /// See: RFC 8011 Section 4.2.6.1
     /// See: PWG 5100.7-2023 Section 5.2
     /// </summary>
-    public readonly record struct WhichJobs(string Value) : ISmartEnum
+    public readonly record struct WhichJobs(string Value) : IKeywordEnum
     {
         /// <summary>
         /// This includes any Job object whose state is

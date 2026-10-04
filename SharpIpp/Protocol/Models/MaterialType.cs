@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the <c>material-type</c> member attribute.
 /// See: PWG 5100.21-2019 Section 8.1.3.16
 /// </summary>
-public readonly record struct MaterialType(string Value, bool IsMarked = true) : IMarkedSmartEnum
+public readonly record struct MaterialType(string Value, bool IsKeyword = true) : IKeywordOrNameEnum
 {
     /// <summary>ABS (Acrylonitrile Butadiene Styrene) filament. See: PWG 5100.21-2019 Section 8.1.3.16</summary>
     public static readonly MaterialType Abs = new("abs");
@@ -68,6 +68,7 @@ public readonly record struct MaterialType(string Value, bool IsMarked = true) :
     public static readonly MaterialType Steel = new("steel");
     /// <summary>Wood-fill filament (PLA with wood fiber). See: PWG 5100.21-2019 Section 8.1.3.16</summary>
     public static readonly MaterialType WoodFill = new("wood-fill");
+
 
     public override string ToString() => Value;
     public static implicit operator string(MaterialType value) => value.Value;

@@ -1,5 +1,4 @@
 using System;
-using System.Numerics;
 
 using SharpIpp.Protocol.Extensions;
 
@@ -28,6 +27,7 @@ public readonly struct IppAttribute : IEquatable<IppAttribute>
             tag = Tag.NoValue;
             value = NoValue.Instance;
         }
+
         Tag = tag;
         Name = name;
         Value = value;

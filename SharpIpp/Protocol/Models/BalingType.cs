@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the type of baling.
 /// See: PWG 5100.1-2022 Section 5.2.1.1
 /// </summary>
-public readonly record struct BalingType(string Value, bool IsMarked = true) : IMarkedSmartEnum 
+public readonly record struct BalingType(string Value, bool IsKeyword = true) : IKeywordOrNameEnum
 {
     /// <summary>
     /// Baling using a band or strap.
@@ -23,6 +23,7 @@ public readonly record struct BalingType(string Value, bool IsMarked = true) : I
     /// See: PWG 5100.1-2022 Section 5.2.1.1
     /// </summary>
     public static readonly BalingType Wrap = new("wrap");
+
 
     public override string ToString() => Value;
     public static implicit operator string(BalingType bin) => bin.Value;

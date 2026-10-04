@@ -65,7 +65,7 @@ public class BinaryOctetStringTests : SharpIppIntegrationTestBase
         serverRequest.Should().NotBeNull();
         var printJobRequest = serverRequest.As<PrintJobRequest>();
         printJobRequest!.OperationAttributes!.DocumentPassword.Should().NotBeNull();
-        printJobRequest.OperationAttributes.DocumentPassword!.Value.Value.Value.Should().BeEquivalentTo(binaryPassword);
+        printJobRequest.OperationAttributes.DocumentPassword!.Value.Value.Should().BeEquivalentTo(binaryPassword);
     }
 
     [TestMethod]
@@ -111,6 +111,6 @@ public class BinaryOctetStringTests : SharpIppIntegrationTestBase
         serverRequest.Should().NotBeNull();
         var createJobRequest = serverRequest.As<CreateJobRequest>();
         createJobRequest!.OperationAttributes!.JobPassword.Should().NotBeNull();
-        createJobRequest.OperationAttributes.JobPassword!.Value.Value.Value.Should().BeEquivalentTo(binaryPassword);
+        createJobRequest.OperationAttributes.JobPassword!.Value.Value.Should().BeEquivalentTo(binaryPassword);
     }
 }

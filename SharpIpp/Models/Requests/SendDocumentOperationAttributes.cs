@@ -25,7 +25,7 @@ public class SendDocumentOperationAttributes : JobOperationAttributes
     /// </summary>
     [IppAttribute(IppAttributeNames.DocumentPassword, Tag = Tag.OctetStringWithAnUnspecifiedFormat)]
     [ByteRange(1, 1023)]
-    public IppValue<OctetString>? DocumentPassword { get; set; }
+    public OctetString? DocumentPassword { get; set; }
 
     /// <summary>
     /// This DEPRECATED operation attribute specifies details about the source of the Document data and can be included in any Job or Document Creation request.
@@ -54,7 +54,7 @@ public class SendDocumentOperationAttributes : JobOperationAttributes
     /// <example>job63</example>
     /// <code>document-name</code>
     [IppAttribute(IppAttributeNames.DocumentName, Tag = Tag.NameWithoutLanguage)]
-    public IppValue<string>? DocumentName { get; set; }
+    public StringWithLanguage? DocumentName { get; set; }
     /// <summary>
     /// The client OPTIONALLY supplies this attribute.  The Printer
     /// object MUST support this attribute and the "compression-
@@ -98,7 +98,7 @@ public class SendDocumentOperationAttributes : JobOperationAttributes
     /// </summary>
     /// <code>document-message</code>
     [IppAttribute(IppAttributeNames.DocumentMessage, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? DocumentMessage { get; set; }
+    public StringWithLanguage? DocumentMessage { get; set; }
 
     /// <summary>
     /// The <c>resource-ids</c> operation attribute.

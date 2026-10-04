@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the <c>job-storage-disposition</c> member attribute.
 /// See: PWG 5100.11-2024 Section 6.1.4.2
 /// </summary>
-public readonly record struct JobStorageDisposition(string Value, bool IsMarked = true) : IMarkedSmartEnum
+public readonly record struct JobStorageDisposition(string Value, bool IsKeyword = true) : IKeywordOrNameEnum
 {
     /// <summary>
     /// The job is printed and then stored.
@@ -17,6 +17,7 @@ public readonly record struct JobStorageDisposition(string Value, bool IsMarked 
     /// See: PWG 5100.11-2024 Section 6.1.4.2
     /// </summary>
     public static readonly JobStorageDisposition StoreOnly = new("store-only");
+
 
     public override string ToString() => Value;
     public static implicit operator string(JobStorageDisposition value) => value.Value;

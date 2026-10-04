@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the output tray type.
 /// See: PWG 5100.13-2023 Section 6.6.10
 /// </summary>
-public readonly record struct OutputTrayType(string Value) : ISmartEnum
+public readonly record struct OutputTrayType(string Value) : IKeywordEnum
 {
     public static readonly OutputTrayType Other = new("other");
     public static readonly OutputTrayType Unknown = new("unknown");

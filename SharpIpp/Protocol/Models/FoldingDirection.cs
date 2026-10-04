@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies whether sheets are pushed outward or pulled inward for the fold.
 /// See: PWG 5100.1-2022 Section 5.2.6.1
 /// </summary>
-public readonly record struct FoldingDirection(string Value) : ISmartEnum 
+public readonly record struct FoldingDirection(string Value) : IKeywordEnum 
 {
     /// <summary>
     /// Sheets are folded inward (toward the center).

@@ -125,15 +125,50 @@ public class IppProtocolTests
 
     [TestMethod]
     [DataRow( "en-us", "Lorem", new byte[] { 0x00, 0x0E, 0x00, 0x05, 0x65, 0x6E, 0x2D, 0x75, 0x73, 0x00, 0x05, 0x4C, 0x6F, 0x72, 0x65, 0x6D } )]
-    public async Task Write_StringWithLanguage_ShouldBeWritten( string language, string text, byte[] expected )
+    [DataRow( null, "Lorem", new byte[] { 0x00, 0x05, 0x4C, 0x6F, 0x72, 0x65, 0x6D } )]
+    [DataRow( "en", null, new byte[] { 0x00, 0x06, 0x00, 0x02, 0x65, 0x6E, 0x00, 0x00 } )]
+    [DataRow( null, null, new byte[] { 0x00, 0x00 } )]
+    public async Task Write_StringWithLanguage_ShouldBeWritten( string? language, string? text, byte[] expected )
     {
         // Arrange
         var protocol = new IppProtocol();
         using MemoryStream memoryStream = new();
         using IppBinaryWriter binaryWriter = new( memoryStream );
         // Act
-        await protocol.WriteValueAsync(new StringWithLanguage( language, text ), binaryWriter);
+        await protocol.WriteValueAsync(new StringWithLanguage( language, text! ), binaryWriter);
         // Assert
+        memoryStream.ToArray().Should().Equal( expected );
+    }
+
+    [TestMethod]
+    public async Task WriteValue_StringWithLanguage_NoValue_ShouldBeWritten()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        using MemoryStream memoryStream = new();
+        using IppBinaryWriter binaryWriter = new( memoryStream );
+
+        // Act
+        await protocol.WriteValueAsync(default(StringWithLanguage), binaryWriter);
+
+        // Assert
+        memoryStream.ToArray().Should().Equal( 0x00, 0x00 );
+    }
+
+    [TestMethod]
+    public async Task WriteValue_StringWithLanguage_WithEncoding_ShouldBeWritten()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        using MemoryStream memoryStream = new();
+        using IppBinaryWriter binaryWriter = new( memoryStream );
+        var value = new StringWithLanguage( "fr", "café" );
+
+        // Act
+        await protocol.WriteValueAsync(value, binaryWriter, Encoding.UTF8);
+
+        // Assert
+        var expected = new byte[] { 0x00, 0x0B, 0x00, 0x02, 0x66, 0x72, 0x00, 0x05, 0x63, 0x61, 0x66, 0xC3, 0xA9 };
         memoryStream.ToArray().Should().Equal( expected );
     }
 
@@ -162,6 +197,75 @@ public class IppProtocolTests
         await protocol.WriteValueAsync(value, binaryWriter);
         // Assert
         memoryStream.ToArray().Should().Equal( 0x00, 0x04, 0xDE, 0xAD, 0xBE, 0xEF );
+    }
+
+    [TestMethod]
+    public async Task WriteValue_OctetString_ShouldBeWritten()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        using MemoryStream memoryStream = new();
+        using IppBinaryWriter binaryWriter = new( memoryStream );
+        var value = new OctetString( new byte[] { 0xDE, 0xAD, 0xBE, 0xEF } );
+        // Act
+        await protocol.WriteValueAsync(value, binaryWriter);
+        // Assert
+        memoryStream.ToArray().Should().Equal( 0x00, 0x04, 0xDE, 0xAD, 0xBE, 0xEF );
+    }
+
+    [TestMethod]
+    public async Task WriteValue_OctetString_NoValue_ShouldBeWritten()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        using MemoryStream memoryStream = new();
+        using IppBinaryWriter binaryWriter = new( memoryStream );
+        // Act
+        await protocol.WriteValueAsync(default(OctetString), binaryWriter);
+        // Assert
+        memoryStream.ToArray().Should().Equal( 0x00, 0x00 );
+    }
+
+    [TestMethod]
+    public async Task WriteValue_OctetString_FromNoValueInstance_ShouldBeWritten()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        using MemoryStream memoryStream = new();
+        using IppBinaryWriter binaryWriter = new( memoryStream );
+        OctetString value = NoValue.Instance;
+        // Act
+        await protocol.WriteValueAsync(value, binaryWriter);
+        // Assert
+        memoryStream.ToArray().Should().Equal( 0x00, 0x00 );
+    }
+
+    [TestMethod]
+    public async Task WriteValue_OctetString_NullValue_ShouldBeWritten()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        using MemoryStream memoryStream = new();
+        using IppBinaryWriter binaryWriter = new( memoryStream );
+        var value = new OctetString((byte[]?)null!);
+        // Act
+        await protocol.WriteValueAsync(value, binaryWriter);
+        // Assert
+        memoryStream.ToArray().Should().Equal( 0x00, 0x00 );
+    }
+
+    [TestMethod]
+    public async Task WriteValue_OctetString_Empty_ShouldBeWritten()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        using MemoryStream memoryStream = new();
+        using IppBinaryWriter binaryWriter = new( memoryStream );
+        var value = new OctetString(Array.Empty<byte>());
+        // Act
+        await protocol.WriteValueAsync(value, binaryWriter);
+        // Assert
+        memoryStream.ToArray().Should().Equal( 0x00, 0x00 );
     }
 
     [TestMethod]
@@ -529,6 +633,36 @@ public class IppProtocolTests
             Encoding.ASCII );
         // Assert
         memoryStream.ToArray().Should().Equal( 0x44, 0x00, 0x00, 0x00, 0x03, 0x31, 0x2E, 0x31 );
+    }
+
+    [TestMethod]
+    public async Task WriteAttribute_OctetString_ShouldBeWritten()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        using MemoryStream memoryStream = new();
+        using IppBinaryWriter binaryWriter = new(memoryStream);
+        var attr = new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, "test-oct", new OctetString(new byte[] { 0x01, 0x02 }));
+        // Act
+        await protocol.WriteAttributeAsync(binaryWriter, attr, null, Encoding.ASCII);
+        // Assert
+        memoryStream.ToArray().Should().Equal(
+            0x30, 0x00, 0x08, 0x74, 0x65, 0x73, 0x74, 0x2D, 0x6F, 0x63, 0x74, 0x00, 0x02, 0x01, 0x02);
+    }
+
+    [TestMethod]
+    public async Task WriteAttribute_OctetString_NoValue_ShouldBeWritten()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        using MemoryStream memoryStream = new();
+        using IppBinaryWriter binaryWriter = new(memoryStream);
+        var attr = new IppAttribute(Tag.NoValue, "test-oct", default(OctetString));
+        // Act
+        await protocol.WriteAttributeAsync(binaryWriter, attr, null, Encoding.ASCII);
+        // Assert
+        memoryStream.ToArray().Should().Equal(
+            0x13, 0x00, 0x08, 0x74, 0x65, 0x73, 0x74, 0x2D, 0x6F, 0x63, 0x74, 0x00, 0x00);
     }
 
     [TestMethod]

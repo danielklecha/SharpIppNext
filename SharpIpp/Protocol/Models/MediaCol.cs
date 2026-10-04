@@ -1,4 +1,4 @@
-using SharpIpp.Mapping;
+﻿using SharpIpp.Mapping;
 
 namespace SharpIpp.Protocol.Models;
 
@@ -42,7 +42,7 @@ public class MediaCol : IIppCollection
     /// text(255)
     /// </summary>
     [IppAttribute("media-info", Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? MediaInfo { get; set; }
+    public StringWithLanguage? MediaInfo { get; set; }
 
     /// <summary>
     /// type2 keyword | name(MAX)

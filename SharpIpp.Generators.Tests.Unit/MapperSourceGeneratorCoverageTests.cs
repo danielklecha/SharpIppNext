@@ -171,24 +171,24 @@ public partial class MapperSourceGeneratorTests
 
             namespace TestNamespace
             {
-                public struct SyntheticSmartEnum : ISmartEnum
+                public struct SyntheticSmartEnum : IKeywordEnum
                 {
                     public string Value { get; set; }
                     public SyntheticSmartEnum(string val) => Value = val;
                     public override string ToString() => Value;
                 }
 
-                public class SyntheticClassSmartEnum : ISmartEnum
+                public class SyntheticClassSmartEnum : IKeywordEnum
                 {
                     public string Value => "class-smart";
                     public override string ToString() => Value;
                 }
 
-                public struct SyntheticMarkedSmartEnum : IMarkedSmartEnum
+                public struct SyntheticMarkedSmartEnum : IKeywordOrNameEnum
                 {
                     public string Value { get; set; }
-                    public bool IsMarked { get; set; }
-                    public SyntheticMarkedSmartEnum(string val, bool isMarked) { Value = val; IsMarked = isMarked; }
+                    public bool IsKeyword { get; set; }
+                    public SyntheticMarkedSmartEnum(string val, bool isKeyword) { Value = val; IsKeyword = isKeyword; }
                     public override string ToString() => Value;
                 }
 
@@ -282,31 +282,31 @@ public partial class MapperSourceGeneratorTests
                 Completed = 9
             }
 
-            public struct SyntheticSmartEnum : ISmartEnum
+            public struct SyntheticSmartEnum : IKeywordEnum
             {
                 public string Value { get; set; }
                 public SyntheticSmartEnum(string val) => Value = val;
                 public override string ToString() => Value;
             }
 
-            public class SyntheticClassSmartEnum : ISmartEnum
+            public class SyntheticClassSmartEnum : IKeywordEnum
             {
                 public string Value => "class-smart";
                 public override string ToString() => Value;
             }
 
-            public struct SyntheticMarkedSmartEnum : IMarkedSmartEnum
+            public struct SyntheticMarkedSmartEnum : IKeywordOrNameEnum
             {
                 public string Value { get; set; }
-                public bool IsMarked { get; set; }
-                public SyntheticMarkedSmartEnum(string val, bool isMarked) { Value = val; IsMarked = isMarked; }
+                public bool IsKeyword { get; set; }
+                public SyntheticMarkedSmartEnum(string val, bool isKeyword) { Value = val; IsKeyword = isKeyword; }
                 public override string ToString() => Value;
             }
 
-            public class SyntheticClassMarkedSmartEnum : IMarkedSmartEnum
+            public class SyntheticClassMarkedSmartEnum : IKeywordOrNameEnum
             {
                 public string Value => "class-marked";
-                public bool IsMarked => true;
+                public bool IsKeyword => true;
                 public override string ToString() => Value;
             }
 
@@ -396,6 +396,12 @@ public partial class MapperSourceGeneratorTests
                 [IppAttribute("ipp-val-range-notag")]
                 public IppValue<SharpIpp.Protocol.Models.Range>? IppValRangeNoTag { get; set; }
 
+                [IppAttribute("ipp-val-lang-arr")]
+                public IppValue<StringWithLanguage[]>? IppValLangArr { get; set; }
+
+                [IppAttribute("ipp-val-single-lang")]
+                public IppValue<StringWithLanguage>? IppValSingleLang { get; set; }
+
                 [IppAttribute("finishings-arr")]
                 public Finishings[]? FinishingsArr { get; set; }
 
@@ -410,6 +416,9 @@ public partial class MapperSourceGeneratorTests
 
                 [IppAttribute("lang-arr")]
                 public StringWithLanguage[]? LangArr { get; set; }
+
+                [IppAttribute("lang-nonnull")]
+                public StringWithLanguage LangNonNull { get; set; }
 
                 [IppAttribute("dict-arr")]
                 public IDictionary<string, IppAttribute[]>[]? DictArr { get; set; }
@@ -510,6 +519,9 @@ public partial class MapperSourceGeneratorTests
         modelMappers.Should().Contain("ReadTestNamespace_SyntheticIppValueModel");
         modelMappers.Should().Contain("WriteTestNamespace_SyntheticIppValueModel");
         modelMappers.Should().Contain("global::SharpIpp.Protocol.Models.Finishings.None");
+        modelMappers.Should().Contain("val_IppValLangArr.Value.Select(x => new IppAttribute(x.ToIppTag(global::SharpIpp.Protocol.Models.Tag.NameWithoutLanguage), \"ipp-val-lang-arr\", x))");
+        modelMappers.Should().Contain("new IppAttribute(val_IppValSingleLang.Value.ToIppTag(global::SharpIpp.Protocol.Models.Tag.NameWithoutLanguage), \"ipp-val-single-lang\", val_IppValSingleLang.Value)");
+        modelMappers.Should().Contain("new IppAttribute(src.LangNonNull.ToIppTag(global::SharpIpp.Protocol.Models.Tag.NameWithoutLanguage), \"lang-nonnull\", src.LangNonNull)");
     }
 
     [TestMethod]
@@ -747,7 +759,7 @@ public partial class MapperSourceGeneratorTests
                     public override string ToString() => Text;
                 }
 
-                public class SyntheticClassSmartEnum : ISmartEnum
+                public class SyntheticClassSmartEnum : IKeywordEnum
                 {
                     public string Value => "class-smart";
                     public override string ToString() => Value;
@@ -1003,5 +1015,49 @@ public partial class MapperSourceGeneratorTests
         var generator = new MapperSourceGenerator();
         GeneratorDriver driver = CSharpGeneratorDriver.Create(generator);
         driver.RunGeneratorsAndUpdateCompilation(comp, out _, out _);
+    }
+
+    [TestMethod]
+    public void StringWithLanguage_Variants_ShouldGenerateCorrectReadAndWriteMapping()
+    {
+        var source = """
+            using SharpIpp.Mapping;
+            using SharpIpp.Protocol.Models;
+
+            namespace TestNamespace;
+
+            public class StringWithLanguageModel
+            {
+                [IppAttribute("nullable-swl")]
+                public StringWithLanguage? NullableSwl { get; set; }
+
+                [IppAttribute("nonnull-swl")]
+                public StringWithLanguage NonNullSwl { get; set; }
+
+                [IppAttribute("ipp-val-swl")]
+                public IppValue<StringWithLanguage>? IppValSwl { get; set; }
+
+                [IppAttribute("ipp-val-swl-arr")]
+                public IppValue<StringWithLanguage[]>? IppValSwlArr { get; set; }
+
+                [IppAttribute("swl-arr")]
+                public StringWithLanguage[]? SwlArr { get; set; }
+            }
+            """;
+
+        var (outputCompilation, generatedTrees, diagnostics) = RunGenerator(source);
+        diagnostics.Should().BeEmpty();
+        var modelMappers = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedModelMappers.g.cs"))?.ToString();
+        modelMappers.Should().NotBeNull();
+
+        // Verify read mappings
+        modelMappers.Should().Contain("dst.NullableSwl = default(global::SharpIpp.Protocol.Models.StringWithLanguage);");
+        modelMappers.Should().Contain("dst.NonNullSwl = default(global::SharpIpp.Protocol.Models.StringWithLanguage);");
+        modelMappers.Should().Contain("dst.IppValSwlArr = new global::SharpIpp.Protocol.Models.IppValue<global::SharpIpp.Protocol.Models.StringWithLanguage[]>(arr_IppValSwlArr);");
+
+        // Verify write mappings
+        modelMappers.Should().Contain("dst.Add(new IppAttribute(val_IppValSwl.Value.ToIppTag(global::SharpIpp.Protocol.Models.Tag.NameWithoutLanguage), \"ipp-val-swl\", val_IppValSwl.Value));");
+        modelMappers.Should().Contain("dst.AddRange(val_IppValSwlArr.Value.Select(x => new IppAttribute(x.ToIppTag(global::SharpIpp.Protocol.Models.Tag.NameWithoutLanguage), \"ipp-val-swl-arr\", x)));");
+        modelMappers.Should().Contain("dst.Add(new IppAttribute(src.NonNullSwl.ToIppTag(global::SharpIpp.Protocol.Models.Tag.NameWithoutLanguage), \"nonnull-swl\", src.NonNullSwl));");
     }
 }

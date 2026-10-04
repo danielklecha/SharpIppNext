@@ -1,4 +1,4 @@
-using SharpIpp.Mapping;
+﻿using SharpIpp.Mapping;
 
 namespace SharpIpp.Protocol.Models;
 
@@ -18,7 +18,7 @@ public class SystemConfiguredPrinter : IIppCollection
     public IppValue<int>? PrinterId { get; set; }
 
     [IppAttribute(IppAttributeNames.PrinterInfo, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? PrinterInfo { get; set; }
+    public StringWithLanguage? PrinterInfo { get; set; }
 
     public IppValue<bool>? PrinterIsAcceptingJobs { get; set; }
     public IppValue<string>? PrinterName { get; set; }

@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Finishing Reference Edge for finishing operations.
 /// See: PWG 5100.1-2022 Section 5.2
 /// </summary>
-public readonly record struct FinishingReferenceEdge(string Value) : ISmartEnum 
+public readonly record struct FinishingReferenceEdge(string Value) : IKeywordEnum 
 {
     /// <summary>
     /// The bottom edge of the media sheet is the reference edge for finishing.

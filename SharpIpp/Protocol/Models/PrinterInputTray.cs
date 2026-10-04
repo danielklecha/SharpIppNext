@@ -1,4 +1,4 @@
-using SharpIpp.Mapping;
+﻿using SharpIpp.Mapping;
 
 namespace SharpIpp.Protocol.Models;
 
@@ -54,7 +54,7 @@ public class PrinterInputTray : IIppCollection
     /// See: PWG 5100.13-2023 Section 6.6.9
     /// </summary>
     [IppAttribute("media-info", Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? MediaInfo { get; set; }
+    public StringWithLanguage? MediaInfo { get; set; }
 
     /// <summary>
     /// media-type — type of media in the tray (keyword | name).

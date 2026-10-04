@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the <c>input-content-type</c> member attribute.
 /// See: PWG 5100.15-2013 Section 7.1.1.6
 /// </summary>
-public readonly record struct InputContentType(string Value, bool IsMarked = true) : IMarkedSmartEnum
+public readonly record struct InputContentType(string Value, bool IsKeyword = true) : IKeywordOrNameEnum
 {
     /// <summary>
     /// The scanner automatically selects the content type optimization.
@@ -47,6 +47,7 @@ public readonly record struct InputContentType(string Value, bool IsMarked = tru
     /// See: PWG 5100.15-2013 Section 7.1.1.6
     /// </summary>
     public static readonly InputContentType TextAndPhoto = new("text-and-photo");
+
 
     public override string ToString() => Value;
     public static implicit operator string(InputContentType value) => value.Value;

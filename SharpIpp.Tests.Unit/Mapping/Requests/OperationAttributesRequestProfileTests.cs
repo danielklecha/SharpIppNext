@@ -366,9 +366,9 @@ public class OperationAttributesRequestProfileTests
         // Assert
         dst.Should().Contain(x => x.Name == IppAttributeNames.DestinationAccesses && x.Tag == Tag.BegCollection);
         dst.Should().Contain(x => x.Tag == Tag.MemberAttrName && (string)x.Value == "access-user-name");
-        dst.Should().Contain(x => x.Tag == Tag.NameWithoutLanguage && (string)x.Value == "scan-user");
+        dst.Should().Contain(x => x.Tag == Tag.NameWithoutLanguage && x.Value.Equals("scan-user"));
         dst.Should().Contain(x => x.Tag == Tag.MemberAttrName && (string)x.Value == "access-password");
-        dst.Should().Contain(x => x.Tag == Tag.TextWithoutLanguage && (string)x.Value == "secret");
+        dst.Should().Contain(x => x.Tag == Tag.TextWithoutLanguage && x.Value.Equals("secret"));
     }
 
     [TestMethod]

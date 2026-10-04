@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,7 +8,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the media-recycled member attribute of the media-col collection, indicating whether the media contains recycled content.
 /// See: PWG 5101.1
 /// </summary>
-public readonly record struct MediaRecycled(string Value) : ISmartEnum 
+public readonly record struct MediaRecycled(string Value) : IKeywordEnum 
 {
     /// <summary>
     /// The media contains no recycled content.

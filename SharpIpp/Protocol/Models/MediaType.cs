@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the media-type attribute.
 /// See: PWG 5101.1
 /// </summary>
-public readonly record struct MediaType(string Value) : ISmartEnum 
+public readonly record struct MediaType(string Value) : IKeywordEnum 
 {
     /// <summary>
     /// Standard office stationery (plain paper).

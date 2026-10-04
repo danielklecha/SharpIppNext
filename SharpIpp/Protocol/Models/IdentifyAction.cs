@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// The <c>identify-actions</c> keyword values.
 /// See: PWG 5100.13-2023 Section 6.8.4
 /// </summary>
-public readonly record struct IdentifyAction(string Value) : ISmartEnum 
+public readonly record struct IdentifyAction(string Value) : IKeywordEnum 
 {
     /// <summary>
     /// The Printer displays a visual indication on its control panel or display.

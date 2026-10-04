@@ -15,19 +15,19 @@ public class ClientInfo : IIppCollection
     /// name(127)
     /// </summary>
     [IppAttribute(Tag = Tag.NameWithoutLanguage)]
-    public IppValue<string>? ClientName { get; set; }
+    public StringWithLanguage? ClientName { get; set; }
 
     /// <summary>
     /// text(255) | no-value
     /// </summary>
     [IppAttribute(Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? ClientPatches { get; set; }
+    public StringWithLanguage? ClientPatches { get; set; }
 
     /// <summary>
     /// text(127)
     /// </summary>
     [IppAttribute(Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? ClientStringVersion { get; set; }
+    public StringWithLanguage? ClientStringVersion { get; set; }
 
     /// <summary>
     /// type2 enum
@@ -39,5 +39,5 @@ public class ClientInfo : IIppCollection
     /// octetString(64) | no-value
     /// </summary>
     [IppAttribute(Tag = Tag.OctetStringWithAnUnspecifiedFormat)]
-    public IppValue<OctetString>? ClientVersion { get; set; }
+    public OctetString? ClientVersion { get; set; }
 }

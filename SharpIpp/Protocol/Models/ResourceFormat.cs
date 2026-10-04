@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Identifies the format of the resource.
 /// See: PWG 5100.22-2025 Section 6.2.2
 /// </summary>
-public readonly record struct ResourceFormat(string Value) : ISmartEnum
+public readonly record struct ResourceFormat(string Value) : IKeywordEnum
 {
     public override string ToString() => Value;
     public static implicit operator string(ResourceFormat bin) => bin.Value;

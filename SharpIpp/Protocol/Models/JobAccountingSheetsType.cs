@@ -4,8 +4,9 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the <c>job-accounting-sheets-type</c> member attribute values.
 /// See: PWG 5100.3-2023 Section 5.2.6.1
 /// </summary>
-public readonly record struct JobAccountingSheetsType(string Value) : ISmartEnum
+public readonly record struct JobAccountingSheetsType(string Value, bool IsKeyword = true) : IKeywordOrNameEnum
 {
+
     /// <summary>'none': Suppress printing of accounting sheets.</summary>
     public static readonly JobAccountingSheetsType None = new("none");
     /// <summary>'standard': Use the standard site accounting sheets.</summary>

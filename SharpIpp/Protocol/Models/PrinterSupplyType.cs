@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the printer supply type.
 /// See: PWG 5100.13-2023 Section 6.6.11
 /// </summary>
-public readonly record struct PrinterSupplyType(string Value) : ISmartEnum
+public readonly record struct PrinterSupplyType(string Value) : IKeywordEnum
 {
     public static readonly PrinterSupplyType Other = new("other");
     public static readonly PrinterSupplyType Unknown = new("unknown");

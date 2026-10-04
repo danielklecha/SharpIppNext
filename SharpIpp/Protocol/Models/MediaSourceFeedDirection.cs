@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the feed direction of the media source.
 /// See: PWG 5100.1-2022 Section 5.3.3
 /// </summary>
-public readonly record struct MediaSourceFeedDirection(string Value) : ISmartEnum 
+public readonly record struct MediaSourceFeedDirection(string Value) : IKeywordEnum 
 {
     /// <summary>
     /// Media is fed long-edge first.

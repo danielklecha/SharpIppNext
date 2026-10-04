@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using SharpIpp.Mapping;
 using SharpIpp.Protocol;
 
@@ -57,7 +57,7 @@ public class JobStatusAttributes
     /// </summary>
     /// <code>job-name</code>
     [IppAttribute(IppAttributeNames.JobName, Tag.NameWithoutLanguage)]
-    public IppValue<string>? JobName { get; set; }
+    public StringWithLanguage? JobName { get; set; }
 
     /// <summary>
     /// This REQUIRED attribute contains the name of the end user that
@@ -68,7 +68,7 @@ public class JobStatusAttributes
     /// </summary>
     /// <code>job-originating-user-name</code>
     [IppAttribute(IppAttributeNames.JobOriginatingUserName, Tag.NameWithoutLanguage)]
-    public IppValue<string>? JobOriginatingUserName { get; set; }
+    public StringWithLanguage? JobOriginatingUserName { get; set; }
 
     /// <summary>
     /// This REQUIRED attribute identifies the current state of the job.
@@ -99,7 +99,7 @@ public class JobStatusAttributes
     /// </summary>
     /// <code>job-state-message</code>
     [IppAttribute(IppAttributeNames.JobStateMessage, Tag.TextWithoutLanguage)]
-    public IppValue<string>? JobStateMessage { get; set; }
+    public StringWithLanguage? JobStateMessage { get; set; }
 
     /// <summary>
     /// This job attribute specifies the number of impressions completed for
@@ -208,7 +208,7 @@ public class JobStatusAttributes
     /// </summary>
     /// <code>output-device-assigned</code>
     [IppAttribute(IppAttributeNames.OutputDeviceAssigned, Tag.NameWithoutLanguage)]
-    public IppValue<string>? OutputDeviceAssigned { get; set; }
+    public StringWithLanguage? OutputDeviceAssigned { get; set; }
 
     /// <summary>
     /// This REQUIRED Job Description attribute indicates the amount of time

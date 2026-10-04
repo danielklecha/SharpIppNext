@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies whether the Printer's Page Description Language (PDL) override is supported.
 /// See: RFC 8011 Section 5.4.28
 /// </summary>
-public readonly record struct PdlOverride(string Value) : ISmartEnum 
+public readonly record struct PdlOverride(string Value) : IKeywordEnum 
 {
     /// <summary>
     /// The Printer attempts to override PDL instructions with IPP attribute values.

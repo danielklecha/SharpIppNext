@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the <c>resource-type</c> attribute.
 /// See: PWG 5100.22-2025 Section 7.9.11
 /// </summary>
-public readonly record struct ResourceType(string Value, bool IsMarked = true) : IMarkedSmartEnum
+public readonly record struct ResourceType(string Value) : IKeywordEnum
 {
     /// <summary>
     /// A static font resource (e.g., a TrueType or OpenType font file).

@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the <c>job-error-sheet-when</c> member values.
 /// See: PWG 5100.3-2023 Section 5.2.9.2
 /// </summary>
-public readonly record struct JobErrorSheetWhen(string Value) : ISmartEnum 
+public readonly record struct JobErrorSheetWhen(string Value) : IKeywordEnum 
 {
     /// <summary>
     /// An error sheet is always printed at the end of the job.

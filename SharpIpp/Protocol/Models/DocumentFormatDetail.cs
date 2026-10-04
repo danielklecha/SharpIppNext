@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace SharpIpp.Protocol.Models;
 
@@ -6,7 +6,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the member names for <code>document-format-details</code>.
 /// See: PWG 5100.7-2023 Section 6.1.2
 /// </summary>
-public readonly record struct DocumentFormatDetail(string Value, bool IsMarked = true) : IMarkedSmartEnum
+public readonly record struct DocumentFormatDetail(string Value) : IKeywordEnum
 {
     /// <summary>
     /// The document-format member.

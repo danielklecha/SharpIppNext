@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the x-image-position.
 /// See: PWG 5100.3-2023 Section 5.2.17
 /// </summary>
-public readonly record struct XImagePosition(string Value) : ISmartEnum 
+public readonly record struct XImagePosition(string Value) : IKeywordEnum 
 {
     /// <summary>The image is centered horizontally on the media. See: PWG 5100.3-2023 Section 5.2.17</summary>
     public static readonly XImagePosition Center = new("center");

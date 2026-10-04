@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies attribute names for <code>resource-settable-attributes-supported</code>.
 /// See: PWG 5100.22-2025 Section 7.2.40
 /// </summary>
-public readonly record struct ResourceSettableAttribute(string Value, bool IsMarked = true) : IMarkedSmartEnum
+public readonly record struct ResourceSettableAttribute(string Value) : IKeywordEnum
 {
     /// <summary>The resource-info attribute. See: PWG 5100.22-2025 Section 7.2.40</summary>
     public static readonly ResourceSettableAttribute ResourceInfo = new("resource-info");

@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the <c>page-order-received</c> Job/Document Template attribute values.
 /// See: PWG 5100.5-2024 Section 6.3 and PWG 5100.3-2001.
 /// </summary>
-public readonly record struct PageOrderReceived(string Value) : ISmartEnum
+public readonly record struct PageOrderReceived(string Value) : IKeywordEnum
 {
     /// <summary>
     /// Pages are received in 1-to-N order (first page first).

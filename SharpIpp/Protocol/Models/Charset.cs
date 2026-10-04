@@ -1,9 +1,9 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Identifies the charset (coded character set and encoding method).
 /// </summary>
-public readonly record struct Charset(string Value) : ISmartEnum
+public readonly record struct Charset(string Value) : IKeywordEnum
 {
     /// <summary>
     /// UTF-8 encoding.

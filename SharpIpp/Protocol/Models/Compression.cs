@@ -1,11 +1,11 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// This REQUIRED Printer attribute identifies the set of supported
 /// compression algorithms for document data.
 /// See: RFC 2911 Section 4.4.32
 /// </summary>
-public readonly record struct Compression(string Value) : ISmartEnum 
+public readonly record struct Compression(string Value) : IKeywordEnum 
 {
     /// <summary>
     /// no compression is used.

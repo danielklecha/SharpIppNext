@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies known keyword values for <c>pdf-versions-supported</c>.
 /// See: PWG 5100.13-2023 Section 6.5.5
 /// </summary>
-public readonly record struct PdfVersion(string Value) : ISmartEnum 
+public readonly record struct PdfVersion(string Value) : IKeywordEnum 
 {
     /// <summary>No specific PDF version is required. See: PWG 5100.13-2023 Section 6.5.5</summary>
     public static readonly PdfVersion None = new("none");

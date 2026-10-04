@@ -1,4 +1,4 @@
-using SharpIpp.Mapping;
+﻿using SharpIpp.Mapping;
 using SharpIpp.Protocol;
 using System;
 using SharpIpp.Validation;
@@ -49,21 +49,21 @@ public class PrinterDescriptionAttributes
     /// See: RFC 8011 Section 5.4.4
     /// </summary>
     [IppAttribute(IppAttributeNames.PrinterName, Tag.NameWithoutLanguage)]
-    public IppValue<string>? PrinterName { get; set; }
+    public StringWithLanguage? PrinterName { get; set; }
 
     /// <summary>
     /// printer-location
     /// See: RFC 8011 Section 5.4.5
     /// </summary>
     [IppAttribute(IppAttributeNames.PrinterLocation, Tag.TextWithoutLanguage)]
-    public IppValue<string>? PrinterLocation { get; set; }
+    public StringWithLanguage? PrinterLocation { get; set; }
 
     /// <summary>
     /// printer-info
     /// See: RFC 8011 Section 5.4.6
     /// </summary>
     [IppAttribute(IppAttributeNames.PrinterInfo, Tag.TextWithoutLanguage)]
-    public IppValue<string>? PrinterInfo { get; set; }
+    public StringWithLanguage? PrinterInfo { get; set; }
 
     /// <summary>
     /// printer-more-info
@@ -84,7 +84,7 @@ public class PrinterDescriptionAttributes
     /// See: RFC 8011 Section 5.4.9
     /// </summary>
     [IppAttribute(IppAttributeNames.PrinterMakeAndModel, Tag.TextWithoutLanguage)]
-    public IppValue<string>? PrinterMakeAndModel { get; set; }
+    public StringWithLanguage? PrinterMakeAndModel { get; set; }
 
     /// <summary>
     /// printer-more-info-manufacturer
@@ -112,7 +112,7 @@ public class PrinterDescriptionAttributes
     /// See: RFC 8011 Section 5.4.13
     /// </summary>
     [IppAttribute(IppAttributeNames.PrinterStateMessage, Tag.TextWithoutLanguage)]
-    public IppValue<string>? PrinterStateMessage { get; set; }
+    public StringWithLanguage? PrinterStateMessage { get; set; }
 
     /// <summary>
     /// printer-state-change-time
@@ -308,7 +308,7 @@ public class PrinterDescriptionAttributes
     /// See: RFC 8011 Section 5.4.25
     /// </summary>
     [IppAttribute(IppAttributeNames.PrinterMessageFromOperator, Tag.TextWithoutLanguage)]
-    public IppValue<string>? PrinterMessageFromOperator { get; set; }
+    public StringWithLanguage? PrinterMessageFromOperator { get; set; }
 
     /// <summary>
     /// color-supported
@@ -1022,7 +1022,7 @@ public class PrinterDescriptionAttributes
     /// See: PWG 5100.7-2023 Section 6.9.7
     /// </summary>
     [IppAttribute(IppAttributeNames.JobAccountIdDefault, Tag.NameWithoutLanguage)]
-    public IppValue<string>? JobAccountIdDefault { get; set; }
+    public StringWithLanguage? JobAccountIdDefault { get; set; }
 
     /// <summary>
     /// job-account-id-supported
@@ -1036,7 +1036,7 @@ public class PrinterDescriptionAttributes
     /// See: PWG 5100.7-2023 Section 6.9.9
     /// </summary>
     [IppAttribute(IppAttributeNames.JobAccountingUserIdDefault, Tag.NameWithoutLanguage)]
-    public IppValue<string>? JobAccountingUserIdDefault { get; set; }
+    public StringWithLanguage? JobAccountingUserIdDefault { get; set; }
 
     /// <summary>
     /// job-accounting-user-id-supported
@@ -1728,7 +1728,7 @@ public class PrinterDescriptionAttributes
     /// See: PWG 5100.11-2024
     /// </summary>
     [IppAttribute(IppAttributeNames.PrinterChargeInfo, Tag.TextWithoutLanguage)]
-    public IppValue<string>? PrinterChargeInfo { get; set; }
+    public StringWithLanguage? PrinterChargeInfo { get; set; }
 
     /// <summary>
     /// printer-charge-info-uri
@@ -2087,7 +2087,7 @@ public class PrinterDescriptionAttributes
     /// See: PWG 5107.2-2010 Section 5.2
     /// </summary>
     [IppAttribute(IppAttributeNames.PrinterDeviceId, Tag.TextWithoutLanguage)]
-    public IppValue<string>? PrinterDeviceId { get; set; }
+    public StringWithLanguage? PrinterDeviceId { get; set; }
 
     /// <summary>
     /// platform-temperature-default

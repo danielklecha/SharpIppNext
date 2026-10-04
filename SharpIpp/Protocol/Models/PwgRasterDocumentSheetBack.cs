@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the <c>pwg-raster-document-sheet-back</c> attribute.
 /// See: PWG 5102.4-2012 Section 10.2
 /// </summary>
-public readonly record struct PwgRasterDocumentSheetBack(string Value, bool IsMarked = true) : IMarkedSmartEnum
+public readonly record struct PwgRasterDocumentSheetBack(string Value) : IKeywordEnum
 {
     /// <summary>
     /// Backside coordinate system is the same as the frontside coordinate system.

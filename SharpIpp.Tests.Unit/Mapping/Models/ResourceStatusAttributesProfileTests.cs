@@ -36,7 +36,7 @@ public void Map_Dictionary_To_ResourceStatusAttributes_ShouldMapResourceUuidAndT
 
             // Assert
             result.ResourceId.Should().Be(55);
-            result.ResourceUuid!.Value.Value.Value.Should().BeEquivalentTo(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 });
+            result.ResourceUuid!.Value.Value.Should().BeEquivalentTo(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 });
             result.TimeAtCanceled.Should().Be(8);
             result.TimeAtCreation.Should().Be(16);
             result.TimeAtInstalled.Should().Be(24);

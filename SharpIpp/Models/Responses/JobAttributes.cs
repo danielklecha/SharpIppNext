@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using SharpIpp.Protocol.Models;
 using System.Collections.Generic;
 using SharpIpp.Mapping;
@@ -46,7 +46,7 @@ public class JobAttributes
     /// </summary>
     /// <code>job-state-message</code>
     [IppAttribute(IppAttributeNames.JobStateMessage, Tag.TextWithoutLanguage)]
-    public IppValue<string>? JobStateMessage { get; set; }
+    public StringWithLanguage? JobStateMessage { get; set; }
     /// <summary>
     /// The number-of-intervening-jobs IPP attribute.
     /// See: pwg5100.7-2023 Section 6.1.1

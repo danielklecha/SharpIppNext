@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the job spooling behavior.
 /// See: PWG 5100.1-2022 Section 6.11
 /// </summary>
-public readonly record struct JobSpooling(string Value) : ISmartEnum 
+public readonly record struct JobSpooling(string Value) : IKeywordEnum 
 {
     /// <summary>
     /// The Printer spools the entire job before processing it.

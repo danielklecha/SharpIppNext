@@ -19,10 +19,10 @@ internal class ModelPropertyInfo
     public bool IsCollectionArray { get; set; }
     public bool IsStructuredString { get; set; }
     public bool IsStructuredStringArray { get; set; }
-    public bool IsMarkedSmartEnum { get; set; }
-    public bool IsMarkedSmartEnumArray { get; set; }
-    public bool IsSmartEnum { get; set; }
-    public bool IsSmartEnumArray { get; set; }
+    public bool IsKeywordOrNameEnum { get; set; }
+    public bool IsKeywordOrNameEnumArray { get; set; }
+    public bool IsKeywordEnum { get; set; }
+    public bool IsKeywordEnumArray { get; set; }
     public bool IsEnum { get; set; }
     public bool IsEnumArray { get; set; }
     public bool IsString { get; set; }

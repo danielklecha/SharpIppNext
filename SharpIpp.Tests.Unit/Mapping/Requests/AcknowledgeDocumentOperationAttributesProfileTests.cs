@@ -34,11 +34,11 @@ public class AcknowledgeDocumentOperationAttributesProfileTests : MapperTestBase
 
         // Assert
         attrs.Should().Contain(a => a.Name == IppAttributeNames.PrinterUri && a.Tag == Tag.Uri && (string)a.Value == "ipp://127.0.0.1/printers/printer1");
-        attrs.Should().Contain(a => a.Name == IppAttributeNames.RequestingUserName && a.Tag == Tag.NameWithoutLanguage && (string)a.Value == "user");
+        attrs.Should().Contain(a => a.Name == IppAttributeNames.RequestingUserName && a.Tag == Tag.NameWithoutLanguage && a.Value.Equals("user"));
         attrs.Should().Contain(a => a.Name == IppAttributeNames.DocumentNumber && a.Tag == Tag.Integer && (int)a.Value == 2);
         attrs.Should().Contain(a => a.Name == IppAttributeNames.OutputDeviceUuid && a.Tag == Tag.Uri && (string)a.Value == "urn:uuid:123e4567-e89b-12d3-a456-426614174001");
         attrs.Should().Contain(a => a.Name == IppAttributeNames.FetchStatusCode && a.Tag == Tag.Enum && (int)a.Value == (int)IppStatusCode.ClientErrorDocumentFormatError);
-        attrs.Should().Contain(a => a.Name == IppAttributeNames.FetchStatusMessage && a.Tag == Tag.TextWithoutLanguage && (string)a.Value == "Unsupported format");
+        attrs.Should().Contain(a => a.Name == IppAttributeNames.FetchStatusMessage && a.Tag == Tag.TextWithoutLanguage && a.Value.Equals("Unsupported format"));
     }
 
     [TestMethod]

@@ -1,4 +1,4 @@
-using SharpIpp.Mapping;
+﻿using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Models;
 using System;
@@ -40,7 +40,7 @@ public class OperationAttributes
     /// </summary>
     /// <code>requesting-user-name</code>
     [IppAttribute(IppAttributeNames.RequestingUserName, Tag = Tag.NameWithoutLanguage)]
-    public IppValue<string>? RequestingUserName { get; set; }
+    public StringWithLanguage? RequestingUserName { get; set; }
 
     /// <summary>
     /// The client SHOULD supply this attribute. The Printer object MUST support this attribute. It contains the URI of the user who submitted the request.

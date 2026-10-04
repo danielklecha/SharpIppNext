@@ -1,4 +1,4 @@
-using SharpIpp.Mapping;
+﻿using SharpIpp.Mapping;
 
 namespace SharpIpp.Protocol.Models;
 
@@ -16,7 +16,7 @@ public class SystemConfiguredResource : IIppCollection
     public IppValue<int>? ResourceId { get; set; }
 
     [IppAttribute(IppAttributeNames.ResourceInfo, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? ResourceInfo { get; set; }
+    public StringWithLanguage? ResourceInfo { get; set; }
 
     public IppValue<string>? ResourceName { get; set; }
     public IppValue<ResourceState>? ResourceState { get; set; }

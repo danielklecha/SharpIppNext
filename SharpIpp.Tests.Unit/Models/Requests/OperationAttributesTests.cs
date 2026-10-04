@@ -78,7 +78,7 @@ public class OperationAttributesTests
         attributes.Should().Contain(x => x.Name == IppAttributeNames.AttributesCharset && (string)x.Value == "utf-8");
         attributes.Should().Contain(x => x.Name == IppAttributeNames.AttributesNaturalLanguage && (string)x.Value == "en-us");
         attributes.Should().Contain(x => x.Name == IppAttributeNames.PrinterUri && (string)x.Value == "ipp://printer/");
-        attributes.Should().Contain(x => x.Name == IppAttributeNames.RequestingUserName && (string)x.Value == "user");
+        attributes.Should().Contain(x => x.Name == IppAttributeNames.RequestingUserName && x.Value.Equals("user"));
     }
 
     [TestMethod]
@@ -347,7 +347,7 @@ public class OperationAttributesTests
         // Assert
         result.Should().Contain(x => x.Name == IppAttributeNames.JobIds && (int)x.Value == 10);
         result.Should().Contain(x => x.Name == IppAttributeNames.JobIds && (int)x.Value == 20);
-        result.Should().Contain(x => x.Name == IppAttributeNames.Message && (string)x.Value == "test");
+        result.Should().Contain(x => x.Name == IppAttributeNames.Message && x.Value.Equals("test"));
     }
 
     [TestMethod]
@@ -410,7 +410,7 @@ public class OperationAttributesTests
         // Assert
         result.Should().NotBeNull();
         result.Should().Contain(x => x.Name == IppAttributeNames.JobKOctets && (int)x.Value == 100);
-        result.Should().Contain(x => x.Name == IppAttributeNames.DocumentName && (string)x.Value == "test.txt");
+        result.Should().Contain(x => x.Name == IppAttributeNames.DocumentName && x.Value.Equals("test.txt"));
         result.Should().Contain(x => x.Name == IppAttributeNames.Compression && (string)x.Value == "gzip");
         result.Should().Contain(x => x.Name == IppAttributeNames.DocumentFormat && (string)x.Value == "text/plain");
         result.Should().Contain(x => x.Name == IppAttributeNames.DocumentNaturalLanguage && (string)x.Value == "en-us");

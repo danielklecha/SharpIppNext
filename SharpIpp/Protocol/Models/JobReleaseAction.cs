@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// The <c>job-release-action</c> keyword values.
 /// See: PWG 5100.11-2024 Section 5.2.4
 /// </summary>
-public readonly record struct JobReleaseAction(string Value) : ISmartEnum 
+public readonly record struct JobReleaseAction(string Value) : IKeywordEnum 
 {
     /// <summary>
     /// No release action is required; the job is released immediately.

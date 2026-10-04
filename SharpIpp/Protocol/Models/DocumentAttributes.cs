@@ -1,4 +1,4 @@
-using SharpIpp.Mapping;
+﻿using SharpIpp.Mapping;
 using System;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
@@ -40,7 +40,7 @@ public class DocumentAttributes : IIppCollection
     /// </summary>
     /// <code>document-state-message</code>
     [IppAttribute(IppAttributeNames.DocumentStateMessage, Tag.TextWithoutLanguage)]
-    public IppValue<string>? DocumentStateMessage { get; set; }
+    public StringWithLanguage? DocumentStateMessage { get; set; }
     /// <summary>
     /// The print-content-optimize IPP attribute.
     /// See: PWG 5100.7-2023 Section 6.3.3
@@ -150,7 +150,7 @@ public class DocumentAttributes : IIppCollection
     /// </summary>
     /// <code>output-device-document-state-message</code>
     [IppAttribute(IppAttributeNames.OutputDeviceDocumentStateMessage, Tag.TextWithoutLanguage)]
-    public IppValue<string>? OutputDeviceDocumentStateMessage { get; set; }
+    public StringWithLanguage? OutputDeviceDocumentStateMessage { get; set; }
 
     /// <summary>
     /// The output-device-document-state-reasons IPP attribute.
@@ -198,7 +198,7 @@ public class DocumentAttributes : IIppCollection
     /// <code>document-format-version</code>
     [Obsolete("The 'document-format-version' attribute is deprecated. See PWG 5100.7-2023 Section 6.2.1.")]
     [IppAttribute(IppAttributeNames.DocumentFormatVersion, Tag.TextWithoutLanguage)]
-    public IppValue<string>? DocumentFormatVersion { get; set; }
+    public StringWithLanguage? DocumentFormatVersion { get; set; }
 
     /// <summary>
     /// The document-format-version-detected IPP attribute.
@@ -208,7 +208,7 @@ public class DocumentAttributes : IIppCollection
     /// <code>document-format-version-detected</code>
     [Obsolete("The 'document-format-version-detected' attribute is deprecated. See PWG 5100.7-2023 Section 6.2.1.")]
     [IppAttribute(IppAttributeNames.DocumentFormatVersionDetected, Tag.TextWithoutLanguage)]
-    public IppValue<string>? DocumentFormatVersionDetected { get; set; }
+    public StringWithLanguage? DocumentFormatVersionDetected { get; set; }
 
     /// <summary>
     /// The errors-count IPP attribute.
@@ -253,14 +253,14 @@ public class DocumentAttributes : IIppCollection
     /// </summary>
     /// <code>document-message</code>
     [IppAttribute(IppAttributeNames.DocumentMessage, Tag.TextWithoutLanguage)]
-    public IppValue<string>? DocumentMessage { get; set; }
+    public StringWithLanguage? DocumentMessage { get; set; }
     /// <summary>
     /// The document-name IPP attribute.
     /// See: PWG 5100.5-2024 Section 6.1.1
     /// </summary>
     /// <code>document-name</code>
     [IppAttribute(IppAttributeNames.DocumentName, Tag.NameWithoutLanguage)]
-    public IppValue<string>? DocumentName { get; set; }
+    public StringWithLanguage? DocumentName { get; set; }
 
     /// <summary>
     /// The document-resource-ids IPP attribute.
@@ -354,7 +354,7 @@ public class DocumentAttributes : IIppCollection
     /// </summary>
     /// <code>output-device-assigned</code>
     [IppAttribute(IppAttributeNames.OutputDeviceAssigned, Tag.NameWithoutLanguage)]
-    public IppValue<string>? OutputDeviceAssigned { get; set; }
+    public StringWithLanguage? OutputDeviceAssigned { get; set; }
     /// <summary>
     /// The printer-up-time IPP attribute.
     /// See: pwg5100.13 - IPP Driver Replacement Extensions v2.0 Section 6.6.5

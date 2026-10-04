@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies attribute names for <code>job-history-attributes-configured</code> and <code>job-history-attributes-supported</code>.
 /// See: RFC 8011 Section 5.4.31
 /// </summary>
-public readonly record struct JobHistoryAttribute(string Value) : ISmartEnum
+public readonly record struct JobHistoryAttribute(string Value) : IKeywordEnum
 {
     /// <summary>The job-id attribute. See: RFC 8011 Section 5.4.31</summary>
     public static readonly JobHistoryAttribute JobId = new("job-id");

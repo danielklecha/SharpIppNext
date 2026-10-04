@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Tests.Unit.Mapping.Types;
@@ -45,23 +47,68 @@ public class ConversionOperatorMappingTests : MapperTestBase
     {
         var model = new StringWithLanguage("fr", "bonjour");
 
-        // Explicit casts in C#
-        var strVal = (string)model;
+        // Explicit and implicit casts in C#
+        var strVal = (string?)model;
         strVal.Should().Be("bonjour");
+        string? implicitStr = model;
+        implicitStr.Should().Be("bonjour");
 
         var fromStr = (StringWithLanguage)"hello";
-        fromStr.Language.Should().Be("en");
+        fromStr.Language.Should().BeNull();
         fromStr.Value.Should().Be("hello");
+        fromStr.HasLanguage.Should().BeFalse();
+
+        StringWithLanguage implicitFromStr = "hello";
+        implicitFromStr.Language.Should().BeNull();
+        implicitFromStr.Value.Should().Be("hello");
 
         // SimpleMapper round-trip
         _mapper.Map<string>(model).Should().Be("bonjour");
         var mapped = _mapper.Map<StringWithLanguage>("hello");
-        mapped.Language.Should().Be("en");
+        mapped.Language.Should().BeNull();
         mapped.Value.Should().Be("hello");
 
         // NoValue mapping
         var noVal = _mapper.Map<IppValue<StringWithLanguage>>(NoValue.Instance);
         noVal.IsValue.Should().BeFalse();
+
+        var noValNullable = _mapper.MapNullable<StringWithLanguage?>(NoValue.Instance);
+        noValNullable.HasValue.Should().BeTrue();
+        noValNullable!.Value.IsValue.Should().BeFalse();
+
+        var strNullable = _mapper.MapNullable<StringWithLanguage?>("hello");
+        strNullable.HasValue.Should().BeTrue();
+        strNullable!.Value.Value.Should().Be("hello");
+
+        // MapFromDicNullable verification without hardcoded check
+        var dictMissing = new Dictionary<string, IppAttribute[]>();
+        _mapper.MapFromDicNullable<StringWithLanguage?>(dictMissing, "key").Should().BeNull();
+
+        var dictNoValue = new Dictionary<string, IppAttribute[]>
+        {
+            { "key", new[] { new IppAttribute(Tag.NoValue, "key", NoValue.Instance) } }
+        };
+        var resNoVal = _mapper.MapFromDicNullable<StringWithLanguage?>(dictNoValue, "key");
+        resNoVal.HasValue.Should().BeTrue();
+        resNoVal!.Value.IsValue.Should().BeFalse();
+
+        var dictStr = new Dictionary<string, IppAttribute[]>
+        {
+            { "key", new[] { new IppAttribute(Tag.NameWithoutLanguage, "key", "printer-1") } }
+        };
+        var resStr = _mapper.MapFromDicNullable<StringWithLanguage?>(dictStr, "key");
+        resStr.HasValue.Should().BeTrue();
+        resStr!.Value.Value.Should().Be("printer-1");
+        resStr.Value.Language.Should().BeNull();
+
+        var dictSwl = new Dictionary<string, IppAttribute[]>
+        {
+            { "key", new[] { new IppAttribute(Tag.NameWithLanguage, "key", new StringWithLanguage("en", "printer-1")) } }
+        };
+        var resSwl = _mapper.MapFromDicNullable<StringWithLanguage?>(dictSwl, "key");
+        resSwl.HasValue.Should().BeTrue();
+        resSwl!.Value.Value.Should().Be("printer-1");
+        resSwl.Value.Language.Should().Be("en");
     }
 
     [TestMethod]
@@ -91,7 +138,7 @@ public class ConversionOperatorMappingTests : MapperTestBase
         var octet = new OctetString(bytes);
 
         // Explicit cast to string
-        var strVal = (string)octet;
+        var strVal = (string?)octet;
         strVal.Should().Be("sample-data");
 
         // Implicit cast from string and byte[]

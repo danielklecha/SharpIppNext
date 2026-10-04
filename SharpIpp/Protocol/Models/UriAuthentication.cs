@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,7 +8,7 @@ namespace SharpIpp.Protocol.Models
     /// Specifies the authentication mechanism used for the printer URI.
     /// See: RFC 8011 Section 5.4.2
     /// </summary>
-    public readonly record struct UriAuthentication(string Value) : ISmartEnum
+    public readonly record struct UriAuthentication(string Value) : IKeywordEnum
     {
         /// <summary>
         /// No authentication is used.

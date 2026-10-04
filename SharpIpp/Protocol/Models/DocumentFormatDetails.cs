@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using SharpIpp.Mapping;
 
 namespace SharpIpp.Protocol.Models;
@@ -18,23 +18,23 @@ public class DocumentFormatDetails : IIppCollection
     /// name(MAX)
     /// </summary>
     [IppAttribute(Tag = Tag.NameWithoutLanguage)]
-    public IppValue<string>? DocumentSourceApplicationName { get; set; }
+    public StringWithLanguage? DocumentSourceApplicationName { get; set; }
 
     /// <summary>
     /// text(127)
     /// </summary>
     [IppAttribute(Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? DocumentSourceApplicationVersion { get; set; }
+    public StringWithLanguage? DocumentSourceApplicationVersion { get; set; }
 
     /// <summary>
     /// name(40)
     /// </summary>
     [IppAttribute(Tag = Tag.NameWithoutLanguage)]
-    public IppValue<string>? DocumentSourceOsName { get; set; }
+    public StringWithLanguage? DocumentSourceOsName { get; set; }
 
     /// <summary>
     /// text(40)
     /// </summary>
     [IppAttribute(Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? DocumentSourceOsVersion { get; set; }
+    public StringWithLanguage? DocumentSourceOsVersion { get; set; }
 }

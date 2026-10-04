@@ -54,14 +54,14 @@ public class CreateResourceOperationAttributes : SystemOperationAttributes
     /// See: PWG 5100.22-2025 Section 7.8.2
     /// </summary>
     [IppAttribute(IppAttributeNames.ResourceName, Tag = Tag.NameWithoutLanguage)]
-    public IppValue<string>? ResourceName { get; set; }
+    public StringWithLanguage? ResourceName { get; set; }
 
     /// <summary>
     /// The <c>resource-info</c> operation attribute.
     /// See: PWG 5100.22-2025 Section 7.8.1
     /// </summary>
     [IppAttribute(IppAttributeNames.ResourceInfo, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? ResourceInfo { get; set; }
+    public StringWithLanguage? ResourceInfo { get; set; }
 }
 
 /// <summary>
@@ -131,14 +131,14 @@ public class SetResourceAttributesOperationAttributes : SystemOperationAttribute
     /// See: PWG 5100.22-2025 Section 7.8.2
     /// </summary>
     [IppAttribute(IppAttributeNames.ResourceName, Tag = Tag.NameWithoutLanguage)]
-    public IppValue<string>? ResourceName { get; set; }
+    public StringWithLanguage? ResourceName { get; set; }
 
     /// <summary>
     /// The <c>resource-info</c> operation attribute.
     /// See: PWG 5100.22-2025 Section 7.8.1
     /// </summary>
     [IppAttribute(IppAttributeNames.ResourceInfo, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? ResourceInfo { get; set; }
+    public StringWithLanguage? ResourceInfo { get; set; }
 
     /// <summary>
     /// The <c>resource-natural-language</c> operation attribute.
@@ -152,14 +152,14 @@ public class SetResourceAttributesOperationAttributes : SystemOperationAttribute
     /// See: PWG 5100.22-2025 Section 7.1.18
     /// </summary>
     [IppAttribute(IppAttributeNames.ResourcePatches, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? ResourcePatches { get; set; }
+    public StringWithLanguage? ResourcePatches { get; set; }
 
     /// <summary>
     /// The <c>resource-string-version</c> operation attribute.
     /// See: PWG 5100.22-2025 Section 7.1.21
     /// </summary>
     [IppAttribute(IppAttributeNames.ResourceStringVersion, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? ResourceStringVersion { get; set; }
+    public StringWithLanguage? ResourceStringVersion { get; set; }
 
     /// <summary>
     /// The <c>resource-type</c> operation attribute.
@@ -173,5 +173,5 @@ public class SetResourceAttributesOperationAttributes : SystemOperationAttribute
     /// See: PWG 5100.22-2025 Section 7.1.24
     /// </summary>
     [IppAttribute(IppAttributeNames.ResourceVersion, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? ResourceVersion { get; set; }
+    public StringWithLanguage? ResourceVersion { get; set; }
 }

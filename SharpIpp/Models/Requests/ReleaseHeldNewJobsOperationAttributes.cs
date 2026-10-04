@@ -16,5 +16,5 @@ public class ReleaseHeldNewJobsOperationAttributes : OperationAttributes
     /// </summary>
     /// <code>printer-message-from-operator</code>
     [IppAttribute(IppAttributeNames.PrinterMessageFromOperator, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? PrinterMessageFromOperator { get; set; }
+    public StringWithLanguage? PrinterMessageFromOperator { get; set; }
 }

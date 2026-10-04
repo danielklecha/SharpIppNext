@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the <c>multiple-object-handling</c> attribute.
 /// See: PWG 5100.21-2019 Section 8.1.4
 /// </summary>
-public readonly record struct MultipleObjectHandling(string Value, bool IsMarked = true) : IMarkedSmartEnum
+public readonly record struct MultipleObjectHandling(string Value) : IKeywordEnum
 {
     /// <summary>
     /// The Printer automatically selects the object handling method.

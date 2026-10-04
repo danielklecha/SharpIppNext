@@ -17,7 +17,7 @@ public class ScheduleJobAfterOperationAttributes : JobOperationAttributes
     /// </summary>
     /// <code>job-message-from-operator</code>
     [IppAttribute(IppAttributeNames.JobMessageFromOperator, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? JobMessageFromOperator { get; set; }
+    public StringWithLanguage? JobMessageFromOperator { get; set; }
 
     /// <summary>
     /// The client MUST supply this attribute. It specifies the job-id of the predecessor job.

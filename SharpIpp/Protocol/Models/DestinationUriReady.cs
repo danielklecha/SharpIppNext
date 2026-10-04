@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using SharpIpp.Mapping;
 
@@ -23,7 +23,7 @@ public class DestinationUriReady : IIppCollection
     public IppValue<string[]>? DestinationAttributesSupported { get; set; }
 
     [IppAttribute("destination-info", Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? DestinationInfo { get; set; }
+    public StringWithLanguage? DestinationInfo { get; set; }
 
     [IppAttribute("destination-is-directory")]
     public IppValue<bool>? DestinationIsDirectory { get; set; }
@@ -32,7 +32,7 @@ public class DestinationUriReady : IIppCollection
     public IppValue<string[]>? DestinationMandatoryAccessAttributes { get; set; }
 
     [IppAttribute("destination-name", Tag = Tag.NameWithoutLanguage)]
-    public IppValue<string>? DestinationName { get; set; }
+    public StringWithLanguage? DestinationName { get; set; }
 
     [IppAttribute("destination-oauth-scope")]
     public IppValue<OctetString[]>? DestinationOAuthScope { get; set; }

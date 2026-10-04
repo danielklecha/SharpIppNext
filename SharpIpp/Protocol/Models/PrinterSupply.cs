@@ -1,4 +1,4 @@
-using SharpIpp.Mapping;
+﻿using SharpIpp.Mapping;
 
 namespace SharpIpp.Protocol.Models;
 
@@ -42,7 +42,7 @@ public class PrinterSupply : IIppCollection
     /// See: PWG 5100.13-2023 Section 6.6.11
     /// </summary>
     [IppAttribute("marker-name", Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? MarkerName { get; set; }
+    public StringWithLanguage? MarkerName { get; set; }
 
     /// <summary>
     /// marker-type — type of marker (keyword).

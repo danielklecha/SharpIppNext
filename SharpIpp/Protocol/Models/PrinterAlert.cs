@@ -207,5 +207,8 @@ public sealed class PrinterAlert : IppStructuredString, IEquatable<PrinterAlert>
     public static explicit operator byte[](PrinterAlert alert) => Encoding.UTF8.GetBytes(alert?.ToString() ?? string.Empty);
     public static explicit operator PrinterAlert(byte[] bytes) => Parse(Encoding.UTF8.GetString(bytes));
     public static explicit operator OctetString(PrinterAlert alert) => new(alert?.ToString() ?? string.Empty);
-    public static explicit operator PrinterAlert(OctetString octet) => Parse(octet.ToString());
+    public static explicit operator PrinterAlert(OctetString octet) =>
+        !octet.IsValue || octet.Value == null
+            ? throw new FormatException("Invalid printer-alert value: no value")
+            : Parse(octet.ToString());
 }

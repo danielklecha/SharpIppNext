@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the finisher supply class.
 /// See: PWG 5100.13-2023 Section 7.3
 /// </summary>
-public readonly record struct FinisherSupplyClass(string Value) : ISmartEnum
+public readonly record struct FinisherSupplyClass(string Value) : IKeywordEnum
 {
     public static readonly FinisherSupplyClass Other = new("other");
     public static readonly FinisherSupplyClass Unknown = new("unknown");

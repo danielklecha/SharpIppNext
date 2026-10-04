@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the type of marker.
 /// See: PWG 5100.13-2023 Section 6.6.11
 /// </summary>
-public readonly record struct MarkerType(string Value) : ISmartEnum
+public readonly record struct MarkerType(string Value) : IKeywordEnum
 {
     public static readonly MarkerType Developer = new("developer");
     public static readonly MarkerType Fuser = new("fuser");

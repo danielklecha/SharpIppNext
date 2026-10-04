@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the <c>job-phone-number-scheme-supported</c> attribute.
 /// See: PWG 5100.3-2023 Section 5.3.26
 /// </summary>
-public readonly record struct JobPhoneNumberScheme(string Value) : ISmartEnum 
+public readonly record struct JobPhoneNumberScheme(string Value) : IKeywordEnum 
 {
     /// <summary>
     /// See: PWG 5100.3-2023 Section 5.3.26

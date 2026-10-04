@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies attribute names for <code>system-settable-attributes-supported</code>.
 /// See: PWG 5100.22-2025 Section 7.2.42
 /// </summary>
-public readonly record struct SystemSettableAttribute(string Value, bool IsMarked = true) : IMarkedSmartEnum
+public readonly record struct SystemSettableAttribute(string Value) : IKeywordEnum
 {
     /// <summary>The system-dns-sd-name attribute. See: PWG 5100.22-2025 Section 7.2.42</summary>
     public static readonly SystemSettableAttribute SystemDnsSdName = new("system-dns-sd-name");

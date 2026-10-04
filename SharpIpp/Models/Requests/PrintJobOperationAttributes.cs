@@ -1,4 +1,4 @@
-﻿using SharpIpp.Mapping;
+using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
@@ -26,7 +26,7 @@ public class PrintJobOperationAttributes : CreateJobOperationAttributes
     /// </summary>
     [IppAttribute(IppAttributeNames.DocumentPassword, Tag = Tag.OctetStringWithAnUnspecifiedFormat)]
     [ByteRange(1, 1023)]
-    public IppValue<OctetString>? DocumentPassword { get; set; }
+    public OctetString? DocumentPassword { get; set; }
 
     /// <summary>
     /// The client OPTIONALLY supplies this attribute.  The Printer
@@ -46,7 +46,7 @@ public class PrintJobOperationAttributes : CreateJobOperationAttributes
     /// <example>job63</example>
     /// <code>document-name</code>
     [IppAttribute(IppAttributeNames.DocumentName, Tag = Tag.NameWithoutLanguage)]
-    public IppValue<string>? DocumentName { get; set; }
+    public StringWithLanguage? DocumentName { get; set; }
     /// <summary>
     /// The client OPTIONALLY supplies this attribute.  The Printer
     /// object MUST support this attribute and the "compression-
@@ -90,5 +90,5 @@ public class PrintJobOperationAttributes : CreateJobOperationAttributes
     /// </summary>
     /// <code>document-message</code>
     [IppAttribute(IppAttributeNames.DocumentMessage, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? DocumentMessage { get; set; }
+    public StringWithLanguage? DocumentMessage { get; set; }
 }

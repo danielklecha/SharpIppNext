@@ -155,7 +155,7 @@ public class RegistryCompletenessTests : MapperTestBase
     public void AllSmartEnums_AreRegisteredInSimpleMapper()
     {
         var smartEnumTypes = SharpIppAssembly.GetTypes()
-            .Where(t => t.IsValueType && typeof(ISmartEnum).IsAssignableFrom(t))
+            .Where(t => t.IsValueType && typeof(IKeywordEnum).IsAssignableFrom(t))
             .ToList();
 
         smartEnumTypes.Should().NotBeEmpty("smart enums must exist in the assembly");

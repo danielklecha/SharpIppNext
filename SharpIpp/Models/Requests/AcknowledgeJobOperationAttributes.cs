@@ -51,5 +51,5 @@ public class AcknowledgeJobOperationAttributes : JobOperationAttributes
     /// See: PWG 5100.18-2025 Section 14.1
     /// </summary>
     [IppAttribute(IppAttributeNames.FetchStatusMessage, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? FetchStatusMessage { get; set; }
+    public StringWithLanguage? FetchStatusMessage { get; set; }
 }

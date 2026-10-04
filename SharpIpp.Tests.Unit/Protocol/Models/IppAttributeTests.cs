@@ -143,4 +143,24 @@ public class IppAttributeTests
         var attr = new IppAttribute(Tag.Integer, "test", 1);
         attr.ToString().Should().Be("(Integer) test: 1");
     }
+
+    [TestMethod]
+    public void Constructor_StringWithLanguage_PreservesTagAndValueWithoutUnwrapping()
+    {
+        var textAttr = new IppAttribute(Tag.TextWithoutLanguage, "test-text", new StringWithLanguage("fr", "bonjour"));
+        textAttr.Tag.Should().Be(Tag.TextWithoutLanguage);
+        textAttr.Value.Should().Be(new StringWithLanguage("fr", "bonjour"));
+
+        var plainTextAttr = new IppAttribute(Tag.TextWithoutLanguage, "test-text", new StringWithLanguage(null, "plain text"));
+        plainTextAttr.Tag.Should().Be(Tag.TextWithoutLanguage);
+        plainTextAttr.Value.Should().Be(new StringWithLanguage(null, "plain text"));
+
+        var nameAttr = new IppAttribute(Tag.NameWithoutLanguage, "test-name", new StringWithLanguage("de", "hallo"));
+        nameAttr.Tag.Should().Be(Tag.NameWithoutLanguage);
+        nameAttr.Value.Should().Be(new StringWithLanguage("de", "hallo"));
+
+        var explicitAttr = new IppAttribute(Tag.TextWithLanguage, "test-text", new StringWithLanguage("en", "hello"));
+        explicitAttr.Tag.Should().Be(Tag.TextWithLanguage);
+        explicitAttr.Value.Should().Be(new StringWithLanguage("en", "hello"));
+    }
 }

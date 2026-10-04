@@ -1,4 +1,4 @@
-using SharpIpp.Mapping;
+﻿using SharpIpp.Mapping;
 
 namespace SharpIpp.Protocol.Models;
 
@@ -13,7 +13,7 @@ public class PowerEventPolicy : IIppCollection
     public IppValue<int>? EventId { get; set; }
 
     [IppAttribute("event-name", Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? EventName { get; set; }
+    public StringWithLanguage? EventName { get; set; }
 
     public IppValue<PowerState>? RequestPowerState { get; set; }
 }

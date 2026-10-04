@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the <c>imposition-template</c> attribute.
 /// See: PWG 5100.3-2023 Section 5.2.4
 /// </summary>
-public readonly record struct ImpositionTemplate(string Value, bool IsMarked = true) : IMarkedSmartEnum 
+public readonly record struct ImpositionTemplate(string Value, bool IsKeyword = true) : IKeywordOrNameEnum
 {
     /// <summary>
     /// Banner imposition template.
@@ -123,6 +123,7 @@ public readonly record struct ImpositionTemplate(string Value, bool IsMarked = t
     /// See: PWG 5100.3-2023 Section 11.3
     /// </summary>
     public static readonly ImpositionTemplate SameUp4x3_2x3_5in = new("same-up_4_3_2x3.5in");
+
 
     public override string ToString() => Value;
     public static implicit operator string(ImpositionTemplate bin) => bin.Value;

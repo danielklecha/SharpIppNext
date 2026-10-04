@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models
+﻿namespace SharpIpp.Protocol.Models
 {
     /// <summary>
     /// Specifies the <c>print-base</c> attribute for 3D printing.
     /// See: PWG 5100.21-2019 Section 8.1.7
     /// </summary>
-    public readonly record struct PrintBase(string Value) : ISmartEnum
+    public readonly record struct PrintBase(string Value) : IKeywordEnum
     {
         /// <summary>No base is printed. See: PWG 5100.21-2019 Section 8.1.7</summary>
         public static readonly PrintBase None = new("none");

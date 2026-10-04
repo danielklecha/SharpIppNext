@@ -16,5 +16,5 @@ public class CancelCurrentJobOperationAttributes : JobOperationAttributes
     /// </summary>
     /// <code>job-message-from-operator</code>
     [IppAttribute(IppAttributeNames.JobMessageFromOperator, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? JobMessageFromOperator { get; set; }
+    public StringWithLanguage? JobMessageFromOperator { get; set; }
 }

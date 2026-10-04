@@ -261,12 +261,13 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
     /// The limits verified are:
     /// - textWithoutLanguage (0x41) / textWithLanguage (0x35): max 1023 octets (Section 5.1.2)
     /// - nameWithoutLanguage (0x42) / nameWithLanguage (0x36): max 255 octets (Section 5.1.3)
+    /// - language part of textWithLanguage / nameWithLanguage: max 63 octets (Section 5.1.2.2, 5.1.3.2)
     /// - keyword (0x44): max 255 octets (Section 5.1.4)
-    /// - uri (0x45): max 1023 octets (Section 5.1.5)
-    /// - uriScheme (0x46): max 255 octets (Section 5.1.6)
-    /// - charset (0x47): max 255 octets (Section 5.1.7)
-    /// - naturalLanguage (0x48): max 255 octets (Section 5.1.8)
-    /// - mimeMediaType (0x49): max 255 octets (Section 5.1.9)
+    /// - uri (0x45): max 1023 octets (Section 5.1.6)
+    /// - uriScheme (0x46): max 63 octets (Section 5.1.7)
+    /// - charset (0x47): max 63 octets (Section 5.1.8)
+    /// - naturalLanguage (0x48): max 63 octets (Section 5.1.9)
+    /// - mimeMediaType (0x49): max 255 octets (Section 5.1.10)
     ///
     /// Characters are converted to octets (bytes) using UTF-8 encoding. Too-long strings are not
     /// automatically truncated, but instead reject the request with a ClientErrorBadRequest status.
@@ -308,10 +309,26 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
                 {
                     case Tag.TextWithoutLanguage:
                         {
-                            var textStr = val.ToString() ?? string.Empty;
-                            var bytes = encoding.GetByteCount(textStr);
-                            if (bytes > 1023)
-                                throw new IppRequestException($"Attribute '{attr.Name}' of tag '{attr.Tag}' length ({bytes} octets) exceeds RFC 8011 limit of 1023 octets", request, IppStatusCode.ClientErrorBadRequest);
+                            if (val is StringWithLanguage swl)
+                            {
+                                var bytes = encoding.GetByteCount(swl.Value ?? string.Empty);
+                                if (bytes > 1023)
+                                    throw new IppRequestException($"Attribute '{attr.Name}' of tag '{attr.Tag}' length ({bytes} octets) exceeds RFC 8011 limit of 1023 octets", request, IppStatusCode.ClientErrorBadRequest);
+
+                                if (swl.HasLanguage)
+                                {
+                                    var langBytes = encoding.GetByteCount(swl.Language!);
+                                    if (langBytes > 63)
+                                        throw new IppRequestException($"Attribute '{attr.Name}' of tag '{attr.Tag}' language length ({langBytes} octets) exceeds RFC 8011 limit of 63 octets", request, IppStatusCode.ClientErrorBadRequest);
+                                }
+                            }
+                            else
+                            {
+                                var textStr = val.ToString() ?? string.Empty;
+                                var bytes = encoding.GetByteCount(textStr);
+                                if (bytes > 1023)
+                                    throw new IppRequestException($"Attribute '{attr.Name}' of tag '{attr.Tag}' length ({bytes} octets) exceeds RFC 8011 limit of 1023 octets", request, IppStatusCode.ClientErrorBadRequest);
+                            }
                         }
                         break;
 
@@ -324,8 +341,8 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
                                     throw new IppRequestException($"Attribute '{attr.Name}' of tag '{attr.Tag}' value length ({valueBytes} octets) exceeds RFC 8011 limit of 1023 octets", request, IppStatusCode.ClientErrorBadRequest);
 
                                 var langBytes = encoding.GetByteCount(textLg.Language ?? string.Empty);
-                                if (langBytes > 255)
-                                    throw new IppRequestException($"Attribute '{attr.Name}' of tag '{attr.Tag}' language length ({langBytes} octets) exceeds RFC 8011 limit of 255 octets", request, IppStatusCode.ClientErrorBadRequest);
+                                if (langBytes > 63)
+                                    throw new IppRequestException($"Attribute '{attr.Name}' of tag '{attr.Tag}' language length ({langBytes} octets) exceeds RFC 8011 limit of 63 octets", request, IppStatusCode.ClientErrorBadRequest);
                             }
                             else
                             {
@@ -339,10 +356,26 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
 
                     case Tag.NameWithoutLanguage:
                         {
-                            var nValue = val.ToString() ?? string.Empty;
-                            var nBytes = encoding.GetByteCount(nValue);
-                            if (nBytes > 255)
-                                throw new IppRequestException($"Attribute '{attr.Name}' of tag '{attr.Tag}' length ({nBytes} octets) exceeds RFC 8011 limit of 255 octets", request, IppStatusCode.ClientErrorBadRequest);
+                            if (val is StringWithLanguage swl)
+                            {
+                                var nBytes = encoding.GetByteCount(swl.Value ?? string.Empty);
+                                if (nBytes > 255)
+                                    throw new IppRequestException($"Attribute '{attr.Name}' of tag '{attr.Tag}' length ({nBytes} octets) exceeds RFC 8011 limit of 255 octets", request, IppStatusCode.ClientErrorBadRequest);
+
+                                if (swl.HasLanguage)
+                                {
+                                    var langBytes = encoding.GetByteCount(swl.Language!);
+                                    if (langBytes > 63)
+                                        throw new IppRequestException($"Attribute '{attr.Name}' of tag '{attr.Tag}' language length ({langBytes} octets) exceeds RFC 8011 limit of 63 octets", request, IppStatusCode.ClientErrorBadRequest);
+                                }
+                            }
+                            else
+                            {
+                                var nValue = val.ToString() ?? string.Empty;
+                                var nBytes = encoding.GetByteCount(nValue);
+                                if (nBytes > 255)
+                                    throw new IppRequestException($"Attribute '{attr.Name}' of tag '{attr.Tag}' length ({nBytes} octets) exceeds RFC 8011 limit of 255 octets", request, IppStatusCode.ClientErrorBadRequest);
+                            }
                         }
                         break;
 
@@ -355,8 +388,8 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
                                     throw new IppRequestException($"Attribute '{attr.Name}' of tag '{attr.Tag}' value length ({swlValueBytes} octets) exceeds RFC 8011 limit of 255 octets", request, IppStatusCode.ClientErrorBadRequest);
 
                                 var swlLangBytes = encoding.GetByteCount(swl.Language ?? string.Empty);
-                                if (swlLangBytes > 255)
-                                    throw new IppRequestException($"Attribute '{attr.Name}' of tag '{attr.Tag}' language length ({swlLangBytes} octets) exceeds RFC 8011 limit of 255 octets", request, IppStatusCode.ClientErrorBadRequest);
+                                if (swlLangBytes > 63)
+                                    throw new IppRequestException($"Attribute '{attr.Name}' of tag '{attr.Tag}' language length ({swlLangBytes} octets) exceeds RFC 8011 limit of 63 octets", request, IppStatusCode.ClientErrorBadRequest);
                             }
                             else
                             {
@@ -368,10 +401,21 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
                         }
                         break;
 
-                    case Tag.Keyword:
                     case Tag.UriScheme:
                     case Tag.Charset:
                     case Tag.NaturalLanguage:
+                        {
+                            var valStr = val.ToString();
+                            if (valStr != null)
+                            {
+                                var strBytes = encoding.GetByteCount(valStr);
+                                if (strBytes > 63)
+                                    throw new IppRequestException($"Attribute '{attr.Name}' of tag '{attr.Tag}' length ({strBytes} octets) exceeds RFC 8011 limit of 63 octets", request, IppStatusCode.ClientErrorBadRequest);
+                            }
+                        }
+                        break;
+
+                    case Tag.Keyword:
                     case Tag.MimeMediaType:
                         {
                             var valStr = val.ToString();
@@ -744,7 +788,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
 
         var isKeyword = outputBin.Tag == Tag.Keyword;
         var isSupported = outputBinSupported.Any(x =>
-            x.IsMarked == isKeyword &&
+            x.IsKeyword == isKeyword &&
             string.Equals(x.Value, value, StringComparison.Ordinal));
 
         if (isSupported)

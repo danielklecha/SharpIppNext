@@ -1,4 +1,4 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the events that can be subscribed to for notifications.
@@ -7,7 +7,7 @@ namespace SharpIpp.Protocol.Models;
 /// See: PWG 5100.18-2025 Section 9.4
 /// See: PWG 5100.22-2025 Section 9.2
 /// </summary>
-public readonly record struct NotifyEvent(string Value, bool IsMarked = true) : IMarkedSmartEnum
+public readonly record struct NotifyEvent(string Value) : IKeywordEnum
 {
     // Job events (RFC 3995)
 

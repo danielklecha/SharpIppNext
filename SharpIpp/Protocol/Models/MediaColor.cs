@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the media-color attribute.
 /// See: PWG 5101.1
 /// </summary>
-public readonly record struct MediaColor(string Value) : ISmartEnum 
+public readonly record struct MediaColor(string Value) : IKeywordEnum 
 {
     /// <summary>
     /// White media.

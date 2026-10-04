@@ -13,7 +13,7 @@ public class OperationAttributes
     /// </summary>
     /// <code>status-message</code>
     [IppAttribute(IppAttributeNames.StatusMessage, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? StatusMessage { get; set; }
+    public StringWithLanguage? StatusMessage { get; set; }
 
     /// <summary>
     /// The Printer object OPTIONALLY returns this attribute. It contains additional detailed and technical information about the operation
@@ -22,7 +22,7 @@ public class OperationAttributes
     /// </summary>
     /// <code>detailed-status-message</code>
     [IppAttribute(IppAttributeNames.DetailedStatusMessage, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? DetailedStatusMessage { get; set; }
+    public StringWithLanguage? DetailedStatusMessage { get; set; }
 
     /// <summary>
     /// The Printer object OPTIONALLY returns this attribute. It provides additional information about each document access error encountered by the Printer in a Print-URI or Send-URI operation
@@ -32,7 +32,7 @@ public class OperationAttributes
     /// </summary>
     /// <code>document-access-error</code>
     [IppAttribute(IppAttributeNames.DocumentAccessError, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? DocumentAccessError { get; set; }
+    public StringWithLanguage? DocumentAccessError { get; set; }
 
     /// <summary>
     /// The Printer object MUST return this attribute. It identifies the charset used by any 'name' and 'text' attributes that the Printer object is returning in this response. Defaults to "utf-8"

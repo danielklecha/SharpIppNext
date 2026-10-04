@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// The <c>print-rendering-intent</c> keyword values.
 /// See: PWG 5100.13-2023 Section 6.2.4
 /// </summary>
-public readonly record struct PrintRenderingIntent(string Value) : ISmartEnum 
+public readonly record struct PrintRenderingIntent(string Value) : IKeywordEnum 
 {
     /// <summary>
     /// Absolute colorimetric rendering intent; colors outside the gamut are clipped.

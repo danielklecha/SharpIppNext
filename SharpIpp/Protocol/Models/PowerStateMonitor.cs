@@ -1,4 +1,4 @@
-using SharpIpp.Mapping;
+﻿using SharpIpp.Mapping;
 
 namespace SharpIpp.Protocol.Models;
 
@@ -17,7 +17,7 @@ public class PowerStateMonitor : IIppCollection
     public IppValue<PowerState>? PowerState { get; set; }
 
     [IppAttribute("power-state-message", Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? PowerStateMessage { get; set; }
+    public StringWithLanguage? PowerStateMessage { get; set; }
 
     public IppValue<bool>? PowerUsageIsRmsWatts { get; set; }
     public IppValue<PowerState[]>? ValidRequestPowerStates { get; set; }

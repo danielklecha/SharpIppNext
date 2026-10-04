@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies when Media Sheets are baled.
 /// See: PWG 5100.1-2022 Section 5.2.1.2
 /// </summary>
-public readonly record struct BalingWhen(string Value) : ISmartEnum 
+public readonly record struct BalingWhen(string Value) : IKeywordEnum 
 {
     /// <summary>
     /// Baling occurs after the entire job is complete.

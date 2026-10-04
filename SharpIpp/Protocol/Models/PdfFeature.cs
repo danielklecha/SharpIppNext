@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies known values for <code>pdf-features-supported</code>.
 /// See: PWG 5100.21-2019 Section 8.3.22
 /// </summary>
-public readonly record struct PdfFeature(string Value, bool IsMarked = true) : IMarkedSmartEnum
+public readonly record struct PdfFeature(string Value) : IKeywordEnum
 {
     /// <summary>
     /// The Printer supports PDF annotation features.

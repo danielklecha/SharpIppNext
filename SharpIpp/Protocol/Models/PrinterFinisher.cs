@@ -17,14 +17,14 @@ public class PrinterFinisher : IppStructuredString, IEquatable<PrinterFinisher>
 
     public FinisherType? Type
     {
-        get => GetSmartEnum("type", s => new FinisherType(s));
-        set => SetSmartEnum("type", value);
+        get => GetKeywordEnum("type", s => new FinisherType(s));
+        set => SetKeywordEnum("type", value);
     }
 
     public CapacityUnit? Unit
     {
-        get => GetSmartEnum("unit", s => new CapacityUnit(s));
-        set => SetSmartEnum("unit", value);
+        get => GetKeywordEnum("unit", s => new CapacityUnit(s));
+        set => SetKeywordEnum("unit", value);
     }
 
     public int? MaxCapacity
@@ -41,8 +41,8 @@ public class PrinterFinisher : IppStructuredString, IEquatable<PrinterFinisher>
 
     public PresentOnOff? PresentOnOff
     {
-        get => GetSmartEnum("presentonoff", s => new PresentOnOff(s));
-        set => SetSmartEnum("presentonoff", value);
+        get => GetKeywordEnum("presentonoff", s => new PresentOnOff(s));
+        set => SetKeywordEnum("presentonoff", value);
     }
 
     public int? Status
@@ -185,5 +185,8 @@ public class PrinterFinisher : IppStructuredString, IEquatable<PrinterFinisher>
     public static explicit operator byte[](PrinterFinisher finisher) => Encoding.UTF8.GetBytes(finisher?.ToString() ?? string.Empty);
     public static explicit operator PrinterFinisher(byte[] bytes) => Parse(Encoding.UTF8.GetString(bytes));
     public static explicit operator OctetString(PrinterFinisher finisher) => new(finisher?.ToString() ?? string.Empty);
-    public static explicit operator PrinterFinisher(OctetString octet) => Parse(octet.ToString());
+    public static explicit operator PrinterFinisher(OctetString octet) =>
+        !octet.IsValue || octet.Value == null
+            ? throw new FormatException("Invalid printer-finisher value: no value")
+            : Parse(octet.ToString());
 }

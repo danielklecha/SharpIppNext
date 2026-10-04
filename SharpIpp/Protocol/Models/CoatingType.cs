@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the type of coating.
 /// See: PWG 5100.1-2022 Section 5.2.3.2
 /// </summary>
-public readonly record struct CoatingType(string Value, bool IsMarked = true) : IMarkedSmartEnum
+public readonly record struct CoatingType(string Value, bool IsKeyword = true) : IKeywordOrNameEnum
 {
     /// <summary>
     /// Archival-quality coating.
@@ -65,6 +65,7 @@ public readonly record struct CoatingType(string Value, bool IsMarked = true) : 
     /// See: PWG 5100.1-2022 Section 5.2.3.2
     /// </summary>
     public static readonly CoatingType WaterResistant = new("water-resistant");
+
 
     public override string ToString() => Value;
     public static implicit operator string(CoatingType bin) => bin.Value;

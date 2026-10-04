@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the supported member attribute names for <code>destination-uris</code>.
 /// See: PWG 5100.15-2013 Section 7.4.5
 /// </summary>
-public readonly record struct DestinationUrisMember(string Value, bool IsMarked = true) : IMarkedSmartEnum
+public readonly record struct DestinationUrisMember(string Value) : IKeywordEnum
 {
     /// <summary>
     /// The URI of the destination (fax, scan, email, etc.).

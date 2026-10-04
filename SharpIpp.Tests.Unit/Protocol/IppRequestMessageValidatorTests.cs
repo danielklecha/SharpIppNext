@@ -2680,15 +2680,30 @@ public class IppRequestMessageValidatorTests
         var request = CreateBasicRequest(IppOperation.PrintJob);
         request.Document = new MemoryStream();
 
-        // 256 octets exceeds 255 limit
-        var longLanguage = new string('e', 256);
+        // 64 octets exceeds 63 limit
+        var longLanguage = new string('e', 64);
         request.JobAttributes.Add(new IppAttribute(Tag.TextWithLanguage, "some-text", new StringWithLanguage(longLanguage, "valid text")));
 
         Action act = () => validator.Validate(request);
 
         act.Should().Throw<IppRequestException>()
-            .WithMessage("Attribute 'some-text' of tag 'TextWithLanguage' language length (256 octets) exceeds RFC 8011 limit of 255 octets")
+            .WithMessage("Attribute 'some-text' of tag 'TextWithLanguage' language length (64 octets) exceeds RFC 8011 limit of 63 octets")
             .Which.StatusCode.Should().Be(IppStatusCode.ClientErrorBadRequest);
+    }
+
+    [TestMethod]
+    public void Validate_StringLengthLimits_TextWithLanguage_WhenLanguageAt63Octets_Passes()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+
+        var maxLanguage = new string('e', 63);
+        request.JobAttributes.Add(new IppAttribute(Tag.TextWithLanguage, "some-text", new StringWithLanguage(maxLanguage, "valid text")));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().NotThrow();
     }
 
     [TestMethod]
@@ -2744,15 +2759,282 @@ public class IppRequestMessageValidatorTests
         var request = CreateBasicRequest(IppOperation.PrintJob);
         request.Document = new MemoryStream();
 
-        // 256 octets exceeds 255 limit
-        var longLanguage = new string('e', 256);
+        // 64 octets exceeds 63 limit
+        var longLanguage = new string('e', 64);
         request.JobAttributes.Add(new IppAttribute(Tag.NameWithLanguage, "some-name", new StringWithLanguage(longLanguage, "valid name")));
 
         Action act = () => validator.Validate(request);
 
         act.Should().Throw<IppRequestException>()
-            .WithMessage("Attribute 'some-name' of tag 'NameWithLanguage' language length (256 octets) exceeds RFC 8011 limit of 255 octets")
+            .WithMessage("Attribute 'some-name' of tag 'NameWithLanguage' language length (64 octets) exceeds RFC 8011 limit of 63 octets")
             .Which.StatusCode.Should().Be(IppStatusCode.ClientErrorBadRequest);
+    }
+
+    [TestMethod]
+    public void Validate_StringLengthLimits_NameWithLanguage_WhenLanguageAt63Octets_Passes()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+
+        var maxLanguage = new string('e', 63);
+        request.JobAttributes.Add(new IppAttribute(Tag.NameWithLanguage, "some-name", new StringWithLanguage(maxLanguage, "valid name")));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_StringLengthLimits_TextWithoutLanguage_WithStringWithLanguageTooLongLanguage_Throws()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+
+        var longLanguage = new string('e', 64);
+        request.JobAttributes.Add(new IppAttribute(Tag.TextWithoutLanguage, "some-text", new StringWithLanguage(longLanguage, "valid text")));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("Attribute 'some-text' of tag 'TextWithoutLanguage' language length (64 octets) exceeds RFC 8011 limit of 63 octets")
+            .Which.StatusCode.Should().Be(IppStatusCode.ClientErrorBadRequest);
+    }
+
+    [TestMethod]
+    public void Validate_StringLengthLimits_TextWithoutLanguage_WithStringWithLanguageWhenValueTooLong_Throws()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+
+        // 1024 octets exceeds 1023 limit
+        var longValue = new string('a', 1024);
+        request.JobAttributes.Add(new IppAttribute(Tag.TextWithoutLanguage, "some-text", new StringWithLanguage("en", longValue)));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("Attribute 'some-text' of tag 'TextWithoutLanguage' length (1024 octets) exceeds RFC 8011 limit of 1023 octets")
+            .Which.StatusCode.Should().Be(IppStatusCode.ClientErrorBadRequest);
+    }
+
+    [TestMethod]
+    public void Validate_StringLengthLimits_TextWithoutLanguage_WithStringWithLanguageWhenLanguageAt63Octets_Passes()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+
+        var maxLanguage = new string('e', 63);
+        request.JobAttributes.Add(new IppAttribute(Tag.TextWithoutLanguage, "some-text", new StringWithLanguage(maxLanguage, "valid text")));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_StringLengthLimits_TextWithoutLanguage_WithStringWithLanguage_WithValidValues_DoesNotThrow()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+
+        request.JobAttributes.Add(new IppAttribute(Tag.TextWithoutLanguage, "some-text", new StringWithLanguage("en", "valid text")));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_StringLengthLimits_TextWithoutLanguage_WithStringWithLanguage_WithoutLanguage_DoesNotThrow()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+
+        request.JobAttributes.Add(new IppAttribute(Tag.TextWithoutLanguage, "some-text", new StringWithLanguage(null, "valid text")));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_StringLengthLimits_NameWithoutLanguage_WithStringWithLanguageTooLongLanguage_Throws()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+
+        var longLanguage = new string('e', 64);
+        request.JobAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, "some-name", new StringWithLanguage(longLanguage, "valid name")));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("Attribute 'some-name' of tag 'NameWithoutLanguage' language length (64 octets) exceeds RFC 8011 limit of 63 octets")
+            .Which.StatusCode.Should().Be(IppStatusCode.ClientErrorBadRequest);
+    }
+
+    [TestMethod]
+    public void Validate_StringLengthLimits_NameWithoutLanguage_WithStringWithLanguageWhenValueTooLong_Throws()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+
+        // 256 octets exceeds 255 limit
+        var longValue = new string('a', 256);
+        request.JobAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, "some-name", new StringWithLanguage("en", longValue)));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("Attribute 'some-name' of tag 'NameWithoutLanguage' length (256 octets) exceeds RFC 8011 limit of 255 octets")
+            .Which.StatusCode.Should().Be(IppStatusCode.ClientErrorBadRequest);
+    }
+
+    [TestMethod]
+    public void Validate_StringLengthLimits_NameWithoutLanguage_WithStringWithLanguageWhenLanguageAt63Octets_Passes()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+
+        var maxLanguage = new string('e', 63);
+        request.JobAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, "some-name", new StringWithLanguage(maxLanguage, "valid name")));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_StringLengthLimits_NameWithoutLanguage_WithStringWithLanguage_WithValidValues_DoesNotThrow()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+
+        request.JobAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, "some-name", new StringWithLanguage("en", "valid name")));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_StringLengthLimits_NameWithoutLanguage_WithStringWithLanguage_WithoutLanguage_DoesNotThrow()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+
+        request.JobAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, "some-name", new StringWithLanguage(null, "valid name")));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_StringLengthLimits_NaturalLanguage_WhenTooLong_Throws()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+
+        var longLanguage = new string('e', 64);
+        request.JobAttributes.Add(new IppAttribute(Tag.NaturalLanguage, "document-natural-language", longLanguage));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("Attribute 'document-natural-language' of tag 'NaturalLanguage' length (64 octets) exceeds RFC 8011 limit of 63 octets")
+            .Which.StatusCode.Should().Be(IppStatusCode.ClientErrorBadRequest);
+    }
+
+    [TestMethod]
+    public void Validate_StringLengthLimits_NaturalLanguage_WhenAt63Octets_Passes()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+
+        var maxLanguage = new string('e', 63);
+        request.JobAttributes.Add(new IppAttribute(Tag.NaturalLanguage, "document-natural-language", maxLanguage));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_StringLengthLimits_UriScheme_WhenTooLong_Throws()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+
+        var longScheme = new string('a', 64);
+        request.JobAttributes.Add(new IppAttribute(Tag.UriScheme, "notify-schemes-supported", longScheme));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("Attribute 'notify-schemes-supported' of tag 'UriScheme' length (64 octets) exceeds RFC 8011 limit of 63 octets")
+            .Which.StatusCode.Should().Be(IppStatusCode.ClientErrorBadRequest);
+    }
+
+    [TestMethod]
+    public void Validate_StringLengthLimits_UriScheme_WhenAt63Octets_Passes()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+
+        var maxScheme = new string('a', 63);
+        request.JobAttributes.Add(new IppAttribute(Tag.UriScheme, "notify-schemes-supported", maxScheme));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_StringLengthLimits_Charset_WhenTooLong_Throws()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+
+        var longCharset = new string('u', 64);
+        request.JobAttributes.Add(new IppAttribute(Tag.Charset, "document-charset", longCharset));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("Attribute 'document-charset' of tag 'Charset' length (64 octets) exceeds RFC 8011 limit of 63 octets")
+            .Which.StatusCode.Should().Be(IppStatusCode.ClientErrorBadRequest);
+    }
+
+    [TestMethod]
+    public void Validate_StringLengthLimits_Charset_WhenAt63Octets_Passes()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+
+        var maxCharset = new string('u', 63);
+        request.JobAttributes.Add(new IppAttribute(Tag.Charset, "document-charset", maxCharset));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().NotThrow();
     }
 
     [TestMethod]
@@ -3225,6 +3507,72 @@ public class IppRequestMessageValidatorTests
         var request = CreateBasicRequest(IppOperation.PrintJob);
         request.Document = new MemoryStream();
         request.JobAttributes.Add(new IppAttribute(Tag.TextWithLanguage, "some-text", new StringWithLanguage("en", null!)));
+        Action act = () => validator.Validate(request);
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_StringLengthLimits_TextWithoutLanguage_NonNullValueNullLanguage_DoesNotThrow()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+        request.JobAttributes.Add(new IppAttribute(Tag.TextWithoutLanguage, "some-text", new StringWithLanguage(null!, "valid text")));
+        Action act = () => validator.Validate(request);
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_StringLengthLimits_TextWithoutLanguage_NullValueNonNullLanguage_DoesNotThrow()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+        request.JobAttributes.Add(new IppAttribute(Tag.TextWithoutLanguage, "some-text", new StringWithLanguage("en", null!)));
+        Action act = () => validator.Validate(request);
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_StringLengthLimits_TextWithoutLanguage_DefaultStringWithLanguage_DoesNotThrow()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+        request.JobAttributes.Add(new IppAttribute(Tag.TextWithoutLanguage, "some-text", new StringWithLanguage()));
+        Action act = () => validator.Validate(request);
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_StringLengthLimits_NameWithoutLanguage_NonNullValueNullLanguage_DoesNotThrow()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+        request.JobAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, "some-name", new StringWithLanguage(null!, "valid name")));
+        Action act = () => validator.Validate(request);
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_StringLengthLimits_NameWithoutLanguage_NullValueNonNullLanguage_DoesNotThrow()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+        request.JobAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, "some-name", new StringWithLanguage("en", null!)));
+        Action act = () => validator.Validate(request);
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_StringLengthLimits_NameWithoutLanguage_DefaultStringWithLanguage_DoesNotThrow()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+        request.JobAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, "some-name", new StringWithLanguage()));
         Action act = () => validator.Validate(request);
         act.Should().NotThrow();
     }

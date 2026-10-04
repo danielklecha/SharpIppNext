@@ -30,12 +30,13 @@ public class ByteRangeAttribute : IppValidationAttribute
 
     public override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
+        if (value is INoValue { IsValue: false })
+        {
+            return ValidationResult.Success;
+        }
+
         if (value is IIppValue ippValue)
         {
-            if (!ippValue.IsValue)
-            {
-                return ValidationResult.Success;
-            }
             value = ippValue.ValueAsObject;
         }
 
@@ -50,12 +51,13 @@ public class ByteRangeAttribute : IppValidationAttribute
 
     private ValidationResult ValidateRecursive(object value, Encoding encoding, ValidationContext validationContext)
     {
+        if (value is INoValue { IsValue: false })
+        {
+            return ValidationResult.Success;
+        }
+
         if (value is IIppValue ippValue)
         {
-            if (!ippValue.IsValue)
-            {
-                return ValidationResult.Success;
-            }
             value = ippValue.ValueAsObject!;
             if (value == null)
             {

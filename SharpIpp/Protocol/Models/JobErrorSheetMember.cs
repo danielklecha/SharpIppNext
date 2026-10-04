@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies member attribute names supported by <code>job-error-sheet-supported</code>.
 /// See: PWG 5100.3-2023 Section 5.3.21
 /// </summary>
-public readonly record struct JobErrorSheetMember(string Value) : ISmartEnum 
+public readonly record struct JobErrorSheetMember(string Value) : IKeywordEnum 
 {
     /// <summary>The job-error-sheet-type member attribute. See: PWG 5100.3-2023 Section 5.3.21</summary>
     public static readonly JobErrorSheetMember JobErrorSheetType = new("job-error-sheet-type");

@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies which printers should be returned.
 /// See: PWG 5100.22-2025 Section 7.1.27
 /// </summary>
-public readonly record struct WhichPrinters(string Value, bool IsMarked = true) : IMarkedSmartEnum
+public readonly record struct WhichPrinters(string Value) : IKeywordEnum
 {
     /// <summary>
     /// Return all printers regardless of state.

@@ -5,7 +5,7 @@ namespace SharpIpp.Protocol.Models;
 /// See: PWG 5101.1
 /// See: RFC 8011 Section 5.2.11
 /// </summary>
-public readonly record struct Media(string Value, bool IsMarked = true) : IMarkedSmartEnum
+public readonly record struct Media(string Value, bool IsKeyword = true) : IKeywordOrNameEnum
 {
     /// <summary>
     /// The Printer selects the media from the available choices.
@@ -72,6 +72,7 @@ public readonly record struct Media(string Value, bool IsMarked = true) : IMarke
     /// See: PWG 5101.1
     /// </summary>
     public static readonly Media ChoiceIsoA4210x297mmNaLetter85x11in = new("choice_iso_a4_210x297mm_na_letter_8.5x11in");
+
 
     public override string ToString() => Value;
     public static implicit operator string(Media bin) => bin.Value;

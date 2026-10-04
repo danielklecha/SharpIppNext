@@ -157,7 +157,13 @@ public partial class IppProtocol
 
     private static async Task WriteAsync(OctetString value, IppBinaryWriter stream, CancellationToken cancellationToken = default)
     {
-        await WriteAsync(value.Value, stream, cancellationToken).ConfigureAwait(false);
+        if (!value.IsValue)
+        {
+            await WriteAsync(NoValue.Instance, stream, cancellationToken).ConfigureAwait(false);
+            return;
+        }
+
+        await WriteAsync(value.Value ?? Array.Empty<byte>(), stream, cancellationToken).ConfigureAwait(false);
     }
 
     private static async Task<OctetString> ReadOctetStringAsync(IppBinaryReader stream, CancellationToken cancellationToken = default)
@@ -198,9 +204,9 @@ public partial class IppProtocol
         return new Resolution(width, height, (ResolutionUnit)units);
     }
 
-    public static async Task WriteAsync(string value, IppBinaryWriter stream, Encoding? encoding, CancellationToken cancellationToken = default)
+    public static async Task WriteAsync(string? value, IppBinaryWriter stream, Encoding? encoding, CancellationToken cancellationToken = default)
     {
-        var bytes = (encoding ?? Encoding.ASCII).GetBytes(value);
+        var bytes = (encoding ?? Encoding.ASCII).GetBytes(value ?? string.Empty);
         await stream.WriteBigEndianAsync((short)bytes.Length, cancellationToken).ConfigureAwait(false);
         await stream.WriteAsync(bytes, cancellationToken).ConfigureAwait(false);
     }
@@ -298,11 +304,23 @@ public partial class IppProtocol
 
     private static async Task WriteAsync(StringWithLanguage value, IppBinaryWriter stream, Encoding? encoding, CancellationToken cancellationToken = default)
     {
-        var languageBytes = Encoding.ASCII.GetBytes(value.Language);
-        var valueBytes = (encoding ?? Encoding.ASCII).GetBytes(value.Value);
+        if (!value.IsValue)
+        {
+            await WriteAsync(NoValue.Instance, stream, cancellationToken).ConfigureAwait(false);
+            return;
+        }
+
+        if (!value.HasLanguage)
+        {
+            await WriteAsync(value.Value, stream, encoding, cancellationToken).ConfigureAwait(false);
+            return;
+        }
+
+        var languageBytes = Encoding.ASCII.GetBytes(value.Language!);
+        var valueBytes = (encoding ?? Encoding.ASCII).GetBytes(value.Value ?? string.Empty);
         await stream.WriteBigEndianAsync((short)(languageBytes.Length + valueBytes.Length + 4), cancellationToken).ConfigureAwait(false);
-        await WriteAsync(value.Language, stream, null, cancellationToken).ConfigureAwait(false);
-        await WriteAsync(value.Value, stream, encoding, cancellationToken).ConfigureAwait(false);
+        await WriteAsync(languageBytes, stream, cancellationToken).ConfigureAwait(false);
+        await WriteAsync(valueBytes, stream, cancellationToken).ConfigureAwait(false);
     }
 
     private static async Task<StringWithLanguage> ReadStringWithLanguageAsync(IppBinaryReader stream, Encoding? encoding = null, CancellationToken cancellationToken = default)

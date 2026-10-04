@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the type of laminating.
 /// See: PWG 5100.1-2022 Section 5.2.6.2
 /// </summary>
-public readonly record struct LaminatingType(string Value, bool IsMarked = true) : IMarkedSmartEnum
+public readonly record struct LaminatingType(string Value, bool IsKeyword = true) : IKeywordOrNameEnum
 {
     /// <summary>
     /// Archival-quality laminating.
@@ -65,6 +65,7 @@ public readonly record struct LaminatingType(string Value, bool IsMarked = true)
     /// See: PWG 5100.1-2022 Section 5.2.6.2
     /// </summary>
     public static readonly LaminatingType WaterResistant = new("water-resistant");
+
 
     public override string ToString() => Value;
     public static implicit operator string(LaminatingType bin) => bin.Value;

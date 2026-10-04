@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace SharpIpp.Protocol.Models
 {
@@ -11,7 +11,7 @@ namespace SharpIpp.Protocol.Models
     /// Additional values from: PWG 5100.13-2023 Section 9.1
     /// Additional values from: PWG 5100.18-2025 Sections 9.3, 4.1.6
     /// </summary>
-    public readonly record struct JobStateReason(string Value) : ISmartEnum
+    public readonly record struct JobStateReason(string Value) : IKeywordEnum
     {
         /// <summary>
         /// No job state reasons apply.

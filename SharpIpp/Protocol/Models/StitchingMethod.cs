@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the type of stitching to use.
 /// See: PWG 5100.1-2022 Section 5.2.9.3
 /// </summary>
-public readonly record struct StitchingMethod(string Value) : ISmartEnum 
+public readonly record struct StitchingMethod(string Value) : IKeywordEnum 
 {
     /// <summary>
     /// The Printer automatically selects the stitching method.

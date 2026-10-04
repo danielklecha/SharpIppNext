@@ -328,7 +328,7 @@ public partial class IppProtocol : IIppProtocol
             case Enum v:
                 await WriteAsync(Convert.ToInt32(v), stream, cancellationToken).ConfigureAwait(false);
                 break;
-            case ISmartEnum v:
+            case IKeywordEnum v:
                 await WriteAsync(v.Value, stream, encoding, cancellationToken).ConfigureAwait(false);
                 break;
             case IppVersion v:

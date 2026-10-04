@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the <c>job-storage-access</c> member attribute.
 /// See: PWG 5100.11-2024 Section 6.1.4.1
 /// </summary>
-public readonly record struct JobStorageAccess(string Value, bool IsMarked = true) : IMarkedSmartEnum
+public readonly record struct JobStorageAccess(string Value, bool IsKeyword = true) : IKeywordOrNameEnum
 {
     /// <summary>
     /// The stored job is accessible to members of the owner's group.
@@ -41,6 +41,7 @@ public readonly record struct JobStorageAccess(string Value, bool IsMarked = tru
     /// See: PWG 5100.11-2024 Section 6.1.4.1
     /// </summary>
     public static readonly JobStorageAccess UsernameAndPassword = new("username-and-password");
+
 
     public override string ToString() => Value;
     public static implicit operator string(JobStorageAccess value) => value.Value;

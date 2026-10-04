@@ -61,4 +61,13 @@ public class OctetStringProfileTests : MapperTestBase
         result.IsValue.Should().BeFalse();
         result.ValueAsObject.Should().BeNull();
     }
+
+    [TestMethod]
+    public void Map_NoValue_To_OctetString_Direct_Should_Return_NoValue()
+    {
+        var source = NoValue.Instance;
+        var result = _mapper.Map<NoValue, OctetString>(source);
+        result.IsValue.Should().BeFalse();
+        result.Value.Should().BeNull();
+    }
 }

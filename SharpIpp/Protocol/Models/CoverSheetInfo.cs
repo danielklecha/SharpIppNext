@@ -1,4 +1,4 @@
-using SharpIpp.Mapping;
+﻿using SharpIpp.Mapping;
 
 namespace SharpIpp.Protocol.Models;
 
@@ -12,16 +12,16 @@ public class CoverSheetInfo : IIppCollection
     public IppValue<string>? FromName { get; set; }
 
     [IppAttribute("logo", Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? Logo { get; set; }
+    public StringWithLanguage? Logo { get; set; }
 
     [IppAttribute("message", Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? Message { get; set; }
+    public StringWithLanguage? Message { get; set; }
 
     [IppAttribute("organization-name", Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? OrganizationName { get; set; }
+    public StringWithLanguage? OrganizationName { get; set; }
 
     [IppAttribute("subject", Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? Subject { get; set; }
+    public StringWithLanguage? Subject { get; set; }
 
     public IppValue<string>? ToName { get; set; }
 }

@@ -300,7 +300,7 @@ public class JobTemplateAttributes
     /// See: PWG 5100.7-2023 Section 6.8.1
     /// </summary>
     [IppAttribute(IppAttributeNames.JobAccountId, Tag.NameWithoutLanguage)]
-    public IppValue<string>? JobAccountId { get; set; }
+    public StringWithLanguage? JobAccountId { get; set; }
 
     /// <summary>
     /// This attribute specifies the type of value in <c>job-account-id</c>.
@@ -315,7 +315,7 @@ public class JobTemplateAttributes
     /// See: PWG 5100.7-2023 Section 6.8.2
     /// </summary>
     [IppAttribute(IppAttributeNames.JobAccountingUserId, Tag.NameWithoutLanguage)]
-    public IppValue<string>? JobAccountingUserId { get; set; }
+    public StringWithLanguage? JobAccountingUserId { get; set; }
 
     /// <summary>
     /// This attribute specifies the maximum number of seconds allowed
@@ -378,14 +378,14 @@ public class JobTemplateAttributes
     /// See: PWG 5100.7-2023 Section 6.8.10
     /// </summary>
     [IppAttribute(IppAttributeNames.JobSheetMessage, Tag.TextWithoutLanguage)]
-    public IppValue<string>? JobSheetMessage { get; set; }
+    public StringWithLanguage? JobSheetMessage { get; set; }
 
     /// <summary>
     /// This attribute specifies the output device requested for the Job.
     /// See: PWG 5100.7-2023 Section 6.3.2
     /// </summary>
     [IppAttribute(IppAttributeNames.OutputDevice, Tag.NameWithoutLanguage)]
-    public IppValue<string>? OutputDevice { get; set; }
+    public StringWithLanguage? OutputDevice { get; set; }
 
     /// <summary>
     /// This attribute specifies how the Printer should optimize the
@@ -487,7 +487,7 @@ public class JobTemplateAttributes
     /// See: PWG 5100.3-2023 Section 5.2.10
     /// </summary>
     [IppAttribute(IppAttributeNames.JobMessageToOperator, Tag.TextWithoutLanguage)]
-    public IppValue<string>? JobMessageToOperator { get; set; }
+    public StringWithLanguage? JobMessageToOperator { get; set; }
 
     /// <summary>
     /// The <c>job-phone-number</c> Job Template attribute.
@@ -501,7 +501,7 @@ public class JobTemplateAttributes
     /// See: PWG 5100.3-2023 Section 5.2.12
     /// </summary>
     [IppAttribute(IppAttributeNames.JobRecipientName, Tag.NameWithoutLanguage)]
-    public IppValue<string>? JobRecipientName { get; set; }
+    public StringWithLanguage? JobRecipientName { get; set; }
 
     /// <summary>
     /// The <c>media-input-tray-check</c> Job Template attribute.
@@ -741,7 +741,7 @@ public class JobTemplateAttributes
     /// See: PWG 5100.11-2024 Section 5.3.7
     /// </summary>
     [IppAttribute(IppAttributeNames.JobPassword, Tag.OctetStringWithAnUnspecifiedFormat)]
-    public IppValue<OctetString>? JobPassword { get; set; }
+    public OctetString? JobPassword { get; set; }
 
     /// <summary>
     /// This attribute specifies the encryption method used to encode the "job-password"

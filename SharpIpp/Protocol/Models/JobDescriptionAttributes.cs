@@ -84,7 +84,7 @@ public class JobDescriptionAttributes
         /// <example>job63</example>
         /// <code>job-name</code>
         [IppAttribute(IppAttributeNames.JobName, Tag = Tag.NameWithoutLanguage)]
-    public IppValue<string>? JobName { get; set; }
+    public StringWithLanguage? JobName { get; set; }
 
         /// <summary>
         /// This REQUIRED attribute contains the name of the end user that
@@ -99,7 +99,7 @@ public class JobDescriptionAttributes
         /// <example>anonymous (en)</example>
         /// <code>job-originating-user-name</code>
         [IppAttribute(IppAttributeNames.JobOriginatingUserName, Tag = Tag.NameWithoutLanguage)]
-    public IppValue<string>? JobOriginatingUserName { get; set; }
+    public StringWithLanguage? JobOriginatingUserName { get; set; }
 
         /// <summary>
         /// This attribute specifies the total number of octets processed in K
@@ -202,7 +202,7 @@ public class JobDescriptionAttributes
         /// See: PWG 5100.11-2024 Section 5.4.2
         /// </summary>
         [IppAttribute(IppAttributeNames.JobChargeInfo, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? JobChargeInfo { get; set; }
+    public StringWithLanguage? JobChargeInfo { get; set; }
 
         /// <summary>
         /// This attribute specifies details about the source of the Document data.
@@ -246,7 +246,7 @@ public class JobDescriptionAttributes
         /// See: RFC 8011 Section 5.3.13
         /// </summary>
         [IppAttribute(IppAttributeNames.OutputDeviceAssigned, Tag = Tag.NameWithoutLanguage)]
-    public IppValue<string>? OutputDeviceAssigned { get; set; }
+    public StringWithLanguage? OutputDeviceAssigned { get; set; }
 
         /// <summary>
         /// This job attribute specifies the media-sheets completed marking and
@@ -286,7 +286,7 @@ public class JobDescriptionAttributes
         /// <example>The job completed successfully</example>
         /// <code>job-state-message</code>
         [IppAttribute(IppAttributeNames.JobStateMessage, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? JobStateMessage { get; set; }
+    public StringWithLanguage? JobStateMessage { get; set; }
 
         /// <summary>
         /// The Printer object MUST return the Job object's REQUIRED "job-
@@ -421,7 +421,7 @@ public class JobDescriptionAttributes
         /// See: RFC 8011 Section 5.3.16
         /// </summary>
         [IppAttribute(IppAttributeNames.JobMessageFromOperator, Tag = Tag.NameWithoutLanguage)]
-    public IppValue<string>? JobMessageFromOperator { get; set; }
+    public StringWithLanguage? JobMessageFromOperator { get; set; }
 
         /// <summary>
         /// This attribute specifies the total number of pages in the Job.
@@ -893,7 +893,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>output-device-job-state-message</code>
         [IppAttribute(IppAttributeNames.OutputDeviceJobStateMessage, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? OutputDeviceJobStateMessage { get; set; }
+    public StringWithLanguage? OutputDeviceJobStateMessage { get; set; }
 
         /// <summary>
         /// The output-device-job-state-reasons attribute reports job state reasons on the output device.
@@ -1024,7 +1024,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>job-password</code>
         [IppAttribute(IppAttributeNames.JobPassword, Tag = Tag.OctetStringWithAnUnspecifiedFormat)]
-    public IppValue<OctetString>? JobPassword { get; set; }
+    public OctetString? JobPassword { get; set; }
 
         /// <summary>
         /// This attribute specifies the encryption algorithm used to encode the

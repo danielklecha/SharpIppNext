@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using SharpIpp.Mapping;
 
 namespace SharpIpp.Protocol.Models
@@ -51,14 +51,14 @@ namespace SharpIpp.Protocol.Models
         /// See: RFC 3995 Section 5.3.5
         /// </summary>
         [IppAttribute(IppAttributeNames.NotifyUserData, Tag.OctetStringWithAnUnspecifiedFormat)]
-        public IppValue<OctetString>? NotifyUserData { get; set; }
+        public OctetString? NotifyUserData { get; set; }
 
         /// <summary>
         /// notify-subscriber-user-name
         /// See: RFC 3995 Section 5.4.6
         /// </summary>
         [IppAttribute(IppAttributeNames.NotifySubscriberUserName, Tag.NameWithoutLanguage)]
-        public IppValue<string>? NotifySubscriberUserName { get; set; }
+        public StringWithLanguage? NotifySubscriberUserName { get; set; }
 
         /// <summary>
         /// notify-charset

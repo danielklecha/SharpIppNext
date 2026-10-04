@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace SharpIpp.Protocol.Models;
 
@@ -6,7 +6,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies known attribute names for <code>document-creation-attributes-supported</code>.
 /// See: PWG 5100.5-2024 Section 6.5.1
 /// </summary>
-public readonly record struct DocumentCreationAttribute(string Value) : ISmartEnum 
+public readonly record struct DocumentCreationAttribute(string Value) : IKeywordEnum 
 {
     // Operation attributes used with Send-Document and Send-URI.
     /// <summary>The compression attribute. See: PWG 5100.5-2024 Section 6.5.1</summary>

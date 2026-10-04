@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the finishing-template attribute.
 /// See: PWG 5100.1
 /// </summary>
-public readonly record struct FinishingTemplate(string Value, bool IsMarked = true) : IMarkedSmartEnum 
+public readonly record struct FinishingTemplate(string Value, bool IsKeyword = true) : IKeywordOrNameEnum
 {
     /// <summary>No finishing is applied. See: PWG 5100.1</summary>
     public static readonly FinishingTemplate None = new("none");
@@ -324,6 +324,7 @@ public readonly record struct FinishingTemplate(string Value, bool IsMarked = tr
     public static readonly FinishingTemplate JdfF64_1 = new("jdf-f64-1");
     /// <summary>JDF fold template jdf-f64-2. See: PWG 5100.1</summary>
     public static readonly FinishingTemplate JdfF64_2 = new("jdf-f64-2");
+
 
     public override string ToString() => Value;
     public static implicit operator string(FinishingTemplate bin) => bin.Value;

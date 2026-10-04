@@ -1,11 +1,11 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the <c>current-page-order</c> Document Status attribute values.
 /// See: PWG 5100.5-2024 Section 6.2
 /// See: PWG 5100.3-2023 Section 5.2.13
 /// </summary>
-public readonly record struct CurrentPageOrder(string Value) : ISmartEnum
+public readonly record struct CurrentPageOrder(string Value) : IKeywordEnum
 {
     /// <summary>
     /// Pages are in 1-to-N order (first page first).

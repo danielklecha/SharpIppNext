@@ -12,7 +12,7 @@ using SharpIpp.Protocol.Models;
 namespace SharpIpp.Tests.Unit.Mapping.Types;
 
 /// <summary>
-/// Comprehensive round-trip tests covering all ISmartEnum and IMarkedSmartEnum types.
+/// Comprehensive round-trip tests covering all IKeywordEnum and IKeywordOrNameEnum types.
 /// </summary>
 [TestClass]
 [ExcludeFromCodeCoverage]
@@ -22,7 +22,7 @@ public class AllSmartEnumsRoundTripTests : MapperTestBase
 
     private static List<Type> GetAllSmartEnumTypes() =>
         SharpIppAssembly.GetTypes()
-            .Where(t => t.IsValueType && typeof(ISmartEnum).IsAssignableFrom(t))
+            .Where(t => t.IsValueType && typeof(IKeywordEnum).IsAssignableFrom(t))
             .ToList();
 
     [TestMethod]
@@ -79,24 +79,26 @@ public class AllSmartEnumsRoundTripTests : MapperTestBase
     }
 
     [TestMethod]
-    public void MarkedSmartEnums_PreserveMarkedState()
+    public void KeywordOrNameEnums_PreserveKeywordState()
     {
-        var markedEnums = SharpIppAssembly.GetTypes()
-            .Where(t => t.IsValueType && typeof(IMarkedSmartEnum).IsAssignableFrom(t))
+        var keywordOrNameEnums = SharpIppAssembly.GetTypes()
+            .Where(t => t.IsValueType && typeof(IKeywordOrNameEnum).IsAssignableFrom(t))
             .ToList();
 
-        markedEnums.Should().NotBeEmpty();
+        keywordOrNameEnums.Should().NotBeEmpty();
 
-        foreach (var type in markedEnums)
+        foreach (var type in keywordOrNameEnums)
         {
             // Keyword tag test: constructor (string, isKeyword)
-            var keywordInst = (IMarkedSmartEnum)Activator.CreateInstance(type, "sample-kw", true)!;
-            keywordInst.IsMarked.Should().BeTrue();
+            var keywordInst = (IKeywordOrNameEnum)Activator.CreateInstance(type, "sample-kw", true)!;
+            keywordInst.IsKeyword.Should().BeTrue();
+            keywordInst.IsName().Should().BeFalse();
             keywordInst.ToIppTag().Should().Be(Tag.Keyword);
 
             // NameWithoutLanguage tag test: constructor (string, false)
-            var nameInst = (IMarkedSmartEnum)Activator.CreateInstance(type, "sample-name", false)!;
-            nameInst.IsMarked.Should().BeFalse();
+            var nameInst = (IKeywordOrNameEnum)Activator.CreateInstance(type, "sample-name", false)!;
+            nameInst.IsKeyword.Should().BeFalse();
+            nameInst.IsName().Should().BeTrue();
             nameInst.ToIppTag().Should().Be(Tag.NameWithoutLanguage);
         }
     }

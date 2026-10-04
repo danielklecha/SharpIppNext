@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies member attribute names supported by <code>insert-sheet-supported</code>.
 /// See: PWG 5100.3-2023 Section 5.3.13
 /// </summary>
-public readonly record struct InsertSheetMember(string Value) : ISmartEnum 
+public readonly record struct InsertSheetMember(string Value) : IKeywordEnum 
 {
     /// <summary>The insert-after-page-number member attribute. See: PWG 5100.3-2023 Section 5.3.13</summary>
     public static readonly InsertSheetMember InsertAfterPageNumber = new("insert-after-page-number");

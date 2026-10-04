@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Protocol.Models;
 using System;
@@ -36,8 +36,8 @@ public class IppStructuredStringTests
         public void SetUriValue(string key, Uri? val) => SetUri(key, val);
         public int? GetIntValue(string key) => GetInt(key);
         public void SetIntValue(string key, int? val) => SetInt(key, val);
-        public T? GetSmartEnumValue<T>(string key, Func<string, T> factory) where T : struct, ISmartEnum => GetSmartEnum(key, factory);
-        public void SetSmartEnumValue<T>(string key, T? val) where T : struct, ISmartEnum => SetSmartEnum(key, val);
+        public T? GetKeywordEnumValue<T>(string key, Func<string, T> factory) where T : struct, IKeywordEnum => GetKeywordEnum(key, factory);
+        public void SetKeywordEnumValue<T>(string key, T? val) where T : struct, IKeywordEnum => SetKeywordEnum(key, val);
     }
 
     [TestMethod]
@@ -329,39 +329,39 @@ public class IppStructuredStringTests
     }
 
     [TestMethod]
-    public void GetSmartEnum_WhenTypeIsIMarkedSmartEnum_ShouldUseFactory()
+    public void GetKeywordEnum_WhenTypeIsIKeywordOrNameEnum_ShouldUseFactory()
     {
         var metadata = new TestMetadata();
         metadata.SetValue("media", "iso-a4");
 
-        var result = metadata.GetSmartEnumValue("media", s => new Media(s, true));
+        var result = metadata.GetKeywordEnumValue("media", s => new Media(s, true));
 
         result.Should().NotBeNull();
         result!.Value.Value.Should().Be("iso-a4");
-        result.Value.IsMarked.Should().BeTrue();
+        result.Value.IsKeyword.Should().BeTrue();
     }
 
     [TestMethod]
-    public void GetSmartEnum_WhenTypeIsNotIMarkedSmartEnum_ShouldUseFactory()
+    public void GetKeywordEnum_WhenTypeIsNotIKeywordOrNameEnum_ShouldUseFactory()
     {
         var metadata = new TestMetadata();
         metadata.SetValue("charset", "utf-8");
 
-        var result = metadata.GetSmartEnumValue("charset", s => new Charset(s));
+        var result = metadata.GetKeywordEnumValue("charset", s => new Charset(s));
 
         result.Should().NotBeNull();
         result!.Value.Value.Should().Be("utf-8");
     }
 
     [TestMethod]
-    public void SetSmartEnum_WhenValueIsNull_ShouldRemoveKey()
+    public void SetKeywordEnum_WhenValueIsNull_ShouldRemoveKey()
     {
         // Line 140: null val branch — Dictionary.Remove(key)
         var metadata = new TestMetadata();
-        metadata.SetSmartEnumValue<Charset>("charset", new Charset("utf-8"));
+        metadata.SetKeywordEnumValue<Charset>("charset", new Charset("utf-8"));
         metadata.GetValue("charset").Should().Be("utf-8");
 
-        metadata.SetSmartEnumValue<Charset>("charset", null);
+        metadata.SetKeywordEnumValue<Charset>("charset", null);
         metadata.GetValue("charset").Should().BeNull();
     }
 

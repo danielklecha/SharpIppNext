@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the configured time source for the System object.
 /// See: PWG 5100.22-2025 Section 7.3.26
 /// </summary>
-public readonly record struct SystemTimeSourceConfigured(string Value, bool IsMarked = true) : IMarkedSmartEnum
+public readonly record struct SystemTimeSourceConfigured(string Value) : IKeywordEnum
 {
     /// <summary>No time source is configured. See: PWG 5100.22-2025 Section 7.3.26</summary>
     public static readonly SystemTimeSourceConfigured None = new("none");

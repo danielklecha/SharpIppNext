@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the y-image-position.
 /// See: PWG 5100.3-2023 Section 5.2.21
 /// </summary>
-public readonly record struct YImagePosition(string Value) : ISmartEnum 
+public readonly record struct YImagePosition(string Value) : IKeywordEnum 
 {
     /// <summary>The image is centered vertically on the media. See: PWG 5100.3-2023 Section 5.2.21</summary>
     public static readonly YImagePosition Center = new("center");

@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies attribute names for <code>printer-requested-job-attributes</code>.
 /// See: RFC 8011 Section 5.4.43
 /// </summary>
-public readonly record struct PrinterRequestedJobAttribute(string Value, bool IsMarked = true) : IMarkedSmartEnum
+public readonly record struct PrinterRequestedJobAttribute(string Value) : IKeywordEnum
 {
     /// <summary>The job-id attribute. See: RFC 8011 Section 5.4.43</summary>
     public static readonly PrinterRequestedJobAttribute JobId = new("job-id");

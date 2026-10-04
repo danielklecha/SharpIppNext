@@ -7,12 +7,12 @@ namespace SharpIpp.Protocol.Models;
 /// whose attribute syntax is 'name'. Output bins whose attribute syntax is 'name', if any, are
 /// assigned by local administrators.
 /// <para>
-/// Use <see cref="IsMarked"/> to distinguish keyword values (standard) from name values (locally assigned):
-/// <c>IsMarked = true</c> â†’ keyword; <c>IsMarked = false</c> â†’ nameWithoutLanguage.
+/// Use <see cref="IsKeyword"/> to distinguish keyword values (standard) from name values (locally assigned):
+/// <c>IsKeyword = true</c> â†’ keyword; <c>IsKeyword = false</c> â†’ nameWithoutLanguage.
 /// </para>
 /// See: PWG 5100.2-2001 Section 2.1
 /// </summary>
-public readonly record struct OutputBin(string Value, bool IsMarked = true) : IMarkedSmartEnum 
+public readonly record struct OutputBin(string Value, bool IsKeyword = true) : IKeywordOrNameEnum
 {
     /// <summary>
     /// The output-bin that, when facing the device, is best identified as the "top" bin
@@ -158,6 +158,7 @@ public readonly record struct OutputBin(string Value, bool IsMarked = true) : IM
     /// </summary>
     /// <param name="number">The tray number (must be greater than 0).</param>
     public static OutputBin Tray(int number) => new($"tray-{ValidatePositive(number, nameof(number))}");
+
 
     public override string ToString() => Value;
     public static implicit operator string(OutputBin bin) => bin.Value;

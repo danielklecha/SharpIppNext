@@ -244,7 +244,7 @@ public class SystemDescriptionAttributes
     /// See: PWG 5100.22-2025 Section 7.3.34
     /// </summary>
     [IppAttribute(IppAttributeNames.SystemSerialNumber, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? SystemSerialNumber { get; set; }
+    public StringWithLanguage? SystemSerialNumber { get; set; }
 
     /// <summary>
     /// <c>system-impressions-completed</c>
@@ -329,7 +329,7 @@ public class SystemDescriptionAttributes
     /// See: PWG 5100.22-2025 Section 7.3.46
     /// </summary>
     [IppAttribute(IppAttributeNames.SystemAssetTag, Tag = Tag.OctetStringWithAnUnspecifiedFormat)]
-    public IppValue<OctetString>? SystemAssetTag { get; set; }
+    public OctetString? SystemAssetTag { get; set; }
 
     /// <summary>
     /// <c>system-current-time</c>
@@ -364,35 +364,35 @@ public class SystemDescriptionAttributes
     /// See: PWG 5100.22-2025 Section 7.3.51
     /// </summary>
     [IppAttribute(IppAttributeNames.SystemInfo, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? SystemInfo { get; set; }
+    public StringWithLanguage? SystemInfo { get; set; }
 
     /// <summary>
     /// <c>system-location</c>
     /// See: PWG 5100.22-2025 Section 7.3.52
     /// </summary>
     [IppAttribute(IppAttributeNames.SystemLocation, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? SystemLocation { get; set; }
+    public StringWithLanguage? SystemLocation { get; set; }
 
     /// <summary>
     /// <c>system-make-and-model</c>
     /// See: PWG 5100.22-2025 Section 7.3.53
     /// </summary>
     [IppAttribute(IppAttributeNames.SystemMakeAndModel, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? SystemMakeAndModel { get; set; }
+    public StringWithLanguage? SystemMakeAndModel { get; set; }
 
     /// <summary>
     /// <c>system-message-from-operator</c>
     /// See: PWG 5100.22-2025 Section 7.3.54
     /// </summary>
     [IppAttribute(IppAttributeNames.SystemMessageFromOperator, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? SystemMessageFromOperator { get; set; }
+    public StringWithLanguage? SystemMessageFromOperator { get; set; }
 
     /// <summary>
     /// <c>system-name</c>
     /// See: PWG 5100.22-2025 Section 7.3.55
     /// </summary>
     [IppAttribute(IppAttributeNames.SystemName, Tag = Tag.NameWithoutLanguage)]
-    public IppValue<string>? SystemName { get; set; }
+    public StringWithLanguage? SystemName { get; set; }
 
     /// <summary>
     /// <c>system-default-printer-id</c>
@@ -407,7 +407,7 @@ public class SystemDescriptionAttributes
     /// See: PWG 5100.22-2025 Section 7.3.57
     /// </summary>
     [IppAttribute(IppAttributeNames.SystemDnsSdName, Tag = Tag.NameWithoutLanguage)]
-    public IppValue<string>? SystemDnsSdName { get; set; }
+    public StringWithLanguage? SystemDnsSdName { get; set; }
 
     /// <summary>
     /// <c>system-mandatory-printer-attributes</c>
@@ -540,7 +540,7 @@ public class SystemDescriptionAttributes
     /// See: PWG 5100.22-2025 Section 7.3.29
     /// </summary>
     [IppAttribute(IppAttributeNames.SystemStateMessage, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? SystemStateMessage { get; set; }
+    public StringWithLanguage? SystemStateMessage { get; set; }
 
     /// <summary>
     /// Time in seconds since system boot when the system state last changed.

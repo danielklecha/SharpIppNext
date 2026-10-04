@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the member names for <code>print-objects</code>.
 /// See: PWG 5100.21-2019 Section 8.3.30
 /// </summary>
-public readonly record struct PrintObjectsMember(string Value, bool IsMarked = true) : IMarkedSmartEnum
+public readonly record struct PrintObjectsMember(string Value) : IKeywordEnum
 {
     /// <summary>The print object is a document. See: PWG 5100.21-2019 Section 8.1.25</summary>
     public static readonly PrintObjectsMember Document = new("document");

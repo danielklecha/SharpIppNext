@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the <c>accuracy-units</c> member attribute.
 /// See: PWG 5100.21-2019 Section 8.1.6.1
 /// </summary>
-public readonly record struct AccuracyUnits(string Value, bool IsMarked = true) : IMarkedSmartEnum
+public readonly record struct AccuracyUnits(string Value) : IKeywordEnum
 {
     /// <summary>
     /// Accuracy measured in micrometers (Âµm).

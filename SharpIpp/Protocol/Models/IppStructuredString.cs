@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -119,13 +119,13 @@ public abstract class IppStructuredString : IEnumerable<string>, IIppStructuredS
             Dictionary[key] = val.OriginalString;
     }
 
-    protected T? GetSmartEnum<T>(string key, Func<string, T> factory) where T : struct, ISmartEnum
+    protected T? GetKeywordEnum<T>(string key, Func<string, T> factory) where T : struct, IKeywordEnum
     {
         var str = Get(key);
         return str != null ? factory(str) : null;
     }
 
-    protected void SetSmartEnum<T>(string key, T? val) where T : struct, ISmartEnum
+    protected void SetKeywordEnum<T>(string key, T? val) where T : struct, IKeywordEnum
     {
         if (val == null)
             Dictionary.Remove(key);

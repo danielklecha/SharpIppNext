@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the finisher device type.
 /// See: PWG 5100.13-2023 Section 7.1
 /// </summary>
-public readonly record struct FinisherType(string Value) : ISmartEnum
+public readonly record struct FinisherType(string Value) : IKeywordEnum
 {
     public static readonly FinisherType Other = new("other");
     public static readonly FinisherType Unknown = new("unknown");

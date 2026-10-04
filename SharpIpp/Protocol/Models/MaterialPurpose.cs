@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the <c>material-purpose</c> member attribute.
 /// See: PWG 5100.21-2019 Section 8.1.3.10
 /// </summary>
-public readonly record struct MaterialPurpose(string Value, bool IsMarked = true) : IMarkedSmartEnum
+public readonly record struct MaterialPurpose(string Value) : IKeywordEnum
 {
     /// <summary>The material is used for all purposes. See: PWG 5100.21-2019 Section 8.1.3.10</summary>
     public static readonly MaterialPurpose All = new("all");

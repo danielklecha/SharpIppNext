@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,7 +8,7 @@ namespace SharpIpp.Protocol.Models
     /// Specifies the media-coating member attribute of the media-col collection.
     /// See: PWG 5101.1
     /// </summary>
-    public readonly record struct MediaCoating(string Value) : ISmartEnum
+    public readonly record struct MediaCoating(string Value) : IKeywordEnum
     {
         /// <summary>
         /// No coating is applied to the media.

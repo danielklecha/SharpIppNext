@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies attribute names for <code>printer-creation-attributes-supported</code>.
 /// See: PWG 5100.22-2025 Section 7.2.35
 /// </summary>
-public readonly record struct PrinterCreationAttribute(string Value, bool IsMarked = true) : IMarkedSmartEnum
+public readonly record struct PrinterCreationAttribute(string Value) : IKeywordEnum
 {
     /// <summary>The printer-name attribute. See: PWG 5100.22-2025 Section 7.2.35</summary>
     public static readonly PrinterCreationAttribute PrinterName = new("printer-name");

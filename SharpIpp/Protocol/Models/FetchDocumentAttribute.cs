@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies attribute names for <code>fetch-document-attributes-supported</code>.
 /// See: PWG 5100.18-2025 Section 7.4.2
 /// </summary>
-public readonly record struct FetchDocumentAttribute(string Value) : ISmartEnum
+public readonly record struct FetchDocumentAttribute(string Value) : IKeywordEnum
 {
     /// <summary>
     /// The document-format attribute.

@@ -253,3 +253,5 @@ paket-files/
 /SharpIpp.Tests/appsettings.json
 *.bak
 /SharpIppServerExample/jobs
+/SharpIpp.Tests.Unit/coverage.json
+/SharpIpp.Generators.Tests.Unit/coverage.json

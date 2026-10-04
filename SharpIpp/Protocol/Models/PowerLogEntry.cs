@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using SharpIpp.Mapping;
 
 namespace SharpIpp.Protocol.Models;
@@ -16,5 +16,5 @@ public class PowerLogEntry : IIppCollection
     public IppValue<DateTimeOffset>? PowerStateDateTime { get; set; }
 
     [IppAttribute("power-state-message", Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? PowerStateMessage { get; set; }
+    public StringWithLanguage? PowerStateMessage { get; set; }
 }

@@ -4,7 +4,7 @@ namespace SharpIpp.Protocol.Models;
 /// Specifies the <c>input-film-scan-mode</c> member attribute.
 /// See: PWG 5100.15-2013 Section 7.1.1.8
 /// </summary>
-public readonly record struct InputFilmScanMode(string Value, bool IsMarked = true) : IMarkedSmartEnum
+public readonly record struct InputFilmScanMode(string Value, bool IsKeyword = true) : IKeywordOrNameEnum
 {
     /// <summary>
     /// The scanner captures positive film (normal photographic film).
@@ -17,6 +17,7 @@ public readonly record struct InputFilmScanMode(string Value, bool IsMarked = tr
     /// See: PWG 5100.15-2013 Section 7.1.1.8
     /// </summary>
     public static readonly InputFilmScanMode Negative = new("negative");
+
 
     public override string ToString() => Value;
     public static implicit operator string(InputFilmScanMode value) => value.Value;

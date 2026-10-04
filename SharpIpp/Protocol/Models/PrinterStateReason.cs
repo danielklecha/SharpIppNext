@@ -1,4 +1,4 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the reason for the current state of a Printer.
@@ -8,7 +8,7 @@ namespace SharpIpp.Protocol.Models;
 /// See: PWG 5100.18-2025 Section 9.5
 /// See: PWG 5100.22-2025 Section 9.3
 /// </summary>
-public readonly record struct PrinterStateReason(string Value) : ISmartEnum 
+public readonly record struct PrinterStateReason(string Value) : IKeywordEnum 
 {
     /// <summary>
     /// No printer state reasons apply.

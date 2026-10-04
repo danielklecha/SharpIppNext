@@ -1,4 +1,4 @@
-using SharpIpp.Mapping;
+﻿using SharpIpp.Mapping;
 
 namespace SharpIpp.Protocol.Models;
 
@@ -15,7 +15,7 @@ public class PowerTimeoutPolicy : IIppCollection
     public IppValue<int>? TimeoutId { get; set; }
 
     [IppAttribute("timeout-predicate", Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? TimeoutPredicate { get; set; }
+    public StringWithLanguage? TimeoutPredicate { get; set; }
 
     public IppValue<int>? TimeoutSeconds { get; set; }
 }

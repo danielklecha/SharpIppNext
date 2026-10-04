@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the type of X.509 certificate supported for an output device.
 /// See: PWG 5100.22-2025 Section 7.2.19
 /// </summary>
-public readonly record struct X509Type(string Value, bool IsMarked = true) : IMarkedSmartEnum
+public readonly record struct X509Type(string Value) : IKeywordEnum
 {
     /// <summary>An internal X.509 certificate. See: PWG 5100.22-2025 Section 7.2.14</summary>
     public static readonly X509Type Internal = new("internal");

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,7 +8,7 @@ namespace SharpIpp.Protocol.Models
     /// Specifies the URI scheme used for printer URIs.
     /// See: RFC 8011 Section 5.1.7
     /// </summary>
-    public readonly record struct UriScheme(string Value) : ISmartEnum
+    public readonly record struct UriScheme(string Value) : IKeywordEnum
     {
         /// <summary>
         /// The IPP URI scheme (ipp://).

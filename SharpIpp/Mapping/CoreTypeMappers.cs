@@ -1,6 +1,5 @@
 using System;
 using SharpIpp.Mapping.Extensions;
-using SharpIpp.Protocol.Extensions;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Mapping;

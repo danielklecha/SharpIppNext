@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models
+﻿namespace SharpIpp.Protocol.Models
 {
     /// <summary>
     /// PWG 5100.5-2024 Section 6.2 - document-state-reasons
     /// Reuses the same keyword vocabulary as job-state-reasons.
     /// </summary>
-    public readonly record struct DocumentStateReason(string Value) : ISmartEnum
+    public readonly record struct DocumentStateReason(string Value) : IKeywordEnum
     {
         /// <summary>
         /// No document state reasons apply.

@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// The <c>job-error-action</c> keyword values.
 /// See: PWG 5100.13-2023 Section 6.2.6
 /// </summary>
-public readonly record struct JobErrorAction(string Value) : ISmartEnum 
+public readonly record struct JobErrorAction(string Value) : IKeywordEnum 
 {
     /// <summary>
     /// The Printer aborts the job when an error is encountered.

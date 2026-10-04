@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Models.Requests;
 using SharpIpp.Protocol.Models;
@@ -737,6 +737,41 @@ public class IppRequestValidatorTests
     }
 
     [TestMethod]
+    public void ByteRangeAttribute_IsValid_WhenValueIsOctetStringNoValue_ReturnsSuccess()
+    {
+        var attribute = new ByteRangeAttribute(1, 10);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        OctetString value = default;
+
+        var result = attribute.IsValid(value, context);
+
+        result.Should().Be(ValidationResult.Success);
+    }
+
+    [TestMethod]
+    public void ByteRangeAttribute_IsValid_WhenValueIsStringWithLanguageNoValue_ReturnsSuccess()
+    {
+        var attribute = new ByteRangeAttribute(1, 10);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        StringWithLanguage value = default;
+
+        var result = attribute.IsValid(value, context);
+
+        result.Should().Be(ValidationResult.Success);
+    }
+
+    [TestMethod]
+    public void ByteRangeAttribute_IsValid_WhenValueIsNoValueInstance_ReturnsSuccess()
+    {
+        var attribute = new ByteRangeAttribute(1, 10);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+
+        var result = attribute.IsValid(NoValue.Instance, context);
+
+        result.Should().Be(ValidationResult.Success);
+    }
+
+    [TestMethod]
     public void ByteRangeAttribute_IsValid_WhenValueIsIppValueWithValidValue_ReturnsSuccess()
     {
         var attribute = new ByteRangeAttribute(1, 10);
@@ -783,6 +818,22 @@ public class IppRequestValidatorTests
         {
             IppValue<string>.NoValue,
             new IppValue<string>("abc")
+        };
+
+        var result = attribute.IsValid(collection, context);
+
+        result.Should().Be(ValidationResult.Success);
+    }
+
+    [TestMethod]
+    public void ByteRangeAttribute_IsValid_WhenCollectionContainsOctetStringNoValue_ReturnsSuccess()
+    {
+        var attribute = new ByteRangeAttribute(1, 10);
+        var context = new ValidationContext(Encoding.UTF8, "TestField");
+        var collection = new object[]
+        {
+            default(OctetString),
+            new OctetString(new byte[] { 1, 2, 3 })
         };
 
         var result = attribute.IsValid(collection, context);

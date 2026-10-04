@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using SharpIpp.Mapping;
 
 namespace SharpIpp.Protocol.Models;
@@ -15,10 +15,10 @@ public class DestinationUri : IIppCollection
     public IppValue<Uri>? DestinationUriValue { get; set; }
 
     [IppAttribute("post-dial-string", Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? PostDialString { get; set; }
+    public StringWithLanguage? PostDialString { get; set; }
 
     [IppAttribute("pre-dial-string", Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? PreDialString { get; set; }
+    public StringWithLanguage? PreDialString { get; set; }
 
     public IppValue<int>? T33Subaddress { get; set; }
 }

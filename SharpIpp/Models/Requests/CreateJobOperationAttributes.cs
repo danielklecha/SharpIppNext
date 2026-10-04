@@ -35,7 +35,7 @@ public class CreateJobOperationAttributes : OperationAttributes
     /// <code>job-name</code>
     /// <example>job63</example>
     [IppAttribute(IppAttributeNames.JobName, Tag = Tag.NameWithoutLanguage)]
-    public IppValue<string>? JobName { get; set; }
+    public StringWithLanguage? JobName { get; set; }
     /// <summary>
     /// The client OPTIONALLY supplies this attribute. The Printer object MUST support this attribute. The value 'true' indicates that total fidelity to client supplied Job Template attributes and values is required, else the Printer object MUST reject the Print-Job request. The value 'false' indicates that a reasonable attempt to print the Job object is acceptable and the Printer object MUST accept the Print-Job request. If not supplied, the Printer object assumes the value is 'false'. All Printer objects MUST support both types of job processing. See section 15 for a full description of "ipp-attribute-fidelity" and its relationship to other attributes, especially the Printer object's "pdl-override-supported" attribute
     /// See: RFC 8011 Section 5.4.18
@@ -86,7 +86,7 @@ public class CreateJobOperationAttributes : OperationAttributes
     /// See: PWG 5100.11-2024 Section 6.1.1
     /// </summary>
     [IppAttribute(IppAttributeNames.JobPassword, Tag = Tag.OctetStringWithAnUnspecifiedFormat)]
-    public IppValue<OctetString>? JobPassword { get; set; }
+    public OctetString? JobPassword { get; set; }
 
     /// <summary>
     /// The <c>job-password-encryption</c> operation attribute.
@@ -122,7 +122,7 @@ public class CreateJobOperationAttributes : OperationAttributes
     /// See: PWG 5100.16-2020 Section 6.1.1
     /// </summary>
     [IppAttribute(IppAttributeNames.ChargeInfoMessage, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? ChargeInfoMessage { get; set; }
+    public StringWithLanguage? ChargeInfoMessage { get; set; }
 
     /// <summary>
     /// The <c>proof-copies</c> operation attribute.

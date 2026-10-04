@@ -1,10 +1,10 @@
-namespace SharpIpp.Protocol.Models;
+﻿namespace SharpIpp.Protocol.Models;
 
 /// <summary>
 /// Specifies the member names for <code>output-attributes</code>.
 /// See: PWG 5100.17-2014 Section 8.1.7
 /// </summary>
-public readonly record struct OutputAttributesMember(string Value, bool IsMarked = true) : IMarkedSmartEnum
+public readonly record struct OutputAttributesMember(string Value) : IKeywordEnum
 {
     /// <summary>The output-bin member attribute. See: PWG 5100.17-2014 Section 8.1.7</summary>
     public static readonly OutputAttributesMember OutputBin = new("output-bin");

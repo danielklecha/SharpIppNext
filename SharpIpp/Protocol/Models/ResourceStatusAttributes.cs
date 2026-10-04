@@ -1,4 +1,4 @@
-﻿using SharpIpp.Mapping;
+using SharpIpp.Mapping;
 using System;
 
 namespace SharpIpp.Protocol.Models;
@@ -39,7 +39,7 @@ public class ResourceStatusAttributes
     /// </summary>
     /// <code>resource-state-message</code>
     [IppAttribute(IppAttributeNames.ResourceStateMessage, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? ResourceStateMessage { get; set; }
+    public StringWithLanguage? ResourceStateMessage { get; set; }
 
     /// <summary>
     /// Resource size in kilobytes.
@@ -71,7 +71,7 @@ public class ResourceStatusAttributes
     /// </summary>
     /// <code>resource-uuid</code>
     [IppAttribute(IppAttributeNames.ResourceUuid, Tag = Tag.OctetStringWithAnUnspecifiedFormat)]
-    public IppValue<OctetString>? ResourceUuid { get; set; }
+    public OctetString? ResourceUuid { get; set; }
 
     /// <summary>
     /// The date and time of creation.
@@ -135,7 +135,7 @@ public class ResourceStatusAttributes
     /// </summary>
     /// <code>resource-patches</code>
     [IppAttribute(IppAttributeNames.ResourcePatches, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? ResourcePatches { get; set; }
+    public StringWithLanguage? ResourcePatches { get; set; }
 
     /// <summary>
     /// Digital signatures for this Resource (1setOf octetString).
@@ -151,7 +151,7 @@ public class ResourceStatusAttributes
     /// </summary>
     /// <code>resource-string-version</code>
     [IppAttribute(IppAttributeNames.ResourceStringVersion, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? ResourceStringVersion { get; set; }
+    public StringWithLanguage? ResourceStringVersion { get; set; }
 
     /// <summary>
     /// The resource format (media type).
@@ -174,7 +174,7 @@ public class ResourceStatusAttributes
     /// </summary>
     /// <code>resource-name</code>
     [IppAttribute(IppAttributeNames.ResourceName, Tag = Tag.NameWithoutLanguage)]
-    public IppValue<string>? ResourceName { get; set; }
+    public StringWithLanguage? ResourceName { get; set; }
 
     /// <summary>
     /// Additional resource info.
@@ -182,7 +182,7 @@ public class ResourceStatusAttributes
     /// </summary>
     /// <code>resource-info</code>
     [IppAttribute(IppAttributeNames.ResourceInfo, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? ResourceInfo { get; set; }
+    public StringWithLanguage? ResourceInfo { get; set; }
 
     /// <summary>
     /// Resource type.
@@ -198,5 +198,5 @@ public class ResourceStatusAttributes
     /// </summary>
     /// <code>resource-version</code>
     [IppAttribute(IppAttributeNames.ResourceVersion, Tag = Tag.TextWithoutLanguage)]
-    public IppValue<string>? ResourceVersion { get; set; }
+    public StringWithLanguage? ResourceVersion { get; set; }
 }
