@@ -16,11 +16,10 @@ namespace SharpIpp;
 
 public partial class SharpIppServer : ISharpIppServer
 {
-    private static readonly Lazy<IMapper> MapperSingleton;
     private readonly IIppProtocol _ippProtocol;
 
     /// <inheritdoc />
-    public IIppRequestMessageValidator? RequestMessageValidator { get; set; } = IppRequestMessageValidator.Default;
+    public IIppRequestMessageValidator? RequestMessageValidator { get; set; } = IppRequestMessageValidator.ServerDefault;
 
     /// <inheritdoc />
     public IIppRequestValidator? RequestValidator { get; set; } = IppRequestValidator.Default;
@@ -30,12 +29,8 @@ public partial class SharpIppServer : ISharpIppServer
 
     /// <inheritdoc />
     public IIppResponseValidator? ResponseValidator { get; set; } = IppResponseValidator.Default;
-    private IMapper Mapper => MapperSingleton.Value;
+    private static IMapper Mapper => SimpleMapper.Instance;
 
-    static SharpIppServer()
-    {
-        MapperSingleton = new Lazy<IMapper>(MapperFactory);
-    }
 
     public SharpIppServer() : this(new IppProtocol())
     {
@@ -224,10 +219,4 @@ public partial class SharpIppServer : ISharpIppServer
         return Task.FromResult<IIppResponseMessage>(ippResponse);
     }
 
-    private static IMapper MapperFactory()
-    {
-        var mapper = new SimpleMapper();
-        mapper.RegisterGeneratedProfiles();
-        return mapper;
-    }
 }

@@ -19,12 +19,7 @@ namespace SharpIpp.Tests.Unit.Mapping.Profiles;
 [ExcludeFromCodeCoverage]
 public class ProfileNullDestTests
 {
-    private SimpleMapper CreateMapper()
-    {
-        var mapper = new SimpleMapper();
-        mapper.RegisterGeneratedProfiles();
-        return mapper;
-    }
+    private SimpleMapper CreateMapper() => SimpleMapper.Instance;
 
     public static IEnumerable<object[]> NullDest_ShouldCreateNew_Data
     {

@@ -20,8 +20,7 @@ public class PrintUriProfileTests
     public void Map_PrintUriRequestToIppRequestMessage_InvalidRequest_DoesNotThrow(bool isDocumentUriNull, bool isOperationAttributesNull)
     {
         // Arrange
-        var mapper = new SimpleMapper();
-        mapper.RegisterGeneratedProfiles();
+        var mapper = SimpleMapper.Instance;
 
         var request = new PrintUriRequest
         {

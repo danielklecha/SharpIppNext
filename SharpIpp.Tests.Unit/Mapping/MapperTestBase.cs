@@ -11,8 +11,6 @@ public abstract class MapperTestBase
 
     protected MapperTestBase()
     {
-        var mapper = new SimpleMapper();
-        mapper.RegisterGeneratedProfiles();
-        _mapper = mapper;
+        _mapper = SimpleMapper.Instance;
     }
 }

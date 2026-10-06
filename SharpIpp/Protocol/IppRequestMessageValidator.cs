@@ -105,7 +105,7 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         IppAttributeNames.JobPasswordEncryption,
     ];
 
-    public static IppRequestMessageValidator Default => new()
+    public static IppRequestMessageValidator ServerDefault => new()
     {
         ValidateCoreRules = true,
         ValidateOperationSpecificRules = true,
@@ -122,6 +122,25 @@ public class IppRequestMessageValidator : IIppRequestMessageValidator
         ValidateStringLengthLimits = true,
         EnforceMediaMutualExclusivity = false,
     };
+
+    public static IppRequestMessageValidator ClientDefault => new()
+    {
+        ValidateCoreRules = true,
+        ValidateOperationSpecificRules = true,
+        ValidateOperationAttributesGroup = true,
+        ValidateJobAttributesGroup = true,
+        ValidatePrinterAttributesGroup = true,
+        ValidateUnsupportedAttributesGroup = true,
+        ValidateSubscriptionAttributesGroup = true,
+        ValidateEventNotificationAttributesGroup = true,
+        ValidateResourceAttributesGroup = true,
+        ValidateDocumentAttributesGroup = true,
+        ValidateSystemAttributesGroup = true,
+        UseIppAttributeFidelityForCapabilityValidation = false,
+        ValidateStringLengthLimits = true,
+        EnforceMediaMutualExclusivity = true,
+    };
+
 
     /// <inheritdoc />
     public IppRequestValidationContext Context { get; } = new();

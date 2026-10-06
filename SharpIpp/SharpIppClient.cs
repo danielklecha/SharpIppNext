@@ -19,14 +19,13 @@ namespace SharpIpp;
 
 public partial class SharpIppClient : ISharpIppClient
 {
-    private static readonly Lazy<IMapper> MapperSingleton;
 
     private readonly bool _disposeHttpClient;
     private readonly HttpClient _httpClient;
     private readonly IIppProtocol _ippProtocol;
 
     /// <inheritdoc />
-    public IIppRequestMessageValidator? RequestMessageValidator { get; set; } = IppRequestMessageValidator.Default;
+    public IIppRequestMessageValidator? RequestMessageValidator { get; set; } = IppRequestMessageValidator.ClientDefault;
 
     /// <inheritdoc />
     public IIppRequestValidator? RequestValidator { get; set; } = IppRequestValidator.Default;
@@ -37,10 +36,6 @@ public partial class SharpIppClient : ISharpIppClient
     /// <inheritdoc />
     public IIppResponseValidator? ResponseValidator { get; set; }
 
-    static SharpIppClient()
-    {
-        MapperSingleton = new Lazy<IMapper>(MapperFactory);
-    }
 
     public SharpIppClient() : this(new HttpClient(), new IppProtocol(), true)
     {
@@ -61,7 +56,7 @@ public partial class SharpIppClient : ISharpIppClient
         _disposeHttpClient = disposeHttpClient;
     }
 
-    private IMapper Mapper => MapperSingleton.Value;
+    private static IMapper Mapper => SimpleMapper.Instance;
 
     /// <summary>
     /// Status codes of <see cref="HttpResponseMessage" /> that are not successful,
@@ -203,7 +198,7 @@ public partial class SharpIppClient : ISharpIppClient
     {
         try
         {
-            var r = Mapper.Map(ippResponse, ippResponse.GetType(), responseType, null);
+            var r = Mapper.Map(ippResponse, typeof(IIppResponseMessage), responseType, null);
             return r;
         }
         catch (Exception ex)
@@ -228,12 +223,6 @@ public partial class SharpIppClient : ISharpIppClient
         return new HttpRequestMessage( HttpMethod.Post, uriBuilder.Uri );
     }
 
-    private static IMapper MapperFactory()
-    {
-        var mapper = new SimpleMapper();
-        mapper.RegisterGeneratedProfiles();
-        return mapper;
-    }
 
     /// <inheritdoc />
     public Task<CUPSGetPrintersResponse> GetCUPSPrintersAsync(CUPSGetPrintersRequest request, CancellationToken cancellationToken = default) =>

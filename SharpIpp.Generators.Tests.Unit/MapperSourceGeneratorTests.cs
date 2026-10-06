@@ -331,6 +331,106 @@ public partial class MapperSourceGeneratorTests
     }
 
     [TestMethod]
+    public void ConfiguredMapper_ShouldSkipHandledModels_FromGeneratedModelMappersAndRegistry()
+    {
+        var source = """
+            using System.Collections.Generic;
+            using SharpIpp.Mapping;
+            using SharpIpp.Protocol.Models;
+
+            namespace TestNamespace;
+
+            [IppAttribute]
+            public class SyntheticHandledModel : IIppCollection
+            {
+                [IppAttribute("dummy-attr")]
+                public string? DummyAttr { get; set; }
+            }
+
+            [IppAttribute]
+            public class SyntheticUnhandledModel : IIppCollection
+            {
+                [IppAttribute("normal-attr")]
+                public string? NormalAttr { get; set; }
+            }
+
+            [MapperConfiguration(1, typeof(SyntheticHandledModel))]
+            public static class CustomModelMapper
+            {
+                public static void Configure(IMapperConstructor mapper)
+                {
+                    mapper.CreateMap<IDictionary<string, IppAttribute[]>, SyntheticHandledModel>((src, map) => new SyntheticHandledModel());
+                }
+            }
+            """;
+
+        var (_, generatedTrees, _) = RunGenerator(source);
+        var modelMappers = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedModelMappers.g.cs"))?.ToString();
+        var registry = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedMapperRegistry.g.cs"))?.ToString();
+
+        modelMappers.Should().NotBeNull();
+        modelMappers.Should().NotContain("ReadTestNamespace_SyntheticHandledModel");
+        modelMappers.Should().NotContain("WriteTestNamespace_SyntheticHandledModel");
+        modelMappers.Should().Contain("ReadTestNamespace_SyntheticUnhandledModel");
+        modelMappers.Should().Contain("WriteTestNamespace_SyntheticUnhandledModel");
+
+        registry.Should().NotBeNull();
+        registry.Should().NotContain("mapper.CreateMap<IDictionary<string, IppAttribute[]>, global::TestNamespace.SyntheticHandledModel>");
+        registry.Should().Contain("mapper.CreateMap<IDictionary<string, IppAttribute[]>, global::TestNamespace.SyntheticUnhandledModel>");
+        registry.Should().Contain("global::TestNamespace.CustomModelMapper.Configure(mapper);");
+    }
+
+    [TestMethod]
+    public void ConfiguredMapper_AutoDetectsHandledModelsFromCreateMapInvocations()
+    {
+        var source = """
+            using System.Collections.Generic;
+            using SharpIpp.Mapping;
+            using SharpIpp.Protocol.Models;
+
+            namespace TestNamespace;
+
+            [IppAttribute]
+            public class SyntheticInferredModel : IIppCollection
+            {
+                [IppAttribute("inferred-attr")]
+                public string? InferredAttr { get; set; }
+            }
+
+            [IppAttribute]
+            public class SyntheticOtherModel : IIppCollection
+            {
+                [IppAttribute("other-attr")]
+                public string? OtherAttr { get; set; }
+            }
+
+            [MapperConfiguration(1)]
+            public static class InferredModelMapper
+            {
+                public static void Configure(IMapperConstructor mapper)
+                {
+                    mapper.CreateMap<IDictionary<string, IppAttribute[]>, SyntheticInferredModel>((src, map) => new SyntheticInferredModel());
+                }
+            }
+            """;
+
+        var (_, generatedTrees, _) = RunGenerator(source);
+        var modelMappers = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedModelMappers.g.cs"))?.ToString();
+        var registry = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedMapperRegistry.g.cs"))?.ToString();
+
+        modelMappers.Should().NotBeNull();
+        modelMappers.Should().NotContain("ReadTestNamespace_SyntheticInferredModel");
+        modelMappers.Should().NotContain("WriteTestNamespace_SyntheticInferredModel");
+        modelMappers.Should().Contain("ReadTestNamespace_SyntheticOtherModel");
+        modelMappers.Should().Contain("WriteTestNamespace_SyntheticOtherModel");
+
+        registry.Should().NotBeNull();
+        registry.Should().NotContain("mapper.CreateMap<IDictionary<string, IppAttribute[]>, global::TestNamespace.SyntheticInferredModel>");
+        registry.Should().Contain("mapper.CreateMap<IDictionary<string, IppAttribute[]>, global::TestNamespace.SyntheticOtherModel>");
+        registry.Should().Contain("global::TestNamespace.InferredModelMapper.Configure(mapper);");
+    }
+
+    [TestMethod]
     public void SectionAttribute_ShouldGenerateSectionMapper()
     {
         var source = """

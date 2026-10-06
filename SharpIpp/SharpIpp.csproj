@@ -35,7 +35,6 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
-    <EmbeddedResource Include="ILLink.Descriptors.xml" LogicalName="ILLink.Descriptors.xml" />
   </ItemGroup>
   
   <ItemGroup Condition="'$(SignAssembly)' != 'true'">

@@ -12,12 +12,7 @@ namespace SharpIpp.Tests.Unit.Mapping.Profiles;
 [ExcludeFromCodeCoverage]
 public class UriProfileTest
 {
-    private IMapper CreateMapper()
-    {
-        var mapper = new SimpleMapper();
-        mapper.RegisterGeneratedProfiles();
-        return mapper;
-    }
+    private IMapper CreateMapper() => SimpleMapper.Instance;
 
     [DataRow("http://example.com", "http://example.com/")]
     [DataRow("ipp://localhost:631", "ipp://localhost:631/")]

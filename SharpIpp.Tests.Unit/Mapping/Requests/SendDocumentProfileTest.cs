@@ -21,8 +21,7 @@ public class SendDocumentProfileTest
     public void Map_SendDocumentRequestToIppRequestMessage_InvalidRequest_DoesNotThrow(bool isDocumentNull, bool isOperationAttributesNull)
     {
         // Arrange
-        var mapper = new SimpleMapper();
-        mapper.RegisterGeneratedProfiles();
+        var mapper = SimpleMapper.Instance;
 
         var request = new SendDocumentRequest
         {
@@ -44,8 +43,7 @@ public class SendDocumentProfileTest
     public void Map_IppRequestMessageToSendDocumentRequest_MissingLastDocumentAttribute_DoesNotThrow()
     {
         // Arrange
-        var mapper = new SimpleMapper();
-        mapper.RegisterGeneratedProfiles();
+        var mapper = SimpleMapper.Instance;
 
         var request = new IppRequestMessage
         {

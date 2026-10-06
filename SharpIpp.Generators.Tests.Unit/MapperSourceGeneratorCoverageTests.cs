@@ -1060,4 +1060,410 @@ public partial class MapperSourceGeneratorTests
         modelMappers.Should().Contain("dst.AddRange(val_IppValSwlArr.Value.Select(x => new IppAttribute(x.ToIppTag(global::SharpIpp.Protocol.Models.Tag.NameWithoutLanguage), \"ipp-val-swl-arr\", x)));");
         modelMappers.Should().Contain("dst.Add(new IppAttribute(src.NonNullSwl.ToIppTag(global::SharpIpp.Protocol.Models.Tag.NameWithoutLanguage), \"nonnull-swl\", src.NonNullSwl));");
     }
+
+    [TestMethod]
+    public void ConfiguredMapper_AttributeVariants_NamedAndConstructorOverloads()
+    {
+        var source = """
+            using System;
+            using System.Collections.Generic;
+            using SharpIpp.Mapping;
+            using SharpIpp.Protocol.Models;
+
+            namespace TestNamespace;
+
+            [IppAttribute]
+            public class ModelConstructorType : IIppCollection
+            {
+                [IppAttribute("p1")]
+                public string? P1 { get; set; }
+            }
+
+            [IppAttribute]
+            public class ModelConstructorOrderAndType : IIppCollection
+            {
+                [IppAttribute("p2")]
+                public string? P2 { get; set; }
+            }
+
+            [IppAttribute]
+            public class ModelConstructorArray : IIppCollection
+            {
+                [IppAttribute("p3")]
+                public string? P3 { get; set; }
+            }
+
+            [IppAttribute]
+            public class ModelNamedSingleType : IIppCollection
+            {
+                [IppAttribute("p4")]
+                public string? P4 { get; set; }
+            }
+
+            [IppAttribute]
+            public class ModelNamedArrayTypes : IIppCollection
+            {
+                [IppAttribute("p5")]
+                public string? P5 { get; set; }
+            }
+
+            [IppAttribute]
+            public class ModelNotHandled : IIppCollection
+            {
+                [IppAttribute("p6")]
+                public string? P6 { get; set; }
+            }
+
+            [MapperConfiguration(typeof(ModelConstructorType))]
+            public class Mapper1
+            {
+                public static void Configure(IMapperConstructor mapper) { }
+            }
+
+            [MapperConfiguration(3, typeof(ModelConstructorOrderAndType))]
+            public class Mapper2
+            {
+                public static void Configure(IMapperConstructor mapper) { }
+            }
+
+            [MapperConfiguration(4, new Type[] { typeof(ModelConstructorArray) })]
+            public class Mapper3
+            {
+                public static void Configure(IMapperConstructor mapper) { }
+            }
+
+            [MapperConfiguration(Order = 5, HandledType = typeof(ModelNamedSingleType))]
+            public class Mapper4
+            {
+                public static void Configure(IMapperConstructor mapper) { }
+            }
+
+            [MapperConfiguration(Order = 6, HandledTypes = new Type[] { typeof(ModelNamedArrayTypes) })]
+            public class Mapper5
+            {
+                public static void Configure(IMapperConstructor mapper) { }
+            }
+            """;
+
+        var (_, generatedTrees, diagnostics) = RunGenerator(source);
+        diagnostics.Should().BeEmpty();
+
+        var modelMappers = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedModelMappers.g.cs"))?.ToString();
+        var registry = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedMapperRegistry.g.cs"))?.ToString();
+
+        modelMappers.Should().NotBeNull();
+        modelMappers.Should().NotContain("ReadTestNamespace_ModelConstructorType");
+        modelMappers.Should().NotContain("ReadTestNamespace_ModelConstructorOrderAndType");
+        modelMappers.Should().NotContain("ReadTestNamespace_ModelConstructorArray");
+        modelMappers.Should().NotContain("ReadTestNamespace_ModelNamedSingleType");
+        modelMappers.Should().NotContain("ReadTestNamespace_ModelNamedArrayTypes");
+        modelMappers.Should().Contain("ReadTestNamespace_ModelNotHandled");
+
+        registry.Should().NotBeNull();
+        registry.Should().NotContain("mapper.CreateMap<IDictionary<string, IppAttribute[]>, global::TestNamespace.ModelConstructorType>");
+        registry.Should().NotContain("mapper.CreateMap<IDictionary<string, IppAttribute[]>, global::TestNamespace.ModelConstructorOrderAndType>");
+        registry.Should().NotContain("mapper.CreateMap<IDictionary<string, IppAttribute[]>, global::TestNamespace.ModelConstructorArray>");
+        registry.Should().NotContain("mapper.CreateMap<IDictionary<string, IppAttribute[]>, global::TestNamespace.ModelNamedSingleType>");
+        registry.Should().NotContain("mapper.CreateMap<IDictionary<string, IppAttribute[]>, global::TestNamespace.ModelNamedArrayTypes>");
+        registry.Should().Contain("mapper.CreateMap<IDictionary<string, IppAttribute[]>, global::TestNamespace.ModelNotHandled>");
+
+        registry.Should().Contain("global::TestNamespace.Mapper1.Configure(mapper);");
+        registry.Should().Contain("global::TestNamespace.Mapper2.Configure(mapper);");
+        registry.Should().Contain("global::TestNamespace.Mapper3.Configure(mapper);");
+        registry.Should().Contain("global::TestNamespace.Mapper4.Configure(mapper);");
+        registry.Should().Contain("global::TestNamespace.Mapper5.Configure(mapper);");
+    }
+
+    [TestMethod]
+    public void ConfiguredMapper_NonGenericCreateMap_And_SimpleNameInvocations()
+    {
+        var source = """
+            using System;
+            using System.Collections.Generic;
+            using SharpIpp.Mapping;
+            using SharpIpp.Protocol.Models;
+
+            namespace TestNamespace;
+
+            [IppAttribute]
+            public class ModelInferredNonGeneric : IIppCollection
+            {
+                [IppAttribute("m1")]
+                public string? M1 { get; set; }
+            }
+
+            [IppAttribute]
+            public class ModelInferredSimpleName : IIppCollection
+            {
+                [IppAttribute("m2")]
+                public string? M2 { get; set; }
+            }
+
+            [IppAttribute]
+            public class ModelInferredIppMap : IIppCollection
+            {
+                [IppAttribute("m3")]
+                public string? M3 { get; set; }
+            }
+
+            [IppAttribute]
+            public class ModelInferredCollections : IIppCollection
+            {
+                [IppAttribute("m4")]
+                public string? M4 { get; set; }
+            }
+
+            [IppAttribute]
+            public class ModelUnchecked : IIppCollection
+            {
+                [IppAttribute("m-un")]
+                public string? MUn { get; set; }
+            }
+
+            [MapperConfiguration(1)]
+            public class CustomAutoDetectionMapper
+            {
+                private static void CreateMap<T1, T2>() { }
+                private static void CreateIppMap(Type t1, Type t2) { }
+
+                public static void Configure(IMapperConstructor mapper)
+                {
+                    // Non-generic MemberAccess CreateMap
+                    mapper.CreateMap(typeof(IDictionary<string, IppAttribute[]>), typeof(ModelInferredNonGeneric));
+
+                    // Non-generic with non-typeof argument to test false branch
+                    mapper.CreateMap(null, null);
+
+                    // Generic SimpleName CreateMap
+                    CreateMap<IDictionary<string, IppAttribute[]>, ModelInferredSimpleName>();
+
+                    // Non-generic SimpleName CreateIppMap
+                    CreateIppMap(typeof(IDictionary<string, IppAttribute[]>), typeof(ModelInferredIppMap));
+
+                    // Generic MemberAccess CreateIppMap with collections
+                    mapper.CreateIppMap<List<ModelInferredCollections>, ModelInferredCollections[]>();
+
+                    // Other method invocation to hit false branch
+                    mapper.GetHashCode();
+
+                    // Complex invocation (neither MemberAccess nor SimpleName)
+                    ((Action)(() => { }))();
+                }
+            }
+            """;
+
+        var (_, generatedTrees, diagnostics) = RunGenerator(source);
+        diagnostics.Should().BeEmpty();
+
+        var modelMappers = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedModelMappers.g.cs"))?.ToString();
+        var registry = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedMapperRegistry.g.cs"))?.ToString();
+
+        modelMappers.Should().NotBeNull();
+        modelMappers.Should().Contain("ReadTestNamespace_ModelUnchecked");
+        modelMappers.Should().NotContain("ReadTestNamespace_ModelInferredNonGeneric");
+        modelMappers.Should().NotContain("ReadTestNamespace_ModelInferredSimpleName");
+        modelMappers.Should().NotContain("ReadTestNamespace_ModelInferredIppMap");
+        modelMappers.Should().NotContain("ReadTestNamespace_ModelInferredCollections");
+
+        registry.Should().NotBeNull();
+        registry.Should().Contain("mapper.CreateMap<IDictionary<string, IppAttribute[]>, global::TestNamespace.ModelUnchecked>");
+        registry.Should().NotContain("mapper.CreateMap<IDictionary<string, IppAttribute[]>, global::TestNamespace.ModelInferredNonGeneric>");
+        registry.Should().NotContain("mapper.CreateMap<IDictionary<string, IppAttribute[]>, global::TestNamespace.ModelInferredSimpleName>");
+        registry.Should().NotContain("mapper.CreateMap<IDictionary<string, IppAttribute[]>, global::TestNamespace.ModelInferredIppMap>");
+        registry.Should().NotContain("mapper.CreateMap<IDictionary<string, IppAttribute[]>, global::TestNamespace.ModelInferredCollections>");
+    }
+
+    [TestMethod]
+    public void HelperMethods_ConfiguredMapperAndSectionHelpers_ShouldCoverAllBranches()
+    {
+        // 1. GetSectionPropertyName branches
+        MapperSourceGenerator.GetSectionPropertyName(1).Should().Be("OperationAttributes");
+        MapperSourceGenerator.GetSectionPropertyName(2).Should().Be("JobAttributes");
+        MapperSourceGenerator.GetSectionPropertyName(4).Should().Be("PrinterAttributes");
+        MapperSourceGenerator.GetSectionPropertyName(5).Should().Be("UnsupportedAttributes");
+        MapperSourceGenerator.GetSectionPropertyName(6).Should().Be("SubscriptionAttributes");
+        MapperSourceGenerator.GetSectionPropertyName(7).Should().Be("EventNotificationAttributes");
+        MapperSourceGenerator.GetSectionPropertyName(8).Should().Be("ResourceAttributes");
+        MapperSourceGenerator.GetSectionPropertyName(9).Should().Be("DocumentAttributes");
+        MapperSourceGenerator.GetSectionPropertyName(10).Should().Be("SystemAttributes");
+        MapperSourceGenerator.GetSectionPropertyName(0).Should().BeNull();
+        MapperSourceGenerator.GetSectionPropertyName(3).Should().BeNull();
+        MapperSourceGenerator.GetSectionPropertyName(99).Should().BeNull();
+
+        // 2. Setup compilation for UnwrapPotentialModel & IsPotentialHandledModel
+        var syntaxTree = CSharpSyntaxTree.ParseText("""
+            using System;
+            using System.Collections.Generic;
+            using SharpIpp.Protocol.Models;
+
+            public class GlobalClass { }
+
+            namespace TestNamespace
+            {
+                public class CustomValidModel { }
+                public struct CustomValidStruct { }
+                public interface ICustomInterface { }
+                public enum CustomEnum { Val = 1 }
+
+                public class ExcludedAttribute : IppAttribute { }
+                public class ExcludedReqMsg : IppRequestMessage { }
+                public class ExcludedRespMsg : IppResponseMessage { }
+                public class ExcludedStringWithLang : StringWithLanguage { }
+            }
+            """);
+
+        var compilation = CSharpCompilation.Create(
+            "HelperTestAssembly",
+            new[] { syntaxTree },
+            new[]
+            {
+                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(List<>).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(SharpIpp.SharpIppClient).Assembly.Location)
+            });
+
+        // UnwrapPotentialModel
+        MapperSourceGenerator.UnwrapPotentialModel(null).Should().BeNull();
+
+        var intType = compilation.GetSpecialType(SpecialType.System_Int32);
+        MapperSourceGenerator.UnwrapPotentialModel(intType).Should().Be(intType);
+
+        var arrayType = compilation.CreateArrayTypeSymbol(intType);
+        MapperSourceGenerator.UnwrapPotentialModel(arrayType).Should().Be(intType);
+
+        var listDef = compilation.GetTypeByMetadataName("System.Collections.Generic.List`1")!;
+        var listInt = listDef.Construct(intType);
+        MapperSourceGenerator.UnwrapPotentialModel(listInt).Should().Be(intType);
+
+        var ienumDef = compilation.GetTypeByMetadataName("System.Collections.Generic.IEnumerable`1")!;
+        var ienumInt = ienumDef.Construct(intType);
+        MapperSourceGenerator.UnwrapPotentialModel(ienumInt).Should().Be(intType);
+
+        var roCollDef = compilation.GetTypeByMetadataName("System.Collections.Generic.IReadOnlyCollection`1")!;
+        var roCollInt = roCollDef.Construct(intType);
+        MapperSourceGenerator.UnwrapPotentialModel(roCollInt).Should().Be(intType);
+
+        var ippValDef = compilation.GetTypeByMetadataName("SharpIpp.Protocol.Models.IppValue`1")!;
+        var ippValInt = ippValDef.Construct(intType);
+        MapperSourceGenerator.UnwrapPotentialModel(ippValInt).Should().Be(intType);
+
+        // Nested array/list: List<int[]>
+        var listArrInt = listDef.Construct(arrayType);
+        MapperSourceGenerator.UnwrapPotentialModel(listArrInt).Should().Be(intType);
+
+        // TypeParameter
+        var genericTypeDecl = CSharpSyntaxTree.ParseText("public class Gen<T> { }");
+        var genComp = compilation.AddSyntaxTrees(genericTypeDecl);
+        var genModel = genComp.GetSemanticModel(genericTypeDecl);
+        var genClassSym = (INamedTypeSymbol)genModel.GetDeclaredSymbol(genericTypeDecl.GetRoot().DescendantNodes().OfType<Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax>().First())!;
+        var typeParam = genClassSym.TypeParameters[0];
+        MapperSourceGenerator.UnwrapPotentialModel(typeParam).Should().BeNull();
+
+        // IsPotentialHandledModel
+        MapperSourceGenerator.IsPotentialHandledModel(intType).Should().BeFalse();
+
+        var stringType = compilation.GetSpecialType(SpecialType.System_String);
+        MapperSourceGenerator.IsPotentialHandledModel(stringType).Should().BeFalse();
+
+        var dateTimeType = compilation.GetTypeByMetadataName("System.DateTime")!;
+        MapperSourceGenerator.IsPotentialHandledModel(dateTimeType).Should().BeFalse();
+
+        var stringBuilderType = compilation.GetTypeByMetadataName("System.Text.StringBuilder")!;
+        MapperSourceGenerator.IsPotentialHandledModel(stringBuilderType).Should().BeFalse();
+
+        var customClassSym = compilation.GetTypeByMetadataName("TestNamespace.CustomValidModel")!;
+        MapperSourceGenerator.IsPotentialHandledModel(customClassSym).Should().BeTrue();
+
+        var customStructSym = compilation.GetTypeByMetadataName("TestNamespace.CustomValidStruct")!;
+        MapperSourceGenerator.IsPotentialHandledModel(customStructSym).Should().BeTrue();
+
+        var customIfaceSym = compilation.GetTypeByMetadataName("TestNamespace.ICustomInterface")!;
+        MapperSourceGenerator.IsPotentialHandledModel(customIfaceSym).Should().BeFalse();
+
+        var customEnumSym = compilation.GetTypeByMetadataName("TestNamespace.CustomEnum")!;
+        MapperSourceGenerator.IsPotentialHandledModel(customEnumSym).Should().BeFalse();
+
+        var globalClassSym = compilation.GetTypeByMetadataName("GlobalClass")!;
+        MapperSourceGenerator.IsPotentialHandledModel(globalClassSym).Should().BeTrue();
+
+        // Excluded types
+        var excludedNames = new[]
+        {
+            "IppAttribute",
+            "IppRequestMessage",
+            "IppResponseMessage",
+            "IIppRequestMessage",
+            "IIppResponseMessage",
+            "IMapper",
+            "IMapperApplier",
+            "IMapperConstructor",
+            "NoValue",
+            "Range",
+            "Resolution",
+            "OctetString",
+            "StringWithLanguage"
+        };
+
+        foreach (var excludedName in excludedNames)
+        {
+            var exclSym = compilation.GetTypeByMetadataName($"SharpIpp.Protocol.Models.{excludedName}")
+                          ?? compilation.GetTypeByMetadataName($"SharpIpp.Mapping.{excludedName}");
+            if (exclSym != null)
+            {
+                MapperSourceGenerator.IsPotentialHandledModel(exclSym).Should().BeFalse();
+            }
+        }
+
+        // AddHandledTypeIfValid
+        var handledTypes = new HashSet<INamedTypeSymbol>(SymbolEqualityComparer.Default);
+        MapperSourceGenerator.AddHandledTypeIfValid(customClassSym, handledTypes);
+        handledTypes.Should().Contain(customClassSym);
+
+        handledTypes.Clear();
+        MapperSourceGenerator.AddHandledTypeIfValid(intType, handledTypes);
+        handledTypes.Should().BeEmpty();
+
+        MapperSourceGenerator.AddHandledTypeIfValid(typeParam, handledTypes);
+        handledTypes.Should().BeEmpty();
+
+        MapperSourceGenerator.AddHandledTypeIfValid(null, handledTypes);
+        handledTypes.Should().BeEmpty();
+    }
+
+    [TestMethod]
+    public void ConfiguredMapper_InvalidOrEdgeCaseArguments_ShouldNotCrash()
+    {
+        var source = """
+            using System;
+            using System.Collections.Generic;
+            using SharpIpp.Mapping;
+            using SharpIpp.Protocol.Models;
+
+            namespace TestNamespace;
+
+            [MapperConfiguration("not-an-int")]
+            public class MapperWithNonIntConstructorArg { }
+
+            [MapperConfiguration(Order = "not-an-int")]
+            public class MapperWithNonIntNamedOrder { }
+
+            [MapperConfiguration(new int[] { 1, 2 })]
+            public class MapperWithIntArrayArg { }
+
+            [MapperConfiguration(typeof(int))]
+            public class MapperWithPrimitiveHandledType { }
+
+            [MapperConfiguration(typeof(List<>))]
+            public class MapperWithOpenGenericHandledType { }
+
+            [MapperConfiguration(new Type[] { typeof(int), typeof(List<>) })]
+            public class MapperWithArrayExcludedTypes { }
+
+            [MapperConfiguration(HandledTypes = new Type[] { typeof(int), typeof(List<>) })]
+            public class MapperWithNamedArrayExcludedTypes { }
+            """;
+
+        var (_, generatedTrees, _) = RunGenerator(source);
+        generatedTrees.Should().NotBeNull();
+    }
 }

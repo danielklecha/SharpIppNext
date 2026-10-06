@@ -66,6 +66,7 @@ public class MapperSourceGenerator : IIncrementalGenerator
         var annotatedSections = new List<AnnotatedSectionType>();
         var configuredMappers = new List<ConfiguredMapperType>();
         var structuredStringTypes = new HashSet<INamedTypeSymbol>(SymbolEqualityComparer.Default);
+        var handledTypes = new HashSet<INamedTypeSymbol>(SymbolEqualityComparer.Default);
 
         foreach (var typeSymbol in types)
         {
@@ -121,10 +122,31 @@ public class MapperSourceGenerator : IIncrementalGenerator
                     if (configAttr != null)
                     {
                         int order = 0;
-                        if (configAttr.ConstructorArguments.Length > 0)
+                        foreach (var arg in configAttr.ConstructorArguments)
                         {
-                            order = (int)configAttr.ConstructorArguments[0].Value!;
+                            if (arg.Kind == TypedConstantKind.Primitive)
+                            {
+                                order = (int)arg.Value!;
+                            }
+                            else
+                            {
+                                ExtractHandledTypes(arg, handledTypes);
+                            }
                         }
+
+                        foreach (var named in configAttr.NamedArguments)
+                        {
+                            if (named.Key == "Order")
+                            {
+                                order = (int)named.Value.Value!;
+                            }
+                            else if (named.Key == "HandledTypes" || named.Key == "HandledType")
+                            {
+                                ExtractHandledTypes(named.Value, handledTypes);
+                            }
+                        }
+
+                        ExtractHandledTypesFromConfiguredMapper(typeSymbol, compilation, handledTypes);
                         configuredMappers.Add(new ConfiguredMapperType(typeSymbol, order));
                     }
                 }
@@ -156,6 +178,11 @@ public class MapperSourceGenerator : IIncrementalGenerator
                 }
             }
         }
+
+        annotatedModels.RemoveWhere(m => handledTypes.Contains(m));
+        annotatedRequests.RemoveWhere(r => handledTypes.Contains(r));
+        annotatedResponses.RemoveWhere(r => handledTypes.Contains(r));
+        annotatedSections.RemoveAll(s => handledTypes.Contains(s.TypeSymbol));
 
         var ippValueTypes = new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
         var collectionElementTypes = new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
@@ -198,6 +225,10 @@ public class MapperSourceGenerator : IIncrementalGenerator
         foreach (var ss in structuredStringTypes)
         {
             AddTypeIfValid(collectionElementTypes, ss);
+        }
+        foreach (var h in handledTypes)
+        {
+            AddTypeIfValid(collectionElementTypes, h);
         }
 
         AddTypeIfValid(collectionElementTypes, compilation.GetSpecialType(SpecialType.System_String));
@@ -262,6 +293,134 @@ public class MapperSourceGenerator : IIncrementalGenerator
         if (type != null && type.TypeKind != TypeKind.Error && type.TypeKind != TypeKind.TypeParameter)
         {
             set.Add(type);
+        }
+    }
+
+    internal static INamedTypeSymbol? UnwrapPotentialModel(ITypeSymbol? type)
+    {
+        if (type == null)
+            return null;
+
+        if (type is IArrayTypeSymbol ats)
+            return UnwrapPotentialModel(ats.ElementType);
+
+        if (type is INamedTypeSymbol nts)
+        {
+            if (nts.IsGenericType && (nts.Name == "List" || nts.Name == "IEnumerable" || nts.Name == "IReadOnlyCollection" || nts.Name == "IppValue"))
+            {
+                return UnwrapPotentialModel(nts.TypeArguments[0]);
+            }
+            return nts;
+        }
+
+        return null;
+    }
+
+    internal static bool IsPotentialHandledModel(INamedTypeSymbol nts)
+    {
+        if (nts.SpecialType != SpecialType.None)
+            return false;
+
+        if (nts.TypeKind != TypeKind.Class && nts.TypeKind != TypeKind.Struct)
+            return false;
+
+        var ns = nts.ContainingNamespace!.ToDisplayString();
+        if (ns.StartsWith("System") || ns.StartsWith("Microsoft"))
+            return false;
+
+        if (nts.Name == "IppAttribute" ||
+            nts.Name == "IppRequestMessage" ||
+            nts.Name == "IppResponseMessage" ||
+            nts.Name == "IIppRequestMessage" ||
+            nts.Name == "IIppResponseMessage" ||
+            nts.Name == "IMapper" ||
+            nts.Name == "IMapperApplier" ||
+            nts.Name == "IMapperConstructor" ||
+            nts.Name == "NoValue" ||
+            nts.Name == "Range" ||
+            nts.Name == "Resolution" ||
+            nts.Name == "OctetString" ||
+            nts.Name == "StringWithLanguage")
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    internal static void ExtractHandledTypesFromConfiguredMapper(
+        INamedTypeSymbol configuredMapper,
+        Compilation compilation,
+        HashSet<INamedTypeSymbol> handledTypes)
+    {
+        foreach (var syntaxRef in configuredMapper.DeclaringSyntaxReferences)
+        {
+            var syntax = syntaxRef.GetSyntax();
+            var semanticModel = compilation.GetSemanticModel(syntax.SyntaxTree);
+
+            foreach (var inv in syntax.DescendantNodes().OfType<InvocationExpressionSyntax>())
+            {
+                string? methodName = null;
+                if (inv.Expression is MemberAccessExpressionSyntax ma)
+                {
+                    methodName = ma.Name.Identifier.Text;
+                }
+                else if (inv.Expression is SimpleNameSyntax sn)
+                {
+                    methodName = sn.Identifier.Text;
+                }
+
+                if (methodName == "CreateMap" || methodName == "CreateIppMap")
+                {
+                    SimpleNameSyntax nameSyntax = inv.Expression is MemberAccessExpressionSyntax m
+                        ? m.Name
+                        : (SimpleNameSyntax)inv.Expression;
+
+                    if (nameSyntax is GenericNameSyntax gn)
+                    {
+                        foreach (var typeArg in gn.TypeArgumentList.Arguments)
+                        {
+                            var typeInfo = semanticModel.GetTypeInfo(typeArg);
+                            AddHandledTypeIfValid(typeInfo.Type, handledTypes);
+                        }
+                    }
+                    else
+                    {
+                        foreach (var arg in inv.ArgumentList.Arguments)
+                        {
+                            if (arg.Expression is TypeOfExpressionSyntax toe)
+                            {
+                                var typeInfo = semanticModel.GetTypeInfo(toe.Type);
+                                AddHandledTypeIfValid(typeInfo.Type, handledTypes);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    internal static void ExtractHandledTypes(TypedConstant constant, HashSet<INamedTypeSymbol> handledTypes)
+    {
+        if (constant.Kind == TypedConstantKind.Array)
+        {
+            foreach (var elem in constant.Values)
+            {
+                ExtractHandledTypes(elem, handledTypes);
+            }
+        }
+        else if (constant.Value is ITypeSymbol ts)
+        {
+            AddHandledTypeIfValid(ts, handledTypes);
+        }
+    }
+
+    internal static void AddHandledTypeIfValid(ITypeSymbol? typeSymbol, HashSet<INamedTypeSymbol> handledTypes)
+    {
+        var unwrapped = UnwrapPotentialModel(typeSymbol);
+        if (unwrapped != null && IsPotentialHandledModel(unwrapped))
+        {
+            handledTypes.Add(unwrapped);
         }
     }
 
@@ -586,6 +745,7 @@ public class MapperSourceGenerator : IIncrementalGenerator
             var safeMethodName = GetSafeMethodName(model);
             var collectionNameExpr = GetCollectionAttributeNameExpression(model, ippAttributeAttrSymbol, nameToConst);
             sb.AppendLine($"            mapper.CreateMap<IDictionary<string, IppAttribute[]>, {fqn}>((src, dst, map) => GeneratedModelMappers.Read{safeMethodName}(src, dst, map));");
+            sb.AppendLine($"            mapper.CreateMap<Dictionary<string, IppAttribute[]>, {fqn}>((src, dst, map) => GeneratedModelMappers.Read{safeMethodName}(src, dst, map));");
             sb.AppendLine($"            mapper.CreateMap<{fqn}, List<IppAttribute>>((src, dst, map) => GeneratedModelMappers.Write{safeMethodName}(src, dst, map));");
             sb.AppendLine($"            mapper.CreateMap<{fqn}, IEnumerable<IppAttribute>>((src, map) => GeneratedModelMappers.Write{safeMethodName}(src, null, map));");
             sb.AppendLine($"            mapper.CreateMap<{fqn}, IDictionary<string, IppAttribute[]>>((src, map) => map.Map<List<IppAttribute>>(src).ToIppDictionary());");
@@ -2388,7 +2548,7 @@ public class MapperSourceGenerator : IIncrementalGenerator
         return false;
     }
 
-    private static string? GetSectionPropertyName(byte sectionTag)
+    internal static string? GetSectionPropertyName(byte sectionTag)
     {
         return sectionTag switch
         {

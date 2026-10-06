@@ -102,19 +102,29 @@ public class IppRequestMessageValidatorTests
 
     #region Base Validation Tests
 
+
     [TestMethod]
-    public void Default_ShouldReturnNewValidatorEachTime()
+    public void ServerDefault_ShouldReturnNewValidatorEachTime()
     {
-        var first = IppRequestMessageValidator.Default;
-        var second = IppRequestMessageValidator.Default;
+        var first = IppRequestMessageValidator.ServerDefault;
+        var second = IppRequestMessageValidator.ServerDefault;
 
         first.Should().NotBeSameAs(second);
     }
 
     [TestMethod]
-    public void Default_ShouldUseSafeNonFidelityAwareSettings()
+    public void ClientDefault_ShouldReturnNewValidatorEachTime()
     {
-        var validator = IppRequestMessageValidator.Default;
+        var first = IppRequestMessageValidator.ClientDefault;
+        var second = IppRequestMessageValidator.ClientDefault;
+
+        first.Should().NotBeSameAs(second);
+    }
+
+    [TestMethod]
+    public void ServerDefault_ShouldUseSafeNonFidelityAwareSettings()
+    {
+        var validator = IppRequestMessageValidator.ServerDefault;
 
         validator.ValidateCoreRules.Should().BeTrue();
         validator.ValidateOperationSpecificRules.Should().BeTrue();
@@ -129,6 +139,45 @@ public class IppRequestMessageValidatorTests
         validator.ValidateSystemAttributesGroup.Should().BeTrue();
         validator.UseIppAttributeFidelityForCapabilityValidation.Should().BeFalse();
         validator.EnforceMediaMutualExclusivity.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void ClientDefault_ShouldEnforceMediaMutualExclusivity()
+    {
+        var validator = IppRequestMessageValidator.ClientDefault;
+
+        validator.ValidateCoreRules.Should().BeTrue();
+        validator.ValidateOperationSpecificRules.Should().BeTrue();
+        validator.ValidateOperationAttributesGroup.Should().BeTrue();
+        validator.ValidateJobAttributesGroup.Should().BeTrue();
+        validator.ValidatePrinterAttributesGroup.Should().BeTrue();
+        validator.ValidateUnsupportedAttributesGroup.Should().BeTrue();
+        validator.ValidateSubscriptionAttributesGroup.Should().BeTrue();
+        validator.ValidateEventNotificationAttributesGroup.Should().BeTrue();
+        validator.ValidateResourceAttributesGroup.Should().BeTrue();
+        validator.ValidateDocumentAttributesGroup.Should().BeTrue();
+        validator.ValidateSystemAttributesGroup.Should().BeTrue();
+        validator.UseIppAttributeFidelityForCapabilityValidation.Should().BeFalse();
+        validator.EnforceMediaMutualExclusivity.Should().BeTrue();
+    }
+
+    [TestMethod]
+    public void Validate_MediaAndMediaCol_ClientDefaultShouldThrow_ServerDefaultShouldNotThrow()
+    {
+        var clientValidator = IppRequestMessageValidator.ClientDefault;
+        var serverValidator = IppRequestMessageValidator.ServerDefault;
+
+        var request = CreateBasicRequest(IppOperation.CreateJob);
+        request.JobAttributes.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.Media, "iso_a4"));
+        request.JobAttributes.Add(new IppAttribute(Tag.BegCollection, IppAttributeNames.MediaCol, NoValue.Instance));
+        request.JobAttributes.Add(new IppAttribute(Tag.EndCollection, string.Empty, NoValue.Instance));
+
+        Action clientAct = () => clientValidator.Validate(request);
+        clientAct.Should().Throw<IppRequestException>()
+            .Which.StatusCode.Should().Be(IppStatusCode.ClientErrorConflictingAttributes);
+
+        Action serverAct = () => serverValidator.Validate(request);
+        serverAct.Should().NotThrow();
     }
 
     [TestMethod]
@@ -243,7 +292,7 @@ public class IppRequestMessageValidatorTests
         };
 
         var request = CreateMinimalCreateJobRequest(attributes);
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
 
         Action act = () => validator.Validate(request);
 
@@ -267,7 +316,7 @@ public class IppRequestMessageValidatorTests
         };
 
         var request = CreateMinimalCreateJobRequest(attributes);
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
 
         Action act = () => validator.Validate(request);
 
@@ -293,7 +342,7 @@ public class IppRequestMessageValidatorTests
         };
 
         var request = CreateMinimalCreateJobRequest(attributes);
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
 
         Action act = () => validator.Validate(request);
 
@@ -315,7 +364,7 @@ public class IppRequestMessageValidatorTests
         };
 
         var request = CreateMinimalSetPrinterAttributesRequest(printerAttributes);
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
 
         Action act = () => validator.Validate(request);
 
@@ -339,7 +388,7 @@ public class IppRequestMessageValidatorTests
         };
 
         var request = CreateMinimalSetPrinterAttributesRequest(printerAttributes);
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
 
         Action act = () => validator.Validate(request);
 
@@ -358,7 +407,7 @@ public class IppRequestMessageValidatorTests
         };
 
         var request = CreateMinimalSetPrinterAttributesRequest(printerAttributes);
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
 
         Action act = () => validator.Validate(request);
 
@@ -381,7 +430,7 @@ public class IppRequestMessageValidatorTests
         };
 
         var request = CreateMinimalSetPrinterAttributesRequest(printerAttributes);
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
 
         Action act = () => validator.Validate(request);
 
@@ -1935,7 +1984,7 @@ public class IppRequestMessageValidatorTests
     [TestMethod]
     public void Validate_RegisterOutputDevice_WithBothX509CertificateAndRequest_Throws()
     {
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
         var request = CreateBasicSystemRequest(IppOperation.RegisterOutputDevice);
         request.OperationAttributes.Add(new IppAttribute(Tag.Uri, IppAttributeNames.OutputDeviceUuid, "urn:uuid:123e4567-e89b-12d3-a456-426614174000"));
         request.OperationAttributes.Add(new IppAttribute(Tag.TextWithoutLanguage, IppAttributeNames.OutputDeviceX509Certificate, "cert-data"));
@@ -1950,7 +1999,7 @@ public class IppRequestMessageValidatorTests
     [TestMethod]
     public void Validate_RegisterOutputDevice_MissingOutputDeviceUuid_Throws()
     {
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
         var request = CreateBasicSystemRequest(IppOperation.RegisterOutputDevice);
 
         Action act = () => validator.Validate(request);
@@ -1962,7 +2011,7 @@ public class IppRequestMessageValidatorTests
     [TestMethod]
     public void Validate_SetPrinterAttributes_DefaultValueNotInSupportedValues_Throws()
     {
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
         var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
         {
             new IppAttribute(Tag.Integer, "copies-default", 15),
@@ -1978,7 +2027,7 @@ public class IppRequestMessageValidatorTests
     [TestMethod]
     public void Validate_SetPrinterAttributes_DefaultValueInSupportedValues_Passes()
     {
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
         var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
         {
             new IppAttribute(Tag.Integer, "copies-default", 5),
@@ -2181,7 +2230,7 @@ public class IppRequestMessageValidatorTests
     [TestMethod]
     public void Validate_SetPrinterAttributes_DefaultWithoutSupported_ShouldPass()
     {
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
         var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
         {
             new IppAttribute(Tag.Integer, "copies-default", 5)
@@ -2205,7 +2254,7 @@ public class IppRequestMessageValidatorTests
     [TestMethod]
     public void Validate_SetPrinterAttributes_DefaultWithCollectionValueContainingNull_ShouldPass()
     {
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
         var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
         {
             new IppAttribute(Tag.Integer, "copies-default", new object[] { 3, null!, 5 }),
@@ -2220,7 +2269,7 @@ public class IppRequestMessageValidatorTests
     [TestMethod]
     public void Validate_SetPrinterAttributes_DefaultValueLongInSupportedRange_Passes()
     {
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
         var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
         {
             new IppAttribute(Tag.Integer, "copies-default", 5L),
@@ -2235,7 +2284,7 @@ public class IppRequestMessageValidatorTests
     [TestMethod]
     public void Validate_SetPrinterAttributes_DefaultValueStringInSupportedRange_Passes()
     {
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
         var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
         {
             new IppAttribute(Tag.Integer, "copies-default", "5"),
@@ -2250,7 +2299,7 @@ public class IppRequestMessageValidatorTests
     [TestMethod]
     public void Validate_SetPrinterAttributes_DefaultValueIntBelowSupportedRange_Throws()
     {
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
         var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
         {
             new IppAttribute(Tag.Integer, "copies-default", 0),
@@ -2266,7 +2315,7 @@ public class IppRequestMessageValidatorTests
     [TestMethod]
     public void Validate_SetPrinterAttributes_DefaultValueLongBelowSupportedRange_Throws()
     {
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
         var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
         {
             new IppAttribute(Tag.Integer, "copies-default", 0L),
@@ -2282,7 +2331,7 @@ public class IppRequestMessageValidatorTests
     [TestMethod]
     public void Validate_SetPrinterAttributes_DefaultValueLongAboveSupportedRange_Throws()
     {
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
         var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
         {
             new IppAttribute(Tag.Integer, "copies-default", 15L),
@@ -2298,7 +2347,7 @@ public class IppRequestMessageValidatorTests
     [TestMethod]
     public void Validate_SetPrinterAttributes_DefaultValueStringBelowSupportedRange_Throws()
     {
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
         var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
         {
             new IppAttribute(Tag.Integer, "copies-default", "0"),
@@ -2314,7 +2363,7 @@ public class IppRequestMessageValidatorTests
     [TestMethod]
     public void Validate_SetPrinterAttributes_DefaultValueStringAboveSupportedRange_Throws()
     {
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
         var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
         {
             new IppAttribute(Tag.Integer, "copies-default", "15"),
@@ -2330,7 +2379,7 @@ public class IppRequestMessageValidatorTests
     [TestMethod]
     public void Validate_SetPrinterAttributes_DefaultValueNonNumericStringForRangeSupported_Throws()
     {
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
         var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
         {
             new IppAttribute(Tag.Integer, "copies-default", "abc"),
@@ -2346,7 +2395,7 @@ public class IppRequestMessageValidatorTests
     [TestMethod]
     public void Validate_SetPrinterAttributes_DefaultValueNullToStringForRangeSupported_Throws()
     {
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
         var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
         {
             new IppAttribute(Tag.Integer, "copies-default", new NullToStringObject()),
@@ -2362,7 +2411,7 @@ public class IppRequestMessageValidatorTests
     [TestMethod]
     public void Validate_SetPrinterAttributes_DefaultValueNullToStringForStringSupported_Throws()
     {
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
         var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
         {
             new IppAttribute(Tag.Keyword, "media-default", new NullToStringObject()),
@@ -2378,7 +2427,7 @@ public class IppRequestMessageValidatorTests
     [TestMethod]
     public void Validate_SetPrinterAttributes_SupportedValueNullToString_Throws()
     {
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
         var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
         {
             new IppAttribute(Tag.Keyword, "media-default", "iso_a4"),
@@ -2481,7 +2530,7 @@ public class IppRequestMessageValidatorTests
     [TestMethod]
     public void Validate_TrayAndSupply_WithValidValues_DoesNotThrow()
     {
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
         var printerAttributes = new List<IppAttribute>
         {
             new(Tag.BegCollection, IppAttributeNames.PrinterInputTray, NoValue.Instance),
@@ -2504,7 +2553,7 @@ public class IppRequestMessageValidatorTests
     [DataRow(IppAttributeNames.PrinterSupply, "color-name", "cyan\x7F")]
     public void Validate_TrayAndSupply_WithControlCharacter_Throws(string colName, string memberName, string valueWithControlChar)
     {
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
         var printerAttributes = new List<IppAttribute>
         {
             new(Tag.BegCollection, colName, NoValue.Instance),
@@ -2542,7 +2591,7 @@ public class IppRequestMessageValidatorTests
     [TestMethod]
     public void Validate_InputAttributes_WithAutoExposureFalseAndOtherSettings_DoesNotThrow()
     {
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
         var request = CreateBasicRequest(IppOperation.PrintJob);
         request.Document = new MemoryStream();
         request.JobAttributes.AddRange(new[]
@@ -2559,7 +2608,7 @@ public class IppRequestMessageValidatorTests
     [TestMethod]
     public void Validate_InputAttributes_WithAutoExposureTrueAndNoBrightnessContrastOrSharpness_DoesNotThrow()
     {
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
         var request = CreateBasicRequest(IppOperation.PrintJob);
         request.Document = new MemoryStream();
         request.JobAttributes.AddRange(new[]
@@ -2579,7 +2628,7 @@ public class IppRequestMessageValidatorTests
     [DataRow(IppAttributeNames.InputSharpness, 0)]
     public void Validate_InputAttributes_WithAutoExposureTrueAndForbiddenAttribute_Throws(string forbiddenAttrName, int val)
     {
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
         var request = CreateBasicRequest(IppOperation.PrintJob);
         request.Document = new MemoryStream();
         request.JobAttributes.AddRange(new[]
@@ -3220,7 +3269,7 @@ public class IppRequestMessageValidatorTests
     [TestMethod]
     public void Validate_TrayAndSupply_WithOutOfBandTag_DoesNotThrow()
     {
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
         var printerAttributes = new List<IppAttribute>
         {
             new(Tag.Unknown, IppAttributeNames.PrinterInputTray, NoValue.Instance)
@@ -3235,7 +3284,7 @@ public class IppRequestMessageValidatorTests
     [TestMethod]
     public void Validate_TrayAndSupply_WithNoValueOrNullMember_DoesNotThrow()
     {
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
         var printerAttributes = new List<IppAttribute>
         {
             new(Tag.BegCollection, IppAttributeNames.PrinterInputTray, NoValue.Instance),
@@ -3253,7 +3302,7 @@ public class IppRequestMessageValidatorTests
     [TestMethod]
     public void Validate_InputAttributes_WithOutOfBandTag_DoesNotThrow()
     {
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
         var request = CreateBasicRequest(IppOperation.PrintJob);
         request.Document = new MemoryStream();
         request.JobAttributes.Add(new IppAttribute(Tag.Unknown, IppAttributeNames.InputAttributes, NoValue.Instance));
@@ -3270,7 +3319,7 @@ public class IppRequestMessageValidatorTests
     [DataRow("false", false)]
     public void Validate_InputAttributes_WithAutoExposureNonBool_Validation(object autoExposureVal, bool shouldThrow)
     {
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
         var request = CreateBasicRequest(IppOperation.PrintJob);
         request.Document = new MemoryStream();
         request.JobAttributes.AddRange(new[]
@@ -3295,7 +3344,7 @@ public class IppRequestMessageValidatorTests
     [TestMethod]
     public void Validate_TrayAndSupply_StringWithLanguage_ControlCharacters_Validation()
     {
-        var validator = IppRequestMessageValidator.Default;
+        var validator = IppRequestMessageValidator.ServerDefault;
 
         var printerAttributes1 = new List<IppAttribute>
         {

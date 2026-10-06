@@ -53,48 +53,7 @@ public class MapperConstructorExtensionsTests
         Assert.AreEqual(123, result);
     }
 
-    [TestMethod]
-    public void SimpleMapper_Should_Promote_Scalar_To_Array()
-    {
-        var mapper = new SimpleMapper();
-        mapper.CreateMap<string, int>((src, _) => int.Parse(src));
 
-        // Same type promotion: int -> int[]
-        var directResult = mapper.Map<int[]>(42);
-        Assert.IsNotNull(directResult);
-        Assert.AreEqual(1, directResult.Length);
-        Assert.AreEqual(42, directResult[0]);
-
-        // Mapped scalar promotion: string -> int[]
-        var mappedResult = mapper.Map<int[]>("123");
-        Assert.IsNotNull(mappedResult);
-        Assert.AreEqual(1, mappedResult.Length);
-        Assert.AreEqual(123, mappedResult[0]);
-    }
-
-    [TestMethod]
-    public void SimpleMapper_Should_Map_Array_To_Array()
-    {
-        var mapper = new SimpleMapper();
-        mapper.CreateMap<string, int>((src, _) => int.Parse(src));
-
-        var result = mapper.Map<int[]>(new[] { "1", "2", "3" });
-        Assert.IsNotNull(result);
-        Assert.AreEqual(3, result.Length);
-        CollectionAssert.AreEqual(new[] { 1, 2, 3 }, result);
-    }
-
-    [TestMethod]
-    public void SimpleMapper_Should_Map_ObjectArray_To_Array()
-    {
-        var mapper = new SimpleMapper();
-        mapper.CreateMap<string, int>((src, _) => int.Parse(src));
-
-        var result = mapper.Map<int[]>(new object[] { "1", "2" });
-        Assert.IsNotNull(result);
-        Assert.AreEqual(2, result.Length);
-        CollectionAssert.AreEqual(new[] { 1, 2 }, result);
-    }
 
     [TestMethod]
     public void SimpleMapper_Should_Map_NoValue_To_Arrays_As_Null()
@@ -182,7 +141,7 @@ public class MapperConstructorExtensionsTests
         var mapper = new SimpleMapper();
         mapper.CreateCollectionMap<int>();
 
-        var result = mapper.Map<List<int>>(new TestEnumerable<int>(1, 2));
+        var result = mapper.Map<IEnumerable<int>, List<int>>(new TestEnumerable<int>(1, 2));
         Assert.IsNotNull(result);
         CollectionAssert.AreEqual(new[] { 1, 2 }, result);
     }
@@ -193,7 +152,7 @@ public class MapperConstructorExtensionsTests
         var mapper = new SimpleMapper();
         mapper.CreateCollectionMap<int>();
 
-        var result = mapper.Map<int[]>(new TestEnumerable<int>(1, 2));
+        var result = mapper.Map<IEnumerable<int>, int[]>(new TestEnumerable<int>(1, 2));
         Assert.IsNotNull(result);
         CollectionAssert.AreEqual(new[] { 1, 2 }, result);
     }

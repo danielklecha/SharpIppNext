@@ -1,4 +1,4 @@
-﻿using SharpIpp.Mapping;
+using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -35,7 +35,7 @@ public class SimpleMapperTests
         var source = new MyImplementation { Value = "test" };
 
         // Act
-        var result = mapper.Map<string?>(source);
+        var result = mapper.Map<IMyInterface, string?>(source);
 
         // Assert
         result.Should().Be("test");
@@ -290,7 +290,7 @@ public class SimpleMapperTests
         var source = new MyImplementation { Value = "42" };
 
         // Act
-        var result = mapper.Map<int?>(source);
+        var result = mapper.Map<IMyInterface, int?>(source);
 
         // Assert
         result.Should().Be(42);
@@ -305,7 +305,7 @@ public class SimpleMapperTests
         var source = new TestDerivedClass { Value = "base_test" };
 
         // Act
-        var result = mapper.Map<string>(source);
+        var result = mapper.Map<TestBaseClass, string>(source);
 
         // Assert
         result.Should().Be("base_test");
@@ -320,7 +320,7 @@ public class SimpleMapperTests
         var source = new TestDerivedClass { Value = "84" };
 
         // Act
-        var result = mapper.Map<int?>(source);
+        var result = mapper.Map<TestBaseClass, int?>(source);
 
         // Assert
         result.Should().Be(84);
@@ -331,7 +331,7 @@ public class SimpleMapperTests
     {
         // Arrange
         var mapper = new SimpleMapper();
-        mapper.CreateMap<string, TestBaseClass>((src, m) => new TestDerivedClass { Value = src });
+        mapper.CreateMap<string, TestDerivedClass>((src, m) => new TestDerivedClass { Value = src });
 
         // Act
         var result = mapper.Map<TestDerivedClass>("derived_dest");
@@ -346,7 +346,7 @@ public class SimpleMapperTests
     {
         // Arrange
         var mapper = new SimpleMapper();
-        mapper.CreateMap<string, IMyInterface>((src, m) => new MyImplementation { Value = src });
+        mapper.CreateMap<string, MyImplementation>((src, m) => new MyImplementation { Value = src });
 
         // Act
         var result = mapper.Map<MyImplementation>("interface_dest");
@@ -539,6 +539,7 @@ public class SimpleMapperTests
         // Arrange
         var mapper = new SimpleMapper();
         mapper.CreateMap<string, int>((src, m) => int.Parse(src));
+        mapper.CreateCollectionMap<int>();
 
         // Act
         var result = mapper.Map<int[]>(new object[] { "1", "2" });
@@ -584,6 +585,7 @@ public class SimpleMapperTests
         // Arrange
         var mapper = new SimpleMapper();
         mapper.CreateMap<string, int>((src, m) => int.Parse(src));
+        mapper.CreateCollectionMap<int>();
 
         // Act
         var result = mapper.Map<int[]>(new object?[] { "7", null });
@@ -832,6 +834,8 @@ public class SimpleMapperTests
     {
         // Arrange
         var mapper = new SimpleMapper();
+        mapper.CreateCollectionMap<int>();
+        mapper.CreateCollectionMap<string>();
 
         // Act
         var intResult = mapper.Map<int[]>(42);
@@ -840,34 +844,6 @@ public class SimpleMapperTests
         // Assert
         intResult.Should().Equal(42);
         strResult.Should().Equal("test");
-    }
-
-    [TestMethod]
-    public void Map_SingleItem_ToArrayDestination_WhenMappedType_ShouldMapAndWrapInArray()
-    {
-        // Arrange
-        var mapper = new SimpleMapper();
-        mapper.CreateMap<string, int>((src, m) => int.Parse(src));
-
-        // Act
-        var result = mapper.Map<int[]>("42");
-
-        // Assert
-        result.Should().Equal(42);
-    }
-
-    [TestMethod]
-    public void Map_SingleItem_ToArrayDestination_WhenMappedViaInterface_ShouldWork()
-    {
-        // Arrange
-        var mapper = new SimpleMapper();
-        mapper.CreateMap<IMyInterface, int>((src, m) => src.Value != null ? int.Parse(src.Value) : 0);
-
-        // Act
-        var result = mapper.Map<int[]>(new MyImplementation { Value = "99" });
-
-        // Assert
-        result.Should().Equal(99);
     }
 
     [TestMethod]
@@ -881,34 +857,6 @@ public class SimpleMapperTests
 
         // Assert
         act.Should().Throw<ArgumentException>().WithMessage("*No mapping found*");
-    }
-
-    [TestMethod]
-    public void Map_SingleItem_ToArrayDestination_WhenMappedToNull_ForReferenceType_ShouldWrapNullInArray()
-    {
-        // Arrange
-        var mapper = new SimpleMapper();
-        mapper.CreateMap<int, string?>((src, m) => null);
-
-        // Act
-        var result = mapper.Map<string?[]>(42);
-
-        // Assert
-        result.Should().Equal(new string?[] { null });
-    }
-
-    [TestMethod]
-    public void Map_SingleItem_ToArrayDestination_WhenMappedToNull_ForValueType_ShouldSetDefaultValueInArray()
-    {
-        // Arrange
-        var mapper = new SimpleMapper();
-        mapper.CreateMap(typeof(string), typeof(int), (src, m) => null!);
-
-        // Act
-        var result = mapper.Map<int[]>("foo");
-
-        // Assert
-        result.Should().Equal(0);
     }
 
     [TestMethod]
@@ -1186,6 +1134,7 @@ public class SimpleMapperTests
         // Arrange
         var mapper = new SimpleMapper();
         mapper.CreateMap<string, int>((src, m) => int.Parse(src));
+        mapper.CreateMap<string[], int[]>((src, map) => src.Select(x => map.Map<int>(x)).ToArray());
 
         // Act
         var result = mapper.Map<int[]>(new IppValue<string[]>(new[] { "1", "2", "3" }));
@@ -1297,4 +1246,18 @@ public class SimpleMapperTests
         }
     }
 
+
+    [TestMethod]
+    public void Instance_ShouldReturnSingletonWithRegisteredProfiles()
+    {
+        var instance1 = SimpleMapper.Instance;
+        var instance2 = SimpleMapper.Instance;
+
+        instance1.Should().NotBeNull();
+        instance1.Should().BeSameAs(instance2);
+
+        var uri = instance1.Map<Uri>("http://localhost:631");
+        uri.Should().NotBeNull();
+        uri.ToString().Should().Be("http://localhost:631/");
+    }
 }

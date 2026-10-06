@@ -17,12 +17,7 @@ namespace SharpIpp.Tests.Unit.Mapping.Profiles;
 [ExcludeFromCodeCoverage]
 public class UpdateActiveJobsOperationAttributesProfileTests
 {
-    private static SimpleMapper CreateMapper()
-    {
-        var mapper = new SimpleMapper();
-        mapper.RegisterGeneratedProfiles();
-        return mapper;
-    }
+    private static SimpleMapper CreateMapper() => SimpleMapper.Instance;
 
     [TestMethod]
     public void Map_UpdateActiveJobsOperationAttributes_To_Attributes_ShouldIncludeAllFields()

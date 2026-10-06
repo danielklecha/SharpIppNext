@@ -7,7 +7,7 @@ using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Mapping;
 
-[MapperConfiguration(1)]
+[MapperConfiguration(1, typeof(OverrideInstruction))]
 internal static class OverrideInstructionMapper
 {
     public static void Configure(IMapperConstructor mapper)
@@ -36,6 +36,8 @@ internal static class OverrideInstructionMapper
                 JobTemplateAttributes = overrideTemplateAttributes
             };
         });
+
+        mapper.CreateMap<Dictionary<string, IppAttribute[]>, OverrideInstruction>((src, map) => map.Map<IDictionary<string, IppAttribute[]>, OverrideInstruction>(src));
 
         mapper.CreateMap<OverrideInstruction, IEnumerable<IppAttribute>>((src, map) =>
         {

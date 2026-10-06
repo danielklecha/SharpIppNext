@@ -20,8 +20,7 @@ public class SetPrinterAttributesRequestProfileTests
     [TestInitialize]
     public void Setup()
     {
-        _mapper = new SimpleMapper();
-        _mapper.RegisterGeneratedProfiles();
+        _mapper = SimpleMapper.Instance;
     }
 
     [TestMethod]

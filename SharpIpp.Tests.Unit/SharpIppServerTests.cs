@@ -779,7 +779,7 @@ public class SharpIppServerTests
         // Disable response validator and response message validator on the server by passing null
         SharpIppServer server = new(Mock.Of<IIppProtocol>())
         {
-            RequestMessageValidator = IppRequestMessageValidator.Default,
+            RequestMessageValidator = IppRequestMessageValidator.ServerDefault,
             ResponseValidator = null,
             ResponseMessageValidator = null
         };
@@ -799,7 +799,7 @@ public class SharpIppServerTests
         Mock<IIppResponseMessageValidator> responseMessageValidator = new();
         SharpIppServer server = new(Mock.Of<IIppProtocol>())
         {
-            RequestMessageValidator = IppRequestMessageValidator.Default,
+            RequestMessageValidator = IppRequestMessageValidator.ServerDefault,
             ResponseValidator = null,
             ResponseMessageValidator = responseMessageValidator.Object
         };
@@ -820,7 +820,7 @@ public class SharpIppServerTests
         Mock<IIppResponseMessageValidator> responseMessageValidator = new();
         SharpIppServer server = new(Mock.Of<IIppProtocol>())
         {
-            RequestMessageValidator = IppRequestMessageValidator.Default,
+            RequestMessageValidator = IppRequestMessageValidator.ServerDefault,
             ResponseValidator = null,
             ResponseMessageValidator = responseMessageValidator.Object
         };
@@ -840,7 +840,7 @@ public class SharpIppServerTests
     public void Server_Properties_ShouldHaveDefaultValues()
     {
         var server = new SharpIppServer();
-        server.RequestMessageValidator.Should().BeEquivalentTo(IppRequestMessageValidator.Default);
+        server.RequestMessageValidator.Should().BeEquivalentTo(IppRequestMessageValidator.ServerDefault);
         server.RequestValidator.Should().BeOfType<IppRequestValidator>();
         server.ResponseMessageValidator.Should().BeEquivalentTo(IppResponseMessageValidator.Default);
         server.ResponseValidator.Should().BeOfType<IppResponseValidator>();
@@ -852,7 +852,7 @@ public class SharpIppServerTests
         // Arrange
         SharpIppServer server = new(Mock.Of<IIppProtocol>())
         {
-            RequestMessageValidator = IppRequestMessageValidator.Default,
+            RequestMessageValidator = IppRequestMessageValidator.ServerDefault,
             ResponseValidator = null,
             ResponseMessageValidator = null
         };
@@ -905,7 +905,7 @@ public class SharpIppServerTests
         // Disable request validator on the server by passing null
         SharpIppServer server = new(Mock.Of<IIppProtocol>())
         {
-            RequestMessageValidator = IppRequestMessageValidator.Default,
+            RequestMessageValidator = IppRequestMessageValidator.ServerDefault,
             RequestValidator = null,
             ResponseMessageValidator = null,
             ResponseValidator = null
@@ -933,7 +933,7 @@ public class SharpIppServerTests
         Mock<IIppRequestValidator> requestValidator = new();
         SharpIppServer server = new(Mock.Of<IIppProtocol>())
         {
-            RequestMessageValidator = IppRequestMessageValidator.Default,
+            RequestMessageValidator = IppRequestMessageValidator.ServerDefault,
             RequestValidator = requestValidator.Object,
             ResponseMessageValidator = null,
             ResponseValidator = null

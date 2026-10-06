@@ -21,8 +21,7 @@ public class PrintJobProfileTest
     public void Map_InvalidRequest_DoesNotThrow(Type sourceType, Type destType)
     {
         // Arrange
-        var mapper = new SimpleMapper();
-        mapper.RegisterGeneratedProfiles();
+        var mapper = SimpleMapper.Instance;
 
         object source = sourceType == typeof(PrintJobRequest) 
             ? new PrintJobRequest { Document = null } 

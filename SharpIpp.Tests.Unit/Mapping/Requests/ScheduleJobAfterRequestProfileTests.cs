@@ -15,12 +15,7 @@ namespace SharpIpp.Tests.Unit.Mapping.Profiles;
 [ExcludeFromCodeCoverage]
 public class ScheduleJobAfterRequestProfileTests
 {
-    private static SimpleMapper CreateMapper()
-    {
-        var mapper = new SimpleMapper();
-        mapper.RegisterGeneratedProfiles();
-        return mapper;
-    }
+    private static SimpleMapper CreateMapper() => SimpleMapper.Instance;
 
     private static IppRequestMessage CreateBaseMessage(IppOperation operation)
     {

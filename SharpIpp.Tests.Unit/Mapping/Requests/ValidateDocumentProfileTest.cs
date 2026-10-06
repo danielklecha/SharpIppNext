@@ -17,8 +17,7 @@ public class ValidateDocumentProfileTest
     [TestMethod]
     public void Map_ValidateDocumentRequestToIppRequestMessage_ShouldSetValidateDocumentOperationAndMapDocumentAttributes()
     {
-        var mapper = new SimpleMapper();
-        mapper.RegisterGeneratedProfiles();
+        var mapper = SimpleMapper.Instance;
 
         var request = new ValidateDocumentRequest
         {
@@ -45,8 +44,7 @@ public class ValidateDocumentProfileTest
     [TestMethod]
     public void Map_IppRequestMessageToValidateDocumentRequest_ShouldNotThrow()
     {
-        var mapper = new SimpleMapper();
-        mapper.RegisterGeneratedProfiles();
+        var mapper = SimpleMapper.Instance;
 
         var request = new IppRequestMessage
         {

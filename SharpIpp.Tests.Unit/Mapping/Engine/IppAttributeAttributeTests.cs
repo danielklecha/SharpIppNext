@@ -115,8 +115,7 @@ public class IppAttributeAttributeTests
     [TestMethod]
     public void Mapper_OrdersAttributesByExplicitOrderFirst()
     {
-        var mapper = new SimpleMapper();
-        mapper.RegisterGeneratedProfiles();
+        var mapper = SimpleMapper.Instance;
 
         var op = new OperationAttributes
         {

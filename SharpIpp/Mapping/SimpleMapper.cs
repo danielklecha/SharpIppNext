@@ -1,3 +1,4 @@
+using SharpIpp.Mapping.Extensions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -7,9 +8,21 @@ namespace SharpIpp.Mapping;
 
 public class SimpleMapper : IMapper
 {
-    private readonly ConcurrentDictionary<(Type src, Type dst), Func<object, object?, SimpleMapper, object?>> _dictionary = new();
+    private static readonly Lazy<SimpleMapper> _instance = new(CreateDefaultInstance);
 
-    private readonly ConcurrentDictionary<(Type src, Type dst), Func<object, object?, SimpleMapper, object?>?> _resolvedMapCache = new();
+    /// <summary>
+    /// Gets the shared default <see cref="SimpleMapper"/> instance configured with registered profiles.
+    /// </summary>
+    public static SimpleMapper Instance => _instance.Value;
+
+    private static SimpleMapper CreateDefaultInstance()
+    {
+        var mapper = new SimpleMapper();
+        mapper.RegisterGeneratedProfiles();
+        return mapper;
+    }
+
+    private readonly ConcurrentDictionary<(Type src, Type dst), Func<object, object?, SimpleMapper, object?>> _dictionary = new();
 
     public void CreateMap<TSource, TDest>(Func<TSource, IMapperApplier, TDest?> mapFunc)
     {
@@ -32,7 +45,6 @@ public class SimpleMapper : IMapper
     {
         var key = (sourceType, destType);
         _dictionary[key] = (src, dst, mapper) => mapFunc(src, dst, mapper);
-        _resolvedMapCache.Clear();
     }
 
     public TDest Map<TDest>(object? source)
@@ -49,12 +61,13 @@ public class SimpleMapper : IMapper
 
     public TDest Map<TSource, TDest>(TSource? source)
     {
-        return Map<TDest>(source);
+        return Map<TSource, TDest>(source, default);
     }
 
     public TDest Map<TSource, TDest>(TSource? source, TDest? dest)
     {
-        return Map<TDest>(source, dest);
+        var res = MapNullable<TSource, TDest>(source, dest) ?? throw new ArgumentException("Cannot map null source to non-nullable destination without a default destination.");
+        return res;
     }
 
     public TDest? MapNullable<TDest>(object? source)
@@ -193,111 +206,16 @@ public class SimpleMapper : IMapper
             }
         }
 
-        var mapFunc = _resolvedMapCache.GetOrAdd((sourceType, destType), key => FindMap(key.src, key.dst));
-        if (mapFunc != null)
+        if (_dictionary.TryGetValue((sourceType, destType), out var mapFunc))
         {
             return mapFunc(source, dest, this);
         }
 
-        throw new ArgumentException($"No mapping found for types {sourceType.FullName} -> {destType.FullName}. Source: {source}");
-    }
-
-    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2070:UnsatisfiedInterfaces", Justification = "Interfaces of mapped models are preserved.")]
-    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050:RequiresDynamicCode", Justification = "Array element types are known from model registrations.")]
-    private Func<object, object?, SimpleMapper, object?>? FindMap(Type sourceType, Type destType)
-    {
-        if (_dictionary.TryGetValue((sourceType, destType), out var directMap))
-        {
-            return directMap;
-        }
-
-        var underlyingDest = Nullable.GetUnderlyingType(destType);
         if (underlyingDest != null && _dictionary.TryGetValue((sourceType, underlyingDest), out var underlyingMap))
         {
-            return underlyingMap;
+            return underlyingMap(source, dest, this);
         }
 
-        foreach (var iface in sourceType.GetInterfaces())
-        {
-            if (_dictionary.TryGetValue((iface, destType), out var ifaceMap))
-            {
-                return ifaceMap;
-            }
-
-            if (underlyingDest != null && _dictionary.TryGetValue((iface, underlyingDest), out ifaceMap))
-            {
-                return ifaceMap;
-            }
-        }
-
-        for (var baseType = sourceType.BaseType; baseType != null && baseType != typeof(object); baseType = baseType.BaseType)
-        {
-            if (_dictionary.TryGetValue((baseType, destType), out var baseMap))
-            {
-                return baseMap;
-            }
-
-            if (underlyingDest != null && _dictionary.TryGetValue((baseType, underlyingDest), out baseMap))
-            {
-                return baseMap;
-            }
-        }
-
-        for (var baseType = destType.BaseType; baseType != null && baseType != typeof(object); baseType = baseType.BaseType)
-        {
-            if (_dictionary.TryGetValue((sourceType, baseType), out var baseMap))
-            {
-                return baseMap;
-            }
-        }
-
-        foreach (var iface in destType.GetInterfaces())
-        {
-            if (_dictionary.TryGetValue((sourceType, iface), out var ifaceMap))
-            {
-                return ifaceMap;
-            }
-        }
-
-        if (destType.IsArray)
-        {
-            var destElemType = destType.GetElementType()!;
-
-            if (sourceType.IsArray)
-            {
-                var srcElemType = sourceType.GetElementType()!;
-                return (src, _, mapper) =>
-                {
-                    var srcArray = (Array)src;
-                    var destArray = Array.CreateInstance(destElemType, srcArray.Length);
-                    for (int i = 0; i < srcArray.Length; i++)
-                    {
-                        var item = srcArray.GetValue(i);
-                        var mapped = mapper.MapNullable(item, item?.GetType() ?? srcElemType, destElemType);
-                        if (mapped != null || !destElemType.IsValueType)
-                        {
-                            destArray.SetValue(mapped, i);
-                        }
-                    }
-                    return destArray;
-                };
-            }
-
-            if (sourceType == typeof(string) || !typeof(System.Collections.IEnumerable).IsAssignableFrom(sourceType))
-            {
-                return (src, _, mapper) =>
-                {
-                    var mapped = mapper.MapNullable(src, sourceType, destElemType);
-                    var destArray = Array.CreateInstance(destElemType, 1);
-                    if (mapped != null || !destElemType.IsValueType)
-                    {
-                        destArray.SetValue(mapped, 0);
-                    }
-                    return destArray;
-                };
-            }
-        }
-
-        return null;
+        throw new ArgumentException($"No mapping found for types {sourceType.FullName} -> {destType.FullName}. Source: {source}");
     }
 }

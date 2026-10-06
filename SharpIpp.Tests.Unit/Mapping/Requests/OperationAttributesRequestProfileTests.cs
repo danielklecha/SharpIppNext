@@ -22,8 +22,7 @@ public class OperationAttributesRequestProfileTests
     [TestInitialize]
     public void TestInitialize()
     {
-        _mapper = new SimpleMapper();
-        _mapper.RegisterGeneratedProfiles();
+        _mapper = SimpleMapper.Instance;
     }
 
     [TestMethod]

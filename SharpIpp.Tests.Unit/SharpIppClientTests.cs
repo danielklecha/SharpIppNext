@@ -257,7 +257,7 @@ public class SharpIppClientTests
             new HttpClient(GetMockOfHttpMessageHandler().Object),
             protocol.Object)
         {
-            RequestMessageValidator = IppRequestMessageValidator.Default,
+            RequestMessageValidator = IppRequestMessageValidator.ClientDefault,
             RequestValidator = IppRequestValidator.Default,
             ResponseMessageValidator = validator.Object,
             ResponseValidator = null
@@ -278,6 +278,17 @@ public class SharpIppClientTests
         var response = await client.SendAsync(new Uri("http://127.0.0.1:631/"), request);
 
         validator.Verify(x => x.Validate(It.Is<IIppResponseMessage>(m => m == response)), Times.Once);
+    }
+
+    [TestMethod]
+    public void Client_Properties_ShouldHaveDefaultValues()
+    {
+        using var client = new SharpIppClient();
+        client.RequestMessageValidator.Should().BeEquivalentTo(IppRequestMessageValidator.ClientDefault);
+        client.RequestMessageValidator!.EnforceMediaMutualExclusivity.Should().BeTrue();
+        client.RequestValidator.Should().BeOfType<IppRequestValidator>();
+        client.ResponseMessageValidator.Should().BeNull();
+        client.ResponseValidator.Should().BeNull();
     }
 
 
@@ -729,9 +740,9 @@ public class SharpIppClientTests
     {
         // Arrange
         using SharpIppClient client = new();
-        var message = new Mock<IIppResponseMessage>();
+        var message = new IppResponseMessage();
         //Act
-        var result = client.CreateResponse<IppResponseMessage>( message.Object );
+        var result = client.CreateResponse<GetPrinterAttributesResponse>( message );
         // Assert
         result.Should().NotBeNull();
     }

@@ -18,8 +18,7 @@ public class SendUriProfileTest
     public void Map_SendUriRequestToIppRequestMessage_DocumentUriNullAndLastDocumentFalse_DoesNotThrow()
     {
         // Arrange
-        var mapper = new SimpleMapper();
-        mapper.RegisterGeneratedProfiles();
+        var mapper = SimpleMapper.Instance;
 
         var request = new SendUriRequest
         {
@@ -40,8 +39,7 @@ public class SendUriProfileTest
     [TestMethod]
     public void Map_SendUriRequest_WithDocumentTemplateAttributes_MapsDocumentAttributesGroup()
     {
-        var mapper = new SimpleMapper();
-        mapper.RegisterGeneratedProfiles();
+        var mapper = SimpleMapper.Instance;
 
         var request = new SendUriRequest
         {
