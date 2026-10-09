@@ -709,6 +709,79 @@ public class SharpIppClientTests
     }
 
     [TestMethod]
+    public async Task SendAsync_WhenContentTypeIsTextHtml_ThrowsIppResponseException_WithDescriptiveMessage()
+    {
+        // Arrange
+        Mock<HttpMessageHandler> handlerMock = new( MockBehavior.Strict );
+        handlerMock
+           .Protected()
+           .Setup<Task<HttpResponseMessage>>(
+              "SendAsync",
+              ItExpr.IsAny<HttpRequestMessage>(),
+              ItExpr.IsAny<CancellationToken>()
+           )
+           .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK)
+           {
+               Content = new StringContent("<!DOCTYPE html><html><body>CUPS Web UI</body></html>", Encoding.UTF8, "text/html")
+           });
+
+        var protocol = GetMockOfIppProtocol();
+        using SharpIppClient client = new( new HttpClient(handlerMock.Object), protocol.Object );
+
+        // Act
+        Func<Task<GetPrinterAttributesResponse>> act = async () => await client.GetPrinterAttributesAsync( new GetPrinterAttributesRequest
+        {
+            RequestId = 1,
+            OperationAttributes = new()
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631/")
+            }
+        });
+
+        // Assert
+        var ex = await act.Should().ThrowAsync<IppResponseException>();
+        ex.Which.Message.Should().Contain("Expected Content-Type 'application/ipp', but received 'text/html'");
+        ex.Which.Message.Should().Contain("web interface");
+    }
+
+    [TestMethod]
+    public async Task SendAsync_WhenContentTypeIsApplicationIpp_Succeeds()
+    {
+        // Arrange
+        Mock<HttpMessageHandler> handlerMock = new( MockBehavior.Strict );
+        handlerMock
+           .Protected()
+           .Setup<Task<HttpResponseMessage>>(
+              "SendAsync",
+              ItExpr.IsAny<HttpRequestMessage>(),
+              ItExpr.IsAny<CancellationToken>()
+           )
+           .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK)
+           {
+               Content = new ByteArrayContent(Array.Empty<byte>())
+               {
+                   Headers = { ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/ipp") }
+               }
+           });
+
+        var protocol = GetMockOfIppProtocol();
+        using SharpIppClient client = new( new HttpClient(handlerMock.Object), protocol.Object );
+
+        // Act
+        var res = await client.GetPrinterAttributesAsync( new GetPrinterAttributesRequest
+        {
+            RequestId = 123,
+            OperationAttributes = new()
+            {
+                PrinterUri = new Uri("http://127.0.0.1:631/")
+            }
+        });
+
+        // Assert
+        res.Should().NotBeNull();
+    }
+
+    [TestMethod]
     public void Constructor_Default_InstanceShouldBeCreated()
     {
         // Arrange & Act

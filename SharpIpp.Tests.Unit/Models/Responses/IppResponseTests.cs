@@ -125,4 +125,22 @@ public class IppResponseTests
         response.RequestId.Should().Be(requestId);
         response.OperationAttributes.Should().BeSameAs(opAttrs);
     }
+
+    [TestMethod]
+    public void ToString_ShouldReturnFormattedString()
+    {
+        // Arrange
+        var response = new TestResponse
+        {
+            Version = new IppVersion(2, 0),
+            StatusCode = IppStatusCode.SuccessfulOk,
+            RequestId = 42
+        };
+
+        // Act
+        var result = response.ToString();
+
+        // Assert
+        result.Should().Be("Version: 2.0, StatusCode: SuccessfulOk, RequestId: 42");
+    }
 }

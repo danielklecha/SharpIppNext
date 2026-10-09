@@ -30,4 +30,6 @@ public class IppRequestMessage : IIppRequestMessage
     public List<IppAttribute> DocumentAttributes { get; } = [];
 
     public List<IppAttribute> SystemAttributes { get; } = [];
+
+    public override string ToString() => $"Version: {Version}, Operation: {IppOperation}, RequestId: {RequestId}";
 }

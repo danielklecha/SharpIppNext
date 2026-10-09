@@ -30,16 +30,24 @@ public class PrinterFinisherTests
     }
 
     [TestMethod]
-    public void Parse_NullOrWhiteSpace_ShouldThrow()
+    public void Parse_Null_ShouldThrow()
     {
         Action act1 = () => PrinterFinisher.Parse(null!);
         act1.Should().Throw<ArgumentNullException>();
+    }
 
-        Action act2 = () => PrinterFinisher.Parse("");
-        act2.Should().Throw<FormatException>();
+    [TestMethod]
+    public void Parse_EmptyOrWhiteSpace_ShouldReturnEmptyModel()
+    {
+        var r1 = PrinterFinisher.Parse("");
+        r1.Should().NotBeNull();
+        r1.Count.Should().Be(0);
+        r1.ToString().Should().Be(string.Empty);
 
-        Action act3 = () => PrinterFinisher.Parse("   ");
-        act3.Should().Throw<FormatException>();
+        var r2 = PrinterFinisher.Parse("   ");
+        r2.Should().NotBeNull();
+        r2.Count.Should().Be(0);
+        r2.ToString().Should().Be(string.Empty);
     }
 
     [TestMethod]
@@ -56,16 +64,35 @@ public class PrinterFinisherTests
     }
 
     [TestMethod]
-    public void TryParse_NullOrWhiteSpace_ShouldReturnFalse()
+    public void TryParse_Null_ShouldReturnFalse()
     {
         PrinterFinisher.TryParse(null, out var r1).Should().BeFalse();
         r1.Should().BeNull();
+    }
 
-        PrinterFinisher.TryParse("", out var r2).Should().BeFalse();
-        r2.Should().BeNull();
+    [TestMethod]
+    public void TryParse_EmptyOrWhiteSpace_ShouldReturnTrueAndEmptyModel()
+    {
+        PrinterFinisher.TryParse("", out var r2).Should().BeTrue();
+        r2.Should().NotBeNull();
+        r2!.Count.Should().Be(0);
 
-        PrinterFinisher.TryParse("   ", out var r3).Should().BeFalse();
-        r3.Should().BeNull();
+        PrinterFinisher.TryParse("   ", out var r3).Should().BeTrue();
+        r3.Should().NotBeNull();
+        r3!.Count.Should().Be(0);
+    }
+
+    [TestMethod]
+    public void TryParse_MalformedInput_ShouldReturnTrueAndTolerateErrors()
+    {
+        var raw = "type=folder;invalidSegment;vendor=x";
+
+        var success = PrinterFinisher.TryParse(raw, out var parsed);
+
+        success.Should().BeTrue();
+        parsed.Should().NotBeNull();
+        parsed!.Type.Should().Be(FinisherType.Folder);
+        parsed.Extensions.Should().ContainKey("vendor").WhoseValue.Should().Be("x");
     }
 
     [TestMethod]
@@ -106,7 +133,7 @@ public class PrinterFinisherTests
         };
 
         // 1. Check properties are correct
-        finisher.Type.Should().Be(FinisherType.Stitcher);
+        finisher!.Type.Should().Be(FinisherType.Stitcher);
         finisher.MaxCapacity.Should().Be(100);
         finisher.Extensions.Should().ContainKey("x-custom").WhoseValue.Should().Be("value");
 
@@ -201,13 +228,14 @@ public class PrinterFinisherTests
     {
         var raw = "type=stitcher;";
         var finisher = (PrinterFinisher)raw;
-        finisher.Type.Should().Be(FinisherType.Stitcher);
+        finisher!.Type.Should().Be(FinisherType.Stitcher);
 
         Action actNull = () => { var _ = (PrinterFinisher)(string)null!; };
         actNull.Should().Throw<ArgumentNullException>();
 
-        Action actEmpty = () => { var _ = (PrinterFinisher)""; };
-        actEmpty.Should().Throw<FormatException>();
+        var empty = (PrinterFinisher)"";
+        empty.Should().NotBeNull();
+        empty.Count.Should().Be(0);
     }
 
     [TestMethod]
@@ -227,13 +255,14 @@ public class PrinterFinisherTests
         var raw = "type=stitcher;";
         var bytes = System.Text.Encoding.UTF8.GetBytes(raw);
         var finisher = (PrinterFinisher)bytes;
-        finisher.Type.Should().Be(FinisherType.Stitcher);
+        finisher!.Type.Should().Be(FinisherType.Stitcher);
 
         Action actNull = () => { var _ = (PrinterFinisher)(byte[])null!; };
         actNull.Should().Throw<ArgumentNullException>();
 
-        Action actEmpty = () => { var _ = (PrinterFinisher)Array.Empty<byte>(); };
-        actEmpty.Should().Throw<FormatException>();
+        var empty = (PrinterFinisher)Array.Empty<byte>();
+        empty.Should().NotBeNull();
+        empty.Count.Should().Be(0);
     }
 
     [TestMethod]
@@ -252,10 +281,19 @@ public class PrinterFinisherTests
     {
         var raw = "type=stitcher;";
         var octet = new OctetString(raw);
-        var finisher = (PrinterFinisher)octet;
-        finisher.Type.Should().Be(FinisherType.Stitcher);
+        var finisher = (PrinterFinisher?)octet;
+        finisher!.Type.Should().Be(FinisherType.Stitcher);
 
-        Action actDefault = () => { var _ = (PrinterFinisher)default(OctetString); };
+        Action actDefault = () => { var _ = (PrinterFinisher?)default(OctetString); };
         actDefault.Should().Throw<FormatException>();
+    }
+
+    [TestMethod]
+    public void ExplicitOperator_FromOctetString_EmptyOrWhitespace_ReturnsEmptyModel()
+    {
+        ((PrinterFinisher?)new OctetString(Array.Empty<byte>())).Should().NotBeNull().And.Match<PrinterFinisher>(x => x.Count == 0);
+        ((PrinterFinisher?)new OctetString(string.Empty)).Should().NotBeNull().And.Match<PrinterFinisher>(x => x.Count == 0);
+        ((PrinterFinisher?)new OctetString("   ")).Should().NotBeNull().And.Match<PrinterFinisher>(x => x.Count == 0);
+        ((PrinterFinisher?)new OctetString("\t\r\n")).Should().NotBeNull().And.Match<PrinterFinisher>(x => x.Count == 0);
     }
 }

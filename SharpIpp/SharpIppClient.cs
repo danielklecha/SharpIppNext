@@ -107,6 +107,14 @@ public partial class SharpIppClient : ISharpIppClient
 
         try
         {
+            var mediaType = response.Content.Headers.ContentType?.MediaType;
+            if (mediaType != null && !mediaType.Equals("application/ipp", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new IppResponseException(
+                    $"Expected Content-Type 'application/ipp', but received '{mediaType}'. " +
+                    "The URI may point to a web interface (e.g. CUPS web UI) rather than an IPP printer endpoint.");
+            }
+
             using var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
             ippResponse = await _ippProtocol.ReadIppResponseAsync(responseStream, cancellationToken).ConfigureAwait(false);
             ResponseMessageValidator?.Validate(ippResponse);

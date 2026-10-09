@@ -40,4 +40,6 @@ public abstract class IppResponse<TOperationAttributes> : IIppResponse where TOp
         get => OperationAttributes;
         set => OperationAttributes = (TOperationAttributes?)value;
     }
+
+    public override string ToString() => $"Version: {Version}, StatusCode: {StatusCode}, RequestId: {RequestId}";
 }

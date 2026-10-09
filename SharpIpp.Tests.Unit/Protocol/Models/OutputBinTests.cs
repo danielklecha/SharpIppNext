@@ -1,4 +1,3 @@
-using SharpIpp.Protocol.Extensions;
 using SharpIpp.Protocol.Models;
 using System.Diagnostics.CodeAnalysis;
 
@@ -15,9 +14,7 @@ public class OutputBinTests
         var nameBin = new OutputBin("Accounting Team", false);
 
         keywordBin.IsKeyword.Should().BeTrue();
-        keywordBin.IsName().Should().BeFalse();
         nameBin.IsKeyword.Should().BeFalse();
-        nameBin.IsName().Should().BeTrue();
     }
 
     [TestMethod]

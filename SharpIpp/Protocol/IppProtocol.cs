@@ -145,7 +145,7 @@ public partial class IppProtocol : IIppProtocol
                     }
                     if (currentAttributes is null)
                     {
-                        throw new ArgumentException($"<Hex dump> Expected section tag, found {data:X2}");
+                        throw new ArgumentException(GetSectionTagDelimiterError(data));
                     }
                     var attribute = await ReadAttributeAsync((Tag)data, reader, prevAttribute, prevBegCollectionAttribute, encoding, cancellationToken).ConfigureAwait(false);
                     switch (attribute.Tag)
@@ -234,7 +234,7 @@ public partial class IppProtocol : IIppProtocol
                     }
                     if ( attributes is null )
                     {
-                        throw new IppRequestException($"<Hex dump> Expected section tag, found {data:X2}", res, IppStatusCode.ClientErrorBadRequest);
+                        throw new IppRequestException(GetSectionTagDelimiterError(data), res, IppStatusCode.ClientErrorBadRequest);
                     }
                     var attribute = await ReadAttributeAsync((Tag)data, reader, prevAttribute, prevBegCollectionAttribute, encoding, cancellationToken).ConfigureAwait(false);
                     switch (attribute.Tag)
@@ -660,5 +660,12 @@ public partial class IppProtocol : IIppProtocol
         await writer.WriteAsync( (byte)sectionTag, cancellationToken ).ConfigureAwait(false);
         for (var i = 0; i < attributes.Count; i++)
             await WriteAttributeAsync( writer, attributes[ i ], i > 0 ? attributes[ i - 1 ] : null, encoding, cancellationToken ).ConfigureAwait(false);
+    }
+
+    private static string GetSectionTagDelimiterError(byte data)
+    {
+        return data is >= 32 and <= 126
+            ? $"Expected section tag delimiter, found 0x{data:X2} ('{(char)data}'). The stream may contain text or HTML rather than binary IPP."
+            : $"Expected section tag delimiter, found 0x{data:X2}";
     }
 }

@@ -1987,6 +1987,81 @@ public class IppProtocolTests
     }
 
     [TestMethod]
+    public async Task ReadIppRequestAsync_InvalidSectionTagWithAscii_ThrowsExceptionWithDescriptiveMessage()
+    {
+        var protocol = new IppProtocol();
+        // 0x45 is 'E' (e.g. from <!DOCTYPE...)
+        using MemoryStream requestStream = new( new byte[] { 0x01, 0x01, 0x00, 0x02, 0x00, 0x00, 0x00, 0x7B, 0x45 } );
+        Func<Task> act = async () => await protocol.ReadIppRequestAsync( requestStream );
+        var ex = await act.Should().ThrowAsync<IppRequestException>();
+        ex.Which.StatusCode.Should().Be(IppStatusCode.ClientErrorBadRequest);
+        ex.Which.Message.Should().Contain("Expected section tag delimiter, found 0x45 ('E')");
+        ex.Which.Message.Should().Contain("text or HTML");
+    }
+
+    [TestMethod]
+    public async Task ReadIppResponseAsync_InvalidSectionTagWithAscii_ThrowsExceptionWithDescriptiveMessage()
+    {
+        var protocol = new IppProtocol();
+        // 0x45 is 'E' (e.g. from <!DOCTYPE...)
+        using MemoryStream responseStream = new( new byte[] { 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x45 } );
+        Func<Task> act = async () => await protocol.ReadIppResponseAsync( responseStream );
+        var ex = await act.Should().ThrowAsync<IppResponseException>();
+        ex.Which.Message.Should().Contain("Version: 1.1, StatusCode: SuccessfulOk, RequestId: 1");
+        ex.Which.InnerException.Should().BeOfType<ArgumentException>()
+            .Which.Message.Should().Contain("Expected section tag delimiter, found 0x45 ('E')")
+            .And.Contain("text or HTML");
+    }
+
+    [TestMethod]
+    public async Task ReadIppRequestAsync_InvalidSectionTagNonAsciiHigh_ThrowsExceptionWithoutAsciiHint()
+    {
+        var protocol = new IppProtocol();
+        // 0xFF is > 126
+        using MemoryStream requestStream = new( new byte[] { 0x01, 0x01, 0x00, 0x02, 0x00, 0x00, 0x00, 0x7B, 0xFF } );
+        Func<Task> act = async () => await protocol.ReadIppRequestAsync( requestStream );
+        var ex = await act.Should().ThrowAsync<IppRequestException>();
+        ex.Which.StatusCode.Should().Be(IppStatusCode.ClientErrorBadRequest);
+        ex.Which.Message.Should().Be("Expected section tag delimiter, found 0xFF");
+    }
+
+    [TestMethod]
+    public async Task ReadIppRequestAsync_InvalidSectionTagNonAsciiLow_ThrowsExceptionWithoutAsciiHint()
+    {
+        var protocol = new IppProtocol();
+        // 0x1F is 31 (< 32, > 0x0F)
+        using MemoryStream requestStream = new( new byte[] { 0x01, 0x01, 0x00, 0x02, 0x00, 0x00, 0x00, 0x7B, 0x1F } );
+        Func<Task> act = async () => await protocol.ReadIppRequestAsync( requestStream );
+        var ex = await act.Should().ThrowAsync<IppRequestException>();
+        ex.Which.StatusCode.Should().Be(IppStatusCode.ClientErrorBadRequest);
+        ex.Which.Message.Should().Be("Expected section tag delimiter, found 0x1F");
+    }
+
+    [TestMethod]
+    public async Task ReadIppResponseAsync_InvalidSectionTagNonAsciiHigh_ThrowsExceptionWithoutAsciiHint()
+    {
+        var protocol = new IppProtocol();
+        // 0xFF is > 126
+        using MemoryStream responseStream = new( new byte[] { 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0xFF } );
+        Func<Task> act = async () => await protocol.ReadIppResponseAsync( responseStream );
+        var ex = await act.Should().ThrowAsync<IppResponseException>();
+        ex.Which.InnerException.Should().BeOfType<ArgumentException>()
+            .Which.Message.Should().Be("Expected section tag delimiter, found 0xFF");
+    }
+
+    [TestMethod]
+    public async Task ReadIppResponseAsync_InvalidSectionTagNonAsciiLow_ThrowsExceptionWithoutAsciiHint()
+    {
+        var protocol = new IppProtocol();
+        // 0x1F is 31 (< 32, > 0x0F)
+        using MemoryStream responseStream = new( new byte[] { 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x1F } );
+        Func<Task> act = async () => await protocol.ReadIppResponseAsync( responseStream );
+        var ex = await act.Should().ThrowAsync<IppResponseException>();
+        ex.Which.InnerException.Should().BeOfType<ArgumentException>()
+            .Which.Message.Should().Be("Expected section tag delimiter, found 0x1F");
+    }
+
+    [TestMethod]
     public async Task ReadIppRequestAsync_MismatchedEndCollection_ThrowsException()
     {
         var protocol = new IppProtocol();

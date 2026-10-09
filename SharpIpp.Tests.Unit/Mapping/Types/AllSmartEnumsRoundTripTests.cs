@@ -92,13 +92,11 @@ public class AllSmartEnumsRoundTripTests : MapperTestBase
             // Keyword tag test: constructor (string, isKeyword)
             var keywordInst = (IKeywordOrNameEnum)Activator.CreateInstance(type, "sample-kw", true)!;
             keywordInst.IsKeyword.Should().BeTrue();
-            keywordInst.IsName().Should().BeFalse();
             keywordInst.ToIppTag().Should().Be(Tag.Keyword);
 
             // NameWithoutLanguage tag test: constructor (string, false)
             var nameInst = (IKeywordOrNameEnum)Activator.CreateInstance(type, "sample-name", false)!;
             nameInst.IsKeyword.Should().BeFalse();
-            nameInst.IsName().Should().BeTrue();
             nameInst.ToIppTag().Should().Be(Tag.NameWithoutLanguage);
         }
     }

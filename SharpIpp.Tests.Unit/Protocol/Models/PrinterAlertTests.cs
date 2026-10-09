@@ -31,16 +31,24 @@ public class PrinterAlertTests
     }
 
     [TestMethod]
-    public void Parse_NullOrWhiteSpace_ShouldThrow()
+    public void Parse_Null_ShouldThrow()
     {
         Action act1 = () => PrinterAlert.Parse(null!);
         act1.Should().Throw<ArgumentNullException>();
+    }
 
-        Action act2 = () => PrinterAlert.Parse("");
-        act2.Should().Throw<FormatException>();
+    [TestMethod]
+    public void Parse_EmptyOrWhiteSpace_ShouldReturnEmptyModel()
+    {
+        var r1 = PrinterAlert.Parse("");
+        r1.Should().NotBeNull();
+        r1.Count.Should().Be(0);
+        r1.ToString().Should().Be(string.Empty);
 
-        Action act3 = () => PrinterAlert.Parse("   ");
-        act3.Should().Throw<FormatException>();
+        var r2 = PrinterAlert.Parse("   ");
+        r2.Should().NotBeNull();
+        r2.Count.Should().Be(0);
+        r2.ToString().Should().Be(string.Empty);
     }
 
     [TestMethod]
@@ -57,16 +65,34 @@ public class PrinterAlertTests
     }
 
     [TestMethod]
-    public void TryParse_NullOrWhiteSpace_ShouldReturnFalse()
+    public void TryParse_Null_ShouldReturnFalse()
     {
         PrinterAlert.TryParse(null, out var r1).Should().BeFalse();
         r1.Should().BeNull();
+    }
 
-        PrinterAlert.TryParse("", out var r2).Should().BeFalse();
-        r2.Should().BeNull();
+    [TestMethod]
+    public void TryParse_EmptyOrWhiteSpace_ShouldReturnTrueAndEmptyModel()
+    {
+        PrinterAlert.TryParse("", out var r2).Should().BeTrue();
+        r2.Should().NotBeNull();
+        r2!.Count.Should().Be(0);
 
-        PrinterAlert.TryParse("   ", out var r3).Should().BeFalse();
-        r3.Should().BeNull();
+        PrinterAlert.TryParse("   ", out var r3).Should().BeTrue();
+        r3.Should().NotBeNull();
+        r3!.Count.Should().Be(0);
+    }
+
+    [TestMethod]
+    public void TryParse_MalformedInput_ShouldReturnTrueAndTolerateErrors()
+    {
+        var raw = "code=jam;invalidSegment;=emptyKey;key=;";
+
+        var success = PrinterAlert.TryParse(raw, out var parsed);
+
+        success.Should().BeTrue();
+        parsed.Should().NotBeNull();
+        parsed!.Code.Should().Be("jam");
     }
 
     [TestMethod]
@@ -183,7 +209,7 @@ public class PrinterAlertTests
         };
 
         // 1. Check properties are correct
-        alert.Code.Should().Be("jam");
+        alert!.Code.Should().Be("jam");
         alert.Index.Should().Be(42);
         alert.Severity.Should().Be("critical");
         alert.Extensions.Should().ContainKey("x-custom").WhoseValue.Should().Be("hello");
@@ -281,14 +307,15 @@ public class PrinterAlertTests
     {
         var raw = "code=jam;severity=critical";
         var alert = (PrinterAlert)raw;
-        alert.Code.Should().Be("jam");
+        alert!.Code.Should().Be("jam");
         alert.Severity.Should().Be("critical");
 
         Action actNull = () => { var _ = (PrinterAlert)(string)null!; };
         actNull.Should().Throw<ArgumentNullException>();
 
-        Action actEmpty = () => { var _ = (PrinterAlert)""; };
-        actEmpty.Should().Throw<FormatException>();
+        var empty = (PrinterAlert)"";
+        empty.Should().NotBeNull();
+        empty.Count.Should().Be(0);
     }
 
     [TestMethod]
@@ -308,14 +335,15 @@ public class PrinterAlertTests
         var raw = "code=jam;severity=critical";
         var bytes = System.Text.Encoding.UTF8.GetBytes(raw);
         var alert = (PrinterAlert)bytes;
-        alert.Code.Should().Be("jam");
+        alert!.Code.Should().Be("jam");
         alert.Severity.Should().Be("critical");
 
         Action actNull = () => { var _ = (PrinterAlert)(byte[])null!; };
         actNull.Should().Throw<ArgumentNullException>();
 
-        Action actEmpty = () => { var _ = (PrinterAlert)Array.Empty<byte>(); };
-        actEmpty.Should().Throw<FormatException>();
+        var empty = (PrinterAlert)Array.Empty<byte>();
+        empty.Should().NotBeNull();
+        empty.Count.Should().Be(0);
     }
 
     [TestMethod]
@@ -334,11 +362,20 @@ public class PrinterAlertTests
     {
         var raw = "code=jam;severity=critical";
         var octet = new OctetString(raw);
-        var alert = (PrinterAlert)octet;
-        alert.Code.Should().Be("jam");
+        var alert = (PrinterAlert?)octet;
+        alert!.Code.Should().Be("jam");
         alert.Severity.Should().Be("critical");
 
-        Action actDefault = () => { var _ = (PrinterAlert)default(OctetString); };
+        Action actDefault = () => { var _ = (PrinterAlert?)default(OctetString); };
         actDefault.Should().Throw<FormatException>();
+    }
+
+    [TestMethod]
+    public void ExplicitOperator_FromOctetString_EmptyOrWhitespace_ReturnsEmptyModel()
+    {
+        ((PrinterAlert?)new OctetString(Array.Empty<byte>())).Should().NotBeNull().And.Match<PrinterAlert>(x => x.Count == 0);
+        ((PrinterAlert?)new OctetString(string.Empty)).Should().NotBeNull().And.Match<PrinterAlert>(x => x.Count == 0);
+        ((PrinterAlert?)new OctetString("   ")).Should().NotBeNull().And.Match<PrinterAlert>(x => x.Count == 0);
+        ((PrinterAlert?)new OctetString("\t\r\n")).Should().NotBeNull().And.Match<PrinterAlert>(x => x.Count == 0);
     }
 }

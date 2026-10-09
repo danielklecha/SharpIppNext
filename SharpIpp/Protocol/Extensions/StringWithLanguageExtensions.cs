@@ -17,16 +17,13 @@ public static class StringWithLanguageExtensions
     /// <exception cref="ArgumentException">Thrown when <paramref name="suggestedTag"/> is not a Text or Name tag.</exception>
     public static Tag ToIppTag(this StringWithLanguage value, Tag suggestedTag = Tag.TextWithoutLanguage)
     {
-        if (!value.IsValue)
-            return Tag.NoValue;
-
         return suggestedTag switch
         {
             Tag.TextWithoutLanguage or Tag.TextWithLanguage =>
-                value.HasLanguage ? Tag.TextWithLanguage : Tag.TextWithoutLanguage,
+                !value.IsValue ? Tag.NoValue : (value.HasLanguage ? Tag.TextWithLanguage : Tag.TextWithoutLanguage),
 
             Tag.NameWithoutLanguage or Tag.NameWithLanguage =>
-                value.HasLanguage ? Tag.NameWithLanguage : Tag.NameWithoutLanguage,
+                !value.IsValue ? Tag.NoValue : (value.HasLanguage ? Tag.NameWithLanguage : Tag.NameWithoutLanguage),
 
             _ => throw new ArgumentException(
                 $"Tag '{suggestedTag}' is not supported for {nameof(StringWithLanguage)}. Only Text and Name tags are supported.",

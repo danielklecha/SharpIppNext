@@ -483,6 +483,46 @@ public partial class MapperSourceGeneratorTests
     }
 
     [TestMethod]
+    public void ConversionOperator_WithReferenceType_ShouldGenerateArrayAndListMaps()
+    {
+        var source = """
+            using System.Collections.Generic;
+
+            namespace TestNamespace;
+
+            public class CustomRefModel
+            {
+                public string Value { get; set; } = string.Empty;
+            }
+
+            public struct CustomValueToRefModel
+            {
+                public string Text { get; set; }
+
+                public static implicit operator CustomRefModel(CustomValueToRefModel src) => new CustomRefModel { Value = src.Text };
+                public static explicit operator CustomValueToRefModel(CustomRefModel src) => new CustomValueToRefModel { Text = src.Value };
+            }
+            """;
+
+        var (_, generatedTrees, diagnostics) = RunGenerator(source);
+        diagnostics.Should().NotContain(d => d.Severity == DiagnosticSeverity.Error);
+
+        var typeConverters = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedTypeConverters.g.cs"))?.ToString();
+        typeConverters.Should().NotBeNull();
+
+        // Reference destination type: CustomRefModel is a reference type (lines 506-527)
+        typeConverters.Should().Contain("mapper.CreateMap<global::TestNamespace.CustomValueToRefModel[], global::TestNamespace.CustomRefModel[]>((src, _) =>");
+        typeConverters.Should().Contain("mapper.CreateMap<global::TestNamespace.CustomValueToRefModel[], List<global::TestNamespace.CustomRefModel>>((src, _) =>");
+        typeConverters.Should().Contain("var list = new List<global::TestNamespace.CustomRefModel>(src.Length);");
+        typeConverters.Should().Contain("var item = (global::TestNamespace.CustomRefModel)src[i];");
+        typeConverters.Should().Contain("if (item != null) list.Add(item);");
+        typeConverters.Should().Contain("return list.ToArray();");
+        typeConverters.Should().Contain("return list;");
+        typeConverters.Should().Contain("mapper.CreateMap<global::TestNamespace.CustomValueToRefModel[], IEnumerable<global::TestNamespace.CustomRefModel>>((src, map) => map.Map<global::TestNamespace.CustomRefModel[]>(src));");
+        typeConverters.Should().Contain("mapper.CreateMap<global::TestNamespace.CustomValueToRefModel[], IReadOnlyCollection<global::TestNamespace.CustomRefModel>>((src, map) => map.Map<global::TestNamespace.CustomRefModel[]>(src));");
+    }
+
+    [TestMethod]
     public void PropertyWithoutAttributeName_ShouldDeriveKebabCaseName()
     {
         var source = """

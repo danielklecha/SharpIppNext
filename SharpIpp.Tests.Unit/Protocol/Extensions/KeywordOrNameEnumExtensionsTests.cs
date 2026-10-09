@@ -11,36 +11,43 @@ namespace SharpIpp.Tests.Unit.Protocol.Extensions;
 [ExcludeFromCodeCoverage]
 public class KeywordOrNameEnumExtensionsTests
 {
-    public static IEnumerable<object[]> ToIppTagTestData
+    [TestMethod]
+    [DataRow("iso_a4_210x297mm", true, Tag.Keyword)]
+    [DataRow("Accounting Team", false, Tag.NameWithoutLanguage)]
+    public void ToIppTag_Media_ShouldReturnExpectedTag(string value, bool isKeyword, Tag expected)
     {
-        get
-        {
-            yield return new object[] { new Media("iso_a4_210x297mm", true), Tag.Keyword };
-            yield return new object[] { new Media("Accounting Team", false), Tag.NameWithoutLanguage };
-            yield return new object[] { new OutputBin("vendor-bin-42", true), Tag.Keyword };
-            yield return new object[] { new OutputBin("custom-finisher-bin", false), Tag.NameWithoutLanguage };
-            yield return new object[] { new Media("iso_a4_210x297mm"), Tag.Keyword };
-        }
+        var media = new Media(value, isKeyword);
+        media.ToIppTag().Should().Be(expected);
     }
 
     [TestMethod]
-    [DynamicData(nameof(ToIppTagTestData))]
-    public void ToIppTag_ShouldReturnExpectedTag(IKeywordOrNameEnum value, Tag expected)
+    public void ToIppTag_MediaSingleArg_DefaultsToKeyword()
     {
-        // Act
-        var result = value.ToIppTag();
-
-        // Assert
-        result.Should().Be(expected);
+        var media = new Media("iso_a4_210x297mm");
+        media.ToIppTag().Should().Be(Tag.Keyword);
     }
 
     [TestMethod]
-    public void IsName_ShouldReflectKeywordStatus()
+    [DataRow("vendor-bin-42", true, Tag.Keyword)]
+    [DataRow("custom-finisher-bin", false, Tag.NameWithoutLanguage)]
+    public void ToIppTag_OutputBin_ShouldReturnExpectedTag(string value, bool isKeyword, Tag expected)
     {
-        var kw = new Media("iso_a4", true);
-        var name = new Media("custom-tray", false);
+        var bin = new OutputBin(value, isKeyword);
+        bin.ToIppTag().Should().Be(expected);
+    }
 
-        kw.IsName().Should().BeFalse();
-        name.IsName().Should().BeTrue();
+    [TestMethod]
+    public void ToIppTag_JobStorageAccess_ShouldReturnExpectedTag()
+    {
+        JobStorageAccess.Group.ToIppTag().Should().Be(Tag.Keyword);
+        new JobStorageAccess("custom-group", false).ToIppTag().Should().Be(Tag.NameWithoutLanguage);
+    }
+
+    [TestMethod]
+    public void ToIppTag_Null_ThrowsArgumentNullException()
+    {
+        IKeywordOrNameEnum? value = null;
+        var act = () => value!.ToIppTag();
+        act.Should().Throw<System.ArgumentNullException>();
     }
 }

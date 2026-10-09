@@ -12,38 +12,35 @@ namespace SharpIpp.Tests.Unit.Protocol.Extensions;
 [ExcludeFromCodeCoverage]
 public class StringWithLanguageExtensionsTests
 {
-    public static IEnumerable<object[]> ToIppTagTestData
+    [TestMethod]
+    [DataRow("en", "hello", Tag.TextWithoutLanguage, Tag.TextWithLanguage)]
+    [DataRow(null, "hello", Tag.TextWithoutLanguage, Tag.TextWithoutLanguage)]
+    [DataRow("en", "hello", Tag.TextWithLanguage, Tag.TextWithLanguage)]
+    [DataRow(null, "hello", Tag.TextWithLanguage, Tag.TextWithoutLanguage)]
+    [DataRow("", "hello-empty-lang", Tag.TextWithoutLanguage, Tag.TextWithoutLanguage)]
+    [DataRow("", "hello-empty-lang", Tag.TextWithLanguage, Tag.TextWithoutLanguage)]
+    [DataRow("de", "printer", Tag.NameWithoutLanguage, Tag.NameWithLanguage)]
+    [DataRow(null, "printer", Tag.NameWithoutLanguage, Tag.NameWithoutLanguage)]
+    [DataRow("de", "printer", Tag.NameWithLanguage, Tag.NameWithLanguage)]
+    [DataRow(null, "printer", Tag.NameWithLanguage, Tag.NameWithoutLanguage)]
+    [DataRow("", "printer-empty-lang", Tag.NameWithoutLanguage, Tag.NameWithoutLanguage)]
+    [DataRow("", "printer-empty-lang", Tag.NameWithLanguage, Tag.NameWithoutLanguage)]
+    public void ToIppTag_ShouldReturnExpectedTag(string? language, string text, Tag suggestedTag, Tag expected)
     {
-        get
-        {
-            // Text tags
-            yield return new object[] { new StringWithLanguage("en", "hello"), Tag.TextWithoutLanguage, Tag.TextWithLanguage };
-            yield return new object[] { new StringWithLanguage(null, "hello"), Tag.TextWithoutLanguage, Tag.TextWithoutLanguage };
-            yield return new object[] { new StringWithLanguage("en", "hello"), Tag.TextWithLanguage, Tag.TextWithLanguage };
-            yield return new object[] { new StringWithLanguage(null, "hello"), Tag.TextWithLanguage, Tag.TextWithoutLanguage };
-            yield return new object[] { new StringWithLanguage(string.Empty, "hello-empty-lang"), Tag.TextWithoutLanguage, Tag.TextWithoutLanguage };
-
-            // Name tags
-            yield return new object[] { new StringWithLanguage("de", "printer"), Tag.NameWithoutLanguage, Tag.NameWithLanguage };
-            yield return new object[] { new StringWithLanguage(null, "printer"), Tag.NameWithoutLanguage, Tag.NameWithoutLanguage };
-            yield return new object[] { new StringWithLanguage("de", "printer"), Tag.NameWithLanguage, Tag.NameWithLanguage };
-            yield return new object[] { new StringWithLanguage(null, "printer"), Tag.NameWithLanguage, Tag.NameWithoutLanguage };
-            yield return new object[] { new StringWithLanguage(string.Empty, "printer-empty-lang"), Tag.NameWithoutLanguage, Tag.NameWithoutLanguage };
-
-            // NoValue state (IsValue == false)
-            yield return new object[] { default(StringWithLanguage), Tag.TextWithoutLanguage, Tag.NoValue };
-            yield return new object[] { default(StringWithLanguage), Tag.NameWithoutLanguage, Tag.NoValue };
-            yield return new object[] { (StringWithLanguage)NoValue.Instance, Tag.TextWithLanguage, Tag.NoValue };
-            yield return new object[] { (StringWithLanguage)NoValue.Instance, Tag.NameWithLanguage, Tag.NoValue };
-        }
+        var value = new StringWithLanguage(language, text);
+        var result = value.ToIppTag(suggestedTag);
+        result.Should().Be(expected);
     }
 
     [TestMethod]
-    [DynamicData(nameof(ToIppTagTestData))]
-    public void ToIppTag_ShouldReturnExpectedTag(StringWithLanguage value, Tag suggestedTag, Tag expected)
+    [DataRow(Tag.TextWithoutLanguage)]
+    [DataRow(Tag.NameWithoutLanguage)]
+    [DataRow(Tag.TextWithLanguage)]
+    [DataRow(Tag.NameWithLanguage)]
+    public void ToIppTag_NoValue_ShouldReturnNoValue(Tag suggestedTag)
     {
-        var result = value.ToIppTag(suggestedTag);
-        result.Should().Be(expected);
+        default(StringWithLanguage).ToIppTag(suggestedTag).Should().Be(Tag.NoValue);
+        ((StringWithLanguage)NoValue.Instance).ToIppTag(suggestedTag).Should().Be(Tag.NoValue);
     }
 
     [TestMethod]
@@ -61,6 +58,10 @@ public class StringWithLanguageExtensionsTests
         var swl = new StringWithLanguage("test");
         Action act = () => swl.ToIppTag(unsupportedTag);
         act.Should().Throw<ArgumentException>();
+
+        var defaultSwl = default(StringWithLanguage);
+        Action actDefault = () => defaultSwl.ToIppTag(unsupportedTag);
+        actDefault.Should().Throw<ArgumentException>();
     }
 
     [TestMethod]

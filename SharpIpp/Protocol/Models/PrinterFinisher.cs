@@ -70,7 +70,7 @@ public class PrinterFinisher : IppStructuredString, IEquatable<PrinterFinisher>
         if (value == null)
             throw new ArgumentNullException(nameof(value));
         if (string.IsNullOrWhiteSpace(value))
-            throw new FormatException("Invalid printer-finisher value: empty string");
+            return new PrinterFinisher();
 
         var finisher = new PrinterFinisher();
         var extensions = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
@@ -124,16 +124,14 @@ public class PrinterFinisher : IppStructuredString, IEquatable<PrinterFinisher>
     /// </summary>
     public static bool TryParse(string? value, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out PrinterFinisher? result)
     {
-        try
-        {
-            result = Parse(value!);
-            return true;
-        }
-        catch
+        if (value == null)
         {
             result = null;
             return false;
         }
+
+        result = Parse(value);
+        return true;
     }
 
     /// <summary>
@@ -185,7 +183,7 @@ public class PrinterFinisher : IppStructuredString, IEquatable<PrinterFinisher>
     public static explicit operator byte[](PrinterFinisher finisher) => Encoding.UTF8.GetBytes(finisher?.ToString() ?? string.Empty);
     public static explicit operator PrinterFinisher(byte[] bytes) => Parse(Encoding.UTF8.GetString(bytes));
     public static explicit operator OctetString(PrinterFinisher finisher) => new(finisher?.ToString() ?? string.Empty);
-    public static explicit operator PrinterFinisher(OctetString octet) =>
+    public static explicit operator PrinterFinisher?(OctetString octet) =>
         !octet.IsValue || octet.Value == null
             ? throw new FormatException("Invalid printer-finisher value: no value")
             : Parse(octet.ToString());

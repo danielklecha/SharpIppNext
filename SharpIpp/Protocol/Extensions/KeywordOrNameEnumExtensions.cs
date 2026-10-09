@@ -14,13 +14,10 @@ public static class KeywordOrNameEnumExtensions
     /// <returns><see cref="Tag.Keyword"/> when <see cref="IKeywordOrNameEnum.IsKeyword"/> is true; otherwise <see cref="Tag.NameWithoutLanguage"/>.</returns>
     public static Tag ToIppTag(this IKeywordOrNameEnum value)
     {
+        if (value is null)
+            throw new System.ArgumentNullException(nameof(value));
+
         return value.IsKeyword ? Tag.Keyword : Tag.NameWithoutLanguage;
     }
 
-    /// <summary>
-    /// Gets a value indicating whether this value represents an IPP name rather than a keyword.
-    /// </summary>
-    /// <param name="value">The keyword-or-name value.</param>
-    /// <returns><see langword="true"/> when the value is an IPP name; otherwise <see langword="false"/>.</returns>
-    public static bool IsName(this IKeywordOrNameEnum value) => !value.IsKeyword;
 }

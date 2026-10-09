@@ -480,9 +480,9 @@ public class MapperSourceGenerator : IIncrementalGenerator
         sb.AppendLine("        {");
         sb.AppendLine("            RegisterConversions(mapper);");
         sb.AppendLine("            RegisterEnums(mapper);");
-        sb.AppendLine("            RegisterStructuredStrings(mapper);");
         sb.AppendLine("            RegisterIppValueTypes(mapper);");
         sb.AppendLine("            RegisterCollections(mapper);");
+        sb.AppendLine("            RegisterStructuredStrings(mapper);");
         sb.AppendLine("        }");
         sb.AppendLine();
         sb.AppendLine("        private static void RegisterConversions(IMapperConstructor mapper)");
@@ -502,18 +502,41 @@ public class MapperSourceGenerator : IIncrementalGenerator
                 sb.AppendLine($"            mapper.CreateIppMap<{srcFqn}, IppValue<{dstFqn}>>((src, _) => new IppValue<{dstFqn}>(({dstFqn})src));");
             if (conv.SourceType is not IArrayTypeSymbol && conv.DestType is not IArrayTypeSymbol)
             {
-                sb.AppendLine($"            mapper.CreateMap<{srcFqn}[], {dstFqn}[]>((src, _) =>");
-                sb.AppendLine("            {");
-                sb.AppendLine($"                var arr = new {dstFqn}[src.Length];");
-                sb.AppendLine($"                for (int i = 0; i < src.Length; i++) arr[i] = ({dstFqn})src[i];");
-                sb.AppendLine("                return arr;");
-                sb.AppendLine("            });");
-                sb.AppendLine($"            mapper.CreateMap<{srcFqn}[], List<{dstFqn}>>((src, _) =>");
-                sb.AppendLine("            {");
-                sb.AppendLine($"                var list = new List<{dstFqn}>(src.Length);");
-                sb.AppendLine($"                for (int i = 0; i < src.Length; i++) list.Add(({dstFqn})src[i]);");
-                sb.AppendLine("                return list;");
-                sb.AppendLine("            });");
+                if (conv.DestType.IsReferenceType)
+                {
+                    void AppendRefCollectionMap(string targetType, string returnStatement)
+                    {
+                        sb.AppendLine($"            mapper.CreateMap<{srcFqn}[], {targetType}>((src, _) =>");
+                        sb.AppendLine("            {");
+                        sb.AppendLine($"                var list = new List<{dstFqn}>(src.Length);");
+                        sb.AppendLine("                for (int i = 0; i < src.Length; i++)");
+                        sb.AppendLine("                {");
+                        sb.AppendLine($"                    var item = ({dstFqn})src[i];");
+                        sb.AppendLine("                    if (item != null) list.Add(item);");
+                        sb.AppendLine("                }");
+                        sb.AppendLine($"                return {returnStatement};");
+                        sb.AppendLine("            });");
+                    }
+
+                    AppendRefCollectionMap($"{dstFqn}[]", "list.ToArray()");
+                    AppendRefCollectionMap($"List<{dstFqn}>", "list");
+                }
+                else
+                {
+                    sb.AppendLine($"            mapper.CreateMap<{srcFqn}[], {dstFqn}[]>((src, _) =>");
+                    sb.AppendLine("            {");
+                    sb.AppendLine($"                var arr = new {dstFqn}[src.Length];");
+                    sb.AppendLine($"                for (int i = 0; i < src.Length; i++) arr[i] = ({dstFqn})src[i];");
+                    sb.AppendLine("                return arr;");
+                    sb.AppendLine("            });");
+                    sb.AppendLine($"            mapper.CreateMap<{srcFqn}[], List<{dstFqn}>>((src, _) =>");
+                    sb.AppendLine("            {");
+                    sb.AppendLine($"                var list = new List<{dstFqn}>(src.Length);");
+                    sb.AppendLine($"                for (int i = 0; i < src.Length; i++) list.Add(({dstFqn})src[i]);");
+                    sb.AppendLine("                return list;");
+                    sb.AppendLine("            });");
+                }
+
                 sb.AppendLine($"            mapper.CreateMap<{srcFqn}[], IEnumerable<{dstFqn}>>((src, map) => map.Map<{dstFqn}[]>(src));");
                 sb.AppendLine($"            mapper.CreateMap<{srcFqn}[], IReadOnlyCollection<{dstFqn}>>((src, map) => map.Map<{dstFqn}[]>(src));");
             }
@@ -559,6 +582,31 @@ public class MapperSourceGenerator : IIncrementalGenerator
                 sb.AppendLine($"            mapper.CreateMap<string[], {fqn}>((src, _) => {fqn}.Parse(src));");
                 sb.AppendLine($"            mapper.CreateMap<object[], {fqn}>((src, map) => map.Map<{fqn}>(map.Map<string[]>(src)));");
             }
+
+            sb.AppendLine($"            mapper.CreateMap<object[], {fqn}[]>((src, map) =>");
+            sb.AppendLine("            {");
+            sb.AppendLine($"                var list = new List<{fqn}>(src.Length);");
+            sb.AppendLine("                for (int i = 0; i < src.Length; i++)");
+            sb.AppendLine("                {");
+            sb.AppendLine("                    var item = src[i];");
+            sb.AppendLine("                    if (item == null || item is global::SharpIpp.Protocol.Models.NoValue) continue;");
+            sb.AppendLine($"                    var mapped = map.MapNullable<{fqn}>(item);");
+            sb.AppendLine("                    if (mapped != null) list.Add(mapped);");
+            sb.AppendLine("                }");
+            sb.AppendLine("                return list.ToArray();");
+            sb.AppendLine("            });");
+            sb.AppendLine($"            mapper.CreateMap<object[], List<{fqn}>>((src, map) =>");
+            sb.AppendLine("            {");
+            sb.AppendLine($"                var list = new List<{fqn}>(src.Length);");
+            sb.AppendLine("                for (int i = 0; i < src.Length; i++)");
+            sb.AppendLine("                {");
+            sb.AppendLine("                    var item = src[i];");
+            sb.AppendLine("                    if (item == null || item is global::SharpIpp.Protocol.Models.NoValue) continue;");
+            sb.AppendLine($"                    var mapped = map.MapNullable<{fqn}>(item);");
+            sb.AppendLine("                    if (mapped != null) list.Add(mapped);");
+            sb.AppendLine("                }");
+            sb.AppendLine("                return list;");
+            sb.AppendLine("            });");
         }
 
         sb.AppendLine("        }");
@@ -958,7 +1006,7 @@ public class MapperSourceGenerator : IIncrementalGenerator
                     var unwrappedFqn = p.UnwrappedType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
                     sb.AppendLine($"            if (src.TryGetValue({attrNameExpr}, out var a_{p.Property.Name}) && a_{p.Property.Name}.Length > 0)");
                     sb.AppendLine("            {");
-                    sb.AppendLine($"                if (a_{p.Property.Name}.Length == 1 && a_{p.Property.Name}[0].Tag == global::SharpIpp.Protocol.Models.Tag.NoValue)");
+                    sb.AppendLine($"                if (a_{p.Property.Name}.Length == 1 && (a_{p.Property.Name}[0].Tag.IsOutOfBand() || a_{p.Property.Name}[0].Value is global::SharpIpp.Protocol.Models.NoValue))");
                     sb.AppendLine($"                    dst.{p.Property.Name} = null;");
                     sb.AppendLine("                else");
                     sb.AppendLine($"                    dst.{p.Property.Name} = {unwrappedFqn}.Parse(a_{p.Property.Name}.Select(x => x.Value?.ToString() ?? string.Empty));");
@@ -976,10 +1024,22 @@ public class MapperSourceGenerator : IIncrementalGenerator
                     var unwrappedFqn = p.UnwrappedType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
                     sb.AppendLine($"            dst.{p.Property.Name} = map.MapFromDicNullable<string, {readPropTypeFqn}>(src, {attrNameExpr}, (attribute, value) => new {unwrappedFqn}(value, attribute.Tag == global::SharpIpp.Protocol.Models.Tag.Keyword)) ?? dst.{p.Property.Name};");
                 }
+                else if (p.IsKeywordEnum)
+                {
+                    var unwrappedFqn = p.UnwrappedType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+                    sb.AppendLine($"            dst.{p.Property.Name} = map.MapFromDicNullable<string, {readPropTypeFqn}>(src, {attrNameExpr}, (attribute, value) => new {unwrappedFqn}(value)) ?? dst.{p.Property.Name};");
+                }
                 else if (p.IsKeywordOrNameEnumArray)
                 {
                     var elemTypeFqn = p.ElementType!.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
                     sb.AppendLine($"            var a_{p.Property.Name} = map.MapFromDicSetNullable<string, {elemTypeFqn}>(src, {attrNameExpr}, (attribute, value) => new {elemTypeFqn}(value, attribute.Tag == global::SharpIpp.Protocol.Models.Tag.Keyword));");
+                    sb.AppendLine($"            if (a_{p.Property.Name} != null && a_{p.Property.Name}.Length > 0)");
+                    sb.AppendLine($"                dst.{p.Property.Name} = a_{p.Property.Name};");
+                }
+                else if (p.IsKeywordEnumArray)
+                {
+                    var elemTypeFqn = p.ElementType!.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+                    sb.AppendLine($"            var a_{p.Property.Name} = map.MapFromDicSetNullable<string, {elemTypeFqn}>(src, {attrNameExpr}, (attribute, value) => new {elemTypeFqn}(value));");
                     sb.AppendLine($"            if (a_{p.Property.Name} != null && a_{p.Property.Name}.Length > 0)");
                     sb.AppendLine($"                dst.{p.Property.Name} = a_{p.Property.Name};");
                 }
@@ -989,10 +1049,22 @@ public class MapperSourceGenerator : IIncrementalGenerator
                     var unwrappedFqn = p.UnwrappedType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
                     sb.AppendLine($"            if (src.TryGetValue({attrNameExpr}, out var a_{p.Property.Name}) && a_{p.Property.Name}.Length > 0)");
                     sb.AppendLine("            {");
-                    sb.AppendLine($"                if (a_{p.Property.Name}[0].Tag == global::SharpIpp.Protocol.Models.Tag.NoValue)");
+                    sb.AppendLine($"                if (a_{p.Property.Name}.Length == 1 && (a_{p.Property.Name}[0].Tag.IsOutOfBand() || a_{p.Property.Name}[0].Value is global::SharpIpp.Protocol.Models.NoValue))");
                     sb.AppendLine($"                    dst.{p.Property.Name} = default({unwrappedFqn});");
                     sb.AppendLine("                else");
                     sb.AppendLine($"                    dst.{p.Property.Name} = new {unwrappedFqn}(new {innerFqn}(a_{p.Property.Name}[0].Value?.ToString() ?? string.Empty, a_{p.Property.Name}[0].Tag == global::SharpIpp.Protocol.Models.Tag.Keyword));");
+                    sb.AppendLine("            }");
+                }
+                else if (p.IsIppValue && p.IppValueInnerType != null && iKeywordEnumSymbol != null && ImplementsOrInherits(p.IppValueInnerType, iKeywordEnumSymbol))
+                {
+                    var innerFqn = p.IppValueInnerType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+                    var unwrappedFqn = p.UnwrappedType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+                    sb.AppendLine($"            if (src.TryGetValue({attrNameExpr}, out var a_{p.Property.Name}) && a_{p.Property.Name}.Length > 0)");
+                    sb.AppendLine("            {");
+                    sb.AppendLine($"                if (a_{p.Property.Name}.Length == 1 && (a_{p.Property.Name}[0].Tag.IsOutOfBand() || a_{p.Property.Name}[0].Value is global::SharpIpp.Protocol.Models.NoValue))");
+                    sb.AppendLine($"                    dst.{p.Property.Name} = default({unwrappedFqn});");
+                    sb.AppendLine("                else");
+                    sb.AppendLine($"                    dst.{p.Property.Name} = new {unwrappedFqn}(new {innerFqn}(a_{p.Property.Name}[0].Value?.ToString() ?? string.Empty));");
                     sb.AppendLine("            }");
                 }
                 else if (p.IsIppValue && p.IppValueInnerType != null && iIppStructuredStringSymbol != null && ImplementsOrInherits(p.IppValueInnerType, iIppStructuredStringSymbol))
@@ -1002,7 +1074,7 @@ public class MapperSourceGenerator : IIncrementalGenerator
                     bool hasEnumerableParse = p.IppValueInnerType.GetMembers("Parse").OfType<IMethodSymbol>().Any(m => m.Parameters.Length == 1 && m.Parameters[0].Type.Name == "IEnumerable");
                     sb.AppendLine($"            if (src.TryGetValue({attrNameExpr}, out var a_{p.Property.Name}) && a_{p.Property.Name}.Length > 0)");
                     sb.AppendLine("            {");
-                    sb.AppendLine($"                if (a_{p.Property.Name}.Length == 1 && a_{p.Property.Name}[0].Tag == global::SharpIpp.Protocol.Models.Tag.NoValue)");
+                    sb.AppendLine($"                if (a_{p.Property.Name}.Length == 1 && (a_{p.Property.Name}[0].Tag.IsOutOfBand() || a_{p.Property.Name}[0].Value is global::SharpIpp.Protocol.Models.NoValue))");
                     sb.AppendLine($"                    dst.{p.Property.Name} = default({unwrappedFqn});");
                     sb.AppendLine("                else");
                     if (hasEnumerableParse)
@@ -1017,7 +1089,7 @@ public class MapperSourceGenerator : IIncrementalGenerator
                     var unwrappedFqn = p.UnwrappedType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
                     sb.AppendLine($"            if (src.TryGetValue({attrNameExpr}, out var a_{p.Property.Name}) && a_{p.Property.Name}.Length > 0)");
                     sb.AppendLine("            {");
-                    sb.AppendLine($"                if (a_{p.Property.Name}.Length == 1 && a_{p.Property.Name}[0].Tag == global::SharpIpp.Protocol.Models.Tag.NoValue)");
+                    sb.AppendLine($"                if (a_{p.Property.Name}.Length == 1 && (a_{p.Property.Name}[0].Tag.IsOutOfBand() || a_{p.Property.Name}[0].Value is global::SharpIpp.Protocol.Models.NoValue))");
                     sb.AppendLine($"                    dst.{p.Property.Name} = default({unwrappedFqn});");
                     sb.AppendLine("                else");
                     sb.AppendLine($"                    dst.{p.Property.Name} = new {unwrappedFqn}(map.Map<{innerFqn}>(a_{p.Property.Name}.FromBegCollection().ToIppDictionary()));");
@@ -1029,17 +1101,24 @@ public class MapperSourceGenerator : IIncrementalGenerator
                     var elemTypeFqn = elem.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
                     var unwrappedFqn = p.UnwrappedType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
                     bool isElemKeywordOrNameEnum = ImplementsOrInherits(elem, iKeywordOrNameEnumSymbol);
+                    bool isElemKeywordEnum = ImplementsOrInherits(elem, iKeywordEnumSymbol) && !isElemKeywordOrNameEnum;
                     bool isElemCollection = ImplementsOrInherits(elem, iIppCollectionSymbol);
 
                     sb.AppendLine($"            if (src.TryGetValue({attrNameExpr}, out var a_{p.Property.Name}) && a_{p.Property.Name}.Length > 0)");
                     sb.AppendLine("            {");
-                    sb.AppendLine($"                if (a_{p.Property.Name}.Length == 1 && a_{p.Property.Name}[0].Tag == global::SharpIpp.Protocol.Models.Tag.NoValue)");
+                    sb.AppendLine($"                if (a_{p.Property.Name}.Length == 1 && (a_{p.Property.Name}[0].Tag.IsOutOfBand() || a_{p.Property.Name}[0].Value is global::SharpIpp.Protocol.Models.NoValue))");
                     sb.AppendLine($"                    dst.{p.Property.Name} = default({unwrappedFqn});");
                     sb.AppendLine("                else");
                     sb.AppendLine("                {");
                     if (isElemKeywordOrNameEnum)
                     {
                         sb.AppendLine($"                    var arr_{p.Property.Name} = map.MapFromDicSetNullable<string, {elemTypeFqn}>(src, {attrNameExpr}, (attribute, value) => new {elemTypeFqn}(value, attribute.Tag == global::SharpIpp.Protocol.Models.Tag.Keyword));");
+                        sb.AppendLine($"                    if (arr_{p.Property.Name} != null)");
+                        sb.AppendLine($"                        dst.{p.Property.Name} = new {unwrappedFqn}(arr_{p.Property.Name});");
+                    }
+                    else if (isElemKeywordEnum)
+                    {
+                        sb.AppendLine($"                    var arr_{p.Property.Name} = map.MapFromDicSetNullable<string, {elemTypeFqn}>(src, {attrNameExpr}, (attribute, value) => new {elemTypeFqn}(value));");
                         sb.AppendLine($"                    if (arr_{p.Property.Name} != null)");
                         sb.AppendLine($"                        dst.{p.Property.Name} = new {unwrappedFqn}(arr_{p.Property.Name});");
                     }
@@ -1050,7 +1129,7 @@ public class MapperSourceGenerator : IIncrementalGenerator
                     else
                     {
                         sb.AppendLine($"                    var arr_{p.Property.Name} = map.MapFromDicSetNullable<{elemTypeFqn}[]>(src, {attrNameExpr});");
-                        sb.AppendLine($"                    if (arr_{p.Property.Name} != null)");
+                        sb.AppendLine($"                    if (arr_{p.Property.Name} != null && arr_{p.Property.Name}.Length > 0)");
                         sb.AppendLine($"                        dst.{p.Property.Name} = new {unwrappedFqn}(arr_{p.Property.Name});");
                     }
                     sb.AppendLine("                }");
@@ -1067,7 +1146,7 @@ public class MapperSourceGenerator : IIncrementalGenerator
                     // StringWithLanguage — accept both WithoutLanguage (string) and WithLanguage (StringWithLanguage) tags
                     sb.AppendLine($"            if (src.TryGetValue({attrNameExpr}, out var a_{p.Property.Name}) && a_{p.Property.Name}.Length > 0)");
                     sb.AppendLine("            {");
-                    sb.AppendLine($"                if (a_{p.Property.Name}[0].Tag == global::SharpIpp.Protocol.Models.Tag.NoValue)");
+                    sb.AppendLine($"                if (a_{p.Property.Name}.Length == 1 && (a_{p.Property.Name}[0].Tag.IsOutOfBand() || a_{p.Property.Name}[0].Value is global::SharpIpp.Protocol.Models.NoValue))");
                     sb.AppendLine($"                    dst.{p.Property.Name} = default(global::SharpIpp.Protocol.Models.StringWithLanguage);");
                     sb.AppendLine($"                else if (a_{p.Property.Name}[0].Value is global::SharpIpp.Protocol.Models.StringWithLanguage swl_{p.Property.Name})");
                     sb.AppendLine($"                    dst.{p.Property.Name} = swl_{p.Property.Name};");
@@ -1079,7 +1158,7 @@ public class MapperSourceGenerator : IIncrementalGenerator
                 {
                     sb.AppendLine($"            if (src.TryGetValue({attrNameExpr}, out var a_{p.Property.Name}) && a_{p.Property.Name}.Length > 0)");
                     sb.AppendLine("            {");
-                    sb.AppendLine($"                if (a_{p.Property.Name}[0].Tag == global::SharpIpp.Protocol.Models.Tag.NoValue)");
+                    sb.AppendLine($"                if (a_{p.Property.Name}.Length == 1 && (a_{p.Property.Name}[0].Tag.IsOutOfBand() || a_{p.Property.Name}[0].Value is global::SharpIpp.Protocol.Models.NoValue))");
                     sb.AppendLine($"                    dst.{p.Property.Name} = default(global::SharpIpp.Protocol.Models.OctetString);");
                     sb.AppendLine($"                else if (a_{p.Property.Name}[0].Value is global::SharpIpp.Protocol.Models.OctetString os_{p.Property.Name})");
                     sb.AppendLine($"                    dst.{p.Property.Name} = os_{p.Property.Name};");

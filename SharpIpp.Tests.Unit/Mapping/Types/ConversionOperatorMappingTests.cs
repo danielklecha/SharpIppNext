@@ -188,8 +188,8 @@ public class ConversionOperatorMappingTests : MapperTestBase
         var alertOctet = (OctetString)alert;
         alertOctet.ToString().Should().Be(alertStr);
 
-        var fromAlertOctet = (PrinterAlert)alertOctet;
-        fromAlertOctet.Code.Should().Be("jam");
+        var fromAlertOctet = (PrinterAlert?)alertOctet;
+        fromAlertOctet!.Code.Should().Be("jam");
 
         // Mapper round trips
         _mapper.Map<string>(alert).Should().Be(alertStr);
@@ -225,8 +225,8 @@ public class ConversionOperatorMappingTests : MapperTestBase
         var supplyOctet = (OctetString)supply;
         supplyOctet.ToString().Should().Be(supplyStr);
 
-        var fromSupplyOctet = (PrinterFinisherSupply)supplyOctet;
-        fromSupplyOctet.Color.Should().Be("blue");
+        var fromSupplyOctet = (PrinterFinisherSupply?)supplyOctet;
+        fromSupplyOctet!.Color.Should().Be("blue");
 
         _mapper.Map<string>(supply).Should().Be(supplyStr);
         _mapper.Map<PrinterFinisherSupply>(supplyStr).Color.Should().Be("blue");
@@ -280,5 +280,36 @@ public class ConversionOperatorMappingTests : MapperTestBase
         // int <-> PrintQuality
         _mapper.Map<PrintQuality>(3).Should().Be(PrintQuality.Draft);
         _mapper.Map<int>(PrintQuality.Draft).Should().Be(3);
+    }
+
+    [TestMethod]
+    public void StructuredStrings_EmptyOctetString_CollectionMapping_MapsToEmptyModels()
+    {
+        var validFinisher = new OctetString("type=stitcher;");
+        var emptyFinisher = new OctetString(Array.Empty<byte>());
+        var whitespaceFinisher = new OctetString("   ");
+
+        var finishers = _mapper.Map<PrinterFinisher[]>(new[] { validFinisher, emptyFinisher, whitespaceFinisher });
+        finishers.Should().HaveCount(3);
+        finishers[0].Type.Should().Be(FinisherType.Stitcher);
+        finishers[1].Count.Should().Be(0);
+        finishers[2].Count.Should().Be(0);
+
+        var allEmptyFinishers = _mapper.Map<PrinterFinisher[]>(new[] { emptyFinisher, whitespaceFinisher });
+        allEmptyFinishers.Should().HaveCount(2);
+        allEmptyFinishers.Should().OnlyContain(x => x.Count == 0);
+
+        var validSupply = new OctetString("class=consumed; type=staples;");
+        var emptySupply = new OctetString(string.Empty);
+
+        var supplies = _mapper.Map<PrinterFinisherSupply[]>(new[] { validSupply, emptySupply });
+        supplies.Should().HaveCount(2);
+        supplies[0].Class.Should().Be(FinisherSupplyClass.Consumed);
+        supplies[0].Type.Should().Be(FinisherSupplyType.Staples);
+        supplies[1].Count.Should().Be(0);
+
+        var allEmptySupplies = _mapper.Map<PrinterFinisherSupply[]>(new[] { emptySupply });
+        allEmptySupplies.Should().HaveCount(1);
+        allEmptySupplies[0].Count.Should().Be(0);
     }
 }

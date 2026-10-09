@@ -302,4 +302,12 @@ public static class IppAttributeExtensions
         value = default!;
         return false;
     }
+
+    /// <summary>
+    /// Determines whether the specified <see cref="IppAttribute"/> is an out-of-band attribute or has a <see cref="NoValue"/> value.
+    /// </summary>
+    /// <param name="attribute">The attribute to check.</param>
+    /// <returns><see langword="true"/> if the attribute's tag is out-of-band or its value is <see cref="NoValue"/>; otherwise <see langword="false"/>.</returns>
+    public static bool IsOutOfBandOrNoValue(this IppAttribute attribute) =>
+        attribute.Tag.IsOutOfBand() || attribute.Value is NoValue;
 }

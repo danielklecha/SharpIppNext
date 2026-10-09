@@ -76,6 +76,22 @@ public class MapperApplierExtensionsTests
     }
 
     [TestMethod]
+    public void MapFromDicSetNullable_Should_Return_Mapped_Values_When_Multiple_Attributes()
+    {
+        var mapperMock = new Mock<IMapperApplier>();
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { "testKey", new[] { new IppAttribute(Tag.Integer, "testKey", 3), new IppAttribute(Tag.Integer, "testKey", 4) } }
+        };
+
+        mapperMock.Setup(m => m.MapNullable<int[]?>(It.Is<object[]>(v => v.Length == 2 && (int)v[0] == 3 && (int)v[1] == 4)))
+            .Returns(new[] { 3, 4 });
+
+        var result = mapperMock.Object.MapFromDicSetNullable<int[]?>(src, "testKey");
+        CollectionAssert.AreEqual(new[] { 3, 4 }, result);
+    }
+
+    [TestMethod]
     public void MapFromDicSetNullable_Should_Return_NoValue_For_Missing_Key()
     {
         var mapperMock = new Mock<IMapperApplier>();
@@ -92,6 +108,37 @@ public class MapperApplierExtensionsTests
         var mapperMock = new Mock<IMapperApplier>();
         mapperMock.Setup(m => m.MapNullable<int[]?>(null)).Returns((int[]?)null);
         var src = new Dictionary<string, IppAttribute[]> { { "testKey", new IppAttribute[0] } };
+
+        var result = mapperMock.Object.MapFromDicSetNullable<int[]?>(src, "testKey");
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    [DataRow(Tag.NoValue)]
+    [DataRow(Tag.Unsupported)]
+    [DataRow(Tag.Unknown)]
+    public void MapFromDicSetNullable_Should_Return_NoValue_When_Single_Attribute_Is_OutOfBand(Tag tag)
+    {
+        var mapperMock = new Mock<IMapperApplier>();
+        mapperMock.Setup(m => m.MapNullable<int[]?>(null)).Returns((int[]?)null);
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { "testKey", new[] { new IppAttribute(tag, "testKey", NoValue.Instance) } }
+        };
+
+        var result = mapperMock.Object.MapFromDicSetNullable<int[]?>(src, "testKey");
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void MapFromDicSetNullable_Should_Return_NoValue_When_Single_Attribute_Has_NoValue_With_NonOutOfBandTag()
+    {
+        var mapperMock = new Mock<IMapperApplier>();
+        mapperMock.Setup(m => m.MapNullable<int[]?>(null)).Returns((int[]?)null);
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { "testKey", new[] { new IppAttribute(Tag.BegCollection, "testKey", NoValue.Instance) } }
+        };
 
         var result = mapperMock.Object.MapFromDicSetNullable<int[]?>(src, "testKey");
         Assert.IsNull(result);
@@ -158,6 +205,21 @@ public class MapperApplierExtensionsTests
     }
 
     [TestMethod]
+    public void MapFromDicNullable_Should_Return_Mapped_Value_When_Multiple_Attributes()
+    {
+        var mapperMock = new Mock<IMapperApplier>();
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { "testKey", new[] { new IppAttribute(Tag.Integer, "testKey", 5), new IppAttribute(Tag.Integer, "testKey", 6) } }
+        };
+
+        mapperMock.Setup(m => m.MapNullable<int?>(5)).Returns(5);
+
+        var result = mapperMock.Object.MapFromDicNullable<int?>(src, "testKey");
+        Assert.AreEqual(5, result);
+    }
+
+    [TestMethod]
     public void MapFromDicNullable_Should_Return_NoValue_For_Missing_Key()
     {
         var mapperMock = new Mock<IMapperApplier>();
@@ -180,6 +242,72 @@ public class MapperApplierExtensionsTests
     }
 
     [TestMethod]
+    [DataRow(Tag.NoValue)]
+    [DataRow(Tag.Unsupported)]
+    [DataRow(Tag.Unknown)]
+    public void MapFromDicNullable_Should_Return_Mapped_Value_When_Single_Attribute_Is_OutOfBand(Tag tag)
+    {
+        var mapperMock = new Mock<IMapperApplier>();
+        var attribute = new IppAttribute(tag, "testKey", NoValue.Instance);
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { "testKey", new[] { attribute } }
+        };
+        mapperMock.Setup(m => m.MapNullable<int?>(attribute.Value)).Returns((int?)null);
+
+        var result = mapperMock.Object.MapFromDicNullable<int?>(src, "testKey");
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void MapFromDicNullable_Should_Return_Mapped_Value_When_Single_Attribute_Has_NoValue_With_NonOutOfBandTag()
+    {
+        var mapperMock = new Mock<IMapperApplier>();
+        var attribute = new IppAttribute(Tag.BegCollection, "testKey", NoValue.Instance);
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { "testKey", new[] { attribute } }
+        };
+        mapperMock.Setup(m => m.MapNullable<int?>(attribute.Value)).Returns((int?)null);
+
+        var result = mapperMock.Object.MapFromDicNullable<int?>(src, "testKey");
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void MapFromDicNullable_Should_Map_Array_For_IppValue_Enumerable()
+    {
+        var mapperMock = new Mock<IMapperApplier>();
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { "testKey", new[] { new IppAttribute(Tag.Integer, "testKey", 1), new IppAttribute(Tag.Integer, "testKey", 2) } }
+        };
+
+        var expected = new IppValue<int[]>(new[] { 1, 2 });
+        mapperMock.Setup(m => m.MapNullable<IppValue<int[]>?>((object)It.Is<object[]>(v => v.Length == 2 && (int)v[0] == 1 && (int)v[1] == 2)))
+            .Returns(expected);
+
+        var result = mapperMock.Object.MapFromDicNullable<IppValue<int[]>?>(src, "testKey");
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void MapFromDicNullable_Should_Map_SingleValue_For_IppValue_Scalar()
+    {
+        var mapperMock = new Mock<IMapperApplier>();
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { "testKey", new[] { new IppAttribute(Tag.Integer, "testKey", 42) } }
+        };
+
+        var expected = new IppValue<int>(42);
+        mapperMock.Setup(m => m.MapNullable<IppValue<int>?>(42)).Returns(expected);
+
+        var result = mapperMock.Object.MapFromDicNullable<IppValue<int>?>(src, "testKey");
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
     public void MapFromDicNullable_WithFactory_Should_Return_Factory_Result()
     {
         var mapperMock = new Mock<IMapperApplier>();
@@ -196,6 +324,25 @@ public class MapperApplierExtensionsTests
             (attribute, value) => $"{attribute.Name}-{value}");
 
         Assert.AreEqual("testKey-value", result);
+    }
+
+    [TestMethod]
+    public void MapFromDicNullable_WithFactory_Should_Return_Factory_Result_When_Multiple_Attributes()
+    {
+        var mapperMock = new Mock<IMapperApplier>();
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { "testKey", new[] { new IppAttribute(Tag.NameWithoutLanguage, "testKey", "value1"), new IppAttribute(Tag.NameWithoutLanguage, "testKey", "value2") } }
+        };
+
+        mapperMock.Setup(m => m.MapNullable<string>("value1")).Returns("value1");
+
+        var result = mapperMock.Object.MapFromDicNullable<string, string?>(
+            src,
+            "testKey",
+            (attribute, value) => $"{attribute.Name}-{value}");
+
+        Assert.AreEqual("testKey-value1", result);
     }
 
     [TestMethod]
@@ -264,6 +411,57 @@ public class MapperApplierExtensionsTests
             {
                 factoryCalled = true;
                 return value?.ToString();
+            });
+
+        Assert.IsNull(result);
+        Assert.IsFalse(factoryCalled);
+    }
+
+    [TestMethod]
+    [DataRow(Tag.NoValue)]
+    [DataRow(Tag.Unsupported)]
+    [DataRow(Tag.Unknown)]
+    public void MapFromDicNullable_WithFactory_Should_Return_Null_When_Single_Attribute_Is_OutOfBand(Tag tag)
+    {
+        var mapperMock = new Mock<IMapperApplier>();
+        mapperMock.Setup(m => m.MapNullable<string?>(null)).Returns((string?)null);
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { "testKey", new[] { new IppAttribute(tag, "testKey", NoValue.Instance) } }
+        };
+        var factoryCalled = false;
+
+        var result = mapperMock.Object.MapFromDicNullable<int?, string?>(
+            src,
+            "testKey",
+            (_, _) =>
+            {
+                factoryCalled = true;
+                return "never";
+            });
+
+        Assert.IsNull(result);
+        Assert.IsFalse(factoryCalled);
+    }
+
+    [TestMethod]
+    public void MapFromDicNullable_WithFactory_Should_Return_Null_When_Single_Attribute_Has_NoValue_With_NonOutOfBandTag()
+    {
+        var mapperMock = new Mock<IMapperApplier>();
+        mapperMock.Setup(m => m.MapNullable<string?>(null)).Returns((string?)null);
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { "testKey", new[] { new IppAttribute(Tag.BegCollection, "testKey", NoValue.Instance) } }
+        };
+        var factoryCalled = false;
+
+        var result = mapperMock.Object.MapFromDicNullable<int?, string?>(
+            src,
+            "testKey",
+            (_, _) =>
+            {
+                factoryCalled = true;
+                return "never";
             });
 
         Assert.IsNull(result);
@@ -376,5 +574,86 @@ public class MapperApplierExtensionsTests
             (_, value) => $"mapped-{value!.Value}");
 
         CollectionAssert.AreEqual(new[] { "mapped-3", "mapped-4" }, result!);
+    }
+
+    [TestMethod]
+    [DataRow(Tag.NoValue)]
+    [DataRow(Tag.Unsupported)]
+    [DataRow(Tag.Unknown)]
+    public void MapFromDicSetNullable_WithFactory_Should_Return_Null_When_Single_Attribute_Is_OutOfBand(Tag tag)
+    {
+        var mapperMock = new Mock<IMapperApplier>();
+        mapperMock.Setup(m => m.MapNullable<string[]?>(null)).Returns((string[]?)null);
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { "testKey", new[] { new IppAttribute(tag, "testKey", NoValue.Instance) } }
+        };
+        var factoryCalled = false;
+
+        var result = mapperMock.Object.MapFromDicSetNullable<int?, string?>(
+            src,
+            "testKey",
+            (_, _) =>
+            {
+                factoryCalled = true;
+                return "never";
+            });
+
+        Assert.IsNull(result);
+        Assert.IsFalse(factoryCalled);
+    }
+
+    [TestMethod]
+    public void MapFromDicSetNullable_WithFactory_Should_Return_Null_When_Single_Attribute_Has_NoValue_With_NonOutOfBandTag()
+    {
+        var mapperMock = new Mock<IMapperApplier>();
+        mapperMock.Setup(m => m.MapNullable<string[]?>(null)).Returns((string[]?)null);
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            { "testKey", new[] { new IppAttribute(Tag.BegCollection, "testKey", NoValue.Instance) } }
+        };
+        var factoryCalled = false;
+
+        var result = mapperMock.Object.MapFromDicSetNullable<int?, string?>(
+            src,
+            "testKey",
+            (_, _) =>
+            {
+                factoryCalled = true;
+                return "never";
+            });
+
+        Assert.IsNull(result);
+        Assert.IsFalse(factoryCalled);
+    }
+
+    [TestMethod]
+    public void MapFromDicSetNullable_WithFactory_Should_Skip_OutOfBand_And_NoValue_Attributes_In_Set()
+    {
+        var mapperMock = new Mock<IMapperApplier>();
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            {
+                "testKey",
+                new[]
+                {
+                    new IppAttribute(Tag.Integer, "testKey", 1),
+                    new IppAttribute(Tag.NoValue, "testKey", NoValue.Instance),
+                    new IppAttribute(Tag.BegCollection, "testKey", NoValue.Instance),
+                    new IppAttribute(Tag.Unsupported, "testKey", "unsupported"),
+                    new IppAttribute(Tag.Integer, "testKey", 2)
+                }
+            }
+        };
+
+        mapperMock.Setup(m => m.MapNullable<int?>(1)).Returns(1);
+        mapperMock.Setup(m => m.MapNullable<int?>(2)).Returns(2);
+
+        var result = mapperMock.Object.MapFromDicSetNullable<int?, string>(
+            src,
+            "testKey",
+            (_, value) => $"mapped-{value!.Value}");
+
+        CollectionAssert.AreEqual(new[] { "mapped-1", "mapped-2" }, result!);
     }
 }

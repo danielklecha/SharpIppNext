@@ -701,6 +701,138 @@ public class PrinterDescriptionAttributesProfileTests
         var roundTripped = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(dst);
         roundTripped.PrinterUUID.Should().Be(src.PrinterUUID);
     }
+
+    [TestMethod]
+    public void Map_PrinterDescriptionAttributes_FromDictionary_WithEmptyPrinterFinisher_MapsEmptyEntries()
+    {
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            {
+                IppAttributeNames.PrinterFinisher,
+                new[]
+                {
+                    new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, IppAttributeNames.PrinterFinisher, new OctetString(Array.Empty<byte>())),
+                    new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, IppAttributeNames.PrinterFinisher, new OctetString("   "))
+                }
+            }
+        };
+
+        var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(src);
+
+        dst.PrinterFinisher.Should().NotBeNull();
+        var finishers = dst.PrinterFinisher!.Value.Value;
+        finishers.Should().HaveCount(2);
+        finishers.Should().OnlyContain(x => x.Count == 0);
+    }
+
+    [TestMethod]
+    public void Map_PrinterDescriptionAttributes_FromDictionary_WithMixedPrinterFinisher_MapsAllEntriesPreservingIndexAlignment()
+    {
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            {
+                IppAttributeNames.PrinterFinisher,
+                new[]
+                {
+                    new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, IppAttributeNames.PrinterFinisher, new OctetString("type=stitcher;")),
+                    new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, IppAttributeNames.PrinterFinisher, new OctetString(Array.Empty<byte>()))
+                }
+            }
+        };
+
+        var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(src);
+
+        dst.PrinterFinisher.Should().NotBeNull();
+        var finishers = dst.PrinterFinisher!.Value.Value;
+        finishers.Should().HaveCount(2);
+        finishers[0].Type.Should().Be(FinisherType.Stitcher);
+        finishers[1].Count.Should().Be(0);
+    }
+
+    [TestMethod]
+    public void Map_PrinterDescriptionAttributes_FromDictionary_WithEmptyPrinterFinisherSupplies_MapsEmptyEntries()
+    {
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            {
+                IppAttributeNames.PrinterFinisherSupplies,
+                new[]
+                {
+                    new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, IppAttributeNames.PrinterFinisherSupplies, new OctetString(Array.Empty<byte>()))
+                }
+            }
+        };
+
+        var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(src);
+
+        dst.PrinterFinisherSupplies.Should().NotBeNull();
+        var supplies = dst.PrinterFinisherSupplies!.Value.Value;
+        supplies.Should().HaveCount(1);
+        supplies[0].Count.Should().Be(0);
+    }
+
+    [TestMethod]
+    public void Map_PrinterDescriptionAttributes_FromDictionary_WithMixedPrinterFinisherSupplies_MapsAllEntriesPreservingIndexAlignment()
+    {
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            {
+                IppAttributeNames.PrinterFinisherSupplies,
+                new[]
+                {
+                    new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, IppAttributeNames.PrinterFinisherSupplies, new OctetString("class=consumed; type=staples;")),
+                    new IppAttribute(Tag.OctetStringWithAnUnspecifiedFormat, IppAttributeNames.PrinterFinisherSupplies, new OctetString(string.Empty))
+                }
+            }
+        };
+
+        var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(src);
+
+        dst.PrinterFinisherSupplies.Should().NotBeNull();
+        var supplies = dst.PrinterFinisherSupplies!.Value.Value;
+        supplies.Should().HaveCount(2);
+        supplies[0].Class.Should().Be(FinisherSupplyClass.Consumed);
+        supplies[0].Type.Should().Be(FinisherSupplyType.Staples);
+        supplies[1].Count.Should().Be(0);
+    }
+
+    [TestMethod]
+    public void Map_PrinterDescriptionAttributes_WhenFinishingsColSupportedIsUnsupported_ShouldMapToNull()
+    {
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            {
+                IppAttributeNames.FinishingsColSupported,
+                new[] { new IppAttribute(Tag.Unsupported, IppAttributeNames.FinishingsColSupported, NoValue.Instance) }
+            }
+        };
+
+        var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(src);
+
+        dst.FinishingsColSupported.Should().NotBeNull();
+        dst.FinishingsColSupported!.Value.IsValue.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void Map_PrinterDescriptionAttributes_WhenFinishingsColSupportedHasValues_ShouldMapCorrectly()
+    {
+        var src = new Dictionary<string, IppAttribute[]>
+        {
+            {
+                IppAttributeNames.FinishingsColSupported,
+                new[]
+                {
+                    new IppAttribute(Tag.Keyword, IppAttributeNames.FinishingsColSupported, "finishing-template"),
+                    new IppAttribute(Tag.Keyword, IppAttributeNames.FinishingsColSupported, "binding")
+                }
+            }
+        };
+
+        var dst = _mapper.Map<IDictionary<string, IppAttribute[]>, PrinterDescriptionAttributes>(src);
+
+        dst.FinishingsColSupported.Should().NotBeNull();
+        dst.FinishingsColSupported!.Value.Value.Should().Equal(FinishingsColMember.FinishingTemplate, FinishingsColMember.Binding);
+    }
 }
 
 

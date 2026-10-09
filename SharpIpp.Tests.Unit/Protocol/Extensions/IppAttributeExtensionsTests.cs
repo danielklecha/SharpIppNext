@@ -842,4 +842,38 @@ public class IppAttributeExtensionsTests
         result.Should().BeTrue();
         value.Should().Be(new IppValue<int>(42));
     }
+
+    [TestMethod]
+    [DataRow(Tag.Unsupported, null, true)]
+    [DataRow(Tag.Unknown, null, true)]
+    [DataRow(Tag.NoValue, null, true)]
+    [DataRow(Tag.BegCollection, null, true)]
+    [DataRow(Tag.Integer, 42, false)]
+    [DataRow(Tag.Keyword, "iso-a4", false)]
+    [DataRow(Tag.Uri, "ipp://localhost", false)]
+    public void IsOutOfBandOrNoValue_ShouldCheckTagAndValue(Tag tag, object? value, bool expected)
+    {
+        // Arrange
+        var attribute = new IppAttribute(tag, "test-attr", value ?? NoValue.Instance);
+
+        // Act
+        var result = attribute.IsOutOfBandOrNoValue();
+
+        // Assert
+        result.Should().Be(expected);
+    }
+
+    [TestMethod]
+    public void IsOutOfBandOrNoValue_WhenParameterlessConstructed_ShouldReturnTrue()
+    {
+        // Arrange
+        var attribute = new IppAttribute();
+
+        // Act
+        var result = attribute.IsOutOfBandOrNoValue();
+
+        // Assert
+        result.Should().BeTrue();
+    }
 }
+

@@ -1,4 +1,4 @@
-﻿using SharpIpp.Mapping;
+using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
@@ -10,9 +10,6 @@ namespace SharpIpp.Models.Requests;
 [IppAttribute]
 public class GetJobsOperationAttributes : OperationAttributes
 {
-    /// <summary>
-    /// The first-index IPP attribute.
-    /// See: PWG 5100.13-2023 Section 6.1.3 and Section 8.4
     /// <summary>
     /// The first-index IPP attribute.
     /// See: PWG 5100.13-2023 Section 6.1.3 and Section 8.4
