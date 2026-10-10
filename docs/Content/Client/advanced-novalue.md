@@ -1,23 +1,25 @@
 # Advanced NoValue in Client
 
-In IPP, the `no-value` out-of-band tag (`0x13`) indicates that an attribute is supported by the printer or client but currently has no value. SharpIppNext represents this state using the generic wrapper `IppValue<T>`.
+In the Internet Printing Protocol (IPP), the `no-value` out-of-band tag (`Tag.NoValue` / `0x13`) indicates that an attribute is supported or requested by an entity, but currently has no configured or assigned value.
+
+SharpIppNext natively integrates `Tag.NoValue` into its strongly-typed object model through standard types that implement `INoValue`:
+- **`IppValue<T>?`**: Wraps value and reference types, including `int`, `bool`, `DateTimeOffset`, enums, keywords, complex collections, and multi-valued arrays (`IppValue<T[]>?`).
+- **`StringWithLanguage?`**: The standard type for all IPP text and name attributes (`Tag.TextWithoutLanguage`, `Tag.TextWithLanguage`, `Tag.NameWithoutLanguage`, `Tag.NameWithLanguage`). It implements `INoValue` natively without requiring wrapping.
+- **`OctetString?`**: The standard type for binary octet string attributes, which also implements `INoValue` natively.
 
 ## Understanding Attribute States
 
-Every IPP attribute mapped via `IppValue<T>?` can be in one of three distinct states:
+Every IPP attribute mapped in SharpIppNext supports three distinct states:
 
 | State | C# Representation | Meaning in IPP |
 | :--- | :--- | :--- |
-| **Missing / Omitted** | `null` | The attribute was not sent or is not requested. |
-| **NoValue** | `NoValue.Instance` (or `default(IppValue<T>)`) | The attribute was explicitly sent with `Tag.NoValue` (`0x13`). |
-| **Concrete Value** | `new IppValue<T>(value)` (or implicitly `value`) | The attribute contains a concrete value of type `T`. |
-
-> [!NOTE]
-> Unlike previous versions that used sentinel values (such as `int.MinValue` or `"###NOVALUE###"`), `IppValue<T>` works natively for all types, including `bool`, numbers, strings, dates, enums, custom structs (`Range`, `Resolution`, `OctetString`), and multi-valued arrays (`IppValue<T[]>?`).
+| **Missing / Omitted** | `null` | The attribute was not sent or is omitted from the message. |
+| **NoValue** | `NoValue.Instance` (or `default` where `IsValue == false`) | The attribute was explicitly transmitted with `Tag.NoValue` (`0x13`). |
+| **Concrete Value** | Value assignment or struct instance (`IsValue == true`) | The attribute contains a concrete value. |
 
 ## Setting Values in Requests
 
-You can assign values or `NoValue` directly using implicit conversions.
+All typed properties support seamless assignment of concrete values, `null` (to omit), or `NoValue.Instance` via implicit conversions.
 
 ### 1. Assigning Concrete Values
 
@@ -26,9 +28,17 @@ var request = new PrintJobRequest
 {
     OperationAttributes = new PrintJobOperationAttributes
     {
-        JobName = "My Document",          // Implicitly converted to IppValue<string>
-        IppAttributeFidelity = true,      // Implicitly converted to IppValue<bool>
-        Copies = 2                        // Implicitly converted to IppValue<int>
+        // StringWithLanguage: implicit conversion from string
+        JobName = "My Document",
+
+        // Or with an explicit natural language tag:
+        // JobName = new StringWithLanguage("en-US", "My Document"),
+
+        // IppValue<bool>: implicit conversion from bool
+        IppAttributeFidelity = true,
+
+        // IppValue<int>: implicit conversion from int
+        Copies = 2
     }
 };
 ```
@@ -42,8 +52,14 @@ var request = new ValidateJobRequest
 {
     OperationAttributes = new ValidateJobOperationAttributes
     {
-        JobPassword = NoValue.Instance,    // Sends Tag.NoValue for job-password
-        DocumentCharset = NoValue.Instance // Sends Tag.NoValue for document-charset
+        // Sends Tag.NoValue for a StringWithLanguage attribute
+        DocumentName = NoValue.Instance,
+
+        // Sends Tag.NoValue for an OctetString attribute
+        DocumentPassword = NoValue.Instance,
+
+        // Sends Tag.NoValue for an IppValue<T> attribute
+        DocumentCharset = NoValue.Instance
     }
 };
 ```
@@ -56,27 +72,34 @@ Multi-valued attributes use `IppValue<T[]>?`:
 // Sending a list of values
 request.OperationAttributes.RequestedAttributes = new[] { "job-id", "job-state" };
 
-// Sending NoValue for the entire array attribute
+// Sending Tag.NoValue for the entire array attribute
 request.OperationAttributes.RequestedAttributes = NoValue.Instance;
 ```
 
 ## Reading Values from Responses
 
-`IppValue<T>` provides multiple convenient ways to check for and read values:
+SharpIppNext provides multiple convenient ways to inspect and handle attribute states:
 
 ### Direct Equality Comparison
 
+You can compare any `IppValue<T>`, `StringWithLanguage`, or `OctetString` directly against `NoValue.Instance`:
+
 ```csharp
-if (response.JobAttributes.JobImpressions == NoValue.Instance)
+if (response.JobAttributes?.JobImpressions == NoValue.Instance)
 {
     Console.WriteLine("The printer reported NoValue for JobImpressions.");
+}
+
+if (response.JobAttributes?.JobName == NoValue.Instance)
+{
+    Console.WriteLine("The printer reported NoValue for JobName.");
 }
 ```
 
 ### Inspecting `IsValue` / `HasValue`
 
 ```csharp
-if (response.PrinterAttributes.ColorSupported is { } colorSupported)
+if (response.PrinterAttributes?.ColorSupported is { } colorSupported)
 {
     if (colorSupported.IsValue)
     {
@@ -84,7 +107,7 @@ if (response.PrinterAttributes.ColorSupported is { } colorSupported)
     }
     else
     {
-        Console.WriteLine("ColorSupported attribute was present, but set to NoValue.");
+        Console.WriteLine("ColorSupported attribute was present, but set to Tag.NoValue.");
     }
 }
 else
@@ -93,17 +116,21 @@ else
 }
 ```
 
-### Safe Fallback (`GetValueOrDefault`)
+### Safe Fallbacks
 
 ```csharp
-// Returns the value if present, or fallback default (e.g. false) if NoValue or omitted
-bool isColor = response.PrinterAttributes.ColorSupported?.GetValueOrDefault(false) ?? false;
+// For IppValue<T>: returns value if present, or fallback default if NoValue or omitted
+bool isColor = response.PrinterAttributes?.ColorSupported?.GetValueOrDefault(false) ?? false;
+
+// For StringWithLanguage: access .Value or use implicit conversion to string? (null if NoValue or omitted)
+string? jobName = response.JobAttributes?.JobName;
+string displayName = response.JobAttributes?.JobName?.Value ?? "Unnamed Job";
 ```
 
 ### Deconstruction
 
 ```csharp
-if (response.JobAttributes.JobKOctets is { } jobKOctets)
+if (response.JobAttributes?.JobKOctets is { } jobKOctets)
 {
     var (isValue, octets) = jobKOctets;
     if (isValue)
@@ -116,9 +143,8 @@ if (response.JobAttributes.JobKOctets is { } jobKOctets)
 ### Pattern Matching and `TryGetValue`
 
 ```csharp
-if (response.JobAttributes.JobName?.TryGetValue(out var name) == true)
+if (response.JobAttributes?.JobKOctets?.TryGetValue(out var octets) == true)
 {
-    Console.WriteLine($"Job name: {name}");
+    Console.WriteLine($"Octets: {octets}");
 }
 ```
-

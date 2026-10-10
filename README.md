@@ -5,7 +5,6 @@
 [![Docs](https://img.shields.io/badge/project-docs-blue)](https://danielklecha.github.io/SharpIppNext/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/danielklecha/SharpIppNext/blob/master/LICENSE.txt)
 [![Coverage Status](https://coveralls.io/repos/github/danielklecha/SharpIppNext/badge.svg?branch=master)](https://coveralls.io/github/danielklecha/SharpIppNext?branch=master)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/danielklecha/SharpIppNext)
 
 A .NET Standard library for building Internet Printing Protocol (IPP) clients and servers.
 
@@ -17,6 +16,8 @@ A .NET Standard library for building Internet Printing Protocol (IPP) clients an
 - **Over 70 Supported Operations**: Out-of-the-box methods for standard IPP operations, plus support for sending custom/extended requests via raw message mapping.
 - **System Service Support**: Broad support for IPP System Service operations defined in PWG 5100.22-2025, including system and printer resource management, power policies, and subscription operations.
 - **Two-Tier Validation**: Recursive model-level validation via a built-in zero-dependency validation engine alongside strict low-level RFC 8011 attribute and octet-limit validation.
+- **AOT & Trimming**: Full support for Native AOT compilation and assembly trimming.
+- **No Reflection**: Uses static validators and mappers with zero runtime reflection for optimal performance and trim safety.
 - **Strong-Named Assembly**: Available in both standard and strong-named NuGet packages.
 
 ## Installation
@@ -65,8 +66,10 @@ Console.WriteLine($"Printer State: {response.PrinterAttributes?.PrinterState}");
 
 ### Examples
 
-- Examples of the IPP client are included in the solution ([SharpIpp.Samples.Client](https://github.com/danielklecha/SharpIppNext/tree/master/SharpIpp.Samples.Client) and [SharpIpp.Samples.Client.NativeAot](https://github.com/danielklecha/SharpIppNext/tree/master/SharpIpp.Samples.Client.NativeAot)).
-- An example of the IPP server is available in the [SharpIppNextServer repository](https://github.com/danielklecha/SharpIppNextServer).
+- A basic IPP client example is included in the solution ([SharpIpp.Samples.Client](SharpIpp.Samples.Client)).
+- A NativeAOT IPP client example is included in the solution ([SharpIpp.Samples.Client.NativeAot](SharpIpp.Samples.Client.NativeAot)).
+- An example of the IPP client is available in the [IppCli repository](https://github.com/danielklecha/IppCli).
+- An example of the IPP server is available in the [IppPrinter repository](https://github.com/danielklecha/IppPrinter).
 
 ### Setting the IPP Version
 

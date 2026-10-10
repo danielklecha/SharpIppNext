@@ -2,12 +2,12 @@
 
 ## Supported Versions
 
-The following table outlines the support status for security updates. The current active version is `4.x.x`. We do not plan to update older versions. When version `5.0.0` is released, support for `4.x.x` will end.
+Security fixes are provided only for the **latest stable release**. Older versions and pre-releases are not supported. When a new release is published, support for previous versions ends immediately.
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 4.x.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+| Latest stable release | :white_check_mark: |
+| Older releases | :x:                |
 
 ## Reporting a Vulnerability
 

@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net10.0</TargetFrameworks>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <PackageIcon>ipp256.png</PackageIcon>
+    <PackageIcon>icon256.png</PackageIcon>
     <PackageIconUrl />
     <PackageProjectUrl>https://github.com/danielklecha/SharpIppNext</PackageProjectUrl>
     <Authors>Daniel Klecha;Evgeny Zelenov</Authors>
@@ -27,7 +27,7 @@
     <IsTrimmable>true</IsTrimmable>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="..\ipp256.png">
+    <None Include="..\icon256.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>

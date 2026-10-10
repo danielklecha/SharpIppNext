@@ -1,7 +1,31 @@
 # Allocate-Printer-Resources Example
 
+Allocates installed resources (fonts, forms, ICC profiles) to a specific printer service.
+
+> [!NOTE]
+> Specification Reference: **PWG 5100.22-2025 Section 6.3.2**
+
 ```csharp
+using System;
+using System.IO;
+using System.Threading.Tasks;
+using SharpIpp;
+using SharpIpp.Models.Requests;
+using SharpIpp.Protocol.Models;
+
 var client = new SharpIppClient();
-var request = new AllocatePrinterResourcesRequest();
+
+var request = new AllocatePrinterResourcesRequest
+{
+    OperationAttributes = new()
+    {
+        SystemUri = new Uri("ipp://localhost:631/system"),
+        PrinterId = 1,
+        ResourceIds = [101, 102]
+    }
+};
+
 var response = await client.AllocatePrinterResourcesAsync(request);
+Console.WriteLine($"Status: {response.StatusCode}");
 ```
+

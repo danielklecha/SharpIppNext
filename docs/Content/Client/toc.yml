@@ -206,7 +206,7 @@
   href: OutputBinExtension.md
 - name: PWG 5100.6 Page Overrides
   href: PageOverridesExtension.md
-- name: Advanced Replacing Attributes
-  href: advanced-replace-attributes.md
+- name: StringWithLanguage
+  href: StringWithLanguage.md
 - name: Advanced NoValue
   href: advanced-novalue.md

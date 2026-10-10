@@ -1,7 +1,30 @@
 # Restart-One-Printer Example
 
+Restarts a specific printer service on the IPP System.
+
+> [!NOTE]
+> Specification Reference: **PWG 5100.22-2025 Section 6.3.6**
+
 ```csharp
+using System;
+using System.IO;
+using System.Threading.Tasks;
+using SharpIpp;
+using SharpIpp.Models.Requests;
+using SharpIpp.Protocol.Models;
+
 var client = new SharpIppClient();
-var request = new RestartOnePrinterRequest();
+
+var request = new RestartOnePrinterRequest
+{
+    OperationAttributes = new()
+    {
+        SystemUri = new Uri("ipp://localhost:631/system"),
+        PrinterId = 1
+    }
+};
+
 var response = await client.RestartOnePrinterAsync(request);
+Console.WriteLine($"Status: {response.StatusCode}");
 ```
+

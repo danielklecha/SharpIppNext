@@ -18,15 +18,34 @@ git clone https://github.com/danielklecha/SharpIppNext.git
 cd SharpIppNext
 ```
 
+## Repository Structure
+
+The solution is divided into the following projects:
+
+- **[`SharpIpp`](SharpIpp)**: The core IPP protocol library, containing client (`ISharpIppClient`) and server (`ISharpIppServer`) implementations, models, and protocol serialization (targets `netstandard2.0` and `net10.0`).
+- **[`SharpIpp.Generators`](SharpIpp.Generators)**: Roslyn incremental source generators (`IIncrementalGenerator`) that produce compile-time object mapping (`SimpleMapper`) and validation routines, ensuring zero-reflection NativeAOT and trimming compatibility (targets `netstandard2.0`).
+- **[`SharpIpp.Generators.Tests.Unit`](SharpIpp.Generators.Tests.Unit)**: Unit tests for verifying source generator output and behavior.
+- **[`SharpIpp.Tests.Unit`](SharpIpp.Tests.Unit)** & **[`SharpIpp.Tests.Integration`](SharpIpp.Tests.Integration)**: Comprehensive test suites for protocol serialization, mapping symmetry, and end-to-end client/server workflows.
+- **`SharpIpp.Samples.*`**: Sample applications demonstrating standard usage, NativeAOT deployment, and UWP integrations.
+
 ## How to Contribute
 
 ### Building the Project
 
-You can build the project using the .NET CLI:
+You can build the entire solution using the .NET CLI:
 
 ```bash
 dotnet build --configuration Release
 ```
+
+### Working with Source Generators (`SharpIpp.Generators`)
+
+If you are modifying or extending attributes (`[IppRequest]`, `[IppResponse]`, `[IppAttribute]`) or mapping logic:
+
+- **Target Framework**: `SharpIpp.Generators` targets `netstandard2.0` as required by the Roslyn compiler infrastructure.
+- **Testing Generators**: When changing generator logic, add or update tests in [`SharpIpp.Generators.Tests.Unit`](SharpIpp.Generators.Tests.Unit).
+- **IDE Caching**: Visual Studio and IDEs may cache generator outputs in background compiler processes. If generated code does not appear to reflect edits immediately, rebuild the solution or restart the IDE Roslyn language server.
+
 
 ### Running Tests
 

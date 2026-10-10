@@ -1,7 +1,29 @@
 # Resume-All-Printers Example
 
+Resumes job scheduling on all paused printers managed by the IPP System.
+
+> [!NOTE]
+> Specification Reference: **PWG 5100.22-2025 Section 6.2.11**
+
 ```csharp
+using System;
+using System.IO;
+using System.Threading.Tasks;
+using SharpIpp;
+using SharpIpp.Models.Requests;
+using SharpIpp.Protocol.Models;
+
 var client = new SharpIppClient();
-var request = new ResumeAllPrintersRequest();
+
+var request = new ResumeAllPrintersRequest
+{
+    OperationAttributes = new()
+    {
+        SystemUri = new Uri("ipp://localhost:631/system")
+    }
+};
+
 var response = await client.ResumeAllPrintersAsync(request);
+Console.WriteLine($"Status: {response.StatusCode}");
 ```
+

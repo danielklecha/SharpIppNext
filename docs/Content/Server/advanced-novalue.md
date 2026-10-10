@@ -1,21 +1,27 @@
 # Advanced NoValue in Server
 
-In IPP requests and responses, the `no-value` out-of-band tag (`0x13`) indicates that an attribute is supported but currently has no value. SharpIppNext uses `IppValue<T>` to seamlessly handle `Tag.NoValue` on the server side.
+In IPP requests and responses, the `no-value` out-of-band tag (`Tag.NoValue` / `0x13`) indicates that an attribute is supported but currently has no assigned value. SharpIppNext natively handles `Tag.NoValue` across all server models using `IppValue<T>`, `StringWithLanguage`, and `OctetString`.
 
 ## Server-Side Receiving: Inspecting `NoValue` in Requests
 
-When SharpIppNext receives an attribute with `Tag.NoValue`, it sets the corresponding property to an `IppValue<T>` where `IsValue == false`.
+When SharpIppNext deserializes an IPP attribute sent with `Tag.NoValue`, it sets the corresponding model property to an instance where `IsValue == false`.
 
 ```csharp
 var request = (GetJobsRequest)await sharpIppServer.ReceiveRequestAsync(stream);
 
-// Check if the client explicitly sent Tag.NoValue
+// Check if the client explicitly sent Tag.NoValue for an integer attribute
 if (request.OperationAttributes.Limit == NoValue.Instance)
 {
     Console.WriteLine("Client sent a NoValue tag for limit.");
 }
 
-// Or check via property
+// Check if the client sent Tag.NoValue for a StringWithLanguage attribute
+if (request.OperationAttributes.DocumentName == NoValue.Instance)
+{
+    Console.WriteLine("Client sent a NoValue tag for document-name.");
+}
+
+// Or check via pattern matching on IsValue
 if (request.OperationAttributes.MyJobs is { IsValue: false })
 {
     Console.WriteLine("Client sent NoValue for my-jobs.");
@@ -35,13 +41,17 @@ public Task<GetPrinterAttributesResponse> GetPrinterAttributesAsync(GetPrinterAt
         PrinterAttributes = new PrinterDescriptionAttributes
         {
             PrinterState = PrinterState.Idle,
-            // Return NoValue for QueuedJobCount (encoded as Tag.NoValue in the IPP response)
+
+            // Return NoValue for an integer attribute (encoded as Tag.NoValue)
             QueuedJobCount = NoValue.Instance,
 
             // Return NoValue for a boolean attribute (encoded as Tag.NoValue)
             ColorSupported = NoValue.Instance,
 
-            // Return NoValue for an array attribute
+            // Return NoValue for a StringWithLanguage attribute (encoded as Tag.NoValue)
+            PrinterInfo = NoValue.Instance,
+
+            // Return NoValue for an array attribute (encoded as Tag.NoValue)
             PrinterStateReasons = NoValue.Instance
         }
     });
@@ -54,7 +64,6 @@ Server handlers can distinguish between an attribute that was omitted and one th
 
 | Property State | Wire IPP Tag | Server Behavior |
 | :--- | :--- | :--- |
-| `null` | *(Omitted)* | Do not include attribute in response / client omitted attribute. |
-| `NoValue.Instance` (`IsValue == false`) | `Tag.NoValue` (`0x13`) | Attribute is supported but has no value. |
-| `value` (`IsValue == true`) | Standard type tag (`Tag.Integer`, `Tag.Boolean`, etc.) | Normal attribute value. |
-
+| `null` | *(Omitted)* | Omit attribute from the response / client omitted the attribute. |
+| `NoValue.Instance` (`IsValue == false`) | `Tag.NoValue` (`0x13`) | Attribute is supported but currently has no value. |
+| Concrete value (`IsValue == true`) | Standard type tag (`Tag.Integer`, `Tag.Boolean`, `Tag.TextWithoutLanguage`, `Tag.TextWithLanguage`, etc.) | Normal attribute value. |
