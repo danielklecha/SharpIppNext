@@ -250,4 +250,132 @@ public partial class ValidationSourceGeneratorTests
         var (outputCompilation, generatedTrees, _) = RunGenerator(source);
         generatedTrees.Should().NotBeEmpty();
     }
+
+    [TestMethod]
+    public void HasValidationLogic_ThroughGenerator_ShouldCoverIppValueAndCollectionProperties()
+    {
+        var source = """
+            namespace SharpIpp.Models
+            {
+                public class ChildModel
+                {
+                    public string? Info { get; set; }
+                }
+
+                // Line 355-356: IppValue with SharpIpp model
+                public class ModelWithIppValueChild
+                {
+                    public global::SharpIpp.Protocol.Models.IppValue<ChildModel>? Item { get; set; }
+                }
+
+                // Line 357-358: IppValue with class array (non-string)
+                public class ModelWithIppValueArrayChild
+                {
+                    public global::SharpIpp.Protocol.Models.IppValue<ChildModel[]>? Items { get; set; }
+                }
+
+                // Line 359-360: IppValue with generic enumerable of class
+                public class ModelWithIppValueListChild
+                {
+                    public global::SharpIpp.Protocol.Models.IppValue<System.Collections.Generic.List<ChildModel>>? Items { get; set; }
+                }
+
+                // Line 368-369: Class array property (non-IppValue, non-string)
+                public class ModelWithArrayChild
+                {
+                    public ChildModel[]? Items { get; set; }
+                }
+
+                // Line 371-373: Generic enumerable of class property (non-IppValue)
+                public class ModelWithListChild
+                {
+                    public System.Collections.Generic.List<ChildModel>? Items { get; set; }
+                }
+
+                // Non-validating collection models to cover false branches in lines 357, 359, 368, 371
+                public class ModelWithNonValidatingCollections
+                {
+                    public global::SharpIpp.Protocol.Models.IppValue<int[]>? PrimitiveArray { get; set; }
+                    public global::SharpIpp.Protocol.Models.IppValue<string[]>? StringArray { get; set; }
+                    public global::SharpIpp.Protocol.Models.IppValue<System.Collections.Generic.List<int>>? PrimitiveList { get; set; }
+                    public global::SharpIpp.Protocol.Models.IppValue<System.Collections.Generic.List<string>>? StringList { get; set; }
+                    public int[]? DirectPrimitiveArray { get; set; }
+                    public string[]? DirectStringArray { get; set; }
+                    public System.Collections.Generic.List<int>? DirectPrimitiveList { get; set; }
+                    public System.Collections.Generic.List<string>? DirectStringList { get; set; }
+                }
+            }
+            """;
+
+        var (outputCompilation, generatedTrees, _) = RunGenerator(source);
+        generatedTrees.Should().NotBeEmpty();
+    }
+
+    [TestMethod]
+    public void HasValidationLogic_DirectCalls_ShouldCoverAllPropertyBranches()
+    {
+        var source = """
+            namespace SharpIpp.Models
+            {
+                public class ChildModel { }
+                public class ModelIppValChild { public global::SharpIpp.Protocol.Models.IppValue<ChildModel>? Item { get; set; } }
+                public class ModelIppValArray { public global::SharpIpp.Protocol.Models.IppValue<ChildModel[]>? Items { get; set; } }
+                public class ModelIppValIntArray { public global::SharpIpp.Protocol.Models.IppValue<int[]>? Items { get; set; } }
+                public class ModelIppValStringArray { public global::SharpIpp.Protocol.Models.IppValue<string[]>? Items { get; set; } }
+                public class ModelIppValList { public global::SharpIpp.Protocol.Models.IppValue<System.Collections.Generic.List<ChildModel>>? Items { get; set; } }
+                public class ModelIppValIntList { public global::SharpIpp.Protocol.Models.IppValue<System.Collections.Generic.List<int>>? Items { get; set; } }
+                public class ModelIppValStringList { public global::SharpIpp.Protocol.Models.IppValue<System.Collections.Generic.List<string>>? Items { get; set; } }
+                public class ModelClassArray { public ChildModel[]? Items { get; set; } }
+                public class ModelIntArray { public int[]? Items { get; set; } }
+                public class ModelStringArray { public string[]? Items { get; set; } }
+                public class ModelClassList { public System.Collections.Generic.List<ChildModel>? Items { get; set; } }
+                public class ModelIntList { public System.Collections.Generic.List<int>? Items { get; set; } }
+                public class ModelStringList { public System.Collections.Generic.List<string>? Items { get; set; } }
+            }
+            """;
+
+        var syntaxTree = CSharpSyntaxTree.ParseText(source, new CSharpParseOptions(LanguageVersion.Latest));
+        var references = AppDomain.CurrentDomain.GetAssemblies()
+            .Where(a => !a.IsDynamic && !string.IsNullOrWhiteSpace(a.Location))
+            .Select(a => MetadataReference.CreateFromFile(a.Location))
+            .Cast<MetadataReference>()
+            .Concat(new[] { MetadataReference.CreateFromFile(typeof(SharpIpp.SharpIppClient).Assembly.Location) })
+            .ToList();
+
+        var compilation = CSharpCompilation.Create(
+            "TestAssembly",
+            new[] { syntaxTree },
+            references,
+            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, nullableContextOptions: NullableContextOptions.Enable));
+
+        var attrSymbol = compilation.GetTypeByMetadataName("SharpIpp.Validation.IppValidationAttribute")!;
+
+        var mIppValChild = compilation.GetTypeByMetadataName("SharpIpp.Models.ModelIppValChild")!;
+        var mIppValArray = compilation.GetTypeByMetadataName("SharpIpp.Models.ModelIppValArray")!;
+        var mIppValIntArray = compilation.GetTypeByMetadataName("SharpIpp.Models.ModelIppValIntArray")!;
+        var mIppValStrArray = compilation.GetTypeByMetadataName("SharpIpp.Models.ModelIppValStringArray")!;
+        var mIppValList = compilation.GetTypeByMetadataName("SharpIpp.Models.ModelIppValList")!;
+        var mIppValIntList = compilation.GetTypeByMetadataName("SharpIpp.Models.ModelIppValIntList")!;
+        var mIppValStrList = compilation.GetTypeByMetadataName("SharpIpp.Models.ModelIppValStringList")!;
+        var mClassArray = compilation.GetTypeByMetadataName("SharpIpp.Models.ModelClassArray")!;
+        var mIntArray = compilation.GetTypeByMetadataName("SharpIpp.Models.ModelIntArray")!;
+        var mStrArray = compilation.GetTypeByMetadataName("SharpIpp.Models.ModelStringArray")!;
+        var mClassList = compilation.GetTypeByMetadataName("SharpIpp.Models.ModelClassList")!;
+        var mIntList = compilation.GetTypeByMetadataName("SharpIpp.Models.ModelIntList")!;
+        var mStrList = compilation.GetTypeByMetadataName("SharpIpp.Models.ModelStringList")!;
+
+        ValidationSourceGenerator.HasValidationLogic(mIppValChild, attrSymbol, compilation.Assembly).Should().BeTrue();
+        ValidationSourceGenerator.HasValidationLogic(mIppValArray, attrSymbol, compilation.Assembly).Should().BeTrue();
+        ValidationSourceGenerator.HasValidationLogic(mIppValIntArray, attrSymbol, compilation.Assembly).Should().BeFalse();
+        ValidationSourceGenerator.HasValidationLogic(mIppValStrArray, attrSymbol, compilation.Assembly).Should().BeFalse();
+        ValidationSourceGenerator.HasValidationLogic(mIppValList, attrSymbol, compilation.Assembly).Should().BeTrue();
+        ValidationSourceGenerator.HasValidationLogic(mIppValIntList, attrSymbol, compilation.Assembly).Should().BeFalse();
+        ValidationSourceGenerator.HasValidationLogic(mIppValStrList, attrSymbol, compilation.Assembly).Should().BeFalse();
+        ValidationSourceGenerator.HasValidationLogic(mClassArray, attrSymbol, compilation.Assembly).Should().BeTrue();
+        ValidationSourceGenerator.HasValidationLogic(mIntArray, attrSymbol, compilation.Assembly).Should().BeFalse();
+        ValidationSourceGenerator.HasValidationLogic(mStrArray, attrSymbol, compilation.Assembly).Should().BeFalse();
+        ValidationSourceGenerator.HasValidationLogic(mClassList, attrSymbol, compilation.Assembly).Should().BeTrue();
+        ValidationSourceGenerator.HasValidationLogic(mIntList, attrSymbol, compilation.Assembly).Should().BeFalse();
+        ValidationSourceGenerator.HasValidationLogic(mStrList, attrSymbol, compilation.Assembly).Should().BeFalse();
+    }
 }

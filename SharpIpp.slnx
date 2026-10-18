@@ -1,0 +1,14 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="SharpIpp.Generators.Tests.Unit/SharpIpp.Generators.Tests.Unit.csproj" />
+  <Project Path="SharpIpp.Generators/SharpIpp.Generators.csproj" />
+  <Project Path="SharpIpp.Samples.Client.NativeAot/SharpIpp.Samples.Client.NativeAot.csproj" />
+  <Project Path="SharpIpp.Samples.Client/SharpIpp.Samples.Client.csproj" />
+  <Project Path="SharpIpp.Tests.Integration/SharpIpp.Tests.Integration.csproj" />
+  <Project Path="SharpIpp.Tests.Unit/SharpIpp.Tests.Unit.csproj" />
+  <Project Path="SharpIpp/SharpIpp.csproj" />
+</Solution>

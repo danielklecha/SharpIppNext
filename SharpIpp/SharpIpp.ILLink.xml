@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<linker>
+  <assembly fullname="SharpIpp">
+    <type fullname="SharpIpp.Mapping.GeneratedMapperRegistry" preserve="all" />
+    <type fullname="SharpIpp.Mapping.GeneratedTypeConverters" preserve="all" />
+    <type fullname="SharpIpp.Mapping.GeneratedModelMappers" preserve="all" />
+    <type fullname="SharpIpp.Validation.GeneratedModelValidator" preserve="all" />
+  </assembly>
+</linker>

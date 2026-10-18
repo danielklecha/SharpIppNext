@@ -30,10 +30,10 @@ jobs:
         find . -type f -name "*.csproj" -exec sed -i "s/<Version>.*<\/Version>/<Version>${tag}<\/Version>/g" {} \;
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore SharpIpp.slnx
 
     - name: Build (Standard)
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build SharpIpp.slnx --configuration Release --no-restore
 
     - name: Test Unit
       run: dotnet test SharpIpp.Tests.Unit/SharpIpp.Tests.Unit.csproj --configuration Release --no-build

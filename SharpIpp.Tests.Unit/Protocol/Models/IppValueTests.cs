@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -20,6 +20,13 @@ public class IppValueTests
         val.Value.Should().Be(42);
         val.GetValueOrDefault().Should().Be(42);
         val.GetValueOrDefault(99).Should().Be(42);
+
+        IppValue<string> strVal = new("hello");
+        strVal.IsValue.Should().BeTrue();
+        strVal.HasValue.Should().BeTrue();
+        strVal.Value.Should().Be("hello");
+        strVal.GetValueOrDefault().Should().Be("hello");
+        strVal.GetValueOrDefault("fallback").Should().Be("hello");
     }
 
     [TestMethod]
@@ -32,6 +39,19 @@ public class IppValueTests
         val.Invoking(x => x.Value).Should().Throw<InvalidOperationException>();
         val.GetValueOrDefault().Should().Be(0);
         val.GetValueOrDefault(99).Should().Be(99);
+
+        IppValue<string> stringVal = default;
+        stringVal.IsValue.Should().BeFalse();
+        stringVal.HasValue.Should().BeFalse();
+        stringVal.Invoking(x => x.Value).Should().Throw<InvalidOperationException>();
+        stringVal.GetValueOrDefault().Should().BeNull();
+        stringVal.GetValueOrDefault("fallback").Should().Be("fallback");
+
+        IppValue<int[]> arrVal = default;
+        arrVal.IsValue.Should().BeFalse();
+        arrVal.HasValue.Should().BeFalse();
+        arrVal.Invoking(x => x.Value).Should().Throw<InvalidOperationException>();
+        arrVal.GetValueOrDefault().Should().BeNull();
     }
 
     [TestMethod]
@@ -59,9 +79,15 @@ public class IppValueTests
     {
         IppValue<int> property = IppValue<int>.NoValue;
         property.IsValue.Should().BeFalse();
+        property.Invoking(x => x.Value).Should().Throw<InvalidOperationException>();
 
         IppValue<int> ctor = new();
         ctor.IsValue.Should().BeFalse();
+        ctor.Invoking(x => x.Value).Should().Throw<InvalidOperationException>();
+
+        IppValue<string> stringProperty = IppValue<string>.NoValue;
+        stringProperty.IsValue.Should().BeFalse();
+        stringProperty.Invoking(x => x.Value).Should().Throw<InvalidOperationException>();
     }
 
     [TestMethod]
@@ -71,6 +97,9 @@ public class IppValueTests
 
         val.IsValue.Should().BeFalse();
         val.HasValue.Should().BeFalse();
+        val.Invoking(x => x.Value).Should().Throw<InvalidOperationException>();
+        val.GetValueOrDefault().Should().BeNull();
+        val.GetValueOrDefault("fallback").Should().Be("fallback");
         (val == NoValue.Instance).Should().BeTrue();
         (val != NoValue.Instance).Should().BeFalse();
         (NoValue.Instance == val).Should().BeTrue();

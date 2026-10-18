@@ -18,21 +18,26 @@ namespace SharpIpp.Generators.Tests.Unit;
 [ExcludeFromCodeCoverage]
 public partial class MapperSourceGeneratorTests
 {
-    private static (Compilation OutputCompilation, IEnumerable<SyntaxTree> GeneratedTrees, IEnumerable<Diagnostic> Diagnostics) RunGenerator(string source)
+    private static (Compilation OutputCompilation, IEnumerable<SyntaxTree> GeneratedTrees, IEnumerable<Diagnostic> Diagnostics) RunGenerator(
+        string source,
+        bool includeSharpIppReference = true)
     {
         var syntaxTree = CSharpSyntaxTree.ParseText(source, new CSharpParseOptions(LanguageVersion.Latest));
 
         var references = AppDomain.CurrentDomain.GetAssemblies()
-            .Where(a => !a.IsDynamic && !string.IsNullOrWhiteSpace(a.Location))
+            .Where(a => !a.IsDynamic && !string.IsNullOrWhiteSpace(a.Location) && (includeSharpIppReference || a.FullName?.StartsWith("SharpIpp,") != true))
             .Select(a => MetadataReference.CreateFromFile(a.Location))
-            .Cast<MetadataReference>()
-            .Append(MetadataReference.CreateFromFile(typeof(SharpIpp.SharpIppClient).Assembly.Location))
-            .ToList();
+            .Cast<MetadataReference>();
+
+        if (includeSharpIppReference)
+        {
+            references = references.Append(MetadataReference.CreateFromFile(typeof(SharpIpp.SharpIppClient).Assembly.Location));
+        }
 
         var compilation = CSharpCompilation.Create(
             "TestAssembly",
             new[] { syntaxTree },
-            references,
+            references.ToList(),
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, nullableContextOptions: NullableContextOptions.Enable));
 
         var generator = new MapperSourceGenerator();
@@ -43,6 +48,12 @@ public partial class MapperSourceGeneratorTests
         var generatedTrees = runResult.GeneratedTrees;
 
         return (outputCompilation, generatedTrees, diagnostics);
+    }
+
+    internal static string? GetModelMappers(IEnumerable<SyntaxTree> generatedTrees)
+    {
+        var trees = generatedTrees.Where(t => t.FilePath.Contains("GeneratedModelMappers")).ToList();
+        return trees.Count == 0 ? null : string.Join("\n", trees.Select(t => t.ToString()));
     }
 
     [TestMethod]
@@ -70,9 +81,13 @@ public partial class MapperSourceGeneratorTests
         generatedSources.Should().ContainKey("GeneratedTypeConverters.g.cs");
         generatedSources.Should().ContainKey("GeneratedMapperRegistry.g.cs");
         generatedSources.Should().ContainKey("GeneratedModelMappers.g.cs");
+        generatedSources.Should().ContainKey("GeneratedModelMappers.TestNamespace.g.cs");
 
         foreach (var (fileName, content) in generatedSources)
         {
+            if (fileName.StartsWith("GeneratedModelMappers.") && fileName != "GeneratedModelMappers.g.cs")
+                continue;
+
             content.Should().Contain("[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]",
                 because: $"{fileName} must be excluded from code coverage");
             content.Should().Contain("[global::System.CodeDom.Compiler.GeneratedCode(\"SharpIpp.Generators\", \"1.0.0.0\")]",
@@ -102,7 +117,7 @@ public partial class MapperSourceGeneratorTests
 
         // Act
         var (_, generatedTrees, _) = RunGenerator(source);
-        var modelMappers = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedModelMappers.g.cs"))?.ToString();
+        var modelMappers = GetModelMappers(generatedTrees);
 
         // Assert
         modelMappers.Should().NotBeNull();
@@ -157,7 +172,7 @@ public partial class MapperSourceGeneratorTests
 
         // Act
         var (_, generatedTrees, _) = RunGenerator(source);
-        var modelMappers = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedModelMappers.g.cs"))?.ToString();
+        var modelMappers = GetModelMappers(generatedTrees);
 
         // Assert
         modelMappers.Should().NotBeNull();
@@ -192,7 +207,7 @@ public partial class MapperSourceGeneratorTests
 
         // Act
         var (_, generatedTrees, _) = RunGenerator(source);
-        var modelMappers = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedModelMappers.g.cs"))?.ToString();
+        var modelMappers = GetModelMappers(generatedTrees);
         var registry = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedMapperRegistry.g.cs"))?.ToString();
 
         // Assert
@@ -233,12 +248,55 @@ public partial class MapperSourceGeneratorTests
 
         // Act
         var (_, generatedTrees, _) = RunGenerator(source);
-        var modelMappers = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedModelMappers.g.cs"))?.ToString();
+        var modelMappers = GetModelMappers(generatedTrees);
 
         // Assert
         modelMappers.Should().NotBeNull();
         modelMappers.Should().Contain("ReadTestNamespace_SyntheticBaseModel(src, dst, map);");
         modelMappers.Should().Contain("WriteTestNamespace_SyntheticBaseModel(src, dst, map);");
+    }
+
+    [TestMethod]
+    public void ModelInheritance_WithMoreThanSplitThresholdProperties_ShouldCallBaseReadAndWrite()
+    {
+        // Arrange
+        var sb = new StringBuilder();
+        sb.AppendLine("using SharpIpp.Mapping;");
+        sb.AppendLine();
+        sb.AppendLine("namespace TestNamespace;");
+        sb.AppendLine();
+        sb.AppendLine("[IppAttribute]");
+        sb.AppendLine("public class SyntheticLargeBaseModel");
+        sb.AppendLine("{");
+        sb.AppendLine("    [IppAttribute(\"base-prop\")]");
+        sb.AppendLine("    public string? BaseProp { get; set; }");
+        sb.AppendLine("}");
+        sb.AppendLine();
+        sb.AppendLine("[IppAttribute]");
+        sb.AppendLine("public class SyntheticLargeDerivedModel : SyntheticLargeBaseModel");
+        sb.AppendLine("{");
+        for (int i = 0; i <= 50; i++)
+        {
+            sb.AppendLine($"    [IppAttribute(\"prop-{i}\")]");
+            sb.AppendLine($"    public int? Prop{i} {{ get; set; }}");
+        }
+        sb.AppendLine("}");
+
+        var source = sb.ToString();
+
+        // Act
+        var (_, generatedTrees, diagnostics) = RunGenerator(source);
+        diagnostics.Should().NotContain(d => d.Severity == DiagnosticSeverity.Error);
+        var modelMappers = GetModelMappers(generatedTrees);
+
+        // Assert
+        modelMappers.Should().NotBeNull();
+        modelMappers.Should().Contain("ReadTestNamespace_SyntheticLargeBaseModel(src, dst, map);");
+        modelMappers.Should().Contain("WriteTestNamespace_SyntheticLargeBaseModel(src, dst, map);");
+        modelMappers.Should().Contain("ReadTestNamespace_SyntheticLargeDerivedModel_Part0(src, dst, map);");
+        modelMappers.Should().Contain("ReadTestNamespace_SyntheticLargeDerivedModel_Part1(src, dst, map);");
+        modelMappers.Should().Contain("WriteTestNamespace_SyntheticLargeDerivedModel_Part0(src, dst, map);");
+        modelMappers.Should().Contain("WriteTestNamespace_SyntheticLargeDerivedModel_Part1(src, dst, map);");
     }
 
     [TestMethod]
@@ -298,7 +356,7 @@ public partial class MapperSourceGeneratorTests
             """;
 
         var (_, generatedTrees, _) = RunGenerator(source);
-        var modelMappers = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedModelMappers.g.cs"))?.ToString();
+        var modelMappers = GetModelMappers(generatedTrees);
 
         modelMappers.Should().NotBeNull();
         modelMappers.Should().Contain("DocumentMetadata.Parse(");
@@ -365,7 +423,7 @@ public partial class MapperSourceGeneratorTests
             """;
 
         var (_, generatedTrees, _) = RunGenerator(source);
-        var modelMappers = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedModelMappers.g.cs"))?.ToString();
+        var modelMappers = GetModelMappers(generatedTrees);
         var registry = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedMapperRegistry.g.cs"))?.ToString();
 
         modelMappers.Should().NotBeNull();
@@ -415,7 +473,7 @@ public partial class MapperSourceGeneratorTests
             """;
 
         var (_, generatedTrees, _) = RunGenerator(source);
-        var modelMappers = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedModelMappers.g.cs"))?.ToString();
+        var modelMappers = GetModelMappers(generatedTrees);
         var registry = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedMapperRegistry.g.cs"))?.ToString();
 
         modelMappers.Should().NotBeNull();
@@ -448,7 +506,7 @@ public partial class MapperSourceGeneratorTests
             """;
 
         var (_, generatedTrees, _) = RunGenerator(source);
-        var modelMappers = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedModelMappers.g.cs"))?.ToString();
+        var modelMappers = GetModelMappers(generatedTrees);
 
         modelMappers.Should().NotBeNull();
         modelMappers.Should().Contain("ReadTestNamespace_SyntheticJobSection");
@@ -523,6 +581,73 @@ public partial class MapperSourceGeneratorTests
     }
 
     [TestMethod]
+    public void ConversionOperator_WithKeywordEnumSource_ShouldSkipIppValueGenericMap()
+    {
+        var source = """
+            using SharpIpp.Protocol.Models;
+
+            namespace TestNamespace;
+
+            public struct CustomKeywordSource : IKeywordEnum
+            {
+                public string Value { get; set; }
+                public static implicit operator string(CustomKeywordSource s) => s.Value;
+            }
+            """;
+
+        var (_, generatedTrees, diagnostics) = RunGenerator(source);
+        diagnostics.Should().NotContain(d => d.Severity == DiagnosticSeverity.Error);
+
+        var typeConverters = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedTypeConverters.g.cs"))?.ToString();
+        typeConverters.Should().NotBeNull();
+        typeConverters.Should().Contain("mapper.CreateIppMap<global::TestNamespace.CustomKeywordSource, string>");
+        typeConverters.Should().NotContain("mapper.CreateIppMap<global::TestNamespace.CustomKeywordSource, IppValue<string>>");
+    }
+
+    [TestMethod]
+    public void ConversionOperator_WithKeywordEnumDest_ShouldSkipIppValueGenericMap()
+    {
+        var source = """
+            using SharpIpp.Protocol.Models;
+
+            namespace TestNamespace;
+
+            public struct CustomKeywordDest : IKeywordEnum
+            {
+                public string Value { get; set; }
+                public static explicit operator CustomKeywordDest(string s) => new CustomKeywordDest { Value = s };
+            }
+            """;
+
+        var (_, generatedTrees, diagnostics) = RunGenerator(source);
+        diagnostics.Should().NotContain(d => d.Severity == DiagnosticSeverity.Error);
+
+        var typeConverters = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedTypeConverters.g.cs"))?.ToString();
+        typeConverters.Should().NotBeNull();
+        typeConverters.Should().Contain("mapper.CreateIppMap<string, global::TestNamespace.CustomKeywordDest>");
+        typeConverters.Should().NotContain("mapper.CreateIppMap<string, IppValue<global::TestNamespace.CustomKeywordDest>>");
+    }
+
+    [TestMethod]
+    public void ConversionOperator_WithoutSharpIppReference_ShouldHandleNullKeywordEnumSymbol()
+    {
+        var source = """
+            namespace TestNamespace;
+
+            public struct StandaloneConvertedType
+            {
+                public int Value { get; set; }
+                public static implicit operator int(StandaloneConvertedType c) => c.Value;
+            }
+            """;
+
+        var (_, generatedTrees, _) = RunGenerator(source, includeSharpIppReference: false);
+        var typeConverters = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedTypeConverters.g.cs"))?.ToString();
+        typeConverters.Should().NotBeNull();
+        typeConverters.Should().Contain("mapper.CreateIppMap<global::TestNamespace.StandaloneConvertedType, int>");
+    }
+
+    [TestMethod]
     public void PropertyWithoutAttributeName_ShouldDeriveKebabCaseName()
     {
         var source = """
@@ -542,7 +667,7 @@ public partial class MapperSourceGeneratorTests
             """;
 
         var (_, generatedTrees, _) = RunGenerator(source);
-        var modelMappers = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedModelMappers.g.cs"))?.ToString();
+        var modelMappers = GetModelMappers(generatedTrees);
 
         modelMappers.Should().NotBeNull();
         modelMappers.Should().Contain("global::SharpIpp.Protocol.Models.IppAttributeNames.DocumentFormat");
@@ -596,7 +721,7 @@ public partial class MapperSourceGeneratorTests
             """;
 
         var (_, generatedTrees, _) = RunGenerator(source);
-        var modelMappers = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedModelMappers.g.cs"))?.ToString();
+        var modelMappers = GetModelMappers(generatedTrees);
 
         modelMappers.Should().NotBeNull();
         modelMappers.Should().Contain("ReadTestNamespace_SyntheticComplexModel");
@@ -654,5 +779,68 @@ public partial class MapperSourceGeneratorTests
         // GetHashCode()
         mapping.GetHashCode().Should().Be(equalMapping.GetHashCode());
         mapping.GetHashCode().Should().NotBe(diffDest.GetHashCode());
+    }
+
+    [TestMethod]
+    public void When_ModelsInDifferentNamespaces_Should_SplitGeneratedModelMappersByNamespace()
+    {
+        var source = """
+            using SharpIpp.Mapping;
+
+            namespace NamespaceA
+            {
+                [IppAttribute]
+                public class ModelA
+                {
+                    [IppAttribute("job-name")]
+                    public string? JobName { get; set; }
+                }
+            }
+
+            namespace NamespaceB
+            {
+                [IppAttribute]
+                public class ModelB
+                {
+                    [IppAttribute("printer-name")]
+                    public string? PrinterName { get; set; }
+                }
+            }
+            """;
+
+        var (_, generatedTrees, _) = RunGenerator(source);
+        var generatedSources = generatedTrees.ToDictionary(t => System.IO.Path.GetFileName(t.FilePath), t => t.ToString());
+
+        generatedSources.Should().ContainKey("GeneratedModelMappers.g.cs");
+        generatedSources.Should().ContainKey("GeneratedModelMappers.NamespaceA.g.cs");
+        generatedSources.Should().ContainKey("GeneratedModelMappers.NamespaceB.g.cs");
+
+        generatedSources["GeneratedModelMappers.NamespaceA.g.cs"].Should().Contain("ReadNamespaceA_ModelA");
+        generatedSources["GeneratedModelMappers.NamespaceA.g.cs"].Should().NotContain("ReadNamespaceB_ModelB");
+
+        generatedSources["GeneratedModelMappers.NamespaceB.g.cs"].Should().Contain("ReadNamespaceB_ModelB");
+        generatedSources["GeneratedModelMappers.NamespaceB.g.cs"].Should().NotContain("ReadNamespaceA_ModelA");
+    }
+
+    [TestMethod]
+    public void When_ModelInGlobalNamespace_Should_GenerateGlobalModelMappers()
+    {
+        var source = """
+            using SharpIpp.Mapping;
+
+            [IppAttribute]
+            public class GlobalModel
+            {
+                [IppAttribute("job-name")]
+                public string? JobName { get; set; }
+            }
+            """;
+
+        var (_, generatedTrees, _) = RunGenerator(source);
+        var generatedSources = generatedTrees.ToDictionary(t => System.IO.Path.GetFileName(t.FilePath), t => t.ToString());
+
+        generatedSources.Should().ContainKey("GeneratedModelMappers.g.cs");
+        generatedSources.Should().ContainKey("GeneratedModelMappers.Global.g.cs");
+        generatedSources["GeneratedModelMappers.Global.g.cs"].Should().Contain("ReadGlobalModel");
     }
 }

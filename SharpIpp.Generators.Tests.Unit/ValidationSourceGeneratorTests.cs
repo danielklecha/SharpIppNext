@@ -296,4 +296,31 @@ public partial class ValidationSourceGeneratorTests
 
         var diags = outputCompilation.GetDiagnostics().Where(d => d.Severity == DiagnosticSeverity.Error).ToList(); diags.Should().BeEmpty(string.Join("; ", diags.Select(d => d.ToString()))); generatedSources.Should().ContainKey("GeneratedModelValidator.Global.g.cs");
     }
+
+    [TestMethod]
+    public void When_ModelHasNoValidationRules_Should_ExcludeDedicatedMethod_And_UseValidationHelper()
+    {
+        var source = """
+            namespace SharpIpp.Models;
+
+            public class EmptyConditionModel
+            {
+                public string? SomeText { get; set; }
+                public int Count { get; set; }
+            }
+            """;
+
+        var (outputCompilation, generatedTrees, _) = RunGenerator(source);
+        var generatedSources = generatedTrees.ToDictionary(t => System.IO.Path.GetFileName(t.FilePath), t => t.ToString());
+
+        var main = generatedSources["GeneratedModelValidator.g.cs"];
+        main.Should().Contain("case global::SharpIpp.Models.EmptyConditionModel target:");
+        main.Should().Contain("return global::SharpIpp.Validation.ValidationHelper.ValidateEmpty(target, visited);");
+
+        // The dedicated method should not be generated in any file
+        foreach (var (fileName, content) in generatedSources)
+        {
+            content.Should().NotContain("Validate_SharpIpp_Models_EmptyConditionModel");
+        }
+    }
 }

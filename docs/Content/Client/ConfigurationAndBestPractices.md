@@ -334,3 +334,12 @@ public async Task WaitForJobCompletionAsync(
 }
 ```
 
+## 9. Native AOT & .NET Native (UWP) Compilation
+
+`SharpIpp` is fully compatible with modern **Native AOT** (.NET 8+) and legacy **.NET Native** (Universal Windows Platform / UWP).
+
+- **Trimming & AOT**: Type mapping and validation profiles are source-generated at compile time. Runtime mapper registries are protected from linker trimming via embedded `ILLink.Descriptors.xml`.
+- **UWP & .NET Native**: For legacy UWP projects compiling with `.NET Native` (`nutc_driver.exe`), specific compiler directives and memory optimization guidance are available.
+
+For detailed configuration instructions and benchmarks, see the [.NET Native & UWP Compilation Guide](DotNetNative.md).
+

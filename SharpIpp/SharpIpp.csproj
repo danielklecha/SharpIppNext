@@ -27,6 +27,14 @@
     <IsTrimmable>true</IsTrimmable>
   </PropertyGroup>
   <ItemGroup>
+    <EmbeddedResource Include="SharpIpp.ILLink.xml">
+      <LogicalName>ILLink.Descriptors.xml</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
+    <TrimmerRootDescriptor Include="SharpIpp.ILLink.xml" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="..\icon256.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>

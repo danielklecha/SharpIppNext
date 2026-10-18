@@ -2,6 +2,7 @@ using SharpIpp.Mapping.Extensions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Mapping;
@@ -22,7 +23,7 @@ public class SimpleMapper : IMapper
         return mapper;
     }
 
-    private readonly ConcurrentDictionary<(Type src, Type dst), Func<object, object?, SimpleMapper, object?>> _dictionary = new();
+    private readonly Dictionary<(Type src, Type dst), Func<object, object?, SimpleMapper, object?>> _dictionary = new();
 
     public void CreateMap<TSource, TDest>(Func<TSource, IMapperApplier, TDest?> mapFunc)
     {
@@ -136,6 +137,14 @@ public class SimpleMapper : IMapper
         return MapNullable(source, sourceType, destType, null);
     }
 
+#if !NETSTANDARD2_0
+    [UnconditionalSuppressMessage("Trimming", "IL2026",
+        Justification = "All mapping delegates are registered by source-generated code " +
+        "in GeneratedMapperRegistry/GeneratedTypeConverters. Types are rooted via ILLink.xml.")]
+    [UnconditionalSuppressMessage("Trimming", "IL2067",
+        Justification = "source.GetType() returns the runtime type of an already-instantiated object " +
+        "that cannot have been trimmed away.")]
+#endif
     public object? MapNullable(object? source, Type sourceType, Type destType, object? dest)
     {
         if (source == null)
@@ -214,6 +223,11 @@ public class SimpleMapper : IMapper
         if (underlyingDest != null && _dictionary.TryGetValue((sourceType, underlyingDest), out var underlyingMap))
         {
             return underlyingMap(source, dest, this);
+        }
+
+        if (destType.IsAssignableFrom(sourceType))
+        {
+            return source;
         }
 
         throw new ArgumentException($"No mapping found for types {sourceType.FullName} -> {destType.FullName}. Source: {source}");

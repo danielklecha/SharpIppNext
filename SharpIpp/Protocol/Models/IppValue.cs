@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
@@ -127,15 +127,7 @@ public readonly struct IppValue<T> : IEquatable<IppValue<T>>, IIppValue
         if (left.IsValue != right.IsValue) return false;
         if (!left.IsValue) return true;
         if (left._value is Array leftArr && right._value is Array rightArr)
-        {
-            if (leftArr.Length != rightArr.Length) return false;
-            for (int i = 0; i < leftArr.Length; i++)
-            {
-                if (!Equals(leftArr.GetValue(i), rightArr.GetValue(i)))
-                    return false;
-            }
-            return true;
-        }
+            return IppValueHelper.ArrayEquals(leftArr, rightArr);
         return EqualityComparer<T>.Default.Equals(left._value!, right._value!);
     }
 
@@ -161,14 +153,7 @@ public readonly struct IppValue<T> : IEquatable<IppValue<T>>, IIppValue
     {
         if (!IsValue || _value == null) return 0;
         if (_value is Array arr)
-        {
-            int hash = 17;
-            foreach (var item in arr)
-            {
-                hash = hash * 31 + (item?.GetHashCode() ?? 0);
-            }
-            return hash;
-        }
+            return IppValueHelper.ArrayGetHashCode(arr);
         return _value.GetHashCode();
     }
 

@@ -249,7 +249,7 @@ public partial class MapperSourceGeneratorTests
 
         var (_, generatedTrees, _) = RunGenerator(source);
         var typeConverters = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedTypeConverters.g.cs"))?.ToString();
-        var modelMappers = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedModelMappers.g.cs"))?.ToString();
+        var modelMappers = MapperSourceGeneratorTests.GetModelMappers(generatedTrees);
 
         typeConverters.Should().NotBeNull();
         typeConverters.Should().Contain("mapper.CreateMap<string[], global::TestNamespace.SyntheticSmartEnum[]>");
@@ -513,7 +513,7 @@ public partial class MapperSourceGeneratorTests
             """;
 
         var (_, generatedTrees, _) = RunGenerator(source);
-        var modelMappers = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedModelMappers.g.cs"))?.ToString();
+        var modelMappers = MapperSourceGeneratorTests.GetModelMappers(generatedTrees);
 
         modelMappers.Should().NotBeNull();
         modelMappers.Should().Contain("ReadTestNamespace_SyntheticIppValueModel");
@@ -565,7 +565,7 @@ public partial class MapperSourceGeneratorTests
             """;
 
         var (_, generatedTrees, _) = RunGenerator(source);
-        var modelMappers = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedModelMappers.g.cs"))?.ToString();
+        var modelMappers = MapperSourceGeneratorTests.GetModelMappers(generatedTrees);
 
         modelMappers.Should().NotBeNull();
         modelMappers.Should().Contain("ReadTestNamespace_FullFeaturedRequest");
@@ -623,7 +623,7 @@ public partial class MapperSourceGeneratorTests
             """;
 
         var (_, generatedTrees, _) = RunGenerator(source);
-        var modelMappers = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedModelMappers.g.cs"))?.ToString();
+        var modelMappers = MapperSourceGeneratorTests.GetModelMappers(generatedTrees);
 
         modelMappers.Should().NotBeNull();
         modelMappers.Should().Contain("ReadTestNamespace_FullFeaturedResponse1");
@@ -704,7 +704,7 @@ public partial class MapperSourceGeneratorTests
             """;
 
         var (_, generatedTrees, _) = RunGenerator(source);
-        var modelMappers = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedModelMappers.g.cs"))?.ToString();
+        var modelMappers = MapperSourceGeneratorTests.GetModelMappers(generatedTrees);
 
         modelMappers.Should().NotBeNull();
         modelMappers.Should().Contain("ReadTestNamespace_SyntheticAttributeVariationsModel");
@@ -843,7 +843,7 @@ public partial class MapperSourceGeneratorTests
 
         var (_, generatedTrees, _) = RunGenerator(source);
         var typeConverters = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedTypeConverters.g.cs"))?.ToString();
-        var modelMappers = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedModelMappers.g.cs"))?.ToString();
+        var modelMappers = MapperSourceGeneratorTests.GetModelMappers(generatedTrees);
 
         typeConverters.Should().NotBeNull();
         modelMappers.Should().NotBeNull();
@@ -1047,7 +1047,7 @@ public partial class MapperSourceGeneratorTests
 
         var (outputCompilation, generatedTrees, diagnostics) = RunGenerator(source);
         diagnostics.Should().BeEmpty();
-        var modelMappers = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedModelMappers.g.cs"))?.ToString();
+        var modelMappers = MapperSourceGeneratorTests.GetModelMappers(generatedTrees);
         modelMappers.Should().NotBeNull();
 
         // Verify read mappings
@@ -1148,7 +1148,7 @@ public partial class MapperSourceGeneratorTests
         var (_, generatedTrees, diagnostics) = RunGenerator(source);
         diagnostics.Should().BeEmpty();
 
-        var modelMappers = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedModelMappers.g.cs"))?.ToString();
+        var modelMappers = MapperSourceGeneratorTests.GetModelMappers(generatedTrees);
         var registry = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedMapperRegistry.g.cs"))?.ToString();
 
         modelMappers.Should().NotBeNull();
@@ -1255,7 +1255,7 @@ public partial class MapperSourceGeneratorTests
         var (_, generatedTrees, diagnostics) = RunGenerator(source);
         diagnostics.Should().BeEmpty();
 
-        var modelMappers = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedModelMappers.g.cs"))?.ToString();
+        var modelMappers = MapperSourceGeneratorTests.GetModelMappers(generatedTrees);
         var registry = generatedTrees.FirstOrDefault(t => t.FilePath.EndsWith("GeneratedMapperRegistry.g.cs"))?.ToString();
 
         modelMappers.Should().NotBeNull();
