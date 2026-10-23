@@ -127,7 +127,7 @@ public class ResourceStatusAttributes
     /// </summary>
     /// <code>resource-natural-language</code>
     [IppAttribute(IppAttributeNames.ResourceNaturalLanguage, Tag = Tag.NaturalLanguage)]
-    public IppValue<string>? ResourceNaturalLanguage { get; set; }
+    public IppValue<NaturalLanguage>? ResourceNaturalLanguage { get; set; }
 
     /// <summary>
     /// Patches applied to this Resource.

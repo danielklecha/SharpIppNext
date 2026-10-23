@@ -38,28 +38,28 @@ public class SystemDescriptionAttributes
     /// See: PWG 5100.22-2025 Section 7.3.6
     /// </summary>
     [IppAttribute(IppAttributeNames.CharsetConfigured, Tag = Tag.Charset)]
-    public IppValue<string>? CharsetConfigured { get; set; }
+    public IppValue<Charset>? CharsetConfigured { get; set; }
 
     /// <summary>
     /// <c>charset-supported</c>
     /// See: PWG 5100.22-2025 Section 7.3.7
     /// </summary>
     [IppAttribute(IppAttributeNames.CharsetSupported, Tag = Tag.Charset)]
-    public IppValue<string[]>? CharsetSupported { get; set; }
+    public IppValue<Charset[]>? CharsetSupported { get; set; }
 
     /// <summary>
     /// <c>document-format-supported</c>
     /// See: PWG 5100.22-2025 Section 7.3.8
     /// </summary>
     [IppAttribute(IppAttributeNames.DocumentFormatSupported, Tag = Tag.MimeMediaType)]
-    public IppValue<string[]>? DocumentFormatSupported { get; set; }
+    public IppValue<DocumentFormat[]>? DocumentFormatSupported { get; set; }
 
     /// <summary>
     /// <c>generated-natural-language-supported</c>
     /// See: PWG 5100.22-2025 Section 7.3.9
     /// </summary>
     [IppAttribute(IppAttributeNames.GeneratedNaturalLanguageSupported, Tag = Tag.NaturalLanguage)]
-    public IppValue<string[]>? GeneratedNaturalLanguageSupported { get; set; }
+    public IppValue<NaturalLanguage[]>? GeneratedNaturalLanguageSupported { get; set; }
 
     /// <summary>
     /// <c>ipp-features-supported</c>
@@ -153,7 +153,7 @@ public class SystemDescriptionAttributes
     /// See: PWG 5100.22-2025 Section 7.3.21
     /// </summary>
     [IppAttribute(IppAttributeNames.NaturalLanguageConfigured, Tag = Tag.NaturalLanguage)]
-    public IppValue<string>? NaturalLanguageConfigured { get; set; }
+    public IppValue<NaturalLanguage>? NaturalLanguageConfigured { get; set; }
 
     /// <summary>
     /// <c>operations-supported</c>

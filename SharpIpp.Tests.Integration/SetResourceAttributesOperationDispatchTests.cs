@@ -19,7 +19,7 @@ public class SetResourceAttributesOperationDispatchTests : SharpIppIntegrationTe
         operationAttributes.ResourceId = 501;
         operationAttributes.ResourceName = "firmware-v2";
         operationAttributes.ResourceInfo = "firmware payload metadata";
-        operationAttributes.ResourceNaturalLanguage = "en";
+        operationAttributes.ResourceNaturalLanguage = NaturalLanguage.En;
         operationAttributes.ResourcePatches = "none";
         operationAttributes.ResourceStringVersion = "2.0.1";
         operationAttributes.ResourceType = (ResourceType)"firmware";

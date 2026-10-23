@@ -18,5 +18,5 @@ public class SaveInfo : IIppCollection
 
     [ByteRange(1, 255)]
     [IppAttribute(IppAttributeNames.SaveDocumentFormat, Tag = Tag.MimeMediaType)]
-    public IppValue<string>? SaveDocumentFormat { get; set; }
+    public IppValue<DocumentFormat>? SaveDocumentFormat { get; set; }
 }

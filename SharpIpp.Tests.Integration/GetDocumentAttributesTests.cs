@@ -57,7 +57,7 @@ public class GetDocumentAttributesTests : SharpIppIntegrationTestBase
                     ErrorsCount = 0,
                     WarningsCount = 1,
                     PrintContentOptimizeActual = new[] { PrintContentOptimize.Text },
-                    DocumentFormatReady = new[] { "application/pdf" },
+                    DocumentFormatReady = new[] { DocumentFormat.ApplicationPdf },
                     OutputDeviceDocumentStateReasons = new[] { DocumentStateReason.None },
                     InputAttributesActual = new DocumentTemplateAttributes { InputBrightness = 50 },
                     DocumentStateReasons = new[] { DocumentStateReason.None },

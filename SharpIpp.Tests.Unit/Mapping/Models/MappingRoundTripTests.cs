@@ -260,7 +260,7 @@ public class MappingRoundTripTests : MapperTestBase
                         {
                             SaveLocation = new Uri($"https://example.com/{RandomString(rng)}"),
                             SaveName = RandomString(rng),
-                            SaveDocumentFormat = RandomString(rng)
+                            SaveDocumentFormat = (DocumentFormat)RandomString(rng)
                         }
                     }
                 },

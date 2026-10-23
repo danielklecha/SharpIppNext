@@ -531,6 +531,7 @@ public class IppRequestValidatorTests
         attr.IsValid(new OctetString("hello"), ctx).Should().Be(ValidationResult.Success);
         attr.IsValid(new byte[] { 1, 2, 3 }, ctx).Should().Be(ValidationResult.Success);
         attr.IsValid(new[] { "abc", "def" }, ctx).Should().Be(ValidationResult.Success);
+        attr.IsValid((DocumentFormat)"test", ctx).Should().Be(ValidationResult.Success);
     }
 
     [TestMethod]
@@ -544,6 +545,8 @@ public class IppRequestValidatorTests
         attr.IsValid(new OctetString("abcdefghijk"), ctx)!.ErrorMessage.Should().Contain("TestProp");
         attr.IsValid(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 }, ctx)!.ErrorMessage.Should().Contain("TestProp");
         attr.IsValid(new[] { "abcdefghijk" }, ctx)!.ErrorMessage.Should().Contain("TestProp");
+        attr.IsValid((DocumentFormat)"toolongstringforrange", ctx)!.ErrorMessage.Should().Contain("TestProp");
+        attr.IsValid(default(DocumentFormat), ctx)!.ErrorMessage.Should().Contain("TestProp");
     }
 
     [TestMethod]
@@ -973,6 +976,30 @@ public class IppRequestValidatorTests
         var os = new OctetString((byte[])null!);
         var lengths = TestByteRangeAttributeExposer.CallGetByteLengths(os, Encoding.UTF8).ToList();
         lengths.Should().ContainSingle().Which.Should().Be(0);
+    }
+
+    [TestMethod]
+    public void ByteRangeAttribute_GetByteLengths_WhenKeywordEnumValueIsNull_CoalescesToEmptyString()
+    {
+        var keyword = default(DocumentFormat);
+        var lengths = TestByteRangeAttributeExposer.CallGetByteLengths(keyword, Encoding.UTF8).ToList();
+        lengths.Should().ContainSingle().Which.Should().Be(0);
+    }
+
+    [TestMethod]
+    public void ByteRangeAttribute_GetByteLengths_WhenKeywordEnumValueIsNotNull_YieldsCorrectLength()
+    {
+        var keyword = (DocumentFormat)"pdf";
+        var lengths = TestByteRangeAttributeExposer.CallGetByteLengths(keyword, Encoding.UTF8).ToList();
+        lengths.Should().ContainSingle().Which.Should().Be(3);
+    }
+
+    [TestMethod]
+    public void ByteRangeAttribute_IsValid_WhenKeywordEnumValueIsNull_AndZeroAllowed_ReturnsSuccess()
+    {
+        var attr = new ByteRangeAttribute(0, 10);
+        var ctx = new ValidationContext(Encoding.UTF8, "TestProp");
+        attr.IsValid(default(DocumentFormat), ctx).Should().Be(ValidationResult.Success);
     }
 
     [TestMethod]

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
@@ -39,5 +39,5 @@ public class FetchDocumentOperationAttributes : JobOperationAttributes
     /// See: PWG 5100.18-2025 Section 7.1.4
     /// </summary>
     [IppAttribute(IppAttributeNames.DocumentFormatAccepted, Tag = Tag.MimeMediaType)]
-    public IppValue<string[]>? DocumentFormatAccepted { get; set; }
+    public IppValue<DocumentFormat[]>? DocumentFormatAccepted { get; set; }
 }

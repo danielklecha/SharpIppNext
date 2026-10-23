@@ -1,4 +1,4 @@
-﻿using SharpIpp;
+using SharpIpp;
 using SharpIpp.Models.Requests;
 using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
@@ -26,7 +26,7 @@ public class FetchDocumentTests : SharpIppIntegrationTestBase
                 DocumentNumber = 1,
                 OutputDeviceUuid = new Uri("urn:uuid:123e4567-e89b-12d3-a456-426614174012"),
                 CompressionAccepted = new[] { Compression.None },
-                DocumentFormatAccepted = new[] { "application/pdf" }
+                DocumentFormatAccepted = new[] { DocumentFormat.ApplicationPdf }
             }
         };
 

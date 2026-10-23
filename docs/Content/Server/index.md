@@ -96,7 +96,7 @@ static GetPrinterAttributesResponse HandleGetPrinterAttributes(
             PrinterUriSupported = [printerUri],
             UriAuthenticationSupported = [UriAuthentication.None],
             UriSecuritySupported = [UriSecurity.None],
-            DocumentFormatSupported = ["application/pdf", "application/postscript", "image/pwg-raster"],
+            DocumentFormatSupported = [DocumentFormat.ApplicationPdf, DocumentFormat.ApplicationPostscript, DocumentFormat.ImagePwgRaster],
             OperationsSupported =
             [
                 IppOperation.PrintJob,

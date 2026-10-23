@@ -65,13 +65,13 @@ namespace SharpIpp.Protocol.Models
         /// See: RFC 3995 Section 5.3.7
         /// </summary>
         [IppAttribute(IppAttributeNames.NotifyCharset, Tag.Charset)]
-        public IppValue<string>? NotifyCharset { get; set; }
+        public IppValue<Charset>? NotifyCharset { get; set; }
 
         /// <summary>
         /// notify-natural-language
         /// See: RFC 3995 Section 5.3.8
         /// </summary>
         [IppAttribute(IppAttributeNames.NotifyNaturalLanguage, Tag.NaturalLanguage)]
-        public IppValue<string>? NotifyNaturalLanguage { get; set; }
+        public IppValue<NaturalLanguage>? NotifyNaturalLanguage { get; set; }
     }
 }

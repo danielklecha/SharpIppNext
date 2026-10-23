@@ -1,4 +1,4 @@
-﻿using SharpIpp.Mapping;
+using SharpIpp.Mapping;
 using SharpIpp.Protocol;
 using System;
 using SharpIpp.Validation;
@@ -175,14 +175,14 @@ public class PrinterDescriptionAttributes
     /// See: RFC 8011 Section 5.4.17
     /// </summary>
     [IppAttribute(IppAttributeNames.CharsetConfigured, Tag.Charset)]
-    public IppValue<string>? CharsetConfigured { get; set; }
+    public IppValue<Charset>? CharsetConfigured { get; set; }
 
     /// <summary>
     /// charset-supported
     /// See: RFC 8011 Section 5.4.18
     /// </summary>
     [IppAttribute(IppAttributeNames.CharsetSupported, Tag.Charset)]
-    public IppValue<string[]>? CharsetSupported { get; set; }
+    public IppValue<Charset[]>? CharsetSupported { get; set; }
 
     /// <summary>
     /// natural-language-configured
@@ -287,7 +287,7 @@ public class PrinterDescriptionAttributes
     /// See: RFC 8011 Section 5.4.22
     /// </summary>
     [IppAttribute(IppAttributeNames.DocumentFormatSupported, Tag.MimeMediaType)]
-    public IppValue<string[]>? DocumentFormatSupported { get; set; }
+    public IppValue<DocumentFormat[]>? DocumentFormatSupported { get; set; }
 
     /// <summary>
     /// printer-is-accepting-jobs
@@ -2329,7 +2329,7 @@ public class PrinterDescriptionAttributes
     /// See: PWG 5100.15-2013 Section 7.4.19
     /// </summary>
     [IppAttribute(IppAttributeNames.LogoUriFormatsSupported, Tag.MimeMediaType)]
-    public IppValue<string[]>? LogoUriFormatsSupported { get; set; }
+    public IppValue<DocumentFormat[]>? LogoUriFormatsSupported { get; set; }
 
     /// <summary>
     /// logo-uri-schemes-supported

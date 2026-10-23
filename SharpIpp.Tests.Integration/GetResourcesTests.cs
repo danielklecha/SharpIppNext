@@ -1,4 +1,4 @@
-﻿using SharpIpp;
+using SharpIpp;
 using SharpIpp.Models.Requests;
 using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
@@ -104,7 +104,7 @@ public class GetResourcesTests : SharpIppIntegrationTestBase
                         ResourceVersion = "2.1.0",
                         ResourceStringVersion = "2.1.0-release",
                         ResourcePatches = "patch-1 patch-2",
-                        ResourceNaturalLanguage = "en-us",
+                        ResourceNaturalLanguage = NaturalLanguage.EnUs,
                         ResourceState = ResourceState.Available,
                         ResourceStates = new[] { ResourceState.Available },
                         ResourceStateReasons = new[] { ResourceStateReason.None },

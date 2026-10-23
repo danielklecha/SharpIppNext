@@ -399,14 +399,14 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
                     SystemConfigChanges = 7,
                     SystemConfiguredPrinters = 2,
                     SystemConfiguredResources = 5,
-                    CharsetConfigured = "utf-8",
-                    CharsetSupported = new[] { "utf-8", "us-ascii" },
-                    DocumentFormatSupported = new[] { "application/pdf" },
-                    GeneratedNaturalLanguageSupported = new[] { "en-us" },
+                    CharsetConfigured = Charset.Utf8,
+                    CharsetSupported = new[] { Charset.Utf8, Charset.UsAscii },
+                    DocumentFormatSupported = new[] { DocumentFormat.ApplicationPdf },
+                    GeneratedNaturalLanguageSupported = new[] { NaturalLanguage.EnUs },
                     IppFeaturesSupported = new[] { (IppFeature)"ippget" },
                     IppVersionsSupported = new[] { new IppVersion(2, 0) },
                     MultipleDocumentPrintersSupported = true,
-                    NaturalLanguageConfigured = "en-us",
+                    NaturalLanguageConfigured = NaturalLanguage.EnUs,
                     IppGetEventLife = 900,
                     NotifyAttributesSupported = new[] { "system-state" },
                     NotifyEventsDefault = new[] { (NotifyEvent)"system-state-changed" },
@@ -543,14 +543,14 @@ public class GetSystemAttributesTests : SharpIppIntegrationTestBase
         mapped.SystemDescriptionAttributes.SystemConfigChanges.Should().Be(7);
         mapped.SystemDescriptionAttributes.SystemConfiguredPrinters.Should().Be(2);
         mapped.SystemDescriptionAttributes.SystemConfiguredResources.Should().Be(5);
-        mapped.SystemDescriptionAttributes.CharsetConfigured.Should().Be("utf-8");
-        mapped.SystemDescriptionAttributes.CharsetSupported.Should().Contain("utf-8");
-        mapped.SystemDescriptionAttributes.DocumentFormatSupported.Should().Contain("application/pdf");
-        mapped.SystemDescriptionAttributes.GeneratedNaturalLanguageSupported.Should().Contain("en-us");
+        mapped.SystemDescriptionAttributes.CharsetConfigured.Should().Be((Charset)"utf-8");
+        mapped.SystemDescriptionAttributes.CharsetSupported.Should().Contain((Charset)"utf-8");
+        mapped.SystemDescriptionAttributes.DocumentFormatSupported.Should().Contain((DocumentFormat)"application/pdf");
+        mapped.SystemDescriptionAttributes.GeneratedNaturalLanguageSupported.Should().Contain((NaturalLanguage)"en-us");
         mapped.SystemDescriptionAttributes.IppFeaturesSupported.Should().Contain((IppFeature)"ippget");
         mapped.SystemDescriptionAttributes.IppVersionsSupported.Should().Contain(new IppVersion(2,0));
         mapped.SystemDescriptionAttributes.MultipleDocumentPrintersSupported.Should().BeTrue();
-        mapped.SystemDescriptionAttributes.NaturalLanguageConfigured.Should().Be("en-us");
+        mapped.SystemDescriptionAttributes.NaturalLanguageConfigured.Should().Be((NaturalLanguage)"en-us");
         mapped.SystemDescriptionAttributes.IppGetEventLife.Should().Be(900);
         mapped.SystemDescriptionAttributes.NotifyAttributesSupported.Should().Contain("system-state");
         mapped.SystemDescriptionAttributes.NotifyEventsDefault.Should().Contain((NotifyEvent)"system-state-changed");

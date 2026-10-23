@@ -1,4 +1,4 @@
-﻿using SharpIpp.Mapping;
+using SharpIpp.Mapping;
 using System;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
@@ -134,7 +134,7 @@ public class DocumentAttributes : IIppCollection
     /// </summary>
     /// <code>document-format-ready</code>
     [IppAttribute(IppAttributeNames.DocumentFormatReady, Tag.MimeMediaType)]
-    public IppValue<string[]>? DocumentFormatReady { get; set; }
+    public IppValue<DocumentFormat[]>? DocumentFormatReady { get; set; }
 
     /// <summary>
     /// The output-device-document-state IPP attribute.

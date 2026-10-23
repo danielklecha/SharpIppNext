@@ -1,4 +1,4 @@
-﻿using SharpIpp;
+using SharpIpp;
 using SharpIpp.Models.Requests;
 using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
@@ -17,7 +17,7 @@ public class CreateResourceOperationDispatchTests : SharpIppIntegrationTestBase
     {
         var operationAttributes = GetSystemOperationAttributes<CreateResourceOperationAttributes>();
         operationAttributes.ResourceFormat = (ResourceFormat)"application/octet-stream";
-        operationAttributes.ResourceNaturalLanguage = "en";
+        operationAttributes.ResourceNaturalLanguage = NaturalLanguage.En;
         operationAttributes.ResourceType = (ResourceType)"firmware";
         operationAttributes.ResourceName = "firmware-v1";
         operationAttributes.ResourceInfo = "firmware payload";

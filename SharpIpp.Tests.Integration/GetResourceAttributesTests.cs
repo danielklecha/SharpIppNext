@@ -50,7 +50,7 @@ public class GetResourceAttributesTests : SharpIppIntegrationTestBase
                     ResourceStateMessage = "ready",
                     ResourceStateReasons = new[] { ResourceStateReason.None },
                     ResourceKOctets = 512,
-                    ResourceNaturalLanguage = "en",
+                    ResourceNaturalLanguage = NaturalLanguage.En,
                     ResourcePatches = "patch-1\r\npatch-2",
                     ResourceSignature = new OctetString[] { new byte[] { 0x01, 0x02 }, new byte[] { 0x03, 0x04 } },
                     ResourceDataUri = new Uri("ipp://127.0.0.1:8631/resources/100"),

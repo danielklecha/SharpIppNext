@@ -95,6 +95,11 @@ public class ByteRangeAttribute : IppValidationAttribute
             length = encoding.GetByteCount(s);
             return true;
         }
+        if (value is IKeywordEnum ke)
+        {
+            length = encoding.GetByteCount(ke.Value ?? string.Empty);
+            return true;
+        }
         if (value is StringWithLanguage swl)
         {
             var languageBytesCount = Encoding.ASCII.GetByteCount(swl.Language ?? string.Empty);

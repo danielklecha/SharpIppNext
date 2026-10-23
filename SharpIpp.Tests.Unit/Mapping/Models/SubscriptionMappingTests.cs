@@ -35,8 +35,8 @@ namespace SharpIpp.Tests.Unit.Mapping
                 NotifyRecipientUri = new Uri("ipp://localhost/test"),
                 NotifyUserData = new OctetString(new byte[] { 0xDE, 0xAD, 0xBE, 0xEF }),
                 NotifySubscriberUserName = "Daniel",
-                NotifyCharset = "utf-8",
-                NotifyNaturalLanguage = "en-us"
+                NotifyCharset = Charset.Utf8,
+                NotifyNaturalLanguage = NaturalLanguage.EnUs
             };
 
             var dict = _mapper.Map<SubscriptionDescriptionAttributes, IDictionary<string, IppAttribute[]>>(original);

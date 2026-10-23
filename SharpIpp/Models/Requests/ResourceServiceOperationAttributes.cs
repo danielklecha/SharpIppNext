@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using SharpIpp.Mapping;
 using SharpIpp.Validation;
 using SharpIpp.Protocol.Models;
@@ -40,7 +40,7 @@ public class CreateResourceOperationAttributes : SystemOperationAttributes
     /// See: PWG 5100.22-2025 Section 7.1.17
     /// </summary>
     [IppAttribute(IppAttributeNames.ResourceNaturalLanguage, Tag = Tag.NaturalLanguage)]
-    public IppValue<string>? ResourceNaturalLanguage { get; set; }
+    public IppValue<NaturalLanguage>? ResourceNaturalLanguage { get; set; }
 
     /// <summary>
     /// The <c>resource-type</c> operation attribute.
@@ -145,7 +145,7 @@ public class SetResourceAttributesOperationAttributes : SystemOperationAttribute
     /// See: PWG 5100.22-2025 Section 7.1.17
     /// </summary>
     [IppAttribute(IppAttributeNames.ResourceNaturalLanguage, Tag = Tag.NaturalLanguage)]
-    public IppValue<string>? ResourceNaturalLanguage { get; set; }
+    public IppValue<NaturalLanguage>? ResourceNaturalLanguage { get; set; }
 
     /// <summary>
     /// The <c>resource-patches</c> operation attribute.

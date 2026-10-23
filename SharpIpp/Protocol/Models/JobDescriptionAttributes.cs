@@ -877,7 +877,7 @@ public class JobDescriptionAttributes
         /// </summary>
         /// <code>document-format-ready</code>
         [IppAttribute(IppAttributeNames.DocumentFormatReady, Tag = Tag.MimeMediaType)]
-    public IppValue<string[]>? DocumentFormatReady { get; set; }
+    public IppValue<DocumentFormat[]>? DocumentFormatReady { get; set; }
 
         /// <summary>
         /// The output-device-job-state attribute reports the job state on the output device.

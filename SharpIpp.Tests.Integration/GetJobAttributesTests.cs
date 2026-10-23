@@ -1,4 +1,4 @@
-﻿using SharpIpp;
+using SharpIpp;
 using SharpIpp.Models.Requests;
 using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
@@ -229,7 +229,7 @@ public class GetJobAttributesTests : SharpIppIntegrationTestBase
                     PrintBaseActual3d = new[] { PrintBase.Raft },
                     PrintObjectsActual3d = new[] { new PrintObject { DocumentNumber = 1 } },
                     PrintSupportsActual3d = new[] { PrintSupports.Standard },
-                    DocumentFormatReady = new[] { "application/pdf" },
+                    DocumentFormatReady = new[] { DocumentFormat.ApplicationPdf },
                     OutputDeviceJobStateReasons = new[] { JobStateReason.None },
                     OutputDeviceJobStateMessage = "processing on output device",
                     OutputDeviceUuidAssigned = new Uri("urn:uuid:12345678-1234-1234-1234-123456789012"),
