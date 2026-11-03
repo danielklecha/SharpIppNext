@@ -1,5 +1,4 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System;
 using System.Reflection;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -12,7 +11,6 @@ using SharpIpp.Protocol.Models;
 namespace SharpIpp.Tests.Unit.Mapping.Profiles;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class EnablePrinterRequestProfileTests
 {
     private static SimpleMapper CreateMapper() => SimpleMapper.Instance;

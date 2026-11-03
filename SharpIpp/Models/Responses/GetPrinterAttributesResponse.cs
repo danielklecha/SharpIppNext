@@ -6,7 +6,7 @@ using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Responses;
 
-[IppResponse]
+[IppResponse(IppOperation.GetPrinterAttributes)]
 public class GetPrinterAttributesResponse : IppResponse<OperationAttributes>
 {
     /// <summary>

@@ -1,18 +1,16 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Models;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using SharpIpp.Models.Requests;
 
 namespace SharpIpp.Tests.Unit.Mapping;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class IppAttributeAttributeTests
 {
     [TestMethod]
@@ -128,6 +126,77 @@ public class IppAttributeAttributeTests
         // AttributesCharset has Order = 0, AttributesNaturalLanguage has Order = 1
         attributes[0].Name.Should().Be(IppAttributeNames.AttributesCharset);
         attributes[1].Name.Should().Be(IppAttributeNames.AttributesNaturalLanguage);
-        attributes.Select(x => x.Name).Should().Contain([IppAttributeNames.PrinterUri, IppAttributeNames.RequestingUserName]);
+        attributes[2].Name.Should().Be(IppAttributeNames.PrinterUri);
+        attributes.Select(x => x.Name).Should().Contain([IppAttributeNames.RequestingUserName]);
+    }
+
+    [TestMethod]
+    public void Mapper_OrdersJobTargetAttributesDirectlyAfterLanguage()
+    {
+        var mapper = SimpleMapper.Instance;
+
+        var op = new GetJobAttributesOperationAttributes
+        {
+            PrinterUri = new Uri("ipp://localhost/printers/test"),
+            RequestingUserName = "john",
+            JobId = 42,
+            RequestedAttributes = new[] { "job-id", "job-state" }
+        };
+
+        var attributes = mapper.Map<List<IppAttribute>>(op);
+
+        // RFC 8011 §4.1.5: [0] charset, [1] language, [2] printer-uri, [3] job-id
+        attributes[0].Name.Should().Be(IppAttributeNames.AttributesCharset);
+        attributes[1].Name.Should().Be(IppAttributeNames.AttributesNaturalLanguage);
+        attributes[2].Name.Should().Be(IppAttributeNames.PrinterUri);
+        attributes[3].Name.Should().Be(IppAttributeNames.JobId);
+        attributes[3].Value.Should().Be(42);
+
+        var remaining = attributes.Skip(4).Select(x => x.Name).ToList();
+        remaining.Should().Contain(IppAttributeNames.RequestingUserName);
+        remaining.Should().Contain(IppAttributeNames.RequestedAttributes);
+    }
+
+    [TestMethod]
+    public void Mapper_OrdersJobUriTargetAttributeAsThird()
+    {
+        var mapper = SimpleMapper.Instance;
+
+        var op = new JobOperationAttributes
+        {
+            JobUri = new Uri("ipp://localhost/jobs/42"),
+            RequestingUserName = "john"
+        };
+
+        var attributes = mapper.Map<List<IppAttribute>>(op);
+
+        attributes[0].Name.Should().Be(IppAttributeNames.AttributesCharset);
+        attributes[1].Name.Should().Be(IppAttributeNames.AttributesNaturalLanguage);
+        attributes[2].Name.Should().Be(IppAttributeNames.JobUri);
+        attributes.Skip(3).Select(x => x.Name).Should().Contain(IppAttributeNames.RequestingUserName);
+    }
+
+    [TestMethod]
+    public void Mapper_OrdersDocumentNumberTargetAttributeAsFifth()
+    {
+        var mapper = SimpleMapper.Instance;
+
+        var op = new GetDocumentAttributesOperationAttributes
+        {
+            PrinterUri = new Uri("ipp://localhost/printers/test"),
+            JobId = 10,
+            DocumentNumber = 1,
+            RequestingUserName = "john"
+        };
+
+        var attributes = mapper.Map<List<IppAttribute>>(op);
+
+        // PWG 5100.5 §5.1: [0] charset, [1] language, [2] printer-uri, [3] job-id, [4] document-number
+        attributes[0].Name.Should().Be(IppAttributeNames.AttributesCharset);
+        attributes[1].Name.Should().Be(IppAttributeNames.AttributesNaturalLanguage);
+        attributes[2].Name.Should().Be(IppAttributeNames.PrinterUri);
+        attributes[3].Name.Should().Be(IppAttributeNames.JobId);
+        attributes[4].Name.Should().Be(IppAttributeNames.DocumentNumber);
+        attributes.Skip(5).Select(x => x.Name).Should().Contain(IppAttributeNames.RequestingUserName);
     }
 }

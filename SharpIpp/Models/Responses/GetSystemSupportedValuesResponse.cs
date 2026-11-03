@@ -7,7 +7,7 @@ namespace SharpIpp.Models.Responses;
 /// Get-System-Supported-Values response.
 /// See: PWG 5100.22-2025 Section 6.3.9
 /// </summary>
-[IppResponse]
+[IppResponse(IppOperation.GetSystemSupportedValues)]
 public class GetSystemSupportedValuesResponse : IppResponse<OperationAttributes>
 {
 }

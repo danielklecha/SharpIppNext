@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Models.Requests;
 using SharpIpp.Protocol.Models;
@@ -11,7 +11,6 @@ using System.Text;
 namespace SharpIpp.Tests.Unit.Validation;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class IppRequestValidatorTests
 {
     [TestMethod]

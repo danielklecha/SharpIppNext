@@ -16,7 +16,7 @@ public static class MapperApplierExtensions
     {
         if (!src.TryGetValue(key, out IppAttribute[]? attributes) || attributes.Length == 0)
             return mapper.Map<TDestination>(null);
-        var values = attributes.Select(x => x.Value).ToArray();
+        var values = ExtractValues(attributes);
         return mapper.Map<TDestination>(values);
     }
 
@@ -29,7 +29,7 @@ public static class MapperApplierExtensions
             return mapper.MapNullable<TDestination>(null);
         if (attributes.Length == 1 && attributes[0].IsOutOfBandOrNoValue())
             return mapper.MapNullable<TDestination>(null);
-        var values = attributes.Select(x => x.Value).ToArray();
+        var values = ExtractValues(attributes);
         return mapper.MapNullable<TDestination>(values);
     }
 
@@ -63,7 +63,7 @@ public static class MapperApplierExtensions
             var innerType = targetType.GetGenericArguments()[0];
             if (innerType.IsArray || typeof(IEnumerable).IsAssignableFrom(innerType) && innerType != typeof(string))
             {
-                var rawValues = values.Select(x => x.Value).ToArray();
+                var rawValues = ExtractValues(values);
                 return mapper.MapNullable<TDestination>(rawValues);
             }
         }
@@ -122,5 +122,15 @@ public static class MapperApplierExtensions
         }
 
         return result.ToArray();
+    }
+
+    private static object[] ExtractValues(IppAttribute[] attributes)
+    {
+        var arr = new object[attributes.Length];
+        for (int i = 0; i < attributes.Length; i++)
+        {
+            arr[i] = attributes[i].Value;
+        }
+        return arr;
     }
 }

@@ -16,7 +16,7 @@ public class AddDocumentImagesOperationAttributes : OperationAttributes
     /// See: PWG 5100.15-2013 Section 6.1.1
     /// </summary>
     [Range(1, int.MaxValue)]
-    [IppAttribute(IppAttributeNames.JobId, Tag = Tag.Integer)]
+    [IppAttribute(IppAttributeNames.JobId, Tag = Tag.Integer, Order = 3)]
     public IppValue<int>? JobId { get; set; }
 
     /// <summary>

@@ -1,14 +1,12 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Moq;
 using SharpIpp.Exceptions;
 using SharpIpp.Protocol;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 
 namespace SharpIpp.Tests.Unit.Exceptions;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class IppResponseExceptionTests
 {
     [TestMethod]

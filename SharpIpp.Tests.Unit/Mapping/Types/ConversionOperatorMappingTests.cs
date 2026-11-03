@@ -1,6 +1,5 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -10,7 +9,6 @@ using SharpIpp.Protocol.Models;
 namespace SharpIpp.Tests.Unit.Mapping.Types;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class ConversionOperatorMappingTests : MapperTestBase
 {
     [TestMethod]

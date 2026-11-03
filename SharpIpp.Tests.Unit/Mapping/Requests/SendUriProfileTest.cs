@@ -1,5 +1,4 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System;
 using System.Reflection;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -11,7 +10,6 @@ using SharpIpp.Protocol.Models;
 namespace SharpIpp.Tests.Unit.Mapping.Profiles;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class SendUriProfileTest
 {
     [TestMethod]

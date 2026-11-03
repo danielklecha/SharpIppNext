@@ -117,7 +117,7 @@ public partial class SharpIppClient : ISharpIppClient
 
             using var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
             ippResponse = await _ippProtocol.ReadIppResponseAsync(responseStream, cancellationToken).ConfigureAwait(false);
-            ResponseMessageValidator?.Validate(ippResponse);
+            ResponseMessageValidator?.Validate(ippResponse, ippRequest.IppOperation);
             if (!ippResponse.IsSuccessfulStatusCode())
                 throw new IppResponseException($"Printer returned error code", ippResponse);
         }

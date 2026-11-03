@@ -6,7 +6,7 @@ namespace SharpIpp.Models.Responses;
 /// Hold-Job Response
 /// See: RFC 2911 Section 3.3.5
 /// </summary>
-[IppResponse]
+[IppResponse(IppOperation.HoldJob)]
 public class HoldJobResponse : IppResponse<OperationAttributes>
 {
 }

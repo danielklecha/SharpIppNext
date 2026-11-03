@@ -1,6 +1,5 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using FluentAssertions;
@@ -16,7 +15,6 @@ namespace SharpIpp.Tests.Unit.Mapping.Completeness;
 /// responses, models, smart enums, and collections are properly registered in SimpleMapper.
 /// </summary>
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class RegistryCompletenessTests : MapperTestBase
 {
     private static readonly Assembly SharpIppAssembly = typeof(ISharpIppClient).Assembly;

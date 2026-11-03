@@ -17,7 +17,7 @@ public class CancelResourceOperationAttributes : SystemOperationAttributes
     /// See: PWG 5100.22-2025 Section 7.1.14
     /// </summary>
     [Range(1, 2147483647)]
-    [IppAttribute(IppAttributeNames.ResourceId, Tag = Tag.Integer)]
+    [IppAttribute(IppAttributeNames.ResourceId, Tag = Tag.Integer, Order = 3)]
     public IppValue<int>? ResourceId { get; set; }
 }
 
@@ -76,7 +76,7 @@ public class InstallResourceOperationAttributes : SystemOperationAttributes
     /// See: PWG 5100.22-2025 Section 7.1.14
     /// </summary>
     [Range(1, 2147483647)]
-    [IppAttribute(IppAttributeNames.ResourceId, Tag = Tag.Integer)]
+    [IppAttribute(IppAttributeNames.ResourceId, Tag = Tag.Integer, Order = 3)]
     public IppValue<int>? ResourceId { get; set; }
 }
 
@@ -92,7 +92,7 @@ public class SendResourceDataOperationAttributes : SystemOperationAttributes
     /// See: PWG 5100.22-2025 Section 7.1.14
     /// </summary>
     [Range(1, 2147483647)]
-    [IppAttribute(IppAttributeNames.ResourceId, Tag = Tag.Integer)]
+    [IppAttribute(IppAttributeNames.ResourceId, Tag = Tag.Integer, Order = 3)]
     public IppValue<int>? ResourceId { get; set; }
 
     /// <summary>
@@ -123,7 +123,7 @@ public class SetResourceAttributesOperationAttributes : SystemOperationAttribute
     /// See: PWG 5100.22-2025 Section 7.1.14
     /// </summary>
     [Range(1, 2147483647)]
-    [IppAttribute(IppAttributeNames.ResourceId, Tag = Tag.Integer)]
+    [IppAttribute(IppAttributeNames.ResourceId, Tag = Tag.Integer, Order = 3)]
     public IppValue<int>? ResourceId { get; set; }
 
     /// <summary>

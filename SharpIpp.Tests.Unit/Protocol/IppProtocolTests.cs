@@ -1806,6 +1806,47 @@ public class IppProtocolTests
     }
 
     [TestMethod]
+    public async Task WriteIppResponseAsync_OperationAttributesWithoutCharset_ShouldThrowArgumentException()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        using MemoryStream memoryStream = new();
+        var message = new IppResponseMessage
+        {
+            StatusCode = IppStatusCode.SuccessfulOk,
+            RequestId = 123
+        };
+        message.OperationAttributes.Add( new List<IppAttribute> { new IppAttribute( Tag.Integer, IppAttributeNames.Copies, 1 ) } );
+
+        // Act
+        Func<Task> act = async () => await protocol.WriteIppResponseAsync( message, memoryStream );
+
+        // Assert
+        await act.Should().ThrowAsync<ArgumentException>();
+    }
+
+    [TestMethod]
+    public async Task WriteIppResponseAsync_CharsetInSecondGroup_ShouldSucceed()
+    {
+        // Arrange
+        var protocol = new IppProtocol();
+        using MemoryStream memoryStream = new();
+        var message = new IppResponseMessage
+        {
+            StatusCode = IppStatusCode.SuccessfulOk,
+            RequestId = 123
+        };
+        message.OperationAttributes.Add( new List<IppAttribute> { new IppAttribute( Tag.Integer, IppAttributeNames.Copies, 1 ) } );
+        message.OperationAttributes.Add( new List<IppAttribute> { new IppAttribute( Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8" ) } );
+
+        // Act
+        Func<Task> act = async () => await protocol.WriteIppResponseAsync( message, memoryStream );
+
+        // Assert
+        await act.Should().NotThrowAsync();
+    }
+
+    [TestMethod]
     public async Task GetNormalizedName_PrevBegCollection_ShouldReturnPrevName()
     {
         // Case for verifying 1setOf Collection support (formerly line 418 break)

@@ -81,41 +81,44 @@ public class PrinterFinisherSupply : IppStructuredString, IEquatable<PrinterFini
         var supply = new PrinterFinisherSupply();
         var extensions = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-        var query = value.Split([';'], StringSplitOptions.RemoveEmptyEntries)
-            .Select(x => x.Split(['='], 2))
-            .Where(x => x.Length == 2)
-            .Select(x => new { Key = x[0].Trim(), Value = x[1].Trim() });
-
-        foreach (var row in query)
+        var segments = value.Split([';'], StringSplitOptions.RemoveEmptyEntries);
+        foreach (var segment in segments)
         {
-            switch (row.Key.ToLowerInvariant())
+            var parts = segment.Split(['='], 2);
+            if (parts.Length != 2)
+                continue;
+
+            var key = parts[0].Trim();
+            var val = parts[1].Trim();
+
+            switch (key.ToLowerInvariant())
             {
                 case "class":
-                    supply.Class = row.Value;
+                    supply.Class = val;
                     break;
                 case "type":
-                    supply.Type = row.Value;
+                    supply.Type = val;
                     break;
                 case "unit":
-                    supply.Unit = row.Value;
+                    supply.Unit = val;
                     break;
-                case "max" when int.TryParse(row.Value, out var max):
+                case "max" when int.TryParse(val, out var max):
                     supply.Max = max;
                     break;
-                case "level" when int.TryParse(row.Value, out var level):
+                case "level" when int.TryParse(val, out var level):
                     supply.Level = level;
                     break;
                 case "color":
-                    supply.Color = row.Value;
+                    supply.Color = val;
                     break;
-                case "index" when int.TryParse(row.Value, out var index):
+                case "index" when int.TryParse(val, out var index):
                     supply.Index = index;
                     break;
-                case "deviceindex" when int.TryParse(row.Value, out var deviceIndex):
+                case "deviceindex" when int.TryParse(val, out var deviceIndex):
                     supply.DeviceIndex = deviceIndex;
                     break;
                 default:
-                    extensions[row.Key] = row.Value;
+                    extensions[key] = val;
                     break;
             }
         }

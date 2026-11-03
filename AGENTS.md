@@ -34,4 +34,7 @@ When adding or updating an IPP operation or attribute, implement parity end-to-e
 
 - Prefer small, focused patches and preserve naming consistency with existing IPP models.
 - Maintain bidirectional mapping symmetry (read and write) for all protocol attributes.
+- **Avoid Lambdas & Closures on Hot Paths**: In message parsing, mapping, and validation pipelines, avoid lambdas, `Func<...>`, `Action<...>`, and closure allocations:
+  - Prefer the non-allocating `Try*` pattern (`if (!TryValidate*(..., out var error)) throw ...`) over callback-based validation methods.
+  - On the happy path, validation and mapping should incur zero delegate or closure allocations to maintain optimal performance and compatibility with UWP, .NET Native, and NativeAOT.
 - Verify behavior against unit and integration tests before finishing.

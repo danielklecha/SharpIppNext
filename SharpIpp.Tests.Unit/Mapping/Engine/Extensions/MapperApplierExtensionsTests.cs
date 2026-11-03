@@ -1,15 +1,13 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Models;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SharpIpp.Tests.Unit.Mapping.Extensions;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class MapperApplierExtensionsTests
 {
     [TestMethod]

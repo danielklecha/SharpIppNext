@@ -5,7 +5,7 @@ using SharpIpp.Protocol.Models;
 namespace SharpIpp.Models.Responses;
 
 [Obsolete("The 'Print-URI' operation is deprecated.")]
-[IppResponse]
+[IppResponse(IppOperation.PrintUri)]
 public class PrintUriResponse : IppResponse<OperationAttributes>, IIppJobResponse
 {
     /// <summary>

@@ -6,7 +6,7 @@ namespace SharpIpp.Models.Responses;
 /// Pause-Printer Response
 /// See: RFC 2911 Section 3.2.7
 /// </summary>
-[IppResponse]
+[IppResponse(IppOperation.PausePrinter)]
 public class PausePrinterResponse : IppResponse<OperationAttributes>
 {
 }

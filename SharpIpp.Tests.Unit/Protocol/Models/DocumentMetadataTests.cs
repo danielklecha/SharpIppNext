@@ -1,15 +1,13 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Protocol.Models;
 using System;
 using SharpIpp.Validation;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace SharpIpp.Tests.Unit.Protocol.Models;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class DocumentMetadataTests
 {
     [TestMethod]

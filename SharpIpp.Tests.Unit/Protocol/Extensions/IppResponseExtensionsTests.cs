@@ -1,16 +1,15 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Extensions;
 using SharpIpp.Protocol.Models;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SharpIpp.Tests.Unit.Protocol.Extensions;
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class IppResponseMessageExtensionsTests
 {
     [TestMethod]
@@ -72,5 +71,115 @@ public class IppResponseMessageExtensionsTests
         var mock = new Mock<IIppResponseMessage>();
         Action action = () => mock.Object.GetSectionList(SectionTag.Reserved);
         action.Should().Throw<ArgumentException>().WithMessage($"Unknown section tag: {SectionTag.Reserved}");
+    }
+
+    [TestMethod]
+    public void GetAllAttributes_WhenResponseIsNull_ShouldThrowArgumentNullException()
+    {
+        IIppResponseMessage message = null!;
+        Action act = () => message.GetAllAttributes().ToList();
+        act.Should().Throw<ArgumentNullException>();
+    }
+
+    [TestMethod]
+    public void GetAllAttributes_WithGroupsAndAttributes_ShouldEnumerateAllAttributes()
+    {
+        var response = new IppResponseMessage();
+        var attr1 = new IppAttribute(Tag.Charset, "attributes-charset", "utf-8");
+        var attr2 = new IppAttribute(Tag.NaturalLanguage, "attributes-natural-language", "en-us");
+        var attr3 = new IppAttribute(Tag.Integer, "job-id", 123);
+        var attr4 = new IppAttribute(Tag.Uri, "printer-uri-supported", "ipp://localhost/printer");
+
+        response.OperationAttributes.Add([attr1, attr2]);
+        response.JobAttributes.Add([attr3]);
+        response.PrinterAttributes.Add([attr4]);
+
+        var all = response.GetAllAttributes().ToList();
+
+        all.Should().HaveCount(4);
+        all.Should().ContainInOrder(attr1, attr2, attr3, attr4);
+    }
+
+    [TestMethod]
+    public void GetAllAttributes_WithNullGroupsOrInnerLists_ShouldIgnoreNulls()
+    {
+        var mock = new Mock<IIppResponseMessage>();
+        var attr = new IppAttribute(Tag.Integer, "job-id", 456);
+
+        mock.Setup(x => x.OperationAttributes).Returns((List<List<IppAttribute>>)null!);
+        mock.Setup(x => x.JobAttributes).Returns([null!, [attr]]);
+        mock.Setup(x => x.PrinterAttributes).Returns([]);
+
+        var all = mock.Object.GetAllAttributes().ToList();
+
+        all.Should().ContainSingle().Which.Should().Be(attr);
+    }
+}
+
+[TestClass]
+public class IppRequestMessageExtensionsTests_GetAllAttributes
+{
+    [TestMethod]
+    public void GetAllAttributes_WhenRequestIsNull_ShouldThrowArgumentNullException()
+    {
+        IIppRequestMessage message = null!;
+        Action act = () => message.GetAllAttributes().ToList();
+        act.Should().Throw<ArgumentNullException>();
+    }
+
+    [TestMethod]
+    public void GetAllAttributes_WithGroupsAndAttributes_ShouldEnumerateAllAttributes()
+    {
+        var request = new IppRequestMessage();
+        var attr1 = new IppAttribute(Tag.Charset, "attributes-charset", "utf-8");
+        var attr2 = new IppAttribute(Tag.NaturalLanguage, "attributes-natural-language", "en-us");
+        var attr3 = new IppAttribute(Tag.Integer, "job-id", 123);
+
+        request.OperationAttributes.AddRange([attr1, attr2]);
+        request.JobAttributes.Add(attr3);
+
+        var all = request.GetAllAttributes().ToList();
+
+        all.Should().HaveCount(3);
+        all.Should().ContainInOrder(attr1, attr2, attr3);
+    }
+
+    [TestMethod]
+    public void GetAllAttributes_WithNullGroups_ShouldIgnoreNulls()
+    {
+        var mock = new Mock<IIppRequestMessage>();
+        var attr = new IppAttribute(Tag.Integer, "job-id", 456);
+
+        mock.Setup(x => x.OperationAttributes).Returns((List<IppAttribute>)null!);
+        mock.Setup(x => x.JobAttributes).Returns([attr]);
+
+        var all = mock.Object.GetAllAttributes().ToList();
+
+        all.Should().ContainSingle().Which.Should().Be(attr);
+    }
+}
+
+[TestClass]
+public class IppResponseExtensionsTests
+{
+    [TestMethod]
+    public void GetOperation_WhenResponseIsNull_ShouldReturnNull()
+    {
+        IIppResponse? response = null;
+        response.GetOperation().Should().BeNull();
+    }
+
+    [TestMethod]
+    public void GetOperation_WhenResponseIsUnrecognized_ShouldReturnNull()
+    {
+        var response = new Mock<IIppResponse>().Object;
+        response.GetOperation().Should().BeNull();
+    }
+
+    [TestMethod]
+    public void GetOperation_WhenResponseIsRecognized_ShouldReturnOperation()
+    {
+        var response = new PrintJobResponse();
+        response.GetOperation().Should().Be(IppOperation.PrintJob);
     }
 }

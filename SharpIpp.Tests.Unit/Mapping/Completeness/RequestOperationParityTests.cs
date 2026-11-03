@@ -1,6 +1,5 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using FluentAssertions;
@@ -16,7 +15,6 @@ namespace SharpIpp.Tests.Unit.Mapping.Completeness;
 /// defined in its attribute when mapped to IppRequestMessage.
 /// </summary>
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class RequestOperationParityTests : MapperTestBase
 {
     private static readonly Assembly SharpIppAssembly = typeof(ISharpIppClient).Assembly;

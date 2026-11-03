@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Validation;
 using SharpIpp;
 using Moq;
@@ -6,7 +6,6 @@ using SharpIpp.Exceptions;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Models;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System;
 using System.Threading;
@@ -19,7 +18,6 @@ using SharpIpp.Models.Responses;
 namespace SharpIpp.Tests.Unit;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class SharpIppServerTests
 {
     [TestMethod]
@@ -468,6 +466,65 @@ public class SharpIppServerTests
     }
 
 
+    [TestMethod]
+    public async Task CreateRawResponseAsync_WhenMissingRequiredOperationAttributes_ThrowsIppResponseException()
+    {
+        SharpIppServer server = new(Mock.Of<IIppProtocol>());
+        var message = new GetPrinterAttributesResponse
+        {
+            RequestId = 123,
+            StatusCode = IppStatusCode.SuccessfulOk,
+            OperationAttributes = new()
+            {
+                StatusMessage = "successful-ok"
+            }
+        };
+
+        Func<Task<IIppResponseMessage>> act = () => server.CreateRawResponseAsync(message);
+
+        await act.Should().ThrowAsync<IppResponseException>()
+            .WithMessage("*printer-attributes*");
+    }
+
+    [TestMethod]
+    public async Task CreateRawResponseAsync_WhenOperationValidationDisabled_DoesNotThrow()
+    {
+        SharpIppServer server = new(Mock.Of<IIppProtocol>())
+        {
+            ResponseMessageValidator = new IppResponseMessageValidator { ValidatePrinterAttributesGroup = false }
+        };
+        var message = new GetPrinterAttributesResponse
+        {
+            RequestId = 123,
+            StatusCode = IppStatusCode.SuccessfulOk,
+            OperationAttributes = new()
+            {
+                StatusMessage = "successful-ok"
+            }
+        };
+
+        Func<Task<IIppResponseMessage>> act = () => server.CreateRawResponseAsync(message);
+
+        await act.Should().NotThrowAsync();
+    }
+
+    [TestMethod]
+    public async Task CreateRawResponseAsync_WhenPrintJobMissingJobAttributes_ThrowsIppResponseException()
+    {
+        SharpIppServer server = new(Mock.Of<IIppProtocol>());
+        var message = new PrintJobResponse
+        {
+            RequestId = 123,
+            StatusCode = IppStatusCode.SuccessfulOk,
+            JobAttributes = null
+        };
+
+        Func<Task<IIppResponseMessage>> act = () => server.CreateRawResponseAsync(message);
+
+        await act.Should().ThrowAsync<IppResponseException>()
+            .WithMessage("*job-id*");
+    }
+
     public static IEnumerable<object[]> ReceiveRequestData
     {
         get
@@ -811,7 +868,7 @@ public class SharpIppServerTests
 
         var response = await server.CreateRawResponseAsync(message);
 
-        responseMessageValidator.Verify(x => x.Validate(It.Is<IIppResponseMessage>(m => m == response)), Times.Once);
+        responseMessageValidator.Verify(x => x.Validate(It.Is<IIppResponseMessage>(m => m == response), IppOperation.CreateJob), Times.Once);
     }
 
     [TestMethod]

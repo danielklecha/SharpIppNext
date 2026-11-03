@@ -4,7 +4,7 @@ using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Responses;
 
-[IppResponse]
+[IppResponse(IppOperation.GetCUPSPrinters)]
 public class CUPSGetPrintersResponse : IppResponse<OperationAttributes>
 {
     public CUPSGetPrintersResponse()

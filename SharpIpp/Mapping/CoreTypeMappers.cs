@@ -18,26 +18,16 @@ internal static class CoreTypeMappers
 
     private static void ConfigureTypes(IMapperConstructor mapper)
     {
-        mapper.CreateIppMap<byte[], string>((src, map) => System.Text.Encoding.UTF8.GetString(src));
-        mapper.CreateIppMap<string, byte[]>((src, map) => System.Text.Encoding.UTF8.GetBytes(src));
-
-        var unixStartTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified);
-        mapper.CreateIppMap<int, DateTime>((src, map) => unixStartTime.AddSeconds(src));
-        mapper.CreateIppMap<DateTime, int>((src, map) => (src - unixStartTime).Seconds);
+        mapper.CreateIppMap<byte[], string>(CoreTypeMappingHelper.Utf8BytesToString);
+        mapper.CreateIppMap<string, byte[]>(CoreTypeMappingHelper.StringToUtf8Bytes);
+        mapper.CreateIppMap<int, DateTime>(CoreTypeMappingHelper.UnixSecondsToDateTime);
+        mapper.CreateIppMap<DateTime, int>(CoreTypeMappingHelper.DateTimeToUnixSeconds);
     }
 
     private static void ConfigureUri(IMapperConstructor mapper)
     {
-        mapper.CreateMap<string, Uri?>((src, dst, map) =>
-        {
-            if (Uri.TryCreate(src, UriKind.RelativeOrAbsolute, out var uri))
-            {
-                return uri;
-            }
-            return null;
-        });
-
-        mapper.CreateMap<NoValue, Uri?>((src, dst, map) => null);
-        mapper.CreateMap<Uri, string>((src, dst, map) => src.ToString());
+        mapper.CreateMap<string, Uri?>(CoreTypeMappingHelper.StringToUri);
+        mapper.CreateMap<NoValue, Uri?>(CoreTypeMappingHelper.NoValueToUri);
+        mapper.CreateMap<Uri, string>(CoreTypeMappingHelper.UriToString);
     }
 }

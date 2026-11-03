@@ -1,7 +1,6 @@
-// Feature: pwg5100-spec-parity, Property 3: Collection Attribute Round-Trip
+﻿// Feature: pwg5100-spec-parity, Property 3: Collection Attribute Round-Trip
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
@@ -19,7 +18,6 @@ namespace SharpIpp.Tests.Unit.Mapping;
 /// Validates: Requirements 4.5, 8.4
 /// </summary>
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class CollectionRoundTripTests : MapperTestBase
 {
     private const int Iterations = 100;
@@ -317,7 +315,6 @@ public class CollectionRoundTripTests : MapperTestBase
 /// Validates: Requirements 8.3
 /// </summary>
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class NullArraySerializationTests : MapperTestBase
 {
     private const int Iterations = 100;

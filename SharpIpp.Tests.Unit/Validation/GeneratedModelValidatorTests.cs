@@ -1,7 +1,6 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -14,7 +13,6 @@ using SharpIpp.Validation;
 namespace SharpIpp.Tests.Unit.Validation;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class GeneratedModelValidatorTests
 {
     private static readonly Assembly SharpIppAssembly = typeof(GeneratedModelValidator).Assembly;

@@ -1,11 +1,10 @@
-using SharpIpp.Exceptions;
+﻿using SharpIpp.Exceptions;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Extensions;
 using SharpIpp.Protocol.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -13,7 +12,6 @@ using System.Reflection;
 namespace SharpIpp.Tests.Unit.Protocol.Extensions;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class IppRequestMessageExtensionsTests
 {
     [TestMethod]
@@ -1736,7 +1734,8 @@ public class IppRequestMessageExtensionsTests
         IppOperation operation = IppOperation.CreateJob,
         bool includePrinterUri = true,
         bool includeSystemUri = false,
-        bool includeJobUri = false)
+        bool includeJobUri = false,
+        bool includeJobId = true)
     {
         var message = new IppRequestMessage
         {
@@ -1758,6 +1757,9 @@ public class IppRequestMessageExtensionsTests
 
         if (includeJobUri)
             message.OperationAttributes.Add(new IppAttribute(Tag.Uri, IppAttributeNames.JobUri, "ipp://127.0.0.1:631/jobs/123"));
+
+        if (includeJobId && includePrinterUri && (operation.IsJobTargetOperation() || operation.IsPwg51005DocumentTargetOperation()))
+            message.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 123));
 
         return message;
     }

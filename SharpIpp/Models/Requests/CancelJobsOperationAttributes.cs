@@ -1,4 +1,4 @@
-﻿using SharpIpp.Mapping;
+using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
@@ -17,7 +17,7 @@ public class CancelJobsOperationAttributes : OperationAttributes
     /// See: PWG 5100.7-2023 Section 5.1.1
     /// </summary>
     /// <code>job-ids</code>
-    [IppAttribute(IppAttributeNames.JobIds, Tag = Tag.Integer)]
+    [IppAttribute(IppAttributeNames.JobIds, Tag = Tag.Integer, Order = 3)]
     [Range(1, int.MaxValue)]
     public IppValue<int[]>? JobIds { get; set; }
 

@@ -1,6 +1,5 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Models;
@@ -9,7 +8,6 @@ using SharpIpp.Tests.Unit.Mapping;
 namespace SharpIpp.Tests.Unit.Mapping.Profiles;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class SmartEnumMappingTests : MapperTestBase
 {
 

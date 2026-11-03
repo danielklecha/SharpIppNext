@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -14,7 +13,6 @@ using SharpIpp.Protocol.Models;
 namespace SharpIpp.Tests.Unit.Protocol;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class IppRequestMessageValidatorTests
 {
     #region Helpers and Shared Types
@@ -139,6 +137,7 @@ public class IppRequestMessageValidatorTests
         validator.ValidateSystemAttributesGroup.Should().BeTrue();
         validator.UseIppAttributeFidelityForCapabilityValidation.Should().BeFalse();
         validator.EnforceMediaMutualExclusivity.Should().BeFalse();
+        validator.ValidateTargetAttributeOrder.Should().BeFalse();
     }
 
     [TestMethod]
@@ -159,6 +158,7 @@ public class IppRequestMessageValidatorTests
         validator.ValidateSystemAttributesGroup.Should().BeTrue();
         validator.UseIppAttributeFidelityForCapabilityValidation.Should().BeFalse();
         validator.EnforceMediaMutualExclusivity.Should().BeTrue();
+        validator.ValidateTargetAttributeOrder.Should().BeFalse();
     }
 
     [TestMethod]
@@ -178,6 +178,636 @@ public class IppRequestMessageValidatorTests
 
         Action serverAct = () => serverValidator.Validate(request);
         serverAct.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_WhenDisabled_ShouldNotThrowOnOutOfOrderTargetAttributes()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = false
+        };
+
+        var request = new IppRequestMessage { IppOperation = IppOperation.GetPrinterAttributes, RequestId = 1 };
+        request.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.RequestingUserName, "john"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://localhost:631/")
+        ]);
+
+        var act = () => validator.Validate(request);
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_WhenFewerThanThreeAttributes_ShouldThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = true
+        };
+
+        var request = new IppRequestMessage { IppOperation = IppOperation.GetPrinterAttributes, RequestId = 1 };
+        request.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en")
+        ]);
+
+        var act = () => validator.Validate(request);
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("*Target URI attribute MUST be the third attribute*");
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_PrinterTarget_WhenPrinterUriIsThird_ShouldNotThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = true
+        };
+
+        var request = CreateBasicRequest(IppOperation.GetPrinterAttributes);
+        request.OperationAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.RequestingUserName, "john"));
+
+        var act = () => validator.Validate(request);
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_PrinterTarget_WhenPrinterUriIsNotThird_ShouldThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = true
+        };
+
+        var request = new IppRequestMessage { IppOperation = IppOperation.GetPrinterAttributes, RequestId = 1 };
+        request.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.RequestingUserName, "john"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://localhost:631/")
+        ]);
+
+        var act = () => validator.Validate(request);
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("*Target URI attribute*MUST be the third attribute*");
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_JobTarget_WhenPrinterUriAndJobIdInOrder_ShouldNotThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = true
+        };
+
+        var request = CreateBasicRequest(IppOperation.GetJobAttributes);
+        request.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 42));
+        request.OperationAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.RequestingUserName, "john"));
+
+        var act = () => validator.Validate(request);
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_JobTarget_WhenJobIdNotFourth_ShouldThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = true
+        };
+
+        var request = CreateBasicRequest(IppOperation.GetJobAttributes);
+        request.OperationAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.RequestingUserName, "john"));
+        request.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 42));
+
+        var act = () => validator.Validate(request);
+        act.Should().Throw<IppRequestException>()
+            .WithMessage($"*'{IppAttributeNames.JobId}' MUST be the fourth attribute*");
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_DocumentTarget_WhenPrinterUriJobIdDocumentNumberInOrder_ShouldNotThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = true
+        };
+
+        var request = CreateBasicRequest(IppOperation.GetDocumentAttributes);
+        request.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 42));
+        request.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.DocumentNumber, 1));
+        request.OperationAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.RequestingUserName, "john"));
+
+        var act = () => validator.Validate(request);
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_DocumentTarget_WhenDocumentNumberPrecedesJobId_ShouldThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = true
+        };
+
+        var request = CreateBasicRequest(IppOperation.GetDocumentAttributes);
+        request.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.DocumentNumber, 1));
+        request.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 42));
+
+        var act = () => validator.Validate(request);
+        act.Should().Throw<IppRequestException>()
+            .WithMessage($"*'{IppAttributeNames.JobId}' MUST be the fourth attribute*");
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_DocumentTarget_WhenDocumentNumberNotFifth_ShouldThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = true
+        };
+
+        var request = CreateBasicRequest(IppOperation.GetDocumentAttributes);
+        request.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 42));
+        request.OperationAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.RequestingUserName, "john"));
+        request.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.DocumentNumber, 1));
+
+        var act = () => validator.Validate(request);
+        act.Should().Throw<IppRequestException>()
+            .WithMessage($"*'{IppAttributeNames.DocumentNumber}' MUST be the fifth attribute*");
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_DocumentTarget_WhenJobIdIsFourthAndNoDocumentNumber_ShouldNotThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = true
+        };
+
+        var request = CreateBasicRequest(IppOperation.GetJobAttributes);
+        request.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 42));
+
+        var act = () => validator.Validate(request);
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_JobUriTarget_WhenJobUriIsThird_ShouldNotThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = true
+        };
+
+        var request = new IppRequestMessage { IppOperation = IppOperation.GetDocuments, RequestId = 1 };
+        request.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.JobUri, "ipp://localhost:631/jobs/1"),
+            new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.RequestingUserName, "john")
+        ]);
+
+        var act = () => validator.Validate(request);
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_JobUriTarget_WhenJobIdAlsoSupplied_ShouldThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = true
+        };
+
+        var request = new IppRequestMessage { IppOperation = IppOperation.GetDocuments, RequestId = 1 };
+        request.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.JobUri, "ipp://localhost:631/jobs/1"),
+            new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 1)
+        ]);
+
+        var act = () => validator.Validate(request);
+        act.Should().Throw<IppRequestException>()
+            .WithMessage($"*'{IppAttributeNames.JobId}' MUST NOT be supplied when '{IppAttributeNames.JobUri}' is used as target*");
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_JobUriTarget_WhenDocumentNumberIsFourth_ShouldNotThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = true
+        };
+
+        var request = new IppRequestMessage { IppOperation = IppOperation.GetDocuments, RequestId = 1 };
+        request.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.JobUri, "ipp://localhost:631/jobs/1"),
+            new IppAttribute(Tag.Integer, IppAttributeNames.DocumentNumber, 1),
+            new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.RequestingUserName, "john")
+        ]);
+
+        var act = () => validator.Validate(request);
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_JobUriTarget_WhenDocumentNumberIsNotFourth_ShouldThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = true
+        };
+
+        var request = new IppRequestMessage { IppOperation = IppOperation.GetDocuments, RequestId = 1 };
+        request.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.JobUri, "ipp://localhost:631/jobs/1"),
+            new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.RequestingUserName, "john"),
+            new IppAttribute(Tag.Integer, IppAttributeNames.DocumentNumber, 1)
+        ]);
+
+        var act = () => validator.Validate(request);
+        act.Should().Throw<IppRequestException>()
+            .WithMessage($"*'{IppAttributeNames.DocumentNumber}' MUST be the fourth attribute following '{IppAttributeNames.JobUri}'*");
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_WhenBothPrinterUriAndJobUriSupplied_ShouldThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = true
+        };
+
+        var request = new IppRequestMessage { IppOperation = IppOperation.GetDocuments, RequestId = 1 };
+        request.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://localhost:631/"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.JobUri, "ipp://localhost:631/jobs/1")
+        ]);
+
+        var act = () => validator.Validate(request);
+        act.Should().Throw<IppRequestException>()
+            .WithMessage($"*'{IppAttributeNames.PrinterUri}' and '{IppAttributeNames.JobUri}' MUST NOT both be supplied as targets*");
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_WhenJobUriThirdAndPrinterUriSupplied_ShouldThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = true
+        };
+
+        var request = new IppRequestMessage { IppOperation = IppOperation.GetDocuments, RequestId = 1 };
+        request.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.JobUri, "ipp://localhost:631/jobs/1"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://localhost:631/")
+        ]);
+
+        var act = () => validator.Validate(request);
+        act.Should().Throw<IppRequestException>()
+            .WithMessage($"*'{IppAttributeNames.PrinterUri}' and '{IppAttributeNames.JobUri}' MUST NOT both be supplied as targets*");
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_PrinterTarget_WhenJobIdsIsFourth_ShouldNotThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = true
+        };
+
+        var request = CreateBasicRequest(IppOperation.CancelJobs);
+        request.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.JobIds, 1));
+        request.OperationAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.RequestingUserName, "john"));
+
+        var act = () => validator.Validate(request);
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_PrinterTarget_WhenJobIdsIsNotFourth_ShouldThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = true
+        };
+
+        var request = CreateBasicRequest(IppOperation.CancelJobs);
+        request.OperationAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.RequestingUserName, "john"));
+        request.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.JobIds, 1));
+
+        var act = () => validator.Validate(request);
+        act.Should().Throw<IppRequestException>()
+            .WithMessage($"*'{IppAttributeNames.JobIds}' MUST be the fourth attribute*");
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_PrinterTarget_WhenDocumentNumberWithoutJobId_ShouldThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = true
+        };
+
+        var request = CreateBasicRequest(IppOperation.GetDocumentAttributes);
+        request.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.DocumentNumber, 1));
+
+        var act = () => validator.Validate(request);
+        act.Should().Throw<IppRequestException>()
+            .WithMessage($"*'{IppAttributeNames.JobId}' MUST be supplied before '{IppAttributeNames.DocumentNumber}'*");
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_PrinterTarget_WhenDocumentNumberWithoutJobIdIsNotFourth_ShouldThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = true
+        };
+
+        var request = CreateBasicRequest(IppOperation.GetDocumentAttributes);
+        request.OperationAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.RequestingUserName, "john"));
+        request.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.DocumentNumber, 1));
+
+        var act = () => validator.Validate(request);
+        act.Should().Throw<IppRequestException>()
+            .WithMessage($"*'{IppAttributeNames.JobId}' MUST be supplied before '{IppAttributeNames.DocumentNumber}'*");
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_PrinterTarget_WhenNotifySubscriptionIdIsFourth_ShouldNotThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = true
+        };
+
+        var request = CreateBasicRequest(IppOperation.GetPrinterAttributes);
+        request.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.NotifySubscriptionId, 5));
+
+        var act = () => validator.Validate(request);
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_PrinterTarget_WhenNotifySubscriptionIdIsNotFourth_ShouldThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = true
+        };
+
+        var request = CreateBasicRequest(IppOperation.GetPrinterAttributes);
+        request.OperationAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.RequestingUserName, "john"));
+        request.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.NotifySubscriptionId, 5));
+
+        var act = () => validator.Validate(request);
+        act.Should().Throw<IppRequestException>()
+            .WithMessage($"*'{IppAttributeNames.NotifySubscriptionId}' MUST be the fourth attribute*");
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_SystemService_WhenSystemUriIsThird_ShouldNotThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = true
+        };
+
+        var request = CreateBasicSystemRequest(IppOperation.GetSystemAttributes);
+        request.OperationAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.RequestingUserName, "admin"));
+
+        var act = () => validator.Validate(request);
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_SystemService_WhenSystemUriIsNotThird_ShouldThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = true
+        };
+
+        var request = new IppRequestMessage { IppOperation = IppOperation.GetSystemAttributes, RequestId = 1 };
+        request.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.RequestingUserName, "admin"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.SystemUri, "ipp://localhost:8631/system")
+        ]);
+
+        var act = () => validator.Validate(request);
+        act.Should().Throw<IppRequestException>()
+            .WithMessage($"*'{IppAttributeNames.SystemUri}' MUST be the third attribute*");
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_SystemService_WhenResourceIdIsFourth_ShouldNotThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = true
+        };
+
+        var request = CreateBasicSystemRequest(IppOperation.GetResourceAttributes);
+        request.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.ResourceId, 10));
+
+        var act = () => validator.Validate(request);
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_SystemService_WhenResourceIdIsNotFourth_ShouldThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = true
+        };
+
+        var request = CreateBasicSystemRequest(IppOperation.GetResourceAttributes);
+        request.OperationAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.RequestingUserName, "admin"));
+        request.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.ResourceId, 10));
+
+        var act = () => validator.Validate(request);
+        act.Should().Throw<IppRequestException>()
+            .WithMessage($"*'{IppAttributeNames.ResourceId}' MUST be the fourth attribute*");
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_SystemService_WhenPrinterIdIsFourth_ShouldNotThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = true
+        };
+
+        var request = CreateBasicSystemRequest(IppOperation.GetSystemAttributes);
+        request.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.PrinterId, 1));
+
+        var act = () => validator.Validate(request);
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_SystemService_WhenPrinterIdIsNotFourth_ShouldThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = true
+        };
+
+        var request = CreateBasicSystemRequest(IppOperation.GetSystemAttributes);
+        request.OperationAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.RequestingUserName, "admin"));
+        request.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.PrinterId, 1));
+
+        var act = () => validator.Validate(request);
+        act.Should().Throw<IppRequestException>()
+            .WithMessage($"*'{IppAttributeNames.PrinterId}' MUST be the fourth attribute*");
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_SystemService_WhenNotifySubscriptionIdIsFourth_ShouldNotThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = true
+        };
+
+        var request = CreateBasicSystemRequest(IppOperation.GetSubscriptionAttributes);
+        request.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.NotifySubscriptionId, 1));
+
+        var act = () => validator.Validate(request);
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_SystemService_WhenNotifySubscriptionIdIsNotFourth_ShouldThrow()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = true
+        };
+
+        var request = CreateBasicSystemRequest(IppOperation.GetSubscriptionAttributes);
+        request.OperationAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.RequestingUserName, "admin"));
+        request.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.NotifySubscriptionId, 1));
+
+        var act = () => validator.Validate(request);
+        act.Should().Throw<IppRequestException>()
+            .WithMessage($"*'{IppAttributeNames.NotifySubscriptionId}' MUST be the fourth attribute*");
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_NonSystemService_WithSystemUriTarget_ShouldValidateSecondaryIdentifiers()
+    {
+        var validator = new IppRequestMessageValidator
+        {
+            ValidateTargetAttributeOrder = true
+        };
+
+        // GetPrinterAttributes targeting system with system-uri
+        var request = new IppRequestMessage { IppOperation = IppOperation.GetPrinterAttributes, RequestId = 1 };
+        request.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.SystemUri, "ipp://localhost:8631/system"),
+            new IppAttribute(Tag.Integer, IppAttributeNames.PrinterId, 1)
+        ]);
+
+        var act = () => validator.Validate(request);
+        act.Should().NotThrow();
+
+        // When printer-id is not 4th
+        var invalidRequest = new IppRequestMessage { IppOperation = IppOperation.GetPrinterAttributes, RequestId = 1 };
+        invalidRequest.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.SystemUri, "ipp://localhost:8631/system"),
+            new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.RequestingUserName, "admin"),
+            new IppAttribute(Tag.Integer, IppAttributeNames.PrinterId, 1)
+        ]);
+
+        var invalidAct = () => validator.Validate(invalidRequest);
+        invalidAct.Should().Throw<IppRequestException>()
+            .WithMessage($"*'{IppAttributeNames.PrinterId}' MUST be the fourth attribute*");
+
+        // When resource-id is 4th
+        var resRequest = new IppRequestMessage { IppOperation = IppOperation.GetPrinterAttributes, RequestId = 1 };
+        resRequest.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.SystemUri, "ipp://localhost:8631/system"),
+            new IppAttribute(Tag.Integer, IppAttributeNames.ResourceId, 1)
+        ]);
+        var resAct = () => validator.Validate(resRequest);
+        resAct.Should().NotThrow();
+
+        // When resource-id is not 4th
+        var invalidResRequest = new IppRequestMessage { IppOperation = IppOperation.GetPrinterAttributes, RequestId = 1 };
+        invalidResRequest.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.SystemUri, "ipp://localhost:8631/system"),
+            new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.RequestingUserName, "admin"),
+            new IppAttribute(Tag.Integer, IppAttributeNames.ResourceId, 1)
+        ]);
+        var invalidResAct = () => validator.Validate(invalidResRequest);
+        invalidResAct.Should().Throw<IppRequestException>()
+            .WithMessage($"*'{IppAttributeNames.ResourceId}' MUST be the fourth attribute*");
+
+        // When notify-subscription-id is 4th
+        var subRequest = new IppRequestMessage { IppOperation = IppOperation.GetPrinterAttributes, RequestId = 1 };
+        subRequest.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.SystemUri, "ipp://localhost:8631/system"),
+            new IppAttribute(Tag.Integer, IppAttributeNames.NotifySubscriptionId, 1)
+        ]);
+        var subAct = () => validator.Validate(subRequest);
+        subAct.Should().NotThrow();
+
+        // When notify-subscription-id is not 4th
+        var invalidSubRequest = new IppRequestMessage { IppOperation = IppOperation.GetPrinterAttributes, RequestId = 1 };
+        invalidSubRequest.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.SystemUri, "ipp://localhost:8631/system"),
+            new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.RequestingUserName, "admin"),
+            new IppAttribute(Tag.Integer, IppAttributeNames.NotifySubscriptionId, 1)
+        ]);
+        var invalidSubAct = () => validator.Validate(invalidSubRequest);
+        invalidSubAct.Should().Throw<IppRequestException>()
+            .WithMessage($"*'{IppAttributeNames.NotifySubscriptionId}' MUST be the fourth attribute*");
     }
 
     [TestMethod]
@@ -516,6 +1146,7 @@ public class IppRequestMessageValidatorTests
         ];
 
         var request = CreateBasicRequest(IppOperation.GetJobAttributes);
+        request.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 1));
         request.OperationAttributes.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.RequestedAttributes, requestedKeyword));
 
         Action act = () => validator.Validate(request);
@@ -687,6 +1318,7 @@ public class IppRequestMessageValidatorTests
     {
         var validator = new IppRequestMessageValidator();
         validator.EnforceMediaMutualExclusivity.Should().BeFalse();
+        validator.ValidateTargetAttributeOrder.Should().BeFalse();
 
         var request = CreateBasicRequest(IppOperation.CreateJob);
         request.JobAttributes.Add(new IppAttribute(Tag.Keyword, IppAttributeNames.Media, "iso_a4"));
@@ -1506,6 +2138,7 @@ public class IppRequestMessageValidatorTests
         var validator = new IppRequestMessageValidator();
         validator.Context.DocumentStatesByNumber = new Dictionary<int, DocumentState> { { 1, DocumentState.Pending } };
         var request = CreateBasicRequest(IppOperation.SetDocumentAttributes);
+        request.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 1));
         request.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.DocumentNumber, 1));
         request.DocumentAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, "document-name", "doc"));
         validator.ValidateOperationRules(request);
@@ -1707,6 +2340,41 @@ public class IppRequestMessageValidatorTests
         request.SubscriptionAttributes.Add(new IppAttribute(Tag.Keyword, "notify-events", "job-created"));
         request.OperationAttributes.Add(new IppAttribute(Tag.Boolean, IppAttributeNames.IppAttributeFidelity, false));
         validator.ValidateNotifyEventsValues(request);
+    }
+
+    [TestMethod]
+    [DataRow(true, true)]
+    [DataRow(false, false)]
+    [DataRow("true", false)]
+    [DataRow(123, false)]
+    public void IsIppAttributeFidelityTrue_VariousAttributeValues_ReturnsExpected(object value, bool expected)
+    {
+        var request = CreateBasicRequest(IppOperation.CreateJob);
+        var tag = value is bool ? Tag.Boolean : (value is int ? Tag.Integer : Tag.Keyword);
+        request.OperationAttributes.Add(new IppAttribute(tag, IppAttributeNames.IppAttributeFidelity, value));
+
+        IppRequestMessageValidator.IsIppAttributeFidelityTrue(request).Should().Be(expected);
+    }
+
+    [TestMethod]
+    public void IsIppAttributeFidelityTrue_NonBoolAttributeValue_ReturnsFalse()
+    {
+        var request = CreateBasicRequest(IppOperation.CreateJob);
+        request.OperationAttributes.Add(new IppAttribute(Tag.NoValue, IppAttributeNames.IppAttributeFidelity, NoValue.Instance));
+
+        IppRequestMessageValidator.IsIppAttributeFidelityTrue(request).Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void IsIppAttributeFidelityTrue_NullOrEmptyOperationAttributes_ReturnsFalse()
+    {
+        var mockRequest = new Moq.Mock<IIppRequestMessage>();
+        mockRequest.SetupGet(x => x.OperationAttributes).Returns((List<IppAttribute>)null!);
+        IppRequestMessageValidator.IsIppAttributeFidelityTrue(mockRequest.Object).Should().BeFalse();
+
+        var requestEmpty = CreateBasicRequest(IppOperation.CreateJob);
+        requestEmpty.OperationAttributes.Clear();
+        IppRequestMessageValidator.IsIppAttributeFidelityTrue(requestEmpty).Should().BeFalse();
     }
 
     [TestMethod]
@@ -2258,6 +2926,22 @@ public class IppRequestMessageValidatorTests
         var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
         {
             new IppAttribute(Tag.Integer, "copies-default", new object[] { 3, null!, 5 }),
+            new IppAttribute(Tag.RangeOfInteger, "copies-supported", new SharpIpp.Protocol.Models.Range(1, 10))
+        });
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_SetPrinterAttributes_WithDefaultIppAttribute_ShouldSkipAttribute()
+    {
+        var validator = IppRequestMessageValidator.ServerDefault;
+        var request = CreateMinimalSetPrinterAttributesRequest(new List<IppAttribute>
+        {
+            default,
+            new IppAttribute(Tag.Integer, "copies-default", 5),
             new IppAttribute(Tag.RangeOfInteger, "copies-supported", new SharpIpp.Protocol.Models.Range(1, 10))
         });
 
@@ -3208,6 +3892,20 @@ public class IppRequestMessageValidatorTests
     }
 
     [TestMethod]
+    public void Validate_StringLengthLimits_WithoutCharsetInOperationAttributes_FallsBackToUtf8()
+    {
+        var validator = new IppRequestMessageValidator { ValidateCoreRules = false };
+        var request = CreateBasicRequest(IppOperation.PrintJob);
+        request.Document = new MemoryStream();
+        request.OperationAttributes.RemoveAll(a => a.Name == IppAttributeNames.AttributesCharset);
+        request.JobAttributes.Add(new IppAttribute(Tag.Keyword, "some-keyword", "valid-keyword"));
+
+        Action act = () => validator.Validate(request);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
     public void Validate_StringLengthLimits_WithNoValueAndNullInArray_DoesNotThrow()
     {
         var validator = new IppRequestMessageValidator();
@@ -3649,6 +4347,233 @@ public class IppRequestMessageValidatorTests
         Action actCustom = () => validator.Validate(request, customContext);
         actCustom.Should().Throw<IppRequestException>()
             .WithMessage("'media' value 'iso_a5_148x210mm' is not supported by target printer");
+    }
+
+    [TestMethod]
+    [DataRow(IppOperation.GetJobAttributes)]
+    [DataRow(IppOperation.CancelJob)]
+    [DataRow(IppOperation.HoldJob)]
+    [DataRow(IppOperation.ReleaseJob)]
+    [DataRow(IppOperation.RestartJob)]
+    [DataRow(IppOperation.SetJobAttributes)]
+    [DataRow(IppOperation.CloseJob)]
+    [DataRow(IppOperation.CreateJobSubscriptions)]
+    [DataRow(IppOperation.ValidateDocument)]
+    public void Validate_JobUriTarget_ForJobOperations_ShouldNotThrow(IppOperation operation)
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = new IppRequestMessage
+        {
+            IppOperation = operation,
+            RequestId = 123
+        };
+        request.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.JobUri, "ipp://127.0.0.1:631/jobs/123")
+        ]);
+
+        Action act = () => validator.Validate(request);
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    [DataRow(IppOperation.CancelDocument)]
+    [DataRow(IppOperation.GetDocumentAttributes)]
+    public void Validate_JobUriTarget_ForDocumentOperations_ShouldNotThrow(IppOperation operation)
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = new IppRequestMessage
+        {
+            IppOperation = operation,
+            RequestId = 123
+        };
+        request.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.JobUri, "ipp://127.0.0.1:631/jobs/123"),
+            new IppAttribute(Tag.Integer, IppAttributeNames.DocumentNumber, 1)
+        ]);
+
+        Action act = () => validator.Validate(request);
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_TargetMutualExclusivity_InOrderRule_ShouldThrow()
+    {
+        var validator = new IppRequestMessageValidator { ValidateTargetAttributeOrder = true };
+        var request = new IppRequestMessage
+        {
+            IppOperation = IppOperation.GetJobAttributes,
+            RequestId = 123
+        };
+        request.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://127.0.0.1:631/"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.JobUri, "ipp://127.0.0.1:631/jobs/123")
+        ]);
+
+        Action act = () => validator.Validate(request);
+        act.Should().Throw<IppRequestException>()
+            .WithMessage($"*'{IppAttributeNames.PrinterUri}' and '{IppAttributeNames.JobUri}' MUST NOT both be supplied as targets*");
+    }
+
+    [TestMethod]
+    public void Validate_JobUriWithJobId_InOrderRule_ShouldThrow()
+    {
+        var validator = new IppRequestMessageValidator { ValidateTargetAttributeOrder = true };
+        var request = new IppRequestMessage
+        {
+            IppOperation = IppOperation.GetJobAttributes,
+            RequestId = 123
+        };
+        request.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.JobUri, "ipp://127.0.0.1:631/jobs/123"),
+            new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 123)
+        ]);
+
+        Action act = () => validator.Validate(request);
+        act.Should().Throw<IppRequestException>()
+            .WithMessage($"*'{IppAttributeNames.JobId}' MUST NOT be supplied when '{IppAttributeNames.JobUri}' is used as target*");
+    }
+
+    [TestMethod]
+    [DataRow(IppOperation.CancelSubscription)]
+    [DataRow(IppOperation.GetSubscriptionAttributes)]
+    [DataRow(IppOperation.RenewSubscription)]
+    public void Validate_SubscriptionOperation_WithPrinterUriTarget_ShouldNotThrow(IppOperation operation)
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(operation);
+        request.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.NotifySubscriptionId, 1));
+
+        Action act = () => validator.Validate(request);
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    [DataRow(IppOperation.CancelJob)]
+    [DataRow(IppOperation.GetJobAttributes)]
+    [DataRow(IppOperation.HoldJob)]
+    [DataRow(IppOperation.ReleaseJob)]
+    [DataRow(IppOperation.DeleteDocument)]
+    public void Validate_JobAndDocumentOperations_WhenPrinterUriWithoutJobId_ShouldThrow(IppOperation operation)
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(operation);
+        if (operation == IppOperation.DeleteDocument)
+        {
+            request.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.DocumentNumber, 1));
+        }
+
+        Action act = () => validator.Validate(request);
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("*missing job-id*");
+    }
+
+    [TestMethod]
+    [DataRow(0)]
+    [DataRow(-1)]
+    [DataRow(-100)]
+    public void Validate_JobAndDocumentOperations_WhenJobIdNotPositive_ShouldThrow(int jobId)
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.GetJobAttributes);
+        request.OperationAttributes.Add(new IppAttribute(Tag.Integer, IppAttributeNames.JobId, jobId));
+
+        Action act = () => validator.Validate(request);
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("*invalid job-id*");
+    }
+
+    [TestMethod]
+    public void Validate_JobAndDocumentOperations_WhenJobIdNotInteger_ShouldThrow()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.GetJobAttributes);
+        request.OperationAttributes.Add(new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.JobId, "not-an-int"));
+
+        Action act = () => validator.Validate(request);
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("*invalid job-id*");
+    }
+
+    [TestMethod]
+    [DataRow(0)]
+    [DataRow(-5)]
+    public void ValidateRequiredJobId_WhenNonPositive_ShouldThrow(int jobId)
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.GetJobAttributes);
+        var attrs = new[] { new IppAttribute(Tag.Integer, IppAttributeNames.JobId, jobId) };
+
+        Action act = () => validator.ValidateRequiredJobId(attrs, request);
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("*invalid job-id*");
+    }
+
+    [TestMethod]
+    public void ValidateRequiredJobId_WhenNotInteger_ShouldThrow()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.GetJobAttributes);
+        var attrs = new[] { new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.JobId, "invalid") };
+
+        Action act = () => validator.ValidateRequiredJobId(attrs, request);
+        act.Should().Throw<IppRequestException>()
+            .WithMessage("*invalid job-id*");
+    }
+
+    [TestMethod]
+    public void ValidateRequiredJobId_WhenValidPositiveInt_ShouldNotThrow()
+    {
+        var validator = new IppRequestMessageValidator();
+        var request = CreateBasicRequest(IppOperation.GetJobAttributes);
+        var attrs = new[] { new IppAttribute(Tag.Integer, IppAttributeNames.JobId, 42) };
+
+        Action act = () => validator.ValidateRequiredJobId(attrs, request);
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void ValidateRequiredJobId_WhenOperationAttributesDisabled_ShouldNotThrow()
+    {
+        var validator = new IppRequestMessageValidator { ValidateOperationAttributesGroup = false };
+        var request = CreateBasicRequest(IppOperation.GetJobAttributes);
+        var attrs = new[] { new IppAttribute(Tag.Integer, IppAttributeNames.JobId, -1) };
+
+        Action act = () => validator.ValidateRequiredJobId(attrs, request);
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_TargetAttributeOrder_SystemService_WithPrinterIdAndResourceIds_ShouldNotThrow()
+    {
+        var validator = new IppRequestMessageValidator { ValidateTargetAttributeOrder = true };
+        var request = new IppRequestMessage
+        {
+            IppOperation = IppOperation.AllocatePrinterResources,
+            RequestId = 123
+        };
+        request.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.SystemUri, "ipp://127.0.0.1:8631/system"),
+            new IppAttribute(Tag.Integer, IppAttributeNames.PrinterId, 1),
+            new IppAttribute(Tag.Integer, IppAttributeNames.ResourceIds, 100)
+        ]);
+
+        Action act = () => validator.Validate(request);
+        act.Should().NotThrow();
     }
     #endregion
 }

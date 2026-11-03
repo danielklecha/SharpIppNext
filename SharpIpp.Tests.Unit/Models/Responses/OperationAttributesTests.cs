@@ -1,12 +1,10 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Models.Responses;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SharpIpp.Tests.Unit.Models.Responses;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class OperationAttributesTests
 {
     [TestMethod]

@@ -1,5 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
-using System.Text;
+﻿using System.Text;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Mapping.Extensions;
@@ -9,7 +8,6 @@ using SharpIpp.Tests.Unit.Mapping;
 namespace SharpIpp.Tests.Unit.Mapping.Profiles;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class PrinterAlertProfileTests : MapperTestBase
 {
 

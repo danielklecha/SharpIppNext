@@ -1,5 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Models.Responses;
 using SharpIpp.Protocol.Models;
@@ -9,7 +8,6 @@ using System.Collections.Generic;
 namespace SharpIpp.Tests.Unit.Mapping.Profiles;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class ValidateDocumentResponseProfileTests : MapperTestBase
 {
     [TestMethod]

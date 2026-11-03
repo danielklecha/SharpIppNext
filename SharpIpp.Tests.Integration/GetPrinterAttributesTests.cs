@@ -1,16 +1,14 @@
-using SharpIpp;
+﻿using SharpIpp;
 using SharpIpp.Models.Requests;
 using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Models;
-using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using Range = SharpIpp.Protocol.Models.Range;
 
 namespace SharpIpp.Tests.Integration;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class GetPrinterAttributesTests : SharpIppIntegrationTestBase
 {
     [TestMethod()]

@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
@@ -8,13 +8,11 @@ using SharpIpp.Protocol.Extensions;
 using SharpIpp.Protocol.Models;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace SharpIpp.Tests.Unit.Mapping.Profiles;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class OperationAttributesRequestProfileTests
 {
     private SimpleMapper _mapper = null!;

@@ -1,14 +1,12 @@
-using FluentAssertions.Execution;
+﻿using FluentAssertions.Execution;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SharpIpp.Tests.Unit.Extensions;
 
-[ExcludeFromCodeCoverage]
 public static class ObjectExtensions
 {
     public static bool VerifyAssertionScope<T>( this T value, Action<T> assertion )

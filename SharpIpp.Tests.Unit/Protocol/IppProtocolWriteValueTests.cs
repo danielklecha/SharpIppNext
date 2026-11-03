@@ -1,8 +1,7 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Models;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +10,6 @@ using System.Collections.Generic;
 namespace SharpIpp.Tests.Unit.Protocol;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class IppProtocolWriteValueTests
 {
     private async Task<byte[]> GetBytesAsync(object value)

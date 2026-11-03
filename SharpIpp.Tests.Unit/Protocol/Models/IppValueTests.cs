@@ -1,5 +1,4 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Protocol.Models;
@@ -7,7 +6,6 @@ using SharpIpp.Protocol.Models;
 namespace SharpIpp.Tests.Unit.Protocol.Models;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class IppValueTests
 {
     [TestMethod]

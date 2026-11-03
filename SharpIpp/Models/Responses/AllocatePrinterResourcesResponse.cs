@@ -8,7 +8,7 @@ namespace SharpIpp.Models.Responses;
 /// Allocate-Printer-Resources response.
 /// See: PWG 5100.22-2025 Section 6.1.1
 /// </summary>
-[IppResponse]
+[IppResponse(IppOperation.AllocatePrinterResources)]
 public class AllocatePrinterResourcesResponse : IppResponse<OperationAttributes>
 {
     /// <summary>

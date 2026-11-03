@@ -1,6 +1,5 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using FluentAssertions;
@@ -15,7 +14,6 @@ namespace SharpIpp.Tests.Unit.Mapping.Types;
 /// Comprehensive round-trip tests covering all IKeywordEnum and IKeywordOrNameEnum types.
 /// </summary>
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class AllSmartEnumsRoundTripTests : MapperTestBase
 {
     private static readonly Assembly SharpIppAssembly = typeof(ISharpIppClient).Assembly;

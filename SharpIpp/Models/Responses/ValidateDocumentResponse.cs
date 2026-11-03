@@ -1,4 +1,5 @@
 using SharpIpp.Mapping;
+using SharpIpp.Protocol.Models;
 using System;
 
 namespace SharpIpp.Models.Responses;
@@ -7,7 +8,7 @@ namespace SharpIpp.Models.Responses;
 /// Validate-Document Response.
 /// See: PWG 5100.13-2023 Section 5.2.2
 /// </summary>
-[IppResponse]
+[IppResponse(IppOperation.ValidateDocument)]
 public class ValidateDocumentResponse : IppResponse<ValidateOperationAttributes>
 {
 }

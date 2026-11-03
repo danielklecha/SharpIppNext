@@ -1,4 +1,4 @@
-﻿using SharpIpp.Mapping;
+using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
@@ -19,7 +19,7 @@ public class JobOperationAttributes : OperationAttributes
     /// See: PWG 5100.5-2024 Section 5.2.1.1 (Get-Documents)
     /// </summary>
     /// <code>job-id</code>
-    [IppAttribute(IppAttributeNames.JobId, Tag = Tag.Integer)]
+    [IppAttribute(IppAttributeNames.JobId, Tag = Tag.Integer, Order = 3)]
     [Range(1, int.MaxValue)]
     public IppValue<int>? JobId { get; set; }
 
@@ -32,7 +32,7 @@ public class JobOperationAttributes : OperationAttributes
     /// See: PWG 5100.5-2024 Section 5.2.1.1 (Get-Documents)
     /// </summary>
     /// <code>job-uri</code>
-    [IppAttribute(IppAttributeNames.JobUri, Tag = Tag.Uri)]
+    [IppAttribute(IppAttributeNames.JobUri, Tag = Tag.Uri, Order = 2)]
     [Obsolete("The 'job-uri' attribute is deprecated in favor of 'job-id'. See RFC 8011 Section 5.3.2.")]
     public IppValue<Uri>? JobUri { get; set; }
 

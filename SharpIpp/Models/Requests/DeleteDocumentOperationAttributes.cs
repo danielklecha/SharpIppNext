@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
@@ -19,6 +19,6 @@ public class DeleteDocumentOperationAttributes : JobOperationAttributes
     /// See: PWG 5100.5-2024 Section 5.1
     /// </summary>
     [Range(1, int.MaxValue)]
-    [IppAttribute(IppAttributeNames.DocumentNumber, Tag = Tag.Integer)]
+    [IppAttribute(IppAttributeNames.DocumentNumber, Tag = Tag.Integer, Order = 4)]
     public IppValue<int>? DocumentNumber { get; set; }
 }

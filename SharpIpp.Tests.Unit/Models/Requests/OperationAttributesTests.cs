@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using SharpIpp.Mapping;
@@ -8,13 +8,11 @@ using SharpIpp.Protocol.Models;
 using System;
 using System.Reflection;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace SharpIpp.Tests.Unit.Models;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class OperationAttributesTests
 {
     [TestMethod]

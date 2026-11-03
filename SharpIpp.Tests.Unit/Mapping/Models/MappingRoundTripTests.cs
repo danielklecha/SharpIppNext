@@ -1,7 +1,6 @@
-// Feature: pwg5100-spec-parity, Property 2: Request Mapping Round-Trip
+﻿// Feature: pwg5100-spec-parity, Property 2: Request Mapping Round-Trip
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
@@ -20,7 +19,6 @@ namespace SharpIpp.Tests.Unit.Mapping;
 /// Validates: Requirements 2.6, 3.5, 8.1, 8.2, 9.4
 /// </summary>
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class MappingRoundTripTests : MapperTestBase
 {
     private const int Iterations = 100;

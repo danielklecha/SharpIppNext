@@ -7,7 +7,7 @@ namespace SharpIpp.Models.Responses;
 /// Fetch-Document response.
 /// See: PWG 5100.18-2025 Section 5.5.2
 /// </summary>
-[IppResponse]
+[IppResponse(IppOperation.FetchDocument)]
 public class FetchDocumentResponse : IppResponse<OperationAttributes>
 {
 }

@@ -1,16 +1,14 @@
-using SharpIpp;
+﻿using SharpIpp;
 using SharpIpp.Exceptions;
 using SharpIpp.Models.Requests;
 using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Models;
-using System.Diagnostics.CodeAnalysis;
 using System.Net;
 
 namespace SharpIpp.Tests.Integration;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class ValidateJobTests : SharpIppIntegrationTestBase
 {
     [TestMethod()]

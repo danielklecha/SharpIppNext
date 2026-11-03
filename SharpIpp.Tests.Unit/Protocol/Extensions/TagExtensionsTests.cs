@@ -1,14 +1,12 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Protocol.Extensions;
 using SharpIpp.Protocol.Models;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SharpIpp.Tests.Unit.Protocol.Extensions;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class TagExtensionsTests
 {
     public static IEnumerable<object[]> TagTestData

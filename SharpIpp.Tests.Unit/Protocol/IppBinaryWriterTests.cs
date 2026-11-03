@@ -1,5 +1,4 @@
-using SharpIpp.Protocol.Models;
-using System.Diagnostics.CodeAnalysis;
+﻿using SharpIpp.Protocol.Models;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -8,7 +7,6 @@ using FluentAssertions;
 namespace SharpIpp.Tests.Unit.Protocol.Models;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class IppBinaryWriterTests
 {
     [TestMethod]

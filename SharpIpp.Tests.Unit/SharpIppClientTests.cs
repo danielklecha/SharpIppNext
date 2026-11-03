@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Validation;
 using Moq.Protected;
 using Moq;
@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Tests.Unit.Extensions;
-using System.Diagnostics.CodeAnalysis;
 using FluentAssertions.Equivalency;
 using SharpIpp.Exceptions;
 using System.Net.Http;
@@ -22,7 +21,6 @@ using SharpIpp.Models.Requests;
 namespace SharpIpp.Tests.Unit;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class SharpIppClientTests
 {
     private static Mock<HttpMessageHandler> GetMockOfHttpMessageHandler( HttpStatusCode statusCode = HttpStatusCode.OK )
@@ -277,7 +275,109 @@ public class SharpIppClientTests
 
         var response = await client.SendAsync(new Uri("http://127.0.0.1:631/"), request);
 
-        validator.Verify(x => x.Validate(It.Is<IIppResponseMessage>(m => m == response)), Times.Once);
+        validator.Verify(x => x.Validate(It.Is<IIppResponseMessage>(m => m == response), IppOperation.GetPrinterAttributes), Times.Once);
+    }
+
+    [TestMethod]
+    public async Task SendAsync_WithResponseMessageValidator_WhenPrinterAttributesMissing_ShouldThrow()
+    {
+        Mock<IIppProtocol> protocol = new();
+        protocol.Setup(x => x.WriteIppRequestAsync(It.IsAny<IIppRequestMessage>(), It.IsAny<Stream>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+        protocol.Setup(x => x.ReadIppResponseAsync(It.IsAny<Stream>(), It.IsAny<CancellationToken>())).ReturnsAsync(new IppResponseMessage
+        {
+            RequestId = 123,
+            Version = new IppVersion(1, 1),
+            StatusCode = IppStatusCode.SuccessfulOk,
+            OperationAttributes =
+            {
+                new List<IppAttribute>
+                {
+                    new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+                    new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en")
+                }
+            }
+        });
+
+        using SharpIppClient client = new SharpIppClient(
+            new HttpClient(GetMockOfHttpMessageHandler().Object),
+            protocol.Object)
+        {
+            RequestMessageValidator = null,
+            RequestValidator = null,
+            ResponseMessageValidator = IppResponseMessageValidator.Default,
+            ResponseValidator = null
+        };
+
+        var request = new IppRequestMessage
+        {
+            IppOperation = IppOperation.GetPrinterAttributes,
+            RequestId = 123,
+        };
+        request.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://127.0.0.1:631/")
+        ]);
+
+        Func<Task> act = async () => await client.SendAsync(new Uri("http://127.0.0.1:631/"), request);
+
+        await act.Should().ThrowAsync<IppResponseException>()
+            .WithMessage("*printer-attributes*");
+    }
+
+    [TestMethod]
+    public async Task SendAsync_WithResponseMessageValidator_WhenPrinterAttributesPresent_ShouldSucceed()
+    {
+        Mock<IIppProtocol> protocol = new();
+        protocol.Setup(x => x.WriteIppRequestAsync(It.IsAny<IIppRequestMessage>(), It.IsAny<Stream>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+        protocol.Setup(x => x.ReadIppResponseAsync(It.IsAny<Stream>(), It.IsAny<CancellationToken>())).ReturnsAsync(new IppResponseMessage
+        {
+            RequestId = 123,
+            Version = new IppVersion(1, 1),
+            StatusCode = IppStatusCode.SuccessfulOk,
+            OperationAttributes =
+            {
+                new List<IppAttribute>
+                {
+                    new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+                    new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en")
+                }
+            },
+            PrinterAttributes =
+            {
+                new List<IppAttribute>
+                {
+                    new IppAttribute(Tag.NameWithoutLanguage, IppAttributeNames.PrinterName, "printer")
+                }
+            }
+        });
+
+        using SharpIppClient client = new SharpIppClient(
+            new HttpClient(GetMockOfHttpMessageHandler().Object),
+            protocol.Object)
+        {
+            RequestMessageValidator = null,
+            RequestValidator = null,
+            ResponseMessageValidator = IppResponseMessageValidator.Default,
+            ResponseValidator = null
+        };
+
+        var request = new IppRequestMessage
+        {
+            IppOperation = IppOperation.GetPrinterAttributes,
+            RequestId = 123,
+        };
+        request.OperationAttributes.AddRange(
+        [
+            new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+            new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en"),
+            new IppAttribute(Tag.Uri, IppAttributeNames.PrinterUri, "ipp://127.0.0.1:631/")
+        ]);
+
+        Func<Task> act = async () => await client.SendAsync(new Uri("http://127.0.0.1:631/"), request);
+
+        await act.Should().NotThrowAsync();
     }
 
     [TestMethod]
@@ -286,6 +386,7 @@ public class SharpIppClientTests
         using var client = new SharpIppClient();
         client.RequestMessageValidator.Should().BeEquivalentTo(IppRequestMessageValidator.ClientDefault);
         client.RequestMessageValidator!.EnforceMediaMutualExclusivity.Should().BeTrue();
+        client.RequestMessageValidator!.ValidateTargetAttributeOrder.Should().BeFalse();
         client.RequestValidator.Should().BeOfType<IppRequestValidator>();
         client.ResponseMessageValidator.Should().BeNull();
         client.ResponseValidator.Should().BeNull();

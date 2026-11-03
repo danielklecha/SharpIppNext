@@ -1,9 +1,10 @@
 using SharpIpp.Mapping;
+using SharpIpp.Protocol.Models;
 namespace SharpIpp.Models.Responses;
 
 /// <summary>
 /// Cancel-Current-Job Response.
 /// See: PWG 5100.15-2013 Section 4.2
 /// </summary>
-[IppResponse]
+[IppResponse(IppOperation.CancelCurrentJob)]
 public class CancelCurrentJobResponse : IppResponse<OperationAttributes> { }

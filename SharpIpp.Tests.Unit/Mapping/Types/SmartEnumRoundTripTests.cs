@@ -1,7 +1,6 @@
-// Feature: pwg5100-spec-parity, Property 5: Smart Enum Round-Trip Preserves All Fields
+﻿// Feature: pwg5100-spec-parity, Property 5: Smart Enum Round-Trip Preserves All Fields
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
@@ -18,7 +17,6 @@ namespace SharpIpp.Tests.Unit.Mapping;
 /// Validates: Requirements 8.5
 /// </summary>
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class SmartEnumRoundTripTests : MapperTestBase
 {
     private const int Iterations = 100;

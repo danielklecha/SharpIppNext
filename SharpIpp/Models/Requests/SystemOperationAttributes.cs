@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
@@ -17,7 +17,7 @@ public class SystemOperationAttributes : OperationAttributes
     /// See: PWG 5100.22-2025 Section 7.1.26
     /// </summary>
     /// <code>system-uri</code>
-    [IppAttribute(IppAttributeNames.SystemUri, Tag = Tag.Uri)]
+    [IppAttribute(IppAttributeNames.SystemUri, Tag = Tag.Uri, Order = 2)]
     public IppValue<Uri>? SystemUri { get; set; }
 
     /// <summary>
@@ -26,7 +26,7 @@ public class SystemOperationAttributes : OperationAttributes
     /// </summary>
     /// <code>printer-id</code>
     [Range(1, 65535)]
-    [IppAttribute(IppAttributeNames.PrinterId, Tag = Tag.Integer)]
+    [IppAttribute(IppAttributeNames.PrinterId, Tag = Tag.Integer, Order = 3)]
     public IppValue<int>? PrinterId { get; set; }
 
     /// <summary>
@@ -80,7 +80,7 @@ public class SystemOperationAttributes : OperationAttributes
     /// See: RFC 3995 Section 5.1
     /// </summary>
     [Range(1, int.MaxValue)]
-    [IppAttribute(IppAttributeNames.NotifySubscriptionId, Tag = Tag.Integer)]
+    [IppAttribute(IppAttributeNames.NotifySubscriptionId, Tag = Tag.Integer, Order = 3)]
     public IppValue<int>? NotifySubscriptionId { get; set; }
 
     /// <summary>

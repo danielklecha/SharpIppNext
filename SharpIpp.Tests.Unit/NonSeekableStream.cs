@@ -1,12 +1,10 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace SharpIpp.Tests.Unit;
 
-[ExcludeFromCodeCoverage]
 internal sealed class NonSeekableStream : Stream
 {
     private readonly Stream _inner;

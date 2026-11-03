@@ -17,7 +17,7 @@ public class FetchDocumentOperationAttributes : JobOperationAttributes
     /// See: PWG 5100.5-2024 Section 5.1.2
     /// </summary>
     [Range(1, int.MaxValue)]
-    [IppAttribute(IppAttributeNames.DocumentNumber, Tag = Tag.Integer)]
+    [IppAttribute(IppAttributeNames.DocumentNumber, Tag = Tag.Integer, Order = 4)]
     public int DocumentNumber { get; set; }
 
     /// <summary>

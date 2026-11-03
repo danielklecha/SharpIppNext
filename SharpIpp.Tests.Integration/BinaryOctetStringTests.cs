@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp;
 using SharpIpp.Models.Requests;
@@ -6,7 +6,6 @@ using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Models;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -17,7 +16,6 @@ using Moq;
 namespace SharpIpp.Tests.Integration;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class BinaryOctetStringTests : SharpIppIntegrationTestBase
 {
     [TestMethod]
@@ -48,7 +46,12 @@ public class BinaryOctetStringTests : SharpIppIntegrationTestBase
             {
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
-                StatusCode = IppStatusCode.SuccessfulOk
+                StatusCode = IppStatusCode.SuccessfulOk,
+                JobAttributes = new()
+                {
+                    JobId = 1,
+                    JobState = JobState.Pending
+                }
             };
             var ms = new MemoryStream();
             await server.SendResponseAsync(response, ms, c);
@@ -94,7 +97,12 @@ public class BinaryOctetStringTests : SharpIppIntegrationTestBase
             {
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
-                StatusCode = IppStatusCode.SuccessfulOk
+                StatusCode = IppStatusCode.SuccessfulOk,
+                JobAttributes = new()
+                {
+                    JobId = 1,
+                    JobState = JobState.Pending
+                }
             };
             var ms = new MemoryStream();
             await server.SendResponseAsync(response, ms, c);

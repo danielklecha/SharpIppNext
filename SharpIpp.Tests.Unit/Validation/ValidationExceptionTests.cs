@@ -1,13 +1,11 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Validation;
 using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SharpIpp.Tests.Unit.Validation;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class ValidationExceptionTests
 {
     [TestMethod]

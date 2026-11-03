@@ -1,8 +1,7 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Protocol;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,7 +9,6 @@ using System.Threading.Tasks;
 namespace SharpIpp.Tests.Unit.Protocol;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class CountingStreamTests
 {
     [TestMethod]

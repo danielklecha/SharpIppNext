@@ -5,7 +5,7 @@ using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Responses;
 
-[IppResponse]
+[IppResponse(IppOperation.ValidateJob)]
 public class ValidateJobResponse : IppResponse<ValidateOperationAttributes>
 {
 }

@@ -1,14 +1,12 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Protocol.Models;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SharpIpp.Tests.Unit.Protocol.Models;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class PrinterFinisherTests
 {
     [TestMethod]

@@ -141,13 +141,23 @@ public class ByteRangeAttribute : IppValidationAttribute
                 return new ValidationResult(ErrorMessage ?? $"The field {validationContext.MemberName} must be between {Ranges[0]} and {Ranges[1]} bytes.");
             }
 
-            var rangeStrings = Enumerable.Range(0, Ranges.Length / 2)
-                .Select(i => $"{Ranges[i * 2]}-{Ranges[i * 2 + 1]}");
-            var allowedRanges = string.Join(", ", rangeStrings);
+            var allowedRanges = FormatAllowedRanges(Ranges);
             return new ValidationResult(ErrorMessage ?? $"The field {validationContext.MemberName} must be within one of the following ranges: {allowedRanges} bytes.");
         }
 
         return ValidationResult.Success;
+    }
+
+    private static string FormatAllowedRanges(int[] ranges)
+    {
+        var sb = new StringBuilder();
+        for (int i = 0; i < ranges.Length / 2; i++)
+        {
+            if (sb.Length > 0)
+                sb.Append(", ");
+            sb.Append(ranges[i * 2]).Append('-').Append(ranges[i * 2 + 1]);
+        }
+        return sb.ToString();
     }
 
     protected static IEnumerable<int> GetByteLengths(object? value, Encoding encoding)

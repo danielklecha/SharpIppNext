@@ -7,7 +7,7 @@ namespace SharpIpp.Models.Responses;
 /// Update-Output-Device-Attributes response.
 /// See: PWG 5100.18-2025 Section 5.10.2
 /// </summary>
-[IppResponse]
+[IppResponse(IppOperation.UpdateOutputDeviceAttributes)]
 public class UpdateOutputDeviceAttributesResponse : IppResponse<OperationAttributes>
 {
 }

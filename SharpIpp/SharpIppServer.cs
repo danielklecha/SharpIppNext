@@ -215,7 +215,8 @@ public partial class SharpIppServer : ISharpIppServer
             throw new ArgumentNullException(nameof(ippResponsMessage));
         ResponseValidator?.Validate(ippResponsMessage);
         var ippResponse = Mapper.Map<IppResponseMessage>(ippResponsMessage);
-        ResponseMessageValidator?.Validate(ippResponse);
+        var operation = ippResponsMessage.GetOperation();
+        ResponseMessageValidator?.Validate(ippResponse, operation);
         return Task.FromResult<IIppResponseMessage>(ippResponse);
     }
 

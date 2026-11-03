@@ -1,15 +1,13 @@
-using SharpIpp.Mapping;
+﻿using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Tests.Unit.Mapping;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class SimpleMapperTests
 {
     [TestMethod]

@@ -7,7 +7,7 @@ namespace SharpIpp.Models.Responses;
 /// Create-Printer response.
 /// See: PWG 5100.22-2025 Section 6.3.1
 /// </summary>
-[IppResponse]
+[IppResponse(IppOperation.CreatePrinter)]
 public class CreatePrinterResponse : IppResponse<OperationAttributes>
 {
 }

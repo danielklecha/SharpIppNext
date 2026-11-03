@@ -1,5 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
-using System.Text;
+﻿using System.Text;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Protocol.Models;
@@ -7,7 +6,6 @@ using SharpIpp.Protocol.Models;
 namespace SharpIpp.Tests.Unit.Mapping.Profiles;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class OctetStringProfileTests : MapperTestBase
 {
     [TestMethod]

@@ -1,16 +1,14 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace SharpIpp.Tests.Unit.Validation;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class MetadataAttributeTests
 {
     private class TestMetadata : IppStructuredString

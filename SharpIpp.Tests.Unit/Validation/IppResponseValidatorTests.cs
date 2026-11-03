@@ -1,17 +1,15 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace SharpIpp.Tests.Unit.Validation;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class IppResponseValidatorTests
 {
     [TestMethod]

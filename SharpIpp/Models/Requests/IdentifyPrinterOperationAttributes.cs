@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
@@ -35,7 +35,7 @@ public class IdentifyPrinterOperationAttributes : OperationAttributes
     /// </summary>
     /// <code>job-id</code>
     [Range(1, int.MaxValue)]
-    [IppAttribute(IppAttributeNames.JobId, Tag = Tag.Integer)]
+    [IppAttribute(IppAttributeNames.JobId, Tag = Tag.Integer, Order = 3)]
     public IppValue<int>? JobId { get; set; }
 
     /// <summary>

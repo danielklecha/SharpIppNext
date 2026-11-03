@@ -1,13 +1,11 @@
-using Moq;
+﻿using Moq;
 using SharpIpp.Exceptions;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Models;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SharpIpp.Tests.Unit.Exceptions;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class IppRequestExceptionTests
 {
     [TestMethod]

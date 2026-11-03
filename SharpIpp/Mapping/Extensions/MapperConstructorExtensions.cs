@@ -17,7 +17,7 @@ public static class MapperConstructorExtensions
 
     public static void CreateIppMap<T>(this IMapperConstructor mapper) where T : notnull
     {
-        mapper.CreateIppMap<T, T>((i, _) => i);
+        mapper.CreateIppMap<T, T>(CollectionMappingHelper.Identity<T>);
     }
 
     public static void CreateIppMap<TSource, TDestination>(

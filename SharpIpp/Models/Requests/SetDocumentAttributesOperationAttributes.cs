@@ -15,6 +15,6 @@ public class SetDocumentAttributesOperationAttributes : JobOperationAttributes
     /// </summary>
     /// <code>document-number</code>
     [Range(1, int.MaxValue)]
-    [IppAttribute(IppAttributeNames.DocumentNumber, Tag = Tag.Integer)]
+    [IppAttribute(IppAttributeNames.DocumentNumber, Tag = Tag.Integer, Order = 4)]
     public int DocumentNumber { get; set; }
 }

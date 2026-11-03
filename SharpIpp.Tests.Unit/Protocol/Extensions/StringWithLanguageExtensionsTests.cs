@@ -1,6 +1,5 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Protocol.Extensions;
@@ -9,7 +8,6 @@ using SharpIpp.Protocol.Models;
 namespace SharpIpp.Tests.Unit.Protocol.Extensions;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class StringWithLanguageExtensionsTests
 {
     [TestMethod]

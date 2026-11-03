@@ -108,6 +108,22 @@ public class IppResponseMessageValidatorTests
     }
 
     [TestMethod]
+    [DataRow((IppStatusCode)0x7fff)]
+    [DataRow((IppStatusCode)9999)]
+    [DataRow((IppStatusCode)(-1))]
+    public void Validate_WithInvalidStatusCode_ShouldThrow(IppStatusCode statusCode)
+    {
+        var validator = IppResponseMessageValidator.Default;
+        var response = CreateBasicResponse();
+        response.StatusCode = statusCode;
+
+        Action act = () => validator.Validate(response);
+
+        act.Should().Throw<IppResponseException>()
+            .WithMessage($"Invalid or undefined IPP status code: {(short)statusCode}");
+    }
+
+    [TestMethod]
     public void Validate_WithDuplicateAttributesInSameGroup_ShouldThrow()
     {
         var validator = IppResponseMessageValidator.Default;
@@ -154,6 +170,37 @@ public class IppResponseMessageValidatorTests
 
         act.Should().Throw<IppResponseException>()
             .WithMessage("No Operation Attributes");
+    }
+
+    [TestMethod]
+    public void Validate_WithNullOperationAttributes_ShouldThrow()
+    {
+        var validator = IppResponseMessageValidator.Default;
+        var mockResponse = new Mock<IIppResponseMessage>();
+        mockResponse.Setup(x => x.RequestId).Returns(1);
+        mockResponse.Setup(x => x.Version).Returns(new IppVersion(1, 1));
+        mockResponse.Setup(x => x.StatusCode).Returns(IppStatusCode.SuccessfulOk);
+        mockResponse.Setup(x => x.OperationAttributes).Returns((List<List<IppAttribute>>)null!);
+
+        Action act = () => validator.Validate(mockResponse.Object);
+
+        act.Should().Throw<IppResponseException>()
+            .WithMessage("No Operation Attributes");
+    }
+
+    [TestMethod]
+    public void Validate_WhenCoreRulesDisabledAndOperationAttributesNull_StringLengthValidationDoesNotThrow()
+    {
+        var validator = new IppResponseMessageValidator { ValidateCoreRules = false, ValidateStringLengthLimits = true };
+        var mockResponse = new Mock<IIppResponseMessage>();
+        mockResponse.Setup(x => x.RequestId).Returns(1);
+        mockResponse.Setup(x => x.Version).Returns(new IppVersion(1, 1));
+        mockResponse.Setup(x => x.StatusCode).Returns(IppStatusCode.SuccessfulOk);
+        mockResponse.Setup(x => x.OperationAttributes).Returns((List<List<IppAttribute>>)null!);
+
+        Action act = () => validator.Validate(mockResponse.Object);
+
+        act.Should().NotThrow();
     }
 
     [TestMethod]
@@ -292,6 +339,120 @@ public class IppResponseMessageValidatorTests
             CreateIppAttributeWithNullName(Tag.Integer, 2),
             new IppAttribute(Tag.Integer, "job-id", 3)
         ]);
+
+        Action act = () => validator.Validate(response);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_WhenCoreRulesDisabledAndOperationAttributesWithoutCharset_DoesNotThrow()
+    {
+        var validator = new IppResponseMessageValidator { ValidateCoreRules = false, ValidateStringLengthLimits = true };
+        var response = CreateBasicResponse();
+        response.OperationAttributes.Clear();
+        response.OperationAttributes.Add(
+        [
+            new IppAttribute(Tag.Keyword, "some-attribute", "some-value")
+        ]);
+
+        Action act = () => validator.Validate(response);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_WhenOperationRequiresPrinterAttributesAndGroupIsNull_ShouldThrow()
+    {
+        var validator = IppResponseMessageValidator.Default;
+        var mockResponse = new Mock<IIppResponseMessage>();
+        mockResponse.Setup(x => x.RequestId).Returns(1);
+        mockResponse.Setup(x => x.Version).Returns(new IppVersion(1, 1));
+        mockResponse.Setup(x => x.StatusCode).Returns(IppStatusCode.SuccessfulOk);
+        mockResponse.Setup(x => x.OperationAttributes).Returns(
+        [
+            [
+                new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+                new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en")
+            ]
+        ]);
+        mockResponse.Setup(x => x.PrinterAttributes).Returns((List<List<IppAttribute>>)null!);
+
+        Action act = () => validator.Validate(mockResponse.Object, IppOperation.GetPrinterAttributes);
+
+        act.Should().Throw<IppResponseException>()
+            .WithMessage("Successful Get-Printer-Attributes response must contain 'printer-attributes' group");
+    }
+
+    [TestMethod]
+    public void Validate_WhenOperationRequiresPrinterAttributesAndGroupIsEmptyList_ShouldThrow()
+    {
+        var validator = IppResponseMessageValidator.Default;
+        var response = CreateBasicResponse();
+        response.PrinterAttributes.Add([]);
+
+        Action act = () => validator.Validate(response, IppOperation.GetPrinterAttributes);
+
+        act.Should().Throw<IppResponseException>()
+            .WithMessage("Successful Get-Printer-Attributes response must contain 'printer-attributes' group");
+    }
+
+    [TestMethod]
+    public void Validate_WhenOperationRequiresPrinterAttributesAndFirstGroupIsEmptyButSecondHasAttributes_ShouldNotThrow()
+    {
+        var validator = IppResponseMessageValidator.Default;
+        var response = CreateBasicResponse();
+        response.PrinterAttributes.Add([]);
+        response.PrinterAttributes.Add([new IppAttribute(Tag.Uri, "printer-uri-supported", "ipp://example")]);
+
+        Action act = () => validator.Validate(response, IppOperation.GetPrinterAttributes);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
+    public void Validate_WhenPrintJobResponseAndJobAttributesNull_ShouldThrow()
+    {
+        var validator = IppResponseMessageValidator.Default;
+        var mockResponse = new Mock<IIppResponseMessage>();
+        mockResponse.Setup(x => x.RequestId).Returns(1);
+        mockResponse.Setup(x => x.Version).Returns(new IppVersion(1, 1));
+        mockResponse.Setup(x => x.StatusCode).Returns(IppStatusCode.SuccessfulOk);
+        mockResponse.Setup(x => x.OperationAttributes).Returns(
+        [
+            [
+                new IppAttribute(Tag.Charset, IppAttributeNames.AttributesCharset, "utf-8"),
+                new IppAttribute(Tag.NaturalLanguage, IppAttributeNames.AttributesNaturalLanguage, "en")
+            ]
+        ]);
+        mockResponse.Setup(x => x.JobAttributes).Returns((List<List<IppAttribute>>)null!);
+
+        Action act = () => validator.Validate(mockResponse.Object, IppOperation.PrintJob);
+
+        act.Should().Throw<IppResponseException>()
+            .WithMessage("Successful print/create job response must contain 'job-id' or 'job-uri' in job-attributes");
+    }
+
+    [TestMethod]
+    public void Validate_WithStringLengthLimitExceeded_ShouldThrow()
+    {
+        var validator = IppResponseMessageValidator.Default;
+        var response = CreateBasicResponse();
+        response.OperationAttributes[0].Add(new IppAttribute(Tag.Keyword, "some-keyword", new string('a', 256)));
+
+        Action act = () => validator.Validate(response);
+
+        act.Should().Throw<IppResponseException>()
+            .WithMessage("Attribute 'some-keyword' of tag 'Keyword' length (256 octets) exceeds RFC 8011 limit of 255 octets")
+            .Which.ResponseMessage.Should().BeSameAs(response);
+    }
+
+    [TestMethod]
+    public void Validate_WithStringLengthLimitExceeded_WhenDisabled_ShouldNotThrow()
+    {
+        var validator = new IppResponseMessageValidator { ValidateStringLengthLimits = false };
+        var response = CreateBasicResponse();
+        response.OperationAttributes[0].Add(new IppAttribute(Tag.Keyword, "some-keyword", new string('a', 256)));
 
         Action act = () => validator.Validate(response);
 

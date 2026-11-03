@@ -7,7 +7,7 @@ namespace SharpIpp.Models.Responses;
 /// Get-Output-Device-Attributes response.
 /// See: PWG 5100.18-2025 Section 6.1.2
 /// </summary>
-[IppResponse]
+[IppResponse(IppOperation.GetOutputDeviceAttributes)]
 public class GetOutputDeviceAttributesResponse : IppResponse<OperationAttributes>
 {
 }

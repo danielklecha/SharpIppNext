@@ -8,7 +8,7 @@ namespace SharpIpp.Models.Responses;
 /// See: RFC 2911 Section 3.3.7
 /// </summary>
 [Obsolete("See RFC 8011 Section 4.3.7.")]
-[IppResponse]
+[IppResponse(IppOperation.RestartJob)]
 public class RestartJobResponse : IppResponse<OperationAttributes>
 {
 }

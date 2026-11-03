@@ -1,17 +1,15 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Models;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace SharpIpp.Tests.Unit.Protocol.Models;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class IppRequestMessageFilterTests
 {
     [TestMethod]

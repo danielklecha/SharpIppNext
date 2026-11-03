@@ -7,7 +7,7 @@ namespace SharpIpp.Models.Responses;
 /// Identify-Printer Response.
 /// See: PWG 5100.13-2023 Section 5.1.2
 /// </summary>
-[IppResponse]
+[IppResponse(IppOperation.IdentifyPrinter)]
 public class IdentifyPrinterResponse : IppResponse<OperationAttributes>
 {
 }

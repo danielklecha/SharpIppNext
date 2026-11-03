@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
@@ -15,7 +15,6 @@ using System.Threading.Tasks;
 namespace SharpIpp.Generators.Tests.Unit;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public partial class MapperSourceGeneratorTests
 {
     private static (Compilation OutputCompilation, IEnumerable<SyntaxTree> GeneratedTrees, IEnumerable<Diagnostic> Diagnostics) RunGenerator(
@@ -223,7 +222,7 @@ public partial class MapperSourceGeneratorTests
     }
 
     [TestMethod]
-    public void ModelInheritance_ShouldCallBaseReadAndWrite()
+    public void ModelInheritance_ShouldFlattenBaseAndDerivedPropertiesInDerivedMapper()
     {
         // Arrange
         var source = """
@@ -252,12 +251,16 @@ public partial class MapperSourceGeneratorTests
 
         // Assert
         modelMappers.Should().NotBeNull();
-        modelMappers.Should().Contain("ReadTestNamespace_SyntheticBaseModel(src, dst, map);");
-        modelMappers.Should().Contain("WriteTestNamespace_SyntheticBaseModel(src, dst, map);");
+        modelMappers.Should().NotContain("ReadTestNamespace_SyntheticBaseModel(src, dst, map);");
+        modelMappers.Should().NotContain("WriteTestNamespace_SyntheticBaseModel(src, dst, map);");
+        modelMappers.Should().Contain("dst.BaseProp =");
+        modelMappers.Should().Contain("dst.DerivedProp =");
+        modelMappers.Should().Contain("\"base-prop\"");
+        modelMappers.Should().Contain("\"derived-prop\"");
     }
 
     [TestMethod]
-    public void ModelInheritance_WithMoreThanSplitThresholdProperties_ShouldCallBaseReadAndWrite()
+    public void ModelInheritance_WithMoreThanSplitThresholdProperties_ShouldFlattenPropertiesAcrossParts()
     {
         // Arrange
         var sb = new StringBuilder();
@@ -291,8 +294,8 @@ public partial class MapperSourceGeneratorTests
 
         // Assert
         modelMappers.Should().NotBeNull();
-        modelMappers.Should().Contain("ReadTestNamespace_SyntheticLargeBaseModel(src, dst, map);");
-        modelMappers.Should().Contain("WriteTestNamespace_SyntheticLargeBaseModel(src, dst, map);");
+        modelMappers.Should().NotContain("ReadTestNamespace_SyntheticLargeBaseModel(src, dst, map);");
+        modelMappers.Should().NotContain("WriteTestNamespace_SyntheticLargeBaseModel(src, dst, map);");
         modelMappers.Should().Contain("ReadTestNamespace_SyntheticLargeDerivedModel_Part0(src, dst, map);");
         modelMappers.Should().Contain("ReadTestNamespace_SyntheticLargeDerivedModel_Part1(src, dst, map);");
         modelMappers.Should().Contain("WriteTestNamespace_SyntheticLargeDerivedModel_Part0(src, dst, map);");

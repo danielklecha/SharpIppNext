@@ -1,13 +1,11 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SharpIpp.Tests.Unit.Mapping;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class MappingAttributesTests
 {
     [TestMethod]

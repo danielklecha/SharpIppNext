@@ -192,7 +192,7 @@ public class MapperSourceGenerator : IIncrementalGenerator
             .Concat(annotatedSections.Select(s => s.TypeSymbol));
         foreach (var m in allTypesWithProps)
         {
-            var props = GetAnnotatedProperties(m, annotatedModels, ippAttributeAttrSymbol, iIppCollectionSymbol, iKeywordOrNameEnumSymbol, iKeywordEnumSymbol, iIppStructuredStringSymbol, ippValueGenericSymbol);
+            var props = GetAnnotatedProperties(m, ippAttributeAttrSymbol, iIppCollectionSymbol, iKeywordOrNameEnumSymbol, iKeywordEnumSymbol, iIppStructuredStringSymbol, ippValueGenericSymbol);
             foreach (var p in props)
             {
                 if (p.IsIppValue || p.IsIppValueArray)
@@ -1050,7 +1050,7 @@ public class MapperSourceGenerator : IIncrementalGenerator
 
             foreach (var model in groupModels)
             {
-                GenerateSingleModelMapper(model, models, nameToConst, ippAttributeAttrSymbol, iIppCollectionSymbol, iKeywordOrNameEnumSymbol, iKeywordEnumSymbol, iIppStructuredStringSymbol, ippValueGenericSymbol, sb);
+                GenerateSingleModelMapper(model, nameToConst, ippAttributeAttrSymbol, iIppCollectionSymbol, iKeywordOrNameEnumSymbol, iKeywordEnumSymbol, iIppStructuredStringSymbol, ippValueGenericSymbol, sb);
             }
 
             if (groupRequests.Count > 0)
@@ -1075,7 +1075,6 @@ public class MapperSourceGenerator : IIncrementalGenerator
 
     private static void GenerateSingleModelMapper(
         INamedTypeSymbol model,
-        HashSet<INamedTypeSymbol> models,
         Dictionary<string, string> nameToConst,
         INamedTypeSymbol? ippAttributeAttrSymbol,
         INamedTypeSymbol? iIppCollectionSymbol,
@@ -1087,13 +1086,8 @@ public class MapperSourceGenerator : IIncrementalGenerator
     {
         var modelFqn = model.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
         var safeMethodName = GetSafeMethodName(model);
-        bool isCollection = ImplementsOrInherits(model, iIppCollectionSymbol);
-        var collectionNameExpr = GetCollectionAttributeNameExpression(model, ippAttributeAttrSymbol, nameToConst);
 
-        bool hasAnnotatedBase = models.Contains(model.BaseType!);
-        string? baseSafeMethodName = hasAnnotatedBase ? GetSafeMethodName(model.BaseType!) : null;
-
-        var properties = GetAnnotatedProperties(model, models, ippAttributeAttrSymbol, iIppCollectionSymbol, iKeywordOrNameEnumSymbol, iKeywordEnumSymbol, iIppStructuredStringSymbol, ippValueGenericSymbol);
+        var properties = GetAnnotatedProperties(model, ippAttributeAttrSymbol, iIppCollectionSymbol, iKeywordOrNameEnumSymbol, iKeywordEnumSymbol, iIppStructuredStringSymbol, ippValueGenericSymbol);
 
         const int SPLIT_THRESHOLD = 50;
 
@@ -1107,10 +1101,6 @@ public class MapperSourceGenerator : IIncrementalGenerator
             sb.AppendLine("        {");
             sb.AppendLine($"            dst ??= new {modelFqn}();");
 
-            if (hasAnnotatedBase && baseSafeMethodName != null)
-            {
-                sb.AppendLine($"            Read{baseSafeMethodName}(src, dst, map);");
-            }
 
             foreach (var p in properties)
             {
@@ -1135,10 +1125,6 @@ public class MapperSourceGenerator : IIncrementalGenerator
             sb.AppendLine("        {");
             sb.AppendLine($"            dst ??= new {modelFqn}();");
 
-            if (hasAnnotatedBase && baseSafeMethodName != null)
-            {
-                sb.AppendLine($"            Read{baseSafeMethodName}(src, dst, map);");
-            }
 
             foreach (var chunk in chunks)
             {
@@ -1177,10 +1163,6 @@ public class MapperSourceGenerator : IIncrementalGenerator
             sb.AppendLine("        {");
             sb.AppendLine("            dst ??= new List<IppAttribute>();");
 
-            if (hasAnnotatedBase && baseSafeMethodName != null)
-            {
-                sb.AppendLine($"            Write{baseSafeMethodName}(src, dst, map);");
-            }
 
             foreach (var p in properties)
             {
@@ -1205,10 +1187,6 @@ public class MapperSourceGenerator : IIncrementalGenerator
             sb.AppendLine("        {");
             sb.AppendLine("            dst ??= new List<IppAttribute>();");
 
-            if (hasAnnotatedBase && baseSafeMethodName != null)
-            {
-                sb.AppendLine($"            Write{baseSafeMethodName}(src, dst, map);");
-            }
 
             foreach (var chunk in chunks)
             {
@@ -2451,7 +2429,6 @@ public class MapperSourceGenerator : IIncrementalGenerator
 
     private static List<ModelPropertyInfo> GetAnnotatedProperties(
         INamedTypeSymbol model,
-        HashSet<INamedTypeSymbol> annotatedModels,
         INamedTypeSymbol? ippAttributeAttrSymbol,
         INamedTypeSymbol? iIppCollectionSymbol,
         INamedTypeSymbol? iKeywordOrNameEnumSymbol,
@@ -2462,15 +2439,10 @@ public class MapperSourceGenerator : IIncrementalGenerator
         var list = new List<ModelPropertyInfo>();
         int sourceIndex = 0;
 
-        // Determine if base class is already an annotated model
-        bool hasAnnotatedBase = annotatedModels.Contains(model.BaseType!);
-
         var hierarchy = new List<INamedTypeSymbol>();
         foreach (var curr in GetTypeAndBaseTypes(model))
         {
             hierarchy.Add(curr);
-            if (hasAnnotatedBase)
-                break; // Base handles its own properties
         }
 
         hierarchy.Reverse(); // Base to derived

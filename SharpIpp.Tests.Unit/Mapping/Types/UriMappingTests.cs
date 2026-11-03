@@ -1,5 +1,4 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System;
 using System.Reflection;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -9,7 +8,6 @@ using SharpIpp.Mapping.Extensions;
 namespace SharpIpp.Tests.Unit.Mapping.Profiles;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class UriProfileTest
 {
     private IMapper CreateMapper() => SimpleMapper.Instance;

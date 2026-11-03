@@ -7,7 +7,7 @@ namespace SharpIpp.Models.Responses;
 /// Update-Job-Status response.
 /// See: PWG 5100.18-2025 Section 5.9.2
 /// </summary>
-[IppResponse]
+[IppResponse(IppOperation.UpdateJobStatus)]
 public class UpdateJobStatusResponse : IppResponse<OperationAttributes>
 {
 }

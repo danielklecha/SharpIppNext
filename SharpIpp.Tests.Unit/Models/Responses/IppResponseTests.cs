@@ -1,15 +1,13 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Models;
 using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SharpIpp.Tests.Unit.Models.Responses;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class IppResponseTests
 {
     private class TestResponse : IppResponse<OperationAttributes>

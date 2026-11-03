@@ -7,7 +7,7 @@ namespace SharpIpp.Models.Responses;
 /// Update-Document-Status response.
 /// See: PWG 5100.18-2025 Section 5.8.2
 /// </summary>
-[IppResponse]
+[IppResponse(IppOperation.UpdateDocumentStatus)]
 public class UpdateDocumentStatusResponse : IppResponse<OperationAttributes>
 {
 }

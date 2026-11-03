@@ -1,14 +1,12 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using FluentAssertions.Collections;
 using FluentAssertions.Primitives;
 using SharpIpp.Protocol.Models;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SharpIpp.Tests.Integration;
 
-[ExcludeFromCodeCoverage]
 public static class IppValueAssertionExtensions
 {
     public static GenericCollectionAssertions<T> Should<T>(this IppValue<T[]>? value)

@@ -1,11 +1,9 @@
-using SharpIpp.Protocol.Extensions;
+﻿using SharpIpp.Protocol.Extensions;
 using SharpIpp.Protocol.Models;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SharpIpp.Tests.Unit.Protocol.Extensions;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class IppAttributeExtensionsTests
 {
     [TestMethod]
@@ -874,6 +872,50 @@ public class IppAttributeExtensionsTests
 
         // Assert
         result.Should().BeTrue();
+    }
+
+    [TestMethod]
+    public void EnumerateNamedCollections_WhenAttributesIsNull_ShouldReturnEmpty()
+    {
+        // Arrange
+        IEnumerable<IppAttribute>? attributes = null;
+
+        // Act
+        var result = attributes!.EnumerateNamedCollections("media-col").ToList();
+
+        // Assert
+        result.Should().BeEmpty();
+    }
+
+    [TestMethod]
+    public void EnumerateNamedCollections_ShouldEnumerateCollectionsOutOfBandAndIgnoreNonMatching()
+    {
+        // Arrange
+        var attributes = new List<IppAttribute>
+        {
+            new(Tag.Integer, "other-attr", 123),
+            new(Tag.Integer, "media-col", 456), // Matches name but not BegCollection or OutOfBand
+            new(Tag.NoValue, "media-col", NoValue.Instance), // OutOfBand
+            new(Tag.BegCollection, "media-col", NoValue.Instance), // BegCollection
+            new(Tag.MemberAttrName, string.Empty, "media-size"),
+            new(Tag.BegCollection, string.Empty, NoValue.Instance), // Nested BegCollection
+            new(Tag.MemberAttrName, string.Empty, "x-dimension"),
+            new(Tag.Integer, string.Empty, 21000),
+            new(Tag.EndCollection, string.Empty, NoValue.Instance), // Nested EndCollection
+            new(Tag.EndCollection, string.Empty, NoValue.Instance), // Outer EndCollection
+            new(Tag.BegCollection, "unclosed-col", NoValue.Instance) // Should not yield if not matching
+        };
+
+        // Act
+        var result = attributes.EnumerateNamedCollections("media-col").ToList();
+
+        // Assert
+        result.Should().HaveCount(2);
+        result[0].Should().ContainSingle();
+        result[0][0].Tag.Should().Be(Tag.NoValue);
+        result[1].Should().HaveCount(7);
+        result[1][0].Tag.Should().Be(Tag.BegCollection);
+        result[1][^1].Tag.Should().Be(Tag.EndCollection);
     }
 }
 

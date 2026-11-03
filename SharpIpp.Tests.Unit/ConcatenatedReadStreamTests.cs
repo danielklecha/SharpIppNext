@@ -1,7 +1,6 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,7 +8,6 @@ using System.Threading.Tasks;
 namespace SharpIpp.Tests.Unit;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class ConcatenatedReadStreamTests
 {
     [TestMethod]

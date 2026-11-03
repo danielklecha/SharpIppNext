@@ -7,7 +7,7 @@ namespace SharpIpp.Models.Responses;
 /// Deregister-Output-Device response.
 /// See: PWG 5100.18-2025 Section 5.4.2
 /// </summary>
-[IppResponse]
+[IppResponse(IppOperation.DeregisterOutputDevice)]
 public class DeregisterOutputDeviceResponse : IppResponse<OperationAttributes>
 {
 }

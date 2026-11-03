@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using SharpIpp;
 using SharpIpp.Protocol;
@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 namespace SharpIpp.Tests.Unit;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class IppRequestContentTests
 {
     [TestMethod]

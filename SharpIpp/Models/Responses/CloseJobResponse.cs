@@ -7,7 +7,7 @@ namespace SharpIpp.Models.Responses;
 /// Close-Job Response.
 /// See: PWG 5100.7-2023 Section 5.3.2
 /// </summary>
-[IppResponse]
+[IppResponse(IppOperation.CloseJob)]
 public class CloseJobResponse : IppResponse<OperationAttributes>, IIppJobResponse
 {
     /// <summary>

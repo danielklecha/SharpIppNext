@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
@@ -12,7 +12,6 @@ using System.Linq;
 namespace SharpIpp.Tests.Unit.Mapping.Extensions;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class MapperConstructorExtensionsTests
 {
     [TestMethod]

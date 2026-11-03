@@ -1,4 +1,4 @@
-﻿using SharpIpp.Mapping;
+using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
 using SharpIpp.Protocol.Models;
 using System;
@@ -31,7 +31,7 @@ public class OperationAttributes
     /// See: RFC 8011
     /// </summary>
     /// <code>printer-uri</code>
-    [IppAttribute(IppAttributeNames.PrinterUri, Tag = Tag.Uri)]
+    [IppAttribute(IppAttributeNames.PrinterUri, Tag = Tag.Uri, Order = 2)]
     public IppValue<Uri>? PrinterUri { get; set; }
 
     /// <summary>

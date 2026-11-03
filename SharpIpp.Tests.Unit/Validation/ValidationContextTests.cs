@@ -1,5 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
-using System.Text;
+﻿using System.Text;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Validation;
@@ -7,7 +6,6 @@ using SharpIpp.Validation;
 namespace SharpIpp.Tests.Unit.Validation;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class ValidationContextTests
 {
     [TestMethod]

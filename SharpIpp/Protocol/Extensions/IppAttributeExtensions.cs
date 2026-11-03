@@ -47,7 +47,12 @@ public static class IppAttributeExtensions
                     break;
             }
         }
-        return groups.ToDictionary(x => x.Key, x => x.Value.ToArray());
+        var dict = new Dictionary<string, IppAttribute[]>(groups.Count);
+        foreach (var kvp in groups)
+        {
+            dict[kvp.Key] = kvp.Value.ToArray();
+        }
+        return dict;
     }
 
     /// <summary>
@@ -310,4 +315,61 @@ public static class IppAttributeExtensions
     /// <returns><see langword="true"/> if the attribute's tag is out-of-band or its value is <see cref="NoValue"/>; otherwise <see langword="false"/>.</returns>
     public static bool IsOutOfBandOrNoValue(this IppAttribute attribute) =>
         attribute.Tag.IsOutOfBand() || attribute.Value is NoValue;
+
+    /// <summary>
+    /// Enumerates all nested collections with the specified <paramref name="collectionName"/>,
+    /// returning each collection instance as a list of attributes spanning from its <see cref="Tag.BegCollection"/>
+    /// to its matching <see cref="Tag.EndCollection"/> (or a single out-of-band attribute).
+    /// </summary>
+    /// <param name="attributes">The collection of IPP attributes to search.</param>
+    /// <param name="collectionName">The name of the collection attribute.</param>
+    /// <returns>An enumeration of attribute lists, each representing one collection instance.</returns>
+    public static IEnumerable<IReadOnlyList<IppAttribute>> EnumerateNamedCollections(
+        this IEnumerable<IppAttribute> attributes,
+        string collectionName)
+    {
+        if (attributes == null)
+            yield break;
+
+        List<IppAttribute>? current = null;
+        var level = 0;
+
+        foreach (var attribute in attributes)
+        {
+            if (current == null)
+            {
+                if (attribute.Name != collectionName)
+                    continue;
+
+                if (attribute.Tag.IsOutOfBand())
+                {
+                    yield return [attribute];
+                    continue;
+                }
+
+                if (attribute.Tag != Tag.BegCollection)
+                    continue;
+
+                current = [attribute];
+                level = 1;
+                continue;
+            }
+
+            current.Add(attribute);
+
+            if (attribute.Tag == Tag.BegCollection)
+            {
+                level++;
+            }
+            else if (attribute.Tag == Tag.EndCollection)
+            {
+                level--;
+                if (level == 0)
+                {
+                    yield return current.ToArray();
+                    current = null;
+                }
+            }
+        }
+    }
 }

@@ -7,7 +7,7 @@ namespace SharpIpp.Models.Responses;
 /// Acknowledge-Identify-Printer response.
 /// See: PWG 5100.18-2025 Section 5.2.2
 /// </summary>
-[IppResponse]
+[IppResponse(IppOperation.AcknowledgeIdentifyPrinter)]
 public class AcknowledgeIdentifyPrinterResponse : IppResponse<OperationAttributes>
 {
 }

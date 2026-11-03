@@ -7,7 +7,7 @@ namespace SharpIpp.Models.Responses;
 /// Get-Next-Document-Data response.
 /// See: PWG 5100.17-2014 Section 6.1.2
 /// </summary>
-[IppResponse]
+[IppResponse(IppOperation.GetNextDocumentData)]
 public class GetNextDocumentDataResponse : IppResponse<GetNextDocumentDataResponseOperationAttributes>
 {
 }

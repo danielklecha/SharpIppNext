@@ -7,7 +7,7 @@ namespace SharpIpp.Models.Responses;
 /// Acknowledge-Job response.
 /// See: PWG 5100.18-2025 Section 5.3.2
 /// </summary>
-[IppResponse]
+[IppResponse(IppOperation.AcknowledgeJob)]
 public class AcknowledgeJobResponse : IppResponse<OperationAttributes>
 {
 }

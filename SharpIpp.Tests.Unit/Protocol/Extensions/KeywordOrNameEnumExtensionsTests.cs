@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Protocol.Extensions;
@@ -8,7 +7,6 @@ using SharpIpp.Protocol.Models;
 namespace SharpIpp.Tests.Unit.Protocol.Extensions;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class KeywordOrNameEnumExtensionsTests
 {
     [TestMethod]

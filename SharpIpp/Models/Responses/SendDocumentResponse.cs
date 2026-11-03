@@ -6,7 +6,7 @@ namespace SharpIpp.Models.Responses;
 /// Send-Document Response
 /// See: RFC 2911 Section 3.3.1.2
 /// </summary>
-[IppResponse]
+[IppResponse(IppOperation.SendDocument)]
 public class SendDocumentResponse : IppResponse<OperationAttributes>, IIppJobResponse
 {
     /// <summary>

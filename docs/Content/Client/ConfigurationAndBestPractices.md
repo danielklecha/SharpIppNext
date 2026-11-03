@@ -339,6 +339,7 @@ public async Task WaitForJobCompletionAsync(
 `SharpIpp` is fully compatible with modern **Native AOT** (.NET 8+) and legacy **.NET Native** (Universal Windows Platform / UWP).
 
 - **Trimming & AOT**: Type mapping and validation profiles are source-generated at compile time. Runtime mapper registries are protected from linker trimming via embedded `ILLink.Descriptors.xml`.
+- **Zero-Allocation Hot Paths**: Core message validation and mapping pipelines eliminate lambdas and delegate closures using `Try*` patterns (`TryValidate*Core`), guaranteeing zero heap allocations on the validation happy path.
 - **UWP & .NET Native**: For legacy UWP projects compiling with `.NET Native` (`nutc_driver.exe`), specific compiler directives and memory optimization guidance are available.
 
 For detailed configuration instructions and benchmarks, see the [.NET Native & UWP Compilation Guide](DotNetNative.md).

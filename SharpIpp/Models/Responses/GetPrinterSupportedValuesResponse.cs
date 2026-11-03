@@ -7,7 +7,7 @@ namespace SharpIpp.Models.Responses;
 /// Get-Printer-Supported-Values Response.
 /// See: RFC 3380 Section 4.3
 /// </summary>
-[IppResponse]
+[IppResponse(IppOperation.GetPrinterSupportedValues)]
 public class GetPrinterSupportedValuesResponse : IppResponse<OperationAttributes>
 {
     /// <summary>

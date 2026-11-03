@@ -1,10 +1,8 @@
-using SharpIpp.Protocol.Models;
-using System.Diagnostics.CodeAnalysis;
+﻿using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Tests.Unit.Protocol.Models;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class OutputBinTests
 {
     [TestMethod]

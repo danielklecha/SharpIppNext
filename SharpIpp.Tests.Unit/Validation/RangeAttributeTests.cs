@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using FluentAssertions;
@@ -12,7 +11,6 @@ using Range = SharpIpp.Protocol.Models.Range;
 namespace SharpIpp.Tests.Unit.Validation;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class RangeAttributeTests
 {
     [TestMethod]

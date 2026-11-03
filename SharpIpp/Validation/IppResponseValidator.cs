@@ -1,5 +1,4 @@
 using System;
-using System.Text;
 using SharpIpp.Protocol;
 
 namespace SharpIpp.Validation;
@@ -20,17 +19,7 @@ public class IppResponseValidator : IIppResponseValidator
         if (response == null)
             throw new ArgumentNullException(nameof(response));
 
-        var charset = response.OperationAttributes?.AttributesCharset ?? "utf-8";
-        Encoding encoding;
-        try
-        {
-            encoding = Encoding.GetEncoding(charset);
-        }
-        catch
-        {
-            encoding = Encoding.UTF8;
-        }
-
+        var encoding = IppEncodingHelper.GetEncoding(response.OperationAttributes?.AttributesCharset);
         IppModelValidator.Validate(response, encoding);
     }
 }

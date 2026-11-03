@@ -1,15 +1,13 @@
-using Moq;
+﻿using Moq;
 using Moq.Protected;
 using SharpIpp.Models.Requests;
 using SharpIpp.Protocol.Models;
-using System.Diagnostics.CodeAnalysis;
 using System.Net;
 
 using FluentAssertions;
 
 namespace SharpIpp.Tests.Integration;
 
-[ExcludeFromCodeCoverage]
 public abstract class SharpIppIntegrationTestBase
 {
     static SharpIppIntegrationTestBase()

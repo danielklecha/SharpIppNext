@@ -1,5 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
+﻿using System.Reflection;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Mapping;
@@ -8,7 +7,6 @@ using SharpIpp.Protocol.Models;
 namespace SharpIpp.Tests.Unit.Mapping.Engine;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class IppSectionAttributeTests
 {
     [TestMethod]

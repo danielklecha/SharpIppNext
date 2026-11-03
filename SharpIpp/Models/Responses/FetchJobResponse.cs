@@ -7,7 +7,7 @@ namespace SharpIpp.Models.Responses;
 /// Fetch-Job response.
 /// See: PWG 5100.18-2025 Section 5.6.2
 /// </summary>
-[IppResponse]
+[IppResponse(IppOperation.FetchJob)]
 public class FetchJobResponse : IppResponse<OperationAttributes>
 {
     /// <summary>

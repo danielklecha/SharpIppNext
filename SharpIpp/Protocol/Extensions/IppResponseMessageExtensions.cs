@@ -36,4 +36,45 @@ public static class IppResponseMessageExtensions
             _ => throw new ArgumentException($"Unknown section tag: {sectionTag}")
         };
     }
+
+    /// <summary>
+    /// Enumerates all attributes across all attribute groups in the response message.
+    /// </summary>
+    /// <param name="message">The IPP response message.</param>
+    /// <returns>An enumerable sequence of all <see cref="IppAttribute"/> instances contained in the message.</returns>
+    public static IEnumerable<IppAttribute> GetAllAttributes(this IIppResponseMessage message)
+    {
+        if (message is null)
+            throw new ArgumentNullException(nameof(message));
+
+        var groups = new[]
+        {
+            message.OperationAttributes,
+            message.JobAttributes,
+            message.PrinterAttributes,
+            message.UnsupportedAttributes,
+            message.SubscriptionAttributes,
+            message.EventNotificationAttributes,
+            message.ResourceAttributes,
+            message.DocumentAttributes,
+            message.SystemAttributes
+        };
+
+        foreach (var group in groups)
+        {
+            if (group is null)
+                continue;
+
+            foreach (var attributeList in group)
+            {
+                if (attributeList is null)
+                    continue;
+
+                foreach (var attr in attributeList)
+                {
+                    yield return attr;
+                }
+            }
+        }
+    }
 }

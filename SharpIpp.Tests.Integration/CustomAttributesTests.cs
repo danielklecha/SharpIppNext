@@ -8,7 +8,6 @@ using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Models;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -18,7 +17,6 @@ using System.Threading.Tasks;
 namespace SharpIpp.Tests.Integration;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class CustomAttributesTests
 {
     private static Mock<HttpMessageHandler> GetMockOfHttpMessageHandler(Func<Stream, CancellationToken, Task<HttpResponseMessage>> func)

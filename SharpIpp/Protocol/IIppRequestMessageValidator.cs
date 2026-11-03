@@ -8,67 +8,12 @@ namespace SharpIpp.Protocol;
 /// (such as versioning, character sets, attribute uniqueness, range bounds, and basic operation rules)
 /// rather than high-end business logic.
 /// </summary>
-public interface IIppRequestMessageValidator
+public interface IIppRequestMessageValidator : IIppMessageValidator
 {
     /// <summary>
     /// Gets the validation context containing supported printer attributes and configurations.
     /// </summary>
     IppRequestValidationContext Context { get; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether core IPP constraints (versioning, request-id, attribute uniqueness, operation attribute positions) are validated.
-    /// </summary>
-    bool ValidateCoreRules { get; set; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether operation-specific validation rules are enforced.
-    /// </summary>
-    bool ValidateOperationSpecificRules { get; set; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the Operation Attributes group is validated.
-    /// </summary>
-    bool ValidateOperationAttributesGroup { get; set; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the Job Attributes group is validated.
-    /// </summary>
-    bool ValidateJobAttributesGroup { get; set; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the Printer Attributes group is validated.
-    /// </summary>
-    bool ValidatePrinterAttributesGroup { get; set; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the Unsupported Attributes group is validated.
-    /// </summary>
-    bool ValidateUnsupportedAttributesGroup { get; set; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the Subscription Attributes group is validated.
-    /// </summary>
-    bool ValidateSubscriptionAttributesGroup { get; set; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the Event Notification Attributes group is validated.
-    /// </summary>
-    bool ValidateEventNotificationAttributesGroup { get; set; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the Resource Attributes group is validated.
-    /// </summary>
-    bool ValidateResourceAttributesGroup { get; set; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the Document Attributes group is validated.
-    /// </summary>
-    bool ValidateDocumentAttributesGroup { get; set; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the System Attributes group is validated.
-    /// </summary>
-    bool ValidateSystemAttributesGroup { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether capability validation (e.g., media, finishings, sides, output-bin)
@@ -85,6 +30,13 @@ public interface IIppRequestMessageValidator
     /// at the job level is enforced. When false (default), both attributes are tolerated (e.g. for Chromebook/CUPS compatibility).
     /// </summary>
     bool EnforceMediaMutualExclusivity { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether target attribute order in the Operation Attributes group is strictly validated.
+    /// When true, verifies that the target URI (printer-uri, job-uri, or system-uri) immediately follows attributes-charset and attributes-natural-language,
+    /// followed by target secondary identifiers (job-id, document-number, resource-id, etc.) in the exact order required by RFC 8011 Section 4.1.5 and PWG 5100.5 Section 5.1.
+    /// </summary>
+    bool ValidateTargetAttributeOrder { get; set; }
 
     /// <summary>
     /// Validates the request message by executing enabled core, job, document, printer, and operation-specific rules.

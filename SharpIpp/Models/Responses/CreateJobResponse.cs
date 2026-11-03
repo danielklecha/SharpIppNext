@@ -3,7 +3,7 @@ using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Models.Responses;
 
-[IppResponse]
+[IppResponse(IppOperation.CreateJob)]
 public class CreateJobResponse : IppResponse<OperationAttributes>, IIppJobResponse
 {
     /// <summary>

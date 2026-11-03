@@ -1,4 +1,5 @@
 using System;
+using SharpIpp.Protocol.Models;
 
 namespace SharpIpp.Mapping;
 
@@ -9,4 +10,24 @@ namespace SharpIpp.Mapping;
 [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 public sealed class IppResponseAttribute : Attribute
 {
+    /// <summary>
+    /// Gets the IPP operation associated with this response model, if any.
+    /// </summary>
+    public IppOperation? Operation { get; }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="IppResponseAttribute"/> class without an associated operation.
+    /// </summary>
+    public IppResponseAttribute()
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="IppResponseAttribute"/> class with the specified operation.
+    /// </summary>
+    /// <param name="operation">The IPP operation associated with this response model.</param>
+    public IppResponseAttribute(IppOperation operation)
+    {
+        Operation = operation;
+    }
 }

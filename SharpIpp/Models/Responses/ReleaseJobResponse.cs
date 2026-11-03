@@ -6,7 +6,7 @@ namespace SharpIpp.Models.Responses;
 /// Release-Job Response
 /// See: RFC 2911 Section 3.3.6
 /// </summary>
-[IppResponse]
+[IppResponse(IppOperation.ReleaseJob)]
 public class ReleaseJobResponse : IppResponse<OperationAttributes>
 {
 }

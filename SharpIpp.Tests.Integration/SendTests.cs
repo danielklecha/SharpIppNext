@@ -1,13 +1,11 @@
-using SharpIpp;
+﻿using SharpIpp;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Models;
-using System.Diagnostics.CodeAnalysis;
 using System.Net;
 
 namespace SharpIpp.Tests.Integration;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class SendTests : SharpIppIntegrationTestBase
 {
     [TestMethod()]

@@ -1,11 +1,10 @@
-using SharpIpp;
+﻿using SharpIpp;
 using SharpIpp.Exceptions;
 using SharpIpp.Models.Requests;
 using SharpIpp.Models.Responses;
 using SharpIpp.Protocol;
 using SharpIpp.Protocol.Extensions;
 using SharpIpp.Protocol.Models;
-using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text;
 using Moq;
@@ -18,7 +17,6 @@ using FluentAssertions;
 namespace SharpIpp.Tests.Integration;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class PrintJobTests : SharpIppIntegrationTestBase
 {
     [TestMethod()]
@@ -295,7 +293,12 @@ public class PrintJobTests : SharpIppIntegrationTestBase
             {
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
-                StatusCode = IppStatusCode.SuccessfulOk
+                StatusCode = IppStatusCode.SuccessfulOk,
+                JobAttributes = new()
+                {
+                    JobId = 1,
+                    JobState = JobState.Pending
+                }
             };
             var ms = new MemoryStream();
             await server.SendResponseAsync(serverResponse, ms, c);
@@ -322,7 +325,17 @@ public class PrintJobTests : SharpIppIntegrationTestBase
         async Task<HttpResponseMessage> func(Stream s, CancellationToken c)
         {
             serverRequest = await server.ReceiveRequestAsync(s, c);
-            serverResponse = new PrintJobResponse { RequestId = serverRequest.RequestId, Version = serverRequest.Version, StatusCode = IppStatusCode.SuccessfulOk };
+            serverResponse = new PrintJobResponse
+            {
+                RequestId = serverRequest.RequestId,
+                Version = serverRequest.Version,
+                StatusCode = IppStatusCode.SuccessfulOk,
+                JobAttributes = new()
+                {
+                    JobId = 1,
+                    JobState = JobState.Pending
+                }
+            };
             var ms = new MemoryStream();
             await server.SendResponseAsync(serverResponse, ms, c);
             ms.Seek(0, SeekOrigin.Begin);
@@ -463,7 +476,12 @@ public class PrintJobTests : SharpIppIntegrationTestBase
             {
                 RequestId = serverRequest.RequestId,
                 Version = serverRequest.Version,
-                StatusCode = IppStatusCode.SuccessfulOk
+                StatusCode = IppStatusCode.SuccessfulOk,
+                JobAttributes = new()
+                {
+                    JobId = 1,
+                    JobState = JobState.Pending
+                }
             };
             var ms = new MemoryStream();
             await server.SendResponseAsync(serverResponse, ms, c);

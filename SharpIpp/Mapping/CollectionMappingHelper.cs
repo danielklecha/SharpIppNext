@@ -10,6 +10,7 @@ namespace SharpIpp.Mapping;
 
 internal static class CollectionMappingHelper
 {
+    public static T Identity<T>(T src, IMapperApplier _) => src;
     public static List<T> MapArrayToList<T>(T[] src, IMapperApplier _) => new List<T>(src);
     public static T[] MapListToArray<T>(List<T> src, IMapperApplier _) => src.ToArray();
     public static T[] MapItemToArray<T>(T src, IMapperApplier _) => new[] { src };

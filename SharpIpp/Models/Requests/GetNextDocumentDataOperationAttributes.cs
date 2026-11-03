@@ -1,4 +1,4 @@
-﻿using SharpIpp.Mapping;
+using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
 
@@ -17,7 +17,7 @@ public class GetNextDocumentDataOperationAttributes : OperationAttributes
     /// See: RFC 8011 Section 5.3.1
     /// </summary>
     [Range(1, int.MaxValue)]
-    [IppAttribute(IppAttributeNames.JobId, Tag = Tag.Integer)]
+    [IppAttribute(IppAttributeNames.JobId, Tag = Tag.Integer, Order = 3)]
     public IppValue<int>? JobId { get; set; }
 
     /// <summary>

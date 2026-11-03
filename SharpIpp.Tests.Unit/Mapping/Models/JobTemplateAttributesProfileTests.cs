@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpIpp.Mapping;
 using SharpIpp.Mapping.Extensions;
@@ -6,7 +6,6 @@ using SharpIpp.Protocol;
 using SharpIpp.Protocol.Extensions;
 using SharpIpp.Protocol.Models;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using SharpIpp.Tests.Unit.Mapping;
@@ -14,7 +13,6 @@ using SharpIpp.Tests.Unit.Mapping;
 namespace SharpIpp.Tests.Unit.Mapping.Profiles;
 
 [TestClass]
-[ExcludeFromCodeCoverage]
 public class JobTemplateAttributesProfileTests : MapperTestBase
 {
 

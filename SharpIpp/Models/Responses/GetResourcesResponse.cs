@@ -7,7 +7,7 @@ namespace SharpIpp.Models.Responses;
 /// Get-Resources response.
 /// See: PWG 5100.22-2025 Section 6.3.7
 /// </summary>
-[IppResponse]
+[IppResponse(IppOperation.GetResources)]
 public class GetResourcesResponse : IppResponse<OperationAttributes>
 {
     /// <summary>

@@ -6,7 +6,7 @@ namespace SharpIpp.Models.Responses;
 /// Cancel-Job Response
 /// See: RFC 2911 Section 3.3.3
 /// </summary>
-[IppResponse]
+[IppResponse(IppOperation.CancelJob)]
 public class CancelJobResponse : IppResponse<OperationAttributes>
 {
 }

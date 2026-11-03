@@ -355,9 +355,7 @@ public partial class IppProtocol : IIppProtocol
             throw new ArgumentNullException( nameof( ippResponseMessage ) );
         if (stream is null)
             throw new ArgumentNullException( nameof( stream ) );
-        var charsetAttribute = ippResponseMessage.OperationAttributes
-            .SelectMany(x => x)
-            .FirstOrDefault(x => x.Tag == Tag.Charset && x.Name == IppAttributeNames.AttributesCharset);
+        var charsetAttribute = FindCharsetAttribute(ippResponseMessage.OperationAttributes);
         if (charsetAttribute.Value is not string charset)
         {
             throw new ArgumentException($"The operation attribute '{IppAttributeNames.AttributesCharset}' is missing or invalid.");
@@ -595,8 +593,7 @@ public partial class IppProtocol : IIppProtocol
             && requestMessage.DocumentAttributes.Count == 0
             && requestMessage.SystemAttributes.Count == 0)
             return;
-        var charsetAttribute = requestMessage.OperationAttributes
-                .FirstOrDefault(x => x.Tag == Tag.Charset && x.Name == IppAttributeNames.AttributesCharset);
+        var charsetAttribute = FindCharsetAttribute(requestMessage.OperationAttributes);
         if (charsetAttribute.Value is not string charset)
         {
             throw new ArgumentException($"The operation attribute '{IppAttributeNames.AttributesCharset}' is missing or invalid.");
@@ -667,5 +664,28 @@ public partial class IppProtocol : IIppProtocol
         return data is >= 32 and <= 126
             ? $"Expected section tag delimiter, found 0x{data:X2} ('{(char)data}'). The stream may contain text or HTML rather than binary IPP."
             : $"Expected section tag delimiter, found 0x{data:X2}";
+    }
+
+    private static IppAttribute FindCharsetAttribute(List<List<IppAttribute>> groups)
+    {
+        foreach (var group in groups)
+        {
+            foreach (var attr in group)
+            {
+                if (attr.Tag == Tag.Charset && attr.Name == IppAttributeNames.AttributesCharset)
+                    return attr;
+            }
+        }
+        return default;
+    }
+
+    private static IppAttribute FindCharsetAttribute(List<IppAttribute> attributes)
+    {
+        foreach (var attr in attributes)
+        {
+            if (attr.Tag == Tag.Charset && attr.Name == IppAttributeNames.AttributesCharset)
+                return attr;
+        }
+        return default;
     }
 }

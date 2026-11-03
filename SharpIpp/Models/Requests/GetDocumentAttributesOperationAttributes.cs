@@ -1,4 +1,4 @@
-﻿using SharpIpp.Mapping;
+using SharpIpp.Mapping;
 using SharpIpp.Protocol.Models;
 using SharpIpp.Validation;
 
@@ -15,7 +15,7 @@ public class GetDocumentAttributesOperationAttributes : JobOperationAttributes
     /// </summary>
     /// <code>document-number</code>
     [Range(1, int.MaxValue)]
-    [IppAttribute(IppAttributeNames.DocumentNumber, Tag = Tag.Integer)]
+    [IppAttribute(IppAttributeNames.DocumentNumber, Tag = Tag.Integer, Order = 4)]
     public int DocumentNumber { get; set; }
     /// <summary>
     /// The requested-attributes IPP attribute.
