@@ -4,24 +4,25 @@
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="BinarySerializer" Version="8.6.0" />
-    <PackageVersion Include="coverlet.collector" Version="8.0.0" />
-    <PackageVersion Include="coverlet.msbuild" Version="8.0.0" />
-    <PackageVersion Include="FluentAssertions" Version="8.8.0" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
+    <PackageVersion Include="BinarySerializer" Version="10.1.0" />
+    <PackageVersion Include="coverlet.collector" Version="10.1.0" />
+    <PackageVersion Include="coverlet.msbuild" Version="10.1.0" />
+    <PackageVersion Include="FluentAssertions" Version="8.11.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="5.9.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.Common" Version="5.9.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.9.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.MSTest" Version="1.1.2" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.12.0" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="5.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
-    <PackageVersion Include="Moq" Version="4.20.72" />
-    <PackageVersion Include="MSTest.TestAdapter" Version="4.1.0" />
-    <PackageVersion Include="MSTest.TestFramework" Version="4.1.0" />
-    <PackageVersion Include="NUnit" Version="3.13.2" />
-    <PackageVersion Include="NUnit3TestAdapter" Version="3.17.0" />
-    <PackageVersion Include="Quartz.Extensions.Hosting" Version="3.8.1" />
-    <PackageVersion Include="Snapper" Version="2.3.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="5.9.0" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
+    <PackageVersion Include="Moq" Version="4.21.0" />
+    <PackageVersion Include="MSTest.TestAdapter" Version="4.5.2" />
+    <PackageVersion Include="MSTest.TestFramework" Version="4.5.2" />
+    <PackageVersion Include="NUnit" Version="5.0.0" />
+    <PackageVersion Include="NUnit3TestAdapter" Version="6.3.1" />
+    <PackageVersion Include="Quartz.Extensions.Hosting" Version="4.7.2" />
+    <PackageVersion Include="Snapper" Version="2.4.1" />
   </ItemGroup>
 </Project>
