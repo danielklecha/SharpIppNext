@@ -26,6 +26,9 @@ public class IppMessageValidatorBaseTests
     }
     private class TestMessageValidator : IppMessageValidatorBase
     {
+        public bool RunValidateVersion(IppVersion version, out string? error, out IppStatusCode statusCode) =>
+            TryValidateVersion(version, out error, out statusCode);
+
         public void RunCoreHeader(int requestId, IppVersion version, Action<string, IppStatusCode> onError) =>
             ValidateCoreHeader(requestId, version, onError);
 
@@ -126,6 +129,26 @@ public class IppMessageValidatorBaseTests
             status.Should().Be(IppStatusCode.ServerErrorVersionNotSupported);
         });
         errorCount.Should().Be(1);
+    }
+
+    [TestMethod]
+    public void TryValidateVersion_ValidVersion_ReturnsTrue()
+    {
+        var validator = new TestMessageValidator();
+        var result = validator.RunValidateVersion(new IppVersion(1, 1), out var error, out var status);
+        result.Should().BeTrue();
+        error.Should().BeNull();
+        status.Should().Be(default);
+    }
+
+    [TestMethod]
+    public void TryValidateVersion_InvalidVersion_ReturnsFalse()
+    {
+        var validator = new TestMessageValidator();
+        var result = validator.RunValidateVersion(new IppVersion(0, 9), out var error, out var status);
+        result.Should().BeFalse();
+        error.Should().Be("Unsupported IPP version");
+        status.Should().Be(IppStatusCode.ServerErrorVersionNotSupported);
     }
 
     [TestMethod]

@@ -80,6 +80,21 @@ public class IppResponseMessageValidatorTests
     }
 
     [TestMethod]
+    [DataRow(0)]
+    [DataRow(-1)]
+    [DataRow(int.MinValue)]
+    public void Validate_WithNonPositiveRequestId_ShouldNotThrow(int requestId)
+    {
+        var validator = IppResponseMessageValidator.Default;
+        var response = CreateBasicResponse();
+        response.RequestId = requestId;
+
+        Action act = () => validator.Validate(response);
+
+        act.Should().NotThrow();
+    }
+
+    [TestMethod]
     public void Validate_WithInvalidVersion_ShouldThrow()
     {
         var validator = IppResponseMessageValidator.Default;

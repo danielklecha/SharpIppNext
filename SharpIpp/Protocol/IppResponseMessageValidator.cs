@@ -127,12 +127,12 @@ public class IppResponseMessageValidator : IppMessageValidatorBase, IIppResponse
     }
 
     /// <summary>
-    /// Validates that the response conforms to basic IPP constraints (valid version, request-id, unique attributes within groups, first/second operation attributes).
+    /// Validates that the response conforms to basic IPP constraints (valid version, status code, unique attributes within groups, first/second operation attributes).
     /// </summary>
     protected virtual void ValidateCore(IIppResponseMessage response)
     {
-        if (response.Version < new IppVersion(1, 0))
-            throw new IppResponseException("Unsupported IPP version", response);
+        if (!TryValidateVersion(response.Version, out var error, out _))
+            throw new IppResponseException(error!, response);
 
         if (!Enum.IsDefined(typeof(IppStatusCode), response.StatusCode))
             throw new IppResponseException($"Invalid or undefined IPP status code: {(short)response.StatusCode}", response);
@@ -168,7 +168,7 @@ public class IppResponseMessageValidator : IppMessageValidatorBase, IIppResponse
             return;
 
         var operationAttributes = response.OperationAttributes?.FirstOrDefault();
-        if (!TryValidateOperationAttributesPrefix(operationAttributes, out var error, out _))
+        if (!TryValidateOperationAttributesPrefix(operationAttributes, out error, out _))
             throw new IppResponseException(error!, response);
     }
 
