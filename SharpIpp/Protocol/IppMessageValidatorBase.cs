@@ -50,6 +50,27 @@ public abstract class IppMessageValidatorBase : IIppMessageValidator
     public virtual bool ValidateStringLengthLimits { get; set; } = true;
 
     /// <summary>
+    /// Validates that the version is &gt;= 1.0.
+    /// Spec: RFC 8011 Section 4.1.8.
+    /// </summary>
+    protected static bool TryValidateVersion(
+        IppVersion version,
+        out string? error,
+        out IppStatusCode statusCode)
+    {
+        if (version < new IppVersion(1, 0))
+        {
+            error = "Unsupported IPP version";
+            statusCode = IppStatusCode.ServerErrorVersionNotSupported;
+            return false;
+        }
+
+        error = null;
+        statusCode = default;
+        return true;
+    }
+
+    /// <summary>
     /// Validates core message header fields: RequestId &gt; 0 and Version &gt;= 1.0.
     /// Spec: RFC 8011 Section 4.1.
     /// </summary>
@@ -66,16 +87,7 @@ public abstract class IppMessageValidatorBase : IIppMessageValidator
             return false;
         }
 
-        if (version < new IppVersion(1, 0))
-        {
-            error = "Unsupported IPP version";
-            statusCode = IppStatusCode.ServerErrorVersionNotSupported;
-            return false;
-        }
-
-        error = null;
-        statusCode = default;
-        return true;
+        return TryValidateVersion(version, out error, out statusCode);
     }
 
     /// <summary>

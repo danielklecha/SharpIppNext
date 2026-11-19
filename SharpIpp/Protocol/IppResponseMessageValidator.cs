@@ -127,11 +127,11 @@ public class IppResponseMessageValidator : IppMessageValidatorBase, IIppResponse
     }
 
     /// <summary>
-    /// Validates that the response conforms to basic IPP constraints (valid version, request-id, unique attributes within groups, first/second operation attributes).
+    /// Validates that the response conforms to basic IPP constraints (valid version, status code, unique attributes within groups, first/second operation attributes).
     /// </summary>
     protected virtual void ValidateCore(IIppResponseMessage response)
     {
-        if (!TryValidateCoreHeader(response.RequestId, response.Version, out var error, out _))
+        if (!TryValidateVersion(response.Version, out var error, out _))
             throw new IppResponseException(error!, response);
 
         if (!Enum.IsDefined(typeof(IppStatusCode), response.StatusCode))

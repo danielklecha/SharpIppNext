@@ -82,7 +82,8 @@ public class IppResponseMessageValidatorTests
     [TestMethod]
     [DataRow(0)]
     [DataRow(-1)]
-    public void Validate_WithInvalidRequestId_ShouldThrow(int requestId)
+    [DataRow(int.MinValue)]
+    public void Validate_WithNonPositiveRequestId_ShouldNotThrow(int requestId)
     {
         var validator = IppResponseMessageValidator.Default;
         var response = CreateBasicResponse();
@@ -90,8 +91,7 @@ public class IppResponseMessageValidatorTests
 
         Action act = () => validator.Validate(response);
 
-        act.Should().Throw<IppResponseException>()
-            .WithMessage("Bad request-id value");
+        act.Should().NotThrow();
     }
 
     [TestMethod]
