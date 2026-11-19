@@ -131,8 +131,8 @@ public class IppResponseMessageValidator : IppMessageValidatorBase, IIppResponse
     /// </summary>
     protected virtual void ValidateCore(IIppResponseMessage response)
     {
-        if (!TryValidateCoreHeader(response.RequestId, response.Version, out var error, out _))
-            throw new IppResponseException(error!, response);
+        if (response.Version < new IppVersion(1, 0))
+            throw new IppResponseException("Unsupported IPP version", response);
 
         if (!Enum.IsDefined(typeof(IppStatusCode), response.StatusCode))
             throw new IppResponseException($"Invalid or undefined IPP status code: {(short)response.StatusCode}", response);
@@ -168,7 +168,7 @@ public class IppResponseMessageValidator : IppMessageValidatorBase, IIppResponse
             return;
 
         var operationAttributes = response.OperationAttributes?.FirstOrDefault();
-        if (!TryValidateOperationAttributesPrefix(operationAttributes, out error, out _))
+        if (!TryValidateOperationAttributesPrefix(operationAttributes, out var error, out _))
             throw new IppResponseException(error!, response);
     }
 

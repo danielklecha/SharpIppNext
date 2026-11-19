@@ -80,21 +80,6 @@ public class IppResponseMessageValidatorTests
     }
 
     [TestMethod]
-    [DataRow(0)]
-    [DataRow(-1)]
-    public void Validate_WithInvalidRequestId_ShouldThrow(int requestId)
-    {
-        var validator = IppResponseMessageValidator.Default;
-        var response = CreateBasicResponse();
-        response.RequestId = requestId;
-
-        Action act = () => validator.Validate(response);
-
-        act.Should().Throw<IppResponseException>()
-            .WithMessage("Bad request-id value");
-    }
-
-    [TestMethod]
     public void Validate_WithInvalidVersion_ShouldThrow()
     {
         var validator = IppResponseMessageValidator.Default;
